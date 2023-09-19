@@ -180,7 +180,7 @@ namespace HuggingFace.SharpTransformers.Tokenizers
     }
 
 
-    class WordPieceTokenizer : TokenizerModel
+    public class WordPieceTokenizer : TokenizerModel
     {
         public JObject Config;
         public List<string> Vocab;

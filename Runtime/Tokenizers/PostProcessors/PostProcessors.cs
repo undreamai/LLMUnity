@@ -72,7 +72,7 @@ namespace HuggingFace.SharpTransformers.PostProcessors
     /// <summary>
     /// Post processor that replaces special tokens in a template with actual tokens.
     /// </summary>
-    class TemplateProcessing : PostProcessor
+    public class TemplateProcessing : PostProcessor
     {
         public JObject Config;
         

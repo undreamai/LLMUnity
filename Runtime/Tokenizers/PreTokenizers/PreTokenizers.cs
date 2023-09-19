@@ -104,7 +104,7 @@ namespace HuggingFace.SharpTransformers.PreTokenizers
     }
 
 
-    class BertPreTokenizer : PreTokenizer
+    public class BertPreTokenizer : PreTokenizer
     {
         private readonly Regex pattern;
 

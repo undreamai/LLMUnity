@@ -81,7 +81,7 @@ namespace HuggingFace.SharpTransformers.Normalizers
     /// <summary>
     /// A BertNormalizer class (inherited from Normalizer) for text normalization.
     /// </summary>
-    class BertNormalizer : Normalizer
+    public class BertNormalizer : Normalizer
     {
         public BertNormalizer(JObject config) : base(config)
         {
@@ -199,7 +199,7 @@ namespace HuggingFace.SharpTransformers.Normalizers
 
 
 
-    class NormalizerSequence : Normalizer
+    public class NormalizerSequence : Normalizer
     {
         public List<Normalizer> Normalizers;
         public JObject Config;
@@ -264,7 +264,7 @@ namespace HuggingFace.SharpTransformers.Normalizers
     /// A Normalizer that prepends a string to the input string
     /// This is a nice day => _This is a nice day
     /// </summary>
-    class Prepend : Normalizer
+    public class Prepend : Normalizer
     {
         public Prepend(JObject config) : base(config)
         {
