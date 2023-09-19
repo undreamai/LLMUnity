@@ -1,6 +1,4 @@
 using UnityEngine;
-using Unity.Sentis;
-using Unity.Sentis.Layers;
 
 using System;
 using System.Collections;
