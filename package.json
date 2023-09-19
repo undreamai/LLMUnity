@@ -1,0 +1,16 @@
+{
+  "name": "com.huggingface.sharp-transformers",
+  "displayName": "Hugging Face Sharp Transformers",
+  "version": "0.0.1",
+  "unity": "2020.3",
+  "description": "A Unity plugin for using Transformers models in Unity.",
+  "keywords": ["huggingface", "llm", "AI"],
+  "author": {
+    "name": "Thomas Simonini",
+    "email": "thomas.simonini@huggingface.co",
+    "url": "https://github.com/huggingface/sharp-transformers"
+  },
+  "dependencies": {
+    "com.unity.nuget.newtonsoft-json": "3.2.1"
+  }
+}
