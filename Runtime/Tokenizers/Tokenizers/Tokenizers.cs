@@ -287,5 +287,62 @@ namespace HuggingFace.SharpTransformers.Tokenizers
             // Return the List<string> of encoded tokens
             return OutputTokens;
         }
+
+        /// <summary>
+        /// Converts a list of token IDs into a list of tokens.
+        /// </summary>
+        /// <param name="ids">The token IDs to convert.</param>
+        /// <returns>The converted tokens.</returns>
+        public List<string> ConvertIdsToTokens(List<int> ids)
+        {
+            /*
+             Select is used instead of map to transform the list of IDs into a list of tokens.
+            The conditional operator (? :) is used to check if the ID is within the valid range of the vocab array. If it is, the code retrieves the corresponding token using this.vocab[i]. If the token is null, it uses this.unk_token as the default value.
+            The resulting list of tokens is returned.
+            */
+            List<string> tokens = ids.Select(i => Vocab.Count > i ? Vocab[i] ?? UnkToken : UnkToken).ToList();
+            return tokens;
+        }
+
+        public List<int> ConvertTokensToIds(List<string> tokens)
+        {
+            // Create an array of token IDs by mapping each token to its corresponding ID
+            List<int> ids = new List<int>();
+
+            // token.Select: applies an operation to each token in tokens
+            ids = tokens.Select(t => TokensToIds.TryGetValue(t, out int id) ? id : UnknownTokenId).ToList();
+
+
+
+            if (FuseUnk == false)
+            {
+                //ids = Fuse(ids, UnkTokenId);
+                ids = Fuse(ids, UnkTokenId ?? -1);
+            }
+
+            return ids;
+        }
+
+        public List<int> Fuse(List<int> arr, int value)
+        {
+            List<int> fused = new List<int>();
+            int i = 0;
+            while (i < arr.Count)
+            {
+                fused.Add(arr[i]);
+                if (arr[i] != value)
+                {
+                    i++;
+                    continue;
+                }
+
+                while (i < arr.Count && arr[i] == value)
+                {
+                    i++;
+                }
+            }
+
+            return fused;
+        }
     }
 }
