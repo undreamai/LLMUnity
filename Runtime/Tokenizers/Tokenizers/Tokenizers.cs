@@ -12,13 +12,13 @@ using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-using Normalizers;
-using PostProcessors;
-using Decoders_;
-using PreTokenizers;
+using HuggingFace.SharpTransformers.Normalizers;
+using HuggingFace.SharpTransformers.PostProcessors;
+using HuggingFace.SharpTransformers.Decoders;
+using HuggingFace.SharpTransformers.PreTokenizers;
 
 
-namespace Tokenizers
+namespace HuggingFace.SharpTransformers.Tokenizers
 {
     public abstract class TokenizerModel
     {

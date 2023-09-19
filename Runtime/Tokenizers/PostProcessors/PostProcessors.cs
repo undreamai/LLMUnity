@@ -13,7 +13,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 
-namespace PostProcessors
+namespace HuggingFace.SharpTransformers.PostProcessors
 {
     public abstract class PostProcessor
     {

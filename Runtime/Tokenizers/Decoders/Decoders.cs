@@ -1,16 +1,19 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Linq;
+
+using UnityEngine;
+
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Linq;
-using NormalizersUtils;
+
+using HuggingFace.SharpTransformers.NormalizersUtils;
 
 
-namespace Decoders_
+namespace HuggingFace.SharpTransformers.Decoders
 {
     class Decoder_
     {

@@ -11,10 +11,10 @@ using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-using NormalizersUtils;
+using HuggingFace.SharpTransformers.NormalizersUtils;
 
 
-namespace Normalizers
+namespace HuggingFace.SharpTransformers.Normalizers
 {
     /// <summary>
     /// A base class for text normalization.

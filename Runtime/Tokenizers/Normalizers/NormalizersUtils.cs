@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 
-namespace NormalizersUtils
+namespace HuggingFace.SharpTransformers.NormalizersUtils
 {
     public static class Utils
     {

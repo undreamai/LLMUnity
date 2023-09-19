@@ -13,7 +13,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 
-namespace PreTokenizers
+namespace HuggingFace.SharpTransformers.PreTokenizers
 {
     /// <summary>
     /// A callable class representing a pre-tokenizer used in tokenization. Subclasses
