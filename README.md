@@ -19,7 +19,8 @@ We published a tutorial where you're to build this smart robot that can underst
 <img src="https://substackcdn.com/image/fetch/w_1456,c_limit,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F8e023e81-1644-40c3-972d-c1ccd7100bc8_640x360.gif" alt="Jammo the Robot"/>
 
 
-The Tutorial 👉 
+The Tutorial 👉 https://open.substack.com/pub/thomassimonini/p/create-an-ai-robot-npc-using-hugging?r=dq5fg&utm_campaign=post&utm_medium=web
+
 The Demo (Windows Executable) 👉 https://singularite.itch.io/jammo-the-robot-with-unity-sentis
 
 ## Supported tasks
