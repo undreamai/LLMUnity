@@ -1,5 +1,4 @@
-#include "common.h"
-#include "llama.h"
+#include "llm.h"
 
 #include <cassert>
 #include <cinttypes>
@@ -97,7 +96,7 @@ void load_model(
     }
 }
 
-std::array<int, 2> get_context_num(
+int get_context_num(
     llama_model * model,
     llama_context * ctx
 ){
@@ -109,7 +108,7 @@ std::array<int, 2> get_context_num(
         LOG_TEE("%s: warning: model was trained on only %d context tokens (%d specified)\n",
                 __func__, n_ctx_train, n_ctx);
     }
-    return {n_ctx_train, n_ctx};
+    return n_ctx;
 }
 
 void load_saved_session(
@@ -117,7 +116,6 @@ void load_saved_session(
     std::string path_session,
     std::vector<llama_token>& session_tokens,
     llama_context *& ctx,
-    const int n_ctx_train,
     const int n_ctx
 ){
     if (!path_session.empty()) {
@@ -372,7 +370,6 @@ void shift_past_guidance(
     std::vector<llama_token>& embd,
     int original_prompt_len
 ){
-    
     // embd is typically prepared beforehand to fit within a batch, but not always
     int input_size = 0;
     llama_token * input_buf = NULL;
@@ -496,7 +493,6 @@ void push_prompt_to_sampling_context(
     }
 }
 
-
 void display_text(
     std::vector<llama_token> embd,
     llama_context * ctx,
@@ -517,8 +513,6 @@ void display_text(
     }
     fflush(stdout);
 }
-
-
 
 bool check_reverse_prompt(
     gpt_params params,
@@ -845,10 +839,6 @@ void run(
 }
 
 
-
-
-
-
 int main(int argc, char ** argv) {
     gpt_params params;
     if (!gpt_params_parse(argc, argv, params)) {
@@ -872,8 +862,8 @@ int main(int argc, char ** argv) {
     // g_ctx = &ctx;
 
     load_model(params, model, ctx, ctx_guidance);
-    auto [n_ctx_train, n_ctx] = get_context_num(model, ctx);
-    load_saved_session(params, path_session, session_tokens, ctx, n_ctx_train, n_ctx);
+    const int n_ctx = get_context_num(model, ctx);
+    load_saved_session(params, path_session, session_tokens, ctx, n_ctx);
 
     const bool add_bos = llama_vocab_type(model) == LLAMA_VOCAB_TYPE_SPM;
     LOG("add_bos: %d\n", add_bos);
