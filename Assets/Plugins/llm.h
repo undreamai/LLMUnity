@@ -108,3 +108,20 @@ class LLM {
             int& n_remain
         );
 };
+
+#ifdef _WIN32
+    #ifdef MYLIBRARY_EXPORTS
+    #define MYLIBRARY_API __declspec(dllexport)
+    #else
+    #define MYLIBRARY_API __declspec(dllimport)
+    #endif
+#else
+    #define MYLIBRARY_API
+#endif
+
+extern "C" {
+	MYLIBRARY_API LLM* LLM_Create_Default() { return new LLM(R"(-i -m /home/benuix/codes/llama.cpp/mistral-7b-v0.1.Q4_K_M.gguf -ngl 32 -c 4096 --keep 256 --repeat_penalty 1.1 --prompt "Transcript of a dialog, where the User interacts with an Assistant named Lucy. Lucy is a friendly dinosaur." -r "User:" -s 1234)"); }
+	MYLIBRARY_API LLM* LLM_Create(std::string params_string) { return new LLM(params_string); }
+	MYLIBRARY_API void LLM_Delete(LLM* object) { delete object; }
+	MYLIBRARY_API void LLM_Run(LLM* object) { return object->run(); }
+}
