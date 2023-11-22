@@ -331,11 +331,7 @@ void LLM::setup_context(){
 }
 
 
-void LLM::context_swapping(
-    std::vector<llama_token>& embd,
-    int& n_past,
-    int& n_past_guidance
-){
+void LLM::context_swapping(){
     // infinite text generation via context swapping
     // if we run out of context:
     // - take the n_keep first tokens from the original prompt (via n_past)
@@ -365,11 +361,7 @@ void LLM::context_swapping(
     }
 }
 
-void LLM::reuse_matching_prefix(
-    std::vector<llama_token>& embd,
-    int& n_session_consumed,
-    int& n_past
-){
+void LLM::reuse_matching_prefix(){
     // try to reuse a matching prefix from the loaded session instead of re-eval (via n_past)
     if (n_session_consumed < (int) session_tokens.size()) {
         size_t i = 0;
@@ -394,12 +386,7 @@ void LLM::reuse_matching_prefix(
 }
 
 
-void LLM::shift_past_guidance(
-    std::vector<llama_token>& embd,
-    std::vector<llama_token>& embd_guidance,
-    int& n_past_guidance,
-    int original_prompt_len
-){
+void LLM::shift_past_guidance(){
     // embd is typically prepared beforehand to fit within a batch, but not always
     int input_size = 0;
     llama_token * input_buf = NULL;
@@ -440,10 +427,7 @@ void LLM::shift_past_guidance(
 }
 
 
-void LLM::eval_tokens_in_batches(
-    std::vector<llama_token>& embd,
-    int& n_past
-){
+void LLM::eval_tokens_in_batches(){
     for (int i = 0; i < (int) embd.size(); i += params.n_batch) {
         int n_eval = (int) embd.size() - i;
         if (n_eval > params.n_batch) {
@@ -464,14 +448,7 @@ void LLM::eval_tokens_in_batches(
     }
 }
 
-void LLM::push_prompt_to_sampling_context(
-    std::vector<llama_token>& embd,
-    bool need_to_save_session,
-    int& n_consumed,
-    int& n_remain,
-    bool& input_echo,
-    bool& is_interacting
-){
+void LLM::push_prompt_to_sampling_context(){
     if ((int) embd_inp.size() <= n_consumed && !is_interacting) {
         // optionally save the session on first sample (for faster prompt loading next time)
         if (!path_session.empty() && need_to_save_session && !params.prompt_cache_ro) {
@@ -514,12 +491,7 @@ void LLM::push_prompt_to_sampling_context(
     }
 }
 
-void LLM::display_text(
-    std::vector<llama_token>& embd,
-    std::vector<int>& input_tokens,
-    std::vector<int>& output_tokens,
-    std::ostringstream& output_ss
-){
+void LLM::display_text(){
     for (auto id : embd) {
         const std::string token_str = llama_token_to_piece(ctx, id);
         printf("%s", token_str.c_str());
@@ -534,9 +506,7 @@ void LLM::display_text(
     fflush(stdout);
 }
 
-bool LLM::check_reverse_prompt(
-    bool& is_interacting
-){
+bool LLM::check_reverse_prompt(){
     bool is_antiprompt = false;
 
     // check for reverse prompt in the last n_prev tokens
@@ -590,24 +560,10 @@ bool LLM::check_reverse_prompt(
     return is_antiprompt;
 }
 
+
 std::string LLM::get_user_input(){
-    LOG("waiting for user input\n");
-
-    if (params.instruct) {
-        printf("\n> ");
-    }
-
-    if (params.input_prefix_bos) {
-        LOG("adding input prefix BOS token\n");
-        embd_inp.push_back(llama_token_bos(model));
-    }
-
     std::string buffer;
-    if (!params.input_prefix.empty()) {
-        LOG("appending input prefix: '%s'\n", params.input_prefix.c_str());
-        printf("%s", params.input_prefix.c_str());
-    }
-
+    LOG("waiting for user input\n");
     std::string line;
     bool another_line = true;
     do {
@@ -617,15 +573,29 @@ std::string LLM::get_user_input(){
     return buffer;
 }
 
+void LLM::query(std::string buffer){
+    if (params.instruct) {
+        printf("\n> ");
+    }
 
-void LLM::add_tokens_to_embd(
-    std::string& buffer,
-    bool is_antiprompt,
-    int& n_consumed,
-    std::vector<int>& output_tokens,
-    std::ostringstream& output_ss,
-    int& n_remain
-){
+    if (params.input_prefix_bos) {
+        LOG("adding input prefix BOS token\n");
+        embd_inp.push_back(llama_token_bos(model));
+    }
+
+    if (!params.input_prefix.empty()) {
+        LOG("appending input prefix: '%s'\n", params.input_prefix.c_str());
+        printf("%s", params.input_prefix.c_str());
+    }
+
+    add_tokens_to_embd(buffer);
+    input_echo = false; // do not echo this again
+    llama_sampling_reset(ctx_sampling);
+    is_interacting = false;
+}
+
+
+void LLM::add_tokens_to_embd(std::string& buffer){
     // Add tokens to embd only if the input buffer is non-empty
     // Entering a empty line lets the user pass control back
     if (buffer.length() > 1) {
@@ -696,103 +666,6 @@ LLM::~LLM(){
     LOG_TEE("Log end\n");
 }
 
-void LLM::run(){
-    LOG_TEE("sampling: \n%s\n", llama_sampling_print(params.sparams).c_str());
-    LOG_TEE("generate: n_ctx = %d, n_batch = %d, n_predict = %d, n_keep = %d\n", n_ctx, params.n_batch, params.n_predict, params.n_keep);
-    LOG_TEE("\n\n");
-
-    static bool is_interacting = params.interactive_first;
-
-    bool is_antiprompt        = false;
-    bool input_echo           = true;
-    bool need_to_save_session = !path_session.empty() && n_matching_session_tokens < embd_inp.size();
-
-    int n_past             = 0;
-    int n_remain           = params.n_predict;
-    int n_consumed         = 0;
-    int n_session_consumed = 0;
-    int n_past_guidance    = 0;
-
-    std::vector<int>   input_tokens;
-    std::vector<int>   output_tokens;
-    std::ostringstream output_ss;
-
-    std::vector<llama_token> embd;
-    std::vector<llama_token> embd_guidance;
-    
-    while (true) {
-        // predict
-        if (!embd.empty()) {
-            // Note: n_ctx - 4 here is to match the logic for commandline prompt handling via
-            // --prompt or --file which uses the same value.
-            int max_embd_size = n_ctx - 4;
-
-            // Ensure the input doesn't exceed the context size by truncating embd if necessary.
-            if ((int) embd.size() > max_embd_size) {
-                const int skipped_tokens = (int) embd.size() - max_embd_size;
-                embd.resize(max_embd_size);
-                // TODO warning
-                printf("<<input too long: skipped %d token%s>>", skipped_tokens, skipped_tokens != 1 ? "s" : "");
-                fflush(stdout);
-            }
-
-            // infinite text generation via context swapping
-            if (n_past + (int) embd.size() + std::max<int>(0, guidance_offset) > n_ctx && params.n_predict == -2) {
-                LOG_TEE("\n\n%s: context full and n_predict == -%d => stopping\n", __func__, params.n_predict);
-                break;
-            }
-            context_swapping(embd, n_past, n_past_guidance);
-            reuse_matching_prefix(embd, n_session_consumed, n_past);
-
-            // evaluate tokens in batches
-            // embd is typically prepared beforehand to fit within a batch, but not always
-            if (ctx_guidance) 
-                shift_past_guidance(embd, embd_guidance, n_past_guidance, original_prompt_len);
-            
-            eval_tokens_in_batches(embd, n_past);
-
-            if (!embd.empty() && !path_session.empty()) {
-                session_tokens.insert(session_tokens.end(), embd.begin(), embd.end());
-                n_session_consumed = session_tokens.size();
-            }
-        }
-
-        embd.clear();
-        embd_guidance.clear();
-
-        push_prompt_to_sampling_context(embd, need_to_save_session, n_consumed, n_remain, input_echo, is_interacting);
-
-        // display text
-        if (input_echo) display_text(embd, input_tokens, output_tokens, output_ss);
-
-        // if not currently processing queued inputs;
-        if ((int) embd_inp.size() <= n_consumed) {
-            is_antiprompt = check_reverse_prompt(is_interacting);
-            if (n_past > 0 && is_interacting) {
-                std::string buffer = get_user_input();
-                add_tokens_to_embd(buffer, is_antiprompt, n_consumed, output_tokens, output_ss, n_remain);
-                input_echo = false; // do not echo this again
-            }
-            if (n_past > 0) {
-                if (is_interacting) llama_sampling_reset(ctx_sampling);
-                is_interacting = false;
-            }
-        }
-
-        // end of text token
-        if (!embd.empty() && embd.back() == llama_token_eos(model) && !(params.instruct || params.interactive)) {
-            LOG_TEE(" [end of text]\n");
-            break;
-        }
-
-        // In interactive mode, respect the maximum number of tokens and drop back to user input when reached.
-        // We skip this logic when n_predict == -1 (infinite) or -2 (stop at context size).
-        if (n_remain <= 0 && params.n_predict >= 0) {
-            n_remain = params.n_predict;
-            is_interacting = true;
-        }
-    }
-}
 
 void LLM::init(){
     LOG("%s: llama backend init\n", __func__);
@@ -824,6 +697,101 @@ void LLM::init(){
     setup_context();
 
     ctx_sampling = llama_sampling_init(params.sparams);
+    LOG_TEE("sampling: \n%s\n", llama_sampling_print(params.sparams).c_str());
+    LOG_TEE("generate: n_ctx = %d, n_batch = %d, n_predict = %d, n_keep = %d\n", n_ctx, params.n_batch, params.n_predict, params.n_keep);
+    LOG_TEE("\n\n");
+
+    reset();
+}
+
+
+void LLM::reset(){
+    is_interacting = params.interactive_first;
+
+    is_antiprompt        = false;
+    input_echo           = true;
+    need_to_save_session = !path_session.empty() && n_matching_session_tokens < embd_inp.size();
+
+    n_past             = 0;
+    n_remain           = params.n_predict;
+    n_consumed         = 0;
+    n_session_consumed = 0;
+    n_past_guidance    = 0;
+
+    input_tokens.clear();
+    output_tokens.clear();
+    output_ss.clear();
+    embd.clear();
+    embd_guidance.clear();
+}
+
+void LLM::answer(){
+    do {
+        // predict
+        if (!embd.empty()) {
+            // Note: n_ctx - 4 here is to match the logic for commandline prompt handling via
+            // --prompt or --file which uses the same value.
+            int max_embd_size = n_ctx - 4;
+
+            // Ensure the input doesn't exceed the context size by truncating embd if necessary.
+            if ((int) embd.size() > max_embd_size) {
+                const int skipped_tokens = (int) embd.size() - max_embd_size;
+                embd.resize(max_embd_size);
+                // TODO warning
+                printf("<<input too long: skipped %d token%s>>", skipped_tokens, skipped_tokens != 1 ? "s" : "");
+                fflush(stdout);
+            }
+
+            // infinite text generation via context swapping
+            if (n_past + (int) embd.size() + std::max<int>(0, guidance_offset) > n_ctx && params.n_predict == -2) {
+                LOG_TEE("\n\n%s: context full and n_predict == -%d => stopping\n", __func__, params.n_predict);
+                break;
+            }
+            context_swapping();
+            reuse_matching_prefix();
+
+            // evaluate tokens in batches
+            // embd is typically prepared beforehand to fit within a batch, but not always
+            if (ctx_guidance) 
+                shift_past_guidance();
+            
+            eval_tokens_in_batches();
+
+            if (!embd.empty() && !path_session.empty()) {
+                session_tokens.insert(session_tokens.end(), embd.begin(), embd.end());
+                n_session_consumed = session_tokens.size();
+            }
+        }
+
+        embd.clear();
+        embd_guidance.clear();
+
+        push_prompt_to_sampling_context();
+
+        // display text
+        if (input_echo) display_text();
+
+        // In interactive mode, respect the maximum number of tokens and drop back to user input when reached.
+        // We skip this logic when n_predict == -1 (infinite) or -2 (stop at context size).
+        if (n_remain <= 0 && params.n_predict >= 0) {
+            n_remain = params.n_predict;
+            is_interacting = true;
+        }
+
+        // if not currently processing queued inputs;
+        if ((int) embd_inp.size() <= n_consumed) {
+            is_antiprompt = check_reverse_prompt();
+        }
+    } while(!is_interacting);
+}
+
+
+
+void LLM::run(){
+    while (true) {
+        answer();
+        query(get_user_input());
+    }
 }
 
 
