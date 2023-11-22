@@ -12,7 +12,7 @@
 #include <string>
 #include <vector>
 
-bool readline(std::string & line) {
+bool LLMParser::readline(std::string & line) {
     if (!std::getline(std::cin, line)) {
         // Input stream is bad or EOF received
         line.clear();
@@ -36,10 +36,58 @@ bool readline(std::string & line) {
     return ret;
 }
 
+std::vector<std::string> LLMParser::splitArguments(const std::string& inputString) {
+    // Split the input string into individual arguments
+    std::vector<std::string> arguments;
+
+    unsigned counter = 0;
+    std::string segment;
+    std::istringstream stream_input(inputString);
+    while(std::getline(stream_input, segment, '\"'))
+    {
+        ++counter;
+        if (counter % 2 == 0)
+        {
+            if (!segment.empty()) arguments.push_back(segment);
+        }
+        else
+        {
+            std::istringstream stream_segment(segment);
+            while(std::getline(stream_segment, segment, ' '))
+                if (!segment.empty()) arguments.push_back(segment);
+        }
+    }
+    return arguments;
+}
+
+
+gpt_params LLMParser::string_to_gpt_params(std::string params_string) {
+    // add "llm" as the program name
+    std::vector<std::string> arguments = splitArguments("llm " + params_string);
+
+    // Convert vector of strings to argc and argv
+    int argc = static_cast<int>(arguments.size());
+    char** argv = new char*[argc];
+    for (int i = 0; i < argc; ++i) {
+        argv[i] = new char[arguments[i].size() + 1];
+        std::strcpy(argv[i], arguments[i].c_str());
+    }
+
+    gpt_params params;
+    if (!gpt_params_parse(argc, argv, params)) {
+        throw std::runtime_error("could not parse the input parameters: " + params_string );
+    }
+    return params;
+}
+
+
 
 LLM::LLM(gpt_params params_in): params(params_in) {
     check_params();
     init();
+}
+
+LLM::LLM(std::string params_string) : LLM(LLMParser::string_to_gpt_params(params_string)){
 }
 
 void LLM::check_params(){
@@ -563,7 +611,7 @@ std::string LLM::get_user_input(){
     std::string line;
     bool another_line = true;
     do {
-        another_line = readline(line);
+        another_line = LLMParser::readline(line);
         buffer += line;
     } while (another_line);
     return buffer;
@@ -780,12 +828,8 @@ void LLM::init(){
 
 
 int main(int argc, char ** argv) {
-    gpt_params params;
-    if (!gpt_params_parse(argc, argv, params)) {
-        return 1;
-    }
-    LLM llm(params);
+    std::string params_string =  R"(-i -m /home/benuix/codes/llama.cpp/mistral-7b-v0.1.Q4_K_M.gguf -ngl 32 -c 4096 --keep 256 --repeat_penalty 1.1 --prompt "Transcript of a dialog, where the User interacts with an Assistant named Lucy. Lucy is a friendly dinosaur." -r "User:" -s 1234)";
+    LLM llm(params_string);
     llm.run();
-
     return 0;
 }

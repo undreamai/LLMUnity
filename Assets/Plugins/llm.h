@@ -2,11 +2,17 @@
 #include "common.h"
 #include "llama.h"
 
-bool readline(std::string & line);
+class LLMParser {
+    public:
+        static bool readline(std::string & line);
+        static std::vector<std::string> splitArguments(const std::string& inputString);
+        static gpt_params string_to_gpt_params(std::string params_string);
+};
 
 class LLM {
     public:
         LLM(gpt_params params);
+        LLM(std::string params_string);
         ~LLM();
 
         void run();
