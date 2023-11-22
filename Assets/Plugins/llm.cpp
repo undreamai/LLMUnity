@@ -828,8 +828,16 @@ void LLM::init(){
 
 
 int main(int argc, char ** argv) {
-    std::string params_string =  R"(-i -m /home/benuix/codes/llama.cpp/mistral-7b-v0.1.Q4_K_M.gguf -ngl 32 -c 4096 --keep 256 --repeat_penalty 1.1 --prompt "Transcript of a dialog, where the User interacts with an Assistant named Lucy. Lucy is a friendly dinosaur." -r "User:" -s 1234)";
-    LLM llm(params_string);
+    gpt_params params;
+    if (argc <= 1){
+        std::string params_string =  R"(-i -m /home/benuix/codes/llama.cpp/mistral-7b-v0.1.Q4_K_M.gguf -ngl 32 -c 4096 --keep 256 --repeat_penalty 1.1 --prompt "Transcript of a dialog, where the User interacts with an Assistant named Lucy. Lucy is a friendly dinosaur." -r "User:" -s 1234)";
+        params = LLMParser::string_to_gpt_params(params_string);
+    }else {
+        if (!gpt_params_parse(argc, argv, params)) {
+            return 1;
+        }
+    }
+    LLM llm(params);
     llm.run();
     return 0;
 }
