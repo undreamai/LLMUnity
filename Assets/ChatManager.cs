@@ -9,9 +9,11 @@ public class ChatManager : MonoBehaviour
 {
     public TMP_InputField inputField;
     public TMP_Text displayText;
-    public Transform chatContainer; // Parent transform for instantiated chat bubbles
-    public Color bubbleColor = Color.blue; // Color for the chat bubble background
-    private List<GameObject> chatBubbles = new List<GameObject>(); // List to store chat bubble GameObjects
+    public Transform chatContainer;
+    public Color playerColor = new Color32(81, 164, 81, 255);
+    public Color botColor = new Color32(29, 29, 73, 255);
+    
+    private List<GameObject> chatBubbles = new List<GameObject>();
 
     void Start()
     {
@@ -29,50 +31,51 @@ public class ChatManager : MonoBehaviour
             return;
         }
         // displayText.text += "\n" + inputField.text;
-        SubmitMessage(inputField.text);
+        CreateBubble(inputField.text, true);
+        CreateBubble("...", false);
         inputField.text = "";
     }
 
-    void SubmitMessage(string message)
+    void CreateBubble(string message, bool player)
     {
+        Color bubbleColor;
+        string bubbleName;
+        float leftPosition;
+        if (player){
+            bubbleName = "PlayerBubble";
+            bubbleColor = playerColor;
+            leftPosition = 0f;
+        }else{
+            bubbleName = "BotBubble";
+            bubbleColor = botColor;
+            leftPosition = 1f;
+        }
+        Debug.Log(bubbleColor);
         // Create a new GameObject for the chat bubble
-        GameObject newBubble = new GameObject("ChatBubble", typeof(RectTransform));
+        GameObject newBubble = new GameObject(bubbleName, typeof(RectTransform));
 
         // Set the parent to the chat container
         newBubble.transform.SetParent(chatContainer);
 
         // Add an Image component for the background
         Image bubbleImage = newBubble.AddComponent<Image>();
-        bubbleImage.color = bubbleColor;
-
-        // Set the type to Sliced for rounded corners
         bubbleImage.type = Image.Type.Sliced;
-
-        bubbleImage.sprite = UnityEditor.AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/Background.psd");;
-
+        bubbleImage.sprite = UnityEditor.AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/Background.psd");
+        bubbleImage.color = bubbleColor;
 
         // Create a child GameObject for the text
         GameObject textObject = new GameObject("Text", typeof(RectTransform), typeof(Text));
         textObject.transform.SetParent(newBubble.transform);
-
-        // Get references to the UI components in the instantiated bubble
         Text textContent = textObject.GetComponent<Text>();
-
-        // Set the text content
+        // Add text and font
         textContent.text = message;
-
-        // Set the text properties (customize as needed)
         textContent.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-        textContent.fontSize = 20;
-        textContent.color = Color.white;
+        textContent.fontSize = 16;
+        // textContent.color = Color.white;
 
-        // Example: Update the bubble size based on text content
+        // Set position and size and add to list
         UpdateBubbleSize(newBubble.GetComponent<RectTransform>(), textObject.GetComponent<RectTransform>(), textContent);
-
-        // Set the position of the new bubble at the bottom
-        SetBubblePosition(newBubble.transform);
-
-        // Add the new bubble to the list
+        SetBubblePosition(newBubble.transform, leftPosition);
         chatBubbles.Add(newBubble);
     }
 
@@ -81,8 +84,6 @@ public class ChatManager : MonoBehaviour
         // Adjust the size of the bubble based on text content
         float preferredWidth = textContent.preferredWidth;
         float preferredHeight = textContent.fontSize * textContent.text.Split('\n').Length;
-
-        // Set the size of the bubble image
         bubbleTransform.sizeDelta = new Vector2(preferredWidth + 2 * padding, preferredHeight + 2 * padding);
 
         textRect.anchorMin = Vector2.zero;
@@ -91,13 +92,13 @@ public class ChatManager : MonoBehaviour
         textRect.anchoredPosition = new Vector2(padding, -padding);
     }
 
-    void SetBubblePosition(Transform bubbleTransform)
+    void SetBubblePosition(Transform bubbleTransform, float leftPosition)
     {
         // Set the position of the new bubble at the bottom
         RectTransform bubbleRect = bubbleTransform.GetComponent<RectTransform>();
-        bubbleRect.pivot = new Vector2(1f, 0f); // Set pivot to the bottom center
-        bubbleRect.anchorMin = new Vector2(1f, 0f); // Set anchor to the bottom center
-        bubbleRect.anchorMax = new Vector2(1f, 0f); // Set anchor to the bottom center
+        bubbleRect.pivot = new Vector2(leftPosition, 0f);
+        bubbleRect.anchorMin = new Vector2(leftPosition, 0f);
+        bubbleRect.anchorMax = new Vector2(leftPosition, 0f);
         
         foreach (GameObject bubble in chatBubbles)
         {
