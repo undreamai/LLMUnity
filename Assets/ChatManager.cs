@@ -8,15 +8,20 @@ using System;
 public class ChatManager : MonoBehaviour
 {
     public TMP_InputField inputField;
-    public TMP_Text displayText;
     public Transform chatContainer;
     public Color playerColor = new Color32(81, 164, 81, 255);
     public Color botColor = new Color32(29, 29, 73, 255);
+    public Color fontColor = Color.white;
+    public Font font;
+    public int fontSize = 16;
     
     private List<GameObject> chatBubbles = new List<GameObject>();
 
     void Start()
     {
+        if (font == null) {
+            font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+        }
         if (inputField != null)
         {
             inputField.onSubmit.AddListener(onInputFieldSubmit);
@@ -30,7 +35,6 @@ public class ChatManager : MonoBehaviour
             inputField.caretPosition = inputField.text.Length;
             return;
         }
-        // displayText.text += "\n" + inputField.text;
         CreateBubble(inputField.text, true);
         CreateBubble("...", false);
         inputField.text = "";
@@ -50,7 +54,6 @@ public class ChatManager : MonoBehaviour
             bubbleColor = botColor;
             leftPosition = 1f;
         }
-        Debug.Log(bubbleColor);
         // Create a new GameObject for the chat bubble
         GameObject newBubble = new GameObject(bubbleName, typeof(RectTransform));
 
@@ -69,9 +72,9 @@ public class ChatManager : MonoBehaviour
         Text textContent = textObject.GetComponent<Text>();
         // Add text and font
         textContent.text = message;
-        textContent.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-        textContent.fontSize = 16;
-        // textContent.color = Color.white;
+        textContent.font = font;
+        textContent.fontSize = fontSize;
+        textContent.color = fontColor;
 
         // Set position and size and add to list
         UpdateBubbleSize(newBubble.GetComponent<RectTransform>(), textObject.GetComponent<RectTransform>(), textContent);
