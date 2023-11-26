@@ -4,6 +4,7 @@ using TMPro;
 using Unity.VisualScripting;
 using System.Collections.Generic;
 using System;
+using System.Net.WebSockets;
 
 public class ChatManager : MonoBehaviour
 {
@@ -15,6 +16,7 @@ public class ChatManager : MonoBehaviour
     public int fontSize = 16;
     
     private TMP_InputField inputField;
+    private GameObject inputBubble;
     private List<GameObject> chatBubbles = new List<GameObject>();
 
     void Start()
@@ -22,61 +24,26 @@ public class ChatManager : MonoBehaviour
         if (font == null) {
             font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
         }
-        // if (inputField != null)
-        // {
-        //     inputField.onSubmit.AddListener(onInputFieldSubmit);
-        // }
+        inputBubble = CreateBubble("Message me", true, false, 600f, fontSize * 4);
+        inputField = createInputField(inputBubble);
+    }
 
-
-
-        GameObject newBubble = new GameObject("boo", typeof(RectTransform));
-        // Set the parent to the chat container
-        newBubble.transform.SetParent(chatContainer);
-
-        // Add an Image component for the background
-        Image bubbleImage = newBubble.AddComponent<Image>();
-        bubbleImage.type = Image.Type.Sliced;
-        bubbleImage.sprite = UnityEditor.AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/Background.psd");
-        bubbleImage.color = playerColor;
-
-        inputField = newBubble.AddComponent<TMP_InputField>();
-        inputField.interactable = true;
-        GameObject textObject = new GameObject("boo_text", typeof(RectTransform));
+    TMP_InputField createInputField(GameObject inputBubble){
+        Transform textObject = inputBubble.transform.Find("Text");
+        TextMeshProUGUI textArea = textObject.GetComponent<TextMeshProUGUI>();
         RectTransform textRectTransform = textObject.GetComponent<RectTransform>();
-        textObject.transform.SetParent(newBubble.transform);
-        TextMeshProUGUI textArea = textObject.AddComponent<TextMeshProUGUI>();
+
+        inputField = inputBubble.AddComponent<TMP_InputField>();
+        inputField.interactable = true;
         inputField.textComponent = textArea;
         inputField.textViewport = textRectTransform;
-        // inputField.placeholder = textArea;
         inputField.lineType = TMP_InputField.LineType.MultiLineSubmit;
         inputField.onSubmit.AddListener(onInputFieldSubmit);
         inputField.onFocusSelectAll = false;
         inputField.shouldHideMobileInput = false;
-        // Add text and font
-        textArea.text = "Message me";
-        // textArea.font = font;
-        textArea.fontSize = fontSize;
-        textArea.color = fontColor;
-
-        // Set other TMP Text properties as needed
-        textArea.fontSize = 16;
-        textArea.color = Color.white;
-
-        float leftPosition = 0f;
-        // Set position and size and add to list
-        RectTransform bubbleRectTransform = newBubble.GetComponent<RectTransform>();
-        UpdateInputSize(bubbleRectTransform, textRectTransform, textArea);
-        // SetBubblePosition(bubbleRectTransform, leftPosition);
-        bubbleRectTransform.pivot = new Vector2(leftPosition, 0f);
-        bubbleRectTransform.anchorMin = new Vector2(leftPosition, 0f);
-        bubbleRectTransform.anchorMax = new Vector2(leftPosition, 0f);
-        bubbleRectTransform.anchoredPosition = new Vector2(0f, 0f);
-
-        // inputField.selectionColor = Color.gray;
-
         inputField.enabled = false;
         inputField.enabled = true;
-        inputField.ActivateInputField();
+        return inputField;
     }
 
     void onInputFieldSubmit(string newText){
@@ -91,7 +58,7 @@ public class ChatManager : MonoBehaviour
         inputField.text = "";
     }
 
-    void CreateBubble(string message, bool player)
+    GameObject CreateBubble(string message, bool player, bool addToList=true, float width=-1f, float height=-1f, float padding = 10f)
     {
         Color bubbleColor;
         string bubbleName;
@@ -106,53 +73,38 @@ public class ChatManager : MonoBehaviour
             leftPosition = 1f;
         }
         // Create a new GameObject for the chat bubble
-        GameObject newBubble = new GameObject(bubbleName, typeof(RectTransform));
-
-        // Set the parent to the chat container
+        GameObject newBubble = new GameObject(bubbleName, typeof(RectTransform), typeof(Image));
         newBubble.transform.SetParent(chatContainer);
+        RectTransform bubbleRectTransform = newBubble.GetComponent<RectTransform>();
+        Image bubbleImage = newBubble.GetComponent<Image>();
 
-        // Add an Image component for the background
-        Image bubbleImage = newBubble.AddComponent<Image>();
         bubbleImage.type = Image.Type.Sliced;
         bubbleImage.sprite = UnityEditor.AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/Background.psd");
         bubbleImage.color = bubbleColor;
 
         // Create a child GameObject for the text
-        GameObject textObject = new GameObject("Text", typeof(RectTransform), typeof(Text));
+        GameObject textObject = new GameObject("Text", typeof(RectTransform), typeof(TextMeshProUGUI));
         textObject.transform.SetParent(newBubble.transform);
-        Text textContent = textObject.GetComponent<Text>();
+        RectTransform textRectTransform = textObject.GetComponent<RectTransform>();
+        TextMeshProUGUI textContent = textObject.GetComponent<TextMeshProUGUI>();
         // Add text and font
         textContent.text = message;
-        textContent.font = font;
+        // textContent.font = font;
         textContent.fontSize = fontSize;
         textContent.color = fontColor;
 
         // Set position and size and add to list
-        RectTransform bubbleRectTransform = newBubble.GetComponent<RectTransform>();
-        UpdateBubbleSize(bubbleRectTransform, textObject.GetComponent<RectTransform>(), textContent);
+        float bubbleWidth = width >= 0? width: textContent.preferredWidth;
+        float bubbleHeight = height >= 0? height: fontSize * message.Split('\n').Length;
+        bubbleRectTransform.sizeDelta = new Vector2(bubbleWidth + 2 * padding, bubbleHeight + 2 * padding);
+        SetTextPosition(textRectTransform, padding);
         SetBubblePosition(bubbleRectTransform, leftPosition);
-        chatBubbles.Add(newBubble);
+        if (addToList) chatBubbles.Add(newBubble);
+        return newBubble;
     }
-
-    void UpdateInputSize(RectTransform bubbleRect, RectTransform textRect, TMP_Text textContent, float padding = 10f)
+    void SetTextPosition(RectTransform textRect, float padding = 10f)
     {
-        // Adjust the size of the bubble based on text content
-        float preferredWidth = 600;
-        float preferredHeight = textContent.fontSize * 4;
-        bubbleRect.sizeDelta = new Vector2(preferredWidth + 2 * padding, preferredHeight + 2 * padding);
-
-        textRect.anchorMin = Vector2.zero;
-        textRect.anchorMax = Vector2.one;
-        textRect.sizeDelta = Vector2.zero;
-        textRect.anchoredPosition = new Vector2(padding, -padding);
-    }
-    void UpdateBubbleSize(RectTransform bubbleRect, RectTransform textRect, Text textContent, float padding = 10f)
-    {
-        // Adjust the size of the bubble based on text content
-        float preferredWidth = textContent.preferredWidth;
-        float preferredHeight = textContent.fontSize * textContent.text.Split('\n').Length;
-        bubbleRect.sizeDelta = new Vector2(preferredWidth + 2 * padding, preferredHeight + 2 * padding);
-
+        textRect.pivot = Vector2.zero;
         textRect.anchorMin = Vector2.zero;
         textRect.anchorMax = Vector2.one;
         textRect.sizeDelta = Vector2.zero;
@@ -173,7 +125,10 @@ public class ChatManager : MonoBehaviour
             currentPosition.y += bubbleRect.sizeDelta.y + 10f;
             childRect.localPosition = currentPosition;
         }
-        bubbleRect.anchoredPosition = new Vector2(0f, inputField.GetComponent<RectTransform>().sizeDelta.y + 10f);
+        float y = 0f;
+        if (inputField != null)
+            y += inputField.GetComponent<RectTransform>().sizeDelta.y + 10f;
+        bubbleRect.anchoredPosition = new Vector2(0f, y);
         
     }
 }
