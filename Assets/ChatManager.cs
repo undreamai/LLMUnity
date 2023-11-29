@@ -144,21 +144,31 @@ public class ChatManager : MonoBehaviour
         textContent.color = fontColor;
         return textObject;
     }
-
+ 
     void SetBubblePosition(RectTransform bubbleRect, float leftPosition)
     {
         // Set the position of the new bubble at the bottom
         bubbleRect.pivot = new Vector2(leftPosition, 0f);
         bubbleRect.anchorMin = new Vector2(leftPosition, 0f);
         bubbleRect.anchorMax = new Vector2(leftPosition, 0f);
-        
-        foreach (GameObject bubble in chatBubbles)
-        {
+
+        int lastBubbleOutsideFOV = -1;
+        float containerHeight = chatContainer.GetComponent<RectTransform>().rect.height;
+        for (int i = 0; i < chatBubbles.Count; i++){
+            GameObject bubble = chatBubbles[i];
             RectTransform childRect = bubble.GetComponent<RectTransform>();
             Vector2 currentPosition = childRect.localPosition;
             currentPosition.y += bubbleRect.sizeDelta.y + spacing;
             childRect.localPosition = currentPosition;
+
+            // destroy bubbles outside the container
+            if (childRect.position.y > containerHeight){
+                Destroy(chatBubbles[i]);
+                lastBubbleOutsideFOV = i;
+            }
         }
+        chatBubbles.RemoveRange(0, lastBubbleOutsideFOV+1);
+        
         float y = 0f;
         if (inputField != null)
             y += inputField.GetComponent<RectTransform>().sizeDelta.y + spacing;
