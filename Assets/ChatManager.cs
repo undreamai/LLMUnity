@@ -29,15 +29,19 @@ public class ChatManager : MonoBehaviour
 
     void onInputFieldSubmit(string newText){
         inputField.ActivateInputField();
+        if ( Input.GetKey(KeyCode.RightShift)){
+            Debug.Log("RightShift");
+        }
         if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)){
             return;
         }
         // replace vertical_tab
         string message = inputField.text.Replace("\v", "\n");
-        CreateBubble(message, true);
-        CreateBubble("...", false);
+        CreateBubble("PlayerBubble", playerColor, 0, message);
+        CreateBubble("BotBubble", botColor, 1, "...");
         inputField.text = "";
     }
+
     void onValueChanged(string newText){
         // Get rid of newline character added when we press enter
         if (Input.GetKey(KeyCode.Return)){
@@ -46,20 +50,8 @@ public class ChatManager : MonoBehaviour
         }
     }
 
-    GameObject CreateBubble(string message, bool player, bool addToList=true, float width=-1f, float height=-1f)
+    GameObject CreateBubble(string bubbleName, Color bubbleColor, float leftPosition, string message, bool addToList=true, float width=-1f, float height=-1f)
     {
-        Color bubbleColor;
-        string bubbleName;
-        float leftPosition;
-        if (player){
-            bubbleName = "PlayerBubble";
-            bubbleColor = playerColor;
-            leftPosition = 0f;
-        }else{
-            bubbleName = "BotBubble";
-            bubbleColor = botColor;
-            leftPosition = 1f;
-        }
         // Create a new GameObject for the chat bubble
         GameObject newBubble = new GameObject(bubbleName, typeof(RectTransform), typeof(Image));
         newBubble.transform.SetParent(chatContainer);
@@ -102,7 +94,7 @@ public class ChatManager : MonoBehaviour
         string messageLines = message;
         for (int i = 0; i <= lineHeight-1; i++)
             messageLines += "\n";
-        GameObject newBubble = CreateBubble(messageLines, true, false, width);
+        GameObject newBubble = CreateBubble("InputBubble", playerColor, 0, messageLines, false, width);
         TMP_InputField inputField = newBubble.AddComponent<TMP_InputField>();
         Transform paddingObject = newBubble.transform.Find("paddingObject");
         Transform textObject = paddingObject.transform.Find("Text");
