@@ -4,6 +4,7 @@ using TMPro;
 using Unity.VisualScripting;
 using System.Collections.Generic;
 using System;
+using System.Text;
 using System.Net.WebSockets;
 
 public class ChatManager : MonoBehaviour
@@ -27,13 +28,20 @@ public class ChatManager : MonoBehaviour
     void onInputFieldSubmit(string newText){
         inputField.ActivateInputField();
         if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)){
-            inputField.text += "\n";
-            inputField.caretPosition = inputField.text.Length;
             return;
         }
-        CreateBubble(inputField.text, true);
+        // replace vertical_tab
+        string message = inputField.text.Replace("\v", "\n");
+        CreateBubble(message, true);
         CreateBubble("...", false);
         inputField.text = "";
+    }
+    void onValueChanged(string newText){
+        // Get rid of newline character added when we press enter
+        if (Input.GetKey(KeyCode.Return)){
+            if(inputField.text == "\n")
+                inputField.text = "";
+        }
     }
 
     GameObject CreateBubble(string message, bool player, bool addToList=true, float width=-1f, float height=-1f)
@@ -96,6 +104,7 @@ public class ChatManager : MonoBehaviour
         inputField.interactable = true;
         inputField.lineType = TMP_InputField.LineType.MultiLineSubmit;
         inputField.onSubmit.AddListener(onInputFieldSubmit);
+        inputField.onValueChanged.AddListener(onValueChanged);
         inputField.onFocusSelectAll = false;
         inputField.shouldHideMobileInput = false;
         inputField.textComponent = textObject.GetComponent<TextMeshProUGUI>();
