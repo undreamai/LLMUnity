@@ -11,12 +11,13 @@ public class ChatManager : MonoBehaviour
 {
     public Transform chatContainer;
     public Color playerColor = new Color32(81, 164, 81, 255);
-    public Color botColor = new Color32(29, 29, 73, 255);
+    public Color aiColor = new Color32(29, 29, 73, 255);
     public Color fontColor = Color.white;
     public TMP_FontAsset font;
     public int fontSize = 16;
+    public LLMClient llmClient;
     
-    private float padding = 10f;
+    public float padding = 10f;
     private float spacing = 10f;    
     private TMP_InputField inputField;
     private List<GameObject> chatBubbles = new List<GameObject>();
@@ -24,22 +25,28 @@ public class ChatManager : MonoBehaviour
     void Start()
     {
         font = TMP_Settings.defaultFontAsset;
-        inputField = CreateInputField("Message me", 600, 4);        
+        inputField = CreateInputField("Message me", 600, 4);
     }
 
     void onInputFieldSubmit(string newText){
         inputField.ActivateInputField();
-        if ( Input.GetKey(KeyCode.RightShift)){
-            Debug.Log("RightShift");
-        }
         if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)){
             return;
         }
         // replace vertical_tab
         string message = inputField.text.Replace("\v", "\n");
         CreateBubble("PlayerBubble", playerColor, 0, message);
-        CreateBubble("BotBubble", botColor, 1, "...");
+        GameObject aiBubble = CreateBubble("AIBubble", aiColor, 1, "...", true, 600);
+
+        BubbleTextSetter aiBubbleTextSetter = new BubbleTextSetter(this, aiBubble);
+        llmClient.Chat(message, aiBubbleTextSetter.SetText);
         inputField.text = "";
+    }
+    
+    public void ReactivateInputField(){
+        inputField.DeactivateInputField();
+        inputField.Select();
+        inputField.ActivateInputField();
     }
 
     void onValueChanged(string newText){
@@ -50,7 +57,7 @@ public class ChatManager : MonoBehaviour
         }
     }
 
-    GameObject CreateBubble(string bubbleName, Color bubbleColor, float leftPosition, string message, bool addToList=true, float width=-1f, float height=-1f)
+    public GameObject CreateBubble(string bubbleName, Color bubbleColor, float leftPosition, string message, bool addToList=true, float width=-1f, float height=-1f)
     {
         // Create a new GameObject for the chat bubble
         GameObject newBubble = new GameObject(bubbleName, typeof(RectTransform), typeof(Image));
@@ -165,5 +172,30 @@ public class ChatManager : MonoBehaviour
         if (inputField != null)
             y += inputField.GetComponent<RectTransform>().sizeDelta.y + spacing;
         bubbleRect.anchoredPosition = new Vector2(0f, y);
+    }
+}
+
+public class BubbleTextSetter {
+    ChatManager chatManager;
+    GameObject bubble;
+    TextMeshProUGUI textContent;
+    public BubbleTextSetter(ChatManager chatManager, GameObject bubble){
+        this.chatManager = chatManager;
+        this.bubble = bubble;
+    }
+
+    public void SetText(string text){
+        Transform paddingObject = bubble.transform.Find("paddingObject");
+        Transform textObject = paddingObject.transform.Find("Text");
+        textContent = textObject.GetComponent<TextMeshProUGUI>();
+
+        RectTransform bubbleRectTransform = bubble.GetComponent<RectTransform>();
+        textContent.text = text;
+        textContent.ForceMeshUpdate();
+        Vector2 messageSize = textContent.GetRenderedValues(false);
+        bubbleRectTransform.sizeDelta = new Vector2(messageSize.x + 2 * chatManager.padding, messageSize.y + 2 * chatManager.padding);
+        paddingObject.GetComponent<RectTransform>().sizeDelta = messageSize;
+        textObject.GetComponent<RectTransform>().sizeDelta = messageSize;
+        this.chatManager.ReactivateInputField();
     }
 }
