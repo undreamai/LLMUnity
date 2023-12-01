@@ -80,10 +80,16 @@ public class LLMClient : MonoBehaviour
         foreach (string responseElement in response.Split("\n\n")){
             string responseElementJson = "{" + responseElement.Replace("data: ","\"data\": ") + "}";
             var responseJson = JsonUtility.FromJson<ChatResultData>(responseElementJson);
-            if (responseJson.data.content != null){
-                answer += responseJson.data.content;
+            string answer_part = responseJson.data.content;
+            if (answer_part!= null){
+                if (answer == "")
+                    answer_part = answer_part.TrimStart();
+                // add here if something needs to be done with partial answer
+                answer += answer_part;
             }
         }
+        // add here if something needs to be done with the full answer
+        answer = answer.Trim();
         callback.Invoke(answer);
         AddQA(question, answer);
     }
