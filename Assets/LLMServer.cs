@@ -1,11 +1,12 @@
 using System.Diagnostics;
+using UnityEngine;
 using Debug = UnityEngine.Debug;
-public class LLMServer
+public class LLMServer : MonoBehaviour
 {
     private bool isServerStarted = false;
     private Process process;
 
-    public LLMServer()
+    void OnEnable()
     {
         StartLLMServer();
     }
@@ -49,7 +50,7 @@ public class LLMServer
         }
     }
 
-    public void Dispose()
+    public void OnDestroy()
     {
         StopProcess();
     }
