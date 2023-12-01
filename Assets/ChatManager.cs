@@ -21,6 +21,7 @@ public class ChatManager : MonoBehaviour
     private float spacing = 10f;    
     private TMP_InputField inputField;
     private List<GameObject> chatBubbles = new List<GameObject>();
+    private bool blockInput = false;
 
     void Start()
     {
@@ -30,9 +31,10 @@ public class ChatManager : MonoBehaviour
 
     void onInputFieldSubmit(string newText){
         inputField.ActivateInputField();
-        if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)){
+        if (blockInput || Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)){
             return;
         }
+        blockInput = true;
         // replace vertical_tab
         string message = inputField.text.Replace("\v", "\n");
         CreateBubble("PlayerBubble", playerColor, 0, message);
@@ -44,6 +46,7 @@ public class ChatManager : MonoBehaviour
     }
     
     public void ReactivateInputField(){
+        blockInput = false;
         inputField.DeactivateInputField();
         inputField.Select();
         inputField.ActivateInputField();
