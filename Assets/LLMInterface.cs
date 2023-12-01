@@ -36,13 +36,3 @@ public struct ChatResult
     public bool cache_prompt;
     public bool system_prompt;
 }
-[Serializable]
-public struct ChatResultData
-{
-    public ChatResult data;
-}
-[Serializable]
-public struct ChatResultDataList
-{
-    public List<ChatResultData> response;
-}

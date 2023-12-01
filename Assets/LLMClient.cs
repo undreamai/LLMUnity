@@ -16,7 +16,6 @@ public class LLMClient : MonoBehaviour
     public float top_p = 0.9f;
     public int n_predict = 256;
     public int n_keep = 30;
-    public bool stream = true;
 
     private string currentPrompt;
     private List<(string, string)> chat;
@@ -49,7 +48,7 @@ public class LLMClient : MonoBehaviour
         chatRequest.top_p = top_p;
         chatRequest.n_predict = n_predict;
         chatRequest.n_keep = n_keep;
-        chatRequest.stream = stream;
+        chatRequest.stream = false;
         if (seed != -1)
             chatRequest.seed = seed;
         chatRequest.stop = new List<string>{RoleString(player_name)};
@@ -68,21 +67,8 @@ public class LLMClient : MonoBehaviour
         string requestJson = JsonUtility.ToJson(GenerateRequest(question));
         string response = await PostRequest(requestJson);
         if (response == null) return;
-
-        string answer = "";
-        foreach (string responseElement in response.Split("\n\n")){
-            string responseElementJson = "{" + responseElement.Replace("data: ","\"data\": ") + "}";
-            var responseJson = JsonUtility.FromJson<ChatResultData>(responseElementJson);
-            string answer_part = responseJson.data.content;
-            if (answer_part!= null){
-                if (answer == "")
-                    answer_part = answer_part.TrimStart();
-                // add here if something needs to be done with partial answer
-                answer += answer_part;
-            }
-        }
-        // add here if something needs to be done with the full answer
-        answer = answer.Trim();
+        var responseJson = JsonUtility.FromJson<ChatResult>(response);
+        string answer = responseJson.content.Trim();
         callback.Invoke(answer);
         AddQA(question, answer);
     }
