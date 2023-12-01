@@ -11,8 +11,6 @@ public class ChatManager : MonoBehaviour
     public TMP_FontAsset font;
     public int fontSize = 16;
     public LLMClient llmClient;
-    public LLMServer llmServer;
-    
     public float padding = 10f;
     private float spacing = 10f;    
     private InputBubble inputBubble;

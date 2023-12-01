@@ -130,9 +130,8 @@ GameObject:
   - component: {fileID: 180020065}
   - component: {fileID: 180020066}
   - component: {fileID: 180020067}
-  - component: {fileID: 180020068}
   m_Layer: 5
-  m_Name: ChatManager
+  m_Name: Chat
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -176,7 +175,6 @@ MonoBehaviour:
   font: {fileID: 0}
   fontSize: 16
   llmClient: {fileID: 180020067}
-  llmServer: {fileID: 180020068}
   padding: 10
 --- !u!114 &180020067
 MonoBehaviour:
@@ -187,32 +185,28 @@ MonoBehaviour:
   m_GameObject: {fileID: 180020064}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0df1e50a41e7d6943bcd8ce1dca1a936, type: 3}
+  m_Script: {fileID: 11500000, guid: 123511e02eb8ea8ad945c3f0231c50fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _uri: localhost:13333/completion
+  host: localhost
+  port: 13333
   player_name: Human
   ai_name: Assistant
   prompt: A chat between a curious human and an artificial intelligence assistant.
     The assistant gives helpful, detailed, and polite answers to the human's questions.
+  seed: -1
   temperature: 0.2
   top_k: 40
   top_p: 0.9
   n_predict: 256
   n_keep: 30
   stream: 1
---- !u!114 &180020068
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 180020064}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 835ab2f50f6d1c00d83dbc111a0b27bf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  model: LLM/Models/llama-2-7b-chat.Q4_0.gguf
+  lora: 
+  contextSize: 512
+  batchSize: 1024
+  numGPULayers: 32
+  numThreads: 18
 --- !u!1 &507661347
 GameObject:
   m_ObjectHideFlags: 0

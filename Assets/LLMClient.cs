@@ -1,25 +1,16 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class Message 
-{
-    public string role;
-    public string content;
-    public Message(string r, string c) {
-        role = r;
-        content = c;
-    }
-}
-
 public class LLMClient : MonoBehaviour
 {
-    public string _uri = "localhost:13333/completion";
+    public string host = "localhost";
+    public int port = 13333;
     public string player_name = "Human";
     public string ai_name = "Assistant";
-    public string prompt = "";
+    public string prompt = "A chat between a curious human and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the human's questions.";
+    public int seed = -1;
     public float temperature = 0.2f;
     public int top_k = 40;
     public float top_p = 0.9f;
@@ -28,7 +19,7 @@ public class LLMClient : MonoBehaviour
     public bool stream = true;
 
     private string currentPrompt;
-    private  List<(string, string)> chat;
+    private List<(string, string)> chat;
     
     private List<(string, string)> requestHeaders;
     public delegate void CallbackDelegate(string message);
@@ -59,6 +50,8 @@ public class LLMClient : MonoBehaviour
         chatRequest.n_predict = n_predict;
         chatRequest.n_keep = n_keep;
         chatRequest.stream = stream;
+        if (seed != -1)
+            chatRequest.seed = seed;
         chatRequest.stop = new List<string>{RoleString(player_name)};
         return chatRequest;
     }
@@ -96,7 +89,7 @@ public class LLMClient : MonoBehaviour
 
     public async Task<string> PostRequest(string json)
     {
-        UnityWebRequest webRequest = new UnityWebRequest(_uri, "POST");
+        UnityWebRequest webRequest = new UnityWebRequest($"{host}:{port}/completion", "POST");
         if (requestHeaders != null){
             for (int i = 0; i < requestHeaders.Count; i++){
                 webRequest.SetRequestHeader(requestHeaders[i].Item1, requestHeaders[i].Item2);

@@ -12,6 +12,7 @@ public struct ChatRequest
     public int n_predict;
     public int n_keep;
     public bool stream;
+    public int seed;
     public List<string> stop;
 }
 [Serializable]
