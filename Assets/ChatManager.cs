@@ -38,7 +38,7 @@ public class ChatManager : MonoBehaviour
         // replace vertical_tab
         string message = inputField.text.Replace("\v", "\n");
         CreateBubble("PlayerBubble", playerColor, 0, message);
-        GameObject aiBubble = CreateBubble("AIBubble", aiColor, 1, "...", true, 600);
+        GameObject aiBubble = CreateBubble("AIBubble", aiColor, 1, "...");
 
         BubbleTextSetter aiBubbleTextSetter = new BubbleTextSetter(this, aiBubble);
         llmClient.Chat(message, aiBubbleTextSetter.SetText);
@@ -191,7 +191,9 @@ public class BubbleTextSetter {
         Transform paddingObject = bubble.transform.Find("paddingObject");
         Transform textObject = paddingObject.transform.Find("Text");
         textContent = textObject.GetComponent<TextMeshProUGUI>();
+        RectTransform textRectTransform = textObject.GetComponent<RectTransform>();
 
+        textRectTransform.sizeDelta = new Vector2(600, textRectTransform.sizeDelta.y);
         RectTransform bubbleRectTransform = bubble.GetComponent<RectTransform>();
         textContent.text = text;
         textContent.ForceMeshUpdate();
