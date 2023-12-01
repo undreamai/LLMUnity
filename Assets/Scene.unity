@@ -130,6 +130,7 @@ GameObject:
   - component: {fileID: 180020065}
   - component: {fileID: 180020066}
   - component: {fileID: 180020067}
+  - component: {fileID: 180020068}
   m_Layer: 5
   m_Name: ChatManager
   m_TagString: Untagged
@@ -175,6 +176,8 @@ MonoBehaviour:
   font: {fileID: 0}
   fontSize: 16
   llmClient: {fileID: 180020067}
+  llmServer: {fileID: 180020068}
+  padding: 10
 --- !u!114 &180020067
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -198,6 +201,18 @@ MonoBehaviour:
   n_predict: 256
   n_keep: 30
   stream: 1
+--- !u!114 &180020068
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 180020064}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 835ab2f50f6d1c00d83dbc111a0b27bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &507661347
 GameObject:
   m_ObjectHideFlags: 0
