@@ -11,6 +11,7 @@ public class ChatManager : MonoBehaviour
     public TMP_FontAsset font;
     public int fontSize = 16;
     public LLMClient llmClient;
+    public LLMServer llmServer;
     
     public float padding = 10f;
     private float spacing = 10f;    
@@ -20,6 +21,8 @@ public class ChatManager : MonoBehaviour
 
     void Start()
     {
+        llmServer = new LLMServer();
+        llmClient = new LLMClient();
         font = TMP_Settings.defaultFontAsset;
         inputBubble = new InputBubble(chatContainer, font, fontSize, fontColor, "InputBubble", playerColor, 0, 0, "Message me", 600, 4);
         inputBubble.AddSubmitListener(onInputFieldSubmit);
@@ -87,5 +90,8 @@ public class ChatManager : MonoBehaviour
             chatBubbles[i].Destroy();
         }
         chatBubbles.RemoveRange(0, lastBubbleOutsideFOV+1);
+    }
+    void OnDestroy() {
+        llmServer.StopProcess();
     }
 }
