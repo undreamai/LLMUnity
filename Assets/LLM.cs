@@ -1,14 +1,14 @@
 using System.Diagnostics;
-using UnityEngine;
 using Debug = UnityEngine.Debug;
+
 public class LLM : LLMClient
 {
-    public string model = "LLM/Models/llama-2-7b-chat.Q4_0.gguf";
-    public string lora;
-    public int contextSize = 512;
-    public int batchSize = 1024;
-    public int numGPULayers = 32;
-    public int numThreads = 18;
+    [HideAttribute("setupHide", "Server Settings")] public string model = "LLM/Models/llama-2-7b-chat.Q4_0.gguf";
+    [HideAttribute("setupHide")] public string lora;
+    [HideAttribute("setupHide")] public int contextSize = 512;
+    [HideAttribute("setupHide")] public int batchSize = 1024;
+    [HideAttribute("setupHide")] public int numGPULayers = 32;
+    [HideAttribute("setupHide")] public int numThreads = 18;
 
     private bool isServerStarted = false;
     private Process process;
