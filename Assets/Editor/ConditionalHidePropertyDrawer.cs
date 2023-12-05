@@ -16,8 +16,6 @@ public class ConditionalHidePropertyDrawer : PropertyDrawer
             if (condHAtt.Header != ""){
                 int addHeight = (int) EditorGUIUtility.singleLineHeight/2;
                 EditorGUILayout.Space(addHeight);
-                position.width = EditorGUIUtility.currentViewWidth;
-                position.x = 0;
                 position.y += addHeight;
                 string labelText = label.text;
                 EditorGUILayout.Space(EditorGUIUtility.singleLineHeight - 2);
