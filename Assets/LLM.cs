@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using Debug = UnityEngine.Debug;
 
 public class LLM : LLMClient
@@ -12,6 +13,21 @@ public class LLM : LLMClient
 
     private bool isServerStarted = false;
     private Process process;
+
+    public LLM() {
+        checkSetup();
+    }
+
+    public bool checkSetup(){
+        bool setupComplete = LLMUnitySetup.SetupComplete();
+        setupHide = ! setupComplete;
+        return setupComplete;
+    }
+
+    public void runSetup(){
+        LLMUnitySetup.Setup();
+        checkSetup();
+    }
 
     new void OnEnable()
     {

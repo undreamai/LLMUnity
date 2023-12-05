@@ -7,27 +7,32 @@ using Debug = UnityEngine.Debug;
 [InitializeOnLoad]
 public class LLMUnitySetup: MonoBehaviour
 {
-    private static bool setupComplete = false;
+    public static string buildPath = "LLM/llama.cpp";
+    public static string serverPath = buildPath + "/server";
+    private static bool setupStarted = false;
+
     public static void Setup()
     {
+        if (setupStarted) return;
+
+        setupStarted = true;
         Debug.Log("LLMUnity setup started...");
         // Define the GitHub repository URL
         string os = SystemInfo.operatingSystem.ToLower();
         string repoURL = "https://github.com/ggerganov/llama.cpp.git";
         string repoVersion = "b1607";
-        string localPath = "LLM/llama.cpp";
 
         // Use a separate thread for the Git clone and setup operation
         System.Threading.Thread cloneThread = new System.Threading.Thread(() =>
         {
             // Clone the GitHub repository locally
-            CloneRepository(repoURL, repoVersion, localPath);
+            CloneRepository(repoURL, repoVersion, buildPath);
 
             // Perform setup actions now that cloning is complete
-            SetupRepository(localPath, os);
+            SetupRepository(buildPath, os);
 
             // Set the flag to signal that the clone and setup are complete
-            setupComplete = true;
+            CheckSetup();
         });
 
         // Start the clone thread
@@ -67,6 +72,17 @@ public class LLMUnitySetup: MonoBehaviour
         RunProcess(command, commandArgs, "Setup llama.cpp");
     }
 
+    public static bool SetupComplete(){
+        return File.Exists(serverPath);
+    }
+
+    private static void CheckSetup(){
+        Debug.Log("LLMUnity setup " + (SetupComplete()? "complete": "failed") + "!");
+        // Unregister the update event
+        EditorApplication.update -= Update;
+        setupStarted = false;
+    }
+
     private static void RunProcess(string command, string commandArgs, string debugMessage){
         Debug.Log(debugMessage + "...");
         ProcessStartInfo processInfo = new ProcessStartInfo
@@ -92,16 +108,5 @@ public class LLMUnitySetup: MonoBehaviour
         Debug.LogError(errorOutput);
     }
 
-    private static void Update()
-    {
-        // Check if the clone and setup are complete
-        if (setupComplete)
-        {
-            Debug.Log("LLMUnity setup completed!");
-            // Unregister the update event
-            EditorApplication.update -= Update;
-
-            // Additional actions if needed
-        }
-    }
+    private static void Update(){}
 }
