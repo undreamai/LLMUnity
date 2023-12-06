@@ -21,7 +21,6 @@ public class LLM : LLMClient
         get { return model; }
         set { if (model != value){ model = value; SetupGUI();} }
     }
-    public string lora;
     [HideAttribute("setupHide")] public int contextSize = 512;
     [HideAttribute("setupHide")] public int batchSize = 1024;
     [HideAttribute("setupHide")] public int numGPULayers = 32;
@@ -37,8 +36,6 @@ public class LLM : LLMClient
 
     public void SetupGUI(){
         setupHide = (Server == "") || (Model == "");
-        Debug.Log((Server == ""));
-        Debug.Log((Model == ""));
     }
 
     public void RunSetup(){
@@ -62,8 +59,6 @@ public class LLM : LLMClient
     private void StartLLMServer()
     {
         string arguments = $"-m {model} -c {contextSize} -b {batchSize} --port {port} -t {numThreads} -ngl {numGPULayers}";
-        if (lora != null)
-            arguments += $"--lora {lora}";
         ProcessStartInfo startInfo = new ProcessStartInfo
         {
             FileName = "LLM/llama.cpp/server",
