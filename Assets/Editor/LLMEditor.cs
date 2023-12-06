@@ -1,6 +1,7 @@
-using System.IO;
+using System;
 using UnityEditor;
 using UnityEngine;
+using System.Reflection;
 
 [CustomEditor(typeof(LLM))]
 public class LLMEditor : Editor
@@ -10,8 +11,16 @@ public class LLMEditor : Editor
     public override void OnInspectorGUI()
     {        
         LLM llmScript = (LLM)target;
-        EditorGUI.BeginChangeCheck();
+        SerializedObject llmScriptSO = new SerializedObject(llmScript);
 
+        // Add script property
+        GUI.enabled = false;
+        var scriptProp = llmScriptSO.FindProperty("m_Script");
+        EditorGUILayout.PropertyField(scriptProp);
+        GUI.enabled = true;
+
+        // Add buttons
+        EditorGUI.BeginChangeCheck();
         EditorGUILayout.BeginHorizontal();
         GUI.enabled = !llmScript.SetupStarted();
         if (GUILayout.Button("Setup server", GUILayout.Width(buttonWidth)))
@@ -54,6 +63,30 @@ public class LLMEditor : Editor
         {
             Repaint();
         }
-        base.OnInspectorGUI();
+        
+        // Add properties from child class and then parent
+        foreach (Type type in new Type[]{typeof(LLM), typeof(LLMClient)}) {
+            SerializedProperty prop = llmScriptSO.GetIterator();
+            if (prop.NextVisible(true)) {
+                do {
+                    if (IsPropertyDeclaredInClass(prop, type))
+                        EditorGUILayout.PropertyField(prop);
+                }
+                while (prop.NextVisible(false));
+            }
+        }
+    }
+
+    private bool IsPropertyDeclaredInClass(SerializedProperty prop, System.Type targetClass)
+    {
+        FieldInfo field = prop.serializedObject.targetObject.GetType().GetField(prop.name,
+            BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+
+        if (field != null && field.DeclaringType == targetClass)
+        {
+            return true;
+        }
+
+        return false;
     }
 }
