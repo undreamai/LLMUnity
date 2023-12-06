@@ -3,13 +3,21 @@ using System.Diagnostics;
 using System.IO;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
+using System.Collections.Generic;
 
 [InitializeOnLoad]
 public class LLMUnitySetup: MonoBehaviour
 {
     public static string buildPath = "LLM/llama.cpp";
-    public static string serverPath = buildPath + "/server";
+    public static string serverPath;
+    private static List<UpdateServerPath> serverPathLinks = new List<UpdateServerPath>();
     private static bool setupStarted = false;
+
+    public delegate void UpdateServerPath(string message);
+    public static void AddServerPathLinks(UpdateServerPath link)
+    {
+        serverPathLinks.Add(link);
+    }
 
     public static void Setup()
     {
@@ -72,12 +80,21 @@ public class LLMUnitySetup: MonoBehaviour
         RunProcess(command, commandArgs, "Setup llama.cpp");
     }
 
-    public static bool SetupComplete(){
-        return File.Exists(serverPath);
+    public static bool SetupStarted(){
+        return setupStarted;
     }
 
     private static void CheckSetup(){
-        Debug.Log("LLMUnity setup " + (SetupComplete()? "complete": "failed") + "!");
+        string exePath = buildPath + "/server";
+        if (File.Exists(exePath)){
+            Debug.Log("LLMUnity setup complete!");
+            serverPath = exePath;
+            foreach (UpdateServerPath link in serverPathLinks){
+                link(serverPath);
+            }
+        } else {
+            Debug.Log("LLMUnity setup failed!");
+        }
         // Unregister the update event
         EditorApplication.update -= Update;
         setupStarted = false;

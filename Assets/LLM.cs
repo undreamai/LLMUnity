@@ -1,11 +1,27 @@
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using UnityEngine;
 using Debug = UnityEngine.Debug;
 
 public class LLM : LLMClient
 {
-    [HideAttribute("setupHide", "Server Settings")] public string model = "LLM/Models/llama-2-7b-chat.Q4_0.gguf";
-    [HideAttribute("setupHide")] public string lora;
+    // [HideAttribute("setupHide", "Server Settings")] 
+    [HeaderAttribute("Server Settings")]
+    [SerializeField]
+    private string server = "";
+    public string Server
+    {
+        get { return server; }
+        set { if (server != value){ server = value; SetupGUI();} }
+    }
+    [SerializeField]
+    private string model = "";
+    public string Model
+    {
+        get { return model; }
+        set { if (model != value){ model = value; SetupGUI();} }
+    }
+    public string lora;
     [HideAttribute("setupHide")] public int contextSize = 512;
     [HideAttribute("setupHide")] public int batchSize = 1024;
     [HideAttribute("setupHide")] public int numGPULayers = 32;
@@ -15,18 +31,26 @@ public class LLM : LLMClient
     private Process process;
 
     public LLM() {
-        checkSetup();
+        LLMUnitySetup.AddServerPathLinks(SetServer);
+        SetupGUI();
     }
 
-    public bool checkSetup(){
-        bool setupComplete = LLMUnitySetup.SetupComplete();
-        setupHide = ! setupComplete;
-        return setupComplete;
+    public void SetupGUI(){
+        setupHide = (Server == "") || (Model == "");
+        Debug.Log((Server == ""));
+        Debug.Log((Model == ""));
     }
 
-    public void runSetup(){
+    public void RunSetup(){
         LLMUnitySetup.Setup();
-        checkSetup();
+    }
+
+    public bool SetupStarted(){
+        return LLMUnitySetup.SetupStarted();
+    }
+
+    public void SetServer(string serverPath){
+        Server = serverPath;
     }
 
     new void OnEnable()
