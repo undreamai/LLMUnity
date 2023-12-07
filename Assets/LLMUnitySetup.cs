@@ -9,9 +9,6 @@ using System.Collections.Generic;
 [InitializeOnLoad]
 public class LLMUnitySetup: MonoBehaviour
 {
-    public static string buildPath = "LLM/llama.cpp";
-    public static string serverPath;
-
     public delegate void UpdatePath(string message);
     private static List<UpdatePath> serverPathLinks = new List<UpdatePath>();
     private static List<UpdatePath> modelPathLinks = new List<UpdatePath>();
@@ -26,8 +23,16 @@ public class LLMUnitySetup: MonoBehaviour
         modelPathLinks.Add(link);
     }
 
-    public static void Setup()
+    public static void Setup(string serverPath)
     {
+        if (File.Exists(serverPath)){
+            foreach (UpdatePath link in serverPathLinks){
+                link(serverPath);
+            }
+            Debug.Log("LLMUnity setup already completed!");
+            return;
+        }
+
         if (setupStarted) return;
 
         setupStarted = true;
@@ -36,6 +41,8 @@ public class LLMUnitySetup: MonoBehaviour
         string os = SystemInfo.operatingSystem.ToLower();
         string repoURL = "https://github.com/ggerganov/llama.cpp.git";
         string repoVersion = "b1607";
+        string exeName = "server";
+        string buildPath = "llama.cpp";
 
         // Use a separate thread for the Git clone and setup operation
         System.Threading.Thread cloneThread = new System.Threading.Thread(() =>
@@ -44,10 +51,10 @@ public class LLMUnitySetup: MonoBehaviour
             CloneRepository(repoURL, repoVersion, buildPath);
 
             // Perform setup actions now that cloning is complete
-            SetupRepository(buildPath, os);
+            SetupRepository(buildPath, exeName, os);
 
             // Set the flag to signal that the clone and setup are complete
-            CheckSetup();
+            CheckSetup(buildPath, exeName, serverPath);
         });
 
         // Start the clone thread
@@ -62,7 +69,6 @@ public class LLMUnitySetup: MonoBehaviour
 
     private static void CloneRepository(string repoURL, string repoVersion, string localPath)
     {
-        Directory.CreateDirectory(Path.GetDirectoryName(localPath));
         if (Directory.Exists(localPath))
         {
             Debug.Log("Repository already exists. Skipping cloning.");
@@ -71,9 +77,9 @@ public class LLMUnitySetup: MonoBehaviour
         RunProcess("git", $"clone -b {repoVersion} {repoURL} {localPath}", "Clone llama.cpp");
     }
 
-    private static void SetupRepository(string repoFolder, string os)
+    private static void SetupRepository(string repoFolder, string exeName, string os)
     {
-        string setupCommand = $"cd {repoFolder} && make -j 8";
+        string setupCommand = $"cd {repoFolder} && make -j 8 {exeName}";
         string command, commandArgs;
 
         if (os.Contains("win")){
@@ -84,25 +90,27 @@ public class LLMUnitySetup: MonoBehaviour
             command = "/bin/bash";
             commandArgs = $"-c \"{setupCommand}\"";
         }
-        RunProcess(command, commandArgs, "Setup llama.cpp");
+        RunProcess(command, commandArgs, "Build llama.cpp");
     }
 
     public static bool SetupStarted(){
         return setupStarted;
     }
 
-    private static void CheckSetup(){
-        string exePath = buildPath + "/server";
+    private static void CheckSetup(string buildPath, string exeName, string serverPath){
+        string exePath = buildPath + "/" + exeName;
         if (File.Exists(exePath)){
-            Debug.Log("LLMUnity setup complete!");
-            serverPath = exePath;
+            string saveDir = Path.GetDirectoryName(serverPath);
+            Directory.CreateDirectory(saveDir);
+            File.Copy(exePath, serverPath);
             foreach (UpdatePath link in serverPathLinks){
                 link(serverPath);
             }
+            Directory.Delete(buildPath, true);
+            Debug.Log("LLMUnity setup complete!");
         } else {
             Debug.Log("LLMUnity setup failed!");
         }
-        // Unregister the update event
         EditorApplication.update -= Update;
         setupStarted = false;
     }

@@ -19,7 +19,8 @@ public class LLM : LLMClient
     private bool isServerStarted = false;
     private Process process;
     private string modelUrl = "https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.1-GGUF/resolve/main/mistral-7b-instruct-v0.1.Q4_K_M.gguf?download=true";
-    private readonly string modelDir = "Assets/Models";
+    private readonly string defaultModelDir = "Assets/Models";
+    private readonly string defaultServerPath = "Assets/server";
 
     public LLM() {
         LLMUnitySetup.AddServerPathLinks(SetServer);
@@ -27,7 +28,7 @@ public class LLM : LLMClient
     }
 
     public void RunSetup(){
-        LLMUnitySetup.Setup();
+        LLMUnitySetup.Setup(defaultServerPath);
     }
 
     public bool SetupStarted(){
@@ -36,7 +37,7 @@ public class LLM : LLMClient
 
     public void DownloadModel(){
         string modelName = Path.GetFileName(modelUrl).Split("?")[0];
-        string modelPath = modelDir + '/' + modelName;
+        string modelPath = defaultModelDir + '/' + modelName;
         StartCoroutine(LLMUnitySetup.DownloadFile(modelUrl, modelPath));
     }
 
