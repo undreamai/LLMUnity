@@ -18,7 +18,9 @@ public class LLMEditor : Editor
         var scriptProp = llmScriptSO.FindProperty("m_Script");
         EditorGUILayout.PropertyField(scriptProp);
         GUI.enabled = true;
+        EditorGUILayout.Space((int)EditorGUIUtility.singleLineHeight / 2);
 
+        EditorGUILayout.LabelField("Server Settings", EditorStyles.boldLabel);
         // Add buttons
         EditorGUI.BeginChangeCheck();
         EditorGUILayout.BeginHorizontal();
@@ -57,36 +59,36 @@ public class LLMEditor : Editor
             };
         }
         EditorGUILayout.EndHorizontal();
-        EditorGUILayout.Space((int)EditorGUIUtility.singleLineHeight / 2);
         
         if (EditorGUI.EndChangeCheck())
         {
             Repaint();
         }
         
-        // Add properties from child class and then parent
-        foreach (Type type in new Type[]{typeof(LLM), typeof(LLMClient)}) {
-            SerializedProperty prop = llmScriptSO.GetIterator();
-            if (prop.NextVisible(true)) {
-                do {
-                    if (IsPropertyDeclaredInClass(prop, type))
-                        EditorGUILayout.PropertyField(prop);
-                }
-                while (prop.NextVisible(false));
-            }
-        }
+        ShowPropertiesOfClass(llmScriptSO, typeof(LLM));
+        EditorGUILayout.Space((int)EditorGUIUtility.singleLineHeight / 2);
+
+        EditorGUILayout.LabelField("Client Settings", EditorStyles.boldLabel);
+        ShowPropertiesOfClass(llmScriptSO, typeof(LLMClient));
     }
 
     private bool IsPropertyDeclaredInClass(SerializedProperty prop, System.Type targetClass)
     {
         FieldInfo field = prop.serializedObject.targetObject.GetType().GetField(prop.name,
             BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-
         if (field != null && field.DeclaringType == targetClass)
-        {
             return true;
-        }
-
         return false;
+    }
+
+    private void ShowPropertiesOfClass(SerializedObject so, System.Type targetClass){
+        SerializedProperty prop = so.GetIterator();
+        if (prop.NextVisible(true)) {
+            do {
+                if (IsPropertyDeclaredInClass(prop, targetClass))
+                    EditorGUILayout.PropertyField(prop);
+            }
+            while (prop.NextVisible(false));
+        }
     }
 }

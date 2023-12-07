@@ -5,19 +5,19 @@ using UnityEngine.Networking;
 
 public class LLMClient : MonoBehaviour
 {   
-    [HideInInspector] public bool setupHide = false;
+    [HideInInspector] public bool clientHide = false;
 
-    [HideAttribute("setupHide", "Client Settings")] public string host = "localhost";
-    [HideAttribute("setupHide")] public int port = 13333;
-    [HideAttribute("setupHide")] public string player_name = "Human";
-    [HideAttribute("setupHide")] public string ai_name = "Assistant";
-    [HideAttribute("setupHide")] public string prompt = "A chat between a curious human and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the human's questions.";
-    [HideAttribute("setupHide")] public int seed = -1;
-    [HideAttribute("setupHide")] public float temperature = 0.2f;
-    [HideAttribute("setupHide")] public int top_k = 40;
-    [HideAttribute("setupHide")] public float top_p = 0.9f;
-    [HideAttribute("setupHide")] public int n_predict = 256;
-    [HideAttribute("setupHide")] public int n_keep = 30;
+    [HideAttribute("clientHide")] public string host = "localhost";
+    [HideAttribute("clientHide")] public int port = 13333;
+    [HideAttribute("clientHide")] public string player_name = "Human";
+    [HideAttribute("clientHide")] public string ai_name = "Assistant";
+    [HideAttribute("clientHide")] public string prompt = "A chat between a curious human and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the human's questions.";
+    [HideAttribute("clientHide")] public int seed = -1;
+    [HideAttribute("clientHide")] public float temperature = 0.2f;
+    [HideAttribute("clientHide")] public int top_k = 40;
+    [HideAttribute("clientHide")] public float top_p = 0.9f;
+    [HideAttribute("clientHide")] public int n_predict = 256;
+    [HideAttribute("clientHide")] public int n_keep = 30;
 
     private string currentPrompt;
     private List<(string, string)> chat;

@@ -5,8 +5,9 @@ using Debug = UnityEngine.Debug;
 
 public class LLM : LLMClient
 {
-    // [HideAttribute("setupHide", "Server Settings")] 
-    [HeaderAttribute("Server Settings")]
+    [HideInInspector] public bool modelHide = true;
+    [HideInInspector] public bool serverHide = true;
+
     [SerializeField]
     private string server = "";
     public string Server
@@ -14,6 +15,8 @@ public class LLM : LLMClient
         get { return server; }
         set { if (server != value){ server = value; SetupGUI();} }
     }
+    [HideAttribute("serverHide")] public int numGPULayers = 32;
+    [HideAttribute("serverHide")] public int numThreads = 18;
     [SerializeField]
     private string model = "";
     public string Model
@@ -21,10 +24,8 @@ public class LLM : LLMClient
         get { return model; }
         set { if (model != value){ model = value; SetupGUI();} }
     }
-    [HideAttribute("setupHide")] public int contextSize = 512;
-    [HideAttribute("setupHide")] public int batchSize = 1024;
-    [HideAttribute("setupHide")] public int numGPULayers = 32;
-    [HideAttribute("setupHide")] public int numThreads = 18;
+    [HideAttribute("modelHide")] public int contextSize = 512;
+    [HideAttribute("modelHide")] public int batchSize = 1024;
 
     private bool isServerStarted = false;
     private Process process;
@@ -35,7 +36,9 @@ public class LLM : LLMClient
     }
 
     public void SetupGUI(){
-        setupHide = (Server == "") || (Model == "");
+        serverHide = Server == "";
+        modelHide = Model == "";
+        clientHide = serverHide || modelHide;
     }
 
     public void RunSetup(){
