@@ -55,7 +55,7 @@ public class LLMEditor : Editor
         EditorGUILayout.BeginHorizontal();
         if (GUILayout.Button("Download model", GUILayout.Width(buttonWidth)))
         {
-            Debug.Log("Download model");
+            llmScript.DownloadModel();
         }
         if (GUILayout.Button("Load model", GUILayout.Width(buttonWidth)))
         {

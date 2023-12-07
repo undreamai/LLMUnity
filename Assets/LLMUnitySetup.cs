@@ -2,6 +2,7 @@ using UnityEditor;
 using System.Diagnostics;
 using System.IO;
 using UnityEngine;
+using UnityEngine.Networking;
 using Debug = UnityEngine.Debug;
 using System.Collections.Generic;
 
@@ -10,13 +11,19 @@ public class LLMUnitySetup: MonoBehaviour
 {
     public static string buildPath = "LLM/llama.cpp";
     public static string serverPath;
-    private static List<UpdateServerPath> serverPathLinks = new List<UpdateServerPath>();
+
+    public delegate void UpdatePath(string message);
+    private static List<UpdatePath> serverPathLinks = new List<UpdatePath>();
+    private static List<UpdatePath> modelPathLinks = new List<UpdatePath>();
     private static bool setupStarted = false;
 
-    public delegate void UpdateServerPath(string message);
-    public static void AddServerPathLinks(UpdateServerPath link)
+    public static void AddServerPathLinks(UpdatePath link)
     {
         serverPathLinks.Add(link);
+    }
+    public static void AddModelPathLinks(UpdatePath link)
+    {
+        modelPathLinks.Add(link);
     }
 
     public static void Setup()
@@ -89,7 +96,7 @@ public class LLMUnitySetup: MonoBehaviour
         if (File.Exists(exePath)){
             Debug.Log("LLMUnity setup complete!");
             serverPath = exePath;
-            foreach (UpdateServerPath link in serverPathLinks){
+            foreach (UpdatePath link in serverPathLinks){
                 link(serverPath);
             }
         } else {
@@ -123,6 +130,37 @@ public class LLMUnitySetup: MonoBehaviour
         if(errorOutput.Contains("detached HEAD")) return;
         if(errorOutput.Trim() == "") return;
         Debug.LogError(errorOutput);
+    }
+
+    public static IEnumerator<UnityWebRequestAsyncOperation> DownloadFile(string fileUrl, string savePath)
+    {
+        if (File.Exists(savePath)){
+            foreach (UpdatePath link in modelPathLinks){
+                link(savePath);
+            }
+            Debug.Log("Model already exists at: " + savePath);
+        } else {
+            string saveDir = Path.GetDirectoryName(savePath);
+            if (!Directory.Exists(saveDir))
+                Directory.CreateDirectory(saveDir);
+            using (UnityWebRequest webRequest = UnityWebRequest.Get(fileUrl))
+            {
+                yield return webRequest.SendWebRequest();
+
+                if (webRequest.result == UnityWebRequest.Result.Success)
+                {
+                    File.WriteAllBytes(savePath, webRequest.downloadHandler.data);
+                    foreach (UpdatePath link in modelPathLinks){
+                        link(savePath);
+                    }
+                    Debug.Log("Model downloaded and saved at: " + savePath);
+                }
+                else
+                {
+                    Debug.LogError("Download failed: " + webRequest.error);
+                }
+            }
+        }
     }
 
     private static void Update(){}

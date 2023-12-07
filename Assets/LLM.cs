@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.IO;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
@@ -17,9 +18,12 @@ public class LLM : LLMClient
 
     private bool isServerStarted = false;
     private Process process;
+    private string modelUrl = "https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.1-GGUF/resolve/main/.gitattributes?download=true";
+    private readonly string modelDir = "Assets/Models";
 
     public LLM() {
         LLMUnitySetup.AddServerPathLinks(SetServer);
+        LLMUnitySetup.AddModelPathLinks(SetModel);
     }
 
     public void RunSetup(){
@@ -30,8 +34,17 @@ public class LLM : LLMClient
         return LLMUnitySetup.SetupStarted();
     }
 
+    public void DownloadModel(){
+        string modelName = Path.GetFileName(modelUrl).Split("?")[0];
+        string modelPath = modelDir + '/' + modelName;
+        StartCoroutine(LLMUnitySetup.DownloadFile(modelUrl, modelPath));
+    }
+
     public void SetServer(string serverPath){
         server = serverPath;
+    }
+    public void SetModel(string modelPath){
+        model = modelPath;
     }
 
     new void OnEnable()
