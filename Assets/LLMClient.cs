@@ -3,21 +3,26 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
 
+public class ClientAttribute : PropertyAttribute {}
+public class ServerAttribute : PropertyAttribute {}
+public class ModelAttribute : PropertyAttribute {}
+public class ChatAttribute : PropertyAttribute {}
+
 public class LLMClient : MonoBehaviour
 {   
-    [HideInInspector] public bool clientHide = false;
+    [ClientAttribute] public string host = "localhost";
+    [ServerAttribute] public int port = 13333;
 
-    [HideAttribute("clientHide")] public string host = "localhost";
-    [HideAttribute("clientHide")] public int port = 13333;
-    [HideAttribute("clientHide")] public string player_name = "Human";
-    [HideAttribute("clientHide")] public string ai_name = "Assistant";
-    [HideAttribute("clientHide")] public string prompt = "A chat between a curious human and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the human's questions.";
-    [HideAttribute("clientHide")] public int seed = -1;
-    [HideAttribute("clientHide")] public float temperature = 0.2f;
-    [HideAttribute("clientHide")] public int top_k = 40;
-    [HideAttribute("clientHide")] public float top_p = 0.9f;
-    [HideAttribute("clientHide")] public int n_predict = 256;
-    [HideAttribute("clientHide")] public int n_keep = 30;
+    [ChatAttribute] public string player_name = "Human";
+    [ChatAttribute] public string ai_name = "Assistant";
+    [ChatAttribute] public string prompt = "A chat between a curious human and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the human's questions.";
+    
+    [ModelAttribute] public string seed = "";
+    [ModelAttribute] public float temperature = 0.2f;
+    [ModelAttribute] public int top_k = 40;
+    [ModelAttribute] public float top_p = 0.9f;
+    [ModelAttribute] public int n_predict = 256;
+    [ModelAttribute] public int n_keep = 30;
 
     private string currentPrompt;
     private List<(string, string)> chat;
@@ -51,8 +56,9 @@ public class LLMClient : MonoBehaviour
         chatRequest.n_predict = n_predict;
         chatRequest.n_keep = n_keep;
         chatRequest.stream = false;
-        if (seed != -1)
-            chatRequest.seed = seed;
+        if (int.TryParse(seed, out int number)){
+            chatRequest.seed = number;
+        }
         chatRequest.stop = new List<string>{RoleString(player_name)};
         return chatRequest;
     }

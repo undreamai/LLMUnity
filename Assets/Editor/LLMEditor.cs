@@ -13,16 +13,18 @@ public class LLMEditor : Editor
         LLM llmScript = (LLM)target;
         SerializedObject llmScriptSO = new SerializedObject(llmScript);
 
-        // Add script property
+        // SCRIPT PROPERTY
         GUI.enabled = false;
         var scriptProp = llmScriptSO.FindProperty("m_Script");
         EditorGUILayout.PropertyField(scriptProp);
         GUI.enabled = true;
         EditorGUILayout.Space((int)EditorGUIUtility.singleLineHeight / 2);
 
+        EditorGUI.BeginChangeCheck();
+
+        // SERVER SETTINGS
         EditorGUILayout.LabelField("Server Settings", EditorStyles.boldLabel);
         // Add buttons
-        EditorGUI.BeginChangeCheck();
         EditorGUILayout.BeginHorizontal();
         GUI.enabled = !llmScript.SetupStarted();
         if (GUILayout.Button("Setup server", GUILayout.Width(buttonWidth)))
@@ -37,12 +39,19 @@ public class LLMEditor : Editor
                 string path = EditorUtility.OpenFilePanel("Select a llama.cpp server exe", "", "");
                 if (!string.IsNullOrEmpty(path))
                 {
-                    llmScript.Server = path;
+                    llmScript.server = path;
                 }
             };
         }
         EditorGUILayout.EndHorizontal();
+        if (llmScript.server != ""){
+            ShowPropertiesOfClass(llmScriptSO, typeof(LLM), typeof(ServerAttribute));
+            ShowPropertiesOfClass(llmScriptSO, typeof(LLMClient), typeof(ServerAttribute));
+        }
+        EditorGUILayout.Space(EditorGUIUtility.singleLineHeight);
 
+        // MODEL SETTINGS
+        EditorGUILayout.LabelField("Model Settings", EditorStyles.boldLabel);
         EditorGUILayout.BeginHorizontal();
         if (GUILayout.Button("Download model", GUILayout.Width(buttonWidth)))
         {
@@ -54,41 +63,62 @@ public class LLMEditor : Editor
                 string path = EditorUtility.OpenFilePanelWithFilters("Select a gguf model file", "", new string[] { "Model Files", "gguf" });
                 if (!string.IsNullOrEmpty(path))
                 {
-                    llmScript.Model = path;
+                    llmScript.model = path;
                 }
             };
         }
         EditorGUILayout.EndHorizontal();
-        
-        if (EditorGUI.EndChangeCheck())
-        {
-            Repaint();
+        if (llmScript.model != ""){
+            ShowPropertiesOfClass(llmScriptSO, typeof(LLM), typeof(ModelAttribute));
+            ShowPropertiesOfClass(llmScriptSO, typeof(LLMClient), typeof(ModelAttribute));
         }
-        
-        ShowPropertiesOfClass(llmScriptSO, typeof(LLM));
-        EditorGUILayout.Space((int)EditorGUIUtility.singleLineHeight / 2);
+        EditorGUILayout.Space(EditorGUIUtility.singleLineHeight);
 
-        EditorGUILayout.LabelField("Client Settings", EditorStyles.boldLabel);
-        ShowPropertiesOfClass(llmScriptSO, typeof(LLMClient));
+        // CLIENT SETTINGS
+        if (llmScript.server != "" && llmScript.model != ""){
+            EditorGUILayout.LabelField("Chat Settings", EditorStyles.boldLabel);
+            ShowPropertiesOfClass(llmScriptSO, typeof(LLMClient), typeof(ChatAttribute));
+        }
+
+        EditorGUI.EndChangeCheck();
+        if (EditorGUI.EndChangeCheck())
+            Repaint();
     }
 
-    private bool IsPropertyDeclaredInClass(SerializedProperty prop, System.Type targetClass)
-    {
-        FieldInfo field = prop.serializedObject.targetObject.GetType().GetField(prop.name,
-            BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-        if (field != null && field.DeclaringType == targetClass)
-            return true;
-        return false;
-    }
-
-    private void ShowPropertiesOfClass(SerializedObject so, System.Type targetClass){
+    private void ShowPropertiesOfClass(SerializedObject so, System.Type targetClass, System.Type attributeClass = null){
         SerializedProperty prop = so.GetIterator();
         if (prop.NextVisible(true)) {
             do {
-                if (IsPropertyDeclaredInClass(prop, targetClass))
+                if (PropertyInClass(prop, targetClass, attributeClass))
                     EditorGUILayout.PropertyField(prop);
             }
             while (prop.NextVisible(false));
         }
     }
+
+    private bool PropertyInClass(SerializedProperty prop, System.Type targetClass, System.Type attributeClass = null)
+    {
+        FieldInfo field = prop.serializedObject.targetObject.GetType().GetField(prop.name,
+            BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+        return field != null && field.DeclaringType == targetClass && (attributeClass == null || AttributeInProperty(prop, attributeClass));
+    }
+
+    private bool AttributeInProperty(SerializedProperty prop, System.Type attributeClass)
+    {
+        foreach (var pathSegment in prop.propertyPath.Split('.')){
+            var targetType = prop.serializedObject.targetObject.GetType();
+            while (targetType != null){
+                var fieldInfo = targetType.GetField(pathSegment, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                if (fieldInfo != null){
+                    foreach (Attribute attr in fieldInfo.GetCustomAttributes(attributeClass, true)){
+                        if (attr.GetType() == attributeClass)
+                            return true;
+                    }
+                }
+                targetType = targetType.BaseType;
+            }
+        }
+        return false;
+    }
+
 }

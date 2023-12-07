@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
@@ -8,37 +7,19 @@ public class LLM : LLMClient
     [HideInInspector] public bool modelHide = true;
     [HideInInspector] public bool serverHide = true;
 
-    [SerializeField]
-    private string server = "";
-    public string Server
-    {
-        get { return server; }
-        set { if (server != value){ server = value; SetupGUI();} }
-    }
-    [HideAttribute("serverHide")] public int numGPULayers = 32;
-    [HideAttribute("serverHide")] public int numThreads = 18;
-    [SerializeField]
-    private string model = "";
-    public string Model
-    {
-        get { return model; }
-        set { if (model != value){ model = value; SetupGUI();} }
-    }
-    [HideAttribute("modelHide")] public int contextSize = 512;
-    [HideAttribute("modelHide")] public int batchSize = 1024;
+    [ServerAttribute] public string server = "";
+    [ServerAttribute] public int numGPULayers = 32;
+    [ServerAttribute] public int numThreads = 18;
+
+    [ModelAttribute] public string model = "";
+    [ModelAttribute] public int contextSize = 512;
+    [ModelAttribute] public int batchSize = 1024;
 
     private bool isServerStarted = false;
     private Process process;
 
     public LLM() {
         LLMUnitySetup.AddServerPathLinks(SetServer);
-        SetupGUI();
-    }
-
-    public void SetupGUI(){
-        serverHide = Server == "";
-        modelHide = Model == "";
-        clientHide = serverHide || modelHide;
     }
 
     public void RunSetup(){
@@ -50,7 +31,7 @@ public class LLM : LLMClient
     }
 
     public void SetServer(string serverPath){
-        Server = serverPath;
+        server = serverPath;
     }
 
     new void OnEnable()
@@ -61,10 +42,16 @@ public class LLM : LLMClient
 
     private void StartLLMServer()
     {
+        if (server == "" || model == ""){
+            if (server == "") Debug.LogError("No server executable provided!");
+            if (model == "") Debug.LogError("No model provided!");
+            return;
+        }
+
         string arguments = $"-m {model} -c {contextSize} -b {batchSize} --port {port} -t {numThreads} -ngl {numGPULayers}";
         ProcessStartInfo startInfo = new ProcessStartInfo
         {
-            FileName = "LLM/llama.cpp/server",
+            FileName = server,
             Arguments = arguments,
             UseShellExecute = false,
             CreateNoWindow = true,
@@ -73,9 +60,7 @@ public class LLM : LLMClient
         };
 
         process = new Process { StartInfo = startInfo };
-
         process.OutputDataReceived += (sender, e) => { HandleOutput(e.Data); };
-        
         process.Start();
         process.BeginOutputReadLine();
 
