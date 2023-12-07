@@ -129,9 +129,8 @@ GameObject:
   m_Component:
   - component: {fileID: 180020065}
   - component: {fileID: 180020066}
-  - component: {fileID: 180020067}
   m_Layer: 5
-  m_Name: Chat
+  m_Name: ChatManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -174,39 +173,8 @@ MonoBehaviour:
   fontColor: {r: 1, g: 1, b: 1, a: 1}
   font: {fileID: 0}
   fontSize: 16
-  llmClient: {fileID: 180020067}
+  llmClient: {fileID: 817827754}
   padding: 10
---- !u!114 &180020067
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 180020064}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 123511e02eb8ea8ad945c3f0231c50fb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  host: localhost
-  port: 13333
-  player_name: Human
-  ai_name: Assistant
-  prompt: A chat between a curious human and an artificial intelligence assistant.
-    The assistant gives helpful, detailed, and polite answers to the human's questions.
-  seed: -1
-  temperature: 0.2
-  top_k: 40
-  top_p: 0.9
-  n_predict: 256
-  n_keep: 30
-  stream: 1
-  model: LLM/Models/llama-2-7b-chat.Q4_0.gguf
-  lora: 
-  contextSize: 512
-  batchSize: 1024
-  numGPULayers: 32
-  numThreads: 18
 --- !u!1 &507661347
 GameObject:
   m_ObjectHideFlags: 0
@@ -345,6 +313,71 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &817827753
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 817827755}
+  - component: {fileID: 817827754}
+  m_Layer: 0
+  m_Name: LLM
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &817827754
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 817827753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 123511e02eb8ea8ad945c3f0231c50fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clientHide: 1
+  host: localhost
+  port: 13333
+  player_name: Human
+  ai_name: Assistant
+  prompt: A chat between a curious human and an artificial intelligence assistant.
+    The assistant gives helpful, detailed, and polite answers to the human's questions.
+  seed: -1
+  temperature: 0.2
+  top_k: 40
+  top_p: 0.9
+  n_predict: 256
+  n_keep: 30
+  modelHide: 1
+  serverHide: 1
+  server: 
+  numGPULayers: 32
+  numThreads: 18
+  model: 
+  contextSize: 512
+  batchSize: 1024
+--- !u!4 &817827755
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 817827753}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 666.02924, y: 345.55203, z: -1.3768913}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -696,5 +729,6 @@ SceneRoots:
   - {fileID: 2011827140}
   - {fileID: 1082174422}
   - {fileID: 1833883736}
-  - {fileID: 180020065}
   - {fileID: 771101144}
+  - {fileID: 180020065}
+  - {fileID: 817827755}
