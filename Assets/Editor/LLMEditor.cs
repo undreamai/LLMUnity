@@ -53,10 +53,12 @@ public class LLMEditor : Editor
         // MODEL SETTINGS
         EditorGUILayout.LabelField("Model Settings", EditorStyles.boldLabel);
         EditorGUILayout.BeginHorizontal();
+        GUI.enabled = !llmScript.ModelDownloading();
         if (GUILayout.Button("Download model", GUILayout.Width(buttonWidth)))
         {
             llmScript.DownloadModel();
         }
+        GUI.enabled = true;
         if (GUILayout.Button("Load model", GUILayout.Width(buttonWidth)))
         {
             EditorApplication.delayCall += () => {

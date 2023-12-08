@@ -13,6 +13,7 @@ public class LLMUnitySetup: MonoBehaviour
     private static List<UpdatePath> serverPathLinks = new List<UpdatePath>();
     private static List<UpdatePath> modelPathLinks = new List<UpdatePath>();
     private static bool setupStarted = false;
+    private static bool modelDownloading = false;
 
     public static void AddServerPathLinks(UpdatePath link)
     {
@@ -142,33 +143,40 @@ public class LLMUnitySetup: MonoBehaviour
 
     public static IEnumerator<UnityWebRequestAsyncOperation> DownloadFile(string fileUrl, string savePath)
     {
-        if (File.Exists(savePath)){
-            foreach (UpdatePath link in modelPathLinks){
-                link(savePath);
-            }
-            Debug.Log("Model already exists at: " + savePath);
-        } else {
-            string saveDir = Path.GetDirectoryName(savePath);
-            if (!Directory.Exists(saveDir))
-                Directory.CreateDirectory(saveDir);
-            using (UnityWebRequest webRequest = UnityWebRequest.Get(fileUrl))
-            {
-                yield return webRequest.SendWebRequest();
-
-                if (webRequest.result == UnityWebRequest.Result.Success)
-                {
-                    File.WriteAllBytes(savePath, webRequest.downloadHandler.data);
-                    foreach (UpdatePath link in modelPathLinks){
-                        link(savePath);
-                    }
-                    Debug.Log("Model downloaded and saved at: " + savePath);
+        if (!modelDownloading){
+            if (File.Exists(savePath)){
+                foreach (UpdatePath link in modelPathLinks){
+                    link(savePath);
                 }
-                else
+                Debug.Log("Model already exists at: " + savePath);
+            } else {
+                Debug.Log("Downloading model from: " + fileUrl);
+                string saveDir = Path.GetDirectoryName(savePath);
+                Directory.CreateDirectory(saveDir);
+                using (UnityWebRequest webRequest = UnityWebRequest.Get(fileUrl))
                 {
-                    Debug.LogError("Download failed: " + webRequest.error);
+                    modelDownloading = true;
+                    yield return webRequest.SendWebRequest();
+
+                    if (webRequest.result == UnityWebRequest.Result.Success)
+                    {
+                        File.WriteAllBytes(savePath, webRequest.downloadHandler.data);
+                        foreach (UpdatePath link in modelPathLinks){
+                            link(savePath);
+                        }
+                        Debug.Log("Model downloaded and saved at: " + savePath);
+                    }
+                    else
+                    {
+                        Debug.LogError("Download failed: " + webRequest.error);
+                    }
+                    modelDownloading = false;
                 }
             }
         }
+    }
+    public static bool ModelDownloading(){
+        return modelDownloading;
     }
 
     private static void Update(){}

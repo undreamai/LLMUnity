@@ -16,11 +16,11 @@ public class LLM : LLMClient
     [ModelAttribute] public int contextSize = 512;
     [ModelAttribute] public int batchSize = 1024;
 
+    [HideInInspector] public string modelUrl = "https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.1-GGUF/resolve/main/mistral-7b-instruct-v0.1.Q4_K_M.gguf?download=true";
+    [HideInInspector] public string defaultModelDir = "Assets/Models";
+    [HideInInspector] public string defaultServerPath = "Assets/server";
     private bool isServerStarted = false;
     private Process process;
-    private string modelUrl = "https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.1-GGUF/resolve/main/mistral-7b-instruct-v0.1.Q4_K_M.gguf?download=true";
-    private readonly string defaultModelDir = "Assets/Models";
-    private readonly string defaultServerPath = "Assets/server";
 
     public LLM() {
         LLMUnitySetup.AddServerPathLinks(SetServer);
@@ -39,6 +39,10 @@ public class LLM : LLMClient
         string modelName = Path.GetFileName(modelUrl).Split("?")[0];
         string modelPath = defaultModelDir + '/' + modelName;
         StartCoroutine(LLMUnitySetup.DownloadFile(modelUrl, modelPath));
+    }
+
+    public bool ModelDownloading(){
+        return LLMUnitySetup.ModelDownloading();
     }
 
     public void SetServer(string serverPath){

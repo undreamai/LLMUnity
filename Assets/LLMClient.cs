@@ -13,16 +13,16 @@ public class LLMClient : MonoBehaviour
     [ClientAttribute] public string host = "localhost";
     [ServerAttribute] public int port = 13333;
 
-    [ChatAttribute] public string player_name = "Human";
-    [ChatAttribute] public string ai_name = "Assistant";
+    [ChatAttribute] public string playerName = "Human";
+    [ChatAttribute] public string AIName = "Assistant";
     [ChatAttribute] public string prompt = "A chat between a curious human and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the human's questions.";
     
     [ModelAttribute] public string seed = "";
     [ModelAttribute] public float temperature = 0.2f;
-    [ModelAttribute] public int top_k = 40;
-    [ModelAttribute] public float top_p = 0.9f;
-    [ModelAttribute] public int n_predict = 256;
-    [ModelAttribute] public int n_keep = 30;
+    [ModelAttribute] public int topK = 40;
+    [ModelAttribute] public float topP = 0.9f;
+    [ModelAttribute] public int nPredict = 256;
+    [ModelAttribute] public int nKeep = 30;
 
     private string currentPrompt;
     private List<(string, string)> chat;
@@ -49,22 +49,22 @@ public class LLMClient : MonoBehaviour
 
     public ChatRequest GenerateRequest(string message){        
         ChatRequest chatRequest = new ChatRequest();
-        chatRequest.prompt = currentPrompt + RoleMessageString(player_name, message) + RoleString(ai_name);
+        chatRequest.prompt = currentPrompt + RoleMessageString(playerName, message) + RoleString(AIName);
         chatRequest.temperature = temperature;
-        chatRequest.top_k = top_k;
-        chatRequest.top_p = top_p;
-        chatRequest.n_predict = n_predict;
-        chatRequest.n_keep = n_keep;
+        chatRequest.top_k = topK;
+        chatRequest.top_p = topP;
+        chatRequest.n_predict = nPredict;
+        chatRequest.n_keep = nKeep;
         chatRequest.stream = false;
         if (int.TryParse(seed, out int number)){
             chatRequest.seed = number;
         }
-        chatRequest.stop = new List<string>{RoleString(player_name)};
+        chatRequest.stop = new List<string>{RoleString(playerName)};
         return chatRequest;
     }
 
     private void AddQA(string question, string answer){
-        foreach ((string role, string message) in new[] { (player_name, question), (ai_name, answer) })
+        foreach ((string role, string message) in new[] { (playerName, question), (AIName, answer) })
         {
             chat.Add((role, message));
             currentPrompt += RoleMessageString(role, message);
