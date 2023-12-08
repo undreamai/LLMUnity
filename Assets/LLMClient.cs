@@ -30,6 +30,7 @@ public class LLMClient : MonoBehaviour
     
     private List<(string, string)> requestHeaders;
     public delegate void ChatCallback(string message);
+    public delegate T2 ContentCallback<T, T2>(T message);
     public delegate void TokenizeCallback(List<int> tokens);
 
     public LLMClient()
@@ -82,40 +83,49 @@ public class LLMClient : MonoBehaviour
         }
     }
 
-    public async Task<LLMResult<Res>> CallPostRequest<Req, Res>(Req request, string endpoint)
+    public async Task<Ret> CallPostRequest<Req, Res, Ret>(ContentCallback<Res, Ret> getContent, Req request, string endpoint)
     {
         string requestJson = JsonUtility.ToJson(request);
         string response = await PostRequest(requestJson, endpoint);
-        if (response == null) return LLMResult<Res>.Failure();
-        return LLMResult<Res>.Success(JsonUtility.FromJson<Res>(response));
+        if (response == null) return default;
+        return getContent(JsonUtility.FromJson<Res>(response));
+    }
+
+    public string ChatContent(ChatResult result){
+        return result.content.Trim();
+    }
+
+    public string ChatOpenAIContent(ChatOpenAIResult result){
+        return result.choices[0].message.content;
+    }
+
+    public List<int> TokenizeContent(TokenizeResult result){
+        return result.tokens;
     }
 
     public async Task Chat(string question, ChatCallback callback)
     {
-        LLMResult<ChatResult> result = await CallPostRequest<ChatRequest, ChatResult>(GenerateRequest(question), "completion");
-        if (!result.success) return;
-        string answer = result.value.content.Trim();
-        callback.Invoke(answer);
-        AddQA(question, answer);
+        string result = await CallPostRequest<ChatRequest, ChatResult, string>(ChatContent, GenerateRequest(question), "completion");
+        if (result == null) return;
+        callback.Invoke(result);
+        AddQA(question, result);
     }
 
     public async Task ChatOpenAI(string question, ChatCallback callback)
     {
         chat.Add(new ChatMessage{role="user", content=question});
-        LLMResult<ChatOpenAIResult> result = await CallPostRequest<ChatRequest, ChatOpenAIResult>(GenerateRequest(question, true), "v1/chat/completions");
-        if (!result.success) return;
-        string answer = result.value.choices[0].message.content;
-        callback.Invoke(answer);
-        chat.Add(new ChatMessage{role="assistant", content=answer});
+        string result = await CallPostRequest<ChatRequest, ChatOpenAIResult, string>(ChatOpenAIContent, GenerateRequest(question, true), "v1/chat/completions");
+        if (result == null) return;
+        callback.Invoke(result);
+        chat.Add(new ChatMessage{role="assistant", content=result});
     }
 
     public async Task Tokenize(string question, TokenizeCallback callback)
     {
         TokenizeRequest tokenizeRequest = new TokenizeRequest();
         tokenizeRequest.content = question;
-        LLMResult<TokenizeResult> result = await CallPostRequest<TokenizeRequest, TokenizeResult>(tokenizeRequest, "tokenize");
-        if (!result.success) return;
-        callback.Invoke(result.value.tokens);
+        List<int> result = await CallPostRequest<TokenizeRequest, TokenizeResult, List<int>>(TokenizeContent, tokenizeRequest, "tokenize");
+        callback.Invoke(result);
     }
 
     private void SetNKeep(List<int> tokens){
