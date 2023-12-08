@@ -74,12 +74,12 @@ public class ChatManager : MonoBehaviour
             Bubble bubble = chatBubbles[i];
             RectTransform childRect = bubble.GetRectTransform();
             childRect.position = new Vector2(childRect.position.x, y);
-            y += childRect.sizeDelta.y + spacing;
 
             // last bubble outside the container
             if (y > containerHeight && lastBubbleOutsideFOV == -1){
                 lastBubbleOutsideFOV = i;
             }
+            y += childRect.sizeDelta.y + spacing;
         }
         // destroy bubbles outside the container
         for (int i = 0; i <= lastBubbleOutsideFOV; i++) {
