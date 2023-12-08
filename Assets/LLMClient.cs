@@ -64,7 +64,7 @@ public class LLMClient : MonoBehaviour
         if (int.TryParse(seed, out int number)){
             chatRequest.seed = number;
         }
-        chatRequest.stop = new List<string>{RoleString(playerName)};
+        chatRequest.stop = new List<string>{RoleString(playerName), playerName + ":"};
         return chatRequest;
     }
 
