@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 public class ChatManager : MonoBehaviour
 {
@@ -45,7 +46,7 @@ public class ChatManager : MonoBehaviour
         UpdateBubblePositions();
 
         BubbleTextSetter aiBubbleTextSetter = new BubbleTextSetter(this, aiBubble);
-        llmClient.Chat(message, aiBubbleTextSetter.SetText);
+        Task chatTask = llmClient.Chat(message, aiBubbleTextSetter.SetText);
 
         inputBubble.SetText("");
     }
