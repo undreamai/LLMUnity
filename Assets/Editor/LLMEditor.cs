@@ -8,6 +8,14 @@ public class LLMEditor : Editor
 {
     private int buttonWidth = 150;
 
+    public void OnEnable()
+    {
+        LLM llmScript = (LLM)target;
+        if (llmScript.numThreads == -1){
+            llmScript.numThreads = SystemInfo.processorCount;
+        }
+    }
+
     public override void OnInspectorGUI()
     {        
         LLM llmScript = (LLM)target;
