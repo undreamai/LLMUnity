@@ -13,6 +13,7 @@ public struct ChatRequest
     public int n_keep;
     public bool stream;
     public int seed;
+    public bool cache_prompt;
     public List<string> stop;
 }
 [Serializable]

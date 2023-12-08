@@ -22,7 +22,7 @@ public class LLMClient : MonoBehaviour
     [ModelAttribute] public int topK = 40;
     [ModelAttribute] public float topP = 0.9f;
     [ModelAttribute] public int nPredict = 256;
-    [ModelAttribute] public int nKeep = 30;
+    [ModelAttribute] public int nKeep = -1;
 
     private string currentPrompt;
     private List<(string, string)> chat;
@@ -56,6 +56,7 @@ public class LLMClient : MonoBehaviour
         chatRequest.n_predict = nPredict;
         chatRequest.n_keep = nKeep;
         chatRequest.stream = false;
+        chatRequest.cache_prompt = true;
         if (int.TryParse(seed, out int number)){
             chatRequest.seed = number;
         }
