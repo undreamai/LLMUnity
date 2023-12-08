@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -22,13 +23,14 @@ public class LLMClient : MonoBehaviour
     [ModelAttribute] public int topK = 40;
     [ModelAttribute] public float topP = 0.9f;
     [ModelAttribute] public int nPredict = 256;
-    [ModelAttribute] public int nKeep = -1;
+    private int nKeep = -1;
 
     private string currentPrompt;
     private List<(string, string)> chat;
     
     private List<(string, string)> requestHeaders;
-    public delegate void CallbackDelegate(string message);
+    public delegate void ChatCallback(string message);
+    public delegate void TokenizeCallback(List<int> tokens);
 
     public LLMClient()
     {
@@ -36,13 +38,15 @@ public class LLMClient : MonoBehaviour
         chat = new List<(string, string)>();
     }
 
-    public void OnEnable(){
+    public async void OnEnable(){
         currentPrompt = prompt;
+        await Tokenize(prompt, SetNKeep);
     }
 
     private string RoleString(string role){
         return "\n### "+role+":";
     }
+
     private string RoleMessageString(string role, string message){
         return RoleString(role) + " " + message;
     }
@@ -71,20 +75,40 @@ public class LLMClient : MonoBehaviour
             currentPrompt += RoleMessageString(role, message);
         }
     }
-    public async void Chat(string question, CallbackDelegate callback)
+
+    public async Task<LLMResult<Res>> CallPostRequest<Req, Res>(Req request, string endpoint)
     {
-        string requestJson = JsonUtility.ToJson(GenerateRequest(question));
-        string response = await PostRequest(requestJson);
-        if (response == null) return;
-        var responseJson = JsonUtility.FromJson<ChatResult>(response);
-        string answer = responseJson.content.Trim();
+        string requestJson = JsonUtility.ToJson(request);
+        string response = await PostRequest(requestJson, endpoint);
+        if (response == null) return LLMResult<Res>.Failure();
+        return LLMResult<Res>.Success(JsonUtility.FromJson<Res>(response));
+    }
+
+    public async Task Chat(string question, ChatCallback callback)
+    {
+        LLMResult<ChatResult> result = await CallPostRequest<ChatRequest, ChatResult>(GenerateRequest(question), "completion");
+        if (!result.success) return;
+        string answer = result.value.content.Trim();
         callback.Invoke(answer);
         AddQA(question, answer);
     }
 
-    public async Task<string> PostRequest(string json)
+    public async Task Tokenize(string question, TokenizeCallback callback)
     {
-        UnityWebRequest webRequest = new UnityWebRequest($"{host}:{port}/completion", "POST");
+        TokenizeRequest tokenizeRequest = new TokenizeRequest();
+        tokenizeRequest.content = question;
+        LLMResult<TokenizeResult> result = await CallPostRequest<TokenizeRequest, TokenizeResult>(tokenizeRequest, "tokenize");
+        if (!result.success) return;
+        callback.Invoke(result.value.tokens);
+    }
+
+    private void SetNKeep(List<int> tokens){
+        nKeep = tokens.Count;
+    }
+
+    public async Task<string> PostRequest(string json, string endpoint)
+    {
+        UnityWebRequest webRequest = new UnityWebRequest($"{host}:{port}/{endpoint}", "POST");
         if (requestHeaders != null){
             for (int i = 0; i < requestHeaders.Count; i++){
                 webRequest.SetRequestHeader(requestHeaders[i].Item1, requestHeaders[i].Item2);

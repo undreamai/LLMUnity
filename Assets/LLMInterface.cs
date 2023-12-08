@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-
+using UnityEngine.UIElements;
 
 [Serializable]
 public struct ChatRequest
@@ -16,6 +16,7 @@ public struct ChatRequest
     public bool cache_prompt;
     public List<string> stop;
 }
+
 [Serializable]
 public struct ChatResult
 {
@@ -36,4 +37,38 @@ public struct ChatResult
     public bool truncated;
     public bool cache_prompt;
     public bool system_prompt;
+}
+
+[Serializable]
+public struct TokenizeRequest
+{
+    public string content;
+}
+
+[Serializable]
+public struct TokenizeResult
+{
+    public List<int> tokens;
+}
+
+public struct LLMResult<T>
+{
+    public T value;
+    public bool success;
+
+    private LLMResult(T _value, bool _success)
+    {
+        this.value = _value;
+        this.success = _success;
+    }
+
+    public static LLMResult<T> Success(T value)
+    {
+        return new LLMResult<T>(value, true);
+    }
+
+    public static LLMResult<T> Failure()
+    {
+        return new LLMResult<T>(default, false);
+    }
 }
