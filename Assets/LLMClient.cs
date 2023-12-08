@@ -13,6 +13,7 @@ public class LLMClient : MonoBehaviour
 {   
     [ClientAttribute] public string host = "localhost";
     [ServerAttribute] public int port = 13333;
+    [ServerAttribute] public bool stream = true;
 
     [ChatAttribute] public string playerName = "Human";
     [ChatAttribute] public string AIName = "Assistant";
@@ -65,7 +66,7 @@ public class LLMClient : MonoBehaviour
         chatRequest.top_p = topP;
         chatRequest.n_predict = nPredict;
         chatRequest.n_keep = nKeep;
-        chatRequest.stream = false;
+        chatRequest.stream = stream;
         chatRequest.cache_prompt = true;
         if (int.TryParse(seed, out int number)){
             chatRequest.seed = number;
@@ -83,7 +84,11 @@ public class LLMClient : MonoBehaviour
     }
 
     public string ChatContent(ChatResult result){
-        return result.content.Trim();
+        return result.content;
+    }
+
+    public string ChatContentTrim(ChatResult result){
+        return ChatContent(result).Trim();
     }
 
     public string ChatOpenAIContent(ChatOpenAIResult result){
@@ -97,7 +102,9 @@ public class LLMClient : MonoBehaviour
     public async Task Chat(string question, Callback<string> callback)
     {
         string json = JsonUtility.ToJson(GenerateRequest(question));
-        string result = await PostRequest<ChatResult, string>(json, "completion", ChatContent, callback);
+        string result;
+        if (stream) result = await PostRequestStream<ChatResult>(json, "completion", ChatContent, callback);
+        else result = await PostRequest<ChatResult, string>(json, "completion", ChatContentTrim, callback);
         AddQA(question, result);
     }
 
@@ -105,7 +112,9 @@ public class LLMClient : MonoBehaviour
     {
         chat.Add(new ChatMessage{role="user", content=question});
         string json = JsonUtility.ToJson(GenerateRequest(question, true));
-        string result = await PostRequest<ChatOpenAIResult, string>(json, "v1/chat/completions", ChatOpenAIContent, callback);
+        string result;
+        if (stream) result = await PostRequestStream<ChatOpenAIResult>(json, "v1/chat/completions", ChatOpenAIContent, callback);
+        else result = await PostRequest<ChatOpenAIResult, string>(json, "v1/chat/completions", ChatOpenAIContent, callback);
         chat.Add(new ChatMessage{role="assistant", content=result});
     }
 
@@ -153,5 +162,56 @@ public class LLMClient : MonoBehaviour
         }
         webRequest.Dispose();
         return default;
+    }
+
+    public async Task<string> PostRequestStream<Res>(string json, string endpoint, ContentCallback<Res, string> getContent, Callback<string> callback)
+    {
+        string answer = null;
+        byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(json);
+        using (var request = UnityWebRequest.Put($"{host}:{port}/{endpoint}", jsonToSend))
+        {
+            request.method = "POST";
+            if (requestHeaders != null)
+            {
+                for (int i = 0; i < requestHeaders.Count; i++)
+                {
+                    request.SetRequestHeader(requestHeaders[i].Item1, requestHeaders[i].Item2);
+                }
+            }
+
+            // Start the request asynchronously
+            var asyncOperation = request.SendWebRequest();
+
+            // Use TaskCompletionSource to await completion
+            var completionSource = new TaskCompletionSource<bool>();
+
+            float lastProgress = 0f;
+            int seenLines = 0;
+            // Continue updating progress until the request is completed
+            while (!asyncOperation.isDone)
+            {
+                float currentProgress = request.downloadProgress;
+                // Check if progress has changed
+                if (currentProgress != lastProgress)
+                {
+                    string[] responses = request.downloadHandler.text.Trim().Replace("\n\n", "").Split("data: ");
+                    for (int i =seenLines+1; i<responses.Length; i++){
+                        Res responseJson = JsonUtility.FromJson<Res>(responses[i]);
+                        string answer_part = getContent(responseJson);
+                        if (answer_part!= null){
+                            answer += answer_part;
+                        }
+                        callback(answer);
+                    }
+                    seenLines = responses.Length -1;
+                    lastProgress = currentProgress;
+                }
+                // Wait for the next frame
+                await Task.Yield();
+            }
+            // Wait for the request to complete asynchronously
+            await completionSource.Task;
+        }
+        return answer;
     }
 }
