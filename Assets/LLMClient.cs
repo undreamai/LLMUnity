@@ -82,16 +82,6 @@ public class LLMClient : MonoBehaviour
         }
     }
 
-    public async Task<Ret> CallPostRequest<Req, Res, Ret>(Req request, string endpoint, ContentCallback<Res, Ret> getContent, Callback<Ret> callback)
-    {
-        string requestJson = JsonUtility.ToJson(request);
-        string response = await PostRequest(requestJson, endpoint);
-        if (response == null) return default;
-        Ret result = getContent(JsonUtility.FromJson<Res>(response));
-        callback(result);
-        return result;
-    }
-
     public string ChatContent(ChatResult result){
         return result.content.Trim();
     }
@@ -106,14 +96,16 @@ public class LLMClient : MonoBehaviour
 
     public async Task Chat(string question, Callback<string> callback)
     {
-        string result = await CallPostRequest<ChatRequest, ChatResult, string>(GenerateRequest(question), "completion", ChatContent, callback);
+        string json = JsonUtility.ToJson(GenerateRequest(question));
+        string result = await PostRequest<ChatResult, string>(json, "completion", ChatContent, callback);
         AddQA(question, result);
     }
 
     public async Task ChatOpenAI(string question, Callback<string> callback)
     {
         chat.Add(new ChatMessage{role="user", content=question});
-        string result = await CallPostRequest<ChatRequest, ChatOpenAIResult, string>(GenerateRequest(question, true), "v1/chat/completions", ChatOpenAIContent, callback);
+        string json = JsonUtility.ToJson(GenerateRequest(question, true));
+        string result = await PostRequest<ChatOpenAIResult, string>(json, "v1/chat/completions", ChatOpenAIContent, callback);
         chat.Add(new ChatMessage{role="assistant", content=result});
     }
 
@@ -121,14 +113,15 @@ public class LLMClient : MonoBehaviour
     {
         TokenizeRequest tokenizeRequest = new TokenizeRequest();
         tokenizeRequest.content = question;
-        await CallPostRequest<TokenizeRequest, TokenizeResult, List<int>>(tokenizeRequest, "tokenize", TokenizeContent, callback);
+        string json = JsonUtility.ToJson(tokenizeRequest);
+        await PostRequest<TokenizeResult, List<int>>(json, "tokenize", TokenizeContent, callback);
     }
 
     private void SetNKeep(List<int> tokens){
         nKeep = tokens.Count;
     }
 
-    public async Task<string> PostRequest(string json, string endpoint)
+    public async Task<Ret> PostRequest<Res, Ret>(string json, string endpoint, ContentCallback<Res, Ret> getContent, Callback<Ret> callback)
     {
         UnityWebRequest webRequest = new UnityWebRequest($"{host}:{port}/{endpoint}", "POST");
         if (requestHeaders != null){
@@ -136,8 +129,8 @@ public class LLMClient : MonoBehaviour
                 webRequest.SetRequestHeader(requestHeaders[i].Item1, requestHeaders[i].Item2);
             }
         }
-        byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(json);
-        webRequest.uploadHandler = (UploadHandler)new UploadHandlerRaw(jsonToSend);
+        byte[] payload = new System.Text.UTF8Encoding().GetBytes(json);
+        webRequest.uploadHandler = (UploadHandler)new UploadHandlerRaw(payload);
         webRequest.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
         webRequest.disposeDownloadHandlerOnDispose = true;
         webRequest.disposeUploadHandlerOnDispose = true;
@@ -152,11 +145,13 @@ public class LLMClient : MonoBehaviour
                 Debug.LogError("Error: " + webRequest.error);
                 break;
             case UnityWebRequest.Result.Success:
-                string responseString = webRequest.downloadHandler.text;
+                string response = webRequest.downloadHandler.text;
+                Ret result = getContent(JsonUtility.FromJson<Res>(response));
+                callback(result);
                 webRequest.Dispose();
-                return responseString;
+                return result;
         }
         webRequest.Dispose();
-        return null;
+        return default;
     }
 }
