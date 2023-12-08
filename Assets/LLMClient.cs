@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+// using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -25,7 +26,7 @@ public class LLMClient : MonoBehaviour
     private int nKeep = -1;
 
     private string currentPrompt;
-    private List<(string, string)> chat;
+    private List<ChatMessage> chat;
     
     private List<(string, string)> requestHeaders;
     public delegate void ChatCallback(string message);
@@ -34,7 +35,8 @@ public class LLMClient : MonoBehaviour
     public LLMClient()
     {
         requestHeaders = new List<(string, string)>{("Content-Type", "application/json")};
-        chat = new List<(string, string)>();
+        chat = new List<ChatMessage>();
+        chat.Add(new ChatMessage{role="system", content=prompt});
     }
 
     public async void OnEnable(){
@@ -50,9 +52,14 @@ public class LLMClient : MonoBehaviour
         return RoleString(role) + " " + message;
     }
 
-    public ChatRequest GenerateRequest(string message){        
+    public ChatRequest GenerateRequest(string message, bool openAIFormat=false){        
         ChatRequest chatRequest = new ChatRequest();
-        chatRequest.prompt = currentPrompt + RoleMessageString(playerName, message) + RoleString(AIName);
+        if (openAIFormat){
+            chatRequest.messages = chat;
+        }
+        else{
+            chatRequest.prompt = currentPrompt + RoleMessageString(playerName, message) + RoleString(AIName);
+        }
         chatRequest.temperature = temperature;
         chatRequest.top_k = topK;
         chatRequest.top_p = topP;
@@ -68,10 +75,10 @@ public class LLMClient : MonoBehaviour
     }
 
     private void AddQA(string question, string answer){
-        foreach ((string role, string message) in new[] { (playerName, question), (AIName, answer) })
+        foreach ((string role, string content) in new[] { (playerName, question), (AIName, answer) })
         {
-            chat.Add((role, message));
-            currentPrompt += RoleMessageString(role, message);
+            chat.Add(new ChatMessage{role=role, content=content});
+            currentPrompt += RoleMessageString(role, content);
         }
     }
 
@@ -90,6 +97,16 @@ public class LLMClient : MonoBehaviour
         string answer = result.value.content.Trim();
         callback.Invoke(answer);
         AddQA(question, answer);
+    }
+
+    public async Task ChatOpenAI(string question, ChatCallback callback)
+    {
+        chat.Add(new ChatMessage{role="user", content=question});
+        LLMResult<ChatOpenAIResult> result = await CallPostRequest<ChatRequest, ChatOpenAIResult>(GenerateRequest(question, true), "v1/chat/completions");
+        if (!result.success) return;
+        string answer = result.value.choices[0].message.content;
+        callback.Invoke(answer);
+        chat.Add(new ChatMessage{role="assistant", content=answer});
     }
 
     public async Task Tokenize(string question, TokenizeCallback callback)
