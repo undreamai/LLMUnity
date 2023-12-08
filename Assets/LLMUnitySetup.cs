@@ -41,7 +41,7 @@ public class LLMUnitySetup: MonoBehaviour
         // Define the GitHub repository URL
         string os = SystemInfo.operatingSystem.ToLower();
         string repoURL = "https://github.com/ggerganov/llama.cpp.git";
-        string repoVersion = "b1607";
+        string repoVersion = "fe680e3d1080a765e5d3150ffd7bab189742898d";
         string exeName = "server";
         string buildPath = "llama.cpp";
 
