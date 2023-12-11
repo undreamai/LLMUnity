@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.IO;
+using System.Threading.Tasks;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
@@ -17,18 +18,18 @@ public class LLM : LLMClient
     [ModelAttribute] public int batchSize = 1024;
 
     [HideInInspector] public string modelUrl = "https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.1-GGUF/resolve/main/mistral-7b-instruct-v0.1.Q4_K_M.gguf?download=true";
-    [HideInInspector] public string defaultModelDir = "Assets/Models";
-    [HideInInspector] public string defaultServerPath = "Assets/server";
     private bool isServerStarted = false;
+    private bool modelCopying = false;
     private Process process;
 
+    #if UNITY_EDITOR
     public LLM() {
         LLMUnitySetup.AddServerPathLinks(SetServer);
         LLMUnitySetup.AddModelPathLinks(SetModel);
     }
 
     public void RunSetup(){
-        LLMUnitySetup.Setup(defaultServerPath);
+        LLMUnitySetup.Setup(Path.Combine(Application.streamingAssetsPath, "server"));
     }
 
     public bool SetupStarted(){
@@ -37,20 +38,47 @@ public class LLM : LLMClient
 
     public void DownloadModel(){
         string modelName = Path.GetFileName(modelUrl).Split("?")[0];
-        string modelPath = defaultModelDir + '/' + modelName;
+        string modelPath = Path.Combine(Application.streamingAssetsPath, modelName);
         StartCoroutine(LLMUnitySetup.DownloadFile(modelUrl, modelPath));
     }
 
     public bool ModelDownloading(){
         return LLMUnitySetup.ModelDownloading();
     }
+    public bool ModelCopying(){
+        return modelCopying;
+    }
 
-    public void SetServer(string serverPath){
-        server = serverPath;
+    private async Task<string> AddAsset(string assetPath){
+        string fullPath = Path.GetFullPath(assetPath);
+        if (!fullPath.StartsWith(Application.streamingAssetsPath)){
+            // if the asset is not in the assets dir copy it over
+            fullPath = Path.Combine(Application.streamingAssetsPath, Path.GetFileName(assetPath));
+            Debug.Log("copying " + assetPath + " to " + fullPath);
+            UnityEditor.AssetDatabase.StartAssetEditing();
+            await Task.Run(() =>
+            {
+                foreach (string filename in new string[] {fullPath, fullPath + ".meta"}){
+                    if (File.Exists(fullPath))
+                        File.Delete(fullPath);
+                }
+                File.Copy(assetPath, fullPath);
+            });
+            UnityEditor.AssetDatabase.StopAssetEditing();
+            return fullPath;
+        }
+        return fullPath;
     }
-    public void SetModel(string modelPath){
-        model = modelPath;
+
+    public async void SetServer(string serverPath){
+        server = await AddAsset(serverPath);
     }
+    public async void SetModel(string modelPath){
+        modelCopying = true;
+        model = await AddAsset(modelPath);
+        modelCopying = false;
+    }
+    #endif
 
     new void OnEnable()
     {

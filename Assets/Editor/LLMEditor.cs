@@ -48,7 +48,7 @@ public class LLMEditor : Editor
                 string path = EditorUtility.OpenFilePanel("Select a llama.cpp server exe", "", "");
                 if (!string.IsNullOrEmpty(path))
                 {
-                    llmScript.server = path;
+                    llmScript.SetServer(path);
                 }
             };
         }
@@ -68,16 +68,18 @@ public class LLMEditor : Editor
             llmScript.DownloadModel();
         }
         GUI.enabled = true;
+        GUI.enabled = !llmScript.ModelCopying();
         if (GUILayout.Button("Load model", GUILayout.Width(buttonWidth)))
         {
             EditorApplication.delayCall += () => {
                 string path = EditorUtility.OpenFilePanelWithFilters("Select a gguf model file", "", new string[] { "Model Files", "gguf" });
                 if (!string.IsNullOrEmpty(path))
                 {
-                    llmScript.model = path;
+                    llmScript.SetModel(path);
                 }
             };
         }
+        GUI.enabled = true;
         EditorGUILayout.EndHorizontal();
         if (llmScript.model != ""){
             ShowPropertiesOfClass(llmScriptSO, typeof(LLM), typeof(ModelAttribute));

@@ -13,6 +13,8 @@ public class ChatManager : MonoBehaviour
     public int fontSize = 16;
     public LLMClient llmClient;
     public float padding = 10f;
+    public Sprite sprite;
+
     private float spacing = 10f;    
     private InputBubble inputBubble;
     private List<Bubble> chatBubbles = new List<Bubble>();
@@ -21,7 +23,7 @@ public class ChatManager : MonoBehaviour
     void Start()
     {
         font = TMP_Settings.defaultFontAsset;
-        inputBubble = new InputBubble(chatContainer, font, fontSize, fontColor, "InputBubble", playerColor, 0, 0, "Message me", 600, 4);
+        inputBubble = new InputBubble(chatContainer, sprite, font, fontSize, fontColor, "InputBubble", playerColor, 0, 0, "Message me", 600, 4);
         inputBubble.AddSubmitListener(onInputFieldSubmit);
         inputBubble.AddValueChangedListener(onValueChanged);
         AllowInput();
@@ -39,8 +41,8 @@ public class ChatManager : MonoBehaviour
         // replace vertical_tab
         string message = inputBubble.GetText().Replace("\v", "\n");
 
-        Bubble playerBubble = new Bubble(chatContainer, font, fontSize, fontColor, "PlayerBubble", playerColor, 0, 0, message);
-        Bubble aiBubble = new Bubble(chatContainer, font, fontSize, fontColor, "AIBubble", aiColor, 0, 1, "...");
+        Bubble playerBubble = new Bubble(chatContainer, sprite, font, fontSize, fontColor, "PlayerBubble", playerColor, 0, 0, message);
+        Bubble aiBubble = new Bubble(chatContainer, sprite, font, fontSize, fontColor, "AIBubble", aiColor, 0, 1, "...");
         chatBubbles.Add(playerBubble);
         chatBubbles.Add(aiBubble);
         UpdateBubblePositions();

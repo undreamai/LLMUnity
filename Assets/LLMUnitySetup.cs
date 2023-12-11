@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using UnityEditor;
 using System.Diagnostics;
 using System.IO;
@@ -182,3 +183,4 @@ public class LLMUnitySetup: MonoBehaviour
 
     private static void Update(){}
 }
+#endif

@@ -13,16 +13,16 @@ class Bubble {
     protected RectTransform textRectTransform;
     protected TextMeshProUGUI textContent;
 
-    public Bubble(Transform parent, TMP_FontAsset font, int fontSize, Color fontColor, string bubbleName, Color bubbleColor, float bottomPosition, float leftPosition, string message, float width=-1f, float height=-1f, float padding=10f)
+    public Bubble(Transform parent, Sprite sprite, TMP_FontAsset font, int fontSize, Color fontColor, string bubbleName, Color bubbleColor, float bottomPosition, float leftPosition, string message, float width=-1f, float height=-1f, float padding=10f)
     {
-        AddBubbleObject(parent, bubbleName, bubbleColor);
+        AddBubbleObject(parent, sprite, bubbleName, bubbleColor);
         AddPaddingObject();
         AddTextObject(font, fontSize, fontColor, message);
         SetBubblePosition(bottomPosition, leftPosition);
         UpdateSize(width, height, padding);
     }
 
-    void AddBubbleObject(Transform parent, String bubbleName, Color bubbleColor){
+    void AddBubbleObject(Transform parent, Sprite sprite, String bubbleName, Color bubbleColor){
         // Create a new GameObject for the chat bubble
         bubbleObject = new GameObject(bubbleName, typeof(RectTransform), typeof(Image));
         bubbleObject.transform.SetParent(parent);
@@ -30,7 +30,7 @@ class Bubble {
         bubbleImage = bubbleObject.GetComponent<Image>();
 
         bubbleImage.type = Image.Type.Sliced;
-        bubbleImage.sprite = UnityEditor.AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/Background.psd");
+        bubbleImage.sprite = sprite;
         bubbleImage.color = bubbleColor;
     }
 
@@ -106,8 +106,8 @@ class InputBubble : Bubble {
     protected TextMeshProUGUI placeholderContent;
     protected RectTransform placeholderRectTransform;
 
-    public InputBubble(Transform parent, TMP_FontAsset font, int fontSize, Color fontColor, string bubbleName, Color bubbleColor, float bottomPosition, float leftPosition, string message, float width=-1f, int lineHeight=4, float padding=10f) : 
-    base(parent, font, fontSize, fontColor, bubbleName, bubbleColor, bottomPosition, leftPosition, addNewLines(message, lineHeight), width, -1f, padding)
+    public InputBubble(Transform parent, Sprite sprite, TMP_FontAsset font, int fontSize, Color fontColor, string bubbleName, Color bubbleColor, float bottomPosition, float leftPosition, string message, float width=-1f, int lineHeight=4, float padding=10f) : 
+    base(parent, sprite, font, fontSize, fontColor, bubbleName, bubbleColor, bottomPosition, leftPosition, addNewLines(message, lineHeight), width, -1f, padding)
     {
         AddInputField();
         AddPlaceholderObject(font, fontSize, fontColor, message);

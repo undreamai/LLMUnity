@@ -172,10 +172,11 @@ MonoBehaviour:
   playerColor: {r: 0.31764707, g: 0.6431373, b: 0.31764707, a: 1}
   aiColor: {r: 0.11372549, g: 0.11372549, b: 0.28627452, a: 1}
   fontColor: {r: 1, g: 1, b: 1, a: 1}
-  font: {fileID: 0}
+  font: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   fontSize: 16
   llmClient: {fileID: 817827756}
   padding: 10
+  sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
 --- !u!1 &507661347
 GameObject:
   m_ObjectHideFlags: 0
@@ -377,15 +378,13 @@ MonoBehaviour:
   nPredict: 256
   modelHide: 1
   serverHide: 1
-  server: Assets/server
+  server: StreamingAssets/server
   numGPULayers: 32
-  numThreads: 18
-  model: /home/benuix/codes/unity/LLMUnity/Assets/Models/llama-2-7b-chat.Q4_0.gguf
+  numThreads: 12
+  model: StreamingAssets/llama-2-7b-chat.Q4_0.gguf
   contextSize: 512
   batchSize: 1024
   modelUrl: https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.1-GGUF/resolve/main/mistral-7b-instruct-v0.1.Q4_K_M.gguf?download=true
-  defaultModelDir: Assets/Models
-  defaultServerPath: Assets/server
 --- !u!1 &1082174420
 GameObject:
   m_ObjectHideFlags: 0
