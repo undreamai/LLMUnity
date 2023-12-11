@@ -54,8 +54,8 @@ public class LLM : LLMClient
 
     new void OnEnable()
     {
-        base.OnEnable();
         StartLLMServer();
+        base.OnEnable();
     }
 
     private void StartLLMServer()
