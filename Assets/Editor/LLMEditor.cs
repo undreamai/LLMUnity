@@ -17,9 +17,10 @@ public class LLMEditor : Editor
     }
 
     public override void OnInspectorGUI()
-    {        
+    {
         LLM llmScript = (LLM)target;
         SerializedObject llmScriptSO = new SerializedObject(llmScript);
+        llmScriptSO.Update();
 
         // SCRIPT PROPERTY
         GUI.enabled = false;
@@ -93,6 +94,8 @@ public class LLMEditor : Editor
         EditorGUI.EndChangeCheck();
         if (EditorGUI.EndChangeCheck())
             Repaint();
+
+        llmScriptSO.ApplyModifiedProperties();
     }
 
     private void ShowPropertiesOfClass(SerializedObject so, System.Type targetClass, System.Type attributeClass = null){
