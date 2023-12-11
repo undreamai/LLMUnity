@@ -13,7 +13,7 @@ OcclusionCullingSettings:
 --- !u!104 &2
 RenderSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 10
+  serializedVersion: 9
   m_Fog: 0
   m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_FogMode: 3
@@ -38,12 +38,13 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028328, g: 0.22571328, b: 0.3069218, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 12
+  m_GIWorkflowMode: 1
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
@@ -164,7 +165,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 180020064}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5ef9d84f764cf0ffba3a48e8faad9df1, type: 3}
+  m_Script: {fileID: 11500000, guid: 325cfb8f0b2f3c669a22ef50427d9f49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   chatContainer: {fileID: 1833883736}
@@ -173,7 +174,7 @@ MonoBehaviour:
   fontColor: {r: 1, g: 1, b: 1, a: 1}
   font: {fileID: 0}
   fontSize: 16
-  llmClient: {fileID: 817827754}
+  llmClient: {fileID: 817827756}
   padding: 10
 --- !u!1 &507661347
 GameObject:
@@ -327,7 +328,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 817827755}
-  - component: {fileID: 817827754}
+  - component: {fileID: 817827756}
   m_Layer: 0
   m_Name: LLM
   m_TagString: Untagged
@@ -335,39 +336,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &817827754
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 817827753}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 123511e02eb8ea8ad945c3f0231c50fb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  clientHide: 1
-  host: localhost
-  port: 13333
-  player_name: Human
-  ai_name: Assistant
-  prompt: A chat between a curious human and an artificial intelligence assistant.
-    The assistant gives helpful, detailed, and polite answers to the human's questions.
-  seed: -1
-  temperature: 0.2
-  top_k: 40
-  top_p: 0.9
-  n_predict: 256
-  n_keep: 30
-  modelHide: 1
-  serverHide: 1
-  server: 
-  numGPULayers: 32
-  numThreads: 18
-  model: 
-  contextSize: 512
-  batchSize: 1024
 --- !u!4 &817827755
 Transform:
   m_ObjectHideFlags: 0
@@ -383,6 +351,41 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &817827756
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 817827753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a50e3140c3ecaaf1c848dbf141cc2074, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  host: localhost
+  port: 13333
+  stream: 1
+  playerName: Human
+  AIName: Assistant
+  prompt: A chat between a curious human and an artificial intelligence assistant.
+    The assistant gives helpful, detailed, and polite answers to the human's questions.
+  seed: 
+  temperature: 0.2
+  topK: 40
+  topP: 0.9
+  nPredict: 256
+  modelHide: 1
+  serverHide: 1
+  server: Assets/server
+  numGPULayers: 32
+  numThreads: 18
+  model: /home/benuix/codes/unity/LLMUnity/Assets/Models/llama-2-7b-chat.Q4_0.gguf
+  contextSize: 512
+  batchSize: 1024
+  modelUrl: https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.1-GGUF/resolve/main/mistral-7b-instruct-v0.1.Q4_K_M.gguf?download=true
+  defaultModelDir: Assets/Models
+  defaultServerPath: Assets/server
 --- !u!1 &1082174420
 GameObject:
   m_ObjectHideFlags: 0
@@ -408,8 +411,9 @@ Light:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1082174420}
   m_Enabled: 1
-  serializedVersion: 11
+  serializedVersion: 10
   m_Type: 1
+  m_Shape: 0
   m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
   m_Intensity: 1
   m_Range: 10
