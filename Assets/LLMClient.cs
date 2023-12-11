@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-// using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -53,7 +52,7 @@ public class LLMClient : MonoBehaviour
         return RoleString(role) + " " + message;
     }
 
-    public ChatRequest GenerateRequest(string message, bool openAIFormat=false){        
+    public ChatRequest GenerateRequest(string message, bool openAIFormat=false){
         ChatRequest chatRequest = new ChatRequest();
         if (openAIFormat){
             chatRequest.messages = chat;
@@ -99,16 +98,17 @@ public class LLMClient : MonoBehaviour
         return result.tokens;
     }
 
-    public async Task Chat(string question, Callback<string> callback)
+    public async Task<string> Chat(string question, Callback<string> callback=null)
     {
         string json = JsonUtility.ToJson(GenerateRequest(question));
         string result;
         if (stream) result = await PostRequestStream<ChatResult>(json, "completion", ChatContent, callback);
         else result = await PostRequest<ChatResult, string>(json, "completion", ChatContentTrim, callback);
         AddQA(question, result);
+        return result;
     }
 
-    public async Task ChatOpenAI(string question, Callback<string> callback)
+    public async Task<string> ChatOpenAI(string question, Callback<string> callback=null)
     {
         chat.Add(new ChatMessage{role="user", content=question});
         string json = JsonUtility.ToJson(GenerateRequest(question, true));
@@ -116,9 +116,10 @@ public class LLMClient : MonoBehaviour
         if (stream) result = await PostRequestStream<ChatOpenAIResult>(json, "v1/chat/completions", ChatOpenAIContent, callback);
         else result = await PostRequest<ChatOpenAIResult, string>(json, "v1/chat/completions", ChatOpenAIContent, callback);
         chat.Add(new ChatMessage{role="assistant", content=result});
+        return result;
     }
 
-    public async Task Tokenize(string question, Callback<List<int>> callback)
+    public async Task Tokenize(string question, Callback<List<int>> callback=null)
     {
         TokenizeRequest tokenizeRequest = new TokenizeRequest();
         tokenizeRequest.content = question;
@@ -130,7 +131,19 @@ public class LLMClient : MonoBehaviour
         nKeep = tokens.Count;
     }
 
-    public async Task<Ret> PostRequest<Res, Ret>(string json, string endpoint, ContentCallback<Res, Ret> getContent, Callback<Ret> callback)
+    public Ret ConvertContent<Res, Ret>(string response, ContentCallback<Res, Ret> getContent=null){
+        if (getContent == null){
+            if (typeof(Res) != typeof(Ret)){
+                throw new System.Exception("Res and Ret must be the same type without a getContent callback.");
+            } else {
+                return JsonUtility.FromJson<Ret>(response);
+            }
+        } else {
+            return getContent(JsonUtility.FromJson<Res>(response));
+        }
+    }
+
+    public async Task<Ret> PostRequest<Res, Ret>(string json, string endpoint, ContentCallback<Res, Ret> getContent=null, Callback<Ret> callback=null)
     {
         UnityWebRequest webRequest = new UnityWebRequest($"{host}:{port}/{endpoint}", "POST");
         if (requestHeaders != null){
@@ -155,8 +168,8 @@ public class LLMClient : MonoBehaviour
                 break;
             case UnityWebRequest.Result.Success:
                 string response = webRequest.downloadHandler.text;
-                Ret result = getContent(JsonUtility.FromJson<Res>(response));
-                callback(result);
+                Ret result = ConvertContent(response, getContent);
+                if (callback!=null) callback(result);
                 webRequest.Dispose();
                 return result;
         }
@@ -166,7 +179,7 @@ public class LLMClient : MonoBehaviour
 
     public async Task<string> PostRequestStream<Res>(string json, string endpoint, ContentCallback<Res, string> getContent, Callback<string> callback)
     {
-        string answer = null;
+        string answer = "";
         byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(json);
         using (var request = UnityWebRequest.Put($"{host}:{port}/{endpoint}", jsonToSend))
         {
@@ -181,10 +194,6 @@ public class LLMClient : MonoBehaviour
 
             // Start the request asynchronously
             var asyncOperation = request.SendWebRequest();
-
-            // Use TaskCompletionSource to await completion
-            var completionSource = new TaskCompletionSource<bool>();
-
             float lastProgress = 0f;
             int seenLines = 0;
             // Continue updating progress until the request is completed
@@ -196,12 +205,11 @@ public class LLMClient : MonoBehaviour
                 {
                     string[] responses = request.downloadHandler.text.Trim().Replace("\n\n", "").Split("data: ");
                     for (int i =seenLines+1; i<responses.Length; i++){
-                        Res responseJson = JsonUtility.FromJson<Res>(responses[i]);
-                        string answer_part = getContent(responseJson);
+                        string answer_part = ConvertContent(responses[i], getContent);
                         if (answer_part!= null){
                             answer += answer_part;
+                            if (callback != null) callback(answer);
                         }
-                        callback(answer);
                     }
                     seenLines = responses.Length -1;
                     lastProgress = currentProgress;
@@ -209,8 +217,6 @@ public class LLMClient : MonoBehaviour
                 // Wait for the next frame
                 await Task.Yield();
             }
-            // Wait for the request to complete asynchronously
-            await completionSource.Task;
         }
         return answer;
     }
