@@ -7,5 +7,4 @@ UserSettings
 .vscode
 
 mono_crash.mem*
-*.meta
 *.csproj
