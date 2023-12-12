@@ -201,6 +201,7 @@ public class LLMClient : MonoBehaviour
                 // Wait for the next frame
                 await Task.Yield();
             }
+            if (request.result != UnityWebRequest.Result.Success) throw new System.Exception(request.error);
         }
         return answer;
     }
