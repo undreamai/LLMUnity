@@ -378,10 +378,10 @@ MonoBehaviour:
   nPredict: 256
   modelHide: 1
   serverHide: 1
-  server: StreamingAssets/server
-  numGPULayers: 32
-  numThreads: 12
-  model: StreamingAssets/llama-2-7b-chat.Q4_0.gguf
+  server: /home/benuix/codes/unity/LLMUnity/Assets/StreamingAssets/server
+  numGPULayers: 0
+  numThreads: -1
+  model: /home/benuix/codes/unity/LLMUnity/Assets/StreamingAssets/llama-2-7b-chat.Q4_0.gguf
   contextSize: 512
   batchSize: 1024
   modelUrl: https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.1-GGUF/resolve/main/mistral-7b-instruct-v0.1.Q4_K_M.gguf?download=true
