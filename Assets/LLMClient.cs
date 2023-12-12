@@ -191,6 +191,7 @@ public class LLMClient : MonoBehaviour
                     for (int i =seenLines+1; i<responses.Length; i++){
                         string answer_part = ConvertContent(responses[i], getContent);
                         if (answer_part!= null){
+                            if (answer == "") answer_part = answer_part.TrimStart();
                             answer += answer_part;
                             if (callback != null) callback(answer);
                         }
