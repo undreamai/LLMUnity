@@ -176,7 +176,8 @@ MonoBehaviour:
   fontSize: 20
   bubbleWidth: 600
   llmClient: {fileID: 817827756}
-  padding: 10
+  textPadding: 10
+  bubbleSpacing: 10
   sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
 --- !u!1 &507661347
 GameObject:
@@ -447,7 +448,7 @@ MonoBehaviour:
   AIName: Assistant
   prompt: A chat between a curious human and an artificial intelligence assistant.
     The assistant gives helpful, detailed, and polite answers to the human's questions.
-  seed: 
+  seed: 0
   temperature: 0.2
   topK: 40
   topP: 0.9
@@ -455,11 +456,10 @@ MonoBehaviour:
   modelHide: 1
   serverHide: 1
   server: /home/benuix/codes/unity/LLMUnity/Assets/StreamingAssets/server
-  numGPULayers: 0
   numThreads: -1
   model: /home/benuix/codes/unity/LLMUnity/Assets/StreamingAssets/llama-2-7b-chat.Q4_0.gguf
   contextSize: 512
-  batchSize: 1024
+  batchSize: 512
   modelUrl: https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.1-GGUF/resolve/main/mistral-7b-instruct-v0.1.Q4_K_M.gguf?download=true
 --- !u!1 &1082174420
 GameObject:
