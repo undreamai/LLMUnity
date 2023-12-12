@@ -9,12 +9,11 @@ public class LLM : LLMClient
     [HideInInspector] public bool serverHide = true;
 
     [ServerAttribute] public string server = "";
-    [ServerAttribute] public int numGPULayers = 0;
     [ServerAttribute] public int numThreads = -1;
 
     [ModelAttribute] public string model = "";
     [ModelAttribute] public int contextSize = 512;
-    [ModelAttribute] public int batchSize = 1024;
+    [ModelAttribute] public int batchSize = 512;
 
     [HideInInspector] public string modelUrl = "https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.1-GGUF/resolve/main/mistral-7b-instruct-v0.1.Q4_K_M.gguf?download=true";
     private bool isServerStarted = false;
@@ -76,7 +75,6 @@ public class LLM : LLMClient
             numThreads = System.Environment.ProcessorCount;
         string arguments = $"--port {port} -m {model} -c {contextSize} -b {batchSize}";
         if (numThreads > 0) arguments += $" -t {numThreads}";
-        if (numThreads > 0) arguments += $" -ngl {numGPULayers}";
         Debug.Log($"Server command: {server} {arguments}");
 
         ProcessStartInfo startInfo = new ProcessStartInfo
