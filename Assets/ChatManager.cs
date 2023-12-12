@@ -2,6 +2,7 @@ using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Unity.VisualScripting;
 
 public class ChatManager : MonoBehaviour
 {
@@ -20,11 +21,29 @@ public class ChatManager : MonoBehaviour
     private InputBubble inputBubble;
     private List<Bubble> chatBubbles = new List<Bubble>();
     private bool blockInput = false;
+    private BubbleUI playerUI, aiUI;
 
     void Start()
     {
-        font = TMP_Settings.defaultFontAsset;
-        inputBubble = new InputBubble(chatContainer, sprite, font, fontSize, fontColor, "InputBubble", playerColor, 0, 0, "Message me", textPadding, bubbleSpacing, bubbleWidth, 4);
+        if (font == null) font = TMP_Settings.defaultFontAsset;
+        playerUI = new BubbleUI {
+            sprite=sprite,
+            font=font,
+            fontSize=fontSize,
+            fontColor=fontColor,
+            bubbleColor=playerColor,
+            bottomPosition=0,
+            leftPosition=0,
+            textPadding=textPadding,
+            bubbleSpacing=bubbleSpacing,
+            bubbleWidth=bubbleWidth,
+            bubbleHeight=-1
+        };
+        aiUI = playerUI;
+        aiUI.bubbleColor = aiColor;
+        aiUI.leftPosition = 1;
+        
+        inputBubble = new InputBubble(chatContainer, playerUI, "InputBubble", "Message me", 4);
         inputBubble.AddSubmitListener(onInputFieldSubmit);
         inputBubble.AddValueChangedListener(onValueChanged);
         AllowInput();
@@ -42,8 +61,8 @@ public class ChatManager : MonoBehaviour
         // replace vertical_tab
         string message = inputBubble.GetText().Replace("\v", "\n");
 
-        Bubble playerBubble = new Bubble(chatContainer, sprite, font, fontSize, fontColor, "PlayerBubble", playerColor, 0, 0, message, textPadding, bubbleSpacing, bubbleWidth);
-        Bubble aiBubble = new Bubble(chatContainer, sprite, font, fontSize, fontColor, "AIBubble", aiColor, 0, 1, "...", textPadding, bubbleSpacing, bubbleWidth);
+        Bubble playerBubble = new Bubble(chatContainer, playerUI, "PlayerBubble", message);
+        Bubble aiBubble = new Bubble(chatContainer, aiUI, "AIBubble", "...");
         chatBubbles.Add(playerBubble);
         chatBubbles.Add(aiBubble);
         UpdateBubblePositions();
