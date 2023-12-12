@@ -12,14 +12,22 @@ class Bubble {
     protected GameObject textObject;
     protected RectTransform textRectTransform;
     protected TextMeshProUGUI textContent;
+    protected float bubbleWidth;
+    protected float bubbleHeight;
+    protected float textPadding;
+    protected float bubbleSpacing;
 
-    public Bubble(Transform parent, Sprite sprite, TMP_FontAsset font, int fontSize, Color fontColor, string bubbleName, Color bubbleColor, float bottomPosition, float leftPosition, string message, float width=-1f, float height=-1f, float padding=10f)
+    public Bubble(Transform parent, Sprite sprite, TMP_FontAsset font, int fontSize, Color fontColor, string bubbleName, Color bubbleColor, float bottomPosition, float leftPosition, string message, float padding=10f, float spacing=10f, float width=-1f, float height=-1f)
     {
+        bubbleWidth = width;
+        bubbleHeight = height;
+        textPadding = padding;
+        bubbleSpacing = spacing;
         AddBubbleObject(parent, sprite, bubbleName, bubbleColor);
         AddPaddingObject();
         AddTextObject(font, fontSize, fontColor, message);
         SetBubblePosition(bottomPosition, leftPosition);
-        UpdateSize(width, height, padding);
+        UpdateSize();
     }
 
     void AddBubbleObject(Transform parent, Sprite sprite, String bubbleName, Color bubbleColor){
@@ -63,24 +71,26 @@ class Bubble {
     void SetBubblePosition(float bottomPosition, float leftPosition)
     {
         // Set the position of the new bubble at the bottom
-        bubbleRectTransform.pivot = new Vector2(leftPosition, 0f);
-        bubbleRectTransform.anchorMin = new Vector2(leftPosition, 0f);
-        bubbleRectTransform.anchorMax = new Vector2(leftPosition, 0f);
-        bubbleRectTransform.anchoredPosition = new Vector2(0f, bottomPosition);
+        bubbleRectTransform.pivot = new Vector2(leftPosition, bottomPosition);
+        bubbleRectTransform.anchorMin = new Vector2(leftPosition, bottomPosition);
+        bubbleRectTransform.anchorMax = new Vector2(leftPosition, bottomPosition);
+        Vector2 anchoredPosition = new Vector2(bubbleSpacing, bubbleSpacing);
+        if (leftPosition == 1) anchoredPosition.x *= -1;
+        if (bottomPosition == 1) anchoredPosition.y *= -1;
+        bubbleRectTransform.anchoredPosition = anchoredPosition;
     }
 
-    public void UpdateSize(float width=-1f, float height=-1f, float padding=10f){
+    public void UpdateSize(){
         // Set position and size of bubble
         textContent.ForceMeshUpdate();
         Vector2 messageSize = textContent.GetRenderedValues(false);
-        float bubbleWidth = width >= 0? width: messageSize.x;
-        float bubbleHeight = height >= 0? height: messageSize.y;
-        bubbleRectTransform.sizeDelta = new Vector2(bubbleWidth + 2 * padding, bubbleHeight + 2 * padding);
-        // SetBubblePosition(bottomPosition, leftPosition);
+        float width = bubbleWidth >= 0? bubbleWidth: messageSize.x;
+        float height = bubbleHeight >= 0? bubbleHeight: messageSize.y;
+        bubbleRectTransform.sizeDelta = new Vector2(width + 2 * textPadding, height + 2 * textPadding);
 
         // Set position and size of the components
-        paddingRectTransform.sizeDelta = new Vector2(bubbleWidth, bubbleHeight);
-        textRectTransform.sizeDelta = new Vector2(bubbleWidth, bubbleHeight);
+        paddingRectTransform.sizeDelta = new Vector2(width, height);
+        textRectTransform.sizeDelta = new Vector2(width, height);
         textRectTransform.anchoredPosition = Vector2.zero;
     }
 
@@ -106,8 +116,8 @@ class InputBubble : Bubble {
     protected TextMeshProUGUI placeholderContent;
     protected RectTransform placeholderRectTransform;
 
-    public InputBubble(Transform parent, Sprite sprite, TMP_FontAsset font, int fontSize, Color fontColor, string bubbleName, Color bubbleColor, float bottomPosition, float leftPosition, string message, float width=-1f, int lineHeight=4, float padding=10f) : 
-    base(parent, sprite, font, fontSize, fontColor, bubbleName, bubbleColor, bottomPosition, leftPosition, addNewLines(message, lineHeight), width, -1f, padding)
+    public InputBubble(Transform parent, Sprite sprite, TMP_FontAsset font, int fontSize, Color fontColor, string bubbleName, Color bubbleColor, float bottomPosition, float leftPosition, string message, float padding=10f, float spacing=10f, float width=-1f, int lineHeight=4) : 
+    base(parent, sprite, font, fontSize, fontColor, bubbleName, bubbleColor, bottomPosition, leftPosition, addNewLines(message, lineHeight), padding, spacing, width, -1f)
     {
         AddInputField();
         AddPlaceholderObject(font, fontSize, fontColor, message);
@@ -187,7 +197,6 @@ class BubbleTextSetter {
 
     public void SetText(string text){
         bubble.SetText(text);
-        bubble.UpdateSize(600);
         bubble.UpdateSize();
         chatManager.UpdateBubblePositions();
         chatManager.AllowInput();

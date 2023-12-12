@@ -11,11 +11,12 @@ public class ChatManager : MonoBehaviour
     public Color fontColor = Color.white;
     public TMP_FontAsset font;
     public int fontSize = 16;
+    public int bubbleWidth = 600;
     public LLMClient llmClient;
-    public float padding = 10f;
+    public float textPadding = 10f;
+    public float bubbleSpacing = 10f;
     public Sprite sprite;
 
-    private float spacing = 10f;    
     private InputBubble inputBubble;
     private List<Bubble> chatBubbles = new List<Bubble>();
     private bool blockInput = false;
@@ -23,7 +24,7 @@ public class ChatManager : MonoBehaviour
     void Start()
     {
         font = TMP_Settings.defaultFontAsset;
-        inputBubble = new InputBubble(chatContainer, sprite, font, fontSize, fontColor, "InputBubble", playerColor, 0, 0, "Message me", 600, 4);
+        inputBubble = new InputBubble(chatContainer, sprite, font, fontSize, fontColor, "InputBubble", playerColor, 0, 0, "Message me", textPadding, bubbleSpacing, bubbleWidth, 4);
         inputBubble.AddSubmitListener(onInputFieldSubmit);
         inputBubble.AddValueChangedListener(onValueChanged);
         AllowInput();
@@ -41,8 +42,8 @@ public class ChatManager : MonoBehaviour
         // replace vertical_tab
         string message = inputBubble.GetText().Replace("\v", "\n");
 
-        Bubble playerBubble = new Bubble(chatContainer, sprite, font, fontSize, fontColor, "PlayerBubble", playerColor, 0, 0, message);
-        Bubble aiBubble = new Bubble(chatContainer, sprite, font, fontSize, fontColor, "AIBubble", aiColor, 0, 1, "...");
+        Bubble playerBubble = new Bubble(chatContainer, sprite, font, fontSize, fontColor, "PlayerBubble", playerColor, 0, 0, message, textPadding, bubbleSpacing, bubbleWidth);
+        Bubble aiBubble = new Bubble(chatContainer, sprite, font, fontSize, fontColor, "AIBubble", aiColor, 0, 1, "...", textPadding, bubbleSpacing, bubbleWidth);
         chatBubbles.Add(playerBubble);
         chatBubbles.Add(aiBubble);
         UpdateBubblePositions();
@@ -69,8 +70,7 @@ public class ChatManager : MonoBehaviour
 
     public void UpdateBubblePositions()
     {
-        float y = inputBubble.GetRectTransform().sizeDelta.y + spacing;
-
+        float y = inputBubble.GetRectTransform().sizeDelta.y + 2 * bubbleSpacing;
         int lastBubbleOutsideFOV = -1;
         float containerHeight = chatContainer.GetComponent<RectTransform>().rect.height;
         for (int i = chatBubbles.Count - 1; i >= 0; i--) {
@@ -82,7 +82,7 @@ public class ChatManager : MonoBehaviour
             if (y > containerHeight && lastBubbleOutsideFOV == -1){
                 lastBubbleOutsideFOV = i;
             }
-            y += childRect.sizeDelta.y + spacing;
+            y += childRect.sizeDelta.y + bubbleSpacing;
         }
         // destroy bubbles outside the container
         for (int i = 0; i <= lastBubbleOutsideFOV; i++) {
