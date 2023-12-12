@@ -1,2 +1,11 @@
+Assets/StreamingAssets
+Build
+Library
+Logs
+Temp
+UserSettings
+.vscode
+
 mono_crash.mem*
 *.meta
+*.csproj
