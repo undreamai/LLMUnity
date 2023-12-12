@@ -18,7 +18,7 @@ public class LLMClient : MonoBehaviour
     [ChatAttribute] public string AIName = "Assistant";
     [ChatAttribute] public string prompt = "A chat between a curious human and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the human's questions.";
     
-    [ModelAttribute] public string seed = "";
+    [ModelAttribute] public int seed = 0;
     [ModelAttribute] public float temperature = 0.2f;
     [ModelAttribute] public int topK = 40;
     [ModelAttribute] public float topP = 0.9f;
@@ -67,8 +67,8 @@ public class LLMClient : MonoBehaviour
         chatRequest.n_keep = nKeep;
         chatRequest.stream = stream;
         chatRequest.cache_prompt = true;
-        if (int.TryParse(seed, out int number)){
-            chatRequest.seed = number;
+        if (seed != -1){
+            chatRequest.seed = seed;
         }
         chatRequest.stop = new List<string>{RoleString(playerName), playerName + ":"};
         return chatRequest;
