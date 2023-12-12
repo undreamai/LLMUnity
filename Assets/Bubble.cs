@@ -1,11 +1,10 @@
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 using System;
 
 struct BubbleUI {
     public Sprite sprite;
-    public TMP_FontAsset font;
+    public Font font;
     public int fontSize;
     public Color fontColor;
     public Color bubbleColor;
@@ -25,7 +24,7 @@ class Bubble {
     protected RectTransform paddingRectTransform;
     protected GameObject textObject;
     protected RectTransform textRectTransform;
-    protected TextMeshProUGUI textContent;
+    protected Text textContent;
     public BubbleUI bubbleUI;
 
     public Bubble(Transform parent, BubbleUI ui, string name, string message)
@@ -59,12 +58,13 @@ class Bubble {
 
     protected GameObject CreateTextObject(Transform parent, string message){
         // Create a child GameObject for the text
-        GameObject textObject = new GameObject("Text", typeof(RectTransform), typeof(TextMeshProUGUI));
+        GameObject textObject = new GameObject("Text", typeof(RectTransform), typeof(Text));
         textObject.transform.SetParent(parent);
-        TextMeshProUGUI textContent = textObject.GetComponent<TextMeshProUGUI>();
+        Text textContent = textObject.GetComponent<Text>();
         // Add text and font
         textContent.text = message;
-        textContent.font = bubbleUI.font;
+        if (bubbleUI.font != null)
+            textContent.font = bubbleUI.font;
         textContent.fontSize = bubbleUI.fontSize;
         textContent.color = bubbleUI.fontColor;
         return textObject;
@@ -72,7 +72,7 @@ class Bubble {
 
     void AddTextObject(string message) {
         textObject = CreateTextObject(paddingObject.transform, message);
-        textContent = textObject.GetComponent<TextMeshProUGUI>();
+        textContent = textObject.GetComponent<Text>();
         textRectTransform = textObject.GetComponent<RectTransform>();
     }
  
@@ -90,10 +90,11 @@ class Bubble {
 
     public void UpdateSize(){
         // Set position and size of bubble
-        textContent.ForceMeshUpdate();
-        Vector2 messageSize = textContent.GetRenderedValues(false);
-        float width = bubbleUI.bubbleWidth >= 0? bubbleUI.bubbleWidth: messageSize.x;
-        float height = bubbleUI.bubbleHeight >= 0? bubbleUI.bubbleHeight: messageSize.y;
+        textContent.SetAllDirty();
+        Debug.Log(textContent.text);
+        Debug.Log(textContent.preferredHeight);
+        float width = bubbleUI.bubbleWidth >= 0? bubbleUI.bubbleWidth: textContent.preferredWidth;
+        float height = bubbleUI.bubbleHeight >= 0? bubbleUI.bubbleHeight: textContent.preferredHeight;
         bubbleRectTransform.sizeDelta = new Vector2(width + 2 * bubbleUI.textPadding, height + 2 * bubbleUI.textPadding);
 
         // Set position and size of the components
@@ -117,24 +118,23 @@ class Bubble {
     }
 }
 
-
 class InputBubble : Bubble {
-    protected TMP_InputField inputField;
+    protected InputField inputField;
     protected GameObject placeholderObject;
-    protected TextMeshProUGUI placeholderContent;
+    protected Text placeholderContent;
     protected RectTransform placeholderRectTransform;
 
     public InputBubble(Transform parent, BubbleUI ui, string name, string message, int lineHeight=4) : 
-    base(parent, ui, name, addNewLines(message, lineHeight))
+    base(parent, ui, name, emptyLines(lineHeight))
     {
         AddInputField();
         AddPlaceholderObject(message);
         FixCaret();
     }
 
-    static string addNewLines(string message, int lineHeight){
-        string messageLines = message;
-        for (int i = 0; i <= lineHeight-1; i++)
+    static string emptyLines(int lineHeight){
+        string messageLines = "";
+        for (int i = 0; i < lineHeight-1; i++)
             messageLines += "\n";
         return messageLines;
     }
@@ -142,31 +142,29 @@ class InputBubble : Bubble {
     void AddPlaceholderObject(string message){
         // Create a child GameObject for the placeholder text
         GameObject placeholderObject = CreateTextObject(paddingObject.transform, message);
-        placeholderContent = placeholderObject.GetComponent<TextMeshProUGUI>();
+        placeholderObject.name = "placeholderText";
+        placeholderContent = placeholderObject.GetComponent<Text>();
         placeholderRectTransform = placeholderObject.GetComponent<RectTransform>();
 
         placeholderObject.transform.SetParent(paddingObject.transform);
-        placeholderRectTransform.sizeDelta = inputField.textViewport.sizeDelta;
-        placeholderRectTransform.anchoredPosition = inputField.textViewport.anchoredPosition;
-        inputField.placeholder = placeholderObject.GetComponent<TextMeshProUGUI>();
+        placeholderRectTransform.sizeDelta = textRectTransform.sizeDelta;
+        placeholderRectTransform.anchoredPosition = textRectTransform.anchoredPosition;
+        inputField.placeholder = placeholderObject.GetComponent<Text>();
     }
 
     void AddInputField(){
         // Create the input field GameObject
-        inputField = bubbleObject.AddComponent<TMP_InputField>();
+        inputField = bubbleObject.AddComponent<InputField>();
         inputField.interactable = true;
-        inputField.lineType = TMP_InputField.LineType.MultiLineSubmit;
-        inputField.onFocusSelectAll = false;
+        inputField.lineType = InputField.LineType.MultiLineSubmit;
         inputField.shouldHideMobileInput = false;
-        inputField.textComponent = textObject.GetComponent<TextMeshProUGUI>();
-        inputField.textViewport = textObject.GetComponent<RectTransform>();
+        inputField.textComponent = textObject.GetComponent<Text>();
     }
 
     public void FixCaret(){
         // disable and re-enable the inputField because otherwise caret doesn't appear (unity bug)
         inputField.enabled = false;
         inputField.enabled = true;
-        // inputField.ActivateInputField();
     }
 
     public void AddSubmitListener(UnityEngine.Events.UnityAction<string> onInputFieldSubmit){
@@ -181,8 +179,15 @@ class InputBubble : Bubble {
     }
     public new void SetText(string text){
         inputField.text = text;
-        inputField.caretPosition = inputField.text.Length;
+        inputField.MoveTextEnd(true);
     }
+
+    public void SetSelectionColorAlpha(float alpha){
+        Color color = inputField.selectionColor;
+        color.a = alpha;
+        inputField.selectionColor = color;
+    }
+
     public void ActivateInputField(){
         inputField.ActivateInputField();
     } 

@@ -1,8 +1,6 @@
 using UnityEngine;
-using TMPro;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Unity.VisualScripting;
 
 public class ChatManager : MonoBehaviour
 {
@@ -10,7 +8,7 @@ public class ChatManager : MonoBehaviour
     public Color playerColor = new Color32(81, 164, 81, 255);
     public Color aiColor = new Color32(29, 29, 73, 255);
     public Color fontColor = Color.white;
-    public TMP_FontAsset font;
+    public Font font;
     public int fontSize = 16;
     public int bubbleWidth = 600;
     public LLMClient llmClient;
@@ -25,7 +23,7 @@ public class ChatManager : MonoBehaviour
 
     void Start()
     {
-        if (font == null) font = TMP_Settings.defaultFontAsset;
+        if (font == null) font =  Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
         playerUI = new BubbleUI {
             sprite=sprite,
             font=font,
@@ -52,9 +50,8 @@ public class ChatManager : MonoBehaviour
     void onInputFieldSubmit(string newText){
         inputBubble.ActivateInputField();
         if (blockInput || newText == "" || Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)){
-            if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)){
-                inputBubble.SetText(inputBubble.GetText() + "\n");
-            }
+            if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+                StartCoroutine(FieldFix());
             return;
         }
         blockInput = true;
@@ -78,12 +75,19 @@ public class ChatManager : MonoBehaviour
         inputBubble.ReActivateInputField();
     }
 
+    IEnumerator<string> FieldFix()
+    {
+        inputBubble.SetSelectionColorAlpha(0);
+        yield return null;
+        inputBubble.SetText(inputBubble.GetText().TrimStart('\n') + "\n");
+        inputBubble.SetSelectionColorAlpha(1);
+    }
+
     void onValueChanged(string newText){
         // Get rid of newline character added when we press enter
         if (Input.GetKey(KeyCode.Return)){
-            if(inputBubble.GetText() == "\n"){
+            if(inputBubble.GetText() == "\n")
                 inputBubble.SetText("");
-            }
         }
     }
 
