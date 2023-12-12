@@ -5,6 +5,4 @@ Logs
 Temp
 UserSettings
 .vscode
-
 mono_crash.mem*
-*.csproj
