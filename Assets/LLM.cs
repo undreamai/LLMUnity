@@ -49,33 +49,12 @@ public class LLM : LLMClient
         return modelCopying;
     }
 
-    private async Task<string> AddAsset(string assetPath){
-        string fullPath = Path.GetFullPath(assetPath);
-        if (!fullPath.StartsWith(Application.streamingAssetsPath)){
-            // if the asset is not in the assets dir copy it over
-            fullPath = Path.Combine(Application.streamingAssetsPath, Path.GetFileName(assetPath));
-            Debug.Log("copying " + assetPath + " to " + fullPath);
-            UnityEditor.AssetDatabase.StartAssetEditing();
-            await Task.Run(() =>
-            {
-                foreach (string filename in new string[] {fullPath, fullPath + ".meta"}){
-                    if (File.Exists(fullPath))
-                        File.Delete(fullPath);
-                }
-                File.Copy(assetPath, fullPath);
-            });
-            UnityEditor.AssetDatabase.StopAssetEditing();
-            return fullPath;
-        }
-        return fullPath;
-    }
-
     public async void SetServer(string serverPath){
-        server = await AddAsset(serverPath);
+        server = await LLMUnitySetup.AddAsset(serverPath);
     }
     public async void SetModel(string modelPath){
         modelCopying = true;
-        model = await AddAsset(modelPath);
+        model = await LLMUnitySetup.AddAsset(modelPath);
         modelCopying = false;
     }
     #endif
