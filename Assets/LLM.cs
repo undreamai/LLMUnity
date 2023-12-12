@@ -1,6 +1,5 @@
 using System.Diagnostics;
 using System.IO;
-using System.Threading.Tasks;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
@@ -10,8 +9,8 @@ public class LLM : LLMClient
     [HideInInspector] public bool serverHide = true;
 
     [ServerAttribute] public string server = "";
-    [ServerAttribute] public int numGPULayers = 32;
-    [ServerAttribute] public int numThreads = 18;
+    [ServerAttribute] public int numGPULayers = 0;
+    [ServerAttribute] public int numThreads = -1;
 
     [ModelAttribute] public string model = "";
     [ModelAttribute] public int contextSize = 512;
@@ -68,9 +67,10 @@ public class LLM : LLMClient
     private void StartLLMServer()
     {
         if (server == "" || model == ""){
-            if (server == "") Debug.LogError("No server executable provided!");
-            if (model == "") Debug.LogError("No model provided!");
-            return;
+            string error = "";
+            if (server == "") error += "No server executable provided!\n";
+            if (model == "") error += "No model provided!";
+            throw new System.Exception(error);
         }
 
         string arguments = $"-m {model} -c {contextSize} -b {batchSize} --port {port} -t {numThreads} -ngl {numGPULayers}";
