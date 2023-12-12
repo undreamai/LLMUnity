@@ -72,8 +72,13 @@ public class LLM : LLMClient
             if (model == "") error += "No model provided!";
             throw new System.Exception(error);
         }
+        if (numThreads == -1)
+            numThreads = System.Environment.ProcessorCount;
+        string arguments = $"--port {port} -m {model} -c {contextSize} -b {batchSize}";
+        if (numThreads > 0) arguments += $" -t {numThreads}";
+        if (numThreads > 0) arguments += $" -ngl {numGPULayers}";
+        Debug.Log($"Server command: {server} {arguments}");
 
-        string arguments = $"-m {model} -c {contextSize} -b {batchSize} --port {port} -t {numThreads} -ngl {numGPULayers}";
         ProcessStartInfo startInfo = new ProcessStartInfo
         {
             FileName = server,
