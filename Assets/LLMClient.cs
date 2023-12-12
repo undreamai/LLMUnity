@@ -145,36 +145,23 @@ public class LLMClient : MonoBehaviour
 
     public async Task<Ret> PostRequest<Res, Ret>(string json, string endpoint, ContentCallback<Res, Ret> getContent=null, Callback<Ret> callback=null)
     {
-        UnityWebRequest webRequest = new UnityWebRequest($"{host}:{port}/{endpoint}", "POST");
+        UnityWebRequest request = new UnityWebRequest($"{host}:{port}/{endpoint}", "POST");
         if (requestHeaders != null){
             for (int i = 0; i < requestHeaders.Count; i++){
-                webRequest.SetRequestHeader(requestHeaders[i].Item1, requestHeaders[i].Item2);
+                request.SetRequestHeader(requestHeaders[i].Item1, requestHeaders[i].Item2);
             }
         }
         byte[] payload = new System.Text.UTF8Encoding().GetBytes(json);
-        webRequest.uploadHandler = (UploadHandler)new UploadHandlerRaw(payload);
-        webRequest.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
-        webRequest.disposeDownloadHandlerOnDispose = true;
-        webRequest.disposeUploadHandlerOnDispose = true;
+        request.uploadHandler = new UploadHandlerRaw(payload);
+        request.downloadHandler = new DownloadHandlerBuffer();
+        request.disposeDownloadHandlerOnDispose = true;
+        request.disposeUploadHandlerOnDispose = true;
 
-        await webRequest.SendWebRequest();
-
-        switch (webRequest.result)
-        {
-            case UnityWebRequest.Result.ConnectionError:
-            case UnityWebRequest.Result.DataProcessingError:
-            case UnityWebRequest.Result.ProtocolError:
-                Debug.LogError("Error: " + webRequest.error);
-                break;
-            case UnityWebRequest.Result.Success:
-                string response = webRequest.downloadHandler.text;
-                Ret result = ConvertContent(response, getContent);
-                if (callback!=null) callback(result);
-                webRequest.Dispose();
-                return result;
-        }
-        webRequest.Dispose();
-        return default;
+        await request.SendWebRequest();
+        if (request.result != UnityWebRequest.Result.Success) throw new System.Exception(request.error);
+        Ret result = ConvertContent(request.downloadHandler.text, getContent);
+        if (callback!=null) callback(result);
+        return result;
     }
 
     public async Task<string> PostRequestStream<Res>(string json, string endpoint, ContentCallback<Res, string> getContent, Callback<string> callback)
@@ -184,12 +171,9 @@ public class LLMClient : MonoBehaviour
         using (var request = UnityWebRequest.Put($"{host}:{port}/{endpoint}", jsonToSend))
         {
             request.method = "POST";
-            if (requestHeaders != null)
-            {
+            if (requestHeaders != null){
                 for (int i = 0; i < requestHeaders.Count; i++)
-                {
                     request.SetRequestHeader(requestHeaders[i].Item1, requestHeaders[i].Item2);
-                }
             }
 
             // Start the request asynchronously
