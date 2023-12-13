@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Threading.Tasks;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
@@ -102,9 +104,8 @@ public class LLM : LLMClient
         return s + "\n" + s2;
     }
 
-    private void StartLLMServer()
+    private async void StartLLMServer()
     {
-
         string error = "";
         string serverPath = getAssetPath(settings.server);
         string modelPath = getAssetPath(settings.model);
@@ -114,9 +115,7 @@ public class LLM : LLMClient
         else if (!File.Exists(modelPath)) error = ExtendString(error, $"File {modelPath} not found!");
         if (error!="") throw new System.Exception(error);
 
-        if (numThreads == -1)
-            numThreads = System.Environment.ProcessorCount;
-        string arguments = $"--port {port} -m {modelPath} -c {contextSize} -b {batchSize}";
+        string arguments = $"--port {port} -m {modelPath} -c {contextSize} -b {batchSize} --log-disable";
         if (numThreads > 0) arguments += $" -t {numThreads}";
         Debug.Log($"Server command: {serverPath} {arguments}");
 
@@ -131,19 +130,20 @@ public class LLM : LLMClient
         };
 
         process = new Process { StartInfo = startInfo };
-        process.OutputDataReceived += (sender, e) => { HandleOutput(e.Data); };
+        process.OutputDataReceived += (sender, e) => { Debug.Log(e.Data); };
         process.Start();
         process.BeginOutputReadLine();
 
         // Wait until the server is started
-        while (!isServerStarted){}
+        while (true){
+            try {
+                await Tokenize("");
+            } catch (System.Exception e){
+                continue;
+            }
+            break;
+        }
         Debug.Log("LLM Server started!");
-    }
-
-    private void HandleOutput(string data)
-    {
-        if (data != null && data.Contains("HTTP server listening"))
-            isServerStarted = true;
     }
 
     public void StopProcess()
