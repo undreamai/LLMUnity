@@ -91,8 +91,6 @@ class Bubble {
     public void UpdateSize(){
         // Set position and size of bubble
         textContent.SetAllDirty();
-        Debug.Log(textContent.text);
-        Debug.Log(textContent.preferredHeight);
         float width = bubbleUI.bubbleWidth >= 0? bubbleUI.bubbleWidth: textContent.preferredWidth;
         float height = bubbleUI.bubbleHeight >= 0? bubbleUI.bubbleHeight: textContent.preferredHeight;
         bubbleRectTransform.sizeDelta = new Vector2(width + 2 * bubbleUI.textPadding, height + 2 * bubbleUI.textPadding);
