@@ -20,6 +20,10 @@ public class LLM : LLMClient
     private bool modelCopying = false;
     private Process process;
 
+    private string getAssetPath(string relPath=""){
+        return Path.Combine(Application.streamingAssetsPath, relPath);
+    }
+
     #if UNITY_EDITOR
     public LLM() {
         LLMUnitySetup.AddServerPathLinks(SetServer);
@@ -27,7 +31,7 @@ public class LLM : LLMClient
     }
 
     public void RunSetup(){
-        LLMUnitySetup.Setup(Path.Combine(Application.streamingAssetsPath, "server"));
+        LLMUnitySetup.Setup(getAssetPath("server"));
     }
 
     public bool SetupStarted(){
@@ -36,8 +40,7 @@ public class LLM : LLMClient
 
     public void DownloadModel(){
         string modelName = Path.GetFileName(modelUrl).Split("?")[0];
-        string modelPath = Path.Combine(Application.streamingAssetsPath, modelName);
-        StartCoroutine(LLMUnitySetup.DownloadFile(modelUrl, modelPath));
+        StartCoroutine(LLMUnitySetup.DownloadFile(modelUrl, getAssetPath(modelName)));
     }
 
     public bool ModelDownloading(){
@@ -48,11 +51,17 @@ public class LLM : LLMClient
     }
 
     public async void SetServer(string serverPath){
-        server = await LLMUnitySetup.AddAsset(serverPath);
+        string relPath = await LLMUnitySetup.AddAsset(serverPath, getAssetPath());
+        server = getAssetPath(relPath);
+        PlayerPrefs.SetString("serverPath", relPath);
+        PlayerPrefs.Save();
     }
     public async void SetModel(string modelPath){
         modelCopying = true;
-        model = await LLMUnitySetup.AddAsset(modelPath);
+        string relPath = await LLMUnitySetup.AddAsset(modelPath, getAssetPath());
+        model = getAssetPath(relPath);
+        PlayerPrefs.SetString("modelPath", relPath);
+        PlayerPrefs.Save();
         modelCopying = false;
     }
     #endif
@@ -63,23 +72,37 @@ public class LLM : LLMClient
         base.OnEnable();
     }
 
+    private string ExtendString(string s, string s2){
+        if (s=="") return s2;
+        return s + "\n" + s2;
+    }
+
+    private (string, string) CheckAsset(string asset){
+        string path = PlayerPrefs.GetString(asset);
+        if (path == "") return ("", $"No {asset} provided!");
+        string fullPath = getAssetPath(path);
+        if (!File.Exists(fullPath)) return ("", $"File {fullPath} not found!");
+        return (fullPath, "");
+    }
+
     private void StartLLMServer()
     {
-        if (server == "" || model == ""){
-            string error = "";
-            if (server == "") error += "No server executable provided!\n";
-            if (model == "") error += "No model provided!";
-            throw new System.Exception(error);
-        }
+
+        string serverPath, modelPath, serverPathError, modelPathError;
+        (serverPath, serverPathError) = CheckAsset("serverPath");
+        (modelPath, modelPathError) = CheckAsset("modelPath");
+        string error = ExtendString(serverPathError, modelPathError);
+        if (error!="") throw new System.Exception(error);
+
         if (numThreads == -1)
             numThreads = System.Environment.ProcessorCount;
-        string arguments = $"--port {port} -m {model} -c {contextSize} -b {batchSize}";
+        string arguments = $"--port {port} -m {modelPath} -c {contextSize} -b {batchSize}";
         if (numThreads > 0) arguments += $" -t {numThreads}";
-        Debug.Log($"Server command: {server} {arguments}");
+        Debug.Log($"Server command: {serverPath} {arguments}");
 
         ProcessStartInfo startInfo = new ProcessStartInfo
         {
-            FileName = server,
+            FileName = serverPath,
             Arguments = arguments,
             UseShellExecute = false,
             CreateNoWindow = true,

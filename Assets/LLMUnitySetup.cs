@@ -183,11 +183,11 @@ public class LLMUnitySetup: MonoBehaviour
         return modelDownloading;
     }
 
-    public static async Task<string> AddAsset(string assetPath){
+    public static async Task<string> AddAsset(string assetPath, string basePath){
         string fullPath = Path.GetFullPath(assetPath);
-        if (!fullPath.StartsWith(Application.streamingAssetsPath)){
+        if (!fullPath.StartsWith(basePath)){
             // if the asset is not in the assets dir copy it over
-            fullPath = Path.Combine(Application.streamingAssetsPath, Path.GetFileName(assetPath));
+            fullPath = Path.Combine(basePath, Path.GetFileName(assetPath));
             Debug.Log("copying " + assetPath + " to " + fullPath);
             AssetDatabase.StartAssetEditing();
             await Task.Run(() =>
@@ -199,9 +199,9 @@ public class LLMUnitySetup: MonoBehaviour
                 File.Copy(assetPath, fullPath);
             });
             AssetDatabase.StopAssetEditing();
-            return fullPath;
+            Debug.Log("copying complete!");
         }
-        return fullPath;
+        return fullPath.Substring(basePath.Length + 1);
     }
 
     private static void Update(){}
