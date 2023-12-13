@@ -3,6 +3,13 @@ using System.IO;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
+[System.Serializable]
+public class LLMSettings
+{
+    public string server;
+    public string model;
+}
+
 public class LLM : LLMClient
 {
     [HideInInspector] public bool modelHide = true;
@@ -16,6 +23,8 @@ public class LLM : LLMClient
     [ModelAttribute] public int batchSize = 512;
 
     [HideInInspector] public string modelUrl = "https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.1-GGUF/resolve/main/mistral-7b-instruct-v0.1.Q4_K_M.gguf?download=true";
+    private LLMSettings settings;
+    private string settingsPath = "settings.json";
     private bool isServerStarted = false;
     private bool modelCopying = false;
     private Process process;
@@ -24,12 +33,16 @@ public class LLM : LLMClient
         return Path.Combine(Application.streamingAssetsPath, relPath);
     }
 
-    #if UNITY_EDITOR
     public LLM() {
+        LoadSettings();
+
+        #if UNITY_EDITOR
         LLMUnitySetup.AddServerPathLinks(SetServer);
         LLMUnitySetup.AddModelPathLinks(SetModel);
+        #endif
     }
 
+    #if UNITY_EDITOR
     public void RunSetup(){
         LLMUnitySetup.Setup(getAssetPath("server"));
     }
@@ -50,21 +63,33 @@ public class LLM : LLMClient
         return modelCopying;
     }
 
+    private void SaveSettings()
+    {
+        File.WriteAllText(getAssetPath(settingsPath), JsonUtility.ToJson(settings));
+    }
+
     public async void SetServer(string serverPath){
-        string relPath = await LLMUnitySetup.AddAsset(serverPath, getAssetPath());
-        server = getAssetPath(relPath);
-        PlayerPrefs.SetString("serverPath", relPath);
-        PlayerPrefs.Save();
+        settings.server = await LLMUnitySetup.AddAsset(serverPath, getAssetPath());
+        SaveSettings();
+        server = getAssetPath(settings.server);
     }
     public async void SetModel(string modelPath){
         modelCopying = true;
-        string relPath = await LLMUnitySetup.AddAsset(modelPath, getAssetPath());
-        model = getAssetPath(relPath);
-        PlayerPrefs.SetString("modelPath", relPath);
-        PlayerPrefs.Save();
+        settings.model = await LLMUnitySetup.AddAsset(modelPath, getAssetPath());
+        SaveSettings();
+        model = getAssetPath(settings.model);
         modelCopying = false;
     }
     #endif
+
+    public void LoadSettings()
+    {
+        string settingsFullPath = getAssetPath(settingsPath);
+        if (File.Exists(settingsFullPath))
+            settings = JsonUtility.FromJson<LLMSettings>(File.ReadAllText(settingsFullPath));
+        else
+            settings = new LLMSettings();
+    }
 
     new void OnEnable()
     {
@@ -77,21 +102,16 @@ public class LLM : LLMClient
         return s + "\n" + s2;
     }
 
-    private (string, string) CheckAsset(string asset){
-        string path = PlayerPrefs.GetString(asset);
-        if (path == "") return ("", $"No {asset} provided!");
-        string fullPath = getAssetPath(path);
-        if (!File.Exists(fullPath)) return ("", $"File {fullPath} not found!");
-        return (fullPath, "");
-    }
-
     private void StartLLMServer()
     {
 
-        string serverPath, modelPath, serverPathError, modelPathError;
-        (serverPath, serverPathError) = CheckAsset("serverPath");
-        (modelPath, modelPathError) = CheckAsset("modelPath");
-        string error = ExtendString(serverPathError, modelPathError);
+        string error = "";
+        string serverPath = getAssetPath(settings.server);
+        string modelPath = getAssetPath(settings.model);
+        if (settings.server == "") error = ExtendString(error, "No server file provided!");
+        else if (!File.Exists(serverPath)) error = ExtendString(error, $"File {serverPath} not found!");
+        if (settings.model == "") error = ExtendString(error, "No model file provided!");
+        else if (!File.Exists(modelPath)) error = ExtendString(error, $"File {modelPath} not found!");
         if (error!="") throw new System.Exception(error);
 
         if (numThreads == -1)
