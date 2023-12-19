@@ -25,49 +25,25 @@ public class LLMEditor : Editor
 
         // SERVER SETTINGS
         EditorGUILayout.LabelField("Server Settings", EditorStyles.boldLabel);
-        // Add buttons
-        EditorGUILayout.BeginHorizontal();
-        GUI.enabled = !llmScript.SetupStarted();
-        if (GUILayout.Button("Setup server", GUILayout.Width(buttonWidth)))
-        {
-            llmScript.RunSetup();
-        }
-        GUI.enabled = true;
-
-        if (GUILayout.Button("Load server", GUILayout.Width(buttonWidth)))
-        {
-            EditorApplication.delayCall += () => {
-                string path = EditorUtility.OpenFilePanel("Select a llama.cpp server exe", "", "");
-                if (!string.IsNullOrEmpty(path))
-                {
-                    llmScript.SetServer(path);
-                }
-            };
-        }
-        EditorGUILayout.EndHorizontal();
-        if (llmScript.server != ""){
-            ShowPropertiesOfClass(llmScriptSO, typeof(LLM), typeof(ServerAttribute));
-            ShowPropertiesOfClass(llmScriptSO, typeof(LLMClient), typeof(ServerAttribute));
-        }
+        ShowPropertiesOfClass(llmScriptSO, typeof(LLM), typeof(ServerAttribute));
+        ShowPropertiesOfClass(llmScriptSO, typeof(LLMClient), typeof(ServerAttribute));
         EditorGUILayout.Space(EditorGUIUtility.singleLineHeight);
 
         // MODEL SETTINGS
         EditorGUILayout.LabelField("Model Settings", EditorStyles.boldLabel);
         EditorGUILayout.BeginHorizontal();
-        GUI.enabled = !llmScript.ModelDownloading();
+        GUI.enabled = !llmScript.modelWIP;
         if (GUILayout.Button("Download model", GUILayout.Width(buttonWidth)))
         {
             llmScript.DownloadModel();
         }
-        GUI.enabled = true;
-        GUI.enabled = !llmScript.ModelCopying();
         if (GUILayout.Button("Load model", GUILayout.Width(buttonWidth)))
         {
             EditorApplication.delayCall += () => {
                 string path = EditorUtility.OpenFilePanelWithFilters("Select a gguf model file", "", new string[] { "Model Files", "gguf" });
                 if (!string.IsNullOrEmpty(path))
                 {
-                    llmScript.SetModel(path);
+                    llmScript.LoadModel(path);
                 }
             };
         }
@@ -80,7 +56,7 @@ public class LLMEditor : Editor
         EditorGUILayout.Space(EditorGUIUtility.singleLineHeight);
 
         // CLIENT SETTINGS
-        if (llmScript.server != "" && llmScript.model != ""){
+        if (llmScript.model != ""){
             EditorGUILayout.LabelField("Chat Settings", EditorStyles.boldLabel);
             ShowPropertiesOfClass(llmScriptSO, typeof(LLMClient), typeof(ChatAttribute));
         }
