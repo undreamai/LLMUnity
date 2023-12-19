@@ -423,7 +423,7 @@ Transform:
   m_GameObject: {fileID: 817827753}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 666.02924, y: 345.55203, z: -1.3768913}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -454,13 +454,12 @@ MonoBehaviour:
   topP: 0.9
   nPredict: 256
   modelHide: 1
-  serverHide: 1
-  server: 
   numThreads: -1
   model: 
   contextSize: 512
   batchSize: 512
   modelUrl: https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.1-GGUF/resolve/main/mistral-7b-instruct-v0.1.Q4_K_M.gguf?download=true
+  modelWIP: 0
 --- !u!1 &1051131186
 GameObject:
   m_ObjectHideFlags: 0
