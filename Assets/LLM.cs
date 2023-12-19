@@ -1,23 +1,22 @@
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Threading.Tasks;
+using System.Threading;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
 [System.Serializable]
 public class LLMSettings
 {
-    public string server;
     public string model;
 }
 
 public class LLM : LLMClient
 {
     [HideInInspector] public bool modelHide = true;
-    [HideInInspector] public bool serverHide = true;
 
-    [ServerAttribute] public string server = "";
+    private string server = getAssetPath("llamafile-server.exe");
+    private string apeARM = getAssetPath("ape-arm64.elf");
+    private string apeX86_64 = getAssetPath("ape-x86_64.elf");
     [ServerAttribute] public int numThreads = -1;
 
     [ModelAttribute] public string model = "";
@@ -27,60 +26,43 @@ public class LLM : LLMClient
     [HideInInspector] public string modelUrl = "https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.1-GGUF/resolve/main/mistral-7b-instruct-v0.1.Q4_K_M.gguf?download=true";
     private LLMSettings settings;
     private string settingsPath = "settings.json";
-    private bool isServerStarted = false;
-    private bool modelCopying = false;
+    public bool modelWIP = false;
     private Process process;
+    private bool serverListening = false;
+    private static ManualResetEvent serverStarted = new ManualResetEvent(false);
 
-    private string getAssetPath(string relPath=""){
+    private static string getAssetPath(string relPath=""){
         return Path.Combine(Application.streamingAssetsPath, relPath);
     }
 
     public LLM() {
         LoadSettings();
-
-        #if UNITY_EDITOR
-        LLMUnitySetup.AddServerPathLinks(SetServer);
-        LLMUnitySetup.AddModelPathLinks(SetModel);
-        #endif
     }
 
     #if UNITY_EDITOR
-    public void RunSetup(){
-        LLMUnitySetup.Setup(getAssetPath("server"));
-    }
-
-    public bool SetupStarted(){
-        return LLMUnitySetup.SetupStarted();
-    }
-
-    public void DownloadModel(){
-        string modelName = Path.GetFileName(modelUrl).Split("?")[0];
-        StartCoroutine(LLMUnitySetup.DownloadFile(modelUrl, getAssetPath(modelName)));
-    }
-
-    public bool ModelDownloading(){
-        return LLMUnitySetup.ModelDownloading();
-    }
-    public bool ModelCopying(){
-        return modelCopying;
-    }
-
     private void SaveSettings()
     {
         File.WriteAllText(getAssetPath(settingsPath), JsonUtility.ToJson(settings));
     }
 
-    public async void SetServer(string serverPath){
-        settings.server = await LLMUnitySetup.AddAsset(serverPath, getAssetPath());
-        SaveSettings();
-        server = getAssetPath(settings.server);
+    public async void DownloadModel(){
+        modelWIP = true;
+        string modelName = Path.GetFileName(modelUrl).Split("?")[0];
+        string modelPath = getAssetPath(modelName);
+        await LLMUnitySetup.DownloadFile(modelUrl, modelPath);
+        SetModel(modelName);
     }
-    public async void SetModel(string modelPath){
-        modelCopying = true;
-        settings.model = await LLMUnitySetup.AddAsset(modelPath, getAssetPath());
+
+    public async void LoadModel(string modelPath){
+        modelWIP = true;
+        SetModel(await LLMUnitySetup.AddAsset(modelPath, getAssetPath()));
+    }
+
+    public void SetModel(string modelPath){
+        model = getAssetPath(modelPath);
+        settings.model = modelPath;
         SaveSettings();
-        model = getAssetPath(settings.model);
-        modelCopying = false;
+        modelWIP = false;
     }
     #endif
 
@@ -99,51 +81,61 @@ public class LLM : LLMClient
         base.OnEnable();
     }
 
-    private string ExtendString(string s, string s2){
-        if (s=="") return s2;
-        return s + "\n" + s2;
+    private string selectApeBinary(){
+        string arch = LLMUnitySetup.RunProcess("uname", "-m");
+        Debug.Log($"architecture: {arch}");
+        string apeExe;
+        if (arch.Contains("arm64") || arch.Contains("aarch64")) {
+            apeExe = apeARM;
+        } else {
+            apeExe = apeX86_64;
+            if (!arch.Contains("x86_64"))
+                Debug.Log($"Unknown architecture of processor {arch}! Falling back to x86_64");
+        }
+        return apeExe;
     }
 
-    private async void StartLLMServer()
-    {
-        string error = "";
-        string serverPath = getAssetPath(settings.server);
-        string modelPath = getAssetPath(settings.model);
-        if (settings.server == "") error = ExtendString(error, "No server file provided!");
-        else if (!File.Exists(serverPath)) error = ExtendString(error, $"File {serverPath} not found!");
-        if (settings.model == "") error = ExtendString(error, "No model file provided!");
-        else if (!File.Exists(modelPath)) error = ExtendString(error, $"File {modelPath} not found!");
-        if (error!="") throw new System.Exception(error);
-
-        string arguments = $"--port {port} -m {modelPath} -c {contextSize} -b {batchSize} --log-disable";
-        if (numThreads > 0) arguments += $" -t {numThreads}";
-        Debug.Log($"Server command: {serverPath} {arguments}");
-
-        ProcessStartInfo startInfo = new ProcessStartInfo
-        {
-            FileName = serverPath,
-            Arguments = arguments,
-            UseShellExecute = false,
-            CreateNoWindow = true,
-            RedirectStandardOutput = true,
-            RedirectStandardError = true
-        };
-
-        process = new Process { StartInfo = startInfo };
-        process.OutputDataReceived += (sender, e) => { Debug.Log(e.Data); };
-        process.Start();
-        process.BeginOutputReadLine();
-
-        // Wait until the server is started
-        while (true){
+    private void DebugWhenListening(string message){
+        if(serverListening){
+            if(message != null) Debug.Log(message);
+        } else {
             try {
-                await Tokenize("");
-            } catch (System.Exception e){
-                continue;
-            }
-            break;
+                ServerStatus status = JsonUtility.FromJson<ServerStatus>(message);
+                if (status.message == "HTTP server listening"){
+                    Debug.Log("LLM Server started!");
+                    serverStarted.Set();
+                    serverListening = true;
+                }
+            } catch {}
         }
-        Debug.Log("LLM Server started!");
+    }  
+
+    private void handleProcessError(string error){
+        if (error == null) return;
+        Debug.Log(error);
+        if (error.Contains("run-detectors")){
+            if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer)
+                throw new System.Exception("run-detectors error in Windows!"); 
+            StopProcess();
+            string binary = selectApeBinary();
+            string arguments = $"{process.StartInfo.FileName} {process.StartInfo.Arguments}";
+            Debug.Log($"Server command: {binary} {arguments}");
+            process = LLMUnitySetup.CreateProcess(binary, arguments, DebugWhenListening, DebugWhenListening);
+        }
+    }
+
+    private void StartLLMServer()
+    {
+        string modelPath = getAssetPath(settings.model);
+        if (settings.model == "") throw new System.Exception("No model file provided!");
+        if (!File.Exists(modelPath)) throw new System.Exception($"File {modelPath} not found!");
+
+        string binary = server;
+        string arguments = $" --port {port} -m {modelPath} -c {contextSize} -b {batchSize} --log-disable --nobrowser";
+        if (numThreads > 0) arguments += $" -t {numThreads}";
+        Debug.Log($"Server command: {binary} {arguments}");
+        process = LLMUnitySetup.CreateProcess(binary, arguments, DebugWhenListening, handleProcessError);
+        serverStarted.WaitOne();
     }
 
     public void StopProcess()
