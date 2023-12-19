@@ -93,3 +93,15 @@ public struct TokenizeResult
 {
     public List<int> tokens;
 }
+
+[Serializable]
+public struct ServerStatus
+{
+    public DateTime timestamp;
+    public string level;
+    public string function;
+    public int line;
+    public string message;
+    public string hostname;
+    public int port;
+}
