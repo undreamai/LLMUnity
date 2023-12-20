@@ -11,7 +11,7 @@ struct BubbleUI {
     public float bottomPosition;
     public float leftPosition;
     public float textPadding;
-    public float bubbleSpacing;
+    public float bubbleOffset;
     public float bubbleWidth;
     public float bubbleHeight;
 }
@@ -76,14 +76,15 @@ class Bubble {
         bubbleRectTransform.pivot = new Vector2(bubbleUI.leftPosition, bubbleUI.bottomPosition);
         bubbleRectTransform.anchorMin = new Vector2(bubbleUI.leftPosition, bubbleUI.bottomPosition);
         bubbleRectTransform.anchorMax = new Vector2(bubbleUI.leftPosition, bubbleUI.bottomPosition);
-        Vector2 anchoredPosition = new Vector2(bubbleUI.bubbleSpacing, bubbleUI.bubbleSpacing);
+        Vector2 anchoredPosition = new Vector2(bubbleUI.bubbleOffset + bubbleUI.textPadding, bubbleUI.bubbleOffset + bubbleUI.textPadding);
         if (bubbleUI.leftPosition == 1) anchoredPosition.x *= -1;
         if (bubbleUI.bottomPosition == 1) anchoredPosition.y *= -1;
         bubbleRectTransform.anchoredPosition = anchoredPosition;
 
-        bubbleRectTransform.sizeDelta = new Vector2(600, bubbleRectTransform.sizeDelta.y);
+        bubbleRectTransform.sizeDelta = new Vector2(600 - 2*bubbleUI.textPadding, bubbleRectTransform.sizeDelta.y - 2*bubbleUI.textPadding);
         SyncParentRectTransform(imageRectTransform);
-        // imageRectTransform.localScale = new Vector2(1.1f, 1.1f);
+        imageRectTransform.offsetMin = new Vector2(-bubbleUI.textPadding, -bubbleUI.textPadding);
+        imageRectTransform.offsetMax = new Vector2(bubbleUI.textPadding, bubbleUI.textPadding);
     }
 
     void SetSortingOrder(GameObject bubbleObject, GameObject imageObject){
@@ -99,9 +100,19 @@ class Bubble {
     public RectTransform GetRectTransform(){
         return bubbleObject.GetComponent<RectTransform>();
     }
+
+    public RectTransform GetOuterRectTransform(){
+        return imageObject.GetComponent<RectTransform>();
+    }
+
+    public Vector2 GetSize(){
+        return bubbleObject.GetComponent<RectTransform>().sizeDelta + imageObject.GetComponent<RectTransform>().sizeDelta;
+    }
+
     public string GetText(){
         return bubbleObject.GetComponent<Text>().text;
     }
+
     public void SetText(string text){
         bubbleObject.GetComponent<Text>().text = text;
     }
@@ -125,6 +136,7 @@ class InputBubble : Bubble {
         placeholderObject = CreatePlaceholderObject(bubbleObject.transform, bubbleRectTransform, textObjext.text);
         inputFieldObject = CreateInputFieldObject(bubbleObject.transform, textObjext, placeholderObject.GetComponent<Text>());
         inputField = inputFieldObject.GetComponent<InputField>();
+        FixCaret();
     }
 
     static string emptyLines(string message, int lineHeight){
@@ -162,6 +174,12 @@ class InputBubble : Bubble {
         inputCanvas.overrideSorting = true;
         inputCanvas.sortingOrder = 3;
         return inputFieldObject;
+    }
+
+    public void FixCaret(){
+        // disable and re-enable the inputField because otherwise caret doesn't appear (unity bug)
+        inputField.enabled = false;
+        inputField.enabled = true;
     }
 
     public void AddSubmitListener(UnityEngine.Events.UnityAction<string> onInputFieldSubmit){
@@ -220,7 +238,7 @@ class BubbleTextSetter {
 
     public void SetText(string text){
         bubble.SetText(text);
-        chatManager.UpdateBubblePositions();
+        chatManager.SetUpdatePositions();
         chatManager.AllowInput();
     }
 }

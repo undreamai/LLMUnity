@@ -20,6 +20,7 @@ public class ChatManager : MonoBehaviour
     private List<Bubble> chatBubbles = new List<Bubble>();
     private bool blockInput = false;
     private BubbleUI playerUI, aiUI;
+    private bool updatePositions=false;
 
     void Start()
     {
@@ -33,7 +34,7 @@ public class ChatManager : MonoBehaviour
             bottomPosition=0,
             leftPosition=0,
             textPadding=textPadding,
-            bubbleSpacing=bubbleSpacing,
+            bubbleOffset=bubbleSpacing,
             bubbleWidth=bubbleWidth,
             bubbleHeight=-1
         };
@@ -62,7 +63,7 @@ public class ChatManager : MonoBehaviour
         Bubble aiBubble = new Bubble(chatContainer, aiUI, "AIBubble", "...");
         chatBubbles.Add(playerBubble);
         chatBubbles.Add(aiBubble);
-        UpdateBubblePositions();
+        SetUpdatePositions();
 
         BubbleTextSetter aiBubbleTextSetter = new BubbleTextSetter(this, aiBubble);
         Task chatTask = llmClient.Chat(message, aiBubbleTextSetter.SetText);
@@ -93,9 +94,13 @@ public class ChatManager : MonoBehaviour
         }
     }
 
+    public void SetUpdatePositions(){
+        updatePositions = true;
+    }
+
     public void UpdateBubblePositions()
     {
-        float y = inputBubble.GetRectTransform().sizeDelta.y + 2 * bubbleSpacing;
+        float y = inputBubble.GetSize().y + inputBubble.GetRectTransform().offsetMin.y + 2 * bubbleSpacing;
         int lastBubbleOutsideFOV = -1;
         float containerHeight = chatContainer.GetComponent<RectTransform>().rect.height;
         for (int i = chatBubbles.Count - 1; i >= 0; i--) {
@@ -107,7 +112,7 @@ public class ChatManager : MonoBehaviour
             if (y > containerHeight && lastBubbleOutsideFOV == -1){
                 lastBubbleOutsideFOV = i;
             }
-            y += childRect.sizeDelta.y + bubbleSpacing;
+            y += bubble.GetSize().y + bubbleSpacing;
         }
         // destroy bubbles outside the container
         for (int i = 0; i <= lastBubbleOutsideFOV; i++) {
@@ -122,6 +127,10 @@ public class ChatManager : MonoBehaviour
         {
             inputBubble.ActivateInputField();
             StartCoroutine(SelectAndShiftFix());
+        }
+        if(updatePositions){
+            UpdateBubblePositions();
+            updatePositions=false;
         }
     }
 }
