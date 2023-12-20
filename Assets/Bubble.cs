@@ -135,7 +135,8 @@ class InputBubble : Bubble {
         bubbleObject.GetComponent<ContentSizeFitter>().enabled = false;
         placeholderObject = CreatePlaceholderObject(bubbleObject.transform, bubbleRectTransform, textObjext.text);
         inputFieldObject = CreateInputFieldObject(bubbleObject.transform, textObjext, placeholderObject.GetComponent<Text>());
-        inputField = inputFieldObject.GetComponent<InputField>();       
+        inputField = inputFieldObject.GetComponent<InputField>();
+        FixCaretSorting(inputField);
     }
 
     static string emptyLines(string message, int lineHeight){
@@ -167,6 +168,13 @@ class InputBubble : Bubble {
         inputField.shouldActivateOnSelect = true;
         SyncParentRectTransform(inputFieldObject.GetComponent<RectTransform>());
         return inputFieldObject;
+    }
+
+    public void FixCaretSorting(InputField inputField){
+        GameObject caret = GameObject.Find($"{inputField.name} Input Caret");
+        Canvas bubbleCanvas = caret.AddComponent<Canvas>();
+        bubbleCanvas.overrideSorting = true;
+        bubbleCanvas.sortingOrder = 3;
     }
 
     public void AddSubmitListener(UnityEngine.Events.UnityAction<string> onInputFieldSubmit){
