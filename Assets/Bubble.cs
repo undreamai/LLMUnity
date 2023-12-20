@@ -136,7 +136,6 @@ class InputBubble : Bubble {
         placeholderObject = CreatePlaceholderObject(bubbleObject.transform, bubbleRectTransform, textObjext.text);
         inputFieldObject = CreateInputFieldObject(bubbleObject.transform, textObjext, placeholderObject.GetComponent<Text>());
         inputField = inputFieldObject.GetComponent<InputField>();
-        FixCaret();
     }
 
     static string emptyLines(string message, int lineHeight){
@@ -174,12 +173,6 @@ class InputBubble : Bubble {
         inputCanvas.overrideSorting = true;
         inputCanvas.sortingOrder = 3;
         return inputFieldObject;
-    }
-
-    public void FixCaret(){
-        // disable and re-enable the inputField because otherwise caret doesn't appear (unity bug)
-        inputField.enabled = false;
-        inputField.enabled = true;
     }
 
     public void AddSubmitListener(UnityEngine.Events.UnityAction<string> onInputFieldSubmit){
