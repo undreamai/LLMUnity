@@ -135,7 +135,7 @@ class InputBubble : Bubble {
         bubbleObject.GetComponent<ContentSizeFitter>().enabled = false;
         placeholderObject = CreatePlaceholderObject(bubbleObject.transform, bubbleRectTransform, textObjext.text);
         inputFieldObject = CreateInputFieldObject(bubbleObject.transform, textObjext, placeholderObject.GetComponent<Text>());
-        inputField = inputFieldObject.GetComponent<InputField>();
+        inputField = inputFieldObject.GetComponent<InputField>();       
     }
 
     static string emptyLines(string message, int lineHeight){
@@ -165,13 +165,7 @@ class InputBubble : Bubble {
         inputField.lineType = InputField.LineType.MultiLineSubmit;
         inputField.shouldHideMobileInput = false;
         inputField.shouldActivateOnSelect = true;
-
-        RectTransform inputRectTransform = inputFieldObject.GetComponent<RectTransform>();
-        SyncParentRectTransform(inputRectTransform);
-
-        Canvas inputCanvas = inputFieldObject.GetComponent<Canvas>();
-        inputCanvas.overrideSorting = true;
-        inputCanvas.sortingOrder = 3;
+        SyncParentRectTransform(inputFieldObject.GetComponent<RectTransform>());
         return inputFieldObject;
     }
 
