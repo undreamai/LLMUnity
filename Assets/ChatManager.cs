@@ -78,9 +78,9 @@ public class ChatManager : MonoBehaviour
     IEnumerator<string> SelectAndShiftFix()
     {
         // prevent from change until next frame
-        inputBubble.inputField.interactable=false;
+        inputBubble.setInteractable(false);
         yield return null;
-        inputBubble.inputField.interactable=true;
+        inputBubble.setInteractable(true);
         // change the caret position to the end of the text
         inputBubble.MoveTextEnd();
     }

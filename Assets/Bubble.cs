@@ -189,6 +189,10 @@ class InputBubble : Bubble {
         inputField.MoveTextEnd(true);
     }
 
+    public void setInteractable(bool interactable){
+        inputField.interactable = interactable;
+    }
+
     public void SetSelectionColorAlpha(float alpha){
         Color color = inputField.selectionColor;
         color.a = alpha;
