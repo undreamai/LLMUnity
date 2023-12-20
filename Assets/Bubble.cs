@@ -18,49 +18,38 @@ struct BubbleUI {
 
 class Bubble {
     protected GameObject bubbleObject;
-    protected RectTransform bubbleRectTransform;
-    protected Image bubbleImage;
-    protected GameObject paddingObject;
-    protected RectTransform paddingRectTransform;
-    protected GameObject textObject;
-    protected RectTransform textRectTransform;
-    protected Text textContent;
+    protected GameObject imageObject;
     public BubbleUI bubbleUI;
 
     public Bubble(Transform parent, BubbleUI ui, string name, string message)
     {
         bubbleUI = ui;
-        AddBubbleObject(parent, name);
-        AddPaddingObject();
-        AddTextObject(message);
-        SetBubblePosition();
-        UpdateSize();
+        bubbleObject = CreateTextObject(parent, name, message, bubbleUI.bubbleWidth == -1, bubbleUI.bubbleHeight == -1);
+        imageObject =  CreateImageObject(bubbleObject.transform, "Image");
+        SetBubblePosition(bubbleObject.GetComponent<RectTransform>(), imageObject.GetComponent<RectTransform>(), bubbleUI);
+        SetSortingOrder(bubbleObject, imageObject);
     }
 
-    void AddBubbleObject(Transform parent, String bubbleName){
-        // Create a new GameObject for the chat bubble
-        bubbleObject = new GameObject(bubbleName, typeof(RectTransform), typeof(Image));
-        bubbleObject.transform.SetParent(parent);
-        bubbleRectTransform = bubbleObject.GetComponent<RectTransform>();
-        bubbleImage = bubbleObject.GetComponent<Image>();
-
-        bubbleImage.type = Image.Type.Sliced;
-        bubbleImage.sprite = bubbleUI.sprite;
-        bubbleImage.color = bubbleUI.bubbleColor;
+    public void SyncParentRectTransform(RectTransform rectTransform){
+        rectTransform.anchorMin = Vector2.zero;
+        rectTransform.anchorMax = Vector2.one;
+        rectTransform.pivot = new Vector2(0.5f, 0.5f);
+        rectTransform.offsetMin = Vector2.zero;
+        rectTransform.offsetMax = Vector2.zero;
     }
 
-    void AddPaddingObject(){
-        // Add an object for alignment
-        paddingObject = new GameObject("paddingObject");
-        paddingRectTransform = paddingObject.AddComponent<RectTransform>();
-        paddingObject.transform.SetParent(bubbleObject.transform);
-    }
-
-    protected GameObject CreateTextObject(Transform parent, string message){
+    protected GameObject CreateTextObject(Transform parent, string name, string message, bool horizontalStretch=true, bool verticalStretch=false){
         // Create a child GameObject for the text
-        GameObject textObject = new GameObject("Text", typeof(RectTransform), typeof(Text));
+        Debug.Log(message);
+        GameObject textObject = new GameObject(name, typeof(RectTransform), typeof(Text), typeof(Canvas));
         textObject.transform.SetParent(parent);
         Text textContent = textObject.GetComponent<Text>();
+
+        if (verticalStretch || horizontalStretch){
+            ContentSizeFitter contentSizeFitter = textObject.AddComponent<ContentSizeFitter>();
+            if (verticalStretch) contentSizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+            if (horizontalStretch) contentSizeFitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
+        }
         // Add text and font
         textContent.text = message;
         if (bubbleUI.font != null)
@@ -70,13 +59,19 @@ class Bubble {
         return textObject;
     }
 
-    void AddTextObject(string message) {
-        textObject = CreateTextObject(paddingObject.transform, message);
-        textContent = textObject.GetComponent<Text>();
-        textRectTransform = textObject.GetComponent<RectTransform>();
+    protected GameObject CreateImageObject(Transform parent, string name){
+        GameObject imageObject = new GameObject(name, typeof(RectTransform), typeof(Image), typeof(Canvas));
+        imageObject.transform.SetParent(parent);
+        RectTransform imageRectTransform = imageObject.GetComponent<RectTransform>();
+        Image bubbleImage = imageObject.GetComponent<Image>();
+
+        bubbleImage.type = Image.Type.Sliced;
+        bubbleImage.sprite = bubbleUI.sprite;
+        bubbleImage.color = bubbleUI.bubbleColor;
+        return imageObject;
     }
- 
-    void SetBubblePosition()
+
+    void SetBubblePosition(RectTransform bubbleRectTransform, RectTransform imageRectTransform, BubbleUI bubbleUI)
     {
         // Set the position of the new bubble at the bottom
         bubbleRectTransform.pivot = new Vector2(bubbleUI.leftPosition, bubbleUI.bottomPosition);
@@ -86,29 +81,31 @@ class Bubble {
         if (bubbleUI.leftPosition == 1) anchoredPosition.x *= -1;
         if (bubbleUI.bottomPosition == 1) anchoredPosition.y *= -1;
         bubbleRectTransform.anchoredPosition = anchoredPosition;
+
+        bubbleRectTransform.sizeDelta = new Vector2(600, bubbleRectTransform.sizeDelta.y);
+        SyncParentRectTransform(imageRectTransform);
+        // imageRectTransform.localScale = new Vector2(1.1f, 1.1f);
     }
 
-    public void UpdateSize(){
-        // Set position and size of bubble
-        textContent.SetAllDirty();
-        float width = bubbleUI.bubbleWidth >= 0? bubbleUI.bubbleWidth: textContent.preferredWidth;
-        float height = bubbleUI.bubbleHeight >= 0? bubbleUI.bubbleHeight: textContent.preferredHeight;
-        bubbleRectTransform.sizeDelta = new Vector2(width + 2 * bubbleUI.textPadding, height + 2 * bubbleUI.textPadding);
-
-        // Set position and size of the components
-        paddingRectTransform.sizeDelta = new Vector2(width, height);
-        textRectTransform.sizeDelta = new Vector2(width, height);
-        textRectTransform.anchoredPosition = Vector2.zero;
+    void SetSortingOrder(GameObject bubbleObject, GameObject imageObject){
+        // Set the sorting order to make bubbleObject render behind textObject
+        Canvas bubbleCanvas = bubbleObject.GetComponent<Canvas>();
+        bubbleCanvas.overrideSorting = true;
+        bubbleCanvas.sortingOrder = 2;
+        Canvas imageCanvas = imageObject.GetComponent<Canvas>();
+        imageCanvas.overrideSorting = true;
+        imageCanvas.sortingOrder = 1;
     }
 
     public RectTransform GetRectTransform(){
-        return bubbleRectTransform;
+        return bubbleObject.GetComponent<RectTransform>();
     }
     public string GetText(){
-        return textContent.text;
+        return bubbleObject.GetComponent<Text>().text;
     }
     public void SetText(string text){
-        textContent.text = text;
+        Debug.Log("SetText: "+text);
+        bubbleObject.GetComponent<Text>().text = text;
     }
 
     public void Destroy(){
@@ -117,52 +114,56 @@ class Bubble {
 }
 
 class InputBubble : Bubble {
-    protected InputField inputField;
+    protected GameObject inputFieldObject;
+    public InputField inputField;
     protected GameObject placeholderObject;
-    protected Text placeholderContent;
-    protected RectTransform placeholderRectTransform;
 
     public InputBubble(Transform parent, BubbleUI ui, string name, string message, int lineHeight=4) : 
-    base(parent, ui, name, emptyLines(lineHeight))
+    base(parent, ui, name, emptyLines(message, lineHeight))
     {
-        AddInputField();
-        AddPlaceholderObject(message);
-        FixCaret();
+        Text textObjext = bubbleObject.GetComponent<Text>();
+        RectTransform bubbleRectTransform = bubbleObject.GetComponent<RectTransform>();
+        bubbleObject.GetComponent<ContentSizeFitter>().enabled = false;
+        placeholderObject = CreatePlaceholderObject(bubbleObject.transform, bubbleRectTransform, textObjext.text);
+        inputFieldObject = CreateInputFieldObject(bubbleObject.transform, textObjext, placeholderObject.GetComponent<Text>());
+        inputField = inputFieldObject.GetComponent<InputField>();
     }
 
-    static string emptyLines(int lineHeight){
-        string messageLines = "";
+    static string emptyLines(string message, int lineHeight){
+        string messageLines = message;
         for (int i = 0; i < lineHeight-1; i++)
             messageLines += "\n";
         return messageLines;
     }
 
-    void AddPlaceholderObject(string message){
+    GameObject CreatePlaceholderObject(Transform parent, RectTransform textRectTransform, string message){
         // Create a child GameObject for the placeholder text
-        GameObject placeholderObject = CreateTextObject(paddingObject.transform, message);
-        placeholderObject.name = "placeholderText";
-        placeholderContent = placeholderObject.GetComponent<Text>();
-        placeholderRectTransform = placeholderObject.GetComponent<RectTransform>();
-
-        placeholderObject.transform.SetParent(paddingObject.transform);
+        GameObject placeholderObject = CreateTextObject(parent, "Placeholder", message, false, false);
+        RectTransform placeholderRectTransform = placeholderObject.GetComponent<RectTransform>();
         placeholderRectTransform.sizeDelta = textRectTransform.sizeDelta;
         placeholderRectTransform.anchoredPosition = textRectTransform.anchoredPosition;
-        inputField.placeholder = placeholderObject.GetComponent<Text>();
+        SyncParentRectTransform(placeholderRectTransform);
+        return placeholderObject;
     }
 
-    void AddInputField(){
-        // Create the input field GameObject
-        inputField = bubbleObject.AddComponent<InputField>();
+    GameObject CreateInputFieldObject(Transform parent, Text textObject, Text placeholderTextObject){
+        GameObject inputFieldObject = new GameObject("InputField", typeof(RectTransform), typeof(InputField), typeof(Canvas));
+        inputFieldObject.transform.SetParent(parent);
+        inputField = inputFieldObject.GetComponent<InputField>();
+        inputField.textComponent = textObject;
+        inputField.placeholder = placeholderTextObject;
         inputField.interactable = true;
         inputField.lineType = InputField.LineType.MultiLineSubmit;
         inputField.shouldHideMobileInput = false;
-        inputField.textComponent = textObject.GetComponent<Text>();
-    }
+        inputField.shouldActivateOnSelect = true;
 
-    public void FixCaret(){
-        // disable and re-enable the inputField because otherwise caret doesn't appear (unity bug)
-        inputField.enabled = false;
-        inputField.enabled = true;
+        RectTransform inputRectTransform = inputFieldObject.GetComponent<RectTransform>();
+        SyncParentRectTransform(inputRectTransform);
+
+        Canvas inputCanvas = inputFieldObject.GetComponent<Canvas>();
+        inputCanvas.overrideSorting = true;
+        inputCanvas.sortingOrder = 3;
+        return inputFieldObject;
     }
 
     public void AddSubmitListener(UnityEngine.Events.UnityAction<string> onInputFieldSubmit){
@@ -193,7 +194,7 @@ class InputBubble : Bubble {
         inputField.DeactivateInputField();
         inputField.Select();
         inputField.ActivateInputField();
-    }        
+    }
 }
 
 class BubbleTextSetter {
@@ -206,7 +207,6 @@ class BubbleTextSetter {
 
     public void SetText(string text){
         bubble.SetText(text);
-        bubble.UpdateSize();
         chatManager.UpdateBubblePositions();
         chatManager.AllowInput();
     }

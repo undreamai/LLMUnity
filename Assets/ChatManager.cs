@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using UnityEngine.EventSystems;
 
 public class ChatManager : MonoBehaviour
 {
@@ -112,5 +113,17 @@ public class ChatManager : MonoBehaviour
             chatBubbles[i].Destroy();
         }
         chatBubbles.RemoveRange(0, lastBubbleOutsideFOV+1);
+    }
+
+    void Update()
+    {
+        if(inputBubble.inputField.isFocused == false)
+        {
+            Debug.Log("dasdas");
+            inputBubble.inputField.ActivateInputField();
+            inputBubble.inputField.MoveTextEnd(true);
+            // EventSystem.current.SetSelectedGameObject(inputBubble.inputField.gameObject, null);
+            // inputBubble.inputField.OnPointerClick(new PointerEventData(EventSystem.current));
+        }
     }
 }
