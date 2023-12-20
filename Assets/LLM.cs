@@ -18,6 +18,7 @@ public class LLM : LLMClient
     private string apeARM = getAssetPath("ape-arm64.elf");
     private string apeX86_64 = getAssetPath("ape-x86_64.elf");
     [ServerAttribute] public int numThreads = -1;
+    [ServerAttribute] public bool debug = false;
 
     [ModelAttribute] public string model = "";
     [ModelAttribute] public int contextSize = 512;
@@ -95,33 +96,27 @@ public class LLM : LLMClient
         return apeExe;
     }
 
-    private void DebugWhenListening(string message){
-        if(serverListening){
-            if(message != null) Debug.Log(message);
-        } else {
-            try {
-                ServerStatus status = JsonUtility.FromJson<ServerStatus>(message);
-                if (status.message == "HTTP server listening"){
-                    Debug.Log("LLM Server started!");
-                    serverStarted.Set();
-                    serverListening = true;
-                }
-            } catch {}
-        }
-    }  
+    private void DebugLog(string message, bool logError = false){
+        if (!debug || message == null) return;
+        if (logError) Debug.LogError(message);
+        else Debug.Log(message);
+    }
 
-    private void handleProcessError(string error){
-        if (error == null) return;
-        Debug.Log(error);
-        if (error.Contains("run-detectors")){
-            if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer)
-                throw new System.Exception("run-detectors error in Windows!"); 
-            StopProcess();
-            string binary = selectApeBinary();
-            string arguments = $"{process.StartInfo.FileName} {process.StartInfo.Arguments}";
-            Debug.Log($"Server command: {binary} {arguments}");
-            process = LLMUnitySetup.CreateProcess(binary, arguments, DebugWhenListening, DebugWhenListening);
-        }
+    private void DebugLogError(string message){
+        DebugLog(message, true);
+    }
+
+    private void CheckIfListening(string message){
+        DebugLog(message);
+        if (serverListening) return;
+        try {
+            ServerStatus status = JsonUtility.FromJson<ServerStatus>(message);
+            if (status.message == "HTTP server listening"){
+                Debug.Log("LLM Server started!");
+                serverStarted.Set();
+                serverListening = true;
+            }
+        } catch {}
     }
 
     private void StartLLMServer()
@@ -133,8 +128,13 @@ public class LLM : LLMClient
         string binary = server;
         string arguments = $" --port {port} -m {modelPath} -c {contextSize} -b {batchSize} --log-disable --nobrowser";
         if (numThreads > 0) arguments += $" -t {numThreads}";
+
+        if (Application.platform != RuntimePlatform.WindowsEditor && Application.platform != RuntimePlatform.WindowsPlayer){
+            arguments = $"{binary} {arguments}";
+            binary = selectApeBinary();
+        }
         Debug.Log($"Server command: {binary} {arguments}");
-        process = LLMUnitySetup.CreateProcess(binary, arguments, DebugWhenListening, handleProcessError);
+        process = LLMUnitySetup.CreateProcess(binary, arguments, CheckIfListening, DebugLogError);
         serverStarted.WaitOne();
     }
 
