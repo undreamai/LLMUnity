@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
@@ -18,6 +19,7 @@ public class LLM : LLMClient
     private string apeARM = getAssetPath("ape-arm64.elf");
     private string apeX86_64 = getAssetPath("ape-x86_64.elf");
     [ServerAttribute] public int numThreads = -1;
+    [ServerAttribute] public int numGPULayers = 0;
     [ServerAttribute] public bool debug = false;
 
     [ModelAttribute] public string model = "";
@@ -128,13 +130,20 @@ public class LLM : LLMClient
         string binary = server;
         string arguments = $" --port {port} -m {modelPath} -c {contextSize} -b {batchSize} --log-disable --nobrowser";
         if (numThreads > 0) arguments += $" -t {numThreads}";
+        if (numGPULayers > 0) arguments += $" -ngl {numGPULayers}";
+        List<(string, string)> environment = null;
 
         if (Application.platform != RuntimePlatform.WindowsEditor && Application.platform != RuntimePlatform.WindowsPlayer){
+            // use APE binary directly if not on Windows
             arguments = $"{binary} {arguments}";
             binary = selectApeBinary();
+            if (numGPULayers <= 0){
+                // prevent nvcc building if not using GPU
+                environment = new List<(string, string)> {("PATH", ""), ("CUDA_PATH", "")};
+            }
         }
         Debug.Log($"Server command: {binary} {arguments}");
-        process = LLMUnitySetup.CreateProcess(binary, arguments, CheckIfListening, DebugLogError);
+        process = LLMUnitySetup.CreateProcess(binary, arguments, CheckIfListening, DebugLogError, environment);
         serverStarted.WaitOne();
     }
 
