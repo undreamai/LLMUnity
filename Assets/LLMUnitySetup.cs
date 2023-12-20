@@ -1,4 +1,3 @@
-#if UNITY_EDITOR
 using UnityEditor;
 using System.Diagnostics;
 using System.IO;
@@ -8,27 +7,9 @@ using Debug = UnityEngine.Debug;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
-[InitializeOnLoad]
 public class LLMUnitySetup: MonoBehaviour
 {
-    public delegate void Callback();
     public delegate void StringCallback(string message);
-
-    public static void SetLinuxExecutable(string filePath)
-    {
-        try
-        {
-            FileInfo fileInfo = new FileInfo(filePath){ IsReadOnly = false};
-            fileInfo.Attributes |= FileAttributes.System; // Ensure the file is not marked as system file
-            fileInfo.Attributes &= ~FileAttributes.ReadOnly; // Clear read-only attribute
-            fileInfo.Attributes |= FileAttributes.Archive; // Ensure the file is not marked as archive
-            fileInfo.Attributes |= FileAttributes.Normal;
-        }
-        catch (System.Exception e)
-        {
-            Debug.LogError($"Error setting execute permissions: {e.Message}");
-        }
-    }
 
     public static Process CreateProcess(
         string command, string commandArgs="",
@@ -66,6 +47,7 @@ public class LLMUnitySetup: MonoBehaviour
         return output;
     }
 
+#if UNITY_EDITOR
     public async static Task DownloadFile(string fileUrl, string savePath, bool debug=true)
     {
         if (File.Exists(savePath)){
@@ -113,7 +95,5 @@ public class LLMUnitySetup: MonoBehaviour
         }
         return fullPath.Substring(basePath.Length + 1);
     }
-
-    private static void Update(){}
-}
 #endif
+}
