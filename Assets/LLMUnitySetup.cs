@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using Debug = UnityEngine.Debug;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 [InitializeOnLoad]
 public class LLMUnitySetup: MonoBehaviour
@@ -32,29 +33,34 @@ public class LLMUnitySetup: MonoBehaviour
     public static Process CreateProcess(
         string command, string commandArgs="",
         StringCallback outputCallback=null, StringCallback errorCallback=null,
-        bool beginOutputRead=true, bool beginErrorRead=true
+        List<(string, string)> environment = null,
+        bool redirectOutput=false, bool redirectError=false
     ){
-        ProcessStartInfo processInfo = new ProcessStartInfo
+        ProcessStartInfo startInfo = new ProcessStartInfo
         {
             FileName = command,
             Arguments = commandArgs,
-            RedirectStandardOutput = outputCallback != null,
-            RedirectStandardError = errorCallback != null,
+            RedirectStandardOutput = redirectOutput || outputCallback != null,
+            RedirectStandardError = redirectError || errorCallback != null,
             UseShellExecute = false,
             CreateNoWindow = true
         };
-
-        Process process = new Process { StartInfo = processInfo };
+        if (environment != null){
+            foreach ((string name, string value) in environment){
+                startInfo.EnvironmentVariables[name] = value;
+            }
+        }
+        Process process = new Process { StartInfo = startInfo };
         if (outputCallback != null) process.OutputDataReceived += (sender, e) => outputCallback(e.Data);
         if (errorCallback != null) process.ErrorDataReceived += (sender, e) => errorCallback(e.Data);
         process.Start();
-        if (outputCallback != null && beginOutputRead) process.BeginOutputReadLine();
-        if (errorCallback != null && beginErrorRead) process.BeginErrorReadLine();
+        if (outputCallback != null) process.BeginOutputReadLine();
+        if (errorCallback != null) process.BeginErrorReadLine();
         return process;
     }
 
     public static string RunProcess(string command, string commandArgs="", StringCallback outputCallback=null, StringCallback errorCallback=null){
-        Process process = CreateProcess(command, commandArgs, _=>{}, null, false, false);
+        Process process = CreateProcess(command, commandArgs, null, null, null, true);
         string output = process.StandardOutput.ReadToEnd();
         process.WaitForExit();
         return output;
