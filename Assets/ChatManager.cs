@@ -51,8 +51,7 @@ public class ChatManager : MonoBehaviour
     void onInputFieldSubmit(string newText){
         inputBubble.ActivateInputField();
         if (blockInput || newText == "" || Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)){
-            if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
-                StartCoroutine(SelectAndShiftFix());
+            StartCoroutine(BlockInteraction());
             return;
         }
         blockInput = true;
@@ -66,7 +65,7 @@ public class ChatManager : MonoBehaviour
         SetUpdatePositions();
 
         BubbleTextSetter aiBubbleTextSetter = new BubbleTextSetter(this, aiBubble);
-        Task chatTask = llmClient.Chat(message, aiBubbleTextSetter.SetText);
+        Task chatTask = llmClient.Chat(message, aiBubbleTextSetter.SetText, AllowInput);
 
         inputBubble.SetText("");
     }
@@ -76,7 +75,7 @@ public class ChatManager : MonoBehaviour
         inputBubble.ReActivateInputField();
     }
 
-    IEnumerator<string> SelectAndShiftFix()
+    IEnumerator<string> BlockInteraction()
     {
         // prevent from change until next frame
         inputBubble.setInteractable(false);
@@ -126,7 +125,7 @@ public class ChatManager : MonoBehaviour
         if(!inputBubble.inputFocused())
         {
             inputBubble.ActivateInputField();
-            StartCoroutine(SelectAndShiftFix());
+            StartCoroutine(BlockInteraction());
         }
         if(updatePositions){
             UpdateBubblePositions();

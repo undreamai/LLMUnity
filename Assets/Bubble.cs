@@ -232,6 +232,5 @@ class BubbleTextSetter {
     public void SetText(string text){
         bubble.SetText(text);
         chatManager.SetUpdatePositions();
-        chatManager.AllowInput();
     }
 }

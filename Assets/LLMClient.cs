@@ -29,6 +29,7 @@ public class LLMClient : MonoBehaviour
     private List<ChatMessage> chat;
     
     private List<(string, string)> requestHeaders;
+    public delegate void EmptyCallback();
     public delegate void Callback<T>(T message);
     public delegate T2 ContentCallback<T, T2>(T message);
 
@@ -98,23 +99,25 @@ public class LLMClient : MonoBehaviour
         return result.tokens;
     }
 
-    public async Task<string> Chat(string question, Callback<string> callback=null)
+    public async Task<string> Chat(string question, Callback<string> callback=null, EmptyCallback completionCallback=null)
     {
         string json = JsonUtility.ToJson(GenerateRequest(question));
         string result;
         if (stream) result = await PostRequestStream<ChatResult>(json, "completion", ChatContent, callback);
         else result = await PostRequest<ChatResult, string>(json, "completion", ChatContentTrim, callback);
+        if (completionCallback != null) completionCallback();
         AddQA(question, result);
         return result;
     }
 
-    public async Task<string> ChatOpenAI(string question, Callback<string> callback=null)
+    public async Task<string> ChatOpenAI(string question, Callback<string> callback=null, EmptyCallback completionCallback=null)
     {
         chat.Add(new ChatMessage{role="user", content=question});
         string json = JsonUtility.ToJson(GenerateRequest(question, true));
         string result;
         if (stream) result = await PostRequestStream<ChatOpenAIResult>(json, "v1/chat/completions", ChatOpenAIContent, callback);
         else result = await PostRequest<ChatOpenAIResult, string>(json, "v1/chat/completions", ChatOpenAIContent, callback);
+        if (completionCallback != null) completionCallback();
         chat.Add(new ChatMessage{role="assistant", content=result});
         return result;
     }
