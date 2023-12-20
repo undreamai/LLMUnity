@@ -40,7 +40,6 @@ class Bubble {
 
     protected GameObject CreateTextObject(Transform parent, string name, string message, bool horizontalStretch=true, bool verticalStretch=false){
         // Create a child GameObject for the text
-        Debug.Log(message);
         GameObject textObject = new GameObject(name, typeof(RectTransform), typeof(Text), typeof(Canvas));
         textObject.transform.SetParent(parent);
         Text textContent = textObject.GetComponent<Text>();
@@ -104,7 +103,6 @@ class Bubble {
         return bubbleObject.GetComponent<Text>().text;
     }
     public void SetText(string text){
-        Debug.Log("SetText: "+text);
         bubbleObject.GetComponent<Text>().text = text;
     }
 
@@ -115,7 +113,7 @@ class Bubble {
 
 class InputBubble : Bubble {
     protected GameObject inputFieldObject;
-    public InputField inputField;
+    protected InputField inputField;
     protected GameObject placeholderObject;
 
     public InputBubble(Transform parent, BubbleUI ui, string name, string message, int lineHeight=4) : 
@@ -169,6 +167,7 @@ class InputBubble : Bubble {
     public void AddSubmitListener(UnityEngine.Events.UnityAction<string> onInputFieldSubmit){
         inputField.onSubmit.AddListener(onInputFieldSubmit);
     }
+
     public void AddValueChangedListener(UnityEngine.Events.UnityAction<string> onValueChanged){
         inputField.onValueChanged.AddListener(onValueChanged);
     }
@@ -176,8 +175,17 @@ class InputBubble : Bubble {
     public new string GetText(){
         return inputField.text;
     }
+
     public new void SetText(string text){
         inputField.text = text;
+        MoveTextEnd();
+    }
+
+    public bool inputFocused(){
+        return inputField.isFocused;
+    }
+
+    public void MoveTextEnd(){
         inputField.MoveTextEnd(true);
     }
 
@@ -190,6 +198,7 @@ class InputBubble : Bubble {
     public void ActivateInputField(){
         inputField.ActivateInputField();
     } 
+
     public void ReActivateInputField(){
         inputField.DeactivateInputField();
         inputField.Select();

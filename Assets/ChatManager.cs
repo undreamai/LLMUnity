@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using UnityEngine.EventSystems;
 
 public class ChatManager : MonoBehaviour
 {
@@ -52,7 +51,7 @@ public class ChatManager : MonoBehaviour
         inputBubble.ActivateInputField();
         if (blockInput || newText == "" || Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)){
             if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
-                StartCoroutine(FieldFix());
+                StartCoroutine(SelectAndShiftFix());
             return;
         }
         blockInput = true;
@@ -76,12 +75,14 @@ public class ChatManager : MonoBehaviour
         inputBubble.ReActivateInputField();
     }
 
-    IEnumerator<string> FieldFix()
+    IEnumerator<string> SelectAndShiftFix()
     {
-        inputBubble.SetSelectionColorAlpha(0);
+        // prevent from change until next frame
+        inputBubble.inputField.interactable=false;
         yield return null;
-        inputBubble.SetText(inputBubble.GetText().TrimStart('\n') + "\n");
-        inputBubble.SetSelectionColorAlpha(1);
+        inputBubble.inputField.interactable=true;
+        // change the caret position to the end of the text
+        inputBubble.MoveTextEnd();
     }
 
     void onValueChanged(string newText){
@@ -117,13 +118,10 @@ public class ChatManager : MonoBehaviour
 
     void Update()
     {
-        if(inputBubble.inputField.isFocused == false)
+        if(!inputBubble.inputFocused())
         {
-            Debug.Log("dasdas");
-            inputBubble.inputField.ActivateInputField();
-            inputBubble.inputField.MoveTextEnd(true);
-            // EventSystem.current.SetSelectedGameObject(inputBubble.inputField.gameObject, null);
-            // inputBubble.inputField.OnPointerClick(new PointerEventData(EventSystem.current));
+            inputBubble.ActivateInputField();
+            StartCoroutine(SelectAndShiftFix());
         }
     }
 }
