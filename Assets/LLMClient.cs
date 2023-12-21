@@ -16,7 +16,7 @@ public class LLMClient : MonoBehaviour
 
     [ChatAttribute] public string playerName = "Human";
     [ChatAttribute] public string AIName = "Assistant";
-    [ChatAttribute] public string prompt = "A chat between a curious human and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the human's questions.";
+    [TextArea(5, 10), ChatAttribute] public string prompt = "A chat between a curious human and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the human's questions.";
     
     [ModelAttribute] public int seed = 0;
     [ModelAttribute] public float temperature = 0.2f;
