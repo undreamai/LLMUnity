@@ -5,13 +5,6 @@ using System.Threading;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
-[System.Serializable]
-public class LLMSettings
-{
-    public string model;
-    public string lora;
-}
-
 public class LLM : LLMClient
 {
     [HideInInspector] public bool modelHide = true;
@@ -29,9 +22,7 @@ public class LLM : LLMClient
     private readonly string server = GetAssetPath("llamafile-server.exe");
     private readonly string apeARM = GetAssetPath("ape-arm64.elf");
     private readonly string apeX86_64 = GetAssetPath("ape-x86_64.elf");
-    private readonly string settingsPath = "settings.json";
 
-    private LLMSettings settings;
     public bool modelWIP = false;
     private Process process;
     private bool serverListening = false;
@@ -42,17 +33,7 @@ public class LLM : LLMClient
         return Path.Combine(Application.streamingAssetsPath, relPath);
     }
 
-    public LLM() {
-        LoadSettings();
-    }
-
     #if UNITY_EDITOR
-    private void SaveSettings()
-    {
-        // save settings to a file in assets
-        File.WriteAllText(GetAssetPath(settingsPath), JsonUtility.ToJson(settings));
-    }
-
     public async void DownloadModel(){
         // download default model and disable model editor properties until the model is set
         modelWIP = true;
@@ -63,43 +44,29 @@ public class LLM : LLMClient
     }
 
     public async void LoadModel(string modelPath){
-        // load model and disable model editor properties until the model is set
+        // load model and disable the model editor properties until the model is set
         modelWIP = true;
         SetModel(await LLMUnitySetup.AddAsset(modelPath, GetAssetPath()));
     }
 
     public void SetModel(string path){
-        // set the model, update editor properties and save settings
-        model = GetAssetPath(path);
-        settings.model = path;
-        SaveSettings();
+        // set the model and enable the model editor properties
+        model = path;
         modelWIP = false;
     }
 
     public async void LoadLora(string loraPath){
-        // load lora and disable model editor properties until the model is set
+        // load lora and disable the model editor properties until the model is set
         modelWIP = true;
         SetLora(await LLMUnitySetup.AddAsset(loraPath, GetAssetPath()));
     }
 
     public void SetLora(string path){
-        // set the lora, update editor properties and save settings
-        lora = GetAssetPath(path);
-        settings.lora = path;
-        SaveSettings();
+        // set the lora and enable the model editor properties
+        lora = path;
         modelWIP = false;
     }
     #endif
-
-    public void LoadSettings()
-    {
-        // load the settings file
-        string settingsFullPath = GetAssetPath(settingsPath);
-        if (File.Exists(settingsFullPath))
-            settings = JsonUtility.FromJson<LLMSettings>(File.ReadAllText(settingsFullPath));
-        else
-            settings = new LLMSettings();
-    }
 
     new void OnEnable()
     {
@@ -152,13 +119,13 @@ public class LLM : LLMClient
     private void StartLLMServer()
     {
         // Start the LLM server in a cross-platform way
-        if (settings.model == "") throw new System.Exception("No model file provided!");
-        string modelPath = GetAssetPath(settings.model);
+        if (model == "") throw new System.Exception("No model file provided!");
+        string modelPath = GetAssetPath(model);
         if (!File.Exists(modelPath)) throw new System.Exception($"File {modelPath} not found!");
 
         string loraPath = "";
-        if (settings.lora != ""){
-            loraPath = GetAssetPath(settings.lora);
+        if (lora != ""){
+            loraPath = GetAssetPath(lora);
             if (!File.Exists(loraPath)) throw new System.Exception($"File {loraPath} not found!");
         }
 
