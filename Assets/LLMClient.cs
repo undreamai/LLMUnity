@@ -14,15 +14,16 @@ public class LLMClient : MonoBehaviour
     [ServerAttribute] public int port = 13333;
     [ServerAttribute] public bool stream = true;
 
-    [ChatAttribute] public string playerName = "Human";
-    [ChatAttribute] public string AIName = "Assistant";
-    [TextArea(5, 10), ChatAttribute] public string prompt = "A chat between a curious human and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the human's questions.";
-    
     [ModelAttribute] public int seed = 0;
     [ModelAttribute] public float temperature = 0.2f;
     [ModelAttribute] public int topK = 40;
     [ModelAttribute] public float topP = 0.9f;
     [ModelAttribute] public int nPredict = 256;
+
+    [ChatAttribute] public string playerName = "Human";
+    [ChatAttribute] public string AIName = "Assistant";
+    [TextArea(5, 10), ChatAttribute] public string prompt = "A chat between a curious human and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the human's questions.";
+    
     private int nKeep = -1;
 
     private string currentPrompt;
