@@ -11,7 +11,7 @@ public class ChatManager : MonoBehaviour
     public Font font;
     public int fontSize = 16;
     public int bubbleWidth = 600;
-    public LLMClient llmClient;
+    public LLMClient llm;
     public float textPadding = 10f;
     public float bubbleSpacing = 10f;
     public Sprite sprite;
@@ -65,7 +65,7 @@ public class ChatManager : MonoBehaviour
         SetUpdatePositions();
 
         BubbleTextSetter aiBubbleTextSetter = new BubbleTextSetter(this, aiBubble);
-        Task chatTask = llmClient.Chat(message, aiBubbleTextSetter.SetText, AllowInput);
+        Task chatTask = llm.Chat(message, aiBubbleTextSetter.SetText, AllowInput);
 
         inputBubble.SetText("");
     }
