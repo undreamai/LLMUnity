@@ -175,7 +175,7 @@ MonoBehaviour:
   font: {fileID: 0}
   fontSize: 20
   bubbleWidth: 600
-  llmClient: {fileID: 817827756}
+  llm: {fileID: 0}
   textPadding: 10
   bubbleSpacing: 10
   sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
@@ -444,15 +444,15 @@ MonoBehaviour:
   host: localhost
   port: 13333
   stream: 1
-  playerName: Human
-  AIName: Assistant
-  prompt: A chat between a curious human and an artificial intelligence assistant.
-    The assistant gives helpful, detailed, and polite answers to the human's questions.
   seed: 0
   temperature: 0.2
   topK: 40
   topP: 0.9
   nPredict: 256
+  playerName: Human
+  AIName: Assistant
+  prompt: A chat between a curious human and an artificial intelligence assistant.
+    The assistant gives helpful, detailed, and polite answers to the human's questions.
   modelHide: 1
   numThreads: -1
   numGPULayers: 0
