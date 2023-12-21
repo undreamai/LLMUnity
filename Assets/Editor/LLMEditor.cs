@@ -81,6 +81,7 @@ public class LLMEditor : Editor
     }
 
     private void ShowPropertiesOfClass(SerializedObject so, System.Type targetClass, System.Type attributeClass = null){
+        // display a property if it belongs to a certain class and/or has a specific attribute class
         SerializedProperty prop = so.GetIterator();
         if (prop.NextVisible(true)) {
             do {
@@ -93,6 +94,7 @@ public class LLMEditor : Editor
 
     private bool PropertyInClass(SerializedProperty prop, System.Type targetClass, System.Type attributeClass = null)
     {
+        // check if a property belongs to a certain class and/or has a specific attribute class
         FieldInfo field = prop.serializedObject.targetObject.GetType().GetField(prop.name,
             BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
         return field != null && field.DeclaringType == targetClass && (attributeClass == null || AttributeInProperty(prop, attributeClass));
@@ -100,6 +102,7 @@ public class LLMEditor : Editor
 
     private bool AttributeInProperty(SerializedProperty prop, System.Type attributeClass)
     {
+        // check if a property has a specific attribute class
         foreach (var pathSegment in prop.propertyPath.Split('.')){
             var targetType = prop.serializedObject.targetObject.GetType();
             while (targetType != null){

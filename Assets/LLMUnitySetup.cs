@@ -17,6 +17,7 @@ public class LLMUnitySetup: MonoBehaviour
         List<(string, string)> environment = null,
         bool redirectOutput=false, bool redirectError=false
     ){
+        // create and start a process with output/error callbacks
         ProcessStartInfo startInfo = new ProcessStartInfo
         {
             FileName = command,
@@ -41,6 +42,7 @@ public class LLMUnitySetup: MonoBehaviour
     }
 
     public static string RunProcess(string command, string commandArgs="", StringCallback outputCallback=null, StringCallback errorCallback=null){
+        // run a process and return the output
         Process process = CreateProcess(command, commandArgs, null, null, null, true);
         string output = process.StandardOutput.ReadToEnd();
         process.WaitForExit();
@@ -50,6 +52,7 @@ public class LLMUnitySetup: MonoBehaviour
 #if UNITY_EDITOR
     public async static Task DownloadFile(string fileUrl, string savePath, bool debug=true)
     {
+        // download a file to the specified path
         if (File.Exists(savePath)){
             if(debug) Debug.Log($"File already exists at: {savePath}");
         } else {
@@ -76,6 +79,7 @@ public class LLMUnitySetup: MonoBehaviour
     }
 
     public static async Task<string> AddAsset(string assetPath, string basePath){
+        // add an asset to the basePath directory if it is not already there and return the relative path
         string fullPath = Path.GetFullPath(assetPath);
         if (!fullPath.StartsWith(basePath)){
             // if the asset is not in the assets dir copy it over

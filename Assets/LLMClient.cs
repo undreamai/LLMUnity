@@ -35,25 +35,30 @@ public class LLMClient : MonoBehaviour
 
     public LLMClient()
     {
+        // initialise headers and chat lists
         requestHeaders = new List<(string, string)>{("Content-Type", "application/json")};
         chat = new List<ChatMessage>();
         chat.Add(new ChatMessage{role="system", content=prompt});
     }
 
     public async void OnEnable(){
+        // initialise the prompt and set the keep tokens based on its length
         currentPrompt = prompt;
         await Tokenize(prompt, SetNKeep);
     }
 
     private string RoleString(string role){
+        // role as a delimited string for the model
         return "\n### "+role+":";
     }
 
     private string RoleMessageString(string role, string message){
+        // role and the role message
         return RoleString(role) + " " + message;
     }
 
     public ChatRequest GenerateRequest(string message, bool openAIFormat=false){
+        // setup the request struct
         ChatRequest chatRequest = new ChatRequest();
         if (openAIFormat){
             chatRequest.messages = chat;
@@ -76,6 +81,7 @@ public class LLMClient : MonoBehaviour
     }
 
     private void AddQA(string question, string answer){
+        // add the question and answer to the chat list, update prompt
         foreach ((string role, string content) in new[] { (playerName, question), (AIName, answer) })
         {
             chat.Add(new ChatMessage{role=role, content=content});
@@ -84,23 +90,30 @@ public class LLMClient : MonoBehaviour
     }
 
     public string ChatContent(ChatResult result){
+        // get content from a chat result received from the endpoint
         return result.content;
     }
 
     public string ChatContentTrim(ChatResult result){
+        // get content from a chat result received from the endpoint and trim
         return ChatContent(result).Trim();
     }
 
     public string ChatOpenAIContent(ChatOpenAIResult result){
+        // get content from a char result received from the endpoint in open AI format
         return result.choices[0].message.content;
     }
 
     public List<int> TokenizeContent(TokenizeResult result){
+        // get the tokens from a tokenize result received from the endpoint
         return result.tokens;
     }
 
     public async Task<string> Chat(string question, Callback<string> callback=null, EmptyCallback completionCallback=null)
     {
+        // handle a chat message by the user
+        // call the callback function while the answer is received
+        // call the completionCallback function when the answer is fully received
         string json = JsonUtility.ToJson(GenerateRequest(question));
         string result;
         if (stream) result = await PostRequestStream<ChatResult>(json, "completion", ChatContent, callback);
@@ -112,6 +125,9 @@ public class LLMClient : MonoBehaviour
 
     public async Task<string> ChatOpenAI(string question, Callback<string> callback=null, EmptyCallback completionCallback=null)
     {
+        // handle a chat message by the user in open AI style
+        // call the callback function while the answer is received
+        // call the completionCallback function when the answer is fully received
         chat.Add(new ChatMessage{role="user", content=question});
         string json = JsonUtility.ToJson(GenerateRequest(question, true));
         string result;
@@ -124,6 +140,7 @@ public class LLMClient : MonoBehaviour
 
     public async Task Tokenize(string question, Callback<List<int>> callback=null)
     {
+        // handle the tokenization of a message by the user
         TokenizeRequest tokenizeRequest = new TokenizeRequest();
         tokenizeRequest.content = question;
         string json = JsonUtility.ToJson(tokenizeRequest);
@@ -131,10 +148,12 @@ public class LLMClient : MonoBehaviour
     }
 
     private void SetNKeep(List<int> tokens){
+        // set the tokens to keep
         nKeep = tokens.Count;
     }
 
     public Ret ConvertContent<Res, Ret>(string response, ContentCallback<Res, Ret> getContent=null){
+        // template function to convert the json received and get the content
         if (getContent == null){
             if (typeof(Res) != typeof(Ret)){
                 throw new System.Exception("Res and Ret must be the same type without a getContent callback.");
@@ -148,6 +167,8 @@ public class LLMClient : MonoBehaviour
 
     public async Task<Ret> PostRequest<Res, Ret>(string json, string endpoint, ContentCallback<Res, Ret> getContent=null, Callback<Ret> callback=null)
     {
+        // send a post request to the server and call the relevant callbacks to convert the received content and handle it
+        // this function doesn't have streaming functionality i.e. handles the answer when it is fully received
         UnityWebRequest request = new UnityWebRequest($"{host}:{port}/{endpoint}", "POST");
         if (requestHeaders != null){
             for (int i = 0; i < requestHeaders.Count; i++){
@@ -169,6 +190,8 @@ public class LLMClient : MonoBehaviour
 
     public async Task<string> PostRequestStream<Res>(string json, string endpoint, ContentCallback<Res, string> getContent, Callback<string> callback)
     {
+        // send a post request to the server and call the relevant callbacks to convert the received content and handle it
+        // this function has streaming functionality i.e. handles the answer while it is being received
         string answer = "";
         byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(json);
         using (var request = UnityWebRequest.Put($"{host}:{port}/{endpoint}", jsonToSend))
