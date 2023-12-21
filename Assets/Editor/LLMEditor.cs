@@ -31,8 +31,8 @@ public class LLMEditor : Editor
 
         // MODEL SETTINGS
         EditorGUILayout.LabelField("Model Settings", EditorStyles.boldLabel);
-        EditorGUILayout.BeginHorizontal();
         GUI.enabled = !llmScript.modelWIP;
+        EditorGUILayout.BeginHorizontal();
         if (GUILayout.Button("Download model", GUILayout.Width(buttonWidth)))
         {
             llmScript.DownloadModel();
@@ -47,8 +47,20 @@ public class LLMEditor : Editor
                 }
             };
         }
-        GUI.enabled = true;
         EditorGUILayout.EndHorizontal();
+        EditorGUILayout.BeginHorizontal();
+        if (GUILayout.Button("Load lora", GUILayout.Width(buttonWidth)))
+        {
+            EditorApplication.delayCall += () => {
+                string path = EditorUtility.OpenFilePanelWithFilters("Select a bin lora file", "", new string[] { "Model Files", "bin" });
+                if (!string.IsNullOrEmpty(path))
+                {
+                    llmScript.LoadLora(path);
+                }
+            };
+        }
+        EditorGUILayout.EndHorizontal();
+        GUI.enabled = true;
         if (llmScript.model != ""){
             ShowPropertiesOfClass(llmScriptSO, typeof(LLM), typeof(ModelAttribute));
             ShowPropertiesOfClass(llmScriptSO, typeof(LLMClient), typeof(ModelAttribute));

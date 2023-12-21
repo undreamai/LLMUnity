@@ -458,6 +458,7 @@ MonoBehaviour:
   numGPULayers: 0
   debug: 0
   model: 
+  lora: 
   contextSize: 512
   batchSize: 512
   modelUrl: https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.1-GGUF/resolve/main/mistral-7b-instruct-v0.1.Q4_K_M.gguf?download=true

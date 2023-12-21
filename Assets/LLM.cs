@@ -9,6 +9,7 @@ using Debug = UnityEngine.Debug;
 public class LLMSettings
 {
     public string model;
+    public string lora;
 }
 
 public class LLM : LLMClient
@@ -23,6 +24,7 @@ public class LLM : LLMClient
     [ServerAttribute] public bool debug = false;
 
     [ModelAttribute] public string model = "";
+    [ModelAttribute] public string lora = "";
     [ModelAttribute] public int contextSize = 512;
     [ModelAttribute] public int batchSize = 512;
 
@@ -61,9 +63,21 @@ public class LLM : LLMClient
         SetModel(await LLMUnitySetup.AddAsset(modelPath, getAssetPath()));
     }
 
-    public void SetModel(string modelPath){
-        model = getAssetPath(modelPath);
-        settings.model = modelPath;
+    public void SetModel(string path){
+        model = getAssetPath(path);
+        settings.model = path;
+        SaveSettings();
+        modelWIP = false;
+    }
+
+    public async void LoadLora(string loraPath){
+        modelWIP = true;
+        SetLora(await LLMUnitySetup.AddAsset(loraPath, getAssetPath()));
+    }
+
+    public void SetLora(string path){
+        lora = getAssetPath(path);
+        settings.lora = path;
         SaveSettings();
         modelWIP = false;
     }
@@ -123,14 +137,21 @@ public class LLM : LLMClient
 
     private void StartLLMServer()
     {
-        string modelPath = getAssetPath(settings.model);
         if (settings.model == "") throw new System.Exception("No model file provided!");
+        string modelPath = getAssetPath(settings.model);
         if (!File.Exists(modelPath)) throw new System.Exception($"File {modelPath} not found!");
+
+        string loraPath = "";
+        if (settings.lora != ""){
+            loraPath = getAssetPath(settings.lora);
+            if (!File.Exists(loraPath)) throw new System.Exception($"File {loraPath} not found!");
+        }
 
         string binary = server;
         string arguments = $" --port {port} -m {modelPath} -c {contextSize} -b {batchSize} --log-disable --nobrowser";
         if (numThreads > 0) arguments += $" -t {numThreads}";
         if (numGPULayers > 0) arguments += $" -ngl {numGPULayers}";
+        if (loraPath != "") arguments += $" --lora {loraPath}";
         List<(string, string)> environment = null;
 
         if (Application.platform != RuntimePlatform.WindowsEditor && Application.platform != RuntimePlatform.WindowsPlayer){
