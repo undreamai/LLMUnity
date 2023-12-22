@@ -7,10 +7,10 @@ using Debug = UnityEngine.Debug;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
+public delegate void StringCallback(string message);
+
 public class LLMUnitySetup: MonoBehaviour
 {
-    public delegate void StringCallback(string message);
-
     public static Process CreateProcess(
         string command, string commandArgs="",
         StringCallback outputCallback=null, StringCallback errorCallback=null,
@@ -50,30 +50,35 @@ public class LLMUnitySetup: MonoBehaviour
     }
 
 #if UNITY_EDITOR
-    public async static Task DownloadFile(string fileUrl, string savePath, bool debug=true)
+    public static void DownloadFile(string fileUrl, string savePath, StringCallback callback = null)
     {
         // download a file to the specified path
         if (File.Exists(savePath)){
-            if(debug) Debug.Log($"File already exists at: {savePath}");
+            Debug.Log($"File already exists at: {savePath}");
+            callback?.Invoke(savePath);
         } else {
-            if (debug) Debug.Log($"Downloading file: {fileUrl}");
+            Debug.Log($"Downloading file: {fileUrl}");
             string saveDir = Path.GetDirectoryName(savePath);
             Directory.CreateDirectory(saveDir);
             using (UnityWebRequest webRequest = UnityWebRequest.Get(fileUrl))
             {
-                await webRequest.SendWebRequest();
+                UnityWebRequestAsyncOperation webRequestOperation = webRequest.SendWebRequest();
+                webRequestOperation.completed += asyncOperation =>
+                {
+                    if (webRequest.result == UnityWebRequest.Result.Success)
+                    {
+                        AssetDatabase.StartAssetEditing();
+                        File.WriteAllBytes(savePath, webRequest.downloadHandler.data);
+                        AssetDatabase.StopAssetEditing();
+                        callback?.Invoke(savePath);
+                        Debug.Log($"File downloaded and saved at: {savePath}");
+                    }
+                    else
+                    {
+                        Debug.LogError($"Download failed: {webRequest.error}");
+                    }
 
-                if (webRequest.result == UnityWebRequest.Result.Success)
-                {
-                    AssetDatabase.StartAssetEditing();
-                    File.WriteAllBytes(savePath, webRequest.downloadHandler.data);
-                    AssetDatabase.StopAssetEditing();
-                    if (debug) Debug.Log($"File downloaded and saved at: {savePath}");
-                }
-                else
-                {
-                    if (debug) Debug.LogError($"Download failed: {webRequest.error}");
-                }
+                };
             }
         }
     }

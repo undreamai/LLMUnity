@@ -8,6 +8,10 @@ public class ServerAttribute : PropertyAttribute {}
 public class ModelAttribute : PropertyAttribute {}
 public class ChatAttribute : PropertyAttribute {}
 
+public delegate void EmptyCallback();
+public delegate void Callback<T>(T message);
+public delegate T2 ContentCallback<T, T2>(T message);
+
 public class LLMClient : MonoBehaviour
 {   
     [ClientAttribute] public string host = "localhost";
@@ -30,9 +34,6 @@ public class LLMClient : MonoBehaviour
     private List<ChatMessage> chat;
     
     private List<(string, string)> requestHeaders;
-    public delegate void EmptyCallback();
-    public delegate void Callback<T>(T message);
-    public delegate T2 ContentCallback<T, T2>(T message);
 
     public LLMClient()
     {
@@ -81,13 +82,18 @@ public class LLMClient : MonoBehaviour
         return chatRequest;
     }
 
-    private void AddQA(string question, string answer){
-        // add the question and answer to the chat list, update prompt
-        foreach ((string role, string content) in new[] { (playerName, question), (AIName, answer) })
-        {
-            chat.Add(new ChatMessage{role=role, content=content});
-            currentPrompt += RoleMessageString(role, content);
-        }
+    private void AddMessage(string role, string content){
+        // add the question / answer to the chat list, update prompt
+        chat.Add(new ChatMessage{role=role, content=content});
+        currentPrompt += RoleMessageString(role, content);
+    }
+
+    private void AddPlayerMessage(string content){
+        AddMessage(playerName, content);
+    }
+
+    private void AddAIMessage(string content){
+        AddMessage(AIName, content);
     }
 
     public string ChatContent(ChatResult result){
@@ -95,9 +101,13 @@ public class LLMClient : MonoBehaviour
         return result.content;
     }
 
-    public string ChatContentTrim(ChatResult result){
-        // get content from a chat result received from the endpoint and trim
-        return ChatContent(result).Trim();
+    public string MultiChatContent(MultiChatResult result){
+        // get content from a chat result received from the endpoint
+        string response = "";
+        foreach (ChatResult resultPart in result.data){
+            response += resultPart.content;
+        }
+        return response;
     }
 
     public string ChatOpenAIContent(ChatOpenAIResult result){
@@ -110,33 +120,21 @@ public class LLMClient : MonoBehaviour
         return result.tokens;
     }
 
-    public async Task<string> Chat(string question, Callback<string> callback=null, EmptyCallback completionCallback=null)
+    public async Task Chat(string question, Callback<string> callback=null, EmptyCallback completionCallback=null)
     {
         // handle a chat message by the user
         // call the callback function while the answer is received
         // call the completionCallback function when the answer is fully received
+        AddPlayerMessage(question);
         string json = JsonUtility.ToJson(GenerateRequest(question));
         string result;
-        if (stream) result = await PostRequestStream<ChatResult>(json, "completion", ChatContent, callback);
-        else result = await PostRequest<ChatResult, string>(json, "completion", ChatContentTrim, callback);
-        if (completionCallback != null) completionCallback();
-        AddQA(question, result);
-        return result;
-    }
-
-    public async Task<string> ChatOpenAI(string question, Callback<string> callback=null, EmptyCallback completionCallback=null)
-    {
-        // handle a chat message by the user in open AI style
-        // call the callback function while the answer is received
-        // call the completionCallback function when the answer is fully received
-        chat.Add(new ChatMessage{role="user", content=question});
-        string json = JsonUtility.ToJson(GenerateRequest(question, true));
-        string result;
-        if (stream) result = await PostRequestStream<ChatOpenAIResult>(json, "v1/chat/completions", ChatOpenAIContent, callback);
-        else result = await PostRequest<ChatOpenAIResult, string>(json, "v1/chat/completions", ChatOpenAIContent, callback);
-        if (completionCallback != null) completionCallback();
-        chat.Add(new ChatMessage{role="assistant", content=result});
-        return result;
+        if (stream) {
+            result = await PostRequest<MultiChatResult, string>(json, "completion", MultiChatContent, callback);
+        } else {
+            result = await PostRequest<ChatResult, string>(json, "completion", ChatContent, callback);
+        }
+        completionCallback?.Invoke();
+        AddAIMessage(result);
     }
 
     public async Task Tokenize(string question, Callback<List<int>> callback=null)
@@ -155,45 +153,28 @@ public class LLMClient : MonoBehaviour
 
     public Ret ConvertContent<Res, Ret>(string response, ContentCallback<Res, Ret> getContent=null){
         // template function to convert the json received and get the content
-        if (getContent == null){
-            if (typeof(Res) != typeof(Ret)){
-                throw new System.Exception("Res and Ret must be the same type without a getContent callback.");
-            } else {
-                return JsonUtility.FromJson<Ret>(response);
+        response = response.Trim();
+        if (response.StartsWith("data: ")){
+            string responseArray = "";
+            foreach (string responsePart in response.Replace("\n\n", "").Split("data: ")){
+                if (responsePart == "") continue;
+                if (responseArray != "") responseArray += ",\n";
+                responseArray += responsePart;
             }
-        } else {
-            return getContent(JsonUtility.FromJson<Res>(response));
+            response = $"{{\"data\": [{responseArray}]}}";
         }
+        return getContent(JsonUtility.FromJson<Res>(response));
     }
 
-    public async Task<Ret> PostRequest<Res, Ret>(string json, string endpoint, ContentCallback<Res, Ret> getContent=null, Callback<Ret> callback=null)
-    {
-        // send a post request to the server and call the relevant callbacks to convert the received content and handle it
-        // this function doesn't have streaming functionality i.e. handles the answer when it is fully received
-        UnityWebRequest request = new UnityWebRequest($"{host}:{port}/{endpoint}", "POST");
-        if (requestHeaders != null){
-            for (int i = 0; i < requestHeaders.Count; i++){
-                request.SetRequestHeader(requestHeaders[i].Item1, requestHeaders[i].Item2);
-            }
-        }
-        byte[] payload = new System.Text.UTF8Encoding().GetBytes(json);
-        request.uploadHandler = new UploadHandlerRaw(payload);
-        request.downloadHandler = new DownloadHandlerBuffer();
-        request.disposeDownloadHandlerOnDispose = true;
-        request.disposeUploadHandlerOnDispose = true;
-
-        await request.SendWebRequest();
-        if (request.result != UnityWebRequest.Result.Success) throw new System.Exception(request.error);
-        Ret result = ConvertContent(request.downloadHandler.text, getContent);
-        if (callback!=null) callback(result);
-        return result;
+    public string[] MultiResponse(string response){
+        return response.Trim().Replace("\n\n", "").Split("data: ");
     }
 
-    public async Task<string> PostRequestStream<Res>(string json, string endpoint, ContentCallback<Res, string> getContent, Callback<string> callback)
+    public async Task<Ret> PostRequest<Res, Ret>(string json, string endpoint, ContentCallback<Res, Ret> getContent, Callback<Ret> callback=null)
     {
         // send a post request to the server and call the relevant callbacks to convert the received content and handle it
         // this function has streaming functionality i.e. handles the answer while it is being received
-        string answer = "";
+        Ret result;
         byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(json);
         using (var request = UnityWebRequest.Put($"{host}:{port}/{endpoint}", jsonToSend))
         {
@@ -206,31 +187,23 @@ public class LLMClient : MonoBehaviour
             // Start the request asynchronously
             var asyncOperation = request.SendWebRequest();
             float lastProgress = 0f;
-            int seenLines = 0;
             // Continue updating progress until the request is completed
             while (!asyncOperation.isDone)
             {
                 float currentProgress = request.downloadProgress;
                 // Check if progress has changed
-                if (currentProgress != lastProgress)
+                if (currentProgress != lastProgress && callback != null)
                 {
-                    string[] responses = request.downloadHandler.text.Trim().Replace("\n\n", "").Split("data: ");
-                    for (int i =seenLines+1; i<responses.Length; i++){
-                        string answer_part = ConvertContent(responses[i], getContent);
-                        if (answer_part!= null){
-                            if (answer == "") answer_part = answer_part.TrimStart();
-                            answer += answer_part;
-                            if (callback != null) callback(answer);
-                        }
-                    }
-                    seenLines = responses.Length -1;
+                    callback?.Invoke(ConvertContent(request.downloadHandler.text, getContent));
                     lastProgress = currentProgress;
                 }
                 // Wait for the next frame
                 await Task.Yield();
             }
+            result = ConvertContent(request.downloadHandler.text, getContent);
+            callback?.Invoke(result);
             if (request.result != UnityWebRequest.Result.Success) throw new System.Exception(request.error);
         }
-        return answer;
+        return result;
     }
 }

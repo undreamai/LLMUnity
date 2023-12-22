@@ -41,6 +41,12 @@ public struct ChatResult
 }
 
 [Serializable]
+public struct MultiChatResult
+{
+    public List<ChatResult> data;
+}
+
+[Serializable]
 public struct ChatMessage
 {
     public string role;

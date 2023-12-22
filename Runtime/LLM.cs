@@ -18,7 +18,7 @@ public class LLM : LLMClient
     [ModelAttribute] public int contextSize = 512;
     [ModelAttribute] public int batchSize = 512;
 
-    [HideInInspector] public string modelUrl = "https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.2-GGUF/resolve/main/mistral-7b-instruct-v0.2.Q4_K_M.gguf?download=true";
+    [HideInInspector] public string modelUrl = "https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.1-GGUF/resolve/main/mistral-7b-instruct-v0.1.Q4_K_M.gguf?download=true";
     private readonly string server = GetAssetPath("llamafile-server.exe");
     private readonly string apeARM = GetAssetPath("ape-arm64.elf");
     private readonly string apeX86_64 = GetAssetPath("ape-x86_64.elf");
@@ -34,36 +34,25 @@ public class LLM : LLMClient
     }
 
     #if UNITY_EDITOR
-    public async void DownloadModel(){
+    public void DownloadModel(){
         // download default model and disable model editor properties until the model is set
         modelWIP = true;
         string modelName = Path.GetFileName(modelUrl).Split("?")[0];
         string modelPath = GetAssetPath(modelName);
-        await LLMUnitySetup.DownloadFile(modelUrl, modelPath);
-        SetModel(modelName);
+        LLMUnitySetup.DownloadFile(modelUrl, modelPath, SetModel);
     }
 
-    public async void LoadModel(string modelPath){
-        // load model and disable the model editor properties until the model is set
-        modelWIP = true;
-        SetModel(await LLMUnitySetup.AddAsset(modelPath, GetAssetPath()));
-    }
-
-    public void SetModel(string path){
+    public async void SetModel(string path){
         // set the model and enable the model editor properties
-        model = path;
+        modelWIP = true;
+        model = await LLMUnitySetup.AddAsset(path, GetAssetPath());
         modelWIP = false;
     }
 
-    public async void LoadLora(string loraPath){
-        // load lora and disable the model editor properties until the model is set
-        modelWIP = true;
-        SetLora(await LLMUnitySetup.AddAsset(loraPath, GetAssetPath()));
-    }
-
-    public void SetLora(string path){
+    public async void SetLora(string path){
         // set the lora and enable the model editor properties
-        lora = path;
+        modelWIP = true;
+        lora = await LLMUnitySetup.AddAsset(path, GetAssetPath());
         modelWIP = false;
     }
     #endif

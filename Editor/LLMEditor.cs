@@ -18,7 +18,7 @@ public class LLMEditor : LLMClientEditor
                 string path = EditorUtility.OpenFilePanelWithFilters("Select a gguf model file", "", new string[] { "Model Files", "gguf" });
                 if (!string.IsNullOrEmpty(path))
                 {
-                    llmScript.LoadModel(path);
+                    llmScript.SetModel(path);
                 }
             };
         }
@@ -30,7 +30,7 @@ public class LLMEditor : LLMClientEditor
                 string path = EditorUtility.OpenFilePanelWithFilters("Select a bin lora file", "", new string[] { "Model Files", "bin" });
                 if (!string.IsNullOrEmpty(path))
                 {
-                    llmScript.LoadLora(path);
+                    llmScript.SetLora(path);
                 }
             };
         }

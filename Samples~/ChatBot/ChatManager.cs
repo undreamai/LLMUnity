@@ -99,7 +99,7 @@ public class ChatManager : MonoBehaviour
 
     public void UpdateBubblePositions()
     {
-        float y = inputBubble.GetSize().y + inputBubble.GetRectTransform().offsetMin.y + 2 * bubbleSpacing;
+        float y = inputBubble.GetSize().y + inputBubble.GetRectTransform().offsetMin.y + bubbleSpacing;
         int lastBubbleOutsideFOV = -1;
         float containerHeight = chatContainer.GetComponent<RectTransform>().rect.height;
         for (int i = chatBubbles.Count - 1; i >= 0; i--) {
