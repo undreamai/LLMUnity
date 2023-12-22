@@ -18,7 +18,7 @@ public class LLM : LLMClient
     [ModelAttribute] public int contextSize = 512;
     [ModelAttribute] public int batchSize = 512;
 
-    [HideInInspector] public string modelUrl = "https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.1-GGUF/resolve/main/mistral-7b-instruct-v0.1.Q4_K_M.gguf?download=true";
+    [HideInInspector] public string modelUrl = "https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.2-GGUF/resolve/main/mistral-7b-instruct-v0.2.Q4_K_M.gguf?download=true";
     private readonly string server = GetAssetPath("llamafile-server.exe");
     private readonly string apeARM = GetAssetPath("ape-arm64.elf");
     private readonly string apeX86_64 = GetAssetPath("ape-x86_64.elf");
