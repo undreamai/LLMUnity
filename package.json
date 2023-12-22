@@ -1,0 +1,34 @@
+{
+  "name": "com.undreamai.llmunity",
+  "version": "1.0.0",
+  "displayName": "LLMUnity",
+  "description": "LLMUnity allows to run and distribute LLM models in the Unity engine.",
+  "unity": "2022.3",
+  "unityRelease": "16f1",
+  "documentationUrl": "https://github.com/amakropoulos/LLMUnity",
+  "keywords": [
+    "llm",
+    "large language model",
+    "Llama",
+    "ChatGPT",
+    "artificial intelligence",
+    "AI",
+    "NPC",
+    "conversation",
+    "dialogue",
+    "chat",
+    "chatbot",
+    "generative"
+   ],
+   "samples": [
+    {
+      "displayName": "ChatBot",
+      "description": "ChatBot example using LLMUnity.",
+      "path": "Samples~/ChatBot"
+    }],
+   "author": {
+    "name": "Antonis Makropoulos",
+    "email": "antonis@undream.ai",
+    "url": "https://undream.ai"
+  }
+}
