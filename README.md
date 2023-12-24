@@ -1,6 +1,6 @@
 
 <p align="center">
-<img src="github/logo_transparent_cropped.png" height="150"/>
+<img src=".github/logo_transparent_cropped.png" height="150"/>
 </p>
 
 <h3 align="center">Run and deploy LLM models in Unity!</h3>
@@ -11,22 +11,27 @@ LLMUnity is built on top of the awesome [llama.cpp](https://github.com/ggerganov
 ## Features
 - :computer: Cross-platform! Supports Windows, Linux and macOS ([supported versions](https://github.com/Mozilla-Ocho/llamafile?tab=readme-ov-file#supported-oses-and-cpus))
 - :house: Runs locally without internet access but also supports remote servers
-- :zap: Real-time inference on CPU or Nvidia GPUs
-- :hugs: Support of the major LLM models ([supported models](https://github.com/ggerganov/llama.cpp?tab=readme-ov-file#description))!
+- :zap: Real-time inference on CPU and Nvidia GPUs
+- :hugs: Support of the major LLM models ([supported models](https://github.com/ggerganov/llama.cpp?tab=readme-ov-file#description))
 - :wrench: Easy to setup, call with a single line code
-- :moneybag: Free to use for both personal and commercial purposes!
+- :moneybag: Free to use for both personal and commercial purposes
 
 ## Setup
-- Install the asset in Unity
-- Create an empty GameObject. In the GameObject Inspector press "Add Component" and select the LLM script ("Scripts">"LLM").
-- Download the default model with the "Download Model" button.<br>You can also load your own model in .gguf format with the "Load model" button (see [Use your own model](#use-your-own-model)).
-- Define the role of your AI in the "Prompt". You can optionally specify the player and the AI name.
-- (Optional) Adjust the server or model settings to your preference (see [Options](#options)).
+Method 1: Install the asset from the asset store.<br>
+Method 2. Install the asset directly in Unity:
+- Open the Package Manager: `Window > Package Manager`
+- Click the `+` button and select `Add package from git URL`
+- Use the repository URL `https://github.com/amakropoulos/LLMUnity.git` and click `Add`
 
+## How to use
+Create a GameObject for the LLM :chess_pawn::
+- Create an empty GameObject. In the GameObject Inspector click `Add Component` and select the LLM script (`Scripts>LLM`).
+- Download the default model with the `Download Model` button.<br>You can also load your own model in .gguf format with the `Load model` button (see [Use your own model](#use-your-own-model)).
+- Define the role of your AI in the `Prompt`. You can optionally specify the player and the AI name.
+- (Optional) Adjust the server or model settings to your preference (see [Options](#options)).
 <br>
 
-- In your script you can then use it as follows:
-
+In your script you can then use it as follows :unicorn::
 
 ``` c#
 public class MyScript {
@@ -47,7 +52,7 @@ public class MyScript {
 }
 ```
 
-- (Optional) You can also specify a function that is called when the model reply has finished. <br>This is useful if you select the Stream option for continuous output from the model (see [Options](#options)):
+(Optional) You can also specify a function that is called when the model reply has finished. <br>This is useful if you select the Stream option for continuous output from the model (see [Options](#options)):
 ``` c#
   void ReplyCompleted(){
     // do something when the reply from the model is complete
@@ -63,24 +68,49 @@ public class MyScript {
   }
 ```
 
-- In the Inspector of the GameObject of your script, select the LLM GameObject created above as the llm property.
+Finally, in the Inspector of the GameObject of your script, select the LLM GameObject created above as the llm property.
 
 That's all :sparkles:!
 
-## Example ChatBot
-An example chatbot is provided in the `ChatManager.cs` script with UI elements defined in `Bubble.cs`.<br>
-The chatbot takes input from the player and holds a conversation with an LLM model.<br>
-The example can be run with the `Assets/Scenes/Scene.unity` scene.<br>
-The LLM model needs to be downloaded or loaded within the LLM GameObject that contains the LLM script functionality.
+## Examples
+An example chatbot is provided in the `Samples~` :robot:.<br>
+The chatbot takes input from the player and holds a conversation with an LLM model.
 
-<img width="400" src="github/demo.gif">
+To install it:
+- Open the Package Manager: `Window > Package Manager`
+- Select the `LLMUnity` Package. From the `Samples` Tab, click `Import`  next to the `ChatBot` Sample.
+
+The sample can be run with the `Assets/Samples/LLMUnity/VERSION/ChatBot/Scene.unity` scene.<br>
+In the scene, select the `LLM` GameObject and click the `Download Model` button to download the default model.<br>
+You can also load your own model in .gguf format with the `Load model` button (see [Use your own model](#use-your-own-model)).<br>
+Save the scene, run and enjoy!
+
+<img width="400" src=".github/demo.gif">
+
+## Use your own model
+Alternative models can be downloaded from [HuggingFace]([ttps://huggingface.co](https://huggingface.co/models)).<br>
+The required model format is .gguf ad defined by the llama.cpp.<br>
+The easiest way is to download gguf models by [TheBloke](https://huggingface.co/TheBloke) who has converted an astonishing number of models :rainbow:!<br>
+Otherwise other model formats can be converted to gguf with the `convert.py` script of the llama.cpp as described [here](https://github.com/ggerganov/llama.cpp/tree/master?tab=readme-ov-file#prepare-data--run).
+
+Before using any model make sure you **check the license**!
+
+## Multiple client / Remote server setup
+In addition to the `LLM` server functionality, LLMUnity defines the `LLMClient` client class that handles the client functionality.<br>
+The `LLMClient` contains a subset of options of the `LLM` class described in the [Options](#options).<br>
+It can be used to have multiple clients with different options e.g. different prompts that use the same server.<br>
+This is important as multiple server instances would require additional compute resources.<br>
+To use mulitple instances, you can define a `LLM` GameObject (as described in [How to use](#how-to-use)) and then multiple `LLMClient` objects.
+
+The `LLMClient` can be configured to connect to a remote instance by providing the IP address of the server in the `host` property.<br>
+The server can be either a LLMUnity server or a standard [llama.cpp server](https://github.com/ggerganov/llama.cpp/blob/master/examples/server).
 
 ## Options
 
 #### :computer: Server Settings
 
 <div>
-<img width="300" src="github/GameObject.png" align="right"/>
+<img width="300" src=".github/GameObject.png" align="right"/>
 </div>
 
 - `Num Threads` number of threads to use (default: -1 = all)
@@ -89,7 +119,7 @@ If set to 0 the GPU is not used. Use a large number i.e. >30 to utilise the GPU 
 If no Nvidia GPU exists in the user, the LLM will fall back to the CPU
 - `Debug` select to log the output of the model in the Unity Editor
 - `Port` port to run the server
-- `Stream` select to receive the reply from the model as it is produced.<br>
+- `Stream` select to receive the reply from the model as it is produced (recommended!).<br>
 If it is not selected, the full reply from the model is received in one go
 
 #### :hugs: Model Settings
@@ -110,20 +140,3 @@ If it is not selected, the full reply from the model is received in one go
 - `Player Name` the name of the player
 - `AI Name` the name of the AI
 - `Prompt` a description of the AI role
-
-## Use your own model
-Alternative models can be downloaded from [HuggingFace]([ttps://huggingface.co](https://huggingface.co/models)).<br>
-The required model format is .gguf ad defined by the llama.cpp.<br>
-The easiest way is to download gguf models by [TheBloke](https://huggingface.co/TheBloke) who has converted an astonishing number of models!<br>
-Otherwise other model formats can be converted to gguf with the `convert.py` script of the llama.cpp as described [here](https://github.com/ggerganov/llama.cpp/tree/master?tab=readme-ov-file#prepare-data--run).
-
-Before using any model make sure you **check the license**!
-
-## Multiple client / Remote server setup
-LLMUnity additionally defines the `LLMClient.cs`, an additional script class that handles the client functionality.<br>
-The `LLMClient` contains a subset of options of the `LLM` class described in the [Options](#options).<br>
-It can be used to have multiple clients with different options e.g. prompts that use the same server.<br>
-This is crucial as multiple server instances would require additional compute resources.
-
-The `LLMClient` can be also configured to connect to a remote instance by providing the IP address of the server in the `host` property.<br>
-The server can be either a LLMUnity server or a standard [llama.cpp server](https://github.com/ggerganov/llama.cpp/blob/master/examples/server).
