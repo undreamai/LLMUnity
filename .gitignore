@@ -1,12 +1,1 @@
-Build
-Library
-Logs
-Temp
-UserSettings
 .vscode
-mono_crash.mem*
-*.gguf
-*.gguf.meta
-Assets/StreamingAssets/settings.json*
-Assets/StreamingAssets/*.bin
-Assets/StreamingAssets/*.bin.meta
