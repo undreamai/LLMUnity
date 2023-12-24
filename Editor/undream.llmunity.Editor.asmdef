@@ -1,5 +1,8 @@
 {
     "name": "undream.llmunity.Editor",
+    "includePlatforms": [
+        "Editor"
+    ],
     "references": [
         "undream.llmunity.Runtime"
     ]
