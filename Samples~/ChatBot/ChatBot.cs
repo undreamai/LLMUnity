@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-public class ChatManager : MonoBehaviour
+public class ChatBot : MonoBehaviour
 {
     public Transform chatContainer;
     public Color playerColor = new Color32(81, 164, 81, 255);

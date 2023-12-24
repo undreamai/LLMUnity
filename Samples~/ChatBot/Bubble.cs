@@ -224,15 +224,15 @@ class InputBubble : Bubble {
 }
 
 class BubbleTextSetter {
-    ChatManager chatManager;
+    ChatBot ChatBot;
     Bubble bubble;
-    public BubbleTextSetter(ChatManager chatManager, Bubble bubble){
-        this.chatManager = chatManager;
+    public BubbleTextSetter(ChatBot ChatBot, Bubble bubble){
+        this.ChatBot = ChatBot;
         this.bubble = bubble;
     }
 
     public void SetText(string text){
         bubble.SetText(text);
-        chatManager.SetUpdatePositions();
+        ChatBot.SetUpdatePositions();
     }
 }
