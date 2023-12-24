@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
+using System.Threading.Tasks;
+using UnityEditor;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
@@ -19,10 +21,14 @@ public class LLM : LLMClient
     [ModelAttribute] public int batchSize = 512;
 
     [HideInInspector] public string modelUrl = "https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.1-GGUF/resolve/main/mistral-7b-instruct-v0.1.Q4_K_M.gguf?download=true";
-    private readonly string server = GetAssetPath("llamafile-server.exe");
-    private readonly string apeARM = GetAssetPath("ape-arm64.elf");
-    private readonly string apeX86_64 = GetAssetPath("ape-x86_64.elf");
+    private static readonly string serverUrl = "https://github.com/Mozilla-Ocho/llamafile/releases/download/0.4/llamafile-server-0.4";
+    private static readonly string server = GetAssetPath("llamafile-server.exe");
+    private static readonly string apeARMUrl = "https://cosmo.zip/pub/cosmos/bin/ape-arm64.elf";
+    private static readonly string apeARM = GetAssetPath("ape-arm64.elf");
+    private static readonly string apeX86_64Url = "https://cosmo.zip/pub/cosmos/bin/ape-x86_64.elf";
+    private static readonly string apeX86_64 = GetAssetPath("ape-x86_64.elf");
 
+    public static bool binariesWIP = false;
     public bool modelWIP = false;
     private Process process;
     private bool serverListening = false;
@@ -34,12 +40,29 @@ public class LLM : LLMClient
     }
 
     #if UNITY_EDITOR
+    [InitializeOnLoadMethod]
+    private static async void InitializeOnLoad()
+    {
+        // Perform download when the build is finished
+        await DownloadBinaries();
+    }
+
+    private static async Task DownloadBinaries(){
+        binariesWIP = true;
+        List<Task> downloadTasks = new List<Task>();
+        foreach ((string url, string path) in new[] {(serverUrl, server), (apeARMUrl, apeARM), (apeX86_64Url, apeX86_64)}){
+            if (!File.Exists(path)) downloadTasks.Add(LLMUnitySetup.DownloadFile(url, path, true));
+        }
+        await Task.WhenAll(downloadTasks);
+        binariesWIP = false;
+    }
+
     public void DownloadModel(){
         // download default model and disable model editor properties until the model is set
         modelWIP = true;
         string modelName = Path.GetFileName(modelUrl).Split("?")[0];
         string modelPath = GetAssetPath(modelName);
-        LLMUnitySetup.DownloadFile(modelUrl, modelPath, SetModel);
+        Task downloadTask = LLMUnitySetup.DownloadFile(modelUrl, modelPath, false, SetModel);
     }
 
     public async void SetModel(string path){

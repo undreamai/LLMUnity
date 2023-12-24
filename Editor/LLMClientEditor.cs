@@ -7,10 +7,8 @@ using System.Reflection;
 public class LLMClientEditor : Editor
 {
     public void AddScript(SerializedObject llmScriptSO){
-        GUI.enabled = false;
         var scriptProp = llmScriptSO.FindProperty("m_Script");
         EditorGUILayout.PropertyField(scriptProp);
-        GUI.enabled = true;
         EditorGUILayout.Space((int)EditorGUIUtility.singleLineHeight / 2);
     }
 
@@ -39,12 +37,14 @@ public class LLMClientEditor : Editor
         SerializedObject llmScriptSO = new SerializedObject(llmScript);
         llmScriptSO.Update();
 
+        GUI.enabled = false;
         AddScript(llmScriptSO);
+        GUI.enabled = true;
+
         EditorGUI.BeginChangeCheck();
         AddServerSettings(llmScriptSO);
         AddModelSettings(llmScriptSO);
         AddChatSettings(llmScriptSO);
-
         EditorGUI.EndChangeCheck();
         if (EditorGUI.EndChangeCheck())
             Repaint();

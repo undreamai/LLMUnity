@@ -42,7 +42,7 @@ public class LLMUnitySetup: MonoBehaviour
     }
 
     public static string RunProcess(string command, string commandArgs="", StringCallback outputCallback=null, StringCallback errorCallback=null){
-        // run a process and return the output
+        // run a process and re#turn the output
         Process process = CreateProcess(command, commandArgs, null, null, null, true);
         string output = process.StandardOutput.ReadToEnd();
         process.WaitForExit();
@@ -50,41 +50,46 @@ public class LLMUnitySetup: MonoBehaviour
     }
 
 #if UNITY_EDITOR
-    public static void DownloadFile(string fileUrl, string savePath, StringCallback callback = null)
+    public static async Task DownloadFile(string fileUrl, string savePath, bool executable=false, StringCallback callback = null)
     {
         // download a file to the specified path
         if (File.Exists(savePath)){
             Debug.Log($"File already exists at: {savePath}");
             callback?.Invoke(savePath);
-        } else {
-            Debug.Log($"Downloading file: {fileUrl}");
-            string saveDir = Path.GetDirectoryName(savePath);
-            Directory.CreateDirectory(saveDir);
-            using (UnityWebRequest webRequest = UnityWebRequest.Get(fileUrl))
-            {
-                UnityWebRequestAsyncOperation webRequestOperation = webRequest.SendWebRequest();
-                webRequestOperation.completed += asyncOperation =>
-                {
-                    if (webRequest.result == UnityWebRequest.Result.Success)
-                    {
-                        AssetDatabase.StartAssetEditing();
-                        File.WriteAllBytes(savePath, webRequest.downloadHandler.data);
-                        AssetDatabase.StopAssetEditing();
-                        callback?.Invoke(savePath);
-                        Debug.Log($"File downloaded and saved at: {savePath}");
-                    }
-                    else
-                    {
-                        Debug.LogError($"Download failed: {webRequest.error}");
-                    }
+            return;
+        }
 
-                };
+        Debug.Log($"Downloading {fileUrl}...");
+        UnityWebRequest webRequest = UnityWebRequest.Get(fileUrl);
+        var asyncOperation = webRequest.SendWebRequest();
+        while (!asyncOperation.isDone)
+        {
+            await Task.Yield();
+        }
+
+        if (webRequest.result == UnityWebRequest.Result.Success)
+        {
+            AssetDatabase.StartAssetEditing();
+            Directory.CreateDirectory(Path.GetDirectoryName(savePath));
+            File.WriteAllBytes(savePath, webRequest.downloadHandler.data);
+            if (executable && Application.platform != RuntimePlatform.WindowsEditor && Application.platform != RuntimePlatform.WindowsPlayer){
+                // macOS/Linux: Set executable permissions using chmod
+                RunProcess("chmod", "+x " + savePath);
             }
+            AssetDatabase.StopAssetEditing();
+            Debug.Log($"File downloaded and saved at: {savePath}");
+            callback?.Invoke(savePath);
+        }
+        else
+        {
+            Debug.LogError($"Error downloading file {fileUrl}");
+            Debug.LogError(webRequest.error);
         }
     }
 
     public static async Task<string> AddAsset(string assetPath, string basePath){
         // add an asset to the basePath directory if it is not already there and return the relative path
+        Directory.CreateDirectory(basePath);
         string fullPath = Path.GetFullPath(assetPath);
         if (!fullPath.StartsWith(basePath)){
             // if the asset is not in the assets dir copy it over

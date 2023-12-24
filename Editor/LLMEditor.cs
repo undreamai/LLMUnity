@@ -6,7 +6,6 @@ public class LLMEditor : LLMClientEditor
 {
     public void AddModelLoaders(SerializedObject llmScriptSO, LLM llmScript, int buttonWidth = 150){
         EditorGUILayout.LabelField("Model Settings", EditorStyles.boldLabel);
-        GUI.enabled = !llmScript.modelWIP;
         EditorGUILayout.BeginHorizontal();
         if (GUILayout.Button("Download model", GUILayout.Width(buttonWidth)))
         {
@@ -35,7 +34,6 @@ public class LLMEditor : LLMClientEditor
             };
         }
         EditorGUILayout.EndHorizontal();
-        GUI.enabled = true;
     }
 
     public override void OnInspectorGUI()
@@ -44,14 +42,22 @@ public class LLMEditor : LLMClientEditor
         SerializedObject llmScriptSO = new SerializedObject(llmScript);
         llmScriptSO.Update();
 
+        GUI.enabled = false;
         AddScript(llmScriptSO);
+        GUI.enabled = true;
+
+        GUI.enabled = !LLM.binariesWIP;
         EditorGUI.BeginChangeCheck();
         AddServerSettings(llmScriptSO);
+        GUI.enabled = !LLM.binariesWIP && !llmScript.modelWIP;
         AddModelLoaders(llmScriptSO, llmScript);
+        GUI.enabled = !LLM.binariesWIP;
         if (llmScript.model != ""){
             AddModelSettings(llmScriptSO, false);
             AddChatSettings(llmScriptSO);
         }
+        GUI.enabled = true;
+
         EditorGUI.EndChangeCheck();
         if (EditorGUI.EndChangeCheck())
             Repaint();
