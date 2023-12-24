@@ -69,12 +69,14 @@ public class LLMUnitySetup: MonoBehaviour
 
         if (webRequest.result == UnityWebRequest.Result.Success)
         {
+            AssetDatabase.StartAssetEditing();
             Directory.CreateDirectory(Path.GetDirectoryName(savePath));
             File.WriteAllBytes(savePath, webRequest.downloadHandler.data);
             if (executable && Application.platform != RuntimePlatform.WindowsEditor && Application.platform != RuntimePlatform.WindowsPlayer){
                 // macOS/Linux: Set executable permissions using chmod
                 RunProcess("chmod", "+x " + savePath);
             }
+            AssetDatabase.StopAssetEditing();
             Debug.Log($"File downloaded and saved at: {savePath}");
             callback?.Invoke(savePath);
         }
@@ -93,6 +95,7 @@ public class LLMUnitySetup: MonoBehaviour
             // if the asset is not in the assets dir copy it over
             fullPath = Path.Combine(basePath, Path.GetFileName(assetPath));
             Debug.Log("copying " + assetPath + " to " + fullPath);
+            AssetDatabase.StartAssetEditing();
             await Task.Run(() =>
             {
                 foreach (string filename in new string[] {fullPath, fullPath + ".meta"}){
@@ -101,6 +104,7 @@ public class LLMUnitySetup: MonoBehaviour
                 }
                 File.Copy(assetPath, fullPath);
             });
+            AssetDatabase.StopAssetEditing();
             Debug.Log("copying complete!");
         }
         return fullPath.Substring(basePath.Length + 1);
