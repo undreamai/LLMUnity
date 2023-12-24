@@ -4,7 +4,7 @@
 </p>
 
 <h3 align="center">Run and deploy LLM models in Unity!</h3>
-
+<br>
 LLMUnity allows to run and distribute LLM models in the Unity engine.<br>
 LLMUnity is built on top of the awesome [llama.cpp](https://github.com/ggerganov/llama.cpp) and [llamafile](https://github.com/Mozilla-Ocho/llamafile) libraries.
 
@@ -26,7 +26,7 @@ Method 2. Install the asset directly in Unity:
 ## How to use
 Create a GameObject for the LLM :chess_pawn::
 - Create an empty GameObject. In the GameObject Inspector click `Add Component` and select the LLM script (`Scripts>LLM`).
-- Download the default model with the `Download Model` button.<br>You can also load your own model in .gguf format with the `Load model` button (see [Use your own model](#use-your-own-model)).
+- Download the default model with the `Download Model` button (this will take a while as it is ~4GB).<br>You can also load your own model in .gguf format with the `Load model` button (see [Use your own model](#use-your-own-model)).
 - Define the role of your AI in the `Prompt`. You can optionally specify the player and the AI name.
 - (Optional) Adjust the server or model settings to your preference (see [Options](#options)).
 <br>
