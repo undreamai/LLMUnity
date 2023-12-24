@@ -1,5 +1,5 @@
 {
-  "name": "com.undreamai.llmunity",
+  "name": "ai.undream.llmunity",
   "version": "1.0.0",
   "displayName": "LLMUnity",
   "description": "LLMUnity allows to run and distribute LLM models in the Unity engine.",
@@ -27,7 +27,7 @@
       "path": "Samples~/ChatBot"
     }],
    "author": {
-    "name": "Antonis Makropoulos",
+    "name": "Undream AI",
     "email": "antonis@undream.ai",
     "url": "https://undream.ai"
   }
