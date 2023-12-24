@@ -1,0 +1,6 @@
+{
+    "name": "undream.llmunity.Editor",
+    "references": [
+        "undream.llmunity.Runtime"
+    ]
+}
