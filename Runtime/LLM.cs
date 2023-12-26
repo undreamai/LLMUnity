@@ -28,8 +28,10 @@ public class LLM : LLMClient
     private static readonly string apeX86_64Url = "https://cosmo.zip/pub/cosmos/bin/ape-x86_64.elf";
     private static readonly string apeX86_64 = GetAssetPath("ape-x86_64.elf");
 
-    public static bool binariesWIP = false;
-    public bool modelWIP = false;
+    public static float binariesProgress = 1;
+    public float modelProgress = 1;
+    public float modelCopyProgress = 1;
+    private static float binariesDone = 0;
     private Process process;
     private bool serverListening = false;
     private static ManualResetEvent serverStarted = new ManualResetEvent(false);
@@ -48,35 +50,44 @@ public class LLM : LLMClient
     }
 
     private static async Task DownloadBinaries(){
-        binariesWIP = true;
-        List<Task> downloadTasks = new List<Task>();
+        binariesProgress = 0;
+        binariesDone = 0;
         foreach ((string url, string path) in new[] {(serverUrl, server), (apeARMUrl, apeARM), (apeX86_64Url, apeX86_64)}){
-            if (!File.Exists(path)) downloadTasks.Add(LLMUnitySetup.DownloadFile(url, path, true));
+            if (!File.Exists(path)) await LLMUnitySetup.DownloadFile(url, path, true, null, SetBinariesProgress);
+            binariesDone += 1;
         }
-        await Task.WhenAll(downloadTasks);
-        binariesWIP = false;
+        binariesProgress = 1;
+    }
+
+    public static void SetBinariesProgress(float progress){
+        binariesProgress = binariesDone / 3f + 1f / 3f * progress;
+        Debug.Log($"SetBinariesProgress: {binariesProgress}");
     }
 
     public void DownloadModel(){
         // download default model and disable model editor properties until the model is set
-        modelWIP = true;
+        modelProgress = 0;
         string modelName = Path.GetFileName(modelUrl).Split("?")[0];
         string modelPath = GetAssetPath(modelName);
-        Task downloadTask = LLMUnitySetup.DownloadFile(modelUrl, modelPath, false, SetModel);
+        Task downloadTask = LLMUnitySetup.DownloadFile(modelUrl, modelPath, false, SetModel, SetModelProgress);
+    }
+
+    public void SetModelProgress(float progress){
+        modelProgress = progress;
     }
 
     public async void SetModel(string path){
         // set the model and enable the model editor properties
-        modelWIP = true;
+        modelCopyProgress = 0;
         model = await LLMUnitySetup.AddAsset(path, GetAssetPath());
-        modelWIP = false;
+        modelCopyProgress = 1;
     }
 
     public async void SetLora(string path){
         // set the lora and enable the model editor properties
-        modelWIP = true;
+        modelCopyProgress = 0;
         lora = await LLMUnitySetup.AddAsset(path, GetAssetPath());
-        modelWIP = false;
+        modelCopyProgress = 1;
     }
     #endif
 
@@ -158,8 +169,11 @@ public class LLM : LLMClient
             }
         }
         Debug.Log($"Server command: {binary} {arguments}");
+        var startTime = Time.time;
         process = LLMUnitySetup.CreateProcess(binary, arguments, CheckIfListening, DebugLogError, environment);
-        serverStarted.WaitOne();
+        serverStarted.WaitOne(120000);
+        // Print or use the elapsed time as needed
+        Debug.Log($"Elapsed Time: {Time.time - startTime}");
     }
 
     public void StopProcess()

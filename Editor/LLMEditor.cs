@@ -36,6 +36,10 @@ public class LLMEditor : LLMClientEditor
         EditorGUILayout.EndHorizontal();
     }
 
+    void ShowProgress(float progress, string progressText){
+        if (progress != 1) EditorGUI.ProgressBar(EditorGUILayout.GetControlRect(), progress, progressText);
+    }
+
     public override void OnInspectorGUI()
     {
         LLM llmScript = (LLM)target;
@@ -46,12 +50,14 @@ public class LLMEditor : LLMClientEditor
         AddScript(llmScriptSO);
         GUI.enabled = true;
 
-        GUI.enabled = !LLM.binariesWIP;
         EditorGUI.BeginChangeCheck();
+        GUI.enabled = LLM.binariesProgress == 1;
         AddServerSettings(llmScriptSO);
-        GUI.enabled = !LLM.binariesWIP && !llmScript.modelWIP;
+        GUI.enabled = LLM.binariesProgress == 1 && llmScript.modelProgress == 1 && llmScript.modelCopyProgress == 1;
         AddModelLoaders(llmScriptSO, llmScript);
-        GUI.enabled = !LLM.binariesWIP;
+        ShowProgress(LLM.binariesProgress, "Binaries Downloading");
+        ShowProgress(llmScript.modelProgress, "Model Downloading");
+        ShowProgress(llmScript.modelCopyProgress, "Model Copying");
         if (llmScript.model != ""){
             AddModelSettings(llmScriptSO, false);
             AddChatSettings(llmScriptSO);

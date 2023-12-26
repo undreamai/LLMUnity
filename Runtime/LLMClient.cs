@@ -8,10 +8,6 @@ public class ServerAttribute : PropertyAttribute {}
 public class ModelAttribute : PropertyAttribute {}
 public class ChatAttribute : PropertyAttribute {}
 
-public delegate void EmptyCallback();
-public delegate void Callback<T>(T message);
-public delegate T2 ContentCallback<T, T2>(T message);
-
 public class LLMClient : MonoBehaviour
 {   
     [ClientAttribute] public string host = "localhost";

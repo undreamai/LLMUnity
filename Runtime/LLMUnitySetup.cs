@@ -7,13 +7,15 @@ using Debug = UnityEngine.Debug;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
-public delegate void StringCallback(string message);
+public delegate void EmptyCallback();
+public delegate void Callback<T>(T message);
+public delegate T2 ContentCallback<T, T2>(T message);
 
 public class LLMUnitySetup: MonoBehaviour
 {
     public static Process CreateProcess(
         string command, string commandArgs="",
-        StringCallback outputCallback=null, StringCallback errorCallback=null,
+        Callback<string> outputCallback=null, Callback<string> errorCallback=null,
         List<(string, string)> environment = null,
         bool redirectOutput=false, bool redirectError=false
     ){
@@ -41,7 +43,7 @@ public class LLMUnitySetup: MonoBehaviour
         return process;
     }
 
-    public static string RunProcess(string command, string commandArgs="", StringCallback outputCallback=null, StringCallback errorCallback=null){
+    public static string RunProcess(string command, string commandArgs="", Callback<string> outputCallback=null, Callback<string> errorCallback=null){
         // run a process and re#turn the output
         Process process = CreateProcess(command, commandArgs, null, null, null, true);
         string output = process.StandardOutput.ReadToEnd();
@@ -50,41 +52,68 @@ public class LLMUnitySetup: MonoBehaviour
     }
 
 #if UNITY_EDITOR
-    public static async Task DownloadFile(string fileUrl, string savePath, bool executable=false, StringCallback callback = null)
+    public static async Task DownloadFile(
+        string fileUrl, string savePath, bool executable=false,
+        Callback<string> callback = null, Callback<float> progresscallback = null,
+        int chunkSize = 1024 * 1024)
     {
         // download a file to the specified path
         if (File.Exists(savePath)){
             Debug.Log($"File already exists at: {savePath}");
-            callback?.Invoke(savePath);
-            return;
-        }
+        } else {
+            Debug.Log($"Downloading {fileUrl}...");
 
-        Debug.Log($"Downloading {fileUrl}...");
-        UnityWebRequest webRequest = UnityWebRequest.Get(fileUrl);
-        var asyncOperation = webRequest.SendWebRequest();
-        while (!asyncOperation.isDone)
-        {
-            await Task.Yield();
-        }
+            UnityWebRequest www = UnityWebRequest.Head(fileUrl);
+            UnityWebRequestAsyncOperation asyncOperation = www.SendWebRequest();
 
-        if (webRequest.result == UnityWebRequest.Result.Success)
-        {
+            while (!asyncOperation.isDone)
+            {
+                await Task.Delay(100); // Adjust the delay as needed
+            }
+
+            if (www.result != UnityWebRequest.Result.Success)
+                throw new System.Exception("Failed to get file size. Error: " + www.error);
+
+            long fileSize = long.Parse(www.GetResponseHeader("Content-Length"));
+
             AssetDatabase.StartAssetEditing();
             Directory.CreateDirectory(Path.GetDirectoryName(savePath));
-            File.WriteAllBytes(savePath, webRequest.downloadHandler.data);
+            using (FileStream fs = new FileStream(savePath, FileMode.Create, FileAccess.Write))
+            {
+                for (long i = 0; i < fileSize; i += chunkSize)
+                {
+                    long startByte = i;
+                    long endByte = (long) Mathf.Min(i + chunkSize - 1, fileSize - 1);
+
+                    www = UnityWebRequest.Get(fileUrl);
+                    www.SetRequestHeader("Range", "bytes=" + startByte + "-" + endByte);
+
+                    asyncOperation = www.SendWebRequest();
+
+                    while (!asyncOperation.isDone)
+                    {
+                        await Task.Delay(100); // Adjust the delay as needed
+                    }
+
+                    if (www.result != UnityWebRequest.Result.Success)
+                        throw new System.Exception("Download failed. Error: " + www.error);
+
+                    fs.Write(www.downloadHandler.data, 0, www.downloadHandler.data.Length);
+
+                    int progressPercentage = Mathf.FloorToInt((float) i / fileSize * 100);
+                    if (progressPercentage % 1 == 0)
+                        progresscallback((float) progressPercentage / 100);
+                }
+            }
+
             if (executable && Application.platform != RuntimePlatform.WindowsEditor && Application.platform != RuntimePlatform.WindowsPlayer){
                 // macOS/Linux: Set executable permissions using chmod
                 RunProcess("chmod", "+x " + savePath);
             }
             AssetDatabase.StopAssetEditing();
-            Debug.Log($"File downloaded and saved at: {savePath}");
-            callback?.Invoke(savePath);
         }
-        else
-        {
-            Debug.LogError($"Error downloading file {fileUrl}");
-            Debug.LogError(webRequest.error);
-        }
+        progresscallback(1f);
+        callback?.Invoke(savePath);
     }
 
     public static async Task<string> AddAsset(string assetPath, string basePath){
