@@ -28,9 +28,9 @@ public class LLM : LLMClient
     private static readonly string apeX86_64Url = "https://cosmo.zip/pub/cosmos/bin/ape-x86_64.elf";
     private static readonly string apeX86_64 = GetAssetPath("ape-x86_64.elf");
 
-    public static float binariesProgress = 1;
-    public float modelProgress = 1;
-    public float modelCopyProgress = 1;
+    [HideInInspector] public static float binariesProgress = 1;
+    [HideInInspector] public float modelProgress = 1;
+    [HideInInspector] public float modelCopyProgress = 1;
     private static float binariesDone = 0;
     private Process process;
     private bool serverListening = false;
