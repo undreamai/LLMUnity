@@ -3,25 +3,6 @@ using UnityEditor;
 using UnityEngine;
 using System.Reflection;
 
-#if UNITY_EDITOR
-[CustomPropertyDrawer(typeof(ReadOnlyAttribute))]
-public class ReadOnlyDrawer : PropertyDrawer
-{
-    public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
-    {
-        return EditorGUI.GetPropertyHeight(property, label, true);
-    }
-
-    public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
-    {
-        bool GUIEnabled = GUI.enabled;
-        GUI.enabled = false;
-        EditorGUI.PropertyField(position, property, label, true);
-        GUI.enabled = GUIEnabled;
-    }
-}
-#endif
-
 [CustomEditor(typeof(LLMClient))]
 public class LLMClientEditor : Editor
 {
@@ -73,11 +54,16 @@ public class LLMClientEditor : Editor
 
     public void ShowPropertiesOfClass(SerializedObject so, System.Type targetClass, System.Type attributeClass = null){
         // display a property if it belongs to a certain class and/or has a specific attribute class
+        bool GUIEnabled = GUI.enabled;
         SerializedProperty prop = so.GetIterator();
         if (prop.NextVisible(true)) {
             do {
-                if (PropertyInClass(prop, targetClass, attributeClass))
+                if (PropertyInClass(prop, targetClass, attributeClass)){
+                    bool ReadOnly = AttributeInProperty(prop, typeof(ReadOnlyAttribute));
+                    if (ReadOnly) GUI.enabled = false;
                     EditorGUILayout.PropertyField(prop);
+                    if (ReadOnly) GUI.enabled = GUIEnabled;
+                }
             }
             while (prop.NextVisible(false));
         }
