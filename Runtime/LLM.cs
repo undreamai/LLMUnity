@@ -11,14 +11,14 @@ public class LLM : LLMClient
 {
     [HideInInspector] public bool modelHide = true;
 
-    [Server] public int numThreads = -1;
-    [Server] public int numGPULayers = 0;
-    [Server] public bool debug = false;
+    [ServerAttribute] public int numThreads = -1;
+    [ServerAttribute] public int numGPULayers = 0;
+    [ServerAttribute] public bool debug = false;
 
-    [Model, ReadOnly, SerializeField] public string model = "";
-    [Model, ReadOnly, SerializeField] public string lora = "";
-    [Model] public int contextSize = 512;
-    [Model] public int batchSize = 512;
+    [ModelAttribute] public string model = "";
+    [ModelAttribute] public string lora = "";
+    [ModelAttribute] public int contextSize = 512;
+    [ModelAttribute] public int batchSize = 512;
 
     [HideInInspector] public string modelUrl = "https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.2-GGUF/resolve/main/mistral-7b-instruct-v0.2.Q4_K_M.gguf?download=true";
     private static readonly string serverUrl = "https://github.com/Mozilla-Ocho/llamafile/releases/download/0.4/llamafile-server-0.4";
@@ -61,6 +61,7 @@ public class LLM : LLMClient
 
     public static void SetBinariesProgress(float progress){
         binariesProgress = binariesDone / 3f + 1f / 3f * progress;
+        Debug.Log($"SetBinariesProgress: {binariesProgress}");
     }
 
     public void DownloadModel(){

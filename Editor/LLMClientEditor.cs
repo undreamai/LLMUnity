@@ -54,16 +54,11 @@ public class LLMClientEditor : Editor
 
     public void ShowPropertiesOfClass(SerializedObject so, System.Type targetClass, System.Type attributeClass = null){
         // display a property if it belongs to a certain class and/or has a specific attribute class
-        bool GUIEnabled = GUI.enabled;
         SerializedProperty prop = so.GetIterator();
         if (prop.NextVisible(true)) {
             do {
-                if (PropertyInClass(prop, targetClass, attributeClass)){
-                    bool ReadOnly = AttributeInProperty(prop, typeof(ReadOnlyAttribute));
-                    if (ReadOnly) GUI.enabled = false;
+                if (PropertyInClass(prop, targetClass, attributeClass))
                     EditorGUILayout.PropertyField(prop);
-                    if (ReadOnly) GUI.enabled = GUIEnabled;
-                }
             }
             while (prop.NextVisible(false));
         }
