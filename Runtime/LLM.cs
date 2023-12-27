@@ -11,14 +11,14 @@ public class LLM : LLMClient
 {
     [HideInInspector] public bool modelHide = true;
 
-    [ServerAttribute] public int numThreads = -1;
-    [ServerAttribute] public int numGPULayers = 0;
-    [ServerAttribute] public bool debug = false;
+    [Server] public int numThreads = -1;
+    [Server] public int numGPULayers = 0;
+    [Server] public bool debug = false;
 
-    [ModelAttribute] public string model = "";
-    [ModelAttribute] public string lora = "";
-    [ModelAttribute] public int contextSize = 512;
-    [ModelAttribute] public int batchSize = 512;
+    [Model] public string model = "";
+    [Model] public string lora = "";
+    [Model] public int contextSize = 512;
+    [Model] public int batchSize = 512;
 
     [HideInInspector] public string modelUrl = "https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.2-GGUF/resolve/main/mistral-7b-instruct-v0.2.Q4_K_M.gguf?download=true";
     private static readonly string serverUrl = "https://github.com/Mozilla-Ocho/llamafile/releases/download/0.4/llamafile-server-0.4";
