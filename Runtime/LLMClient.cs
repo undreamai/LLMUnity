@@ -7,22 +7,23 @@ public class ClientAttribute : PropertyAttribute {}
 public class ServerAttribute : PropertyAttribute {}
 public class ModelAttribute : PropertyAttribute {}
 public class ChatAttribute : PropertyAttribute {}
+public class ReadOnlyAttribute : PropertyAttribute {}
 
 public class LLMClient : MonoBehaviour
 {   
-    [ClientAttribute] public string host = "localhost";
-    [ServerAttribute] public int port = 13333;
-    [ServerAttribute] public bool stream = true;
+    [Client] public string host = "localhost";
+    [Server] public int port = 13333;
+    [Server] public bool stream = true;
 
-    [ModelAttribute] public int seed = 0;
-    [ModelAttribute] public float temperature = 0.2f;
-    [ModelAttribute] public int topK = 40;
-    [ModelAttribute] public float topP = 0.9f;
-    [ModelAttribute] public int nPredict = 256;
+    [Model] public int seed = 0;
+    [Model] public float temperature = 0.2f;
+    [Model] public int topK = 40;
+    [Model] public float topP = 0.9f;
+    [Model] public int nPredict = 256;
 
-    [ChatAttribute] public string playerName = "Human";
-    [ChatAttribute] public string AIName = "Assistant";
-    [TextArea(5, 10), ChatAttribute] public string prompt = "A chat between a curious human and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the human's questions.";
+    [Chat] public string playerName = "Human";
+    [Chat] public string AIName = "Assistant";
+    [TextArea(5, 10), Chat] public string prompt = "A chat between a curious human and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the human's questions.";
     
     private int nKeep = -1;
 
