@@ -168,11 +168,9 @@ public class LLM : LLMClient
             }
         }
         Debug.Log($"Server command: {binary} {arguments}");
-        var startTime = Time.time;
         process = LLMUnitySetup.CreateProcess(binary, arguments, CheckIfListening, DebugLogError, environment);
+        // wait for at most 2'
         serverStarted.WaitOne(120000);
-        // Print or use the elapsed time as needed
-        Debug.Log($"Elapsed Time: {Time.time - startTime}");
     }
 
     public void StopProcess()
