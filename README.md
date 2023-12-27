@@ -21,7 +21,7 @@ Method 1: Install the asset from the asset store.<br>
 Method 2. Install the asset directly in Unity:
 - Open the Package Manager: `Window > Package Manager`
 - Click the `+` button and select `Add package from git URL`
-- Use the repository URL `https://github.com/amakropoulos/LLMUnity.git` and click `Add`
+- Use the repository URL `https://github.com/undreamai/LLMUnity.git` and click `Add`
 
 ## How to use
 Create a GameObject for the LLM :chess_pawn::
