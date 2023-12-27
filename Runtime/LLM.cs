@@ -15,8 +15,8 @@ public class LLM : LLMClient
     [Server] public int numGPULayers = 0;
     [Server] public bool debug = false;
 
-    [Model, ReadOnly] public string model = "";
-    [Model, ReadOnly] public string lora = "";
+    [Model, ReadOnly, SerializeField] public string model = "";
+    [Model, ReadOnly, SerializeField] public string lora = "";
     [Model] public int contextSize = 512;
     [Model] public int batchSize = 512;
 
