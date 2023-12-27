@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028328, g: 0.22571328, b: 0.3069218, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657832, g: 0.49641222, b: 0.57481664, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -175,13 +175,13 @@ MonoBehaviour:
   playerColor: {r: 0.31764707, g: 0.6431373, b: 0.31764707, a: 1}
   aiColor: {r: 0.11372549, g: 0.11372549, b: 0.28627452, a: 1}
   fontColor: {r: 1, g: 1, b: 1, a: 1}
-  font: {fileID: 0}
-  fontSize: 20
+  font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+  fontSize: 16
   bubbleWidth: 600
   llm: {fileID: 817827756}
   textPadding: 10
   bubbleSpacing: 10
-  sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
 --- !u!1 &507661347
 GameObject:
   m_ObjectHideFlags: 0
@@ -464,8 +464,9 @@ MonoBehaviour:
   lora: 
   contextSize: 512
   batchSize: 512
-  modelUrl: https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.1-GGUF/resolve/main/mistral-7b-instruct-v0.1.Q4_K_M.gguf?download=true
-  modelWIP: 0
+  modelUrl: https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.2-GGUF/resolve/main/mistral-7b-instruct-v0.2.Q2_K.gguf?download=true
+  modelProgress: 1
+  modelCopyProgress: 1
 --- !u!1 &1051131186
 GameObject:
   m_ObjectHideFlags: 0
