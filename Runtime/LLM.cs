@@ -61,7 +61,6 @@ public class LLM : LLMClient
 
     public static void SetBinariesProgress(float progress){
         binariesProgress = binariesDone / 3f + 1f / 3f * progress;
-        Debug.Log($"SetBinariesProgress: {binariesProgress}");
     }
 
     public void DownloadModel(){
@@ -80,6 +79,7 @@ public class LLM : LLMClient
         // set the model and enable the model editor properties
         modelCopyProgress = 0;
         model = await LLMUnitySetup.AddAsset(path, GetAssetPath());
+        EditorUtility.SetDirty(this);
         modelCopyProgress = 1;
     }
 
@@ -87,6 +87,7 @@ public class LLM : LLMClient
         // set the lora and enable the model editor properties
         modelCopyProgress = 0;
         lora = await LLMUnitySetup.AddAsset(path, GetAssetPath());
+        EditorUtility.SetDirty(this);
         modelCopyProgress = 1;
     }
     #endif
