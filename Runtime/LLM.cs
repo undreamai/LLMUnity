@@ -50,6 +50,7 @@ public class LLM : LLMClient
     }
 
     private static async Task DownloadBinaries(){
+        if (binariesProgress == 0) return;
         binariesProgress = 0;
         binariesDone = 0;
         foreach ((string url, string path) in new[] {(serverUrl, server), (apeARMUrl, apeARM), (apeX86_64Url, apeX86_64)}){
