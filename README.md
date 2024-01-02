@@ -17,7 +17,7 @@ LLMUnity is built on top of the awesome [llama.cpp](https://github.com/ggerganov
 - :moneybag: Free to use for both personal and commercial purposes
 
 ## Setup
-Method 1: Install the asset from the asset store.<br>
+Method 1: Install the asset from the asset store: [LLM for Unity](https://assetstore.unity.com/packages/slug/273604).<br>
 Method 2. Install the asset directly in Unity:
 - Open the Package Manager: `Window > Package Manager`
 - Click the `+` button and select `Add package from git URL`
