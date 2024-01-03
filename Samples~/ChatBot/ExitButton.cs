@@ -1,11 +1,14 @@
 using UnityEngine;
 
-public class ExitButton : MonoBehaviour
+namespace LLMUnitySamples
 {
-    public void ExitGame()
+    public class ExitButton : MonoBehaviour
     {
-        // This method will be called when the button is clicked
-        Debug.Log("Exit button clicked");
-        Application.Quit();
+        public void ExitGame()
+        {
+            // This method will be called when the button is clicked
+            Debug.Log("Exit button clicked");
+            Application.Quit();
+        }
     }
 }
