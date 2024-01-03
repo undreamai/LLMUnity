@@ -464,7 +464,7 @@ MonoBehaviour:
   lora: 
   contextSize: 512
   batchSize: 512
-  modelUrl: https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.2-GGUF/resolve/main/mistral-7b-instruct-v0.2.Q2_K.gguf?download=true
+  modelUrl: https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.2-GGUF/resolve/main/mistral-7b-instruct-v0.2.Q4_K_M.gguf?download=true
   modelProgress: 1
   modelCopyProgress: 1
 --- !u!1 &1051131186
