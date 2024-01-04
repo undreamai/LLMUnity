@@ -30,6 +30,11 @@
       "displayName": "SimpleInteraction",
       "description": "Minimal example using LLMUnity.",
       "path": "Samples~/SimpleInteraction"
+    },
+    {
+      "displayName": "ServerClient",
+      "description": "Example with two AIs using LLMUnity.",
+      "path": "Samples~/ServerClient"
     }
    ],
    "author": {
