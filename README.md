@@ -54,7 +54,7 @@ public class MyScript {
     // your game function
     ...
     string message = "Hello bot!"
-    _ = llmClient.Chat(message, HandleReply);
+    _ = llm.Chat(message, HandleReply);
     ...
   }
 }
@@ -76,7 +76,7 @@ That's all :sparkles:!
     // your game function
     ...
     string message = "Hello bot!"
-    _ = llmClient.Chat(message, HandleReply, ReplyCompleted);
+    _ = llm.Chat(message, HandleReply, ReplyCompleted);
     ...
   }
 ```
@@ -87,7 +87,7 @@ That's all :sparkles:!
     // your game function
     ...
     string message = "Hello bot!"
-    await llmClient.Chat(message, HandleReply, ReplyCompleted);
+    await llm.Chat(message, HandleReply, ReplyCompleted);
     ...
   }
 ```
