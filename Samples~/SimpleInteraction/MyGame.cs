@@ -1,0 +1,35 @@
+using UnityEngine;
+using LLMUnity;
+using UnityEngine.UI;
+
+public class MyGame : MonoBehaviour
+{
+    public LLM llm;
+    public InputField playerText;
+    public Text AIText;
+
+    void Start()
+    {
+        playerText.onSubmit.AddListener(onInputFieldSubmit);
+        playerText.Select();
+    }
+
+    void onInputFieldSubmit(string message)
+    {
+        playerText.interactable = false;
+        AIText.text = "...";
+        _ = llm.Chat(message, SetAIText, AIReplyComplete);
+    }
+    
+    public void SetAIText(string text)
+    {
+       AIText.text = text;
+    }
+
+    public void AIReplyComplete()
+    {
+        playerText.interactable = true;
+        playerText.Select();
+        playerText.text = "";
+    }
+}

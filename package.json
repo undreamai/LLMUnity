@@ -25,7 +25,13 @@
       "displayName": "ChatBot",
       "description": "ChatBot example using LLMUnity.",
       "path": "Samples~/ChatBot"
-    }],
+    },
+    {
+      "displayName": "SimpleInteraction",
+      "description": "Minimal example using LLMUnity.",
+      "path": "Samples~/SimpleInteraction"
+    }
+   ],
    "author": {
     "name": "Undream AI",
     "email": "antonis@undream.ai",
