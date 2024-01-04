@@ -2,7 +2,7 @@ using UnityEngine;
 using LLMUnity;
 using UnityEngine.UI;
 
-public class MyGame : MonoBehaviour
+public class SimpleInteraction : MonoBehaviour
 {
     public LLM llm;
     public InputField playerText;
