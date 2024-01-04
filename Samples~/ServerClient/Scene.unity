@@ -1227,12 +1227,11 @@ MonoBehaviour:
   AIName: Assistant
   prompt: A chat between a curious human and an artificial intelligence assistant.
     The assistant gives helpful, detailed, and polite answers to the human's questions.
-    The assistant name is Nick.
   modelHide: 1
   numThreads: -1
   numGPULayers: 0
   debug: 0
-  model: mistral-7b-instruct-v0.1.Q4_K_M.gguf
+  model: 
   lora: 
   contextSize: 512
   batchSize: 512
