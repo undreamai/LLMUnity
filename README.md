@@ -43,7 +43,7 @@ Create a GameObject for the LLM :chess_pawn::
 In your script you can then use it as follows :unicorn::
 ``` c#
 public class MyScript {
-  LLM llm;
+  public LLM llm;
   
   void HandleReply(string reply){
     // do something with the reply from the model
