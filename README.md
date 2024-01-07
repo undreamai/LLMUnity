@@ -12,7 +12,7 @@ LLMUnity is built on top of the awesome [llama.cpp](https://github.com/ggerganov
 ## Features
 - :computer: Cross-platform! Supports Windows, Linux and macOS ([supported versions](https://github.com/Mozilla-Ocho/llamafile?tab=readme-ov-file#supported-oses-and-cpus))
 - :house: Runs locally without internet access but also supports remote servers
-- :zap: Blazing fast inference on CPU and Nvidia GPUs
+- :zap: Fast inference on CPU and Nvidia GPUs
 - :hugs: Support of the major LLM models ([supported models](https://github.com/ggerganov/llama.cpp?tab=readme-ov-file#description))
 - :wrench: Easy to setup, call with a single line code
 - :moneybag: Free to use for both personal and commercial purposes
@@ -35,7 +35,7 @@ _Method 2: Install the asset using the GitHub repo:_
 Create a GameObject for the LLM :chess_pawn::
 - Create an empty GameObject. In the GameObject Inspector click `Add Component` and select the LLM script (`Scripts>LLM`).
 - Download the default model with the `Download Model` button (this will take a while as it is ~4GB).<br>You can also load your own model in .gguf format with the `Load model` button (see [Use your own model](#use-your-own-model)).
-- Define the role of your AI in the `Prompt`.
+- Define the role of your AI in the `Prompt`. You can also define the name of the AI (`AI Mame`) and the player (`Player Name`).
 - (Optional) By default the LLM script is set up to receive the reply from the model as is it is produced in real-time (recommended).<br>If you prefer to receive the full reply in one go, you can deselect the option.
 - (Optional) Adjust the server or model settings to your preference (see [Options](#options)).
 <br>
@@ -93,14 +93,17 @@ That's all :sparkles:!
 ```
 
 ## Examples
-An example chatbot is provided in the `Samples~` :robot:.<br>
-The chatbot takes input from the player and holds a conversation with an LLM model.
+The [Samples~](Samples~) folder contains several examples of interaction :robot::
+- [SimpleInteraction](Samples~/SimpleInteraction): Demonstrates simple interaction between a player and a AI
+- [ServerClient](Samples~/ServerClient): Demonstrates interaction between a player and multiple AIs using a `LLM` and a `LLMClient`
+- [ChatBot](Samples~/ChatBot): Demonstrates interaction between a player and a AI with UI similar to a messaging app
 
-To install it:
+If you install the package as an asset, the samples will already be in the `Assets/Samples` folder.<br>
+Otherwise if you install it with the GitHub URL, to install a sample:
 - Open the Package Manager: `Window > Package Manager`
-- Select the `LLMUnity` Package. From the `Samples` Tab, click `Import`  next to the `ChatBot` Sample.
+- Select the `LLMUnity` Package. From the `Samples` Tab, click `Import` next to the sample you want to install.
 
-The sample can be run with the `Assets/Samples/LLMUnity/VERSION/ChatBot/Scene.unity` scene.<br>
+The samples can be run with the `Scene.unity` scene they contain inside their folder.<br>
 In the scene, select the `LLM` GameObject and click the `Download Model` button to download the default model.<br>
 You can also load your own model in .gguf format with the `Load model` button (see [Use your own model](#use-your-own-model)).<br>
 Save the scene, run and enjoy!
@@ -121,6 +124,7 @@ The `LLMClient` contains a subset of options of the `LLM` class described in the
 It can be used to have multiple clients with different options e.g. different prompts that use the same server.<br>
 This is important as multiple server instances would require additional compute resources.<br>
 To use multiple instances, you can define one `LLM` GameObject (as described in [How to use](#how-to-use)) and then multiple `LLMClient` objects.
+See the [ServerClient](Samples~/ServerClient) sample for a server-client example.
 
 The `LLMClient` can be configured to connect to a remote instance by providing the IP address of the server in the `host` property.<br>
 The server can be either a LLMUnity server or a standard [llama.cpp server](https://github.com/ggerganov/llama.cpp/blob/master/examples/server).
