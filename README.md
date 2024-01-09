@@ -65,7 +65,7 @@ That's all :sparkles:!
 
 ---
 
-**(Optional)** You can also specify a function that is called when the model reply is completed. <br>This is useful if the Stream option is selected for continuous output from the model (default behaviour):
+**(Optional)** You can also specify a function that is called when the model reply has been completed. <br>This is useful if the Stream option is selected for continuous output from the model (default behaviour):
 ``` c#
   void ReplyCompleted(){
     // do something when the reply from the model is complete
@@ -88,6 +88,21 @@ That's all :sparkles:!
     ...
     string message = "Hello bot!"
     await llm.Chat(message, HandleReply, ReplyCompleted);
+    ...
+  }
+```
+
+**(Optional)** You can process your prompt at the beginning of your app to save some processing time for the first input of the user:
+``` c#
+  void WarmupCompleted(){
+    // do something when the warmup is complete
+    Debug.Log("The AI is warm");
+  }
+
+  void Game(){
+    // your game function
+    ...
+    _ = llm.Warmup(WarmupCompleted);
     ...
   }
 ```
