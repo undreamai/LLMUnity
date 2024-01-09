@@ -6,7 +6,7 @@ namespace LLMUnity
     [CustomEditor(typeof(LLM))]
     public class LLMEditor : LLMClientEditor
     {
-        public void AddModelLoaders(SerializedObject llmScriptSO, LLM llmScript, int buttonWidth = 150){
+        public void AddModelLoaders(SerializedObject llmScriptSO, LLM llmScript){
             EditorGUILayout.LabelField("Model Settings", EditorStyles.boldLabel);
             EditorGUILayout.BeginHorizontal();
             if (GUILayout.Button("Download model", GUILayout.Width(buttonWidth)))
@@ -53,6 +53,7 @@ namespace LLMUnity
             GUI.enabled = true;
 
             EditorGUI.BeginChangeCheck();
+            AddAdvancedOptionsToggle(llmScriptSO);
             GUI.enabled = LLM.binariesProgress == 1;
             AddServerSettings(llmScriptSO);
             GUI.enabled = LLM.binariesProgress == 1 && llmScript.modelProgress == 1 && llmScript.modelCopyProgress == 1;
