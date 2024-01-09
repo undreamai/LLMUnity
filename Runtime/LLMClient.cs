@@ -118,12 +118,11 @@ namespace LLMUnity
             return result.tokens;
         }
 
-        public async Task Chat(string question, Callback<string> callback=null, EmptyCallback completionCallback=null)
+        public async Task Chat(string question, Callback<string> callback=null, EmptyCallback completionCallback=null, bool addToHistory=true)
         {
             // handle a chat message by the user
             // call the callback function while the answer is received
             // call the completionCallback function when the answer is fully received
-            AddPlayerMessage(question);
             string json = JsonUtility.ToJson(GenerateRequest(question));
             string result;
             if (stream) {
@@ -132,7 +131,15 @@ namespace LLMUnity
                 result = await PostRequest<ChatResult, string>(json, "completion", ChatContent, callback);
             }
             completionCallback?.Invoke();
-            AddAIMessage(result);
+            if (addToHistory) {
+                AddPlayerMessage(question);
+                AddAIMessage(result);
+            }
+        }
+
+        public async Task Warmup(string question="hi", Callback<string> callback=null, EmptyCallback completionCallback=null)
+        {
+            await Chat(question, callback, completionCallback, false);
         }
 
         public async Task Tokenize(string question, Callback<List<int>> callback=null)
