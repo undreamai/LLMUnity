@@ -9,18 +9,23 @@ namespace LLMUnity
     public class ServerAttribute : PropertyAttribute {}
     public class ModelAttribute : PropertyAttribute {}
     public class ChatAttribute : PropertyAttribute {}
+    public class ClientAdvancedAttribute : PropertyAttribute {}
+    public class ServerAdvancedAttribute : PropertyAttribute {}
+    public class ModelAdvancedAttribute : PropertyAttribute {}
 
     public class LLMClient : MonoBehaviour
     {   
-        [Client] public string host = "localhost";
-        [Server] public int port = 13333;
+        [HideInInspector] public bool advancedOptions = false;
+
+        [ClientAdvanced] public string host = "localhost";
+        [ServerAdvanced] public int port = 13333;
         [Server] public bool stream = true;
 
-        [Model] public int seed = 0;
-        [Model] public float temperature = 0.2f;
-        [Model] public int topK = 40;
-        [Model] public float topP = 0.9f;
-        [Model] public int nPredict = 256;
+        [ModelAdvanced] public int seed = 0;
+        [ModelAdvanced] public float temperature = 0.2f;
+        [ModelAdvanced] public int topK = 40;
+        [ModelAdvanced] public float topP = 0.9f;
+        [ModelAdvanced] public int nPredict = 256;
 
         [Chat] public string playerName = "Human";
         [Chat] public string AIName = "Assistant";
