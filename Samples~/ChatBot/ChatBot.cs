@@ -56,7 +56,7 @@ namespace LLMUnitySamples
 
         void onInputFieldSubmit(string newText){
             inputBubble.ActivateInputField();
-            if (blockInput || newText == "" || Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)){
+            if (blockInput || newText.Trim() == "" || Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)){
                 StartCoroutine(BlockInteraction());
                 return;
             }
@@ -100,7 +100,7 @@ namespace LLMUnitySamples
         void onValueChanged(string newText){
             // Get rid of newline character added when we press enter
             if (Input.GetKey(KeyCode.Return)){
-                if(inputBubble.GetText() == "\n")
+                if(inputBubble.GetText().Trim() == "")
                     inputBubble.SetText("");
             }
         }
