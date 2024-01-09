@@ -36,8 +36,8 @@ Create a GameObject for the LLM :chess_pawn::
 - Create an empty GameObject. In the GameObject Inspector click `Add Component` and select the LLM script (`Scripts>LLM`).
 - Download the default model with the `Download Model` button (this will take a while as it is ~4GB).<br>You can also load your own model in .gguf format with the `Load model` button (see [Use your own model](#use-your-own-model)).
 - Define the role of your AI in the `Prompt`. You can also define the name of the AI (`AI Mame`) and the player (`Player Name`).
-- (Optional) By default the LLM script is set up to receive the reply from the model as is it is produced in real-time (recommended).<br>If you prefer to receive the full reply in one go, you can deselect the option.
-- (Optional) Adjust the server or model settings to your preference (see [Options](#options)).
+- **(Optional)** By default the LLM script is set up to receive the reply from the model as is it is produced in real-time (recommended). If you prefer to receive the full reply in one go, you can deselect the `Stream` option.
+- **(Optional)** Adjust the server or model settings to your preference (see [Options](#options)).
 <br>
 
 In your script you can then use it as follows :unicorn::
