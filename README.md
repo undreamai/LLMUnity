@@ -38,8 +38,8 @@ Create a GameObject for the LLM :chess_pawn::
 - Create an empty GameObject. In the GameObject Inspector click `Add Component` and select the LLM script (`Scripts>LLM`).
 - Download the default model with the `Download Model` button (this will take a while as it is ~4GB).<br>You can also load your own model in .gguf format with the `Load model` button (see [Use your own model](#use-your-own-model)).
 - Define the role of your AI in the `Prompt`. You can also define the name of the AI (`AI Mame`) and the player (`Player Name`).
-- **(Optional)** By default the LLM script is set up to receive the reply from the model as is it is produced in real-time (recommended). If you prefer to receive the full reply in one go, you can deselect the `Stream` option.
-- **(Optional)** Adjust the server or model settings to your preference (see [Options](#options)).
+- (Optional) By default the LLM script is set up to receive the reply from the model as is it is produced in real-time (recommended). If you prefer to receive the full reply in one go, you can deselect the `Stream` option.
+- (Optional) Adjust the server or model settings to your preference (see [Options](#options)).
 <br>
 
 In your script you can then use it as follows :unicorn::
@@ -61,13 +61,8 @@ public class MyScript {
   }
 }
 ```
-- Finally, in the Inspector of the GameObject of your script, select the LLM GameObject created above as the llm property.
-
-That's all :sparkles:!
-
----
-
-**(Optional)** You can also specify a function that is called when the model reply has been completed. <br>This is useful if the Stream option is selected for continuous output from the model (default behaviour):
+You can also specify a function to call when the model reply has been completed.<br>
+This is useful if the `Stream` option is selected for continuous output from the model (default behaviour):
 ``` c#
   void ReplyCompleted(){
     // do something when the reply from the model is complete
@@ -83,7 +78,17 @@ That's all :sparkles:!
   }
 ```
 
-**(Optional)** If you want to wait for the reply before proceeding with your next lines of code you can use `await`:
+- Finally, in the Inspector of the GameObject of your script, select the LLM GameObject created above as the llm property.
+
+That's all :sparkles:!
+<br><br>
+You can also:
+
+
+<details>
+<summary>Wait for the reply before proceeding to the next lines of code</summary>
+
+  For this you can use the `async`/`await` functionality:
 ``` c#
   async void Game(){
     // your game function
@@ -94,7 +99,10 @@ That's all :sparkles:!
   }
 ```
 
-**(Optional)** You can process your prompt at the beginning of your app to save some processing time for the first input of the user:
+</details>
+<details>
+<summary>Process the prompt at the beginning of your app for faster initial processing time</summary>
+
 ``` c#
   void WarmupCompleted(){
     // do something when the warmup is complete
@@ -109,11 +117,15 @@ That's all :sparkles:!
   }
 ```
 
+</details>
+
 ## Examples
 The [Samples~](Samples~) folder contains several examples of interaction :robot::
 - [SimpleInteraction](Samples~/SimpleInteraction): Demonstrates simple interaction between a player and a AI
-- [ServerClient](Samples~/ServerClient): Demonstrates interaction between a player and multiple AIs using a `LLM` and a `LLMClient`
-- [ChatBot](Samples~/ChatBot): Demonstrates interaction between a player and a AI with UI similar to a messaging app
+- [ServerClient](Samples~/ServerClient): Demonstrates simple interaction between a player and multiple AIs using a `LLM` and a `LLMClient`
+- [ChatBot](Samples~/ChatBot): Demonstrates interaction between a player and a AI with a UI similar to a messaging app (see image below)
+  
+<img width="400" src=".github/demo.gif">
 
 If you install the package as an asset, the samples will already be in the `Assets/Samples` folder.<br>
 Otherwise if you install it with the GitHub URL, to install a sample:
@@ -125,7 +137,6 @@ In the scene, select the `LLM` GameObject and click the `Download Model` button 
 You can also load your own model in .gguf format with the `Load model` button (see [Use your own model](#use-your-own-model)).<br>
 Save the scene, run and enjoy!
 
-<img width="400" src=".github/demo.gif">
 
 ## Use your own model
 Alternative models can be downloaded from [HuggingFace](https://huggingface.co/models).<br>
