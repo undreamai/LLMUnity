@@ -196,6 +196,10 @@ namespace LLMUnitySamples
             MoveTextEnd();
         }
 
+        public void SetPlaceHolderText(string text){
+            placeholderObject.GetComponent<Text>().text = text;
+        }
+
         public bool inputFocused(){
             return inputField.isFocused;
         }
@@ -216,7 +220,7 @@ namespace LLMUnitySamples
 
         public void ActivateInputField(){
             inputField.ActivateInputField();
-        } 
+        }
 
         public void ReActivateInputField(){
             inputField.DeactivateInputField();
