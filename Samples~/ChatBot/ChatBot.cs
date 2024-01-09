@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using LLMUnity;
+using TMPro;
 
 namespace LLMUnitySamples
 {
@@ -21,9 +22,10 @@ namespace LLMUnitySamples
 
         private InputBubble inputBubble;
         private List<Bubble> chatBubbles = new List<Bubble>();
-        private bool blockInput = false;
+        private bool blockInput = true;
         private BubbleUI playerUI, aiUI;
-        private bool updatePositions=false;
+        private bool updatePositions = false;
+        private bool warmUpDone = false;
 
         void Start()
         {
@@ -45,10 +47,11 @@ namespace LLMUnitySamples
             aiUI.bubbleColor = aiColor;
             aiUI.leftPosition = 1;
             
-            inputBubble = new InputBubble(chatContainer, playerUI, "InputBubble", "Message me", 4);
+            inputBubble = new InputBubble(chatContainer, playerUI, "InputBubble", "Loading...", 4);
             inputBubble.AddSubmitListener(onInputFieldSubmit);
             inputBubble.AddValueChangedListener(onValueChanged);
-            AllowInput();
+            inputBubble.setInteractable(false);
+            _ = llm.Warmup(WarmUpCallback);
         }
 
         void onInputFieldSubmit(string newText){
@@ -72,7 +75,13 @@ namespace LLMUnitySamples
 
             inputBubble.SetText("");
         }
-        
+
+        public void WarmUpCallback(){
+            warmUpDone = true;
+            inputBubble.SetPlaceHolderText("Message me");
+            AllowInput();
+        }
+
         public void AllowInput(){
             blockInput = false;
             inputBubble.ReActivateInputField();
@@ -125,7 +134,7 @@ namespace LLMUnitySamples
 
         void Update()
         {
-            if(!inputBubble.inputFocused())
+            if(!inputBubble.inputFocused() && warmUpDone)
             {
                 inputBubble.ActivateInputField();
                 StartCoroutine(BlockInteraction());
