@@ -137,9 +137,9 @@ namespace LLMUnity
             }
         }
 
-        public async Task Warmup(string question="hi", Callback<string> callback=null, EmptyCallback completionCallback=null)
+        public async Task Warmup(EmptyCallback completionCallback=null, string question="hi")
         {
-            await Chat(question, callback, completionCallback, false);
+            await Chat(question, null, completionCallback, false);
         }
 
         public async Task Tokenize(string question, Callback<List<int>> callback=null)
