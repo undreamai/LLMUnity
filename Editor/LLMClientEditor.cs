@@ -20,9 +20,9 @@ namespace LLMUnity
         }
         public void AddAdvancedOptionsToggle(SerializedObject llmScriptSO){
             SerializedProperty advancedOptionsProp = llmScriptSO.FindProperty("advancedOptions");
-            string toggleText = (advancedOptionsProp.boolValue? "Show":"Hide") + " Advanced Options";
+            string toggleText = (advancedOptionsProp.boolValue? "Hide": "Show") + " Advanced Options";
             GUIStyle style = new GUIStyle("Button");
-            if (!advancedOptionsProp.boolValue)
+            if (advancedOptionsProp.boolValue)
                 style.normal = new GUIStyleState(){ background = Texture2D.grayTexture };
             if (GUILayout.Button(toggleText, style, GUILayout.Width(buttonWidth))){
                 advancedOptionsProp.boolValue = !advancedOptionsProp.boolValue;
