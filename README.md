@@ -34,6 +34,14 @@ _Method 2: Install the asset using the GitHub repo:_
 - Use the repository URL `https://github.com/undreamai/LLMUnity.git` and click `Add`
 
 ## How to use
+For a step-by-step tutorial you can have a look at our guide: 
+
+<a href="https://towardsdatascience.com/how-to-use-llms-in-unity-308c9c0f637c">
+<img width="400" src=".github/life_is_strange_dialogue.png"/>
+</a>
+
+[How to Use LLMs in Unity](https://towardsdatascience.com/how-to-use-llms-in-unity-308c9c0f637c)
+
 Create a GameObject for the LLM :chess_pawn::
 - Create an empty GameObject. In the GameObject Inspector click `Add Component` and select the LLM script (`Scripts>LLM`).
 - Download the default model with the `Download Model` button (this will take a while as it is ~4GB).<br>You can also load your own model in .gguf format with the `Load model` button (see [Use your own model](#use-your-own-model)).
@@ -118,6 +126,7 @@ You can also:
 ```
 
 </details>
+
 
 ## Examples
 The [Samples~](Samples~) folder contains several examples of interaction :robot::
