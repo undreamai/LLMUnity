@@ -157,15 +157,15 @@ namespace LLMUnity
             }
 
             string binary = server;
-            string arguments = $" --port {port} -m {modelPath} -c {contextSize} -b {batchSize} --log-disable --nobrowser";
+            string arguments = $" --port {port} -m \"{modelPath}\" -c {contextSize} -b {batchSize} --log-disable --nobrowser";
             if (numThreads > 0) arguments += $" -t {numThreads}";
             if (numGPULayers > 0) arguments += $" -ngl {numGPULayers}";
-            if (loraPath != "") arguments += $" --lora {loraPath}";
+            if (loraPath != "") arguments += $" --lora \"{loraPath}\"";
             List<(string, string)> environment = null;
 
             if (Application.platform != RuntimePlatform.WindowsEditor && Application.platform != RuntimePlatform.WindowsPlayer){
                 // use APE binary directly if not on Windows
-                arguments = $"{binary} {arguments}";
+                arguments = $"\"{binary}\" {arguments}";
                 binary = SelectApeBinary();
                 if (numGPULayers <= 0){
                     // prevent nvcc building if not using GPU

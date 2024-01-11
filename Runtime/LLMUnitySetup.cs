@@ -110,9 +110,10 @@ namespace LLMUnity
 
                 if (executable && Application.platform != RuntimePlatform.WindowsEditor && Application.platform != RuntimePlatform.WindowsPlayer){
                     // macOS/Linux: Set executable permissions using chmod
-                    RunProcess("chmod", "+x " + savePath);
+                    RunProcess("chmod", $"+x \"{savePath}\"");
                 }
                 AssetDatabase.StopAssetEditing();
+                Debug.Log($"Download complete!");
             }
             progresscallback(1f);
             callback?.Invoke(savePath);
