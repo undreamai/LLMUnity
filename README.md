@@ -17,7 +17,7 @@ LLMUnity is built on top of the awesome [llama.cpp](https://github.com/ggerganov
 - :wrench: Easy to setup, call with a single line code
 - :moneybag: Free to use for both personal and commercial purposes
 
-[:vertical_traffic_light: Feature Backlog](https://github.com/orgs/undreamai/projects/2/views/1)
+[:vertical_traffic_light: Upcoming Releases](https://github.com/orgs/undreamai/projects/2/views/10)
 
 ## Setup
 To install the package you can follow the typical asset / package process in Unity:<br>
