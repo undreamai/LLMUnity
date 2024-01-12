@@ -13,6 +13,7 @@ namespace LLMUnity
     public class ServerAdvancedAttribute : PropertyAttribute {}
     public class ModelAdvancedAttribute : PropertyAttribute {}
 
+    [DefaultExecutionOrder(-2)]
     public class LLMClient : MonoBehaviour
     {
         protected static int LLMClientCounter = 0;
@@ -48,12 +49,14 @@ namespace LLMUnity
             chat.Add(new ChatMessage{role="system", content=prompt});
         }
 
-        void OnEnable(){
-            if (!counted) LLMClientCounter++;
-            counted = true;
+        public void Awake(){
+            if (!counted){
+                LLMClientCounter++;
+                counted = true;
+            }
         }
 
-        public async void Start(){
+        public async void OnEnable(){
             // initialise the prompt and set the keep tokens based on its length
             currentPrompt = prompt;
             await Tokenize(prompt, SetNKeep);

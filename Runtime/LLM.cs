@@ -9,6 +9,7 @@ using Debug = UnityEngine.Debug;
 
 namespace LLMUnity
 {
+    [DefaultExecutionOrder(-1)]
     public class LLM : LLMClient
     {
         [HideInInspector] public bool modelHide = true;
@@ -96,11 +97,11 @@ namespace LLMUnity
         }
         #endif
 
-        new public  void Start()
+        new public void OnEnable()
         {
             // start the llm server and run the OnEnable of the client
             StartLLMServer();
-            base.Start();
+            base.OnEnable();
         }
 
         private string SelectApeBinary(){
