@@ -116,7 +116,7 @@ namespace LLMUnitySamples
             for (int i = chatBubbles.Count - 1; i >= 0; i--) {
                 Bubble bubble = chatBubbles[i];
                 RectTransform childRect = bubble.GetRectTransform();
-                childRect.position = new Vector2(childRect.position.x, y);
+                childRect.anchoredPosition = new Vector2(childRect.anchoredPosition.x, y);
 
                 // last bubble outside the container
                 if (y > containerHeight && lastBubbleOutsideFOV == -1){
