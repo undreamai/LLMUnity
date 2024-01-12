@@ -14,7 +14,8 @@ namespace LLMUnity
     public class ModelAdvancedAttribute : PropertyAttribute {}
 
     public class LLMClient : MonoBehaviour
-    {   
+    {
+        protected static int LLMClientCounter = 0;
         [HideInInspector] public bool advancedOptions = false;
 
         [ClientAdvanced] public string host = "localhost";
@@ -32,6 +33,7 @@ namespace LLMUnity
         [TextArea(5, 10), Chat] public string prompt = "A chat between a curious human and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the human's questions.";
         
         private int nKeep = -1;
+        private bool counted = false;
 
         private string currentPrompt;
         private List<ChatMessage> chat;
@@ -46,7 +48,12 @@ namespace LLMUnity
             chat.Add(new ChatMessage{role="system", content=prompt});
         }
 
-        public async void OnEnable(){
+        void OnEnable(){
+            if (!counted) LLMClientCounter++;
+            counted = true;
+        }
+
+        public async void Start(){
             // initialise the prompt and set the keep tokens based on its length
             currentPrompt = prompt;
             await Tokenize(prompt, SetNKeep);

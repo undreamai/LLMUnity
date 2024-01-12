@@ -15,6 +15,7 @@ namespace LLMUnity
 
         [Server] public int numThreads = -1;
         [Server] public int numGPULayers = 0;
+        [ServerAdvanced] public int parallelPrompts = -1;
         [ServerAdvanced] public bool debug = false;
 
         [Model] public string model = "";
@@ -95,11 +96,11 @@ namespace LLMUnity
         }
         #endif
 
-        new void OnEnable()
+        new public  void Start()
         {
             // start the llm server and run the OnEnable of the client
             StartLLMServer();
-            base.OnEnable();
+            base.Start();
         }
 
         private string SelectApeBinary(){
@@ -156,8 +157,9 @@ namespace LLMUnity
                 if (!File.Exists(loraPath)) throw new System.Exception($"File {loraPath} not found!");
             }
 
+            int slots = parallelPrompts == -1? LLMClientCounter: parallelPrompts;
             string binary = server;
-            string arguments = $" --port {port} -m \"{modelPath}\" -c {contextSize} -b {batchSize} --log-disable --nobrowser";
+            string arguments = $" --port {port} -m \"{modelPath}\" -c {contextSize} -b {batchSize} --log-disable --nobrowser -np {slots}";
             if (numThreads > 0) arguments += $" -t {numThreads}";
             if (numGPULayers > 0) arguments += $" -ngl {numGPULayers}";
             if (loraPath != "") arguments += $" --lora \"{loraPath}\"";
