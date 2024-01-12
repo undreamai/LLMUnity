@@ -753,6 +753,7 @@ MonoBehaviour:
   modelHide: 1
   numThreads: -1
   numGPULayers: 0
+  parallelPrompts: -1
   debug: 0
   model: 
   lora: 
