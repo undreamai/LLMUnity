@@ -168,6 +168,8 @@ The server can be either a LLMUnity server or a standard [llama.cpp server](http
 
 ## Options
 
+- `Show/Hide Advanced Options` Toggle to show/hide advanced options from below
+
 #### :computer: Server Settings
 
 <div>
@@ -178,10 +180,12 @@ The server can be either a LLMUnity server or a standard [llama.cpp server](http
 - `Num GPU Layers` number of model layers to offload to the GPU.
 If set to 0 the GPU is not used. Use a large number i.e. >30 to utilise the GPU as much as possible.<br>
 If the user's GPU is not supported, the LLM will fall back to the CPU
-- `Debug` select to log the output of the model in the Unity Editor
-- `Port` port to run the server
 - `Stream` select to receive the reply from the model as it is produced (recommended!).<br>
 If it is not selected, the full reply from the model is received in one go
+- Advanced options:
+  - `Parallel Prompts` number of prompts that can happen in parallel (default: -1 = number of LLM/LLMClient objects)
+  - `Debug` select to log the output of the model in the Unity Editor
+  - `Port` port to run the server
 
 #### :hugs: Model Settings
 - `Download model` click to download the default model (Mistral 7B Instruct)
@@ -189,13 +193,14 @@ If it is not selected, the full reply from the model is received in one go
 - `Load lora` click to load a LORA model in .bin format
 - `Model` the model being used (inside the Assets/StreamingAssets folder)
 - `Lora` the LORA model being used (inside the Assets/StreamingAssets folder)
-- `Context Size` Size of the prompt context (0 = context size of the model)
-- `Batch Size` Batch size for prompt processing (default: 512)
-- `Seed` seed for reproducibility. For random results every time select -1
-- `Temperature` LLM temperature, lower values give more deterministic answers
-- `Top K` top-k sampling (default: 40, 0 = disabled)
-- `Top P` top-p sampling (default: 0.9, 1.0 = disabled)
-- `Num Predict` number of tokens to predict (default: 256, -1 = infinity, -2 = until context filled)
+- Advanced options:
+  - `Context Size` Size of the prompt context (0 = context size of the model)
+  - `Batch Size` Batch size for prompt processing (default: 512)
+  - `Seed` seed for reproducibility. For random results every time select -1
+  - `Temperature` LLM temperature, lower values give more deterministic answers
+  - `Top K` top-k sampling (default: 40, 0 = disabled)
+  - `Top P` top-p sampling (default: 0.9, 1.0 = disabled)
+  - `Num Predict` number of tokens to predict (default: 256, -1 = infinity, -2 = until context filled)
 
 #### :left_speech_bubble: Chat Settings
 - `Player Name` the name of the player

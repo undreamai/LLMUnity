@@ -9,12 +9,14 @@ using Debug = UnityEngine.Debug;
 
 namespace LLMUnity
 {
+    [DefaultExecutionOrder(-2)]
     public class LLM : LLMClient
     {
         [HideInInspector] public bool modelHide = true;
 
         [Server] public int numThreads = -1;
         [Server] public int numGPULayers = 0;
+        [ServerAdvanced] public int parallelPrompts = -1;
         [ServerAdvanced] public bool debug = false;
 
         [Model] public string model = "";
@@ -36,7 +38,7 @@ namespace LLMUnity
         private static float binariesDone = 0;
         private Process process;
         private bool serverListening = false;
-        private static ManualResetEvent serverStarted = new ManualResetEvent(false);
+        public ManualResetEvent serverStarted = new ManualResetEvent(false);
 
         private static string GetAssetPath(string relPath=""){
             // Path to store llm server binaries and models
@@ -95,7 +97,7 @@ namespace LLMUnity
         }
         #endif
 
-        new void OnEnable()
+        new public void OnEnable()
         {
             // start the llm server and run the OnEnable of the client
             StartLLMServer();
@@ -156,16 +158,17 @@ namespace LLMUnity
                 if (!File.Exists(loraPath)) throw new System.Exception($"File {loraPath} not found!");
             }
 
+            int slots = parallelPrompts == -1? FindObjectsOfType<LLMClient>().Length: parallelPrompts;
             string binary = server;
-            string arguments = $" --port {port} -m {modelPath} -c {contextSize} -b {batchSize} --log-disable --nobrowser";
+            string arguments = $" --port {port} -m \"{modelPath}\" -c {contextSize} -b {batchSize} --log-disable --nobrowser -np {slots}";
             if (numThreads > 0) arguments += $" -t {numThreads}";
             if (numGPULayers > 0) arguments += $" -ngl {numGPULayers}";
-            if (loraPath != "") arguments += $" --lora {loraPath}";
+            if (loraPath != "") arguments += $" --lora \"{loraPath}\"";
             List<(string, string)> environment = null;
 
             if (Application.platform != RuntimePlatform.WindowsEditor && Application.platform != RuntimePlatform.WindowsPlayer){
                 // use APE binary directly if not on Windows
-                arguments = $"{binary} {arguments}";
+                arguments = $"\"{binary}\" {arguments}";
                 binary = SelectApeBinary();
                 if (numGPULayers <= 0){
                     // prevent nvcc building if not using GPU
@@ -175,7 +178,7 @@ namespace LLMUnity
             Debug.Log($"Server command: {binary} {arguments}");
             process = LLMUnitySetup.CreateProcess(binary, arguments, CheckIfListening, DebugLogError, environment);
             // wait for at most 2'
-            serverStarted.WaitOne(120000);
+            serverStarted.WaitOne(60000);
         }
 
         public void StopProcess()

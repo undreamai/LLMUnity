@@ -78,12 +78,15 @@ namespace LLMUnitySamples
             bubbleRectTransform.pivot = new Vector2(bubbleUI.leftPosition, bubbleUI.bottomPosition);
             bubbleRectTransform.anchorMin = new Vector2(bubbleUI.leftPosition, bubbleUI.bottomPosition);
             bubbleRectTransform.anchorMax = new Vector2(bubbleUI.leftPosition, bubbleUI.bottomPosition);
+            bubbleRectTransform.localScale = Vector3.one;
             Vector2 anchoredPosition = new Vector2(bubbleUI.bubbleOffset + bubbleUI.textPadding, bubbleUI.bubbleOffset + bubbleUI.textPadding);
             if (bubbleUI.leftPosition == 1) anchoredPosition.x *= -1;
             if (bubbleUI.bottomPosition == 1) anchoredPosition.y *= -1;
             bubbleRectTransform.anchoredPosition = anchoredPosition;
 
-            bubbleRectTransform.sizeDelta = new Vector2(600 - 2*bubbleUI.textPadding, bubbleRectTransform.sizeDelta.y - 2*bubbleUI.textPadding);
+            float width = bubbleUI.bubbleWidth == -1? bubbleRectTransform.sizeDelta.x: bubbleUI.bubbleWidth;
+            float height = bubbleUI.bubbleHeight == -1? bubbleRectTransform.sizeDelta.y: bubbleUI.bubbleHeight;
+            bubbleRectTransform.sizeDelta = new Vector2(width-2*bubbleUI.textPadding, height-2*bubbleUI.textPadding);
             SyncParentRectTransform(imageRectTransform);
             imageRectTransform.offsetMin = new Vector2(-bubbleUI.textPadding, -bubbleUI.textPadding);
             imageRectTransform.offsetMax = new Vector2(bubbleUI.textPadding, bubbleUI.textPadding);
@@ -154,6 +157,7 @@ namespace LLMUnitySamples
             RectTransform placeholderRectTransform = placeholderObject.GetComponent<RectTransform>();
             placeholderRectTransform.sizeDelta = textRectTransform.sizeDelta;
             placeholderRectTransform.anchoredPosition = textRectTransform.anchoredPosition;
+            placeholderRectTransform.localScale = Vector3.one;
             SyncParentRectTransform(placeholderRectTransform);
             return placeholderObject;
         }
@@ -168,7 +172,9 @@ namespace LLMUnitySamples
             inputField.lineType = InputField.LineType.MultiLineSubmit;
             inputField.shouldHideMobileInput = false;
             inputField.shouldActivateOnSelect = true;
-            SyncParentRectTransform(inputFieldObject.GetComponent<RectTransform>());
+            RectTransform inputFieldRect = inputFieldObject.GetComponent<RectTransform>();
+            inputFieldRect.localScale = Vector3.one;
+            SyncParentRectTransform(inputFieldRect);
             return inputFieldObject;
         }
 

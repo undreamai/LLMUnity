@@ -63,8 +63,10 @@ namespace LLMUnity
             ShowProgress(llmScript.modelCopyProgress, "Model Copying");
             if (llmScript.model != ""){
                 AddModelSettings(llmScriptSO, false);
-                AddChatSettings(llmScriptSO);
+            } else {
+                EditorGUILayout.Space();
             }
+            AddChatSettings(llmScriptSO);
             GUI.enabled = true;
 
             EditorGUI.EndChangeCheck();

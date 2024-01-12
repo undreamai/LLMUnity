@@ -13,8 +13,9 @@ namespace LLMUnity
     public class ServerAdvancedAttribute : PropertyAttribute {}
     public class ModelAdvancedAttribute : PropertyAttribute {}
 
+    [DefaultExecutionOrder(-1)]
     public class LLMClient : MonoBehaviour
-    {   
+    {
         [HideInInspector] public bool advancedOptions = false;
 
         [ClientAdvanced] public string host = "localhost";
