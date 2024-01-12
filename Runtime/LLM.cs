@@ -177,7 +177,7 @@ namespace LLMUnity
             Debug.Log($"Server command: {binary} {arguments}");
             process = LLMUnitySetup.CreateProcess(binary, arguments, CheckIfListening, DebugLogError, environment);
             // wait for at most 2'
-            serverStarted.WaitOne(120000);
+            serverStarted.WaitOne(60000);
         }
 
         public void StopProcess()
