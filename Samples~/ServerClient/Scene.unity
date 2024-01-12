@@ -1225,7 +1225,7 @@ MonoBehaviour:
   topP: 0.9
   nPredict: 256
   playerName: Human
-  AIName: Assistant
+  AIName: Adam
   prompt: A chat between a curious human and an artificial intelligence assistant.
     The assistant gives helpful, detailed, and polite answers to the human's questions.
   modelHide: 1
@@ -1530,10 +1530,9 @@ MonoBehaviour:
   topP: 0.9
   nPredict: 256
   playerName: Human
-  AIName: Assistant
+  AIName: Eve
   prompt: A chat between a curious human and an artificial intelligence assistant.
     The assistant gives helpful, detailed, and polite answers to the human's questions.
-    The assistant name is Helen.
 --- !u!4 &1493015759
 Transform:
   m_ObjectHideFlags: 0
