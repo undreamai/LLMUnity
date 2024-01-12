@@ -176,8 +176,8 @@ MonoBehaviour:
   aiColor: {r: 0.11372549, g: 0.11372549, b: 0.28627452, a: 1}
   fontColor: {r: 1, g: 1, b: 1, a: 1}
   font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-  fontSize: 16
-  bubbleWidth: 450
+  fontSize: 20
+  bubbleWidth: 600
   llm: {fileID: 817827756}
   textPadding: 10
   bubbleSpacing: 10
