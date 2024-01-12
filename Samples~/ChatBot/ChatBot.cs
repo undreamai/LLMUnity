@@ -2,7 +2,6 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using LLMUnity;
-using TMPro;
 
 namespace LLMUnitySamples
 {

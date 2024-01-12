@@ -83,7 +83,9 @@ namespace LLMUnitySamples
             if (bubbleUI.bottomPosition == 1) anchoredPosition.y *= -1;
             bubbleRectTransform.anchoredPosition = anchoredPosition;
 
-            bubbleRectTransform.sizeDelta = new Vector2(600 - 2*bubbleUI.textPadding, bubbleRectTransform.sizeDelta.y - 2*bubbleUI.textPadding);
+            float width = bubbleUI.bubbleWidth == -1? bubbleRectTransform.sizeDelta.x: bubbleUI.bubbleWidth;
+            float height = bubbleUI.bubbleHeight == -1? bubbleRectTransform.sizeDelta.y: bubbleUI.bubbleHeight;
+            bubbleRectTransform.sizeDelta = new Vector2(width-2*bubbleUI.textPadding, height-2*bubbleUI.textPadding);
             SyncParentRectTransform(imageRectTransform);
             imageRectTransform.offsetMin = new Vector2(-bubbleUI.textPadding, -bubbleUI.textPadding);
             imageRectTransform.offsetMax = new Vector2(bubbleUI.textPadding, bubbleUI.textPadding);
