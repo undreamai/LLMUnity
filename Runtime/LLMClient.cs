@@ -13,10 +13,9 @@ namespace LLMUnity
     public class ServerAdvancedAttribute : PropertyAttribute {}
     public class ModelAdvancedAttribute : PropertyAttribute {}
 
-    [DefaultExecutionOrder(-2)]
+    [DefaultExecutionOrder(-1)]
     public class LLMClient : MonoBehaviour
     {
-        protected static int LLMClientCounter = 0;
         [HideInInspector] public bool advancedOptions = false;
 
         [ClientAdvanced] public string host = "localhost";
@@ -34,7 +33,6 @@ namespace LLMUnity
         [TextArea(5, 10), Chat] public string prompt = "A chat between a curious human and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the human's questions.";
         
         private int nKeep = -1;
-        private bool counted = false;
 
         private string currentPrompt;
         private List<ChatMessage> chat;
@@ -47,13 +45,6 @@ namespace LLMUnity
             requestHeaders = new List<(string, string)>{("Content-Type", "application/json")};
             chat = new List<ChatMessage>();
             chat.Add(new ChatMessage{role="system", content=prompt});
-        }
-
-        public void Awake(){
-            if (!counted){
-                LLMClientCounter++;
-                counted = true;
-            }
         }
 
         public async void OnEnable(){

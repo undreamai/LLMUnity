@@ -9,7 +9,7 @@ using Debug = UnityEngine.Debug;
 
 namespace LLMUnity
 {
-    [DefaultExecutionOrder(-1)]
+    [DefaultExecutionOrder(-2)]
     public class LLM : LLMClient
     {
         [HideInInspector] public bool modelHide = true;
@@ -38,7 +38,7 @@ namespace LLMUnity
         private static float binariesDone = 0;
         private Process process;
         private bool serverListening = false;
-        private static ManualResetEvent serverStarted = new ManualResetEvent(false);
+        public ManualResetEvent serverStarted = new ManualResetEvent(false);
 
         private static string GetAssetPath(string relPath=""){
             // Path to store llm server binaries and models
@@ -158,7 +158,7 @@ namespace LLMUnity
                 if (!File.Exists(loraPath)) throw new System.Exception($"File {loraPath} not found!");
             }
 
-            int slots = parallelPrompts == -1? LLMClientCounter: parallelPrompts;
+            int slots = parallelPrompts == -1? FindObjectsOfType<LLMClient>().Length: parallelPrompts;
             string binary = server;
             string arguments = $" --port {port} -m \"{modelPath}\" -c {contextSize} -b {batchSize} --log-disable --nobrowser -np {slots}";
             if (numThreads > 0) arguments += $" -t {numThreads}";
