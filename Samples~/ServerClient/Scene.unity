@@ -291,7 +291,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 14
+    m_FontSize: 16
     m_FontStyle: 2
     m_BestFit: 0
     m_MinSize: 10
@@ -445,7 +445,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 14
+    m_FontSize: 16
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 10
@@ -598,7 +598,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 14
+    m_FontSize: 16
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 10
@@ -788,7 +788,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 14
+    m_FontSize: 16
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 10
@@ -1225,12 +1225,13 @@ MonoBehaviour:
   topP: 0.9
   nPredict: 256
   playerName: Human
-  AIName: Assistant
+  AIName: Adam
   prompt: A chat between a curious human and an artificial intelligence assistant.
     The assistant gives helpful, detailed, and polite answers to the human's questions.
   modelHide: 1
   numThreads: -1
   numGPULayers: 0
+  parallelPrompts: -1
   debug: 0
   model: 
   lora: 
@@ -1313,10 +1314,10 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 14
+    m_FontSize: 16
     m_FontStyle: 2
     m_BestFit: 0
-    m_MinSize: 10
+    m_MinSize: 1
     m_MaxSize: 40
     m_Alignment: 0
     m_AlignByGeometry: 0
@@ -1530,10 +1531,9 @@ MonoBehaviour:
   topP: 0.9
   nPredict: 256
   playerName: Human
-  AIName: Assistant
+  AIName: Eve
   prompt: A chat between a curious human and an artificial intelligence assistant.
     The assistant gives helpful, detailed, and polite answers to the human's questions.
-    The assistant name is Helen.
 --- !u!4 &1493015759
 Transform:
   m_ObjectHideFlags: 0
@@ -1608,7 +1608,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 14
+    m_FontSize: 16
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 10
