@@ -47,7 +47,7 @@ namespace LLMUnity
             chat.Add(new ChatMessage{role="system", content=prompt});
         }
 
-        public async void OnEnable(){
+        public async void Awake(){
             // initialise the prompt and set the keep tokens based on its length
             currentPrompt = prompt;
             await Tokenize(prompt, SetNKeep);
