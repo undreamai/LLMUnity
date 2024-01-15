@@ -6,11 +6,13 @@ using UnityEngine.Networking;
 using Debug = UnityEngine.Debug;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System;
 
 namespace LLMUnity
 {
     public delegate void EmptyCallback();
     public delegate void Callback<T>(T message);
+    public delegate Task TaskCallback<T>(T message);
     public delegate T2 ContentCallback<T, T2>(T message);
 
     public class LLMUnitySetup : MonoBehaviour
@@ -60,7 +62,7 @@ namespace LLMUnity
     #if UNITY_EDITOR
         public static async Task DownloadFile(
             string fileUrl, string savePath, bool executable = false,
-            Callback<string> callback = null, Callback<float> progresscallback = null,
+            TaskCallback<string> callback = null, Callback<float> progresscallback = null,
             int chunkSize = 1024 * 1024)
         {
             // download a file to the specified path
@@ -129,6 +131,11 @@ namespace LLMUnity
 
         public static async Task<string> AddAsset(string assetPath, string basePath)
         {
+            if (!File.Exists(assetPath))
+            {
+                Debug.LogError($"{assetPath} does not exist!");
+                return null;
+            }
             // add an asset to the basePath directory if it is not already there and return the relative path
             Directory.CreateDirectory(basePath);
             string fullPath = Path.GetFullPath(assetPath);

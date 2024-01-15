@@ -48,7 +48,7 @@ namespace LLMUnity
 
         #if UNITY_EDITOR
         [InitializeOnLoadMethod]
-        private static async void InitializeOnLoad()
+        private static async Task InitializeOnLoad()
         {
             // Perform download when the build is finished
             await DownloadBinaries();
@@ -86,7 +86,7 @@ namespace LLMUnity
             modelProgress = progress;
         }
 
-        public async void SetModel(string path)
+        public async Task SetModel(string path)
         {
             // set the model and enable the model editor properties
             modelCopyProgress = 0;
@@ -95,7 +95,7 @@ namespace LLMUnity
             modelCopyProgress = 1;
         }
 
-        public async void SetLora(string path)
+        public async Task SetLora(string path)
         {
             // set the lora and enable the model editor properties
             modelCopyProgress = 0;
