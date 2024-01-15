@@ -29,23 +29,24 @@ namespace LLMUnitySamples
         void Start()
         {
             if (font == null) font =  Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            playerUI = new BubbleUI {
-                sprite=sprite,
-                font=font,
-                fontSize=fontSize,
-                fontColor=fontColor,
-                bubbleColor=playerColor,
-                bottomPosition=0,
-                leftPosition=0,
-                textPadding=textPadding,
-                bubbleOffset=bubbleSpacing,
-                bubbleWidth=bubbleWidth,
-                bubbleHeight=-1
+            playerUI = new BubbleUI
+            {
+                sprite = sprite,
+                font = font,
+                fontSize = fontSize,
+                fontColor = fontColor,
+                bubbleColor = playerColor,
+                bottomPosition = 0,
+                leftPosition = 0,
+                textPadding = textPadding,
+                bubbleOffset = bubbleSpacing,
+                bubbleWidth = bubbleWidth,
+                bubbleHeight = -1
             };
             aiUI = playerUI;
             aiUI.bubbleColor = aiColor;
             aiUI.leftPosition = 1;
-            
+
             inputBubble = new InputBubble(chatContainer, playerUI, "InputBubble", "Loading...", 4);
             inputBubble.AddSubmitListener(onInputFieldSubmit);
             inputBubble.AddValueChangedListener(onValueChanged);
@@ -53,9 +54,11 @@ namespace LLMUnitySamples
             _ = llm.Warmup(WarmUpCallback);
         }
 
-        void onInputFieldSubmit(string newText){
+        void onInputFieldSubmit(string newText)
+        {
             inputBubble.ActivateInputField();
-            if (blockInput || newText.Trim() == "" || Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)){
+            if (blockInput || newText.Trim() == "" || Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+            {
                 StartCoroutine(BlockInteraction());
                 return;
             }
@@ -75,13 +78,15 @@ namespace LLMUnitySamples
             inputBubble.SetText("");
         }
 
-        public void WarmUpCallback(){
+        public void WarmUpCallback()
+        {
             warmUpDone = true;
             inputBubble.SetPlaceHolderText("Message me");
             AllowInput();
         }
 
-        public void AllowInput(){
+        public void AllowInput()
+        {
             blockInput = false;
             inputBubble.ReActivateInputField();
         }
@@ -96,15 +101,18 @@ namespace LLMUnitySamples
             inputBubble.MoveTextEnd();
         }
 
-        void onValueChanged(string newText){
+        void onValueChanged(string newText)
+        {
             // Get rid of newline character added when we press enter
-            if (Input.GetKey(KeyCode.Return)){
-                if(inputBubble.GetText().Trim() == "")
+            if (Input.GetKey(KeyCode.Return))
+            {
+                if (inputBubble.GetText().Trim() == "")
                     inputBubble.SetText("");
             }
         }
 
-        public void SetUpdatePositions(){
+        public void SetUpdatePositions()
+        {
             updatePositions = true;
         }
 
@@ -113,34 +121,38 @@ namespace LLMUnitySamples
             float y = inputBubble.GetSize().y + inputBubble.GetRectTransform().offsetMin.y + bubbleSpacing;
             int lastBubbleOutsideFOV = -1;
             float containerHeight = chatContainer.GetComponent<RectTransform>().rect.height;
-            for (int i = chatBubbles.Count - 1; i >= 0; i--) {
+            for (int i = chatBubbles.Count - 1; i >= 0; i--)
+            {
                 Bubble bubble = chatBubbles[i];
                 RectTransform childRect = bubble.GetRectTransform();
                 childRect.anchoredPosition = new Vector2(childRect.anchoredPosition.x, y);
 
                 // last bubble outside the container
-                if (y > containerHeight && lastBubbleOutsideFOV == -1){
+                if (y > containerHeight && lastBubbleOutsideFOV == -1)
+                {
                     lastBubbleOutsideFOV = i;
                 }
                 y += bubble.GetSize().y + bubbleSpacing;
             }
             // destroy bubbles outside the container
-            for (int i = 0; i <= lastBubbleOutsideFOV; i++) {
+            for (int i = 0; i <= lastBubbleOutsideFOV; i++)
+            {
                 chatBubbles[i].Destroy();
             }
-            chatBubbles.RemoveRange(0, lastBubbleOutsideFOV+1);
+            chatBubbles.RemoveRange(0, lastBubbleOutsideFOV + 1);
         }
 
         void Update()
         {
-            if(!inputBubble.inputFocused() && warmUpDone)
+            if (!inputBubble.inputFocused() && warmUpDone)
             {
                 inputBubble.ActivateInputField();
                 StartCoroutine(BlockInteraction());
             }
-            if(updatePositions){
+            if (updatePositions)
+            {
                 UpdateBubblePositions();
-                updatePositions=false;
+                updatePositions = false;
             }
         }
     }
