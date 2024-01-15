@@ -28,10 +28,10 @@ public class ServerClientInteraction
         AIText.text = "...";
         _ = llm.Chat(message, SetAIText, AIReplyComplete);
     }
-    
+
     public void SetAIText(string text)
     {
-       AIText.text = text;
+        AIText.text = text;
     }
 
     public void AIReplyComplete()
