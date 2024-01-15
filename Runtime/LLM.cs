@@ -40,7 +40,8 @@ namespace LLMUnity
         private bool serverListening = false;
         public ManualResetEvent serverStarted = new ManualResetEvent(false);
 
-        private static string GetAssetPath(string relPath=""){
+        private static string GetAssetPath(string relPath = "")
+        {
             // Path to store llm server binaries and models
             return Path.Combine(Application.streamingAssetsPath, relPath);
         }
@@ -53,22 +54,26 @@ namespace LLMUnity
             await DownloadBinaries();
         }
 
-        private static async Task DownloadBinaries(){
+        private static async Task DownloadBinaries()
+        {
             if (binariesProgress == 0) return;
             binariesProgress = 0;
             binariesDone = 0;
-            foreach ((string url, string path) in new[] {(serverUrl, server), (apeARMUrl, apeARM), (apeX86_64Url, apeX86_64)}){
+            foreach ((string url, string path) in new[] {(serverUrl, server), (apeARMUrl, apeARM), (apeX86_64Url, apeX86_64)})
+            {
                 if (!File.Exists(path)) await LLMUnitySetup.DownloadFile(url, path, true, null, SetBinariesProgress);
                 binariesDone += 1;
             }
             binariesProgress = 1;
         }
 
-        public static void SetBinariesProgress(float progress){
+        public static void SetBinariesProgress(float progress)
+        {
             binariesProgress = binariesDone / 3f + 1f / 3f * progress;
         }
 
-        public void DownloadModel(){
+        public void DownloadModel()
+        {
             // download default model and disable model editor properties until the model is set
             modelProgress = 0;
             string modelName = Path.GetFileName(modelUrl).Split("?")[0];
@@ -76,11 +81,13 @@ namespace LLMUnity
             Task downloadTask = LLMUnitySetup.DownloadFile(modelUrl, modelPath, false, SetModel, SetModelProgress);
         }
 
-        public void SetModelProgress(float progress){
+        public void SetModelProgress(float progress)
+        {
             modelProgress = progress;
         }
 
-        public async void SetModel(string path){
+        public async void SetModel(string path)
+        {
             // set the model and enable the model editor properties
             modelCopyProgress = 0;
             model = await LLMUnitySetup.AddAsset(path, GetAssetPath());
@@ -88,13 +95,15 @@ namespace LLMUnity
             modelCopyProgress = 1;
         }
 
-        public async void SetLora(string path){
+        public async void SetLora(string path)
+        {
             // set the lora and enable the model editor properties
             modelCopyProgress = 0;
             lora = await LLMUnitySetup.AddAsset(path, GetAssetPath());
             EditorUtility.SetDirty(this);
             modelCopyProgress = 1;
         }
+
         #endif
 
         new public void OnEnable()
@@ -104,14 +113,18 @@ namespace LLMUnity
             base.OnEnable();
         }
 
-        private string SelectApeBinary(){
+        private string SelectApeBinary()
+        {
             // select the corresponding APE binary for the system architecture
             string arch = LLMUnitySetup.RunProcess("uname", "-m");
             Debug.Log($"architecture: {arch}");
             string apeExe;
-            if (arch.Contains("arm64") || arch.Contains("aarch64")) {
+            if (arch.Contains("arm64") || arch.Contains("aarch64"))
+            {
                 apeExe = apeARM;
-            } else {
+            }
+            else
+            {
                 apeExe = apeX86_64;
                 if (!arch.Contains("x86_64"))
                     Debug.Log($"Unknown architecture of processor {arch}! Falling back to x86_64");
@@ -119,30 +132,36 @@ namespace LLMUnity
             return apeExe;
         }
 
-        private void DebugLog(string message, bool logError = false){
+        private void DebugLog(string message, bool logError = false)
+        {
             // Debug log if debug is enabled
             if (!debug || message == null) return;
             if (logError) Debug.LogError(message);
             else Debug.Log(message);
         }
 
-        private void DebugLogError(string message){
+        private void DebugLogError(string message)
+        {
             // Debug log errors if debug is enabled
             DebugLog(message, true);
         }
 
-        private void CheckIfListening(string message){
+        private void CheckIfListening(string message)
+        {
             // Read the output of the llm binary and check if the server has been started and listening
             DebugLog(message);
             if (serverListening) return;
-            try {
+            try
+            {
                 ServerStatus status = JsonUtility.FromJson<ServerStatus>(message);
-                if (status.message == "HTTP server listening"){
+                if (status.message == "HTTP server listening")
+                {
                     Debug.Log("LLM Server started!");
                     serverStarted.Set();
                     serverListening = true;
                 }
-            } catch {}
+            }
+            catch {}
         }
 
         private void StartLLMServer()
@@ -153,12 +172,13 @@ namespace LLMUnity
             if (!File.Exists(modelPath)) throw new System.Exception($"File {modelPath} not found!");
 
             string loraPath = "";
-            if (lora != ""){
+            if (lora != "")
+            {
                 loraPath = GetAssetPath(lora);
                 if (!File.Exists(loraPath)) throw new System.Exception($"File {loraPath} not found!");
             }
 
-            int slots = parallelPrompts == -1? FindObjectsOfType<LLMClient>().Length: parallelPrompts;
+            int slots = parallelPrompts == -1 ? FindObjectsOfType<LLMClient>().Length : parallelPrompts;
             string binary = server;
             string arguments = $" --port {port} -m \"{modelPath}\" -c {contextSize} -b {batchSize} --log-disable --nobrowser -np {slots}";
             if (numThreads > 0) arguments += $" -t {numThreads}";
@@ -166,11 +186,13 @@ namespace LLMUnity
             if (loraPath != "") arguments += $" --lora \"{loraPath}\"";
             List<(string, string)> environment = null;
 
-            if (Application.platform != RuntimePlatform.WindowsEditor && Application.platform != RuntimePlatform.WindowsPlayer){
+            if (Application.platform != RuntimePlatform.WindowsEditor && Application.platform != RuntimePlatform.WindowsPlayer)
+            {
                 // use APE binary directly if not on Windows
                 arguments = $"\"{binary}\" {arguments}";
                 binary = SelectApeBinary();
-                if (numGPULayers <= 0){
+                if (numGPULayers <= 0)
+                {
                     // prevent nvcc building if not using GPU
                     environment = new List<(string, string)> {("PATH", ""), ("CUDA_PATH", "")};
                 }

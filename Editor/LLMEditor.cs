@@ -6,7 +6,8 @@ namespace LLMUnity
     [CustomEditor(typeof(LLM))]
     public class LLMEditor : LLMClientEditor
     {
-        public void AddModelLoaders(SerializedObject llmScriptSO, LLM llmScript){
+        public void AddModelLoaders(SerializedObject llmScriptSO, LLM llmScript)
+        {
             EditorGUILayout.LabelField("Model Settings", EditorStyles.boldLabel);
             EditorGUILayout.BeginHorizontal();
             if (GUILayout.Button("Download model", GUILayout.Width(buttonWidth)))
@@ -38,7 +39,8 @@ namespace LLMUnity
             EditorGUILayout.EndHorizontal();
         }
 
-        void ShowProgress(float progress, string progressText){
+        void ShowProgress(float progress, string progressText)
+        {
             if (progress != 1) EditorGUI.ProgressBar(EditorGUILayout.GetControlRect(), progress, progressText);
         }
 
@@ -61,9 +63,12 @@ namespace LLMUnity
             ShowProgress(LLM.binariesProgress, "Binaries Downloading");
             ShowProgress(llmScript.modelProgress, "Model Downloading");
             ShowProgress(llmScript.modelCopyProgress, "Model Copying");
-            if (llmScript.model != ""){
+            if (llmScript.model != "")
+            {
                 AddModelSettings(llmScriptSO, false);
-            } else {
+            }
+            else
+            {
                 EditorGUILayout.Space();
             }
             AddChatSettings(llmScriptSO);

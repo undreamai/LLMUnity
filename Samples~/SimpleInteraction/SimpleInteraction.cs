@@ -20,10 +20,10 @@ public class SimpleInteraction : MonoBehaviour
         AIText.text = "...";
         _ = llm.Chat(message, SetAIText, AIReplyComplete);
     }
-    
+
     public void SetAIText(string text)
     {
-       AIText.text = text;
+        AIText.text = text;
     }
 
     public void AIReplyComplete()

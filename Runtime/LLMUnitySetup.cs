@@ -13,14 +13,15 @@ namespace LLMUnity
     public delegate void Callback<T>(T message);
     public delegate T2 ContentCallback<T, T2>(T message);
 
-    public class LLMUnitySetup: MonoBehaviour
+    public class LLMUnitySetup : MonoBehaviour
     {
         public static Process CreateProcess(
-            string command, string commandArgs="",
-            Callback<string> outputCallback=null, Callback<string> errorCallback=null,
+            string command, string commandArgs = "",
+            Callback<string> outputCallback = null, Callback<string> errorCallback = null,
             List<(string, string)> environment = null,
-            bool redirectOutput=false, bool redirectError=false
-        ){
+            bool redirectOutput = false, bool redirectError = false
+        )
+        {
             // create and start a process with output/error callbacks
             ProcessStartInfo startInfo = new ProcessStartInfo
             {
@@ -31,8 +32,10 @@ namespace LLMUnity
                 UseShellExecute = false,
                 CreateNoWindow = true
             };
-            if (environment != null){
-                foreach ((string name, string value) in environment){
+            if (environment != null)
+            {
+                foreach ((string name, string value) in environment)
+                {
                     startInfo.EnvironmentVariables[name] = value;
                 }
             }
@@ -45,7 +48,8 @@ namespace LLMUnity
             return process;
         }
 
-        public static string RunProcess(string command, string commandArgs="", Callback<string> outputCallback=null, Callback<string> errorCallback=null){
+        public static string RunProcess(string command, string commandArgs = "", Callback<string> outputCallback = null, Callback<string> errorCallback = null)
+        {
             // run a process and re#turn the output
             Process process = CreateProcess(command, commandArgs, null, null, null, true);
             string output = process.StandardOutput.ReadToEnd();
@@ -55,14 +59,17 @@ namespace LLMUnity
 
     #if UNITY_EDITOR
         public static async Task DownloadFile(
-            string fileUrl, string savePath, bool executable=false,
+            string fileUrl, string savePath, bool executable = false,
             Callback<string> callback = null, Callback<float> progresscallback = null,
             int chunkSize = 1024 * 1024)
         {
             // download a file to the specified path
-            if (File.Exists(savePath)){
+            if (File.Exists(savePath))
+            {
                 Debug.Log($"File already exists at: {savePath}");
-            } else {
+            }
+            else
+            {
                 Debug.Log($"Downloading {fileUrl}...");
 
                 UnityWebRequest www = UnityWebRequest.Head(fileUrl);
@@ -85,7 +92,7 @@ namespace LLMUnity
                     for (long i = 0; i < fileSize; i += chunkSize)
                     {
                         long startByte = i;
-                        long endByte = (long) Mathf.Min(i + chunkSize - 1, fileSize - 1);
+                        long endByte = (long)Mathf.Min(i + chunkSize - 1, fileSize - 1);
 
                         www = UnityWebRequest.Get(fileUrl);
                         www.SetRequestHeader("Range", "bytes=" + startByte + "-" + endByte);
@@ -102,13 +109,14 @@ namespace LLMUnity
 
                         fs.Write(www.downloadHandler.data, 0, www.downloadHandler.data.Length);
 
-                        int progressPercentage = Mathf.FloorToInt((float) i / fileSize * 100);
+                        int progressPercentage = Mathf.FloorToInt((float)i / fileSize * 100);
                         if (progressPercentage % 1 == 0)
-                            progresscallback((float) progressPercentage / 100);
+                            progresscallback((float)progressPercentage / 100);
                     }
                 }
 
-                if (executable && Application.platform != RuntimePlatform.WindowsEditor && Application.platform != RuntimePlatform.WindowsPlayer){
+                if (executable && Application.platform != RuntimePlatform.WindowsEditor && Application.platform != RuntimePlatform.WindowsPlayer)
+                {
                     // macOS/Linux: Set executable permissions using chmod
                     RunProcess("chmod", $"+x \"{savePath}\"");
                 }
@@ -119,18 +127,21 @@ namespace LLMUnity
             callback?.Invoke(savePath);
         }
 
-        public static async Task<string> AddAsset(string assetPath, string basePath){
+        public static async Task<string> AddAsset(string assetPath, string basePath)
+        {
             // add an asset to the basePath directory if it is not already there and return the relative path
             Directory.CreateDirectory(basePath);
             string fullPath = Path.GetFullPath(assetPath);
-            if (!fullPath.StartsWith(basePath)){
+            if (!fullPath.StartsWith(basePath))
+            {
                 // if the asset is not in the assets dir copy it over
                 fullPath = Path.Combine(basePath, Path.GetFileName(assetPath));
                 Debug.Log("copying " + assetPath + " to " + fullPath);
                 AssetDatabase.StartAssetEditing();
                 await Task.Run(() =>
                 {
-                    foreach (string filename in new string[] {fullPath, fullPath + ".meta"}){
+                    foreach (string filename in new string[] {fullPath, fullPath + ".meta"})
+                    {
                         if (File.Exists(fullPath))
                             File.Delete(fullPath);
                     }
@@ -141,6 +152,7 @@ namespace LLMUnity
             }
             return fullPath.Substring(basePath.Length + 1);
         }
+
     #endif
     }
 }

@@ -31,45 +31,51 @@ namespace LLMUnity
         [Chat] public string playerName = "Human";
         [Chat] public string AIName = "Assistant";
         [TextArea(5, 10), Chat] public string prompt = "A chat between a curious human and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the human's questions.";
-        
+
         private int nKeep = -1;
 
         private string currentPrompt;
         private List<ChatMessage> chat;
-        
+
         private List<(string, string)> requestHeaders;
 
         public LLMClient()
         {
             // initialise headers and chat lists
-            requestHeaders = new List<(string, string)>{("Content-Type", "application/json")};
+            requestHeaders = new List<(string, string)> {("Content-Type", "application/json")};
             chat = new List<ChatMessage>();
-            chat.Add(new ChatMessage{role="system", content=prompt});
+            chat.Add(new ChatMessage {role = "system", content = prompt});
         }
 
-        public async void OnEnable(){
+        public async void OnEnable()
+        {
             // initialise the prompt and set the keep tokens based on its length
             currentPrompt = prompt;
             await Tokenize(prompt, SetNKeep);
         }
 
-        private string RoleString(string role){
+        private string RoleString(string role)
+        {
             // role as a delimited string for the model
-            return "\n### "+role+":";
+            return "\n### " + role + ":";
         }
 
-        private string RoleMessageString(string role, string message){
+        private string RoleMessageString(string role, string message)
+        {
             // role and the role message
             return RoleString(role) + " " + message;
         }
 
-        public ChatRequest GenerateRequest(string message, bool openAIFormat=false){
+        public ChatRequest GenerateRequest(string message, bool openAIFormat = false)
+        {
             // setup the request struct
             ChatRequest chatRequest = new ChatRequest();
-            if (openAIFormat){
+            if (openAIFormat)
+            {
                 chatRequest.messages = chat;
             }
-            else{
+            else
+            {
                 chatRequest.prompt = currentPrompt + RoleMessageString(playerName, message) + RoleString(AIName);
             }
             chatRequest.temperature = temperature;
@@ -79,76 +85,89 @@ namespace LLMUnity
             chatRequest.n_keep = nKeep;
             chatRequest.stream = stream;
             chatRequest.cache_prompt = true;
-            if (seed != -1){
+            if (seed != -1)
+            {
                 chatRequest.seed = seed;
             }
-            chatRequest.stop = new List<string>{RoleString(playerName), playerName + ":"};
+            chatRequest.stop = new List<string> {RoleString(playerName), playerName + ":"};
             return chatRequest;
         }
 
-        private void AddMessage(string role, string content){
+        private void AddMessage(string role, string content)
+        {
             // add the question / answer to the chat list, update prompt
-            chat.Add(new ChatMessage{role=role, content=content});
+            chat.Add(new ChatMessage {role = role, content = content});
             currentPrompt += RoleMessageString(role, content);
         }
 
-        private void AddPlayerMessage(string content){
+        private void AddPlayerMessage(string content)
+        {
             AddMessage(playerName, content);
         }
 
-        private void AddAIMessage(string content){
+        private void AddAIMessage(string content)
+        {
             AddMessage(AIName, content);
         }
 
-        public string ChatContent(ChatResult result){
+        public string ChatContent(ChatResult result)
+        {
             // get content from a chat result received from the endpoint
             return result.content;
         }
 
-        public string MultiChatContent(MultiChatResult result){
+        public string MultiChatContent(MultiChatResult result)
+        {
             // get content from a chat result received from the endpoint
             string response = "";
-            foreach (ChatResult resultPart in result.data){
+            foreach (ChatResult resultPart in result.data)
+            {
                 response += resultPart.content;
             }
             return response;
         }
 
-        public string ChatOpenAIContent(ChatOpenAIResult result){
+        public string ChatOpenAIContent(ChatOpenAIResult result)
+        {
             // get content from a char result received from the endpoint in open AI format
             return result.choices[0].message.content;
         }
 
-        public List<int> TokenizeContent(TokenizeResult result){
+        public List<int> TokenizeContent(TokenizeResult result)
+        {
             // get the tokens from a tokenize result received from the endpoint
             return result.tokens;
         }
 
-        public async Task Chat(string question, Callback<string> callback=null, EmptyCallback completionCallback=null, bool addToHistory=true)
+        public async Task Chat(string question, Callback<string> callback = null, EmptyCallback completionCallback = null, bool addToHistory = true)
         {
             // handle a chat message by the user
             // call the callback function while the answer is received
             // call the completionCallback function when the answer is fully received
             string json = JsonUtility.ToJson(GenerateRequest(question));
             string result;
-            if (stream) {
+            if (stream)
+            {
                 result = await PostRequest<MultiChatResult, string>(json, "completion", MultiChatContent, callback);
-            } else {
+            }
+            else
+            {
                 result = await PostRequest<ChatResult, string>(json, "completion", ChatContent, callback);
             }
             completionCallback?.Invoke();
-            if (addToHistory) {
+            if (addToHistory)
+            {
                 AddPlayerMessage(question);
                 AddAIMessage(result);
             }
         }
 
-        public async Task Warmup(EmptyCallback completionCallback=null, string question="hi")
+        public async Task Warmup(EmptyCallback completionCallback = null, string question = "hi")
         {
             await Chat(question, null, completionCallback, false);
         }
 
-        public async Task Tokenize(string question, Callback<List<int>> callback=null)
+        public async Task Tokenize(string question, Callback<List<int>> callback = null)
         {
             // handle the tokenization of a message by the user
             TokenizeRequest tokenizeRequest = new TokenizeRequest();
@@ -157,17 +176,21 @@ namespace LLMUnity
             await PostRequest<TokenizeResult, List<int>>(json, "tokenize", TokenizeContent, callback);
         }
 
-        private void SetNKeep(List<int> tokens){
+        private void SetNKeep(List<int> tokens)
+        {
             // set the tokens to keep
             nKeep = tokens.Count;
         }
 
-        public Ret ConvertContent<Res, Ret>(string response, ContentCallback<Res, Ret> getContent=null){
+        public Ret ConvertContent<Res, Ret>(string response, ContentCallback<Res, Ret> getContent = null)
+        {
             // template function to convert the json received and get the content
             response = response.Trim();
-            if (response.StartsWith("data: ")){
+            if (response.StartsWith("data: "))
+            {
                 string responseArray = "";
-                foreach (string responsePart in response.Replace("\n\n", "").Split("data: ")){
+                foreach (string responsePart in response.Replace("\n\n", "").Split("data: "))
+                {
                     if (responsePart == "") continue;
                     if (responseArray != "") responseArray += ",\n";
                     responseArray += responsePart;
@@ -177,11 +200,12 @@ namespace LLMUnity
             return getContent(JsonUtility.FromJson<Res>(response));
         }
 
-        public string[] MultiResponse(string response){
+        public string[] MultiResponse(string response)
+        {
             return response.Trim().Replace("\n\n", "").Split("data: ");
         }
 
-        public async Task<Ret> PostRequest<Res, Ret>(string json, string endpoint, ContentCallback<Res, Ret> getContent, Callback<Ret> callback=null)
+        public async Task<Ret> PostRequest<Res, Ret>(string json, string endpoint, ContentCallback<Res, Ret> getContent, Callback<Ret> callback = null)
         {
             // send a post request to the server and call the relevant callbacks to convert the received content and handle it
             // this function has streaming functionality i.e. handles the answer while it is being received
@@ -190,7 +214,8 @@ namespace LLMUnity
             using (var request = UnityWebRequest.Put($"{host}:{port}/{endpoint}", jsonToSend))
             {
                 request.method = "POST";
-                if (requestHeaders != null){
+                if (requestHeaders != null)
+                {
                     for (int i = 0; i < requestHeaders.Count; i++)
                         request.SetRequestHeader(requestHeaders[i].Item1, requestHeaders[i].Item2);
                 }

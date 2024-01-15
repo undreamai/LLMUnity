@@ -11,34 +11,41 @@ namespace LLMUnity
     public class LLMClientEditor : Editor
     {
         protected int buttonWidth = 150;
-        Type[] orderedTypes = new Type[]{typeof(LLM), typeof(LLMClient)};
+        Type[] orderedTypes = new Type[] {typeof(LLM), typeof(LLMClient)};
 
-        public void AddScript(SerializedObject llmScriptSO){
+        public void AddScript(SerializedObject llmScriptSO)
+        {
             var scriptProp = llmScriptSO.FindProperty("m_Script");
             EditorGUILayout.PropertyField(scriptProp);
             EditorGUILayout.Space((int)EditorGUIUtility.singleLineHeight / 2);
         }
-        public void AddAdvancedOptionsToggle(SerializedObject llmScriptSO){
+
+        public void AddAdvancedOptionsToggle(SerializedObject llmScriptSO)
+        {
             SerializedProperty advancedOptionsProp = llmScriptSO.FindProperty("advancedOptions");
-            string toggleText = (advancedOptionsProp.boolValue? "Hide": "Show") + " Advanced Options";
+            string toggleText = (advancedOptionsProp.boolValue ? "Hide" : "Show") + " Advanced Options";
             GUIStyle style = new GUIStyle("Button");
             if (advancedOptionsProp.boolValue)
                 style.normal = new GUIStyleState(){ background = Texture2D.grayTexture };
-            if (GUILayout.Button(toggleText, style, GUILayout.Width(buttonWidth))){
+            if (GUILayout.Button(toggleText, style, GUILayout.Width(buttonWidth)))
+            {
                 advancedOptionsProp.boolValue = !advancedOptionsProp.boolValue;
             }
             EditorGUILayout.Space();
         }
 
-        public void AddServerSettings(SerializedObject llmScriptSO){
+        public void AddServerSettings(SerializedObject llmScriptSO)
+        {
             ShowPropertiesOfClass("Server Settings", llmScriptSO, orderedTypes, typeof(ServerAttribute), typeof(ServerAdvancedAttribute), true);
         }
 
-        public void AddModelSettings(SerializedObject llmScriptSO, bool showHeader=true){
-            ShowPropertiesOfClass(showHeader? "Model Settings": "", llmScriptSO, orderedTypes, typeof(ModelAttribute), typeof(ModelAdvancedAttribute), true);
+        public void AddModelSettings(SerializedObject llmScriptSO, bool showHeader = true)
+        {
+            ShowPropertiesOfClass(showHeader ? "Model Settings" : "", llmScriptSO, orderedTypes, typeof(ModelAttribute), typeof(ModelAdvancedAttribute), true);
         }
 
-        public void AddChatSettings(SerializedObject llmScriptSO){
+        public void AddChatSettings(SerializedObject llmScriptSO)
+        {
             ShowPropertiesOfClass("Chat Settings", llmScriptSO, orderedTypes, typeof(ChatAttribute), null, false);
         }
 
@@ -63,18 +70,23 @@ namespace LLMUnity
             llmScriptSO.ApplyModifiedProperties();
         }
 
-        public List<SerializedProperty> GetPropertiesOfClass(SerializedObject so, Type[] targetClasses, Type attributeClass=null, Type attributeAdvancedClass=null){
+        public List<SerializedProperty> GetPropertiesOfClass(SerializedObject so, Type[] targetClasses, Type attributeClass = null, Type attributeAdvancedClass = null)
+        {
             // display a property if it belongs to a certain class and/or has a specific attribute class
             List<SerializedProperty> properties = new List<SerializedProperty>();
-            List<Type> attributeClasses = new List<Type>{attributeClass};
+            List<Type> attributeClasses = new List<Type> {attributeClass};
             if (so.FindProperty("advancedOptions").boolValue)
                 attributeClasses.Add(attributeAdvancedClass);
-            foreach (Type attrClass in attributeClasses){
+            foreach (Type attrClass in attributeClasses)
+            {
                 if (attrClass == null) continue;
-                foreach (Type targetClass in targetClasses){
+                foreach (Type targetClass in targetClasses)
+                {
                     SerializedProperty prop = so.GetIterator();
-                    if (prop.NextVisible(true)) {
-                        do {
+                    if (prop.NextVisible(true))
+                    {
+                        do
+                        {
                             if (PropertyInClass(prop, targetClass, attrClass))
                                 properties.Add(so.FindProperty(prop.propertyPath));
                         }
@@ -85,7 +97,8 @@ namespace LLMUnity
             return properties;
         }
 
-        public void ShowPropertiesOfClass(string title, SerializedObject so, Type[] targetClasses, Type attributeClass=null, Type attributeAdvancedClass=null, bool addSpace = true){
+        public void ShowPropertiesOfClass(string title, SerializedObject so, Type[] targetClasses, Type attributeClass = null, Type attributeAdvancedClass = null, bool addSpace = true)
+        {
             // display a property if it belongs to a certain class and/or has a specific attribute class
             List<SerializedProperty> properties = GetPropertiesOfClass(so, targetClasses, attributeClass, attributeAdvancedClass);
             if (properties.Count == 0) return;
@@ -105,12 +118,16 @@ namespace LLMUnity
         public bool AttributeInProperty(SerializedProperty prop, Type attributeClass)
         {
             // check if a property has a specific attribute class
-            foreach (var pathSegment in prop.propertyPath.Split('.')){
+            foreach (var pathSegment in prop.propertyPath.Split('.'))
+            {
                 var targetType = prop.serializedObject.targetObject.GetType();
-                while (targetType != null){
+                while (targetType != null)
+                {
                     var fieldInfo = targetType.GetField(pathSegment, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-                    if (fieldInfo != null){
-                        foreach (Attribute attr in fieldInfo.GetCustomAttributes(attributeClass, true)){
+                    if (fieldInfo != null)
+                    {
+                        foreach (Attribute attr in fieldInfo.GetCustomAttributes(attributeClass, true))
+                        {
                             if (attr.GetType() == attributeClass)
                                 return true;
                         }
