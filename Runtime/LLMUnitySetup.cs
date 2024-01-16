@@ -39,7 +39,6 @@ namespace LLMUnity
                 foreach ((string name, string value) in environment)
                 {
                     startInfo.EnvironmentVariables[name] = value;
-                    Debug.Log($"{name}:{value}");
                 }
             }
             Process process = new Process { StartInfo = startInfo };
@@ -61,7 +60,8 @@ namespace LLMUnity
         }
 
 #if UNITY_EDITOR
-        public static void makeExecutable(string path){
+        public static void makeExecutable(string path)
+        {
             if (Application.platform != RuntimePlatform.WindowsEditor && Application.platform != RuntimePlatform.WindowsPlayer)
             {
                 // macOS/Linux: Set executable permissions using chmod
