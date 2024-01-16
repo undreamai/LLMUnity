@@ -25,7 +25,7 @@ namespace LLMUnity
         [ModelAdvanced] public int batchSize = 512;
 
         [HideInInspector] public string modelUrl = "https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.2-GGUF/resolve/main/mistral-7b-instruct-v0.2.Q4_K_M.gguf?download=true";
-        private static readonly string serverUrl = "https://github.com/Mozilla-Ocho/llamafile/releases/download/0.4.1/llamafile-server-0.4.1";
+        private static readonly string serverUrl = "https://github.com/Mozilla-Ocho/llamafile/releases/download/0.6/llamafile-0.6";
         private static readonly string server = GetAssetPath("llamafile-server.exe");
         private static readonly string apeARMUrl = "https://cosmo.zip/pub/cosmos/bin/ape-arm64.elf";
         private static readonly string apeARM = GetAssetPath("ape-arm64.elf");
