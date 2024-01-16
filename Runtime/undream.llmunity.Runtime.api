@@ -112,12 +112,12 @@ namespace LLMUnity
         [ServerAdvanced] public int parallelPrompts;
         public System.Threading.ManualResetEvent serverStarted;
         public LLM() {}
+        public void Awake();
         public void DownloadModel();
         public void OnDestroy();
-        public void OnEnable();
         public static void SetBinariesProgress(float progress);
-        public void SetLora(string path);
-        public void SetModel(string path);
+        public System.Threading.Tasks.Task SetLora(string path);
+        public System.Threading.Tasks.Task SetModel(string path);
         public void SetModelProgress(float progress);
         public void StopProcess();
     }
@@ -137,6 +137,7 @@ namespace LLMUnity
         [ModelAdvanced] public int topK = 40;
         [ModelAdvanced] public float topP = 0.9f;
         public LLMClient() {}
+        public void Awake();
         public System.Threading.Tasks.Task Chat(string question, LLMUnity.Callback<string> callback = default(LLMUnity.Callback<string>), EmptyCallback completionCallback = default(EmptyCallback), bool addToHistory = true);
         public string ChatContent(ChatResult result);
         public string ChatOpenAIContent(ChatOpenAIResult result);
@@ -144,7 +145,6 @@ namespace LLMUnity
         public ChatRequest GenerateRequest(string message, bool openAIFormat = false);
         public string MultiChatContent(MultiChatResult result);
         public string[] MultiResponse(string response);
-        public void OnEnable();
         public System.Threading.Tasks.Task<Ret> PostRequest<Res, Ret>(string json, string endpoint, LLMUnity.ContentCallback<Res, Ret> getContent, LLMUnity.Callback<Ret> callback = default(LLMUnity.Callback<Ret>));
         public System.Threading.Tasks.Task Tokenize(string question, LLMUnity.Callback<System.Collections.Generic.List<int>> callback = default(LLMUnity.Callback<System.Collections.Generic.List<int>>));
         public System.Collections.Generic.List<int> TokenizeContent(TokenizeResult result);
@@ -156,7 +156,7 @@ namespace LLMUnity
         public LLMUnitySetup() {}
         public static System.Threading.Tasks.Task<string> AddAsset(string assetPath, string basePath);
         public static System.Diagnostics.Process CreateProcess(string command, string commandArgs = @"", LLMUnity.Callback<string> outputCallback = default(LLMUnity.Callback<string>), LLMUnity.Callback<string> errorCallback = default(LLMUnity.Callback<string>), System.Collections.Generic.List<System.ValueTuple<string, string>> environment = default(System.Collections.Generic.List<System.ValueTuple<string, string>>), bool redirectOutput = false, bool redirectError = false);
-        public static System.Threading.Tasks.Task DownloadFile(string fileUrl, string savePath, bool executable = false, LLMUnity.Callback<string> callback = default(LLMUnity.Callback<string>), LLMUnity.Callback<float> progresscallback = default(LLMUnity.Callback<float>), int chunkSize = 1048576);
+        public static System.Threading.Tasks.Task DownloadFile(string fileUrl, string savePath, bool executable = false, LLMUnity.TaskCallback<string> callback = default(LLMUnity.TaskCallback<string>), LLMUnity.Callback<float> progresscallback = default(LLMUnity.Callback<float>), int chunkSize = 1048576);
         public static string RunProcess(string command, string commandArgs = @"", LLMUnity.Callback<string> outputCallback = default(LLMUnity.Callback<string>), LLMUnity.Callback<string> errorCallback = default(LLMUnity.Callback<string>));
     }
 
@@ -195,6 +195,8 @@ namespace LLMUnity
         public int port;
         public System.DateTime timestamp;
     }
+
+    public delegate System.Threading.Tasks.Task TaskCallback<T>(T message);
 
     public struct TokenizeRequest
     {

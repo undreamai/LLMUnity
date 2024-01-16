@@ -52,6 +52,8 @@ Create a GameObject for the LLM :chess_pawn::
 
 In your script you can then use it as follows :unicorn::
 ``` c#
+using LLMUnity;
+
 public class MyScript {
   public LLM llm;
   
@@ -123,6 +125,36 @@ You can also:
     _ = llm.Warmup(WarmupCompleted);
     ...
   }
+```
+
+</details>
+<details>
+<summary>Add a LLM / LLMClient component dynamically</summary>
+
+``` c#
+using UnityEngine;
+using LLMUnity;
+
+public class MyScript : MonoBehaviour
+{
+    LLM llm;
+    LLMClient llmclient;
+
+    async void Start()
+    {
+        // Add and setup a LLM object
+        gameObject.SetActive(false);
+        llm = gameObject.AddComponent<LLM>();
+        await llm.SetModel("mistral-7b-instruct-v0.1.Q4_K_M.gguf");
+        llm.prompt = "A chat between a curious human and an artificial intelligence assistant.";
+        gameObject.SetActive(true);
+        // or a LLMClient object
+        gameObject.SetActive(false);
+        llmclient = gameObject.AddComponent<LLMClient>();
+        llmclient.prompt = "A chat between a curious human and an artificial intelligence assistant.";
+        gameObject.SetActive(true);
+    }
+}
 ```
 
 </details>
