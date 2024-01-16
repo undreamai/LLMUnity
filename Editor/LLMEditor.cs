@@ -62,7 +62,7 @@ namespace LLMUnity
             AddServerSettings(llmScriptSO);
             GUI.enabled = LLM.binariesProgress == 1 && llmScript.modelProgress == 1 && llmScript.modelCopyProgress == 1;
             AddModelLoaders(llmScriptSO, llmScript);
-            ShowProgress(LLM.binariesProgress, "Binaries Downloading");
+            ShowProgress(LLM.binariesProgress, "Setup Binaries");
             ShowProgress(llmScript.modelProgress, "Model Downloading");
             ShowProgress(llmScript.modelCopyProgress, "Model Copying");
             if (llmScript.model != "")
