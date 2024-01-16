@@ -25,8 +25,8 @@ namespace LLMUnity
         [ModelAdvanced] public int batchSize = 512;
 
         [HideInInspector] public string modelUrl = "https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.2-GGUF/resolve/main/mistral-7b-instruct-v0.2.Q4_K_M.gguf?download=true";
-        private static readonly string serverUrl = "https://github.com/Mozilla-Ocho/llamafile/releases/download/0.6/llamafile-0.6";
-        private static readonly string server = GetAssetPath("llamafile-server.exe");
+        private static readonly string serverZipUrl = "https://github.com/Mozilla-Ocho/llamafile/releases/download/0.6/llamafile-0.6.zip";
+        private static readonly string server = Path.Combine(GetAssetPath(Path.GetFileNameWithoutExtension(serverZipUrl)), "bin/llamafile");
         private static readonly string apeARMUrl = "https://cosmo.zip/pub/cosmos/bin/ape-arm64.elf";
         private static readonly string apeARM = GetAssetPath("ape-arm64.elf");
         private static readonly string apeX86_64Url = "https://cosmo.zip/pub/cosmos/bin/ape-x86_64.elf";
@@ -51,17 +51,26 @@ namespace LLMUnity
         private static async Task InitializeOnLoad()
         {
             // Perform download when the build is finished
-            await DownloadBinaries();
+            await SetupBinaries();
         }
 
-        private static async Task DownloadBinaries()
+        private static async Task SetupBinaries()
         {
             if (binariesProgress == 0) return;
             binariesProgress = 0;
             binariesDone = 0;
-            foreach ((string url, string path) in new[] {(serverUrl, server), (apeARMUrl, apeARM), (apeX86_64Url, apeX86_64)})
+            if (!File.Exists(apeARM)) await LLMUnitySetup.DownloadFile(apeARMUrl, apeARM, true, null, SetBinariesProgress);
+            binariesDone += 1;
+            if (!File.Exists(apeX86_64)) await LLMUnitySetup.DownloadFile(apeX86_64Url, apeX86_64, true, null, SetBinariesProgress);
+            binariesDone += 1;
+            if (!File.Exists(server))
             {
-                if (!File.Exists(path)) await LLMUnitySetup.DownloadFile(url, path, true, null, SetBinariesProgress);
+                string serverZip = Path.Combine(Application.dataPath, "llamafile.zip");
+                if (!File.Exists(serverZip)) await LLMUnitySetup.DownloadFile(serverZipUrl, serverZip, false, null, SetBinariesProgress);
+                binariesDone += 1;
+                LLMUnitySetup.ExtractZip(serverZip, GetAssetPath());
+                LLMUnitySetup.makeExecutable(server);
+                File.Delete(serverZip);
                 binariesDone += 1;
             }
             binariesProgress = 1;
@@ -69,7 +78,7 @@ namespace LLMUnity
 
         public static void SetBinariesProgress(float progress)
         {
-            binariesProgress = binariesDone / 3f + 1f / 3f * progress;
+            binariesProgress = binariesDone / 4f + 1f / 4f * progress;
         }
 
         public void DownloadModel()
@@ -199,7 +208,7 @@ namespace LLMUnity
             }
             Debug.Log($"Server command: {binary} {arguments}");
             process = LLMUnitySetup.CreateProcess(binary, arguments, CheckIfListening, DebugLogError, environment);
-            // wait for at most 2'
+            // wait for at most 1'
             serverStarted.WaitOne(60000);
         }
 
