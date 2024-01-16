@@ -16,7 +16,8 @@ namespace LLMUnity
             }
             if (GUILayout.Button("Load model", GUILayout.Width(buttonWidth)))
             {
-                EditorApplication.delayCall += () => {
+                EditorApplication.delayCall += () =>
+                {
                     string path = EditorUtility.OpenFilePanelWithFilters("Select a gguf model file", "", new string[] { "Model Files", "gguf" });
                     if (!string.IsNullOrEmpty(path))
                     {
@@ -28,7 +29,8 @@ namespace LLMUnity
             EditorGUILayout.BeginHorizontal();
             if (GUILayout.Button("Load lora", GUILayout.Width(buttonWidth)))
             {
-                EditorApplication.delayCall += () => {
+                EditorApplication.delayCall += () =>
+                {
                     string path = EditorUtility.OpenFilePanelWithFilters("Select a bin lora file", "", new string[] { "Model Files", "bin" });
                     if (!string.IsNullOrEmpty(path))
                     {

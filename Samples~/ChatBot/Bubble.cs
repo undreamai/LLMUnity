@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using LLMUnity;
 
 namespace LLMUnitySamples
 {
@@ -17,6 +18,21 @@ namespace LLMUnitySamples
         public float bubbleOffset;
         public float bubbleWidth;
         public float bubbleHeight;
+    }
+
+    public class RectTransformResizeHandler : MonoBehaviour
+    {
+        EmptyCallback callback;
+
+        public void SetCallBack(EmptyCallback callback)
+        {
+            this.callback = callback;
+        }
+
+        void OnRectTransformDimensionsChange()
+        {
+            callback?.Invoke();
+        }
     }
 
     class Bubble
@@ -109,6 +125,12 @@ namespace LLMUnitySamples
             imageCanvas.sortingOrder = 1;
         }
 
+        public void OnResize(EmptyCallback callback)
+        {
+            RectTransformResizeHandler resizeHandler = bubbleObject.AddComponent<RectTransformResizeHandler>();
+            resizeHandler.SetCallBack(callback);
+        }
+
         public RectTransform GetRectTransform()
         {
             return bubbleObject.GetComponent<RectTransform>();
@@ -147,7 +169,7 @@ namespace LLMUnitySamples
         protected GameObject placeholderObject;
 
         public InputBubble(Transform parent, BubbleUI ui, string name, string message, int lineHeight = 4) :
-            base(parent, ui, name, emptyLines(message, lineHeight))
+        base(parent, ui, name, emptyLines(message, lineHeight))
         {
             Text textObjext = bubbleObject.GetComponent<Text>();
             RectTransform bubbleRectTransform = bubbleObject.GetComponent<RectTransform>();
@@ -155,7 +177,6 @@ namespace LLMUnitySamples
             placeholderObject = CreatePlaceholderObject(bubbleObject.transform, bubbleRectTransform, textObjext.text);
             inputFieldObject = CreateInputFieldObject(bubbleObject.transform, textObjext, placeholderObject.GetComponent<Text>());
             inputField = inputFieldObject.GetComponent<InputField>();
-            FixCaretSorting(inputField);
         }
 
         static string emptyLines(string message, int lineHeight)
@@ -195,12 +216,16 @@ namespace LLMUnitySamples
             return inputFieldObject;
         }
 
-        public void FixCaretSorting(InputField inputField)
+        public void FixCaretSorting()
         {
             GameObject caret = GameObject.Find($"{inputField.name} Input Caret");
-            Canvas bubbleCanvas = caret.AddComponent<Canvas>();
-            bubbleCanvas.overrideSorting = true;
-            bubbleCanvas.sortingOrder = 3;
+            Canvas bubbleCanvas = caret.GetComponent<Canvas>();
+            if (bubbleCanvas == null)
+            {
+                bubbleCanvas = caret.AddComponent<Canvas>();
+                bubbleCanvas.overrideSorting = true;
+                bubbleCanvas.sortingOrder = 3;
+            }
         }
 
         public void AddSubmitListener(UnityEngine.Events.UnityAction<string> onInputFieldSubmit)
@@ -254,6 +279,7 @@ namespace LLMUnitySamples
         public void ActivateInputField()
         {
             inputField.ActivateInputField();
+            FixCaretSorting();
         }
 
         public void ReActivateInputField()
@@ -264,20 +290,4 @@ namespace LLMUnitySamples
         }
     }
 
-    class BubbleTextSetter
-    {
-        ChatBot ChatBot;
-        Bubble bubble;
-        public BubbleTextSetter(ChatBot ChatBot, Bubble bubble)
-        {
-            this.ChatBot = ChatBot;
-            this.bubble = bubble;
-        }
-
-        public void SetText(string text)
-        {
-            bubble.SetText(text);
-            ChatBot.SetUpdatePositions();
-        }
-    }
 }

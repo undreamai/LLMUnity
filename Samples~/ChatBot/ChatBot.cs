@@ -23,7 +23,6 @@ namespace LLMUnitySamples
         private List<Bubble> chatBubbles = new List<Bubble>();
         private bool blockInput = true;
         private BubbleUI playerUI, aiUI;
-        private bool updatePositions = false;
         private bool warmUpDone = false;
 
         void Start()
@@ -70,11 +69,10 @@ namespace LLMUnitySamples
             Bubble aiBubble = new Bubble(chatContainer, aiUI, "AIBubble", "...");
             chatBubbles.Add(playerBubble);
             chatBubbles.Add(aiBubble);
-            SetUpdatePositions();
+            playerBubble.OnResize(UpdateBubblePositions);
+            aiBubble.OnResize(UpdateBubblePositions);
 
-            BubbleTextSetter aiBubbleTextSetter = new BubbleTextSetter(this, aiBubble);
-            Task chatTask = llm.Chat(message, aiBubbleTextSetter.SetText, AllowInput);
-
+            Task chatTask = llm.Chat(message, aiBubble.SetText, AllowInput);
             inputBubble.SetText("");
         }
 
@@ -111,11 +109,6 @@ namespace LLMUnitySamples
             }
         }
 
-        public void SetUpdatePositions()
-        {
-            updatePositions = true;
-        }
-
         public void UpdateBubblePositions()
         {
             float y = inputBubble.GetSize().y + inputBubble.GetRectTransform().offsetMin.y + bubbleSpacing;
@@ -148,11 +141,6 @@ namespace LLMUnitySamples
             {
                 inputBubble.ActivateInputField();
                 StartCoroutine(BlockInteraction());
-            }
-            if (updatePositions)
-            {
-                UpdateBubblePositions();
-                updatePositions = false;
             }
         }
     }
