@@ -157,6 +157,8 @@ namespace LLMUnity
         public static System.Threading.Tasks.Task<string> AddAsset(string assetPath, string basePath);
         public static System.Diagnostics.Process CreateProcess(string command, string commandArgs = @"", LLMUnity.Callback<string> outputCallback = default(LLMUnity.Callback<string>), LLMUnity.Callback<string> errorCallback = default(LLMUnity.Callback<string>), System.Collections.Generic.List<System.ValueTuple<string, string>> environment = default(System.Collections.Generic.List<System.ValueTuple<string, string>>), bool redirectOutput = false, bool redirectError = false);
         public static System.Threading.Tasks.Task DownloadFile(string fileUrl, string savePath, bool executable = false, LLMUnity.TaskCallback<string> callback = default(LLMUnity.TaskCallback<string>), LLMUnity.Callback<float> progresscallback = default(LLMUnity.Callback<float>), int chunkSize = 1048576);
+        public static void ExtractZip(string zipPath, string extractToPath);
+        public static void makeExecutable(string path);
         public static string RunProcess(string command, string commandArgs = @"", LLMUnity.Callback<string> outputCallback = default(LLMUnity.Callback<string>), LLMUnity.Callback<string> errorCallback = default(LLMUnity.Callback<string>));
     }
 
