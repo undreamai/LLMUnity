@@ -57,7 +57,7 @@ namespace LLMUnity
             return output;
         }
 
-    #if UNITY_EDITOR
+#if UNITY_EDITOR
         public static async Task DownloadFile(
             string fileUrl, string savePath, bool executable = false,
             Callback<string> callback = null, Callback<float> progresscallback = null,
@@ -153,6 +153,6 @@ namespace LLMUnity
             return fullPath.Substring(basePath.Length + 1);
         }
 
-    #endif
+#endif
     }
 }

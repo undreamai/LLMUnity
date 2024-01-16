@@ -46,7 +46,7 @@ namespace LLMUnity
             return Path.Combine(Application.streamingAssetsPath, relPath);
         }
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         [InitializeOnLoadMethod]
         private static async void InitializeOnLoad()
         {
@@ -104,7 +104,7 @@ namespace LLMUnity
             modelCopyProgress = 1;
         }
 
-        #endif
+#endif
 
         new public void OnEnable()
         {
@@ -161,7 +161,7 @@ namespace LLMUnity
                     serverListening = true;
                 }
             }
-            catch {}
+            catch { }
         }
 
         private void StartLLMServer()
@@ -194,7 +194,7 @@ namespace LLMUnity
                 if (numGPULayers <= 0)
                 {
                     // prevent nvcc building if not using GPU
-                    environment = new List<(string, string)> {("PATH", ""), ("CUDA_PATH", "")};
+                    environment = new List<(string, string)> { ("PATH", ""), ("CUDA_PATH", "") };
                 }
             }
             Debug.Log($"Server command: {binary} {arguments}");

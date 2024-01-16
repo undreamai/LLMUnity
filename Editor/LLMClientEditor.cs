@@ -11,7 +11,7 @@ namespace LLMUnity
     public class LLMClientEditor : Editor
     {
         protected int buttonWidth = 150;
-        Type[] orderedTypes = new Type[] {typeof(LLM), typeof(LLMClient)};
+        Type[] orderedTypes = new Type[] { typeof(LLM), typeof(LLMClient) };
 
         public void AddScript(SerializedObject llmScriptSO)
         {
@@ -26,7 +26,7 @@ namespace LLMUnity
             string toggleText = (advancedOptionsProp.boolValue ? "Hide" : "Show") + " Advanced Options";
             GUIStyle style = new GUIStyle("Button");
             if (advancedOptionsProp.boolValue)
-                style.normal = new GUIStyleState(){ background = Texture2D.grayTexture };
+                style.normal = new GUIStyleState() { background = Texture2D.grayTexture };
             if (GUILayout.Button(toggleText, style, GUILayout.Width(buttonWidth)))
             {
                 advancedOptionsProp.boolValue = !advancedOptionsProp.boolValue;
@@ -74,7 +74,7 @@ namespace LLMUnity
         {
             // display a property if it belongs to a certain class and/or has a specific attribute class
             List<SerializedProperty> properties = new List<SerializedProperty>();
-            List<Type> attributeClasses = new List<Type> {attributeClass};
+            List<Type> attributeClasses = new List<Type> { attributeClass };
             if (so.FindProperty("advancedOptions").boolValue)
                 attributeClasses.Add(attributeAdvancedClass);
             foreach (Type attrClass in attributeClasses)
