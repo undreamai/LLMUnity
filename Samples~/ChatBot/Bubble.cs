@@ -29,7 +29,7 @@ namespace LLMUnitySamples
         {
             bubbleUI = ui;
             bubbleObject = CreateTextObject(parent, name, message, bubbleUI.bubbleWidth == -1, bubbleUI.bubbleHeight == -1);
-            imageObject =  CreateImageObject(bubbleObject.transform, "Image");
+            imageObject = CreateImageObject(bubbleObject.transform, "Image");
             SetBubblePosition(bubbleObject.GetComponent<RectTransform>(), imageObject.GetComponent<RectTransform>(), bubbleUI);
             SetSortingOrder(bubbleObject, imageObject);
         }

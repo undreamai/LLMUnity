@@ -5,13 +5,13 @@ using UnityEngine.Networking;
 
 namespace LLMUnity
 {
-    public class ClientAttribute : PropertyAttribute {}
-    public class ServerAttribute : PropertyAttribute {}
-    public class ModelAttribute : PropertyAttribute {}
-    public class ChatAttribute : PropertyAttribute {}
-    public class ClientAdvancedAttribute : PropertyAttribute {}
-    public class ServerAdvancedAttribute : PropertyAttribute {}
-    public class ModelAdvancedAttribute : PropertyAttribute {}
+    public class ClientAttribute : PropertyAttribute { }
+    public class ServerAttribute : PropertyAttribute { }
+    public class ModelAttribute : PropertyAttribute { }
+    public class ChatAttribute : PropertyAttribute { }
+    public class ClientAdvancedAttribute : PropertyAttribute { }
+    public class ServerAdvancedAttribute : PropertyAttribute { }
+    public class ModelAdvancedAttribute : PropertyAttribute { }
 
     [DefaultExecutionOrder(-1)]
     public class LLMClient : MonoBehaviour
@@ -42,9 +42,9 @@ namespace LLMUnity
         public LLMClient()
         {
             // initialise headers and chat lists
-            requestHeaders = new List<(string, string)> {("Content-Type", "application/json")};
+            requestHeaders = new List<(string, string)> { ("Content-Type", "application/json") };
             chat = new List<ChatMessage>();
-            chat.Add(new ChatMessage {role = "system", content = prompt});
+            chat.Add(new ChatMessage { role = "system", content = prompt });
         }
 
         public async void Awake()
@@ -89,14 +89,14 @@ namespace LLMUnity
             {
                 chatRequest.seed = seed;
             }
-            chatRequest.stop = new List<string> {RoleString(playerName), playerName + ":"};
+            chatRequest.stop = new List<string> { RoleString(playerName), playerName + ":" };
             return chatRequest;
         }
 
         private void AddMessage(string role, string content)
         {
             // add the question / answer to the chat list, update prompt
-            chat.Add(new ChatMessage {role = role, content = content});
+            chat.Add(new ChatMessage { role = role, content = content });
             currentPrompt += RoleMessageString(role, content);
         }
 

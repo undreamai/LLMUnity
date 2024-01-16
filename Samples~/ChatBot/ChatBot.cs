@@ -28,7 +28,7 @@ namespace LLMUnitySamples
 
         void Start()
         {
-            if (font == null) font =  Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            if (font == null) font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
             playerUI = new BubbleUI
             {
                 sprite = sprite,
