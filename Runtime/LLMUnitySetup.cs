@@ -19,7 +19,7 @@ namespace LLMUnity
     {
         public static Process CreateProcess(
             string command, string commandArgs = "",
-            Callback<string> outputCallback = null, Callback<string> errorCallback = null,
+            Callback<string> outputCallback = null, Callback<string> errorCallback = null, System.EventHandler exitCallback = null,
             List<(string, string)> environment = null,
             bool redirectOutput = false, bool redirectError = false
         )
@@ -44,6 +44,11 @@ namespace LLMUnity
             Process process = new Process { StartInfo = startInfo };
             if (outputCallback != null) process.OutputDataReceived += (sender, e) => outputCallback(e.Data);
             if (errorCallback != null) process.ErrorDataReceived += (sender, e) => errorCallback(e.Data);
+            if (exitCallback != null)
+            {
+                process.EnableRaisingEvents = true;
+                process.Exited += exitCallback;
+            }
             process.Start();
             if (outputCallback != null) process.BeginOutputReadLine();
             if (errorCallback != null) process.BeginErrorReadLine();
@@ -53,7 +58,7 @@ namespace LLMUnity
         public static string RunProcess(string command, string commandArgs = "", Callback<string> outputCallback = null, Callback<string> errorCallback = null)
         {
             // run a process and re#turn the output
-            Process process = CreateProcess(command, commandArgs, null, null, null, true);
+            Process process = CreateProcess(command, commandArgs, null, null, null, null, true);
             string output = process.StandardOutput.ReadToEnd();
             process.WaitForExit();
             return output;
