@@ -24,6 +24,7 @@ namespace LLMUnitySamples
         private bool blockInput = true;
         private BubbleUI playerUI, aiUI;
         private bool warmUpDone = false;
+        private int lastBubbleOutsideFOV = -1;
 
         void Start()
         {
@@ -112,7 +113,6 @@ namespace LLMUnitySamples
         public void UpdateBubblePositions()
         {
             float y = inputBubble.GetSize().y + inputBubble.GetRectTransform().offsetMin.y + bubbleSpacing;
-            int lastBubbleOutsideFOV = -1;
             float containerHeight = chatContainer.GetComponent<RectTransform>().rect.height;
             for (int i = chatBubbles.Count - 1; i >= 0; i--)
             {
@@ -127,12 +127,6 @@ namespace LLMUnitySamples
                 }
                 y += bubble.GetSize().y + bubbleSpacing;
             }
-            // destroy bubbles outside the container
-            for (int i = 0; i <= lastBubbleOutsideFOV; i++)
-            {
-                chatBubbles[i].Destroy();
-            }
-            chatBubbles.RemoveRange(0, lastBubbleOutsideFOV + 1);
         }
 
         void Update()
@@ -141,6 +135,16 @@ namespace LLMUnitySamples
             {
                 inputBubble.ActivateInputField();
                 StartCoroutine(BlockInteraction());
+            }
+            if (lastBubbleOutsideFOV != -1)
+            {
+                // destroy bubbles outside the container
+                for (int i = 0; i <= lastBubbleOutsideFOV; i++)
+                {
+                    chatBubbles[i].Destroy();
+                }
+                chatBubbles.RemoveRange(0, lastBubbleOutsideFOV + 1);
+                lastBubbleOutsideFOV = -1;
             }
         }
     }
