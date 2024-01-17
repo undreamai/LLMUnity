@@ -70,7 +70,7 @@ namespace LLMUnity
             if (Application.platform != RuntimePlatform.WindowsEditor && Application.platform != RuntimePlatform.WindowsPlayer)
             {
                 // macOS/Linux: Set executable permissions using chmod
-                RunProcess("chmod", $"+x \"{path}\"");
+                RunProcess("chmod", $"+x {path.Replace(" ", "' '")}");
             }
         }
 
