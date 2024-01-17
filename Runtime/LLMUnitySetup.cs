@@ -6,7 +6,7 @@ using UnityEngine.Networking;
 using Debug = UnityEngine.Debug;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using System;
+using System.IO.Compression;
 
 namespace LLMUnity
 {
@@ -19,7 +19,7 @@ namespace LLMUnity
     {
         public static Process CreateProcess(
             string command, string commandArgs = "",
-            Callback<string> outputCallback = null, Callback<string> errorCallback = null,
+            Callback<string> outputCallback = null, Callback<string> errorCallback = null, System.EventHandler exitCallback = null,
             List<(string, string)> environment = null,
             bool redirectOutput = false, bool redirectError = false
         )
@@ -44,6 +44,11 @@ namespace LLMUnity
             Process process = new Process { StartInfo = startInfo };
             if (outputCallback != null) process.OutputDataReceived += (sender, e) => outputCallback(e.Data);
             if (errorCallback != null) process.ErrorDataReceived += (sender, e) => errorCallback(e.Data);
+            if (exitCallback != null)
+            {
+                process.EnableRaisingEvents = true;
+                process.Exited += exitCallback;
+            }
             process.Start();
             if (outputCallback != null) process.BeginOutputReadLine();
             if (errorCallback != null) process.BeginErrorReadLine();
@@ -53,13 +58,22 @@ namespace LLMUnity
         public static string RunProcess(string command, string commandArgs = "", Callback<string> outputCallback = null, Callback<string> errorCallback = null)
         {
             // run a process and re#turn the output
-            Process process = CreateProcess(command, commandArgs, null, null, null, true);
+            Process process = CreateProcess(command, commandArgs, null, null, null, null, true);
             string output = process.StandardOutput.ReadToEnd();
             process.WaitForExit();
             return output;
         }
 
 #if UNITY_EDITOR
+        public static void makeExecutable(string path)
+        {
+            if (Application.platform != RuntimePlatform.WindowsEditor && Application.platform != RuntimePlatform.WindowsPlayer)
+            {
+                // macOS/Linux: Set executable permissions using chmod
+                RunProcess("chmod", $"+x \"{path}\"");
+            }
+        }
+
         public static async Task DownloadFile(
             string fileUrl, string savePath, bool executable = false,
             TaskCallback<string> callback = null, Callback<float> progresscallback = null,
@@ -117,11 +131,7 @@ namespace LLMUnity
                     }
                 }
 
-                if (executable && Application.platform != RuntimePlatform.WindowsEditor && Application.platform != RuntimePlatform.WindowsPlayer)
-                {
-                    // macOS/Linux: Set executable permissions using chmod
-                    RunProcess("chmod", $"+x \"{savePath}\"");
-                }
+                if (executable) makeExecutable(savePath);
                 AssetDatabase.StopAssetEditing();
                 Debug.Log($"Download complete!");
             }
@@ -143,7 +153,7 @@ namespace LLMUnity
             {
                 // if the asset is not in the assets dir copy it over
                 fullPath = Path.Combine(basePath, Path.GetFileName(assetPath));
-                Debug.Log("copying " + assetPath + " to " + fullPath);
+                Debug.Log($"copying {assetPath} to {fullPath}");
                 AssetDatabase.StartAssetEditing();
                 await Task.Run(() =>
                 {
@@ -158,6 +168,19 @@ namespace LLMUnity
                 Debug.Log("copying complete!");
             }
             return fullPath.Substring(basePath.Length + 1);
+        }
+
+        public static void ExtractZip(string zipPath, string extractToPath)
+        {
+            Debug.Log($"extracting {zipPath} to {extractToPath}");
+            AssetDatabase.StartAssetEditing();
+            if (!Directory.Exists(extractToPath))
+            {
+                Directory.CreateDirectory(extractToPath);
+            }
+            ZipFile.ExtractToDirectory(zipPath, extractToPath);
+            AssetDatabase.StopAssetEditing();
+            Debug.Log($"extraction complete!");
         }
 
 #endif

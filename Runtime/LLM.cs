@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -25,8 +26,8 @@ namespace LLMUnity
         [ModelAdvanced] public int batchSize = 512;
 
         [HideInInspector] public string modelUrl = "https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.2-GGUF/resolve/main/mistral-7b-instruct-v0.2.Q4_K_M.gguf?download=true";
-        private static readonly string serverUrl = "https://github.com/Mozilla-Ocho/llamafile/releases/download/0.4.1/llamafile-server-0.4.1";
-        private static readonly string server = GetAssetPath("llamafile-server.exe");
+        private static readonly string serverZipUrl = "https://github.com/Mozilla-Ocho/llamafile/releases/download/0.6/llamafile-0.6.zip";
+        private static readonly string server = Path.Combine(GetAssetPath(Path.GetFileNameWithoutExtension(serverZipUrl)), "bin/llamafile");
         private static readonly string apeARMUrl = "https://cosmo.zip/pub/cosmos/bin/ape-arm64.elf";
         private static readonly string apeARM = GetAssetPath("ape-arm64.elf");
         private static readonly string apeX86_64Url = "https://cosmo.zip/pub/cosmos/bin/ape-x86_64.elf";
@@ -38,7 +39,7 @@ namespace LLMUnity
         private static float binariesDone = 0;
         private Process process;
         private bool serverListening = false;
-        public ManualResetEvent serverStarted = new ManualResetEvent(false);
+        private ManualResetEvent serverBlock = new ManualResetEvent(false);
 
         private static string GetAssetPath(string relPath = "")
         {
@@ -51,17 +52,26 @@ namespace LLMUnity
         private static async Task InitializeOnLoad()
         {
             // Perform download when the build is finished
-            await DownloadBinaries();
+            await SetupBinaries();
         }
 
-        private static async Task DownloadBinaries()
+        private static async Task SetupBinaries()
         {
             if (binariesProgress == 0) return;
             binariesProgress = 0;
             binariesDone = 0;
-            foreach ((string url, string path) in new[] {(serverUrl, server), (apeARMUrl, apeARM), (apeX86_64Url, apeX86_64)})
+            if (!File.Exists(apeARM)) await LLMUnitySetup.DownloadFile(apeARMUrl, apeARM, true, null, SetBinariesProgress);
+            binariesDone += 1;
+            if (!File.Exists(apeX86_64)) await LLMUnitySetup.DownloadFile(apeX86_64Url, apeX86_64, true, null, SetBinariesProgress);
+            binariesDone += 1;
+            if (!File.Exists(server))
             {
-                if (!File.Exists(path)) await LLMUnitySetup.DownloadFile(url, path, true, null, SetBinariesProgress);
+                string serverZip = Path.Combine(Application.dataPath, "llamafile.zip");
+                if (!File.Exists(serverZip)) await LLMUnitySetup.DownloadFile(serverZipUrl, serverZip, false, null, SetBinariesProgress);
+                binariesDone += 1;
+                LLMUnitySetup.ExtractZip(serverZip, GetAssetPath());
+                LLMUnitySetup.makeExecutable(server);
+                File.Delete(serverZip);
                 binariesDone += 1;
             }
             binariesProgress = 1;
@@ -69,7 +79,7 @@ namespace LLMUnity
 
         public static void SetBinariesProgress(float progress)
         {
-            binariesProgress = binariesDone / 3f + 1f / 3f * progress;
+            binariesProgress = binariesDone / 4f + 1f / 4f * progress;
         }
 
         public void DownloadModel()
@@ -157,11 +167,36 @@ namespace LLMUnity
                 if (status.message == "HTTP server listening")
                 {
                     Debug.Log("LLM Server started!");
-                    serverStarted.Set();
                     serverListening = true;
+                    serverBlock.Set();
                 }
             }
             catch { }
+        }
+
+        private void ProcessExited(object sender, EventArgs e)
+        {
+            serverBlock.Set();
+        }
+
+        private void RunServerCommand(string exe, string args)
+        {
+            string binary = exe;
+            string arguments = args;
+            List<(string, string)> environment = null;
+            if (Application.platform != RuntimePlatform.WindowsEditor && Application.platform != RuntimePlatform.WindowsPlayer)
+            {
+                // use APE binary directly if not on Windows
+                arguments = $"\"{binary}\" {arguments}";
+                binary = SelectApeBinary();
+                if (numGPULayers <= 0)
+                {
+                    // prevent nvcc building if not using GPU
+                    environment = new List<(string, string)> { ("PATH", ""), ("CUDA_PATH", "") };
+                }
+            }
+            Debug.Log($"Server command: {binary} {arguments}");
+            process = LLMUnitySetup.CreateProcess(binary, arguments, CheckIfListening, DebugLogError, ProcessExited, environment);
         }
 
         private void StartLLMServer()
@@ -182,25 +217,21 @@ namespace LLMUnity
             string binary = server;
             string arguments = $" --port {port} -m \"{modelPath}\" -c {contextSize} -b {batchSize} --log-disable --nobrowser -np {slots}";
             if (numThreads > 0) arguments += $" -t {numThreads}";
-            if (numGPULayers > 0) arguments += $" -ngl {numGPULayers}";
             if (loraPath != "") arguments += $" --lora \"{loraPath}\"";
-            List<(string, string)> environment = null;
 
-            if (Application.platform != RuntimePlatform.WindowsEditor && Application.platform != RuntimePlatform.WindowsPlayer)
+            string GPUArgument = numGPULayers <= 0 ? "" : $" -ngl {numGPULayers}";
+            RunServerCommand(binary, arguments + GPUArgument);
+            serverBlock.WaitOne(60000);
+
+            if (process.HasExited && numGPULayers > 0)
             {
-                // use APE binary directly if not on Windows
-                arguments = $"\"{binary}\" {arguments}";
-                binary = SelectApeBinary();
-                if (numGPULayers <= 0)
-                {
-                    // prevent nvcc building if not using GPU
-                    environment = new List<(string, string)> { ("PATH", ""), ("CUDA_PATH", "") };
-                }
+                Debug.Log("GPU failed, fallback to CPU");
+                serverBlock.Reset();
+                RunServerCommand(binary, arguments);
+                serverBlock.WaitOne(60000);
             }
-            Debug.Log($"Server command: {binary} {arguments}");
-            process = LLMUnitySetup.CreateProcess(binary, arguments, CheckIfListening, DebugLogError, environment);
-            // wait for at most 2'
-            serverStarted.WaitOne(60000);
+
+            if (process.HasExited) throw new System.Exception("Server could not be started!");
         }
 
         public void StopProcess()
