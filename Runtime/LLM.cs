@@ -171,7 +171,7 @@ namespace LLMUnity
                     serverBlock.Set();
                 }
             }
-            catch { }
+            catch {}
         }
 
         private void ProcessExited(object sender, EventArgs e)
@@ -183,17 +183,23 @@ namespace LLMUnity
         {
             string binary = exe;
             string arguments = args;
+
             List<(string, string)> environment = null;
-            if (Application.platform != RuntimePlatform.WindowsEditor && Application.platform != RuntimePlatform.WindowsPlayer)
+            if (numGPULayers <= 0)
             {
-                // use APE binary directly if not on Windows
-                arguments = $"\"{binary}\" {arguments}";
+                // prevent nvcc building if not using GPU
+                environment = new List<(string, string)> { ("PATH", ""), ("CUDA_PATH", "") };
+            }
+
+            if (Application.platform == RuntimePlatform.LinuxEditor || Application.platform == RuntimePlatform.LinuxPlayer)
+            {
+                // use APE binary directly if on Linux
+                arguments = $"{binary.Replace(" ", "' '")} {arguments}";
                 binary = SelectApeBinary();
-                if (numGPULayers <= 0)
-                {
-                    // prevent nvcc building if not using GPU
-                    environment = new List<(string, string)> { ("PATH", ""), ("CUDA_PATH", "") };
-                }
+            } else if (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.OSXPlayer)
+            {
+                arguments = $"-c \"{binary.Replace(" ", "' '")} {arguments}\"";
+                binary = "sh";
             }
             Debug.Log($"Server command: {binary} {arguments}");
             process = LLMUnitySetup.CreateProcess(binary, arguments, CheckIfListening, DebugLogError, ProcessExited, environment);
@@ -212,22 +218,23 @@ namespace LLMUnity
                 loraPath = GetAssetPath(lora);
                 if (!File.Exists(loraPath)) throw new System.Exception($"File {loraPath} not found!");
             }
+            modelPath = modelPath.Replace(" ", "' '");
+            loraPath = loraPath.Replace(" ", "' '");
 
             int slots = parallelPrompts == -1 ? FindObjectsOfType<LLMClient>().Length : parallelPrompts;
-            string binary = server;
-            string arguments = $" --port {port} -m \"{modelPath}\" -c {contextSize} -b {batchSize} --log-disable --nobrowser -np {slots}";
+            string arguments = $" --port {port} -m {modelPath} -c {contextSize} -b {batchSize} --log-disable --nobrowser -np {slots}";
             if (numThreads > 0) arguments += $" -t {numThreads}";
-            if (loraPath != "") arguments += $" --lora \"{loraPath}\"";
+            if (loraPath != "") arguments += $" --lora {loraPath}";
 
             string GPUArgument = numGPULayers <= 0 ? "" : $" -ngl {numGPULayers}";
-            RunServerCommand(binary, arguments + GPUArgument);
+            RunServerCommand(server, arguments + GPUArgument);
             serverBlock.WaitOne(60000);
 
             if (process.HasExited && numGPULayers > 0)
             {
                 Debug.Log("GPU failed, fallback to CPU");
                 serverBlock.Reset();
-                RunServerCommand(binary, arguments);
+                RunServerCommand(server, arguments);
                 serverBlock.WaitOne(60000);
             }
 
