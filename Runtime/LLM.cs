@@ -171,12 +171,20 @@ namespace LLMUnity
                     serverBlock.Set();
                 }
             }
-            catch {}
+            catch { }
         }
 
         private void ProcessExited(object sender, EventArgs e)
         {
             serverBlock.Set();
+        }
+
+        private string EscapeSpaces(string input)
+        {
+            if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer)
+                return input.Replace(" ", "\" \"");
+            else
+                return input.Replace(" ", "' '");
         }
 
         private void RunServerCommand(string exe, string args)
@@ -194,11 +202,12 @@ namespace LLMUnity
             if (Application.platform == RuntimePlatform.LinuxEditor || Application.platform == RuntimePlatform.LinuxPlayer)
             {
                 // use APE binary directly if on Linux
-                arguments = $"{binary.Replace(" ", "' '")} {arguments}";
+                arguments = $"{EscapeSpaces(binary)} {arguments}";
                 binary = SelectApeBinary();
-            } else if (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.OSXPlayer)
+            }
+            else if (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.OSXPlayer)
             {
-                arguments = $"-c \"{binary.Replace(" ", "' '")} {arguments}\"";
+                arguments = $"-c \"{EscapeSpaces(binary)} {arguments}\"";
                 binary = "sh";
             }
             Debug.Log($"Server command: {binary} {arguments}");
@@ -218,13 +227,11 @@ namespace LLMUnity
                 loraPath = GetAssetPath(lora);
                 if (!File.Exists(loraPath)) throw new System.Exception($"File {loraPath} not found!");
             }
-            modelPath = modelPath.Replace(" ", "' '");
-            loraPath = loraPath.Replace(" ", "' '");
 
             int slots = parallelPrompts == -1 ? FindObjectsOfType<LLMClient>().Length : parallelPrompts;
-            string arguments = $" --port {port} -m {modelPath} -c {contextSize} -b {batchSize} --log-disable --nobrowser -np {slots}";
+            string arguments = $" --port {port} -m {EscapeSpaces(modelPath)} -c {contextSize} -b {batchSize} --log-disable --nobrowser -np {slots}";
             if (numThreads > 0) arguments += $" -t {numThreads}";
-            if (loraPath != "") arguments += $" --lora {loraPath}";
+            if (loraPath != "") arguments += $" --lora {EscapeSpaces(loraPath)}";
 
             string GPUArgument = numGPULayers <= 0 ? "" : $" -ngl {numGPULayers}";
             RunServerCommand(server, arguments + GPUArgument);
