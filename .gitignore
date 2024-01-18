@@ -11,3 +11,4 @@ hooks/pre-commit.meta
 setup.sh.meta
 *.api
 *.api.meta
+CHANGELOG.release.md.meta
