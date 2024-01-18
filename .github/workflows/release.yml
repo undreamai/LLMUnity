@@ -24,6 +24,6 @@ jobs:
         with:
           tag_name: ${{ env.version }}
           release_name: "Release ${{ env.version }}"
-          body_path: CHANGELOG.md.diff
+          body_path: CHANGELOG.release.md
           draft: false
           prerelease: false
