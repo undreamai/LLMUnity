@@ -4,10 +4,26 @@
 </p>
 
 <h3 align="center">Integrate LLM models in Unity!</h3>
-<br>
-LLMUnity allows to integrate, run and deploy LLMs (Large Language Models) in the Unity engine.<br>
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+<a href="https://discord.gg/tZRGntma"><img src="https://discordapp.com/api/guilds/1194779009284841552/widget.png?style=shield"/></a>
+[![Reddit](https://img.shields.io/badge/Reddit-%23FF4500.svg?style=flat&logo=Reddit&logoColor=white)](https://www.reddit.com/user/UndreamAI)
+
+LLMUnity allows to integrate, run and deploy LLMs (Large Language Models) in the Unity engine.<br>
 LLMUnity is built on top of the awesome [llama.cpp](https://github.com/ggerganov/llama.cpp) and [llamafile](https://github.com/Mozilla-Ocho/llamafile) libraries.
+
+  
+<sub>
+<a href="#at-a-glance" style="color: black">At a glance</a>&nbsp;&nbsp;•&nbsp;
+<a href="#setup" style=color: black>Setup</a>&nbsp;&nbsp;•&nbsp;
+<a href="#how-to-use" style=color: black>How to use</a>&nbsp;&nbsp;•&nbsp;
+<a href="#examples" style=color: black>Examples</a>&nbsp;&nbsp;•&nbsp;
+<a href="#use-your-own-model" style=color: black>Use your own model</a>&nbsp;&nbsp;•&nbsp;
+<a href="#multiple-client--remote-server-setup" style=color: black>Multiple client / Remote server setup</a>&nbsp;&nbsp;•&nbsp;
+<a href="#options" style=color: black>Options</a>&nbsp;&nbsp;•&nbsp;
+<a href="#license" style=color: black>License</a>
+</sub>
+
 
 ## At a glance
 - :computer: Cross-platform! Supports Windows, Linux and macOS ([supported versions](https://github.com/Mozilla-Ocho/llamafile?tab=readme-ov-file#supported-oses-and-cpus))
@@ -17,7 +33,13 @@ LLMUnity is built on top of the awesome [llama.cpp](https://github.com/ggerganov
 - :wrench: Easy to setup, call with a single line code
 - :moneybag: Free to use for both personal and commercial purposes
 
-[:vertical_traffic_light: Upcoming Releases](https://github.com/orgs/undreamai/projects/2/views/10)
+🧪 Tested on Unity: 2021 LTS, 2022 LTS, 2023<br>
+:vertical_traffic_light: [Upcoming Releases](https://github.com/orgs/undreamai/projects/2/views/10)
+
+## How to help
+- Join us at [Discord](https://discord.gg/tZRGntma) and say hi!
+- Star the repo and spread the word about the project ❤️!
+- Submit feature requests or bugs as [issues](https://github.com/undreamai/LLMUnity/issues) or even submit a PR and become a collaborator!
 
 ## Setup
 To install the package you can follow the typical asset / package process in Unity:<br>
@@ -45,7 +67,7 @@ For a step-by-step tutorial you can have a look at our guide:
 Create a GameObject for the LLM :chess_pawn::
 - Create an empty GameObject. In the GameObject Inspector click `Add Component` and select the LLM script (`Scripts>LLM`).
 - Download the default model with the `Download Model` button (this will take a while as it is ~4GB).<br>You can also load your own model in .gguf format with the `Load model` button (see [Use your own model](#use-your-own-model)).
-- Define the role of your AI in the `Prompt`. You can also define the name of the AI (`AI Mame`) and the player (`Player Name`).
+- Define the role of your AI in the `Prompt`. You can also define the name of the AI (`AI Name`) and the player (`Player Name`).
 - (Optional) By default the LLM script is set up to receive the reply from the model as is it is produced in real-time (recommended). If you prefer to receive the full reply in one go, you can deselect the `Stream` option.
 - (Optional) Adjust the server or model settings to your preference (see [Options](#options)).
 <br>
@@ -95,6 +117,21 @@ That's all :sparkles:!
 You can also:
 
 
+<details>
+<summary>Add or not the message to the chat/prompt history</summary>
+
+  The last argument of the `Chat` function is a boolean that specifies whether to add the message to the history (default: true):
+``` c#
+  void Game(){
+    // your game function
+    ...
+    string message = "Hello bot!"
+    await llm.Chat(message, HandleReply, ReplyCompleted, false);
+    ...
+  }
+```
+
+</details>
 <details>
 <summary>Wait for the reply before proceeding to the next lines of code</summary>
 
