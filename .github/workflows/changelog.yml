@@ -22,7 +22,7 @@ jobs:
         with:
           fromTag: main
           toTag: ${{ github.base_ref }}
-          outputFile: CHANGELOG.md.diff
+          outputFile: CHANGELOG.release.md
           configurationJson: |
             {
               "pr_template": "- #{{TITLE}} (PR: ##{{NUMBER}})",
@@ -60,18 +60,17 @@ jobs:
 
       - name: Create CHANGELOG.md
         run: |
-            echo "## `cat VERSION`" > CHANGELOG.md.new
-            cat CHANGELOG.md.diff | sed -e 's:## :### :g'  >> CHANGELOG.md.new
+            echo "## ${GITHUB_BASE_REF#release/}" > CHANGELOG.md.new
+            cat CHANGELOG.release.md | sed -e 's:## :### :g'  >> CHANGELOG.md.new
             echo "" >> CHANGELOG.md.new
-            if [ -f CHANGELOG.md ];then
-                cat CHANGELOG.md >> CHANGELOG.md.new;
-            fi
+            git checkout origin/main -- CHANGELOG.md
+            cat CHANGELOG.md >> CHANGELOG.md.new;
             mv CHANGELOG.md.new CHANGELOG.md
 
             git config --global user.name $GITHUB_ACTOR
             git config --global user.email $GITHUB_ACTOR@users.noreply.github.com
             git add CHANGELOG.md
-            git add CHANGELOG.md.diff
+            git add CHANGELOG.release.md
             git commit -m "update changelogs"
   
       - name: Push changes
