@@ -8,6 +8,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 <a href="https://discord.gg/tZRGntma"><img src="https://discordapp.com/api/guilds/1194779009284841552/widget.png?style=shield"/></a>
 [![Reddit](https://img.shields.io/badge/Reddit-%23FF4500.svg?style=flat&logo=Reddit&logoColor=white)](https://www.reddit.com/user/UndreamAI)
+[![X (formerly Twitter) URL](https://img.shields.io/twitter/url?url=https%3A%2F%2Ftwitter.com%2FUndreamAI&style=social)](https://twitter.com/UndreamAI)
+
 
 LLMUnity allows to integrate, run and deploy LLMs (Large Language Models) in the Unity engine.<br>
 LLMUnity is built on top of the awesome [llama.cpp](https://github.com/ggerganov/llama.cpp) and [llamafile](https://github.com/Mozilla-Ocho/llamafile) libraries.
@@ -15,11 +17,12 @@ LLMUnity is built on top of the awesome [llama.cpp](https://github.com/ggerganov
   
 <sub>
 <a href="#at-a-glance" style="color: black">At a glance</a>&nbsp;&nbsp;•&nbsp;
+<a href="#how-to-help" style=color: black>How to help</a>&nbsp;&nbsp;•&nbsp;
 <a href="#setup" style=color: black>Setup</a>&nbsp;&nbsp;•&nbsp;
 <a href="#how-to-use" style=color: black>How to use</a>&nbsp;&nbsp;•&nbsp;
 <a href="#examples" style=color: black>Examples</a>&nbsp;&nbsp;•&nbsp;
 <a href="#use-your-own-model" style=color: black>Use your own model</a>&nbsp;&nbsp;•&nbsp;
-<a href="#multiple-client--remote-server-setup" style=color: black>Multiple client / Remote server setup</a>&nbsp;&nbsp;•&nbsp;
+<a href="#multiple-ai--remote-server-setup" style=color: black>Multiple AI / Remote server setup</a>&nbsp;&nbsp;•&nbsp;
 <a href="#options" style=color: black>Options</a>&nbsp;&nbsp;•&nbsp;
 <a href="#license" style=color: black>License</a>
 </sub>
@@ -38,7 +41,7 @@ LLMUnity is built on top of the awesome [llama.cpp](https://github.com/ggerganov
 
 ## How to help
 - Join us at [Discord](https://discord.gg/tZRGntma) and say hi!
-- Star the repo and spread the word about the project ❤️!
+- ⭐ Star the repo and spread the word about the project!
 - Submit feature requests or bugs as [issues](https://github.com/undreamai/LLMUnity/issues) or even submit a PR and become a collaborator!
 
 ## Setup
@@ -224,11 +227,13 @@ Otherwise other model formats can be converted to gguf with the `convert.py` scr
 
 :grey_exclamation: Before using any model make sure you **check their license** :grey_exclamation:
 
-## Multiple client / Remote server setup
-In addition to the `LLM` server functionality, LLMUnity defines the `LLMClient` client class that handles the client functionality.<br>
+## Multiple AI / Remote server setup
+LLMUnity allows to have multiple AI characters efficiently.<br>
+Each character can be implemented with a different client with its own prompt (and other parameters), and all of the clients send their requests to a single server.<br>
+This is essential as multiple server instances would require additional compute resources.<br>
+
+In addition to the `LLM` server functionality, we define the `LLMClient` class that handles the client functionality.<br>
 The `LLMClient` contains a subset of options of the `LLM` class described in the [Options](#options).<br>
-It can be used to have multiple clients with different options e.g. different prompts that use the same server.<br>
-This is important as multiple server instances would require additional compute resources.<br>
 To use multiple instances, you can define one `LLM` GameObject (as described in [How to use](#how-to-use)) and then multiple `LLMClient` objects.
 See the [ServerClient](Samples~/ServerClient) sample for a server-client example.
 
