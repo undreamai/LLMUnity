@@ -1,7 +1,8 @@
 ## v1.0.3
-#### 📦 General
+#### 🐛 Fixes
 
 - fix slash in windows paths (PR: #42)
+- Fix chmod when deploying from windows (PR: #43)
 
 
 ## v1.0.2
