@@ -70,7 +70,6 @@ namespace LLMUnity
                 if (!File.Exists(serverZip)) await LLMUnitySetup.DownloadFile(serverZipUrl, serverZip, false, null, SetBinariesProgress);
                 binariesDone += 1;
                 LLMUnitySetup.ExtractZip(serverZip, GetAssetPath());
-                LLMUnitySetup.makeExecutable(server);
                 File.Delete(serverZip);
                 binariesDone += 1;
             }
@@ -234,6 +233,7 @@ namespace LLMUnity
             if (loraPath != "") arguments += $" --lora {EscapeSpaces(loraPath)}";
 
             string GPUArgument = numGPULayers <= 0 ? "" : $" -ngl {numGPULayers}";
+            LLMUnitySetup.makeExecutable(server);
             RunServerCommand(server, arguments + GPUArgument);
             serverBlock.WaitOne(60000);
 
