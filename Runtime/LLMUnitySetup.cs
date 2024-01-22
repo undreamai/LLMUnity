@@ -64,7 +64,6 @@ namespace LLMUnity
             return output;
         }
 
-#if UNITY_EDITOR
         public static void makeExecutable(string path)
         {
             if (Application.platform != RuntimePlatform.WindowsEditor && Application.platform != RuntimePlatform.WindowsPlayer)
@@ -74,6 +73,7 @@ namespace LLMUnity
             }
         }
 
+#if UNITY_EDITOR
         public static async Task DownloadFile(
             string fileUrl, string savePath, bool executable = false,
             TaskCallback<string> callback = null, Callback<float> progresscallback = null,
