@@ -38,7 +38,7 @@ namespace LLMUnity
         [HideInInspector] public float modelCopyProgress = 1;
         private static float binariesDone = 0;
         private Process process;
-        public bool serverListening { get; private set} = false;
+        public bool serverListening { get; private set; } = false;
         private ManualResetEvent serverBlock = new ManualResetEvent(false);
         private static string GetAssetPath(string relPath = "")
         {
