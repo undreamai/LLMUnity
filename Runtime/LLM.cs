@@ -203,6 +203,7 @@ namespace LLMUnity
                 // use APE binary directly if on Linux
                 arguments = $"{EscapeSpaces(binary)} {arguments}";
                 binary = SelectApeBinary();
+                LLMUnitySetup.makeExecutable(binary);
             }
             else if (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.OSXPlayer)
             {
