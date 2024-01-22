@@ -147,12 +147,13 @@ namespace LLMUnity
                 return null;
             }
             // add an asset to the basePath directory if it is not already there and return the relative path
-            Directory.CreateDirectory(basePath);
-            string fullPath = Path.GetFullPath(assetPath);
-            if (!fullPath.StartsWith(basePath))
+            string basePathSlash = basePath.Replace('\\', '/');
+            string fullPath = Path.GetFullPath(assetPath).Replace('\\', '/');
+            Directory.CreateDirectory(basePathSlash);
+            if (!fullPath.StartsWith(basePathSlash))
             {
                 // if the asset is not in the assets dir copy it over
-                fullPath = Path.Combine(basePath, Path.GetFileName(assetPath));
+                fullPath = Path.Combine(basePathSlash, Path.GetFileName(assetPath));
                 Debug.Log($"copying {assetPath} to {fullPath}");
                 AssetDatabase.StartAssetEditing();
                 await Task.Run(() =>
@@ -167,7 +168,7 @@ namespace LLMUnity
                 AssetDatabase.StopAssetEditing();
                 Debug.Log("copying complete!");
             }
-            return fullPath.Substring(basePath.Length + 1);
+            return fullPath.Substring(basePathSlash.Length + 1);
         }
 
         public static void ExtractZip(string zipPath, string extractToPath)
