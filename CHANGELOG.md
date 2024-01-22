@@ -1,3 +1,9 @@
+## v1.0.3
+#### 📦 General
+
+- fix slash in windows paths (PR: #42)
+
+
 ## v1.0.2
 #### 🚀 Features
 
