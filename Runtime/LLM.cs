@@ -38,14 +38,8 @@ namespace LLMUnity
         [HideInInspector] public float modelCopyProgress = 1;
         private static float binariesDone = 0;
         private Process process;
-        private bool serverListening = false;
+        public bool serverListening { get; private set} = false;
         private ManualResetEvent serverBlock = new ManualResetEvent(false);
-
-        /// <summary>
-        /// Returns true if the server is listening.
-        /// </summary>
-        public bool ServerListening => serverListening;
-
         private static string GetAssetPath(string relPath = "")
         {
             // Path to store llm server binaries and models
