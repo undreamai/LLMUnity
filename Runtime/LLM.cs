@@ -41,6 +41,11 @@ namespace LLMUnity
         private bool serverListening = false;
         private ManualResetEvent serverBlock = new ManualResetEvent(false);
 
+        /// <summary>
+        /// Returns true if the server is listening.
+        /// </summary>
+        public bool ServerListening => serverListening;
+
         private static string GetAssetPath(string relPath = "")
         {
             // Path to store llm server binaries and models
