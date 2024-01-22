@@ -33,7 +33,7 @@ jobs:
                   },
                   {
                     "title": "### 🐛 Fixes",
-                    "labels": ["fix", "bug"]
+                    "labels": ["fix", "hotfix", "bug"]
                   },
                   {
                     "title": "### 🧪 Test",
