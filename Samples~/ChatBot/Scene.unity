@@ -444,7 +444,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a50e3140c3ecaaf1c848dbf141cc2074, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  advancedOptions: 0
+  advancedOptions: 1
   host: localhost
   port: 13333
   stream: 1
@@ -462,7 +462,7 @@ MonoBehaviour:
   numGPULayers: 0
   parallelPrompts: -1
   debug: 0
-  model: 
+  model: mistral-7b-instruct-v0.1.Q4_K_M.gguf
   lora: 
   contextSize: 512
   batchSize: 512

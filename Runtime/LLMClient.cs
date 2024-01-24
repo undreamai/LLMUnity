@@ -5,13 +5,13 @@ using UnityEngine.Networking;
 
 namespace LLMUnity
 {
-    public class ClientAttribute : PropertyAttribute { }
-    public class ServerAttribute : PropertyAttribute { }
-    public class ModelAttribute : PropertyAttribute { }
-    public class ChatAttribute : PropertyAttribute { }
-    public class ClientAdvancedAttribute : PropertyAttribute { }
-    public class ServerAdvancedAttribute : PropertyAttribute { }
-    public class ModelAdvancedAttribute : PropertyAttribute { }
+    public class ClientAttribute : PropertyAttribute {}
+    public class ServerAttribute : PropertyAttribute {}
+    public class ModelAttribute : PropertyAttribute {}
+    public class ChatAttribute : PropertyAttribute {}
+    public class ClientAdvancedAttribute : PropertyAttribute {}
+    public class ServerAdvancedAttribute : PropertyAttribute {}
+    public class ModelAdvancedAttribute : PropertyAttribute {}
 
     [DefaultExecutionOrder(-1)]
     public class LLMClient : MonoBehaviour
@@ -139,6 +139,12 @@ namespace LLMUnity
             return result.tokens;
         }
 
+        public List<float> EmbeddingContent(EmbeddingResult result)
+        {
+            // get the tokens from a tokenize result received from the endpoint
+            return result.embedding;
+        }
+
         public async Task Chat(string question, Callback<string> callback = null, EmptyCallback completionCallback = null, bool addToHistory = true)
         {
             // handle a chat message by the user
@@ -174,6 +180,18 @@ namespace LLMUnity
             tokenizeRequest.content = question;
             string json = JsonUtility.ToJson(tokenizeRequest);
             await PostRequest<TokenizeResult, List<int>>(json, "tokenize", TokenizeContent, callback);
+        }
+
+        public async Task<List<float>> Embedding(string question, Callback<List<float>> callback = null)
+        {
+            // handle the tokenization of a message by the user
+            // ChatRequest embeddingRequest = new ChatRequest();
+            // embeddingRequest.prompt = question;
+            TokenizeRequest embeddingRequest = new TokenizeRequest();
+            embeddingRequest.content = question;
+            string json = JsonUtility.ToJson(embeddingRequest);
+            List<float> embedding = await PostRequest<EmbeddingResult, List<float>>(json, "embedding", EmbeddingContent, callback);
+            return embedding;
         }
 
         private void SetNKeep(List<int> tokens)
