@@ -5,10 +5,4 @@ obj/
 obj.meta
 bin/
 bin.meta
-LLMUnity.csproj.meta
-hooks.meta
-hooks/pre-commit.meta
-setup.sh.meta
-*.api
-*.api.meta
-CHANGELOG.release.md.meta
+
