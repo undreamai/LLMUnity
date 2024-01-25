@@ -268,13 +268,13 @@ If it is not selected, the full reply from the model is received in one go
 - `Model` the model being used (inside the Assets/StreamingAssets folder)
 - `Lora` the LORA model being used (inside the Assets/StreamingAssets folder)
 - Advanced options:
-  - `Context Size` Size of the prompt context (0 = context size of the model)
-  - `Batch Size` Batch size for prompt processing (default: 512)
-  - `Seed` seed for reproducibility. For random results every time select -1
-  - `Temperature` LLM temperature, lower values give more deterministic answers
-  - `Top K` top-k sampling (default: 40, 0 = disabled)
-  - `Top P` top-p sampling (default: 0.9, 1.0 = disabled)
-  - `Num Predict` number of tokens to predict (default: 256, -1 = infinity, -2 = until context filled)
+  - <code>Context Size</code> Size of the prompt context (0 = context size of the model)
+  - <code>Batch Size</code> Batch size for prompt processing (default: 512)
+  - <code>Seed</code> seed for reproducibility. For random results every time select -1
+  - <details><summary><code>Temperature</code> LLM temperature, lower values give more deterministic answers</summary>The temperature setting adjusts how random the generated responses are. Turning it up makes the generated choices more varied and unpredictable. Turning it down  makes the generated responses more predictable and focused on the most likely options.</details>
+  - <details><summary><code>Top K</code> top-k sampling (default: 40, 0 = disabled)</summary>The top k value controls the top k most probable tokens at each step of generation. This value can help fine tune the output and make this adhere to specific patterns or constraints.</details>
+  - <details><summary><code>Top P</code> top-p sampling (default: 0.9, 1.0 = disabled)</summary>The top p value controls the cumulative probability of generated tokens. The model will generate tokens until this theshold (p) is reached. By lowering this value you can shorten output & encourage / discourage more diverse output.</details>
+  - <details><summary><code>Num Predict</code> number of tokens to predict (default: 256, -1 = infinity, -2 = until context filled)</summary>This is the amount of tokens the model will maximum predict. When N predict is reached the model will stop generating. This means words / sentences might not get finished if this is too low.  </details>
 
 #### :left_speech_bubble: Chat Settings
 - `Player Name` the name of the player
