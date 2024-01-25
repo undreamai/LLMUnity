@@ -65,7 +65,7 @@ namespace LLMUnity
             binariesDone += 1;
             if (!File.Exists(server))
             {
-                string serverZip = Path.Combine(Application.dataPath, "llamafile.zip");
+                string serverZip = Path.Combine(Application.temporaryCachePath, "llamafile.zip");
                 if (!File.Exists(serverZip)) await LLMUnitySetup.DownloadFile(serverZipUrl, serverZip, false, null, SetBinariesProgress);
                 binariesDone += 1;
                 LLMUnitySetup.ExtractZip(serverZip, GetAssetPath());
