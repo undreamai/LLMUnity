@@ -1,3 +1,13 @@
+## v1.0.4
+#### 🐛 Fixes
+
+- Fix download function (PR: #51)
+
+#### 📦 General
+
+- Added how settings impact generation to the readme (PR: #49)
+
+
 ## v1.0.3
 #### 🐛 Fixes
 

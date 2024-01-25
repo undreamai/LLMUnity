@@ -1,5 +1,8 @@
 ### 🐛 Fixes
 
-- fix slash in windows paths (PR: #42)
-- Fix chmod when deploying from windows (PR: #43)
+- Fix download function (PR: #51)
+
+### 📦 General
+
+- Added how settings impact generation to the readme (PR: #49)
 
