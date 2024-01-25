@@ -5,7 +5,7 @@
   "description": "LLMUnity allows to run and distribute LLM models in the Unity engine.",
   "unity": "2022.3",
   "unityRelease": "16f1",
-  "documentationUrl": "https://github.com/amakropoulos/LLMUnity",
+  "documentationUrl": "https://github.com/undreamai/LLMUnity",
   "keywords": [
     "llm",
     "large language model",
