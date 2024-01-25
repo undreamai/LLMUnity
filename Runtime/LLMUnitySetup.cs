@@ -77,7 +77,7 @@ namespace LLMUnity
         public static async Task DownloadFile(
             string fileUrl, string savePath, bool executable = false,
             TaskCallback<string> callback = null, Callback<float> progresscallback = null,
-            int chunkSize = 1024 * 1024)
+            long chunkSize = 10 * 1024 * 1024)
         {
             // download a file to the specified path
             if (File.Exists(savePath))
@@ -100,34 +100,37 @@ namespace LLMUnity
                     throw new System.Exception("Failed to get file size. Error: " + www.error);
 
                 long fileSize = long.Parse(www.GetResponseHeader("Content-Length"));
-
                 AssetDatabase.StartAssetEditing();
                 Directory.CreateDirectory(Path.GetDirectoryName(savePath));
                 using (FileStream fs = new FileStream(savePath, FileMode.Create, FileAccess.Write))
                 {
-                    for (long i = 0; i < fileSize; i += chunkSize)
+                    long chunks = (long) Mathf.Ceil((float)fileSize / chunkSize);
+                    for (long i = 0; i < chunks; i++)
                     {
-                        long startByte = i;
-                        long endByte = (long)Mathf.Min(i + chunkSize - 1, fileSize - 1);
+                        long startByte = i * chunkSize;
+                        long endByte = startByte + chunkSize - 1;
+                        if (endByte > fileSize - 1) endByte = fileSize - 1;
 
-                        www = UnityWebRequest.Get(fileUrl);
-                        www.SetRequestHeader("Range", "bytes=" + startByte + "-" + endByte);
-
-                        asyncOperation = www.SendWebRequest();
-
-                        while (!asyncOperation.isDone)
+                        using (UnityWebRequest wwwChunk = UnityWebRequest.Get(fileUrl))
                         {
-                            await Task.Delay(100); // Adjust the delay as needed
+                            wwwChunk.SetRequestHeader("Range", "bytes=" + startByte + "-" + endByte);
+
+                            asyncOperation = wwwChunk.SendWebRequest();
+
+                            while (!asyncOperation.isDone)
+                            {
+                                await Task.Delay(1000); // Adjust the delay as needed
+                            }
+
+                            if (wwwChunk.result != UnityWebRequest.Result.Success)
+                                throw new System.Exception("Download failed. Error: " + wwwChunk.error);
+
+                            fs.Write(wwwChunk.downloadHandler.data, 0, wwwChunk.downloadHandler.data.Length);
+
+                            int progressPercentage = Mathf.FloorToInt((float) i / chunks * 100);
+                            if (progressPercentage % 1 == 0)
+                                progresscallback((float)progressPercentage / 100);
                         }
-
-                        if (www.result != UnityWebRequest.Result.Success)
-                            throw new System.Exception("Download failed. Error: " + www.error);
-
-                        fs.Write(www.downloadHandler.data, 0, www.downloadHandler.data.Length);
-
-                        int progressPercentage = Mathf.FloorToInt((float)i / fileSize * 100);
-                        if (progressPercentage % 1 == 0)
-                            progresscallback((float)progressPercentage / 100);
                     }
                 }
 
