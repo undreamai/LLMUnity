@@ -44,8 +44,9 @@ public class EmbeddingModel
 
     public void Destroy()
     {
-        worker.Dispose();
+        allocator.Dispose();
         ops.Dispose();
+        worker.Dispose();
     }
 
     public TensorFloat Encode(List<string> input)
@@ -60,6 +61,9 @@ public class EmbeddingModel
         TensorFloat MeanPooledTensor = MeanPooling(inputSentencesTokensTensor["attention_mask"], outputTensor, ops);
         // Step 5: Normalize the results
         TensorFloat NormedTensor = L2Norm(MeanPooledTensor, ops);
+        // Cleanup
+        foreach (var val in inputSentencesTokensTensor.Values) val.Dispose();
+        inputSentencesTokensTensor.Clear();
         return NormedTensor;
     }
 
