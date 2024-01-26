@@ -14,7 +14,13 @@ using HuggingFace.SharpTransformers.Tokenizers;
 using HuggingFace.SharpTransformers.PostProcessors;
 using System.IO;
 
-public class EmbeddingModel
+
+public abstract class Embedder<T>
+{
+    public abstract T Encode(string input);
+}
+
+public class EmbeddingModel : Embedder<TensorFloat>
 {
     Model runtimeModel;
     IWorker worker;
@@ -68,7 +74,7 @@ public class EmbeddingModel
         return tensors;
     }
 
-    public TensorFloat Encode(string input)
+    public override TensorFloat Encode(string input)
     {
         return Encode(new List<string> { input });
     }
