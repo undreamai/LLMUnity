@@ -49,6 +49,35 @@ public class EmbeddingModel
         worker.Dispose();
     }
 
+    public Tensor Concat(Tensor[] tensors, int axis = 0)
+    {
+        return ops.Concat(tensors, axis);
+    }
+
+    public TensorFloat Concat(TensorFloat[] tensors, int axis = 0)
+    {
+        return (TensorFloat)ops.Concat(tensors, axis);
+    }
+
+    public Tensor[] Split(Tensor tensor, int axis = 0)
+    {
+        if (tensor.shape.rank != 2) throw new Exception("Tensor does not have a rank of 2.");
+        TensorFloat[] tensors = new TensorFloat[tensor.shape[0]];
+        for (int i = 0; i < tensor.shape[axis]; i++)
+            tensors[i] = (TensorFloat)ops.Split(tensor, axis, i, i + 1);
+        return tensors;
+    }
+
+    public TensorFloat Encode(string input)
+    {
+        return Encode(new List<string> { input });
+    }
+
+    public TensorFloat Encode(string[] input)
+    {
+        return Encode(new List<string>(input));
+    }
+
     public TensorFloat Encode(List<string> input)
     {
         // Step 1: Tokenize the sentences
