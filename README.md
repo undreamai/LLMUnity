@@ -1,3 +1,22 @@
+# sharp-transformers
+## Description
+Sharp Transformers is a unity plugin developed by Hugging Face.
+The original code can be found here: <br>
+https://github.com/huggingface/sharp-transformers/tree/577bfe23c286a605f58d328ea991aa4d4d06f4c8
+
+## License
+Sharp Transformers is distributed under Apache-2.0 license, see the [LICENSE file](LICENSE).
+
+## Local Modifications
+- adapt README.md to include the changelog from the original repo
+- fix "hides inherited" warnings in Unity
+- add missing LICENSE.meta
+
+## Original Readme
+The original readme is appended here:
+
+-----
+
 # Sharp Transformers 
 A Unity plugin of utilities to **run Transformer 🤗 models in Unity games**.
 
