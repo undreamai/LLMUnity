@@ -74,8 +74,6 @@ namespace HuggingFace.SharpTransformers.PostProcessors
     /// </summary>
     public class TemplateProcessing : PostProcessor
     {
-        public JObject Config;
-        
         // The template for a single sequence of tokens.
         public JArray Single;
         

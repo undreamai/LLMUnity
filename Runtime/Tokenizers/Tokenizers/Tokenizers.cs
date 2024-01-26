@@ -179,14 +179,8 @@ namespace HuggingFace.SharpTransformers.Tokenizers
         }
     }
 
-
     public class WordPieceTokenizer : TokenizerModel
     {
-        public JObject Config;
-        public List<string> Vocab;
-        public Dictionary<string, int> TokensToIds;
-        public int? UnkTokenId; // Thanks to int?, the variable can hold an integer value or be null
-        public string UnkToken;
         public string ContinuingSubwordPrefix;
 
         public WordPieceTokenizer(JObject config) : base(config)
@@ -215,7 +209,7 @@ namespace HuggingFace.SharpTransformers.Tokenizers
         /// </summary>
         /// <param name="tokens">The tokens to encode.</param>
         /// <returns>An array of encoded tokens.</returns>
-        public List<string> Encode(List<string> tokens)
+        public new List<string> Encode(List<string> tokens)
         {
             // Initialize a List<string> to store the encoded tokens
             var OutputTokens = new List<string>();
@@ -293,7 +287,7 @@ namespace HuggingFace.SharpTransformers.Tokenizers
         /// </summary>
         /// <param name="ids">The token IDs to convert.</param>
         /// <returns>The converted tokens.</returns>
-        public List<string> ConvertIdsToTokens(List<int> ids)
+        public new List<string> ConvertIdsToTokens(List<int> ids)
         {
             /*
              Select is used instead of map to transform the list of IDs into a list of tokens.
@@ -304,7 +298,7 @@ namespace HuggingFace.SharpTransformers.Tokenizers
             return tokens;
         }
 
-        public List<int> ConvertTokensToIds(List<string> tokens)
+        public new List<int> ConvertTokensToIds(List<string> tokens)
         {
             // Create an array of token IDs by mapping each token to its corresponding ID
             List<int> ids = new List<int>();
@@ -323,7 +317,7 @@ namespace HuggingFace.SharpTransformers.Tokenizers
             return ids;
         }
 
-        public List<int> Fuse(List<int> arr, int value)
+        public new List<int> Fuse(List<int> arr, int value)
         {
             List<int> fused = new List<int>();
             int i = 0;

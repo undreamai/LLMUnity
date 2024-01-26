@@ -27,7 +27,6 @@ namespace HuggingFace.SharpTransformers.NormalizersUtils
             else
             {
                 throw new Exception($"Unknown pattern type: {pattern}");
-                return null;
             }
         }
     }

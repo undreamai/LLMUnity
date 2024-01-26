@@ -85,7 +85,6 @@ namespace HuggingFace.SharpTransformers.Normalizers
     {
         public BertNormalizer(JObject config) : base(config)
         {
-
         }
 
         /// <summary>
@@ -114,35 +113,34 @@ namespace HuggingFace.SharpTransformers.Normalizers
                 {
                     output.Append(character);
                 }
-
             }
             return output.ToString();
         }
 
         /// <summary>
         /// Checks whether the given Unicode codepoint represents a CJK (Chinese, Japanese, or Korean) character.
-        /// 
+        ///
         /// A "chinese character" is defined as anything in the CJK Unicode block:
         /// https://en.wikipedia.org/wiki/CJK_Unified_Ideographs_(Unicode_block)
-        /// 
+        ///
         /// Note that the CJK Unicode block is NOT all Japanese and Korean characters, despite its name.
         /// The modern Korean Hangul alphabet is a different block, as is Japanese Hiragana and Katakana.
         /// Those alphabets are used to write space-separated words, so they are not treated specially
         /// and are handled like all other languages.
-        /// 
+        ///
         /// </summary>
         /// <param name="unicodeCodePoint">The Unicode codepoint to check.</param>
         /// <returns name="bool"> True if the codepoint represents a CJK character, false otherwise. </returns>
         public bool IsChineseChar(int unicodeCodePoint)
         {
             return (unicodeCodePoint >= 0x4E00 && unicodeCodePoint <= 0x9FFF) ||
-           (unicodeCodePoint >= 0x3400 && unicodeCodePoint <= 0x4DBF) ||
-           (unicodeCodePoint >= 0x20000 && unicodeCodePoint <= 0x2A6DF) ||
-           (unicodeCodePoint >= 0x2A700 && unicodeCodePoint <= 0x2B73F) ||
-           (unicodeCodePoint >= 0x2B740 && unicodeCodePoint <= 0x2B81F) ||
-           (unicodeCodePoint >= 0x2B820 && unicodeCodePoint <= 0x2CEAF) ||
-           (unicodeCodePoint >= 0xF900 && unicodeCodePoint <= 0xFAFF) ||
-           (unicodeCodePoint >= 0x2F800 && unicodeCodePoint <= 0x2FA1F);
+                (unicodeCodePoint >= 0x3400 && unicodeCodePoint <= 0x4DBF) ||
+                (unicodeCodePoint >= 0x20000 && unicodeCodePoint <= 0x2A6DF) ||
+                (unicodeCodePoint >= 0x2A700 && unicodeCodePoint <= 0x2B73F) ||
+                (unicodeCodePoint >= 0x2B740 && unicodeCodePoint <= 0x2B81F) ||
+                (unicodeCodePoint >= 0x2B820 && unicodeCodePoint <= 0x2CEAF) ||
+                (unicodeCodePoint >= 0xF900 && unicodeCodePoint <= 0xFAFF) ||
+                (unicodeCodePoint >= 0x2F800 && unicodeCodePoint <= 0x2FA1F);
         }
 
         /// <summary>
@@ -198,11 +196,9 @@ namespace HuggingFace.SharpTransformers.Normalizers
     }
 
 
-
     public class NormalizerSequence : Normalizer
     {
         public List<Normalizer> Normalizers;
-        public JObject Config;
 
         /// <summary>
         /// Create a new instance of NormalizerSequence
@@ -210,7 +206,7 @@ namespace HuggingFace.SharpTransformers.Normalizers
         /// <param name="config">The configuration object</param>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="ArgumentException"></exception>
-        public NormalizerSequence(JObject config): base(config)
+        public NormalizerSequence(JObject config) : base(config)
         {
             string jsonString = config.ToString();
 
@@ -224,7 +220,7 @@ namespace HuggingFace.SharpTransformers.Normalizers
             }
 
             Normalizers = new List<Normalizer>();
-        
+
             foreach (JObject normalizerConfig in config["normalizers"])
             {
                 var normalizer = Normalizer.FromConfig(normalizerConfig);
@@ -238,14 +234,13 @@ namespace HuggingFace.SharpTransformers.Normalizers
             }
         }
 
-
         /// <summary>
         /// Apply a sequence of Normalizes to the input text.
         /// </summary>
         /// <param name="text">The text to normalize</param>
         /// <returns>The normalized text</returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public string Normalize(string text)
+        public new string Normalize(string text)
         {
             if (text == null)
             {
@@ -268,7 +263,6 @@ namespace HuggingFace.SharpTransformers.Normalizers
     {
         public Prepend(JObject config) : base(config)
         {
-
         }
 
         /// <summary>
@@ -292,7 +286,6 @@ namespace HuggingFace.SharpTransformers.Normalizers
     {
         public Replace(JObject config) : base(config)
         {
-
         }
 
         /// <summary>

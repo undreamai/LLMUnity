@@ -322,7 +322,6 @@ namespace HuggingFace.SharpTransformers.Decoders
     class DecoderSequence : Decoder_
     {
         public List<Decoder_> Decoders;
-        public JObject Config;
 
         public DecoderSequence(JObject config) : base(config)
         {
@@ -354,7 +353,7 @@ namespace HuggingFace.SharpTransformers.Decoders
         /// </summary>
         /// <param name="tokens"></param>
         /// <returns></returns>
-        public List<string> DecodeChain(List<string> tokens)
+        public new List<string> DecodeChain(List<string> tokens)
         {
             return this.Decoders.Aggregate(tokens, (currentTokens, decoder) => decoder.DecodeChain(currentTokens));
         }
