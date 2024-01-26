@@ -14,7 +14,7 @@ using HuggingFace.SharpTransformers.Tokenizers;
 using HuggingFace.SharpTransformers.PostProcessors;
 using System.IO;
 
-public class EmbeddingModel : MonoBehaviour
+public class EmbeddingModel
 {
     Model runtimeModel;
     IWorker worker;
