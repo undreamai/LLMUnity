@@ -233,7 +233,7 @@ namespace LLMUnity
                 string grammarPath = GetAssetPath(grammarFile);
                 if (!File.Exists(grammarPath)) throw new System.Exception($"File {grammarPath} not found!");
 
-                grammar = File.ReadAllText(grammarFile);
+                grammar = File.ReadAllText(GetAssetPath(grammarFile));
             }
 
             int slots = parallelPrompts == -1 ? FindObjectsOfType<LLMClient>().Length : parallelPrompts;
