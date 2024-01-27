@@ -1,8 +1,9 @@
 using System;
 
-namespace Cloud.Unum.USearch;
-
-public class USearchException : Exception
+namespace Cloud.Unum.USearch
 {
-    public USearchException(string message) : base(message) { }
+    public class USearchException : Exception
+    {
+        public USearchException(string message) : base(message) {}
+    }
 }
