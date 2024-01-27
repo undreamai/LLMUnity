@@ -1,5 +1,7 @@
 using System;
+using System.IO;
 using System.Runtime.InteropServices;
+using System.Runtime.Serialization.Formatters.Binary;
 using static Cloud.Unum.USearch.NativeMethods;
 
 namespace Cloud.Unum.USearch
@@ -9,6 +11,7 @@ namespace Cloud.Unum.USearch
         private IntPtr _index;
         private bool _disposedValue = false;
         private ulong _cachedDimensions;
+        private IndexOptions _initOptions;
 
         public USearchIndex(
             MetricKind metricKind,
@@ -18,7 +21,7 @@ namespace Cloud.Unum.USearch
             ulong expansionAdd = 0,
             ulong expansionSearch = 0,
             bool multi = false
-        //CustomDistanceFunction? customMetric = null
+                //CustomDistanceFunction? customMetric = null
         )
         {
             IndexOptions initOptions = new()
@@ -32,27 +35,20 @@ namespace Cloud.Unum.USearch
                 expansion_search = expansionSearch,
                 multi = multi
             };
-
-            this._index = usearch_init(ref initOptions, out IntPtr error);
-            HandleError(error);
-            this._cachedDimensions = dimensions;
+            Init(initOptions);
         }
 
         public USearchIndex(IndexOptions options)
         {
-            this._index = usearch_init(ref options, out IntPtr error);
-            HandleError(error);
-            this._cachedDimensions = options.dimensions;
+            Init(options);
         }
 
         public USearchIndex(string path, bool view = false)
         {
-            IndexOptions initOptions = new();
-            usearch_metadata(path, ref initOptions, out IntPtr error);
-            HandleError(error);
-            this._index = usearch_init(ref initOptions, out error);
-            HandleError(error);
+            IndexOptions initOptions = LoadIndexOptions(path + ".index_options");
+            Init(initOptions);
 
+            IntPtr error;
             if (view)
             {
                 usearch_view(this._index, path, out error);
@@ -61,16 +57,56 @@ namespace Cloud.Unum.USearch
             {
                 usearch_load(this._index, path, out error);
             }
-
             HandleError(error);
+        }
 
-            this._cachedDimensions = this.Dimensions();
+        public void Init(IndexOptions options)
+        {
+            _initOptions = options;
+            this._index = usearch_init(ref options, out IntPtr error);
+            HandleError(error);
+            this._cachedDimensions = options.dimensions;
         }
 
         public void Save(string path)
         {
             usearch_save(this._index, path, out IntPtr error);
             HandleError(error);
+            SaveIndexOptions(path + ".index_options");
+        }
+
+        public void SaveIndexOptions(string path)
+        {
+            try
+            {
+                using (FileStream fileStream = new FileStream(path, FileMode.Create))
+                {
+                    BinaryFormatter formatter = new BinaryFormatter();
+                    formatter.Serialize(fileStream, _initOptions);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error serializing struct: {ex.Message}");
+            }
+        }
+
+        public IndexOptions LoadIndexOptions(string path)
+        {
+            IndexOptions initOptions = default;
+            try
+            {
+                using (FileStream fileStream = new FileStream(path, FileMode.Open))
+                {
+                    BinaryFormatter formatter = new BinaryFormatter();
+                    initOptions = (IndexOptions)formatter.Deserialize(fileStream);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error deserializing struct: {ex.Message}");
+            }
+            return initOptions;
         }
 
         public ulong Size()

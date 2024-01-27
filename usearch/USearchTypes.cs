@@ -33,6 +33,7 @@ namespace Cloud.Unum.USearch
     // 2) https://learn.microsoft.com/en-us/dotnet/framework/interop/marshalling-a-delegate-as-a-callback-method
     // public delegate float CustomMetricFunction(IntPtr a, IntPtr b);
 
+    [Serializable]
     [StructLayout(LayoutKind.Sequential)]
     public struct IndexOptions
     {
