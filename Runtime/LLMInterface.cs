@@ -13,6 +13,7 @@ namespace LLMUnity
         public float top_p;
         public int n_predict;
         public int n_keep;
+        public string grammar;
         public bool stream;
         public int seed;
         public bool cache_prompt;
