@@ -48,7 +48,9 @@ namespace Cloud.Unum.USearch
         public USearchIndex(string path, bool view = false)
         {
             IndexOptions initOptions = new();
-            this._index = usearch_init(ref initOptions, out IntPtr error);
+            usearch_metadata(path, ref initOptions, out IntPtr error);
+            HandleError(error);
+            this._index = usearch_init(ref initOptions, out error);
             HandleError(error);
 
             if (view)
@@ -317,7 +319,5 @@ namespace Cloud.Unum.USearch
         }
 
         ~USearchIndex() => this.Dispose(false);
-
-
     }
 }
