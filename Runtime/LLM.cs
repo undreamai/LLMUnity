@@ -24,6 +24,7 @@ namespace LLMUnity
         [Model] public string lora = "";
         [ModelAdvanced] public int contextSize = 512;
         [ModelAdvanced] public int batchSize = 512;
+        [ModelAdvanced] public string grammarFile = "";
 
         [HideInInspector] public string modelUrl = "https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.2-GGUF/resolve/main/mistral-7b-instruct-v0.2.Q4_K_M.gguf?download=true";
         private static readonly string serverZipUrl = "https://github.com/Mozilla-Ocho/llamafile/releases/download/0.6/llamafile-0.6.zip";
@@ -225,6 +226,14 @@ namespace LLMUnity
             {
                 loraPath = GetAssetPath(lora);
                 if (!File.Exists(loraPath)) throw new System.Exception($"File {loraPath} not found!");
+            }
+
+            if (grammarFile != "")
+            {
+                string grammarPath = GetAssetPath(grammarFile);
+                if (!File.Exists(grammarPath)) throw new System.Exception($"File {grammarPath} not found!");
+
+                grammar = File.ReadAllText(GetAssetPath(grammarFile));
             }
 
             int slots = parallelPrompts == -1 ? FindObjectsOfType<LLMClient>().Length : parallelPrompts;

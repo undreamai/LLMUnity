@@ -27,6 +27,7 @@ namespace LLMUnity
         [ModelAdvanced] public int topK = 40;
         [ModelAdvanced] public float topP = 0.9f;
         [ModelAdvanced] public int nPredict = 256;
+        [ModelAdvanced] public string grammar;
 
         [Chat] public string playerName = "Human";
         [Chat] public string AIName = "Assistant";
@@ -36,6 +37,7 @@ namespace LLMUnity
 
         private string currentPrompt;
         private List<ChatMessage> chat;
+
 
         private List<(string, string)> requestHeaders;
 
@@ -85,6 +87,7 @@ namespace LLMUnity
             chatRequest.n_keep = nKeep;
             chatRequest.stream = stream;
             chatRequest.cache_prompt = true;
+            chatRequest.grammar = grammar;
             if (seed != -1)
             {
                 chatRequest.seed = seed;
