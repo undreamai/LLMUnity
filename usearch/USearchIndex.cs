@@ -1,7 +1,9 @@
 using System;
 using System.IO;
+using System.IO.Compression;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization.Formatters.Binary;
+using UnityEngine;
 using static Cloud.Unum.USearch.NativeMethods;
 
 namespace Cloud.Unum.USearch
@@ -11,24 +13,23 @@ namespace Cloud.Unum.USearch
         private IntPtr _index;
         private bool _disposedValue = false;
         private ulong _cachedDimensions;
-        private IndexOptions _initOptions;
+        private IndexOptions _indexOptions;
+
 
         public USearchIndex(
-            MetricKind metricKind,
-            ScalarKind quantization,
             ulong dimensions,
-            ulong connectivity = 0,
-            ulong expansionAdd = 0,
-            ulong expansionSearch = 0,
+            MetricKind metricKind = MetricKind.Cos,
+            ulong connectivity = 32,
+            ulong expansionAdd = 40,
+            ulong expansionSearch = 16,
             bool multi = false
-                //CustomDistanceFunction? customMetric = null
         )
         {
             IndexOptions initOptions = new()
             {
                 metric_kind = metricKind,
                 metric = default,
-                quantization = quantization,
+                quantization = ScalarKind.Float32,
                 dimensions = dimensions,
                 connectivity = connectivity,
                 expansion_add = expansionAdd,
@@ -38,41 +39,112 @@ namespace Cloud.Unum.USearch
             Init(initOptions);
         }
 
-        public USearchIndex(IndexOptions options)
+        public USearchIndex(string path, string name = "")
         {
-            Init(options);
-        }
-
-        public USearchIndex(string path, bool view = false)
-        {
-            IndexOptions initOptions = LoadIndexOptions(path + ".index_options");
-            Init(initOptions);
-
-            IntPtr error;
-            if (view)
-            {
-                usearch_view(this._index, path, out error);
-            }
-            else
-            {
-                usearch_load(this._index, path, out error);
-            }
-            HandleError(error);
+            Load(path);
         }
 
         public void Init(IndexOptions options)
         {
-            _initOptions = options;
+            _indexOptions = options;
             this._index = usearch_init(ref options, out IntPtr error);
             HandleError(error);
             this._cachedDimensions = options.dimensions;
         }
 
-        public void Save(string path)
+        private static string GetIndexFilename(string name = "")
         {
-            usearch_save(this._index, path, out IntPtr error);
+            return name == "" ? "index" : name + ".index";
+        }
+
+        private static string GetIndexOptionsFilename(string name = "")
+        {
+            return name == "" ? "indexOptions" : name + ".indexOptions";
+        }
+
+        private void Load(string path, string name = "")
+        {
+            try
+            {
+                using (FileStream zipFileStream = new FileStream(path, FileMode.Open))
+                using (ZipArchive zipArchive = new ZipArchive(zipFileStream, ZipArchiveMode.Read))
+                {
+                    var entry = zipArchive.GetEntry(GetIndexOptionsFilename(name));
+                    using (Stream fileStream = entry.Open())
+                    {
+                        LoadIndexOptions(fileStream);
+                    }
+
+                    entry = zipArchive.GetEntry(GetIndexFilename(name));
+                    using (Stream entryStream = entry.Open())
+                    using (MemoryStream memoryStream = new MemoryStream())
+                    {
+                        entryStream.CopyTo(memoryStream);
+                        // Access the length and create a buffer
+                        byte[] managedBuffer = new byte[memoryStream.Length];
+                        memoryStream.Position = 0;  // Reset the position to the beginning
+                        memoryStream.Read(managedBuffer, 0, managedBuffer.Length);
+
+                        GCHandle handle = GCHandle.Alloc(managedBuffer, GCHandleType.Pinned);
+                        try
+                        {
+                            IntPtr unmanagedBuffer = handle.AddrOfPinnedObject();
+                            usearch_load_buffer(_index, unmanagedBuffer, (UIntPtr)managedBuffer.Length, out IntPtr error);
+                            HandleError(error);
+                        }
+                        finally
+                        {
+                            handle.Free();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"Error loading the search index: {ex.Message}");
+            }
+        }
+
+        public void Save(string path, string name = "", FileMode mode = FileMode.Create)
+        {
+            string indexPath = path + GetIndexFilename(name);
+            string indexOptionsPath = path + GetIndexOptionsFilename(name);
+            usearch_save(_index, indexPath, out IntPtr error);
             HandleError(error);
-            SaveIndexOptions(path + ".index_options");
+            SaveIndexOptions(indexOptionsPath);
+            try
+            {
+                using (FileStream zipFileStream = new FileStream(path, mode))
+                using (ZipArchive zipArchive = new ZipArchive(zipFileStream, ZipArchiveMode.Create))
+                {
+                    zipArchive.CreateEntryFromFile(indexPath, GetIndexFilename(name));
+                    zipArchive.CreateEntryFromFile(indexOptionsPath, GetIndexOptionsFilename(name));
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"Error adding file to the zip archive: {ex.Message}");
+            }
+            File.Delete(indexPath);
+            File.Delete(indexOptionsPath);
+        }
+
+        public IndexOptions GetIndexOptions()
+        {
+            return _indexOptions;
+        }
+
+        public void SaveIndexOptions(Stream fileStream)
+        {
+            BinaryFormatter formatter = new BinaryFormatter();
+            formatter.Serialize(fileStream, _indexOptions);
+        }
+
+        public void LoadIndexOptions(Stream fileStream)
+        {
+            BinaryFormatter formatter = new BinaryFormatter();
+            IndexOptions indexOptions = (IndexOptions)formatter.Deserialize(fileStream);
+            Init(indexOptions);
         }
 
         public void SaveIndexOptions(string path)
@@ -81,8 +153,7 @@ namespace Cloud.Unum.USearch
             {
                 using (FileStream fileStream = new FileStream(path, FileMode.Create))
                 {
-                    BinaryFormatter formatter = new BinaryFormatter();
-                    formatter.Serialize(fileStream, _initOptions);
+                    SaveIndexOptions(fileStream);
                 }
             }
             catch (Exception ex)
@@ -91,22 +162,19 @@ namespace Cloud.Unum.USearch
             }
         }
 
-        public IndexOptions LoadIndexOptions(string path)
+        public void LoadIndexOptions(string path)
         {
-            IndexOptions initOptions = default;
             try
             {
                 using (FileStream fileStream = new FileStream(path, FileMode.Open))
                 {
-                    BinaryFormatter formatter = new BinaryFormatter();
-                    initOptions = (IndexOptions)formatter.Deserialize(fileStream);
+                    LoadIndexOptions(fileStream);
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error deserializing struct: {ex.Message}");
             }
-            return initOptions;
         }
 
         public ulong Size()
