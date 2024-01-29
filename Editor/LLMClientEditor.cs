@@ -3,7 +3,6 @@ using UnityEditor;
 using UnityEngine;
 using System.Reflection;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace LLMUnity
 {
@@ -13,11 +12,15 @@ namespace LLMUnity
         protected int buttonWidth = 150;
         Type[] orderedTypes = new Type[] { typeof(LLM), typeof(LLMClient) };
 
+        public void Space()
+        {
+            EditorGUILayout.Space((int)EditorGUIUtility.singleLineHeight / 2);
+        }
+
         public void AddScript(SerializedObject llmScriptSO)
         {
             var scriptProp = llmScriptSO.FindProperty("m_Script");
             EditorGUILayout.PropertyField(scriptProp);
-            EditorGUILayout.Space((int)EditorGUIUtility.singleLineHeight / 2);
         }
 
         public void AddAdvancedOptionsToggle(SerializedObject llmScriptSO)
@@ -31,22 +34,58 @@ namespace LLMUnity
             {
                 advancedOptionsProp.boolValue = !advancedOptionsProp.boolValue;
             }
-            EditorGUILayout.Space();
+            Space();
         }
 
         public void AddServerSettings(SerializedObject llmScriptSO)
         {
-            ShowPropertiesOfClass("Server Settings", llmScriptSO, orderedTypes, typeof(ServerAttribute), typeof(ServerAdvancedAttribute), true);
+            List<Type> attributeClasses = new List<Type> { typeof(ServerAttribute) };
+            if (llmScriptSO.FindProperty("advancedOptions").boolValue) attributeClasses.Add(typeof(ServerAdvancedAttribute));
+            ShowPropertiesOfClass("Server Settings", llmScriptSO, orderedTypes, attributeClasses, true);
         }
 
-        public void AddModelSettings(SerializedObject llmScriptSO, bool showHeader = true)
+        public void AddModelAddonLoaders(SerializedObject llmScriptSO, LLMClient llmScript, bool layout = true)
         {
-            ShowPropertiesOfClass(showHeader ? "Model Settings" : "", llmScriptSO, orderedTypes, typeof(ModelAttribute), typeof(ModelAdvancedAttribute), true);
+            if (llmScriptSO.FindProperty("advancedOptions").boolValue)
+            {
+                if (layout) EditorGUILayout.BeginHorizontal();
+                if (GUILayout.Button("Load grammar", GUILayout.Width(buttonWidth)))
+                {
+                    EditorApplication.delayCall += () =>
+                    {
+                        string path = EditorUtility.OpenFilePanelWithFilters("Select a gbnf grammar file", "", new string[] { "Grammar Files", "gbnf" });
+                        if (!string.IsNullOrEmpty(path))
+                        {
+                            llmScript.SetGrammar(path);
+                        }
+                    };
+                }
+                if (layout) EditorGUILayout.EndHorizontal();
+            }
+        }
+
+        public void AddModelSettings(SerializedObject llmScriptSO)
+        {
+            List<Type> attributeClasses = new List<Type> { typeof(ModelAttribute), typeof(ModelAddonAttribute) };
+            if (llmScriptSO.FindProperty("advancedOptions").boolValue)
+            {
+                attributeClasses.Add(typeof(ModelAddonAdvancedAttribute));
+                attributeClasses.Add(typeof(ModelAdvancedAttribute));
+            }
+            ShowPropertiesOfClass("", llmScriptSO, orderedTypes, attributeClasses, true);
+        }
+
+        public void AddModelLoadersSettings(SerializedObject llmScriptSO, LLMClient llmScript)
+        {
+            if (!llmScriptSO.FindProperty("advancedOptions").boolValue) return; // at the moment we only have advanced parameters here
+            EditorGUILayout.LabelField("Model Settings", EditorStyles.boldLabel);
+            AddModelAddonLoaders(llmScriptSO, llmScript);
+            AddModelSettings(llmScriptSO);
         }
 
         public void AddChatSettings(SerializedObject llmScriptSO)
         {
-            ShowPropertiesOfClass("Chat Settings", llmScriptSO, orderedTypes, typeof(ChatAttribute), null, false);
+            ShowPropertiesOfClass("Chat Settings", llmScriptSO, orderedTypes, new List<Type> { typeof(ChatAttribute) }, false);
         }
 
         public override void OnInspectorGUI()
@@ -61,7 +100,7 @@ namespace LLMUnity
             EditorGUI.BeginChangeCheck();
             AddAdvancedOptionsToggle(llmScriptSO);
             AddServerSettings(llmScriptSO);
-            AddModelSettings(llmScriptSO);
+            AddModelLoadersSettings(llmScriptSO, llmScript);
             AddChatSettings(llmScriptSO);
             EditorGUI.EndChangeCheck();
             if (EditorGUI.EndChangeCheck())
@@ -70,13 +109,10 @@ namespace LLMUnity
             llmScriptSO.ApplyModifiedProperties();
         }
 
-        public List<SerializedProperty> GetPropertiesOfClass(SerializedObject so, Type[] targetClasses, Type attributeClass = null, Type attributeAdvancedClass = null)
+        public List<SerializedProperty> GetPropertiesOfClass(SerializedObject so, Type[] targetClasses, List<Type> attributeClasses)
         {
             // display a property if it belongs to a certain class and/or has a specific attribute class
             List<SerializedProperty> properties = new List<SerializedProperty>();
-            List<Type> attributeClasses = new List<Type> { attributeClass };
-            if (so.FindProperty("advancedOptions").boolValue)
-                attributeClasses.Add(attributeAdvancedClass);
             foreach (Type attrClass in attributeClasses)
             {
                 if (attrClass == null) continue;
@@ -97,14 +133,14 @@ namespace LLMUnity
             return properties;
         }
 
-        public void ShowPropertiesOfClass(string title, SerializedObject so, Type[] targetClasses, Type attributeClass = null, Type attributeAdvancedClass = null, bool addSpace = true)
+        public void ShowPropertiesOfClass(string title, SerializedObject so, Type[] targetClasses, List<Type> attributeClasses, bool addSpace = true)
         {
             // display a property if it belongs to a certain class and/or has a specific attribute class
-            List<SerializedProperty> properties = GetPropertiesOfClass(so, targetClasses, attributeClass, attributeAdvancedClass);
+            List<SerializedProperty> properties = GetPropertiesOfClass(so, targetClasses, attributeClasses);
             if (properties.Count == 0) return;
             if (title != "") EditorGUILayout.LabelField(title, EditorStyles.boldLabel);
             foreach (SerializedProperty prop in properties) EditorGUILayout.PropertyField(prop);
-            if (addSpace) EditorGUILayout.Space(EditorGUIUtility.singleLineHeight);
+            if (addSpace) Space();
         }
 
         public bool PropertyInClass(SerializedProperty prop, Type targetClass, Type attributeClass = null)
