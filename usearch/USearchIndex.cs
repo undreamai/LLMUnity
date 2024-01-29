@@ -41,7 +41,7 @@ namespace Cloud.Unum.USearch
 
         public USearchIndex(string path, string name = "")
         {
-            Load(path);
+            Load(path, name);
         }
 
         public void Init(IndexOptions options)
