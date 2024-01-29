@@ -1,17 +1,20 @@
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
 
 namespace LLMUnity
 {
-    public class ClientAttribute : PropertyAttribute { }
-    public class ServerAttribute : PropertyAttribute { }
-    public class ModelAttribute : PropertyAttribute { }
-    public class ChatAttribute : PropertyAttribute { }
-    public class ClientAdvancedAttribute : PropertyAttribute { }
-    public class ServerAdvancedAttribute : PropertyAttribute { }
-    public class ModelAdvancedAttribute : PropertyAttribute { }
+    public class ClientAttribute : PropertyAttribute {}
+    public class ServerAttribute : PropertyAttribute {}
+    public class ModelAttribute : PropertyAttribute {}
+    public class ModelAddonAttribute : PropertyAttribute {}
+    public class ChatAttribute : PropertyAttribute {}
+    public class ClientAdvancedAttribute : PropertyAttribute {}
+    public class ServerAdvancedAttribute : PropertyAttribute {}
+    public class ModelAdvancedAttribute : PropertyAttribute {}
+    public class ModelAddonAdvancedAttribute : PropertyAttribute {}
 
     [DefaultExecutionOrder(-1)]
     public class LLMClient : MonoBehaviour
@@ -22,19 +25,19 @@ namespace LLMUnity
         [ServerAdvanced] public int port = 13333;
         [Server] public bool stream = true;
 
+        [ModelAddonAdvanced] public string grammar;
         [ModelAdvanced] public int seed = 0;
         [ModelAdvanced] public float temperature = 0.2f;
         [ModelAdvanced] public int topK = 40;
         [ModelAdvanced] public float topP = 0.9f;
         [ModelAdvanced] public int nPredict = 256;
-        [ModelAdvanced] public string grammar;
 
         [Chat] public string playerName = "Human";
         [Chat] public string AIName = "Assistant";
         [TextArea(5, 10), Chat] public string prompt = "A chat between a curious human and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the human's questions.";
 
         private int nKeep = -1;
-
+        private string grammarString;
         private string currentPrompt;
         private List<ChatMessage> chat;
 
@@ -54,6 +57,18 @@ namespace LLMUnity
             // initialise the prompt and set the keep tokens based on its length
             currentPrompt = prompt;
             await Tokenize(prompt, SetNKeep);
+        }
+
+        protected static string GetAssetPath(string relPath = "")
+        {
+            // Path to store llm server binaries and models
+            return Path.Combine(Application.streamingAssetsPath, relPath).Replace('\\', '/');
+        }
+
+        public async void SetGrammar(string path)
+        {
+            grammar = await LLMUnitySetup.AddAsset(path, GetAssetPath());
+            grammarString = File.ReadAllText(grammar);
         }
 
         private string RoleString(string role)
@@ -87,11 +102,9 @@ namespace LLMUnity
             chatRequest.n_keep = nKeep;
             chatRequest.stream = stream;
             chatRequest.cache_prompt = true;
-            chatRequest.grammar = grammar;
+            chatRequest.grammar = grammarString;
             if (seed != -1)
-            {
                 chatRequest.seed = seed;
-            }
             chatRequest.stop = new List<string> { RoleString(playerName), playerName + ":" };
             return chatRequest;
         }
