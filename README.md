@@ -6,7 +6,7 @@
 <h3 align="center">Integrate LLM models in Unity!</h3>
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-<a href="https://discord.gg/tZRGntma"><img src="https://discordapp.com/api/guilds/1194779009284841552/widget.png?style=shield"/></a>
+<a href="https://discord.gg/RwXKQb6zdv"><img src="https://discordapp.com/api/guilds/1194779009284841552/widget.png?style=shield"/></a>
 [![Reddit](https://img.shields.io/badge/Reddit-%23FF4500.svg?style=flat&logo=Reddit&logoColor=white)](https://www.reddit.com/user/UndreamAI)
 [![X (formerly Twitter) URL](https://img.shields.io/twitter/url?url=https%3A%2F%2Ftwitter.com%2FUndreamAI&style=social)](https://twitter.com/UndreamAI)
 
@@ -40,7 +40,7 @@ LLMUnity is built on top of the awesome [llama.cpp](https://github.com/ggerganov
 :vertical_traffic_light: [Upcoming Releases](https://github.com/orgs/undreamai/projects/2/views/10)
 
 ## How to help
-- Join us at [Discord](https://discord.gg/tZRGntma) and say hi!
+- Join us at [Discord](https://discord.gg/RwXKQb6zdv) and say hi!
 - ⭐ Star the repo and spread the word about the project!
 - Submit feature requests or bugs as [issues](https://github.com/undreamai/LLMUnity/issues) or even submit a PR and become a collaborator!
 
