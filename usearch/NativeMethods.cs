@@ -26,7 +26,13 @@ namespace Cloud.Unum.USearch
         public static extern void usearch_load(usearch_index_t index, [MarshalAs(UnmanagedType.LPStr)] string path, out usearch_error_t error);
 
         [DllImport(LibraryName, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void usearch_load_buffer(usearch_index_t index, void_ptr_t buffer, size_t length, out usearch_error_t error);
+
+        [DllImport(LibraryName, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public static extern void usearch_view(usearch_index_t index, [MarshalAs(UnmanagedType.LPStr)] string path, out usearch_error_t error);
+
+        [DllImport(LibraryName, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void usearch_view_buffer(usearch_index_t index, void_ptr_t buffer, size_t length, out usearch_error_t error);
 
         [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl)]
         public static extern size_t usearch_size(usearch_index_t index, out usearch_error_t error);
