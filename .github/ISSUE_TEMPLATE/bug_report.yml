@@ -6,7 +6,7 @@ body:
     attributes:
       value: |
         Thanks for taking the time to issue this bug!
-        If you would like to ask us something, you can also reach us on [Discord](https://discord.gg/tZRGntma).
+        If you would like to ask us something, you can also reach us on [Discord](https://discord.gg/RwXKQb6zdv).
   - type: textarea
     id: what
     attributes:
