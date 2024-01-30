@@ -28,11 +28,11 @@ namespace LLMUnity
 
         [ModelAddonAdvanced] public string grammar = null;
         [ModelAdvanced] public int seed = 0;
+        [ModelAdvanced] public int nPredict = 256;
         [ModelAdvanced] public float temperature = 0.2f;
         [ModelAdvanced] public int topK = 40;
         [ModelAdvanced] public float topP = 0.9f;
         [ModelAdvanced] public float minP = 0.05f;
-        [ModelAdvanced] public int nPredict = 256;
         [ModelAdvanced] public float repeatPenalty = 1.1f;
         [ModelAdvanced] public float presencePenalty = 0f;
         [ModelAdvanced] public float frequencyPenalty = 0f;
