@@ -80,8 +80,8 @@ namespace LLMUnity
             AddServerSettings(llmScriptSO);
             GUI.enabled = LLM.binariesProgress == 1 && llmScript.modelProgress == 1 && llmScript.modelCopyProgress == 1;
             AddModelLoadersSettings(llmScriptSO, llmScript);
-            AddChatSettings(llmScriptSO);
             GUI.enabled = true;
+            AddChatSettings(llmScriptSO);
 
             EditorGUI.EndChangeCheck();
             if (EditorGUI.EndChangeCheck())
