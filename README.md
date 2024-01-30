@@ -8,7 +8,6 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 <a href="https://discord.gg/RwXKQb6zdv"><img src="https://discordapp.com/api/guilds/1194779009284841552/widget.png?style=shield"/></a>
 [![Reddit](https://img.shields.io/badge/Reddit-%23FF4500.svg?style=flat&logo=Reddit&logoColor=white)](https://www.reddit.com/user/UndreamAI)
-[![X (formerly Twitter) URL](https://img.shields.io/twitter/url?url=https%3A%2F%2Ftwitter.com%2FUndreamAI&style=social)](https://twitter.com/UndreamAI)
 
 
 LLMUnity allows to integrate, run and deploy LLMs (Large Language Models) in the Unity engine.<br>
@@ -185,7 +184,7 @@ public class MyScript : MonoBehaviour
         // Add and setup a LLM object
         gameObject.SetActive(false);
         llm = gameObject.AddComponent<LLM>();
-        await llm.SetModel("mistral-7b-instruct-v0.1.Q4_K_M.gguf");
+        await llm.SetModel("mistral-7b-instruct-v0.2.Q4_K_M.gguf");
         llm.prompt = "A chat between a curious human and an artificial intelligence assistant.";
         gameObject.SetActive(true);
         // or a LLMClient object
@@ -220,6 +219,7 @@ Save the scene, run and enjoy!
 
 
 ## Use your own model
+LLMUnity uses the Mistral 7B Instruct model by default, quantised with the Q4 method ([link](https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.2-GGUF/resolve/main/mistral-7b-instruct-v0.2.Q4_K_M.gguf?download=true)).<br>
 Alternative models can be downloaded from [HuggingFace](https://huggingface.co/models).<br>
 The required model format is .gguf as defined by the llama.cpp.<br>
 The easiest way is to download gguf models directly by [TheBloke](https://huggingface.co/TheBloke) who has converted an astonishing number of models :rainbow:!<br>
@@ -252,29 +252,59 @@ The server can be either a LLMUnity server or a standard [llama.cpp server](http
 
 - `Num Threads` number of threads to use (default: -1 = all)
 - `Num GPU Layers` number of model layers to offload to the GPU.
-If set to 0 the GPU is not used. Use a large number i.e. >30 to utilise the GPU as much as possible.<br>
+If set to 0 the GPU is not used. Use a large number i.e. >30 to utilise the GPU as much as possible.
 If the user's GPU is not supported, the LLM will fall back to the CPU
 - `Stream` select to receive the reply from the model as it is produced (recommended!).<br>
 If it is not selected, the full reply from the model is received in one go
-- Advanced options:
+- <details><summary>Advanced options</summary>
+
   - `Parallel Prompts` number of prompts that can happen in parallel (default: -1 = number of LLM/LLMClient objects)
   - `Debug` select to log the output of the model in the Unity Editor
   - `Port` port to run the server
 
+</details>
+
 #### :hugs: Model Settings
-- `Download model` click to download the default model (Mistral 7B Instruct)
+- `Download model` click to download the default model ([Mistral 7B Instruct](https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.2-GGUF/resolve/main/mistral-7b-instruct-v0.2.Q4_K_M.gguf?download=true))
 - `Load model` click to load your own model in .gguf format
-- `Load lora` click to load a LORA model in .bin format
 - `Model` the model being used (inside the Assets/StreamingAssets folder)
-- `Lora` the LORA model being used (inside the Assets/StreamingAssets folder)
-- Advanced options:
-  - <code>Context Size</code> Size of the prompt context (0 = context size of the model)
-  - <code>Batch Size</code> Batch size for prompt processing (default: 512)
-  - <code>Seed</code> seed for reproducibility. For random results every time select -1
+- <details><summary>Advanced options</summary>
+
+  - `Load lora` click to load a LORA model in .bin format
+  - `Load grammar` click to load a grammar in .gbnf format
+  - `Lora` the LORA model being used (inside the Assets/StreamingAssets folder)
+  - `Grammar` the grammar being used (inside the Assets/StreamingAssets folder)
+  - `Context Size` Size of the prompt context (0 = context size of the model)
+  - `Batch Size` Batch size for prompt processing (default: 512)
+  - `Seed` seed for reproducibility. For random results every time select -1
+  - <details><summary><code>Cache Prompt</code> save the ongoing prompt from the chat (default: true)</summary> Saves the prompt as it is being created by the chat to avoid reprocessing the entire prompt every time</details>
+  - <details><summary><code>Num Predict</code> number of tokens to predict (default: 256, -1 = infinity, -2 = until context filled)</summary>This is the amount of tokens the model will maximum predict. When N predict is reached the model will stop generating. This means words / sentences might not get finished if this is too low. </details>
   - <details><summary><code>Temperature</code> LLM temperature, lower values give more deterministic answers</summary>The temperature setting adjusts how random the generated responses are. Turning it up makes the generated choices more varied and unpredictable. Turning it down  makes the generated responses more predictable and focused on the most likely options.</details>
   - <details><summary><code>Top K</code> top-k sampling (default: 40, 0 = disabled)</summary>The top k value controls the top k most probable tokens at each step of generation. This value can help fine tune the output and make this adhere to specific patterns or constraints.</details>
   - <details><summary><code>Top P</code> top-p sampling (default: 0.9, 1.0 = disabled)</summary>The top p value controls the cumulative probability of generated tokens. The model will generate tokens until this theshold (p) is reached. By lowering this value you can shorten output & encourage / discourage more diverse output.</details>
-  - <details><summary><code>Num Predict</code> number of tokens to predict (default: 256, -1 = infinity, -2 = until context filled)</summary>This is the amount of tokens the model will maximum predict. When N predict is reached the model will stop generating. This means words / sentences might not get finished if this is too low.  </details>
+  - <details><summary><code>Min P</code> minimum probability for a token to be used (default: 0.05)</summary> The probability is defined relative to the probability of the most likely token.</details>
+  - <details><summary><code>Repeat Penalty</code> Control the repetition of token sequences in the generated text (default: 1.1)</summary>The penalty is applied to repeated tokens.</details>
+  - <details><summary><code>Presence Penalty</code> repeated token presence penalty (default: 0.0, 0.0 = disabled)</summary> Positive values penalize new tokens based on whether they appear in the text so far, increasing the model's likelihood to talk about new topics.</details>
+  - <details><summary><code>Frequency Penalty</code> repeated token frequency penalty (default: 0.0, 0.0 = disabled)</summary> Positive values penalize new tokens based on their existing frequency in the text so far, decreasing the model's likelihood to repeat the same line verbatim.</details>
+  - <details><summary>Expert options: Variables of LLM / LLMClient objects that can be modified only by code</summary>
+
+    - `n_keep`: Number of tokens to retain from the prompt when the context size is exceeded (default: intial prompt)
+    - `stop`: stopwords to stop the token generation from the LLM
+    - `tfs_z`: Enable tail free sampling with parameter z (default: 1.0, 1.0 = disabled).
+    - `typical_p`: Enable locally typical sampling with parameter p (default: 1.0, 1.0 = disabled).
+    - `repeat_last_n`: Last n tokens to consider for penalizing repetition (default: 64, 0 = disabled, -1 = ctx-size).
+    - `penalize_nl`: Penalize newline tokens when applying the repeat penalty (default: true).
+    - `penalty_prompt`: Prompt for the purpose of the penalty evaluation. Can be either `null`, a string or an array of numbers representing tokens (default: `null` = use original `prompt`).
+    - `mirostat`: Enable Mirostat sampling, controlling perplexity during text generation (default: 0, 0 = disabled, 1 = Mirostat, 2 = Mirostat 2.0).
+    - `mirostat_tau`: Set the Mirostat target entropy, parameter tau (default: 5.0).
+    - `mirostat_eta`: Set the Mirostat learning rate, parameter eta (default: 0.1).
+    - `ignore_eos`: Ignore end of stream token and continue generating (default: false).
+    - `n_probs`: If greater than 0, the response also contains the probabilities of top N tokens for each generated token (default: 0)
+    - <details><summary><code>logit_bias</code> Modify the likelihood of a token appearing in the generated text completion</summary>. For example, use [[15043,1.0]] to increase the likelihood of the token 'Hello', or [[15043,-1.0]]` to decrease its likelihood. Setting the value to false, [[15043,false]] ensures that the token `Hello` is never produced (default: []).</details>
+
+    </details>
+
+</details>
 
 #### :left_speech_bubble: Chat Settings
 - `Player Name` the name of the player
