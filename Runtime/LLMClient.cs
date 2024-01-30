@@ -28,7 +28,8 @@ namespace LLMUnity
 
         [ModelAddonAdvanced] public string grammar = null;
         [ModelAdvanced] public int seed = 0;
-        [ModelAdvanced] public int nPredict = 256;
+        [ModelAdvanced] public int numPredict = 256;
+        [ModelAdvanced] public bool cachePrompt = true;
         [ModelAdvanced] public float temperature = 0.2f;
         [ModelAdvanced] public int topK = 40;
         [ModelAdvanced] public float topP = 0.9f;
@@ -37,6 +38,7 @@ namespace LLMUnity
         [ModelAdvanced] public float presencePenalty = 0f;
         [ModelAdvanced] public float frequencyPenalty = 0f;
 
+        public int? nKeep = null;
         public List<string> stop = null;
         public float? tfsZ = null;
         public float? typicalP = null;
@@ -49,9 +51,7 @@ namespace LLMUnity
         public bool? ignoreEos = null;
         public Dictionary<int, string> logitBias = null;
         public int? nProbs = null;
-        public int? nKeep = null;
         public string grammarString;
-        public bool cachePrompt = true;
 
         [Chat] public string playerName = "Human";
         [Chat] public string AIName = "Assistant";
@@ -148,7 +148,7 @@ namespace LLMUnity
             chatRequest.top_k = topK;
             chatRequest.top_p = topP;
             chatRequest.min_p = minP;
-            chatRequest.n_predict = nPredict;
+            chatRequest.n_predict = numPredict;
             chatRequest.n_keep = nKeep;
             chatRequest.stream = stream;
             chatRequest.stop = stop;
