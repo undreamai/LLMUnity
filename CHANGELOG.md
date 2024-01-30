@@ -1,3 +1,9 @@
+## v1.0.5
+#### 🚀 Features
+
+- Expose new llama.cpp arguments (PR: #60)
+
+
 ## v1.0.4
 #### 🐛 Fixes
 
