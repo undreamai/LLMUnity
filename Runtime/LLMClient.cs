@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
+using Newtonsoft.Json;
 
 namespace LLMUnity
 {
@@ -222,7 +223,7 @@ namespace LLMUnity
             // handle a chat message by the user
             // call the callback function while the answer is received
             // call the completionCallback function when the answer is fully received
-            string json = JsonUtility.ToJson(GenerateRequest(question));
+            string json = JsonConvert.SerializeObject(GenerateRequest(question), new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
             string result;
             if (stream)
             {
