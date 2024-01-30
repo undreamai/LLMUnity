@@ -55,10 +55,7 @@ namespace LLMUnity
             ShowProgress(LLM.binariesProgress, "Setup Binaries");
             ShowProgress(llmScript.modelProgress, "Model Downloading");
             ShowProgress(llmScript.modelCopyProgress, "Model Copying");
-            if (llmScript.model != "")
-            {
-                AddModelAddonLoaders(llmScriptSO, llmScript);
-            }
+            AddModelAddonLoaders(llmScriptSO, llmScript);
             AddModelSettings(llmScriptSO);
         }
 
