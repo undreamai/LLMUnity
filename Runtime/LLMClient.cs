@@ -25,23 +25,39 @@ namespace LLMUnity
         [ServerAdvanced] public int port = 13333;
         [Server] public bool stream = true;
 
-        [ModelAddonAdvanced] public string grammar;
+        [ModelAddonAdvanced] public string grammar = null;
         [ModelAdvanced] public int seed = 0;
         [ModelAdvanced] public float temperature = 0.2f;
         [ModelAdvanced] public int topK = 40;
         [ModelAdvanced] public float topP = 0.9f;
+        [ModelAdvanced] public float minP = 0.05f;
         [ModelAdvanced] public int nPredict = 256;
+        [ModelAdvanced] public float repeatPenalty = 1.1f;
+        [ModelAdvanced] public float presencePenalty = 0f;
+        [ModelAdvanced] public float frequencyPenalty = 0f;
+
+        public List<string> stop = null;
+        public float? tfsZ = null;
+        public float? typicalP = null;
+        public int? repeatLastN = null;
+        public bool? penalizeNl = null;
+        public string penaltyPrompt;
+        public int? mirostat = null;
+        public float? mirostatTau = null;
+        public float? mirostatEta = null;
+        public bool? ignoreEos = null;
+        public Dictionary<int, string> logitBias = null;
+        public int? nProbs = null;
+        public int? nKeep = null;
+        public string grammarString;
+        public bool cachePrompt = true;
 
         [Chat] public string playerName = "Human";
         [Chat] public string AIName = "Assistant";
         [TextArea(5, 10), Chat] public string prompt = "A chat between a curious human and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the human's questions.";
 
-        private int nKeep = -1;
-        private string grammarString;
         private string currentPrompt;
         private List<ChatMessage> chat;
-
-
         private List<(string, string)> requestHeaders;
 
         public LLMClient()
@@ -56,7 +72,9 @@ namespace LLMUnity
         {
             // initialise the prompt and set the keep tokens based on its length
             currentPrompt = prompt;
-            await Tokenize(prompt, SetNKeep);
+            InitStop();
+            InitGrammar();
+            await InitNKeep();
         }
 
         protected static string GetAssetPath(string relPath = "")
@@ -65,10 +83,40 @@ namespace LLMUnity
             return Path.Combine(Application.streamingAssetsPath, relPath).Replace('\\', '/');
         }
 
+        private async Task InitNKeep()
+        {
+            if (nKeep == null)
+            {
+                await Tokenize(prompt, SetNKeep);
+            }
+        }
+
+        private void InitStop()
+        {
+            // set stopwords
+            if (stop == null || stop.Count == 0)
+            {
+                stop = new List<string> { RoleString(playerName), playerName + ":" };
+            }
+        }
+
+        private void InitGrammar()
+        {
+            if (grammar != null && grammar != "")
+            {
+                grammarString = File.ReadAllText(GetAssetPath(grammar));
+            }
+        }
+
+        private void SetNKeep(List<int> tokens)
+        {
+            // set the tokens to keep
+            nKeep = tokens.Count;
+        }
+
         public async void SetGrammar(string path)
         {
             grammar = await LLMUnitySetup.AddAsset(path, GetAssetPath());
-            grammarString = File.ReadAllText(grammar);
         }
 
         private string RoleString(string role)
@@ -98,14 +146,28 @@ namespace LLMUnity
             chatRequest.temperature = temperature;
             chatRequest.top_k = topK;
             chatRequest.top_p = topP;
+            chatRequest.min_p = minP;
             chatRequest.n_predict = nPredict;
             chatRequest.n_keep = nKeep;
             chatRequest.stream = stream;
-            chatRequest.cache_prompt = true;
-            chatRequest.grammar = grammarString;
-            if (seed != -1)
-                chatRequest.seed = seed;
-            chatRequest.stop = new List<string> { RoleString(playerName), playerName + ":" };
+            chatRequest.stop = stop;
+            chatRequest.tfs_z = tfsZ;
+            chatRequest.typical_p = typicalP;
+            chatRequest.repeat_penalty = repeatPenalty;
+            chatRequest.repeat_last_n = repeatLastN;
+            chatRequest.penalize_nl = penalizeNl;
+            chatRequest.presence_penalty = presencePenalty;
+            chatRequest.frequency_penalty = frequencyPenalty;
+            chatRequest.penalty_prompt = (penaltyPrompt != null && penaltyPrompt != "") ? penaltyPrompt : null;
+            chatRequest.mirostat = mirostat;
+            chatRequest.mirostat_tau = mirostatTau;
+            chatRequest.mirostat_eta = mirostatEta;
+            chatRequest.grammar = null;//(grammarString != null && grammarString != "") ? grammarString : null;
+            chatRequest.seed = seed;
+            chatRequest.ignore_eos = ignoreEos;
+            chatRequest.logit_bias = logitBias;
+            chatRequest.n_probs = nProbs;
+            chatRequest.cache_prompt = cachePrompt;
             return chatRequest;
         }
 
@@ -190,12 +252,6 @@ namespace LLMUnity
             tokenizeRequest.content = question;
             string json = JsonUtility.ToJson(tokenizeRequest);
             await PostRequest<TokenizeResult, List<int>>(json, "tokenize", TokenizeContent, callback);
-        }
-
-        private void SetNKeep(List<int> tokens)
-        {
-            // set the tokens to keep
-            nKeep = tokens.Count;
         }
 
         public Ret ConvertContent<Res, Ret>(string response, ContentCallback<Res, Ret> getContent = null)
