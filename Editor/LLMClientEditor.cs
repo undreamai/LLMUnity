@@ -23,10 +23,10 @@ namespace LLMUnity
             EditorGUILayout.PropertyField(scriptProp);
         }
 
-        public void AddAdvancedOptionsToggle(SerializedObject llmScriptSO)
+        public void AddOptionsToggle(SerializedObject llmScriptSO, string propertyName, string name)
         {
-            SerializedProperty advancedOptionsProp = llmScriptSO.FindProperty("advancedOptions");
-            string toggleText = (advancedOptionsProp.boolValue ? "Hide" : "Show") + " Advanced Options";
+            SerializedProperty advancedOptionsProp = llmScriptSO.FindProperty(propertyName);
+            string toggleText = (advancedOptionsProp.boolValue ? "Hide" : "Show") + " " + name;
             GUIStyle style = new GUIStyle("Button");
             if (advancedOptionsProp.boolValue)
                 style.normal = new GUIStyleState() { background = Texture2D.grayTexture };
@@ -34,6 +34,14 @@ namespace LLMUnity
             {
                 advancedOptionsProp.boolValue = !advancedOptionsProp.boolValue;
             }
+        }
+
+        public void AddOptionsToggles(SerializedObject llmScriptSO)
+        {
+            EditorGUILayout.BeginHorizontal();
+            AddOptionsToggle(llmScriptSO, "advancedOptions", "Advanced Options");
+            AddOptionsToggle(llmScriptSO, "expertOptions", "Expert Options");
+            EditorGUILayout.EndHorizontal();
             Space();
         }
 
@@ -72,6 +80,10 @@ namespace LLMUnity
                 attributeClasses.Add(typeof(ModelAddonAdvancedAttribute));
                 attributeClasses.Add(typeof(ModelAdvancedAttribute));
             }
+            if (llmScriptSO.FindProperty("expertOptions").boolValue)
+            {
+                attributeClasses.Add(typeof(ModelExpertAttribute));
+            }
             ShowPropertiesOfClass("", llmScriptSO, orderedTypes, attributeClasses, true);
         }
 
@@ -98,7 +110,7 @@ namespace LLMUnity
             AddScript(llmScriptSO);
             GUI.enabled = true;
             EditorGUI.BeginChangeCheck();
-            AddAdvancedOptionsToggle(llmScriptSO);
+            AddOptionsToggles(llmScriptSO);
             AddServerSettings(llmScriptSO);
             AddModelLoadersSettings(llmScriptSO, llmScript);
             AddChatSettings(llmScriptSO);

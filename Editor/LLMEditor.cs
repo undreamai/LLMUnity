@@ -75,7 +75,7 @@ namespace LLMUnity
             GUI.enabled = true;
 
             EditorGUI.BeginChangeCheck();
-            AddAdvancedOptionsToggle(llmScriptSO);
+            AddOptionsToggles(llmScriptSO);
             GUI.enabled = LLM.binariesProgress == 1;
             AddServerSettings(llmScriptSO);
             GUI.enabled = LLM.binariesProgress == 1 && llmScript.modelProgress == 1 && llmScript.modelCopyProgress == 1;
