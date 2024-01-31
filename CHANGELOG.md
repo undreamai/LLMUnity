@@ -2,6 +2,7 @@
 #### 🚀 Features
 
 - Expose new llama.cpp arguments (PR: #60)
+- Allow to change prompt (PR: #64)
 
 #### 🐛 Fixes
 
