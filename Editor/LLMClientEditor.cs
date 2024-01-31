@@ -139,7 +139,23 @@ namespace LLMUnity
             List<SerializedProperty> properties = GetPropertiesOfClass(so, targetClasses, attributeClasses);
             if (properties.Count == 0) return;
             if (title != "") EditorGUILayout.LabelField(title, EditorStyles.boldLabel);
-            foreach (SerializedProperty prop in properties) EditorGUILayout.PropertyField(prop);
+            foreach (SerializedProperty prop in properties)
+            {
+                Attribute floatAttr = GetPropertyAttribute(prop, typeof(FloatAttribute));
+                Attribute intAttr = GetPropertyAttribute(prop, typeof(IntAttribute));
+                if (floatAttr != null)
+                {
+                    EditorGUILayout.Slider(prop, ((FloatAttribute)floatAttr).Min, ((FloatAttribute)floatAttr).Max, new GUIContent(prop.displayName));
+                }
+                else if (intAttr != null)
+                {
+                    EditorGUILayout.IntSlider(prop, ((IntAttribute)intAttr).Min, ((IntAttribute)intAttr).Max, new GUIContent(prop.displayName));
+                }
+                else
+                {
+                    EditorGUILayout.PropertyField(prop);
+                }
+            }
             if (addSpace) Space();
         }
 
@@ -148,10 +164,10 @@ namespace LLMUnity
             // check if a property belongs to a certain class and/or has a specific attribute class
             FieldInfo field = prop.serializedObject.targetObject.GetType().GetField(prop.name,
                 BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-            return field != null && field.DeclaringType == targetClass && (attributeClass == null || AttributeInProperty(prop, attributeClass));
+            return field != null && field.DeclaringType == targetClass && (attributeClass == null || GetPropertyAttribute(prop, attributeClass) != null);
         }
 
-        public bool AttributeInProperty(SerializedProperty prop, Type attributeClass)
+        public Attribute GetPropertyAttribute(SerializedProperty prop, Type attributeClass)
         {
             // check if a property has a specific attribute class
             foreach (var pathSegment in prop.propertyPath.Split('.'))
@@ -165,13 +181,13 @@ namespace LLMUnity
                         foreach (Attribute attr in fieldInfo.GetCustomAttributes(attributeClass, true))
                         {
                             if (attr.GetType() == attributeClass)
-                                return true;
+                                return attr;
                         }
                     }
                     targetType = targetType.BaseType;
                 }
             }
-            return false;
+            return null;
         }
     }
 }
