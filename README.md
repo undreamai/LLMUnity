@@ -231,6 +231,7 @@ The server can be either a LLMUnity server or a standard [llama.cpp server](http
 ## Options
 
 - `Show/Hide Advanced Options` Toggle to show/hide advanced options from below
+- `Show/Hide Expert Options` Toggle to show/hide expert options from below
 
 #### :computer: Server Settings
 
@@ -274,21 +275,18 @@ If it is not selected, the full reply from the model is received in one go
   - <details><summary><code>Repeat Penalty</code> Control the repetition of token sequences in the generated text (default: 1.1)</summary>The penalty is applied to repeated tokens.</details>
   - <details><summary><code>Presence Penalty</code> repeated token presence penalty (default: 0.0, 0.0 = disabled)</summary> Positive values penalize new tokens based on whether they appear in the text so far, increasing the model's likelihood to talk about new topics.</details>
   - <details><summary><code>Frequency Penalty</code> repeated token frequency penalty (default: 0.0, 0.0 = disabled)</summary> Positive values penalize new tokens based on their existing frequency in the text so far, decreasing the model's likelihood to repeat the same line verbatim.</details>
-  - <details><summary>Expert options: Variables of LLM / LLMClient objects that can be modified only by code</summary>
+- <details><summary>Expert options</summary>
 
-    - `n_keep`: Number of tokens to retain from the prompt when the context size is exceeded (default: intial prompt)
-    - `stop`: stopwords to stop the token generation from the LLM
-    - `tfs_z`: Enable tail free sampling with parameter z (default: 1.0, 1.0 = disabled).
-    - `typical_p`: Enable locally typical sampling with parameter p (default: 1.0, 1.0 = disabled).
-    - `repeat_last_n`: Last n tokens to consider for penalizing repetition (default: 64, 0 = disabled, -1 = ctx-size).
-    - `penalize_nl`: Penalize newline tokens when applying the repeat penalty (default: true).
-    - `penalty_prompt`: Prompt for the purpose of the penalty evaluation. Can be either `null`, a string or an array of numbers representing tokens (default: `null` = use original `prompt`).
-    - `mirostat`: Enable Mirostat sampling, controlling perplexity during text generation (default: 0, 0 = disabled, 1 = Mirostat, 2 = Mirostat 2.0).
-    - `mirostat_tau`: Set the Mirostat target entropy, parameter tau (default: 5.0).
-    - `mirostat_eta`: Set the Mirostat learning rate, parameter eta (default: 0.1).
-    - `ignore_eos`: Ignore end of stream token and continue generating (default: false).
-    - `n_probs`: If greater than 0, the response also contains the probabilities of top N tokens for each generated token (default: 0)
-    - <details><summary><code>logit_bias</code> Modify the likelihood of a token appearing in the generated text completion</summary>. For example, use [[15043,1.0]] to increase the likelihood of the token 'Hello', or [[15043,-1.0]]` to decrease its likelihood. Setting the value to false, [[15043,false]] ensures that the token `Hello` is never produced (default: []).</details>
+  - `tfs_z`: Enable tail free sampling with parameter z (default: 1.0, 1.0 = disabled).
+  - `typical_p`: Enable locally typical sampling with parameter p (default: 1.0, 1.0 = disabled).
+  - `repeat_last_n`: Last n tokens to consider for penalizing repetition (default: 64, 0 = disabled, -1 = ctx-size).
+  - `penalize_nl`: Penalize newline tokens when applying the repeat penalty (default: true).
+  - `penalty_prompt`: Prompt for the purpose of the penalty evaluation. Can be either `null`, a string or an array of numbers representing tokens (default: `null` = use original `prompt`).
+  - `mirostat`: Enable Mirostat sampling, controlling perplexity during text generation (default: 0, 0 = disabled, 1 = Mirostat, 2 = Mirostat 2.0).
+  - `mirostat_tau`: Set the Mirostat target entropy, parameter tau (default: 5.0).
+  - `mirostat_eta`: Set the Mirostat learning rate, parameter eta (default: 0.1).
+  - `n_probs`: If greater than 0, the response also contains the probabilities of top N tokens for each generated token (default: 0)
+  - `ignore_eos`: Ignore end of stream token and continue generating (default: false).
 
     </details>
 
