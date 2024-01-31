@@ -8,12 +8,11 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 <a href="https://discord.gg/RwXKQb6zdv"><img src="https://discordapp.com/api/guilds/1194779009284841552/widget.png?style=shield"/></a>
 [![Reddit](https://img.shields.io/badge/Reddit-%23FF4500.svg?style=flat&logo=Reddit&logoColor=white)](https://www.reddit.com/user/UndreamAI)
-
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-blue?style=flat&logo=linkedin&labelColor=blue)](https://www.linkedin.com/company/undreamai)
 
 LLMUnity allows to integrate, run and deploy LLMs (Large Language Models) in the Unity engine.<br>
 LLMUnity is built on top of the awesome [llama.cpp](https://github.com/ggerganov/llama.cpp) and [llamafile](https://github.com/Mozilla-Ocho/llamafile) libraries.
 
-  
 <sub>
 <a href="#at-a-glance" style="color: black">At a glance</a>&nbsp;&nbsp;•&nbsp;
 <a href="#how-to-help" style=color: black>How to help</a>&nbsp;&nbsp;•&nbsp;
@@ -21,11 +20,11 @@ LLMUnity is built on top of the awesome [llama.cpp](https://github.com/ggerganov
 <a href="#how-to-use" style=color: black>How to use</a>&nbsp;&nbsp;•&nbsp;
 <a href="#examples" style=color: black>Examples</a>&nbsp;&nbsp;•&nbsp;
 <a href="#use-your-own-model" style=color: black>Use your own model</a>&nbsp;&nbsp;•&nbsp;
-<a href="#multiple-ai--remote-server-setup" style=color: black>Multiple AI / Remote server setup</a>&nbsp;&nbsp;•&nbsp;
+<a href="#multiple-ai--remote-server" style=color: black>Multiple AI / Remote server</a>&nbsp;&nbsp;•&nbsp;
 <a href="#options" style=color: black>Options</a>&nbsp;&nbsp;•&nbsp;
+<a href="#games-using-llmunity" style=color: black>Games using LLMUnity</a>&nbsp;&nbsp;•&nbsp;
 <a href="#license" style=color: black>License</a>
 </sub>
-
 
 ## At a glance
 - :computer: Cross-platform! Supports Windows, Linux and macOS ([supported versions](https://github.com/Mozilla-Ocho/llamafile?tab=readme-ov-file#supported-oses-and-cpus))
@@ -44,16 +43,7 @@ LLMUnity is built on top of the awesome [llama.cpp](https://github.com/ggerganov
 - Submit feature requests or bugs as [issues](https://github.com/undreamai/LLMUnity/issues) or even submit a PR and become a collaborator!
 
 ## Setup
-To install the package you can follow the typical asset / package process in Unity:<br>
-
-_Method 1: Install the asset using the asset store_
-- Open the [LLMUnity](https://assetstore.unity.com/packages/slug/273604) asset page and click `Add to My Assets`
-- Open the Package Manager: `Window > Package Manager`
-- Select the `Packages: My Assets` option from the drop-down
-- Select the `LLMUnity` package, click `Download` and then `Import`
-
-_Method 2: Install the asset using the GitHub repo:_
-- Open the Package Manager: `Window > Package Manager`
+- Open the Package Manager in Unity: `Window > Package Manager`
 - Click the `+` button and select `Add package from git URL`
 - Use the repository URL `https://github.com/undreamai/LLMUnity.git` and click `Add`
 
@@ -207,8 +197,7 @@ The [Samples~](Samples~) folder contains several examples of interaction :robot:
   
 <img width="400" src=".github/demo.gif">
 
-If you install the package as an asset, the samples will already be in the `Assets/Samples` folder.<br>
-Otherwise if you install it with the GitHub URL, to install a sample:
+To install a sample:
 - Open the Package Manager: `Window > Package Manager`
 - Select the `LLMUnity` Package. From the `Samples` Tab, click `Import` next to the sample you want to install.
 
@@ -216,7 +205,6 @@ The samples can be run with the `Scene.unity` scene they contain inside their fo
 In the scene, select the `LLM` GameObject and click the `Download Model` button to download the default model.<br>
 You can also load your own model in .gguf format with the `Load model` button (see [Use your own model](#use-your-own-model)).<br>
 Save the scene, run and enjoy!
-
 
 ## Use your own model
 LLMUnity uses the Mistral 7B Instruct model by default, quantised with the Q4 method ([link](https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.2-GGUF/resolve/main/mistral-7b-instruct-v0.2.Q4_K_M.gguf?download=true)).<br>
@@ -227,7 +215,7 @@ Otherwise other model formats can be converted to gguf with the `convert.py` scr
 
 :grey_exclamation: Before using any model make sure you **check their license** :grey_exclamation:
 
-## Multiple AI / Remote server setup
+## Multiple AI / Remote server
 LLMUnity allows to have multiple AI characters efficiently.<br>
 Each character can be implemented with a different client with its own prompt (and other parameters), and all of the clients send their requests to a single server.<br>
 This is essential as multiple server instances would require additional compute resources.<br>
@@ -310,6 +298,9 @@ If it is not selected, the full reply from the model is received in one go
 - `Player Name` the name of the player
 - `AI Name` the name of the AI
 - `Prompt` a description of the AI role
+
+## Games using LLMUnity
+- [Verbal Verdict](https://store.steampowered.com/app/2778780/Verbal_Verdict/)
 
 ## License
 The license of LLMUnity is MIT ([LICENSE.md](LICENSE.md)) and uses third-party software with MIT and Apache licenses ([Third Party Notices.md](<Third Party Notices.md>)).
