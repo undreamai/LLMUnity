@@ -71,10 +71,10 @@ namespace LLMUnity
         [ModelExpert, Float(0f, 10f)] public float mirostatTau = 5f;
         [ModelExpert, Float(0f, 1f)] public float mirostatEta = 0.1f;
         [ModelExpert, Int(0, 10)] public int nProbs = 0;
+        [ModelExpert] public bool ignoreEos = false;
 
         public int nKeep = -1;
         public List<string> stop = null;
-        public bool ignoreEos = false;
         public Dictionary<int, string> logitBias = null;
         public string grammarString;
 
