@@ -39,6 +39,7 @@ namespace LLMUnity
         [HideInInspector] public float modelCopyProgress = 1;
         private static float binariesDone = 0;
         private Process process;
+        private bool mmapCrash = false;
         public bool serverListening { get; private set; } = false;
         private ManualResetEvent serverBlock = new ManualResetEvent(false);
 
@@ -155,10 +156,14 @@ namespace LLMUnity
             else Debug.Log(message);
         }
 
-        private void DebugLogError(string message)
+        private void ProcessError(string message)
         {
             // Debug log errors if debug is enabled
             DebugLog(message, true);
+            if (message.Contains("assert(!isnan(x)) failed"))
+            {
+                mmapCrash = true;
+            }
         }
 
         private void CheckIfListening(string message)
@@ -217,7 +222,7 @@ namespace LLMUnity
                 binary = "sh";
             }
             Debug.Log($"Server command: {binary} {arguments}");
-            process = LLMUnitySetup.CreateProcess(binary, arguments, CheckIfListening, DebugLogError, ProcessExited, environment);
+            process = LLMUnitySetup.CreateProcess(binary, arguments, CheckIfListening, ProcessError, ProcessExited, environment);
         }
 
         private void StartLLMServer()
@@ -245,6 +250,15 @@ namespace LLMUnity
             LLMUnitySetup.makeExecutable(server);
             RunServerCommand(server, arguments + GPUArgument);
             serverBlock.WaitOne(60000);
+
+            if (process.HasExited && mmapCrash)
+            {
+                Debug.Log("Mmap error, fallback to no mmap use");
+                serverBlock.Reset();
+                arguments += " --no-mmap";
+                RunServerCommand(server, arguments + GPUArgument);
+                serverBlock.WaitOne(60000);
+            }
 
             if (process.HasExited && numGPULayers > 0)
             {
