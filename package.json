@@ -20,9 +20,6 @@
     "chatbot",
     "generative"
    ],
-   "dependencies": {
-    "com.unity.nuget.newtonsoft-json": "3.2.1"
-   },
    "samples": [
     {
       "displayName": "ChatBot",
