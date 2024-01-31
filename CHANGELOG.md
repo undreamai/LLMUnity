@@ -1,7 +1,13 @@
 ## v1.0.5
 #### 🚀 Features
 
+- Feature/issue template (PR: #57)
+- Feature/issue template (PR: #58)
 - Expose new llama.cpp arguments (PR: #60)
+
+#### 🐛 Fixes
+
+- Fail if port is already in use (PR: #62)
 
 
 ## v1.0.4
