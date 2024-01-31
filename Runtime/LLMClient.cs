@@ -39,11 +39,13 @@ namespace LLMUnity
     public class ServerAdvancedAttribute : PropertyAttribute {}
     public class ModelAdvancedAttribute : PropertyAttribute {}
     public class ModelAddonAdvancedAttribute : PropertyAttribute {}
+    public class ModelExpertAttribute : PropertyAttribute {}
 
     [DefaultExecutionOrder(-1)]
     public class LLMClient : MonoBehaviour
     {
         [HideInInspector] public bool advancedOptions = false;
+        [HideInInspector] public bool expertOptions = false;
 
         [ClientAdvanced] public string host = "localhost";
         [ServerAdvanced] public int port = 13333;
@@ -61,19 +63,20 @@ namespace LLMUnity
         [ModelAdvanced, Float(0f, 1f)] public float presencePenalty = 0f;
         [ModelAdvanced, Float(0f, 1f)] public float frequencyPenalty = 0f;
 
-        public int? nKeep = null;
+        [ModelExpert, Float(0f, 1f)] public float tfsZ = 1f;
+        [ModelExpert, Float(0f, 1f)] public float typicalP = 1f;
+        [ModelExpert, Int(0, 2048)] public int repeatLastN = 256;
+        [ModelExpert] public bool penalizeNl = true;
+        [ModelExpert] public string penaltyPrompt;
+        [ModelExpert, Int(0, 2)] public int mirostat = 0;
+        [ModelExpert, Float(0f, 10f)] public float mirostatTau = 5f;
+        [ModelExpert, Float(0f, 1f)] public float mirostatEta = 0.1f;
+        [ModelExpert, Int(0, 10)] public int nProbs = 0;
+
+        public int nKeep = -1;
         public List<string> stop = null;
-        public float? tfsZ = null;
-        public float? typicalP = null;
-        public int? repeatLastN = null;
-        public bool? penalizeNl = null;
-        public string penaltyPrompt;
-        public int? mirostat = null;
-        public float? mirostatTau = null;
-        public float? mirostatEta = null;
-        public bool? ignoreEos = null;
+        public bool ignoreEos = false;
         public Dictionary<int, string> logitBias = null;
-        public int? nProbs = null;
         public string grammarString;
 
         [Chat] public string playerName = "Human";
