@@ -7,6 +7,29 @@ using Newtonsoft.Json;
 
 namespace LLMUnity
 {
+    public sealed class FloatAttribute : PropertyAttribute
+    {
+        public float Min { get; private set; }
+        public float Max { get; private set; }
+
+        public FloatAttribute(float min, float max)
+        {
+            Min = min;
+            Max = max;
+        }
+    }
+    public sealed class IntAttribute : PropertyAttribute
+    {
+        public int Min { get; private set; }
+        public int Max { get; private set; }
+
+        public IntAttribute(int min, int max)
+        {
+            Min = min;
+            Max = max;
+        }
+    }
+
     public class ClientAttribute : PropertyAttribute {}
     public class ServerAttribute : PropertyAttribute {}
     public class ModelAttribute : PropertyAttribute {}
@@ -30,13 +53,13 @@ namespace LLMUnity
         [ModelAdvanced] public int seed = 0;
         [ModelAdvanced] public int numPredict = 256;
         [ModelAdvanced] public bool cachePrompt = true;
-        [ModelAdvanced] public float temperature = 0.2f;
-        [ModelAdvanced] public int topK = 40;
-        [ModelAdvanced] public float topP = 0.9f;
-        [ModelAdvanced] public float minP = 0.05f;
-        [ModelAdvanced] public float repeatPenalty = 1.1f;
-        [ModelAdvanced] public float presencePenalty = 0f;
-        [ModelAdvanced] public float frequencyPenalty = 0f;
+        [ModelAdvanced, Float(0f, 2f)] public float temperature = 0.2f;
+        [ModelAdvanced, Int(-1, 100)] public int topK = 40;
+        [ModelAdvanced, Float(0f, 1f)] public float topP = 0.9f;
+        [ModelAdvanced, Float(0f, 1f)] public float minP = 0.05f;
+        [ModelAdvanced, Float(0f, 1f)] public float repeatPenalty = 1.1f;
+        [ModelAdvanced, Float(0f, 1f)] public float presencePenalty = 0f;
+        [ModelAdvanced, Float(0f, 1f)] public float frequencyPenalty = 0f;
 
         public int? nKeep = null;
         public List<string> stop = null;
