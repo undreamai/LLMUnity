@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEditor;
@@ -135,6 +136,17 @@ namespace LLMUnity
             return apeExe;
         }
 
+        bool IsPortInUse()
+        {
+            try
+            {
+                TcpClient c = new TcpClient(host, port);
+                return true;
+            }
+            catch {}
+            return false;
+        }
+
         private void DebugLog(string message, bool logError = false)
         {
             // Debug log if debug is enabled
@@ -210,16 +222,18 @@ namespace LLMUnity
 
         private void StartLLMServer()
         {
+            if (IsPortInUse()) throw new Exception($"Port {port} is already in use, please use another port or kill all llamafile processes using it!");
+
             // Start the LLM server in a cross-platform way
-            if (model == "") throw new System.Exception("No model file provided!");
+            if (model == "") throw new Exception("No model file provided!");
             string modelPath = GetAssetPath(model);
-            if (!File.Exists(modelPath)) throw new System.Exception($"File {modelPath} not found!");
+            if (!File.Exists(modelPath)) throw new Exception($"File {modelPath} not found!");
 
             string loraPath = "";
             if (lora != "")
             {
                 loraPath = GetAssetPath(lora);
-                if (!File.Exists(loraPath)) throw new System.Exception($"File {loraPath} not found!");
+                if (!File.Exists(loraPath)) throw new Exception($"File {loraPath} not found!");
             }
 
             int slots = parallelPrompts == -1 ? FindObjectsOfType<LLMClient>().Length : parallelPrompts;
@@ -240,7 +254,7 @@ namespace LLMUnity
                 serverBlock.WaitOne(60000);
             }
 
-            if (process.HasExited) throw new System.Exception("Server could not be started!");
+            if (process.HasExited) throw new Exception("Server could not be started!");
         }
 
         public void StopProcess()
