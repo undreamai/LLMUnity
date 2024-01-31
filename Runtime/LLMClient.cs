@@ -60,22 +60,54 @@ namespace LLMUnity
         private string currentPrompt;
         private List<ChatMessage> chat;
         private List<(string, string)> requestHeaders;
+        public bool setNKeepToPrompt = true;
 
         public LLMClient()
         {
             // initialise headers and chat lists
             requestHeaders = new List<(string, string)> { ("Content-Type", "application/json") };
-            chat = new List<ChatMessage>();
-            chat.Add(new ChatMessage { role = "system", content = prompt });
         }
 
         public async void Awake()
         {
             // initialise the prompt and set the keep tokens based on its length
-            currentPrompt = prompt;
+            await InitPrompt();
             InitStop();
             InitGrammar();
+        }
+
+        private async Task InitPrompt(bool clearChat = true)
+        {
             await InitNKeep();
+            if (chat != null)
+            {
+                if (clearChat) chat.Clear();
+            }
+            else
+            {
+                chat = new List<ChatMessage>();
+            }
+            ChatMessage promptMessage = new ChatMessage { role = "system", content = prompt };
+            if (chat.Count == 0)
+            {
+                chat.Add(promptMessage);
+            }
+            else
+            {
+                chat[0] = promptMessage;
+            }
+
+            currentPrompt = prompt;
+            for (int i = 1; i < chat.Count; i++)
+            {
+                currentPrompt += RoleMessageString(chat[i].role, chat[i].content);
+            }
+        }
+
+        public async Task SetPrompt(string newPrompt, bool clearChat = true)
+        {
+            prompt = newPrompt;
+            await InitPrompt(clearChat);
         }
 
         protected static string GetAssetPath(string relPath = "")
@@ -86,7 +118,7 @@ namespace LLMUnity
 
         private async Task InitNKeep()
         {
-            if (nKeep == null)
+            if (setNKeepToPrompt)
             {
                 await Tokenize(prompt, SetNKeep);
             }
