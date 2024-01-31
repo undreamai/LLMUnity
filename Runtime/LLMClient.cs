@@ -195,7 +195,7 @@ namespace LLMUnity
             chatRequest.mirostat = mirostat;
             chatRequest.mirostat_tau = mirostatTau;
             chatRequest.mirostat_eta = mirostatEta;
-            chatRequest.grammar = null;//(grammarString != null && grammarString != "") ? grammarString : null;
+            chatRequest.grammar = grammarString;
             chatRequest.seed = seed;
             chatRequest.ignore_eos = ignoreEos;
             chatRequest.logit_bias = logitBias;
