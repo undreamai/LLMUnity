@@ -20,7 +20,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          # fromTag: main
+          fromTag: main
           toTag: ${{ github.base_ref }}
           outputFile: CHANGELOG.release.md
           configurationJson: |
