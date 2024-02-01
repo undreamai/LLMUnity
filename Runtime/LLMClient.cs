@@ -132,6 +132,7 @@ namespace LLMUnity
         public async Task SetPrompt(string newPrompt, bool clearChat = true)
         {
             prompt = newPrompt;
+            nKeep = -1;
             await InitPrompt(clearChat);
         }
 
@@ -143,7 +144,7 @@ namespace LLMUnity
 
         private async Task InitNKeep()
         {
-            if (setNKeepToPrompt)
+            if (setNKeepToPrompt && nKeep == -1)
             {
                 await Tokenize(prompt, SetNKeep);
             }
@@ -280,6 +281,7 @@ namespace LLMUnity
             // handle a chat message by the user
             // call the callback function while the answer is received
             // call the completionCallback function when the answer is fully received
+            await InitNKeep();
             string json = JsonUtility.ToJson(GenerateRequest(question));
             string result;
             if (stream)
