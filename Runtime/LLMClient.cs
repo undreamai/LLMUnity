@@ -96,9 +96,9 @@ namespace LLMUnity
         public async void Awake()
         {
             // initialise the prompt and set the keep tokens based on its length
-            await InitPrompt();
             InitStop();
             InitGrammar();
+            await InitPrompt();
         }
 
         private async Task InitPrompt(bool clearChat = true)
