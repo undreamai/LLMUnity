@@ -276,7 +276,7 @@ namespace LLMUnity
             return result.tokens;
         }
 
-        public async Task Chat(string question, Callback<string> callback = null, EmptyCallback completionCallback = null, bool addToHistory = true)
+        public async Task<string> Chat(string question, Callback<string> callback = null, EmptyCallback completionCallback = null, bool addToHistory = true)
         {
             // handle a chat message by the user
             // call the callback function while the answer is received
@@ -298,20 +298,21 @@ namespace LLMUnity
                 AddPlayerMessage(question);
                 AddAIMessage(result);
             }
+            return result;
         }
 
-        public async Task Warmup(EmptyCallback completionCallback = null, string question = "hi")
+        public async Task<string> Warmup(EmptyCallback completionCallback = null, string question = "hi")
         {
-            await Chat(question, null, completionCallback, false);
+            return await Chat(question, null, completionCallback, false);
         }
 
-        public async Task Tokenize(string question, Callback<List<int>> callback = null)
+        public async Task<List<int>> Tokenize(string question, Callback<List<int>> callback = null)
         {
             // handle the tokenization of a message by the user
             TokenizeRequest tokenizeRequest = new TokenizeRequest();
             tokenizeRequest.content = question;
             string json = JsonUtility.ToJson(tokenizeRequest);
-            await PostRequest<TokenizeResult, List<int>>(json, "tokenize", TokenizeContent, callback);
+            return await PostRequest<TokenizeResult, List<int>>(json, "tokenize", TokenizeContent, callback);
         }
 
         public Ret ConvertContent<Res, Ret>(string response, ContentCallback<Res, Ret> getContent = null)
