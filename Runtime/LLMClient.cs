@@ -64,7 +64,7 @@ namespace LLMUnity
 
         [ModelExpert, Float(0f, 1f)] public float tfsZ = 1f;
         [ModelExpert, Float(0f, 1f)] public float typicalP = 1f;
-        [ModelExpert, Int(0, 2048)] public int repeatLastN = 256;
+        [ModelExpert, Int(0, 2048)] public int repeatLastN = 64;
         [ModelExpert] public bool penalizeNl = true;
         [ModelExpert] public string penaltyPrompt;
         [ModelExpert, Int(0, 2)] public int mirostat = 0;
