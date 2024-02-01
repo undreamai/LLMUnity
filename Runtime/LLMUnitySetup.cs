@@ -90,11 +90,11 @@ namespace LLMUnity
         }
 
         public static async Task DownloadFile(
-            string fileUrl, string savePath, bool executable = false,
+            string fileUrl, string savePath, bool overwrite = false, bool executable = false,
             TaskCallback<string> callback = null, Callback<float> progresscallback = null)
         {
             // download a file to the specified path
-            if (File.Exists(savePath))
+            if (File.Exists(savePath) && !overwrite)
             {
                 Debug.Log($"File already exists at: {savePath}");
             }
