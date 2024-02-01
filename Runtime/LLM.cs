@@ -53,17 +53,17 @@ namespace LLMUnity
 
         private static async Task SetupBinaries()
         {
-            if (binariesProgress == 0) return;
+            if (binariesProgress < 1) return;
             binariesProgress = 0;
             binariesDone = 0;
-            if (!File.Exists(apeARM)) await LLMUnitySetup.DownloadFile(apeARMUrl, apeARM, true, null, SetBinariesProgress);
+            if (!File.Exists(apeARM)) await LLMUnitySetup.DownloadFile(apeARMUrl, apeARM, false, true, null, SetBinariesProgress);
             binariesDone += 1;
-            if (!File.Exists(apeX86_64)) await LLMUnitySetup.DownloadFile(apeX86_64Url, apeX86_64, true, null, SetBinariesProgress);
+            if (!File.Exists(apeX86_64)) await LLMUnitySetup.DownloadFile(apeX86_64Url, apeX86_64, false, true, null, SetBinariesProgress);
             binariesDone += 1;
             if (!File.Exists(server))
             {
                 string serverZip = Path.Combine(Application.temporaryCachePath, "llamafile.zip");
-                if (!File.Exists(serverZip)) await LLMUnitySetup.DownloadFile(serverZipUrl, serverZip, false, null, SetBinariesProgress);
+                await LLMUnitySetup.DownloadFile(serverZipUrl, serverZip, true, false, null, SetBinariesProgress);
                 binariesDone += 1;
                 LLMUnitySetup.ExtractZip(serverZip, GetAssetPath());
                 File.Delete(serverZip);
@@ -83,7 +83,7 @@ namespace LLMUnity
             modelProgress = 0;
             string modelName = Path.GetFileName(modelUrl).Split("?")[0];
             string modelPath = GetAssetPath(modelName);
-            Task downloadTask = LLMUnitySetup.DownloadFile(modelUrl, modelPath, false, SetModel, SetModelProgress);
+            Task downloadTask = LLMUnitySetup.DownloadFile(modelUrl, modelPath, false, false, SetModel, SetModelProgress);
         }
 
         public void SetModelProgress(float progress)
