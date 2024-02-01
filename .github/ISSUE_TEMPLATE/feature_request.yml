@@ -1,0 +1,17 @@
+name: Request a feature
+description: Ask us to enhance our functionality
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to request a new feature!
+        If you would like to ask us something, you can also reach us on [Discord](https://discord.gg/RwXKQb6zdv).
+        For the current backlog you can see our [upcoming releases](https://github.com/orgs/undreamai/projects/2/views/10).
+  - type: textarea
+    id: what
+    attributes:
+      label: Describe the feature
+      placeholder: A short description of what the feature would look like.
+    validations:
+      required: true

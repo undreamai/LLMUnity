@@ -7,6 +7,9 @@ FILES=$(git diff --cached --name-only --diff-filter=ACM "*.cs" | sed 's| |\\ |g'
 # Format all selected files
 echo "$FILES" | cat | xargs | sed -e 's/ /,/g' | xargs dotnet format -v q --include
 
+# fix formatting of braces
+for f in ${FILES};do sed -i 's:{ }:{}:g' $f;done
+
 # Add back the modified files to staging
 echo "$FILES" | xargs git add
 

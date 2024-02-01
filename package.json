@@ -1,11 +1,11 @@
 {
   "name": "ai.undream.llmunity",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "displayName": "LLMUnity",
   "description": "LLMUnity allows to run and distribute LLM models in the Unity engine.",
   "unity": "2022.3",
   "unityRelease": "16f1",
-  "documentationUrl": "https://github.com/amakropoulos/LLMUnity",
+  "documentationUrl": "https://github.com/undreamai/LLMUnity",
   "dependencies": {
     "com.unity.sentis": "1.2.0-exp.2",
     "com.unity.nuget.newtonsoft-json": "3.2.1"
@@ -43,7 +43,7 @@
    ],
    "author": {
     "name": "Undream AI",
-    "email": "antonis@undream.ai",
+    "email": "hello@undream.ai",
     "url": "https://undream.ai"
   }
 }

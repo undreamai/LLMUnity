@@ -11,13 +11,29 @@ namespace LLMUnity
         public float temperature;
         public int top_k;
         public float top_p;
+        public float min_p;
         public int n_predict;
         public int n_keep;
         public bool stream;
+        public List<string> stop;
+        public float tfs_z;
+        public float typical_p;
+        public float repeat_penalty;
+        public int repeat_last_n;
+        public bool penalize_nl;
+        public float presence_penalty;
+        public float frequency_penalty;
+        public string penalty_prompt;
+        public int mirostat;
+        public float mirostat_tau;
+        public float mirostat_eta;
+        public string grammar;
         public int seed;
+        public bool ignore_eos;
+        public Dictionary<int, string> logit_bias;
+        public int n_probs;
         public bool cache_prompt;
         public List<ChatMessage> messages;
-        public List<string> stop;
     }
 
     [Serializable]

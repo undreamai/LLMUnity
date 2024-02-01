@@ -1,3 +1,28 @@
+## v1.0.5
+#### 🚀 Features
+
+- Expose new llama.cpp arguments (PR: #60)
+- Allow to change prompt (PR: #64)
+- Feature/variable sliders (PR: #65)
+- Feature/show expert options (PR: #66)
+- Improve package loading (PR: #67)
+
+#### 🐛 Fixes
+
+- Fail if port is already in use (PR: #62)
+- Run server without mmap on mmap crash (PR: #63)
+
+
+## v1.0.4
+#### 🐛 Fixes
+
+- Fix download function (PR: #51)
+
+#### 📦 General
+
+- Added how settings impact generation to the readme (PR: #49)
+
+
 ## v1.0.3
 #### 🐛 Fixes
 

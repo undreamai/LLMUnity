@@ -2,11 +2,11 @@ using UnityEditor;
 using System.Diagnostics;
 using System.IO;
 using UnityEngine;
-using UnityEngine.Networking;
 using Debug = UnityEngine.Debug;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.IO.Compression;
+using System.Net;
 
 namespace LLMUnity
 {
@@ -74,69 +74,50 @@ namespace LLMUnity
         }
 
 #if UNITY_EDITOR
+        public class DownloadStatus
+        {
+            Callback<float> progresscallback;
+
+            public DownloadStatus(Callback<float> progresscallback = null)
+            {
+                this.progresscallback = progresscallback;
+            }
+
+            public void DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+            {
+                progresscallback?.Invoke(e.ProgressPercentage / 100.0f);
+            }
+        }
+
         public static async Task DownloadFile(
-            string fileUrl, string savePath, bool executable = false,
-            TaskCallback<string> callback = null, Callback<float> progresscallback = null,
-            int chunkSize = 1024 * 1024)
+            string fileUrl, string savePath, bool overwrite = false, bool executable = false,
+            TaskCallback<string> callback = null, Callback<float> progresscallback = null)
         {
             // download a file to the specified path
-            if (File.Exists(savePath))
+            if (File.Exists(savePath) && !overwrite)
             {
                 Debug.Log($"File already exists at: {savePath}");
             }
             else
             {
                 Debug.Log($"Downloading {fileUrl}...");
+                string tmpPath = Path.Combine(Application.temporaryCachePath, Path.GetFileName(savePath));
 
-                UnityWebRequest www = UnityWebRequest.Head(fileUrl);
-                UnityWebRequestAsyncOperation asyncOperation = www.SendWebRequest();
-
-                while (!asyncOperation.isDone)
-                {
-                    await Task.Delay(100); // Adjust the delay as needed
-                }
-
-                if (www.result != UnityWebRequest.Result.Success)
-                    throw new System.Exception("Failed to get file size. Error: " + www.error);
-
-                long fileSize = long.Parse(www.GetResponseHeader("Content-Length"));
+                WebClient client = new WebClient();
+                DownloadStatus downloadStatus = new DownloadStatus(progresscallback);
+                client.DownloadProgressChanged += downloadStatus.DownloadProgressChanged;
+                await client.DownloadFileTaskAsync(fileUrl, tmpPath);
+                if (executable) makeExecutable(tmpPath);
 
                 AssetDatabase.StartAssetEditing();
                 Directory.CreateDirectory(Path.GetDirectoryName(savePath));
-                using (FileStream fs = new FileStream(savePath, FileMode.Create, FileAccess.Write))
-                {
-                    for (long i = 0; i < fileSize; i += chunkSize)
-                    {
-                        long startByte = i;
-                        long endByte = (long)Mathf.Min(i + chunkSize - 1, fileSize - 1);
-
-                        www = UnityWebRequest.Get(fileUrl);
-                        www.SetRequestHeader("Range", "bytes=" + startByte + "-" + endByte);
-
-                        asyncOperation = www.SendWebRequest();
-
-                        while (!asyncOperation.isDone)
-                        {
-                            await Task.Delay(100); // Adjust the delay as needed
-                        }
-
-                        if (www.result != UnityWebRequest.Result.Success)
-                            throw new System.Exception("Download failed. Error: " + www.error);
-
-                        fs.Write(www.downloadHandler.data, 0, www.downloadHandler.data.Length);
-
-                        int progressPercentage = Mathf.FloorToInt((float)i / fileSize * 100);
-                        if (progressPercentage % 1 == 0)
-                            progresscallback((float)progressPercentage / 100);
-                    }
-                }
-
-                if (executable) makeExecutable(savePath);
+                File.Move(tmpPath, savePath);
                 AssetDatabase.StopAssetEditing();
                 Debug.Log($"Download complete!");
+
+                progresscallback?.Invoke(1f);
+                callback?.Invoke(savePath);
             }
-            progresscallback(1f);
-            callback?.Invoke(savePath);
         }
 
         public static async Task<string> AddAsset(string assetPath, string basePath)

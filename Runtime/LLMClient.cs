@@ -1,57 +1,181 @@
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
 
 namespace LLMUnity
 {
+    public sealed class FloatAttribute : PropertyAttribute
+    {
+        public float Min { get; private set; }
+        public float Max { get; private set; }
+
+        public FloatAttribute(float min, float max)
+        {
+            Min = min;
+            Max = max;
+        }
+    }
+    public sealed class IntAttribute : PropertyAttribute
+    {
+        public int Min { get; private set; }
+        public int Max { get; private set; }
+
+        public IntAttribute(int min, int max)
+        {
+            Min = min;
+            Max = max;
+        }
+    }
+
     public class ClientAttribute : PropertyAttribute {}
     public class ServerAttribute : PropertyAttribute {}
     public class ModelAttribute : PropertyAttribute {}
+    public class ModelAddonAttribute : PropertyAttribute {}
     public class ChatAttribute : PropertyAttribute {}
     public class ClientAdvancedAttribute : PropertyAttribute {}
     public class ServerAdvancedAttribute : PropertyAttribute {}
     public class ModelAdvancedAttribute : PropertyAttribute {}
+    public class ModelAddonAdvancedAttribute : PropertyAttribute {}
+    public class ModelExpertAttribute : PropertyAttribute {}
 
     [DefaultExecutionOrder(-1)]
     public class LLMClient : MonoBehaviour
     {
         [HideInInspector] public bool advancedOptions = false;
+        [HideInInspector] public bool expertOptions = false;
 
         [ClientAdvanced] public string host = "localhost";
         [ServerAdvanced] public int port = 13333;
         [Server] public bool stream = true;
 
+        [ModelAddonAdvanced] public string grammar = null;
         [ModelAdvanced] public int seed = 0;
-        [ModelAdvanced] public float temperature = 0.2f;
-        [ModelAdvanced] public int topK = 40;
-        [ModelAdvanced] public float topP = 0.9f;
-        [ModelAdvanced] public int nPredict = 256;
+        [ModelAdvanced] public int numPredict = 256;
+        [ModelAdvanced] public bool cachePrompt = true;
+        [ModelAdvanced, Float(0f, 2f)] public float temperature = 0.2f;
+        [ModelAdvanced, Int(-1, 100)] public int topK = 40;
+        [ModelAdvanced, Float(0f, 1f)] public float topP = 0.9f;
+        [ModelAdvanced, Float(0f, 1f)] public float minP = 0.05f;
+        [ModelAdvanced, Float(0f, 1f)] public float repeatPenalty = 1.1f;
+        [ModelAdvanced, Float(0f, 1f)] public float presencePenalty = 0f;
+        [ModelAdvanced, Float(0f, 1f)] public float frequencyPenalty = 0f;
+
+        [ModelExpert, Float(0f, 1f)] public float tfsZ = 1f;
+        [ModelExpert, Float(0f, 1f)] public float typicalP = 1f;
+        [ModelExpert, Int(0, 2048)] public int repeatLastN = 64;
+        [ModelExpert] public bool penalizeNl = true;
+        [ModelExpert] public string penaltyPrompt;
+        [ModelExpert, Int(0, 2)] public int mirostat = 0;
+        [ModelExpert, Float(0f, 10f)] public float mirostatTau = 5f;
+        [ModelExpert, Float(0f, 1f)] public float mirostatEta = 0.1f;
+        [ModelExpert, Int(0, 10)] public int nProbs = 0;
+        [ModelExpert] public bool ignoreEos = false;
+
+        public int nKeep = -1;
+        public List<string> stop = null;
+        public Dictionary<int, string> logitBias = null;
+        public string grammarString;
 
         [Chat] public string playerName = "Human";
         [Chat] public string AIName = "Assistant";
         [TextArea(5, 10), Chat] public string prompt = "A chat between a curious human and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the human's questions.";
 
-        private int nKeep = -1;
-
         private string currentPrompt;
         private List<ChatMessage> chat;
-
         private List<(string, string)> requestHeaders;
+        public bool setNKeepToPrompt = true;
 
         public LLMClient()
         {
             // initialise headers and chat lists
             requestHeaders = new List<(string, string)> { ("Content-Type", "application/json") };
-            chat = new List<ChatMessage>();
-            chat.Add(new ChatMessage { role = "system", content = prompt });
         }
 
         public async void Awake()
         {
             // initialise the prompt and set the keep tokens based on its length
+            InitStop();
+            InitGrammar();
+            await InitPrompt();
+        }
+
+        private async Task InitPrompt(bool clearChat = true)
+        {
+            await InitNKeep();
+            if (chat != null)
+            {
+                if (clearChat) chat.Clear();
+            }
+            else
+            {
+                chat = new List<ChatMessage>();
+            }
+            ChatMessage promptMessage = new ChatMessage { role = "system", content = prompt };
+            if (chat.Count == 0)
+            {
+                chat.Add(promptMessage);
+            }
+            else
+            {
+                chat[0] = promptMessage;
+            }
+
             currentPrompt = prompt;
-            await Tokenize(prompt, SetNKeep);
+            for (int i = 1; i < chat.Count; i++)
+            {
+                currentPrompt += RoleMessageString(chat[i].role, chat[i].content);
+            }
+        }
+
+        public async Task SetPrompt(string newPrompt, bool clearChat = true)
+        {
+            prompt = newPrompt;
+            nKeep = -1;
+            await InitPrompt(clearChat);
+        }
+
+        protected static string GetAssetPath(string relPath = "")
+        {
+            // Path to store llm server binaries and models
+            return Path.Combine(Application.streamingAssetsPath, relPath).Replace('\\', '/');
+        }
+
+        private async Task InitNKeep()
+        {
+            if (setNKeepToPrompt && nKeep == -1)
+            {
+                await Tokenize(prompt, SetNKeep);
+            }
+        }
+
+        private void InitStop()
+        {
+            // set stopwords
+            if (stop == null || stop.Count == 0)
+            {
+                stop = new List<string> { RoleString(playerName), playerName + ":" };
+            }
+        }
+
+        private void InitGrammar()
+        {
+            if (grammar != null && grammar != "")
+            {
+                grammarString = File.ReadAllText(GetAssetPath(grammar));
+            }
+        }
+
+        private void SetNKeep(List<int> tokens)
+        {
+            // set the tokens to keep
+            nKeep = tokens.Count;
+        }
+
+        public async void SetGrammar(string path)
+        {
+            grammar = await LLMUnitySetup.AddAsset(path, GetAssetPath());
         }
 
         private string RoleString(string role)
@@ -81,15 +205,28 @@ namespace LLMUnity
             chatRequest.temperature = temperature;
             chatRequest.top_k = topK;
             chatRequest.top_p = topP;
-            chatRequest.n_predict = nPredict;
+            chatRequest.min_p = minP;
+            chatRequest.n_predict = numPredict;
             chatRequest.n_keep = nKeep;
             chatRequest.stream = stream;
-            chatRequest.cache_prompt = true;
-            if (seed != -1)
-            {
-                chatRequest.seed = seed;
-            }
-            chatRequest.stop = new List<string> { RoleString(playerName), playerName + ":" };
+            chatRequest.stop = stop;
+            chatRequest.tfs_z = tfsZ;
+            chatRequest.typical_p = typicalP;
+            chatRequest.repeat_penalty = repeatPenalty;
+            chatRequest.repeat_last_n = repeatLastN;
+            chatRequest.penalize_nl = penalizeNl;
+            chatRequest.presence_penalty = presencePenalty;
+            chatRequest.frequency_penalty = frequencyPenalty;
+            chatRequest.penalty_prompt = (penaltyPrompt != null && penaltyPrompt != "") ? penaltyPrompt : null;
+            chatRequest.mirostat = mirostat;
+            chatRequest.mirostat_tau = mirostatTau;
+            chatRequest.mirostat_eta = mirostatEta;
+            chatRequest.grammar = grammarString;
+            chatRequest.seed = seed;
+            chatRequest.ignore_eos = ignoreEos;
+            chatRequest.logit_bias = logitBias;
+            chatRequest.n_probs = nProbs;
+            chatRequest.cache_prompt = cachePrompt;
             return chatRequest;
         }
 
@@ -150,6 +287,7 @@ namespace LLMUnity
             // handle a chat message by the user
             // call the callback function while the answer is received
             // call the completionCallback function when the answer is fully received
+            await InitNKeep();
             string json = JsonUtility.ToJson(GenerateRequest(question));
             string result;
             if (stream)
@@ -180,24 +318,6 @@ namespace LLMUnity
             tokenizeRequest.content = question;
             string json = JsonUtility.ToJson(tokenizeRequest);
             await PostRequest<TokenizeResult, List<int>>(json, "tokenize", TokenizeContent, callback);
-        }
-
-        public async Task<List<float>> Embedding(string question, Callback<List<float>> callback = null)
-        {
-            // handle the tokenization of a message by the user
-            // ChatRequest embeddingRequest = new ChatRequest();
-            // embeddingRequest.prompt = question;
-            TokenizeRequest embeddingRequest = new TokenizeRequest();
-            embeddingRequest.content = question;
-            string json = JsonUtility.ToJson(embeddingRequest);
-            List<float> embedding = await PostRequest<EmbeddingResult, List<float>>(json, "embedding", EmbeddingContent, callback);
-            return embedding;
-        }
-
-        private void SetNKeep(List<int> tokens)
-        {
-            // set the tokens to keep
-            nKeep = tokens.Count;
         }
 
         public Ret ConvertContent<Res, Ret>(string response, ContentCallback<Res, Ret> getContent = null)

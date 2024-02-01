@@ -1,0 +1,40 @@
+name: Report a bug
+description: Something doesn't work as expected
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to issue this bug!
+        If you would like to ask us something, you can also reach us on [Discord](https://discord.gg/RwXKQb6zdv).
+  - type: textarea
+    id: what
+    attributes:
+      label: Describe the bug
+      placeholder: A short description of the bug.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: Steps to reproduce the behavior.
+    validations:
+      required: false
+  - type: input
+    id: version
+    attributes:
+      label: LLMUnity version
+      placeholder: X.X.X
+    validations:
+      required: false
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating System
+      options:
+        - Windows
+        - Linux
+        - macOs
+    validations:
+      required: false

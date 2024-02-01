@@ -8,7 +8,6 @@ namespace LLMUnity
     {
         public void AddModelLoaders(SerializedObject llmScriptSO, LLM llmScript)
         {
-            EditorGUILayout.LabelField("Model Settings", EditorStyles.boldLabel);
             EditorGUILayout.BeginHorizontal();
             if (GUILayout.Button("Download model", GUILayout.Width(buttonWidth)))
             {
@@ -26,19 +25,38 @@ namespace LLMUnity
                 };
             }
             EditorGUILayout.EndHorizontal();
-            EditorGUILayout.BeginHorizontal();
-            if (GUILayout.Button("Load lora", GUILayout.Width(buttonWidth)))
+        }
+
+        public void AddModelAddonLoaders(SerializedObject llmScriptSO, LLM llmScript)
+        {
+            if (llmScriptSO.FindProperty("advancedOptions").boolValue)
             {
-                EditorApplication.delayCall += () =>
+                EditorGUILayout.BeginHorizontal();
+                if (GUILayout.Button("Load lora", GUILayout.Width(buttonWidth)))
                 {
-                    string path = EditorUtility.OpenFilePanelWithFilters("Select a bin lora file", "", new string[] { "Model Files", "bin" });
-                    if (!string.IsNullOrEmpty(path))
+                    EditorApplication.delayCall += () =>
                     {
-                        llmScript.SetLora(path);
-                    }
-                };
+                        string path = EditorUtility.OpenFilePanelWithFilters("Select a bin lora file", "", new string[] { "Model Files", "bin" });
+                        if (!string.IsNullOrEmpty(path))
+                        {
+                            llmScript.SetLora(path);
+                        }
+                    };
+                }
+                base.AddModelAddonLoaders(llmScriptSO, llmScript, false);
+                EditorGUILayout.EndHorizontal();
             }
-            EditorGUILayout.EndHorizontal();
+        }
+
+        public void AddModelLoadersSettings(SerializedObject llmScriptSO, LLM llmScript)
+        {
+            EditorGUILayout.LabelField("Model Settings", EditorStyles.boldLabel);
+            AddModelLoaders(llmScriptSO, llmScript);
+            AddModelAddonLoaders(llmScriptSO, llmScript);
+            ShowProgress(LLM.binariesProgress, "Setup Binaries");
+            ShowProgress(llmScript.modelProgress, "Model Downloading");
+            ShowProgress(llmScript.modelCopyProgress, "Model Copying");
+            AddModelSettings(llmScriptSO);
         }
 
         void ShowProgress(float progress, string progressText)
@@ -57,24 +75,13 @@ namespace LLMUnity
             GUI.enabled = true;
 
             EditorGUI.BeginChangeCheck();
-            AddAdvancedOptionsToggle(llmScriptSO);
+            AddOptionsToggles(llmScriptSO);
             GUI.enabled = LLM.binariesProgress == 1;
             AddServerSettings(llmScriptSO);
             GUI.enabled = LLM.binariesProgress == 1 && llmScript.modelProgress == 1 && llmScript.modelCopyProgress == 1;
-            AddModelLoaders(llmScriptSO, llmScript);
-            ShowProgress(LLM.binariesProgress, "Setup Binaries");
-            ShowProgress(llmScript.modelProgress, "Model Downloading");
-            ShowProgress(llmScript.modelCopyProgress, "Model Copying");
-            if (llmScript.model != "")
-            {
-                AddModelSettings(llmScriptSO, false);
-            }
-            else
-            {
-                EditorGUILayout.Space();
-            }
-            AddChatSettings(llmScriptSO);
+            AddModelLoadersSettings(llmScriptSO, llmScript);
             GUI.enabled = true;
+            AddChatSettings(llmScriptSO);
 
             EditorGUI.EndChangeCheck();
             if (EditorGUI.EndChangeCheck())

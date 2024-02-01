@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEditor;
@@ -21,7 +22,7 @@ namespace LLMUnity
         [ServerAdvanced] public bool debug = false;
 
         [Model] public string model = "";
-        [Model] public string lora = "";
+        [ModelAddonAdvanced] public string lora = "";
         [ModelAdvanced] public int contextSize = 512;
         [ModelAdvanced] public int batchSize = 512;
 
@@ -38,13 +39,9 @@ namespace LLMUnity
         [HideInInspector] public float modelCopyProgress = 1;
         private static float binariesDone = 0;
         private Process process;
+        private bool mmapCrash = false;
         public bool serverListening { get; private set; } = false;
         private ManualResetEvent serverBlock = new ManualResetEvent(false);
-        private static string GetAssetPath(string relPath = "")
-        {
-            // Path to store llm server binaries and models
-            return Path.Combine(Application.streamingAssetsPath, relPath).Replace('\\', '/');
-        }
 
 #if UNITY_EDITOR
         [InitializeOnLoadMethod]
@@ -56,17 +53,17 @@ namespace LLMUnity
 
         private static async Task SetupBinaries()
         {
-            if (binariesProgress == 0) return;
+            if (binariesProgress < 1) return;
             binariesProgress = 0;
             binariesDone = 0;
-            if (!File.Exists(apeARM)) await LLMUnitySetup.DownloadFile(apeARMUrl, apeARM, true, null, SetBinariesProgress);
+            if (!File.Exists(apeARM)) await LLMUnitySetup.DownloadFile(apeARMUrl, apeARM, false, true, null, SetBinariesProgress);
             binariesDone += 1;
-            if (!File.Exists(apeX86_64)) await LLMUnitySetup.DownloadFile(apeX86_64Url, apeX86_64, true, null, SetBinariesProgress);
+            if (!File.Exists(apeX86_64)) await LLMUnitySetup.DownloadFile(apeX86_64Url, apeX86_64, false, true, null, SetBinariesProgress);
             binariesDone += 1;
             if (!File.Exists(server))
             {
-                string serverZip = Path.Combine(Application.dataPath, "llamafile.zip");
-                if (!File.Exists(serverZip)) await LLMUnitySetup.DownloadFile(serverZipUrl, serverZip, false, null, SetBinariesProgress);
+                string serverZip = Path.Combine(Application.temporaryCachePath, "llamafile.zip");
+                await LLMUnitySetup.DownloadFile(serverZipUrl, serverZip, true, false, null, SetBinariesProgress);
                 binariesDone += 1;
                 LLMUnitySetup.ExtractZip(serverZip, GetAssetPath());
                 File.Delete(serverZip);
@@ -86,7 +83,7 @@ namespace LLMUnity
             modelProgress = 0;
             string modelName = Path.GetFileName(modelUrl).Split("?")[0];
             string modelPath = GetAssetPath(modelName);
-            Task downloadTask = LLMUnitySetup.DownloadFile(modelUrl, modelPath, false, SetModel, SetModelProgress);
+            Task downloadTask = LLMUnitySetup.DownloadFile(modelUrl, modelPath, false, false, SetModel, SetModelProgress);
         }
 
         public void SetModelProgress(float progress)
@@ -140,6 +137,17 @@ namespace LLMUnity
             return apeExe;
         }
 
+        bool IsPortInUse()
+        {
+            try
+            {
+                TcpClient c = new TcpClient(host, port);
+                return true;
+            }
+            catch {}
+            return false;
+        }
+
         private void DebugLog(string message, bool logError = false)
         {
             // Debug log if debug is enabled
@@ -148,10 +156,14 @@ namespace LLMUnity
             else Debug.Log(message);
         }
 
-        private void DebugLogError(string message)
+        private void ProcessError(string message)
         {
             // Debug log errors if debug is enabled
             DebugLog(message, true);
+            if (message.Contains("assert(!isnan(x)) failed"))
+            {
+                mmapCrash = true;
+            }
         }
 
         private void CheckIfListening(string message)
@@ -169,7 +181,7 @@ namespace LLMUnity
                     serverBlock.Set();
                 }
             }
-            catch { }
+            catch {}
         }
 
         private void ProcessExited(object sender, EventArgs e)
@@ -210,21 +222,23 @@ namespace LLMUnity
                 binary = "sh";
             }
             Debug.Log($"Server command: {binary} {arguments}");
-            process = LLMUnitySetup.CreateProcess(binary, arguments, CheckIfListening, DebugLogError, ProcessExited, environment);
+            process = LLMUnitySetup.CreateProcess(binary, arguments, CheckIfListening, ProcessError, ProcessExited, environment);
         }
 
         private void StartLLMServer()
         {
+            if (IsPortInUse()) throw new Exception($"Port {port} is already in use, please use another port or kill all llamafile processes using it!");
+
             // Start the LLM server in a cross-platform way
-            if (model == "") throw new System.Exception("No model file provided!");
+            if (model == "") throw new Exception("No model file provided!");
             string modelPath = GetAssetPath(model);
-            if (!File.Exists(modelPath)) throw new System.Exception($"File {modelPath} not found!");
+            if (!File.Exists(modelPath)) throw new Exception($"File {modelPath} not found!");
 
             string loraPath = "";
             if (lora != "")
             {
                 loraPath = GetAssetPath(lora);
-                if (!File.Exists(loraPath)) throw new System.Exception($"File {loraPath} not found!");
+                if (!File.Exists(loraPath)) throw new Exception($"File {loraPath} not found!");
             }
 
             int slots = parallelPrompts == -1 ? FindObjectsOfType<LLMClient>().Length : parallelPrompts;
@@ -237,6 +251,15 @@ namespace LLMUnity
             RunServerCommand(server, arguments + GPUArgument);
             serverBlock.WaitOne(60000);
 
+            if (process.HasExited && mmapCrash)
+            {
+                Debug.Log("Mmap error, fallback to no mmap use");
+                serverBlock.Reset();
+                arguments += " --no-mmap";
+                RunServerCommand(server, arguments + GPUArgument);
+                serverBlock.WaitOne(60000);
+            }
+
             if (process.HasExited && numGPULayers > 0)
             {
                 Debug.Log("GPU failed, fallback to CPU");
@@ -245,7 +268,7 @@ namespace LLMUnity
                 serverBlock.WaitOne(60000);
             }
 
-            if (process.HasExited) throw new System.Exception("Server could not be started!");
+            if (process.HasExited) throw new Exception("Server could not be started!");
         }
 
         public void StopProcess()

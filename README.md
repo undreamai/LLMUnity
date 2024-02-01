@@ -1,20 +1,19 @@
 
 <p align="center">
-<img src=".github/logo_transparent_cropped.png" height="150"/>
+<img src=".github/logo.png" height="150"/>
 </p>
 
-<h3 align="center">Integrate LLM models in Unity!</h3>
+<h3 align="center">Create characters in Unity with LLMs!</h3>
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-<a href="https://discord.gg/tZRGntma"><img src="https://discordapp.com/api/guilds/1194779009284841552/widget.png?style=shield"/></a>
+<a href="https://discord.gg/RwXKQb6zdv"><img src="https://discordapp.com/api/guilds/1194779009284841552/widget.png?style=shield"/></a>
 [![Reddit](https://img.shields.io/badge/Reddit-%23FF4500.svg?style=flat&logo=Reddit&logoColor=white)](https://www.reddit.com/user/UndreamAI)
-[![X (formerly Twitter) URL](https://img.shields.io/twitter/url?url=https%3A%2F%2Ftwitter.com%2FUndreamAI&style=social)](https://twitter.com/UndreamAI)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-blue?style=flat&logo=linkedin&labelColor=blue)](https://www.linkedin.com/company/undreamai)
 
-
-LLMUnity allows to integrate, run and deploy LLMs (Large Language Models) in the Unity engine.<br>
+LLMUnity allows to integrate LLMs (Large Language Models) in the Unity engine.<br>
+It allows to build create intelligent characters that your players can interact for an immersive experience.<br>
 LLMUnity is built on top of the awesome [llama.cpp](https://github.com/ggerganov/llama.cpp) and [llamafile](https://github.com/Mozilla-Ocho/llamafile) libraries.
 
-  
 <sub>
 <a href="#at-a-glance" style="color: black">At a glance</a>&nbsp;&nbsp;•&nbsp;
 <a href="#how-to-help" style=color: black>How to help</a>&nbsp;&nbsp;•&nbsp;
@@ -22,11 +21,11 @@ LLMUnity is built on top of the awesome [llama.cpp](https://github.com/ggerganov
 <a href="#how-to-use" style=color: black>How to use</a>&nbsp;&nbsp;•&nbsp;
 <a href="#examples" style=color: black>Examples</a>&nbsp;&nbsp;•&nbsp;
 <a href="#use-your-own-model" style=color: black>Use your own model</a>&nbsp;&nbsp;•&nbsp;
-<a href="#multiple-ai--remote-server-setup" style=color: black>Multiple AI / Remote server setup</a>&nbsp;&nbsp;•&nbsp;
+<a href="#multiple-ai--remote-server" style=color: black>Multiple AI / Remote server</a>&nbsp;&nbsp;•&nbsp;
 <a href="#options" style=color: black>Options</a>&nbsp;&nbsp;•&nbsp;
+<a href="#games-using-llmunity" style=color: black>Games using LLMUnity</a>&nbsp;&nbsp;•&nbsp;
 <a href="#license" style=color: black>License</a>
 </sub>
-
 
 ## At a glance
 - :computer: Cross-platform! Supports Windows, Linux and macOS ([supported versions](https://github.com/Mozilla-Ocho/llamafile?tab=readme-ov-file#supported-oses-and-cpus))
@@ -40,21 +39,12 @@ LLMUnity is built on top of the awesome [llama.cpp](https://github.com/ggerganov
 :vertical_traffic_light: [Upcoming Releases](https://github.com/orgs/undreamai/projects/2/views/10)
 
 ## How to help
-- Join us at [Discord](https://discord.gg/tZRGntma) and say hi!
+- Join us at [Discord](https://discord.gg/RwXKQb6zdv) and say hi!
 - ⭐ Star the repo and spread the word about the project!
 - Submit feature requests or bugs as [issues](https://github.com/undreamai/LLMUnity/issues) or even submit a PR and become a collaborator!
 
 ## Setup
-To install the package you can follow the typical asset / package process in Unity:<br>
-
-_Method 1: Install the asset using the asset store_
-- Open the [LLMUnity](https://assetstore.unity.com/packages/slug/273604) asset page and click `Add to My Assets`
-- Open the Package Manager: `Window > Package Manager`
-- Select the `Packages: My Assets` option from the drop-down
-- Select the `LLMUnity` package, click `Download` and then `Import`
-
-_Method 2: Install the asset using the GitHub repo:_
-- Open the Package Manager: `Window > Package Manager`
+- Open the Package Manager in Unity: `Window > Package Manager`
 - Click the `+` button and select `Add package from git URL`
 - Use the repository URL `https://github.com/undreamai/LLMUnity.git` and click `Add`
 
@@ -185,7 +175,7 @@ public class MyScript : MonoBehaviour
         // Add and setup a LLM object
         gameObject.SetActive(false);
         llm = gameObject.AddComponent<LLM>();
-        await llm.SetModel("mistral-7b-instruct-v0.1.Q4_K_M.gguf");
+        await llm.SetModel("mistral-7b-instruct-v0.2.Q4_K_M.gguf");
         llm.prompt = "A chat between a curious human and an artificial intelligence assistant.";
         gameObject.SetActive(true);
         // or a LLMClient object
@@ -208,8 +198,7 @@ The [Samples~](Samples~) folder contains several examples of interaction :robot:
   
 <img width="400" src=".github/demo.gif">
 
-If you install the package as an asset, the samples will already be in the `Assets/Samples` folder.<br>
-Otherwise if you install it with the GitHub URL, to install a sample:
+To install a sample:
 - Open the Package Manager: `Window > Package Manager`
 - Select the `LLMUnity` Package. From the `Samples` Tab, click `Import` next to the sample you want to install.
 
@@ -218,8 +207,8 @@ In the scene, select the `LLM` GameObject and click the `Download Model` button 
 You can also load your own model in .gguf format with the `Load model` button (see [Use your own model](#use-your-own-model)).<br>
 Save the scene, run and enjoy!
 
-
 ## Use your own model
+LLMUnity uses the Mistral 7B Instruct model by default, quantised with the Q4 method ([link](https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.2-GGUF/resolve/main/mistral-7b-instruct-v0.2.Q4_K_M.gguf?download=true)).<br>
 Alternative models can be downloaded from [HuggingFace](https://huggingface.co/models).<br>
 The required model format is .gguf as defined by the llama.cpp.<br>
 The easiest way is to download gguf models directly by [TheBloke](https://huggingface.co/TheBloke) who has converted an astonishing number of models :rainbow:!<br>
@@ -227,7 +216,7 @@ Otherwise other model formats can be converted to gguf with the `convert.py` scr
 
 :grey_exclamation: Before using any model make sure you **check their license** :grey_exclamation:
 
-## Multiple AI / Remote server setup
+## Multiple AI / Remote server
 LLMUnity allows to have multiple AI characters efficiently.<br>
 Each character can be implemented with a different client with its own prompt (and other parameters), and all of the clients send their requests to a single server.<br>
 This is essential as multiple server instances would require additional compute resources.<br>
@@ -243,6 +232,7 @@ The server can be either a LLMUnity server or a standard [llama.cpp server](http
 ## Options
 
 - `Show/Hide Advanced Options` Toggle to show/hide advanced options from below
+- `Show/Hide Expert Options` Toggle to show/hide expert options from below
 
 #### :computer: Server Settings
 
@@ -252,34 +242,64 @@ The server can be either a LLMUnity server or a standard [llama.cpp server](http
 
 - `Num Threads` number of threads to use (default: -1 = all)
 - `Num GPU Layers` number of model layers to offload to the GPU.
-If set to 0 the GPU is not used. Use a large number i.e. >30 to utilise the GPU as much as possible.<br>
+If set to 0 the GPU is not used. Use a large number i.e. >30 to utilise the GPU as much as possible.
 If the user's GPU is not supported, the LLM will fall back to the CPU
 - `Stream` select to receive the reply from the model as it is produced (recommended!).<br>
 If it is not selected, the full reply from the model is received in one go
-- Advanced options:
+- <details><summary>Advanced options</summary>
+
   - `Parallel Prompts` number of prompts that can happen in parallel (default: -1 = number of LLM/LLMClient objects)
   - `Debug` select to log the output of the model in the Unity Editor
   - `Port` port to run the server
 
+</details>
+
 #### :hugs: Model Settings
-- `Download model` click to download the default model (Mistral 7B Instruct)
+- `Download model` click to download the default model ([Mistral 7B Instruct](https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.2-GGUF/resolve/main/mistral-7b-instruct-v0.2.Q4_K_M.gguf?download=true))
 - `Load model` click to load your own model in .gguf format
-- `Load lora` click to load a LORA model in .bin format
 - `Model` the model being used (inside the Assets/StreamingAssets folder)
-- `Lora` the LORA model being used (inside the Assets/StreamingAssets folder)
-- Advanced options:
+- <details><summary>Advanced options</summary>
+
+  - `Load lora` click to load a LORA model in .bin format
+  - `Load grammar` click to load a grammar in .gbnf format
+  - `Lora` the LORA model being used (inside the Assets/StreamingAssets folder)
+  - `Grammar` the grammar being used (inside the Assets/StreamingAssets folder)
   - `Context Size` Size of the prompt context (0 = context size of the model)
   - `Batch Size` Batch size for prompt processing (default: 512)
   - `Seed` seed for reproducibility. For random results every time select -1
-  - `Temperature` LLM temperature, lower values give more deterministic answers
-  - `Top K` top-k sampling (default: 40, 0 = disabled)
-  - `Top P` top-p sampling (default: 0.9, 1.0 = disabled)
-  - `Num Predict` number of tokens to predict (default: 256, -1 = infinity, -2 = until context filled)
+  - <details><summary><code>Cache Prompt</code> save the ongoing prompt from the chat (default: true)</summary> Saves the prompt as it is being created by the chat to avoid reprocessing the entire prompt every time</details>
+  - <details><summary><code>Num Predict</code> number of tokens to predict (default: 256, -1 = infinity, -2 = until context filled)</summary>This is the amount of tokens the model will maximum predict. When N predict is reached the model will stop generating. This means words / sentences might not get finished if this is too low. </details>
+  - <details><summary><code>Temperature</code> LLM temperature, lower values give more deterministic answers</summary>The temperature setting adjusts how random the generated responses are. Turning it up makes the generated choices more varied and unpredictable. Turning it down  makes the generated responses more predictable and focused on the most likely options.</details>
+  - <details><summary><code>Top K</code> top-k sampling (default: 40, 0 = disabled)</summary>The top k value controls the top k most probable tokens at each step of generation. This value can help fine tune the output and make this adhere to specific patterns or constraints.</details>
+  - <details><summary><code>Top P</code> top-p sampling (default: 0.9, 1.0 = disabled)</summary>The top p value controls the cumulative probability of generated tokens. The model will generate tokens until this theshold (p) is reached. By lowering this value you can shorten output & encourage / discourage more diverse output.</details>
+  - <details><summary><code>Min P</code> minimum probability for a token to be used (default: 0.05)</summary> The probability is defined relative to the probability of the most likely token.</details>
+  - <details><summary><code>Repeat Penalty</code> Control the repetition of token sequences in the generated text (default: 1.1)</summary>The penalty is applied to repeated tokens.</details>
+  - <details><summary><code>Presence Penalty</code> repeated token presence penalty (default: 0.0, 0.0 = disabled)</summary> Positive values penalize new tokens based on whether they appear in the text so far, increasing the model's likelihood to talk about new topics.</details>
+  - <details><summary><code>Frequency Penalty</code> repeated token frequency penalty (default: 0.0, 0.0 = disabled)</summary> Positive values penalize new tokens based on their existing frequency in the text so far, decreasing the model's likelihood to repeat the same line verbatim.</details>
+- <details><summary>Expert options</summary>
+
+  - `tfs_z`: Enable tail free sampling with parameter z (default: 1.0, 1.0 = disabled).
+  - `typical_p`: Enable locally typical sampling with parameter p (default: 1.0, 1.0 = disabled).
+  - `repeat_last_n`: Last n tokens to consider for penalizing repetition (default: 64, 0 = disabled, -1 = ctx-size).
+  - `penalize_nl`: Penalize newline tokens when applying the repeat penalty (default: true).
+  - `penalty_prompt`: Prompt for the purpose of the penalty evaluation. Can be either `null`, a string or an array of numbers representing tokens (default: `null` = use original `prompt`).
+  - `mirostat`: Enable Mirostat sampling, controlling perplexity during text generation (default: 0, 0 = disabled, 1 = Mirostat, 2 = Mirostat 2.0).
+  - `mirostat_tau`: Set the Mirostat target entropy, parameter tau (default: 5.0).
+  - `mirostat_eta`: Set the Mirostat learning rate, parameter eta (default: 0.1).
+  - `n_probs`: If greater than 0, the response also contains the probabilities of top N tokens for each generated token (default: 0)
+  - `ignore_eos`: Ignore end of stream token and continue generating (default: false).
+
+    </details>
+
+</details>
 
 #### :left_speech_bubble: Chat Settings
 - `Player Name` the name of the player
 - `AI Name` the name of the AI
 - `Prompt` a description of the AI role
+
+## Games using LLMUnity
+- [Verbal Verdict](https://store.steampowered.com/app/2778780/Verbal_Verdict/)
 
 ## License
 The license of LLMUnity is MIT ([LICENSE.md](LICENSE.md)) and uses third-party software with MIT and Apache licenses ([Third Party Notices.md](<Third Party Notices.md>)).
