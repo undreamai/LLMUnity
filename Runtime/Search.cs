@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Sentis;
+using Cloud.Unum.USearch;
 
 public abstract class Search<T, E> where E : Embedder<T>
 {
@@ -14,10 +15,13 @@ public abstract class Search<T, E> where E : Embedder<T>
         this.embedder = embedder;
     }
 
+    public abstract void Insert(string inputString, T encoding);
+
     public T Add(string inputString)
     {
-        embeddings[inputString] = embedder.Encode(inputString);
-        return embeddings[inputString];
+        T embedding = embedder.Encode(inputString);
+        Insert(inputString, embedding);
+        return embedding;
     }
 
     public T[] Add(string[] inputStrings)
@@ -49,12 +53,19 @@ public abstract class Search<T, E> where E : Embedder<T>
 
 public class ModelSearch : Search<TensorFloat, EmbeddingModel>
 {
-    public ModelSearch(EmbeddingModel embedder) : base(embedder) { }
+    public ModelSearch(EmbeddingModel embedder) : base(embedder) {}
+
+    public override void Insert(string inputString, TensorFloat encoding){
+        embeddings[inputString] = encoding;
+    }
 
     public new TensorFloat[] Add(string[] inputStrings)
     {
         TensorFloat[] inputEmbeddings = (TensorFloat[])embedder.Split(embedder.Encode(inputStrings));
-        for (int i = 0; i < inputStrings.Length; i++) embeddings[inputStrings[i]] = inputEmbeddings[i];
+        for (int i = 0; i < inputStrings.Length; i++)
+        {
+            Insert(inputStrings[i], inputEmbeddings[i]);
+        }
         return inputEmbeddings;
     }
 
@@ -64,5 +75,52 @@ public class ModelSearch : Search<TensorFloat, EmbeddingModel>
         TensorFloat storeEmbedding = embedder.Concat(embeddings.Values.ToArray());
         float[] scores = embedder.SimilarityScores(queryEmbedding, storeEmbedding);
         return GetKNN(embeddings.Keys.ToArray(), scores, k);
+    }
+}
+
+public class ANNModelSearch : ModelSearch
+{
+    USearchIndex index;
+    protected Dictionary<string, ulong> TextToUSearch;
+    protected Dictionary<ulong, string> USearchToText;
+    ulong nextKey;
+
+    public ANNModelSearch(
+        EmbeddingModel embedder,
+        ulong dimensions,
+        MetricKind metricKind = MetricKind.Cos,
+        ulong connectivity = 32,
+        ulong expansionAdd = 40,
+        ulong expansionSearch = 16,
+        bool multi = false
+    ) : this(embedder, new USearchIndex(dimensions, metricKind, connectivity, expansionAdd, expansionSearch, multi)) {}
+
+    public ANNModelSearch(
+        EmbeddingModel embedder,
+        USearchIndex index
+    ) : base(embedder) {
+        this.index = index;
+        TextToUSearch = new Dictionary<string, ulong>();
+        USearchToText = new Dictionary<ulong, string>();
+        nextKey = 0;
+    }
+
+    public override void Insert(string inputString, TensorFloat encoding){
+        if (TextToUSearch.ContainsKey(inputString)) return;
+        ulong key = nextKey++;
+        TextToUSearch[inputString] = key;
+        USearchToText[key] = inputString;
+        index.Add(key, encoding.ToReadOnlyArray());
+    }
+
+    public override List<string> RetrieveSimilar(string queryString, int k)
+    {
+        float[] queryEmbedding = embedder.Encode(queryString).ToReadOnlyArray();
+        index.Search(queryEmbedding, k, out ulong[] keys, out float[] distances);
+        List<string> result = new List<string>();
+        for(int i=0; i<keys.Length; i++){
+            result.Add(USearchToText[keys[i]]);
+        }
+        return result;
     }
 }
