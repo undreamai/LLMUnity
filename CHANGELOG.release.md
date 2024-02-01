@@ -4,6 +4,7 @@
 - Allow to change prompt (PR: #64)
 - Feature/variable sliders (PR: #65)
 - Feature/show expert options (PR: #66)
+- Improve package loading (PR: #67)
 
 ### 🐛 Fixes
 
