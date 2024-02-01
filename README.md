@@ -134,7 +134,8 @@ You can also:
     // your game function
     ...
     string message = "Hello bot!"
-    await llm.Chat(message, HandleReply, ReplyCompleted);
+    string reply = await llm.Chat(message, HandleReply, ReplyCompleted);
+    Debug.Log(reply);
     ...
   }
 ```
