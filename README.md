@@ -1,16 +1,17 @@
 
 <p align="center">
-<img src=".github/logo_transparent_cropped.png" height="150"/>
+<img src=".github/logo.png" height="150"/>
 </p>
 
-<h3 align="center">Integrate LLM models in Unity!</h3>
+<h3 align="center">Create characters in Unity with LLMs!</h3>
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 <a href="https://discord.gg/RwXKQb6zdv"><img src="https://discordapp.com/api/guilds/1194779009284841552/widget.png?style=shield"/></a>
 [![Reddit](https://img.shields.io/badge/Reddit-%23FF4500.svg?style=flat&logo=Reddit&logoColor=white)](https://www.reddit.com/user/UndreamAI)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-blue?style=flat&logo=linkedin&labelColor=blue)](https://www.linkedin.com/company/undreamai)
 
-LLMUnity allows to integrate, run and deploy LLMs (Large Language Models) in the Unity engine.<br>
+LLMUnity allows to integrate LLMs (Large Language Models) in the Unity engine.<br>
+It allows to build create intelligent characters that your players can interact for an immersive experience.<br>
 LLMUnity is built on top of the awesome [llama.cpp](https://github.com/ggerganov/llama.cpp) and [llamafile](https://github.com/Mozilla-Ocho/llamafile) libraries.
 
 <sub>
