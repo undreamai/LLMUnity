@@ -31,12 +31,10 @@ public class EmbeddingModel : Embedder<TensorFloat>
     BertPreTokenizer bertPreTok;
     WordPieceTokenizer wordPieceTokenizer;
     TemplateProcessing templateProcessing;
-    List<string> outputLayerNames = new List<string>(){
-        "last_hidden_state",
-        "sentence_embedding"
-    };
+    string outputLayerName;
+    bool useMeanPooling;
 
-    public EmbeddingModel(string modelPath, string tokenizerPath, BackendType backend = BackendType.CPU)
+    public EmbeddingModel(string modelPath, string tokenizerPath, BackendType backend = BackendType.CPU, string outputLayerName="last_hidden_state", bool useMeanPooling=true)
     {
         runtimeModel = ModelLoader.Load(modelPath);
         string tokenizerJsonContent = File.ReadAllText(tokenizerPath);
@@ -50,6 +48,8 @@ public class EmbeddingModel : Embedder<TensorFloat>
         bertPreTok = new BertPreTokenizer(JObject.FromObject(tokenizerJsonData["pre_tokenizer"]));
         wordPieceTokenizer = new WordPieceTokenizer(JObject.FromObject(tokenizerJsonData["model"]));
         templateProcessing = new TemplateProcessing(JObject.FromObject(tokenizerJsonData["post_processor"]));
+        this.outputLayerName = outputLayerName;
+        this.useMeanPooling = useMeanPooling;
     }
 
     public void Destroy()
@@ -95,11 +95,12 @@ public class EmbeddingModel : Embedder<TensorFloat>
         // Step 2: Compute embedding and get the output
         worker.Execute(inputSentencesTokensTensor);
         // Step 3: Get the output from the neural network
-        List<string> validOutputs = runtimeModel.outputs.Intersect(outputLayerNames).ToList();
-        if (validOutputs.Count() != 1) throw new Exception("Could not determine output layer!");
-        TensorFloat outputTensor = worker.PeekOutput(validOutputs[0]) as TensorFloat;
+        TensorFloat outputTensor = worker.PeekOutput(outputLayerName) as TensorFloat;
         // Step 4: Perform pooling
-        TensorFloat MeanPooledTensor = MeanPooling(inputSentencesTokensTensor["attention_mask"], outputTensor, ops);
+        TensorFloat MeanPooledTensor = outputTensor;
+        if (useMeanPooling){
+            MeanPooledTensor = MeanPooling(inputSentencesTokensTensor["attention_mask"], outputTensor, ops);
+        }
         // Step 5: Normalize the results
         TensorFloat NormedTensor = L2Norm(MeanPooledTensor, ops);
         // Cleanup
@@ -325,4 +326,16 @@ public class EmbeddingModel : Embedder<TensorFloat>
     {
         return inputIds.Select(innerList => innerList.Select(_ => 0).ToList()).ToList();
     }
+}
+
+public class BGEModel: EmbeddingModel
+{
+    public BGEModel(string modelPath, string tokenizerPath, BackendType backend = BackendType.CPU):
+        base(modelPath, tokenizerPath, backend, "sentence_embedding", false){}
+}
+
+public class MiniLMModel: EmbeddingModel
+{
+    public MiniLMModel(string modelPath, string tokenizerPath, BackendType backend = BackendType.CPU):
+        base(modelPath, tokenizerPath, backend, "last_hidden_state", true){}
 }
