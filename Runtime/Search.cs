@@ -119,6 +119,7 @@ namespace LLMUnity
         public override void Insert(string inputString, TensorFloat encoding)
         {
             if (USearchToText.ContainsValue(inputString)) return;
+            encoding.MakeReadable();
             lock (insertLock)
             {
                 ulong key = nextKey++;
@@ -129,8 +130,9 @@ namespace LLMUnity
 
         public override List<string> RetrieveSimilar(string queryString, int k)
         {
-            float[] queryEmbedding = embedder.Encode(queryString).ToReadOnlyArray();
-            index.Search(queryEmbedding, k, out ulong[] keys, out float[] distances);
+            TensorFloat encoding = embedder.Encode(queryString);
+            encoding.MakeReadable();
+            index.Search(encoding.ToReadOnlyArray(), k, out ulong[] keys, out float[] distances);
             List<string> result = new List<string>();
             for (int i = 0; i < keys.Length; i++)
             {
