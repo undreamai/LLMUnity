@@ -62,7 +62,8 @@ namespace LLMUnity
     {
         public ModelSearch(EmbeddingModel embedder) : base(embedder) {}
 
-        public override void Insert(string inputString, TensorFloat encoding){
+        public override void Insert(string inputString, TensorFloat encoding)
+        {
             embeddings[inputString] = encoding;
         }
 
@@ -99,19 +100,21 @@ namespace LLMUnity
             ulong expansionAdd = 40,
             ulong expansionSearch = 16,
             bool multi = false
-        ) : this(embedder, new USearchIndex((ulong) embedder.Dimensions, metricKind, connectivity, expansionAdd, expansionSearch, multi)) {}
+        ) : this(embedder, new USearchIndex((ulong)embedder.Dimensions, metricKind, connectivity, expansionAdd, expansionSearch, multi)) {}
 
         public ANNModelSearch(
             EmbeddingModel embedder,
             USearchIndex index
-        ) : base(embedder) {
+        ) : base(embedder)
+        {
             this.index = index;
             TextToUSearch = new Dictionary<string, ulong>();
             USearchToText = new Dictionary<ulong, string>();
             nextKey = 0;
         }
 
-        public override void Insert(string inputString, TensorFloat encoding){
+        public override void Insert(string inputString, TensorFloat encoding)
+        {
             if (TextToUSearch.ContainsKey(inputString)) return;
             ulong key = nextKey++;
             TextToUSearch[inputString] = key;
@@ -124,7 +127,8 @@ namespace LLMUnity
             float[] queryEmbedding = embedder.Encode(queryString).ToReadOnlyArray();
             index.Search(queryEmbedding, k, out ulong[] keys, out float[] distances);
             List<string> result = new List<string>();
-            for(int i=0; i<keys.Length; i++){
+            for (int i = 0; i < keys.Length; i++)
+            {
                 result.Add(USearchToText[keys[i]]);
             }
             return result;
@@ -133,7 +137,7 @@ namespace LLMUnity
         public new int Count()
         {
             Console.Write(index.Size());
-            return (int) index.Size();
+            return (int)index.Size();
         }
     }
 }

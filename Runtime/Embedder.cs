@@ -36,7 +36,7 @@ namespace LLMUnity
         bool useMeanPooling;
         public int Dimensions { get; private set; }
 
-        public EmbeddingModel(string modelPath, string tokenizerPath, BackendType backend = BackendType.CPU, string outputLayerName = "last_hidden_state", bool useMeanPooling = true, int dimensions=384)
+        public EmbeddingModel(string modelPath, string tokenizerPath, BackendType backend = BackendType.CPU, string outputLayerName = "last_hidden_state", bool useMeanPooling = true, int dimensions = 384)
         {
             runtimeModel = ModelLoader.Load(modelPath);
             string tokenizerJsonContent = File.ReadAllText(tokenizerPath);

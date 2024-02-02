@@ -257,7 +257,7 @@ namespace HuggingFace.SharpTransformers.Decoders
 
             return newTokens;
         }
-        
+
     }
 
     /// <summary>
@@ -273,8 +273,8 @@ namespace HuggingFace.SharpTransformers.Decoders
         {
 
             this.content = this.Config["content"].Value<string>();
-            this.start = this.Config["start"].Value<int>(); 
-            this.stop = this.Config["stop"].Value<int>(); 
+            this.start = this.Config["start"].Value<int>();
+            this.stop = this.Config["stop"].Value<int>();
         }
 
         public override List<string> Decode(List<string> tokens)
@@ -313,7 +313,7 @@ namespace HuggingFace.SharpTransformers.Decoders
                 return token.Substring(startCut, stopCut - startCut);
             }).ToList();
         }
-}
+    }
 
 
     /// <summary>
@@ -338,7 +338,7 @@ namespace HuggingFace.SharpTransformers.Decoders
 
             foreach (JObject decoderConfig in config["decoders"])
             {
-               
+
                 var decoder = Decoder_.FromConfig(decoderConfig);
 
                 if (decoder != null)

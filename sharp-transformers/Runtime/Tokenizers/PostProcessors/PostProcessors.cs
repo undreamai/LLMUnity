@@ -76,14 +76,14 @@ namespace HuggingFace.SharpTransformers.PostProcessors
     {
         // The template for a single sequence of tokens.
         public JArray Single;
-        
+
         //public List<SingleItem> Single;
 
         // The template for a pair of sequences of tokens.
         public JArray Pair;
-        
+
         //public List<PairItem> Pair;
-        
+
         /// <summary>
         /// Creates a new instance of TemplateProcessing
         /// </summary>
@@ -120,7 +120,7 @@ namespace HuggingFace.SharpTransformers.PostProcessors
                     string specialTokenId = (string)itemJson["SpecialToken"]["id"];
                     ToReturn.Add(specialTokenId);
                 }
-                
+
                 // If the current item has a property called "Sequence"  it means that this item
                 // represents a sequence identifier (like 'A' or 'B')
                 else if (itemJson.ContainsKey("Sequence"))
