@@ -31,6 +31,10 @@ public class EmbeddingModel : Embedder<TensorFloat>
     BertPreTokenizer bertPreTok;
     WordPieceTokenizer wordPieceTokenizer;
     TemplateProcessing templateProcessing;
+    List<string> outputLayerNames = new List<string>(){
+        "last_hidden_state",
+        "sentence_embedding"
+    };
 
     public EmbeddingModel(string modelPath, string tokenizerPath, BackendType backend = BackendType.CPU)
     {
@@ -91,7 +95,9 @@ public class EmbeddingModel : Embedder<TensorFloat>
         // Step 2: Compute embedding and get the output
         worker.Execute(inputSentencesTokensTensor);
         // Step 3: Get the output from the neural network
-        TensorFloat outputTensor = worker.PeekOutput("last_hidden_state") as TensorFloat;
+        List<string> validOutputs = runtimeModel.outputs.Intersect(outputLayerNames).ToList();
+        if (validOutputs.Count() != 1) throw new Exception("Could not determine output layer!");
+        TensorFloat outputTensor = worker.PeekOutput(validOutputs[0]) as TensorFloat;
         // Step 4: Perform pooling
         TensorFloat MeanPooledTensor = MeanPooling(inputSentencesTokensTensor["attention_mask"], outputTensor, ops);
         // Step 5: Normalize the results
@@ -151,7 +157,8 @@ public class EmbeddingModel : Embedder<TensorFloat>
         }
 
         int max_length = (int)tokenizerJsonData["truncation"]["max_length"];
-        Tuple<List<List<int>>, List<List<int>>> tuple_ = PaddingOrTruncate(true, true, sentences, max_length, JObject.FromObject(tokenizerJsonData["padding"]));
+        // Tuple<List<List<int>>, List<List<int>>> tuple_ = PaddingOrTruncate(true, true, sentences, max_length, JObject.FromObject(tokenizerJsonData["padding"]));
+        Tuple<List<List<int>>, List<List<int>>> tuple_ = PaddingOrTruncate(true, true, sentences, max_length);
         attentionMask = tuple_.Item1;
         tokenIds = tuple_.Item2;
 
@@ -248,7 +255,7 @@ public class EmbeddingModel : Embedder<TensorFloat>
         return inputTensors;
     }
 
-    static Tuple<List<List<int>>, List<List<int>>> PaddingOrTruncate(bool padding, bool truncation, List<List<int>> tokens, int max_length, JObject config)
+    static Tuple<List<List<int>>, List<List<int>>> PaddingOrTruncate(bool padding, bool truncation, List<List<int>> tokens, int max_length)
     {
         // TODO allow user to change
         string padding_side = "right";
