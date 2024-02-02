@@ -70,6 +70,10 @@ namespace LLMUnity
         public new TensorFloat[] Add(string[] inputStrings)
         {
             TensorFloat[] inputEmbeddings = (TensorFloat[])embedder.Split(embedder.Encode(inputStrings));
+            if (inputStrings.Length != inputEmbeddings.Length)
+            {
+                throw new Exception($"Number of computed embeddings ({inputEmbeddings.Length}) different than inputs ({inputStrings.Length})");
+            }
             for (int i = 0; i < inputStrings.Length; i++)
             {
                 Insert(inputStrings[i], inputEmbeddings[i]);
@@ -89,9 +93,9 @@ namespace LLMUnity
     public class ANNModelSearch : ModelSearch
     {
         USearchIndex index;
-        protected Dictionary<string, ulong> TextToUSearch;
-        protected Dictionary<ulong, string> USearchToText;
+        Dictionary<ulong, string> USearchToText;
         ulong nextKey;
+        object insertLock = new object();
 
         public ANNModelSearch(
             EmbeddingModel embedder,
@@ -108,18 +112,19 @@ namespace LLMUnity
         ) : base(embedder)
         {
             this.index = index;
-            TextToUSearch = new Dictionary<string, ulong>();
             USearchToText = new Dictionary<ulong, string>();
             nextKey = 0;
         }
 
         public override void Insert(string inputString, TensorFloat encoding)
         {
-            if (TextToUSearch.ContainsKey(inputString)) return;
-            ulong key = nextKey++;
-            TextToUSearch[inputString] = key;
-            USearchToText[key] = inputString;
-            index.Add(key, encoding.ToReadOnlyArray());
+            if (USearchToText.ContainsValue(inputString)) return;
+            lock (insertLock)
+            {
+                ulong key = nextKey++;
+                USearchToText[key] = inputString;
+                index.Add(key, encoding.ToReadOnlyArray());
+            }
         }
 
         public override List<string> RetrieveSimilar(string queryString, int k)
@@ -136,7 +141,6 @@ namespace LLMUnity
 
         public new int Count()
         {
-            Console.Write(index.Size());
             return (int)index.Size();
         }
     }
