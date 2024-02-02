@@ -94,13 +94,12 @@ namespace LLMUnity
 
         public ANNModelSearch(
             EmbeddingModel embedder,
-            ulong dimensions,
             MetricKind metricKind = MetricKind.Cos,
             ulong connectivity = 32,
             ulong expansionAdd = 40,
             ulong expansionSearch = 16,
             bool multi = false
-        ) : this(embedder, new USearchIndex(dimensions, metricKind, connectivity, expansionAdd, expansionSearch, multi)) {}
+        ) : this(embedder, new USearchIndex((ulong) embedder.Dimensions, metricKind, connectivity, expansionAdd, expansionSearch, multi)) {}
 
         public ANNModelSearch(
             EmbeddingModel embedder,

@@ -34,8 +34,9 @@ namespace LLMUnity
         TemplateProcessing templateProcessing;
         string outputLayerName;
         bool useMeanPooling;
+        public int Dimensions { get; private set; }
 
-        public EmbeddingModel(string modelPath, string tokenizerPath, BackendType backend = BackendType.CPU, string outputLayerName = "last_hidden_state", bool useMeanPooling = true)
+        public EmbeddingModel(string modelPath, string tokenizerPath, BackendType backend = BackendType.CPU, string outputLayerName = "last_hidden_state", bool useMeanPooling = true, int dimensions=384)
         {
             runtimeModel = ModelLoader.Load(modelPath);
             string tokenizerJsonContent = File.ReadAllText(tokenizerPath);
@@ -51,6 +52,7 @@ namespace LLMUnity
             templateProcessing = new TemplateProcessing(JObject.FromObject(tokenizerJsonData["post_processor"]));
             this.outputLayerName = outputLayerName;
             this.useMeanPooling = useMeanPooling;
+            Dimensions = dimensions;
         }
 
         public void Destroy()
@@ -333,14 +335,14 @@ namespace LLMUnity
     public class BGEModel : EmbeddingModel
     {
         public BGEModel(string modelPath, string tokenizerPath, BackendType backend = BackendType.CPU) :
-            base(modelPath, tokenizerPath, backend, "sentence_embedding", false)
+            base(modelPath, tokenizerPath, backend, "sentence_embedding", false, 384)
         {}
     }
 
     public class MiniLMModel : EmbeddingModel
     {
         public MiniLMModel(string modelPath, string tokenizerPath, BackendType backend = BackendType.CPU) :
-            base(modelPath, tokenizerPath, backend, "last_hidden_state", true)
+            base(modelPath, tokenizerPath, backend, "last_hidden_state", true, 384)
         {}
     }
 }
