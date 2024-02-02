@@ -173,10 +173,12 @@ namespace LLMUnity
             nKeep = tokens.Count;
         }
 
+#if UNITY_EDITOR
         public async void SetGrammar(string path)
         {
             grammar = await LLMUnitySetup.AddAsset(path, GetAssetPath());
         }
+#endif
 
         private string RoleString(string role)
         {
