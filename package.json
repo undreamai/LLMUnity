@@ -39,6 +39,11 @@
       "displayName": "ServerClient",
       "description": "Example with two AIs using LLMUnity.",
       "path": "Samples~/ServerClient"
+    },
+    {
+      "displayName": "HamletSearch",
+      "description": "Example demonstrating search of relevant text with embeddings.",
+      "path": "Samples~/HamletSearch"
     }
    ],
    "author": {
