@@ -30,7 +30,7 @@ LLMUnity is built on top of the awesome [llama.cpp](https://github.com/ggerganov
 ## At a glance
 - :computer: Cross-platform! Supports Windows, Linux and macOS ([supported versions](https://github.com/Mozilla-Ocho/llamafile?tab=readme-ov-file#supported-oses-and-cpus))
 - :house: Runs locally without internet access but also supports remote servers
-- :zap: Fast inference on CPU and GPU
+- :zap: Fast inference on CPU and GPU (NVIDIA and AMD)
 - :hugs: Support of the major LLM models ([supported models](https://github.com/ggerganov/llama.cpp?tab=readme-ov-file#description))
 - :wrench: Easy to setup, call with a single line code
 - :moneybag: Free to use for both personal and commercial purposes
