@@ -193,7 +193,9 @@ namespace LLMUnity
         {
             if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer)
                 return input.Replace(" ", "\" \"");
-            return $"'{input}'";
+            if (input.Contains(" "))
+                return $"'{input}'";
+            return input;
         }
 
         private void RunServerCommand(string exe, string args)
