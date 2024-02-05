@@ -81,6 +81,11 @@ namespace LLMUnity
             return inputEmbeddings;
         }
 
+        public TensorFloat[] Add(List<string> inputStrings)
+        {
+            return Add(inputStrings.ToArray());
+        }
+
         public override List<string> RetrieveSimilar(string queryString, int k)
         {
             TensorFloat queryEmbedding = embedder.Encode(queryString);
