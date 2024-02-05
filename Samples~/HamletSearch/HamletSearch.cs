@@ -5,6 +5,7 @@ using Debug = UnityEngine.Debug;
 using System.Text.RegularExpressions;
 using LLMUnity;
 using System.Linq;
+using Unity.VisualScripting;
 
 class HamletSearch : MonoBehaviour
 {
@@ -23,28 +24,32 @@ class HamletSearch : MonoBehaviour
 
     void Start()
     {
-        List<Dialogue> dialogues = ReadGutenbergFile(gutenbergText.text);
-        List<Dialogue> dialoguesToDo = fullPlay ? dialogues : new List<Dialogue> { dialogues[2] };
+        Dictionary<string, List<(string, string)>> hamlet = ReadGutenbergFile(gutenbergText.text);
+        DialogueManager dialogueManager = new DialogueManager();
         search = new ANNModelSearch(embedder);
-
         Stopwatch stopwatch = new Stopwatch();
-        float elapsed_total = 0;
-        int numSentences = 0;
 
-        foreach (Dialogue dialogue in dialoguesToDo)
+        int numSentences = 0;
+        float elapsedTotal = 0;
+        foreach ((string act, List<(string, string)> messages) in hamlet)
         {
-            string[] sentences = dialogue.GetSentences().ToArray();
-            numSentences += sentences.Length;
+            if (!fullPlay && act != "ACT III") continue;
+            foreach ((string actor, string message) in messages)
+                dialogueManager.Add(actor, act, message);
+            messages.Clear();
+
+            List<string> sentences = dialogueManager.GetSentences(null, act);
+            numSentences += sentences.Count;
 
             stopwatch.Reset(); stopwatch.Start();
             search.Add(sentences);
             stopwatch.Stop();
 
-            float elapsed = (float)stopwatch.Elapsed.TotalMilliseconds / 1000f;
-            elapsed_total += elapsed;
-            Debug.Log($"{dialogue.Title} embed time: {elapsed} secs");
+            elapsedTotal += (float)stopwatch.Elapsed.TotalMilliseconds / 1000f;
+            Debug.Log($"act {act} embedded {sentences.Count} sentences in {stopwatch.Elapsed.TotalMilliseconds / 1000f} secs");
         }
-        Debug.Log($"embedded {numSentences} sentences in {elapsed_total} secs");
+        Debug.Log($"embedded {numSentences} sentences in {elapsedTotal} secs");
+        Debug.Log(search.Count());
 
         stopwatch.Reset(); stopwatch.Start();
         List<string> similar = search.RetrieveSimilar("should i exist?", 10);
@@ -58,9 +63,8 @@ class HamletSearch : MonoBehaviour
         }
     }
 
-    public List<Dialogue> ReadGutenbergFile(string text)
+    public Dictionary<string, List<(string, string)>> ReadGutenbergFile(string text)
     {
-        List<Dialogue> dialogues = new List<Dialogue>();
         string skipPattern = @"\[.*?\]";
         string namePattern = "^[A-Z and]+\\.$";
         Regex nameRegex = new Regex(namePattern);
@@ -72,6 +76,7 @@ class HamletSearch : MonoBehaviour
         Dialogue dialogue = null;
         int numWords = 0;
         int numLines = 0;
+        Dictionary<string, List<(string, string)>> messages = new Dictionary<string, List<(string, string)>>();
 
         string[] lines = text.Split("\n");
         for (int i = 0; i < lines.Length; i++)
@@ -91,11 +96,10 @@ class HamletSearch : MonoBehaviour
             {
                 if (dialogue != null && message != "")
                 {
-                    dialogue.AddPhrase(name, message);
+                    messages[act].Add((name, message));
                 }
                 act = line.Replace(".", "");
-                dialogue = new Dialogue(act);
-                dialogues.Add(dialogue);
+                messages[act] = new List<(string, string)>();
                 name = null;
                 message = "";
             }
@@ -103,7 +107,7 @@ class HamletSearch : MonoBehaviour
             {
                 if (name != null && message != "")
                 {
-                    dialogue.AddPhrase(name, message);
+                    messages[act].Add((name, message));
                 }
                 message = "";
                 name = line.Replace(".", "");
@@ -115,7 +119,7 @@ class HamletSearch : MonoBehaviour
             }
         }
         Debug.Log($"{numLines} lines, {numWords} words");
-        return dialogues;
+        return messages;
     }
 
     public void OnDisable()
