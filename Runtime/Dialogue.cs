@@ -4,101 +4,232 @@ using System.Linq;
 
 namespace LLMUnity
 {
+    public class Sentence
+    {
+        public int phraseId;
+        public int startIndex;
+        public int endIndex;
+
+        public Sentence(int phraseId, int startIndex, int endIndex)
+        {
+            this.phraseId = phraseId;
+            this.startIndex = startIndex;
+            this.endIndex = endIndex;
+        }
+    }
+
+    public class SentenceSplitter
+    {
+        public static char[] DefaultDelimiters = new char[] { '.', '!', ':', ';', '?', '\n', '\r', };
+        char[] delimiters;
+        bool trimSentences = true;
+
+        public SentenceSplitter(char[] delimiters, bool trimSentences = true)
+        {
+            this.delimiters = delimiters;
+            this.trimSentences = trimSentences;
+        }
+
+        public SentenceSplitter() : this(SentenceSplitter.DefaultDelimiters, true) {}
+
+        public List<(int, int)> Split(string input)
+        {
+            List<(int, int)> indices = new List<(int, int)>();
+            int startIndex = 0;
+            bool sawDelimiter = true;
+            for (int i = 0; i < input.Length; i++)
+            {
+                if (sawDelimiter && trimSentences)
+                {
+                    while (char.IsWhiteSpace(input[i]) && i < input.Length - 1) i++;
+                    startIndex = i;
+                    sawDelimiter = false;
+                }
+                if (delimiters.Contains(input[i]) || i == input.Length - 1)
+                {
+                    int endIndex = i;
+                    if (i == input.Length - 1 && trimSentences)
+                    {
+                        while (char.IsWhiteSpace(input[endIndex]) && endIndex > startIndex) endIndex--;
+                    }
+                    if (endIndex > startIndex || !trimSentences || (trimSentences && !char.IsWhiteSpace(input[startIndex]) && !delimiters.Contains(input[startIndex])))
+                    {
+                        indices.Add((startIndex, endIndex));
+                    }
+                    startIndex = i + 1;
+                    sawDelimiter = true;
+                }
+            }
+            return indices;
+        }
+    }
+
     public class Dialogue
     {
         public string Title { get; private set; }
+        public string Actor { get; private set; }
 
-        char[] delimiters;
-        Dictionary<int, string> sentences;
         Dictionary<int, string> phrases;
-        Dictionary<string, List<int>> characterPhrases;
-        Dictionary<int, List<int>> phraseSentences;
-        Dictionary<int, int> sentencePhrase;
-        int nextSentenceId;
+        Dictionary<int, List<Sentence>> phraseSentences;
         int nextPhraseId;
+        SentenceSplitter sentenceSplitter;
 
-        public Dialogue(string title = "")
+        public Dialogue(string actor = "", string title = "")
         {
+            Actor = actor;
             Title = title;
-            sentences = new Dictionary<int, string>();
             phrases = new Dictionary<int, string>();
-            characterPhrases = new Dictionary<string, List<int>>();
-            phraseSentences = new Dictionary<int, List<int>>();
-            sentencePhrase = new Dictionary<int, int>();
-            nextSentenceId = 0;
+            phraseSentences = new Dictionary<int, List<Sentence>>();
             nextPhraseId = 0;
-            SetDelimiters(new char[] { '.', '!', ':', ';', '?', '\n', '\r', });
+            sentenceSplitter = new SentenceSplitter();
         }
 
-        public void SetDelimiters(char[] delimiters)
+        public void SetSentenceSplitting(char[] delimiters, bool trimSentences = true)
         {
-            this.delimiters = delimiters;
-        }
-
-        public static void Add<K, V>(Dictionary<K, List<V>> dict, K key, V value)
-        {
-            if (!dict.ContainsKey(key))
+            if (nextPhraseId > 0) throw new Exception("Sentence splitting can't change when there are phrases in the Dialogue");
+            if (delimiters == null)
             {
-                dict[key] = new List<V>();
+                sentenceSplitter = null;
             }
-            dict[key].Add(value);
+            else
+            {
+                sentenceSplitter = new SentenceSplitter(delimiters, trimSentences);
+            }
         }
 
-        int AddSentence(int phraseId, string sentence)
+        public void SetNoSentenceSplitting()
         {
-            int sentenceId = nextSentenceId++;
-            sentences[sentenceId] = sentence;
-            sentencePhrase[sentenceId] = phraseId;
-            return sentenceId;
+            SetSentenceSplitting(null);
         }
 
-        public void AddPhrase(string name, string phrase)
+        public void Add(string text)
         {
             int phraseId = nextPhraseId++;
-            phrases[phraseId] = phrase;
-            string[] sentences = phrase.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
-            for (int i = 0; i < sentences.Length; i++)
+            phrases[phraseId] = text;
+            if (sentenceSplitter == null)
             {
-                string sentence = sentences[i].Trim();
-                int sentenceId = AddSentence(phraseId, sentence);
-                Add(phraseSentences, phraseId, sentenceId);
+                phraseSentences[phraseId] = new List<Sentence> { new Sentence(phraseId, 0, text.Length - 1) };
             }
-            Add(characterPhrases, name, phraseId);
-        }
-
-        public List<string> GetCharacterPhrases(string name)
-        {
-            if (!characterPhrases.ContainsKey(name))
+            else
             {
-                return null;
-            }
-            List<string> result = new List<string>();
-            foreach (int phraseId in characterPhrases[name])
-            {
-                result.Add(phrases[phraseId]);
-            }
-            return result;
-        }
-
-        public List<string> GetCharacterSentences(string name)
-        {
-            if (!characterPhrases.ContainsKey(name))
-            {
-                return null;
-            }
-            List<string> result = new List<string>();
-            foreach (int phraseId in characterPhrases[name])
-            {
-                foreach (int sentenceId in phraseSentences[phraseId])
+                phraseSentences[phraseId] = new List<Sentence>();
+                List<(int, int)> subindices = sentenceSplitter.Split(text);
+                foreach ((int startIndex, int endIndex) in subindices)
                 {
-                    result.Add(sentences[sentenceId]);
+                    phraseSentences[phraseId].Add(new Sentence(phraseId, startIndex, endIndex));
                 }
             }
-            return result;
         }
+
+        public List<string> GetPhrases()
+        {
+            return phrases.Values.ToList();
+        }
+
         public List<string> GetSentences()
         {
-            return sentences.Values.ToList();
+            List<string> allSentences = new List<string>();
+            foreach ((int phraseId, List<Sentence> sentences) in phraseSentences)
+            {
+                string phrase = phrases[phraseId];
+                foreach (Sentence sentence in sentences)
+                {
+                    allSentences.Add(phrase.Substring(sentence.startIndex, sentence.endIndex - sentence.startIndex + 1));
+                }
+            }
+            return allSentences;
+        }
+
+        public void Clear()
+        {
+            phrases.Clear();
+            foreach (List<Sentence> sentences in phraseSentences.Values) sentences.Clear();
+        }
+    }
+
+    public class DialogueManager
+    {
+        Dictionary<string, Dictionary<string, Dialogue>> dialogues;
+        char[] delimiters = SentenceSplitter.DefaultDelimiters;
+        bool trimSentences = true;
+
+        public DialogueManager()
+        {
+            dialogues = new Dictionary<string, Dictionary<string, Dialogue>>();
+        }
+
+        public void SetSentenceSplitting(char[] delimiters, bool trimSentences = true)
+        {
+            this.delimiters = delimiters;
+            this.trimSentences = trimSentences;
+        }
+
+        public void SetNoSentenceSplitting()
+        {
+            SetSentenceSplitting(null);
+        }
+
+        public void Add(string actor, string title, string text)
+        {
+            if (!dialogues.ContainsKey(actor) || !dialogues[actor].ContainsKey(title))
+            {
+                Dialogue dialogue = new Dialogue(actor, title);
+                dialogue.SetSentenceSplitting(delimiters, trimSentences);
+                if (!dialogues.ContainsKey(actor))
+                {
+                    dialogues[actor] = new Dictionary<string, Dialogue>();
+                }
+                dialogues[actor][title] = dialogue;
+            }
+            dialogues[actor][title].Add(text);
+        }
+
+        public void Add(string actor, string text)
+        {
+            Add(actor, "", text);
+        }
+
+        public List<string> GetPhrases(string actor = null, string title = null)
+        {
+            List<string> phrases = new List<string>();
+            foreach ((string actorName, Dictionary<string, Dialogue> actorDialogues) in dialogues)
+            {
+                foreach ((string titleName, Dialogue dialogue) in actorDialogues)
+                {
+                    if ((actor == null || actor == actorName) && (title == null || title == titleName))
+                    {
+                        phrases.AddRange(dialogue.GetPhrases());
+                    }
+                }
+            }
+            return phrases;
+        }
+
+        public List<string> GetSentences(string actor = null, string title = null)
+        {
+            List<string> sentences = new List<string>();
+            foreach ((string actorName, Dictionary<string, Dialogue> actorDialogues) in dialogues)
+            {
+                foreach ((string titleName, Dialogue dialogue) in actorDialogues)
+                {
+                    if ((actor == null || actor == actorName) && (title == null || title == titleName))
+                    {
+                        sentences.AddRange(dialogue.GetSentences());
+                    }
+                }
+            }
+            return sentences;
+        }
+
+        public void Clear()
+        {
+            foreach (Dictionary<string, Dialogue> actorDialogues in dialogues.Values)
+            {
+                foreach (Dialogue dialogue in actorDialogues.Values)
+                {
+                    dialogue.Clear();
+                }
+            }
         }
     }
 }
