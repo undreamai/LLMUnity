@@ -20,6 +20,10 @@ class HamletSearch : MonoBehaviour
             "Assets/StreamingAssets/bge-small-en-v1.5.sentis",
             "Assets/StreamingAssets/bge-small-en-v1.5.tokenizer.json"
         );
+        // embedder = new BGEModel(
+        //     "Assets/StreamingAssets/bge-base-en-v1.5.sentis",
+        //     "Assets/StreamingAssets/bge-base-en-v1.5.tokenizer.json"
+        // );
     }
 
     void Start()
@@ -39,10 +43,14 @@ class HamletSearch : MonoBehaviour
             messages.Clear();
 
             List<string> sentences = dialogueManager.GetSentences(null, act);
-            numSentences += sentences.Count;
+            List<int> keys = new List<int>();
+            for (int i = 0; i < sentences.Count; i++)
+            {
+                keys.Add(numSentences++);
+            }
 
             stopwatch.Reset(); stopwatch.Start();
-            search.Add(sentences);
+            search.Add(keys, sentences);
             stopwatch.Stop();
 
             elapsedTotal += (float)stopwatch.Elapsed.TotalMilliseconds / 1000f;
@@ -52,12 +60,12 @@ class HamletSearch : MonoBehaviour
         Debug.Log(search.Count());
 
         stopwatch.Reset(); stopwatch.Start();
-        List<string> similar = search.RetrieveSimilar("should i exist?", 10);
+        string[] similar = search.Search("should i be?", 10);
         stopwatch.Stop();
         Debug.Log($"search time: {stopwatch.Elapsed.TotalMilliseconds / 1000f} secs");
 
         Debug.Log("Similar sentences:");
-        for (int i = 0; i < similar.Count; i++)
+        for (int i = 0; i < similar.Length; i++)
         {
             Debug.Log($"  {i + 1}: {similar[i]}");
         }
