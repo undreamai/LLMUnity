@@ -67,23 +67,31 @@ namespace LLMUnity
             embeddings[inputString] = encoding;
         }
 
-        public new TensorFloat[] Add(string[] inputStrings)
+        public TensorFloat[] Add(string[] inputStrings, int batchSize = 64)
         {
-            TensorFloat[] inputEmbeddings = (TensorFloat[])embedder.Split(embedder.Encode(inputStrings));
-            if (inputStrings.Length != inputEmbeddings.Length)
+            return Add(new List<string>(inputStrings), batchSize);
+        }
+
+        public TensorFloat[] Add(List<string> inputStrings, int batchSize = 64)
+        {
+            List<TensorFloat> inputEmbeddings = new List<TensorFloat>();
+            for (int i = 0; i < inputStrings.Count; i += batchSize)
             {
-                throw new Exception($"Number of computed embeddings ({inputEmbeddings.Length}) different than inputs ({inputStrings.Length})");
+                int takeCount = Math.Min(batchSize, inputStrings.Count - i);
+                List<string> batch = new List<string>(inputStrings.GetRange(i, takeCount));
+                inputEmbeddings.AddRange((TensorFloat[])embedder.Split(embedder.Encode(batch)));
+                Console.WriteLine(takeCount);
             }
-            for (int i = 0; i < inputStrings.Length; i++)
+
+            if (inputStrings.Count != inputEmbeddings.Count)
+            {
+                throw new Exception($"Number of computed embeddings ({inputEmbeddings.Count}) different than inputs ({inputStrings.Count})");
+            }
+            for (int i = 0; i < inputStrings.Count; i++)
             {
                 Insert(inputStrings[i], inputEmbeddings[i]);
             }
-            return inputEmbeddings;
-        }
-
-        public TensorFloat[] Add(List<string> inputStrings)
-        {
-            return Add(inputStrings.ToArray());
+            return inputEmbeddings.ToArray();
         }
 
         public override List<string> RetrieveSimilar(string queryString, int k)
