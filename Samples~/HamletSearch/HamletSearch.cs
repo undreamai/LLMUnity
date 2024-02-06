@@ -4,13 +4,10 @@ using System.Diagnostics;
 using Debug = UnityEngine.Debug;
 using System.Text.RegularExpressions;
 using LLMUnity;
-using System.Linq;
-using Unity.VisualScripting;
 
 class HamletSearch : MonoBehaviour
 {
     EmbeddingModel embedder;
-    ANNModelSearch search;
     public bool fullPlay;
     public TextAsset gutenbergText;
 
@@ -29,38 +26,24 @@ class HamletSearch : MonoBehaviour
     void Start()
     {
         Dictionary<string, List<(string, string)>> hamlet = ReadGutenbergFile(gutenbergText.text);
-        DialogueManager dialogueManager = new DialogueManager();
-        search = new ANNModelSearch(embedder);
+        DialogueManager dialogueManager = new DialogueManager(embedder);
         Stopwatch stopwatch = new Stopwatch();
 
-        int numSentences = 0;
         float elapsedTotal = 0;
         foreach ((string act, List<(string, string)> messages) in hamlet)
         {
             if (!fullPlay && act != "ACT III") continue;
+            stopwatch.Reset(); stopwatch.Start();
             foreach ((string actor, string message) in messages)
                 dialogueManager.Add(actor, act, message);
-            messages.Clear();
-
-            List<string> sentences = dialogueManager.GetSentences(null, act);
-            List<int> keys = new List<int>();
-            for (int i = 0; i < sentences.Count; i++)
-            {
-                keys.Add(numSentences++);
-            }
-
-            stopwatch.Reset(); stopwatch.Start();
-            search.Add(keys, sentences);
-            stopwatch.Stop();
 
             elapsedTotal += (float)stopwatch.Elapsed.TotalMilliseconds / 1000f;
-            Debug.Log($"act {act} embedded {sentences.Count} sentences in {stopwatch.Elapsed.TotalMilliseconds / 1000f} secs");
+            Debug.Log($"act {act} embedded {dialogueManager.GetSentences(null, act).Count} sentences in {stopwatch.Elapsed.TotalMilliseconds / 1000f} secs");
         }
-        Debug.Log($"embedded {numSentences} sentences in {elapsedTotal} secs");
-        Debug.Log(search.Count());
+        Debug.Log($"embedded {dialogueManager.NumPhrases()} phrases, {dialogueManager.NumSentences()} sentences in {elapsedTotal} secs");
 
         stopwatch.Reset(); stopwatch.Start();
-        string[] similar = search.Search("should i be?", 10);
+        string[] similar = dialogueManager.Search("should i be?", 10);
         stopwatch.Stop();
         Debug.Log($"search time: {stopwatch.Elapsed.TotalMilliseconds / 1000f} secs");
 
