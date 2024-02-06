@@ -144,7 +144,7 @@ namespace LLMUnity
                 TcpClient c = new TcpClient(host, port);
                 return true;
             }
-            catch {}
+            catch { }
             return false;
         }
 
@@ -181,7 +181,7 @@ namespace LLMUnity
                     serverBlock.Set();
                 }
             }
-            catch {}
+            catch { }
         }
 
         private void ProcessExited(object sender, EventArgs e)
@@ -225,7 +225,7 @@ namespace LLMUnity
             process = LLMUnitySetup.CreateProcess(binary, arguments, CheckIfListening, ProcessError, ProcessExited, environment);
         }
 
-        private void StartLLMServer()
+        private async void StartLLMServer()
         {
             if (IsPortInUse()) throw new Exception($"Port {port} is already in use, please use another port or kill all llamafile processes using it!");
 
@@ -249,7 +249,10 @@ namespace LLMUnity
             string GPUArgument = numGPULayers <= 0 ? "" : $" -ngl {numGPULayers}";
             LLMUnitySetup.makeExecutable(server);
             RunServerCommand(server, arguments + GPUArgument);
-            serverBlock.WaitOne(60000);
+
+
+            await WaitOneASync(serverBlock, TimeSpan.FromSeconds(60));
+            //serverBlock.WaitOne(60000);
 
             if (process.HasExited && mmapCrash)
             {
@@ -257,7 +260,8 @@ namespace LLMUnity
                 serverBlock.Reset();
                 arguments += " --no-mmap";
                 RunServerCommand(server, arguments + GPUArgument);
-                serverBlock.WaitOne(60000);
+                await WaitOneASync(serverBlock, TimeSpan.FromSeconds(60));
+                //serverBlock.WaitOne(60000);
             }
 
             if (process.HasExited && numGPULayers > 0)
@@ -265,7 +269,8 @@ namespace LLMUnity
                 Debug.Log("GPU failed, fallback to CPU");
                 serverBlock.Reset();
                 RunServerCommand(server, arguments);
-                serverBlock.WaitOne(60000);
+                await WaitOneASync(serverBlock, TimeSpan.FromSeconds(60));
+                //serverBlock.WaitOne(60000);
             }
 
             if (process.HasExited) throw new Exception("Server could not be started!");
@@ -284,6 +289,22 @@ namespace LLMUnity
         public void OnDestroy()
         {
             StopProcess();
+        }
+
+        /// Wrapper from https://stackoverflow.com/a/18766131
+        private static Task WaitOneASync(WaitHandle handle, TimeSpan timeout)
+        {
+            var tcs = new TaskCompletionSource<object>();
+            var registration = ThreadPool.RegisterWaitForSingleObject(handle, (state, timedOut) =>
+            {
+                var localTcs = (TaskCompletionSource<object>)state;
+                if (timedOut)
+                    localTcs.TrySetCanceled();
+                else
+                    localTcs.TrySetResult(null);
+            }, tcs, timeout, executeOnlyOnce: true);
+            tcs.Task.ContinueWith((_, state) => ((RegisteredWaitHandle)state).Unregister(null), registration, TaskScheduler.Default);
+            return tcs.Task;
         }
     }
 }
