@@ -25,6 +25,7 @@ namespace LLMUnity
         [ModelAddonAdvanced] public string lora = "";
         [ModelAdvanced] public int contextSize = 512;
         [ModelAdvanced] public int batchSize = 512;
+        [ModelAdvanced] public bool asynchronousStartup = false;
 
         [HideInInspector] public string modelUrl = "https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.2-GGUF/resolve/main/mistral-7b-instruct-v0.2.Q4_K_M.gguf?download=true";
         private static readonly string serverZipUrl = "https://github.com/Mozilla-Ocho/llamafile/releases/download/0.6/llamafile-0.6.zip";
@@ -111,10 +112,11 @@ namespace LLMUnity
 
 #endif
 
-        new public void Awake()
+        new public async void Awake()
         {
-            // start the llm server and run the OnEnable of the client
-            StartLLMServer();
+            // start the llm server and run the Awake of the client
+            await StartLLMServer();
+
             base.Awake();
         }
 
@@ -141,7 +143,10 @@ namespace LLMUnity
         {
             try
             {
-                TcpClient c = new TcpClient(host, port);
+                using (TcpClient c = new TcpClient())
+                {
+                    c.Connect(host, port);
+                }
                 return true;
             }
             catch { }
@@ -225,7 +230,7 @@ namespace LLMUnity
             process = LLMUnitySetup.CreateProcess(binary, arguments, CheckIfListening, ProcessError, ProcessExited, environment);
         }
 
-        private async void StartLLMServer()
+        private async Task StartLLMServer()
         {
             if (IsPortInUse()) throw new Exception($"Port {port} is already in use, please use another port or kill all llamafile processes using it!");
 
@@ -250,9 +255,8 @@ namespace LLMUnity
             LLMUnitySetup.makeExecutable(server);
             RunServerCommand(server, arguments + GPUArgument);
 
-
-            await WaitOneASync(serverBlock, TimeSpan.FromSeconds(60));
-            //serverBlock.WaitOne(60000);
+            if (asynchronousStartup) await WaitOneASync(serverBlock, TimeSpan.FromSeconds(60));
+            else serverBlock.WaitOne(60000);
 
             if (process.HasExited && mmapCrash)
             {
@@ -260,8 +264,8 @@ namespace LLMUnity
                 serverBlock.Reset();
                 arguments += " --no-mmap";
                 RunServerCommand(server, arguments + GPUArgument);
-                await WaitOneASync(serverBlock, TimeSpan.FromSeconds(60));
-                //serverBlock.WaitOne(60000);
+                if (asynchronousStartup) await WaitOneASync(serverBlock, TimeSpan.FromSeconds(60));
+                else serverBlock.WaitOne(60000);
             }
 
             if (process.HasExited && numGPULayers > 0)
@@ -269,8 +273,8 @@ namespace LLMUnity
                 Debug.Log("GPU failed, fallback to CPU");
                 serverBlock.Reset();
                 RunServerCommand(server, arguments);
-                await WaitOneASync(serverBlock, TimeSpan.FromSeconds(60));
-                //serverBlock.WaitOne(60000);
+                if (asynchronousStartup) await WaitOneASync(serverBlock, TimeSpan.FromSeconds(60));
+                else serverBlock.WaitOne(60000);
             }
 
             if (process.HasExited) throw new Exception("Server could not be started!");
