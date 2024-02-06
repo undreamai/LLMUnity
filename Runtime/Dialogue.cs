@@ -139,12 +139,6 @@ namespace LLMUnity
             }
             return allSentences;
         }
-
-        public void Clear()
-        {
-            phrases.Clear();
-            foreach (List<Sentence> sentences in phraseSentences.Values) sentences.Clear();
-        }
     }
 
     public class DialogueManager
@@ -189,7 +183,7 @@ namespace LLMUnity
             Add(actor, "", text);
         }
 
-        public List<string> GetPhrases(string actor = null, string title = null)
+        public List<string> Get(string actor = null, string title = null)
         {
             List<string> phrases = new List<string>();
             foreach ((string actorName, Dictionary<string, Dialogue> actorDialogues) in dialogues)
@@ -219,17 +213,6 @@ namespace LLMUnity
                 }
             }
             return sentences;
-        }
-
-        public void Clear()
-        {
-            foreach (Dictionary<string, Dialogue> actorDialogues in dialogues.Values)
-            {
-                foreach (Dialogue dialogue in actorDialogues.Values)
-                {
-                    dialogue.Clear();
-                }
-            }
         }
     }
 }
