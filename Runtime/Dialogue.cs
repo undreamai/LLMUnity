@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System;
 using System.Linq;
+using System.Diagnostics;
+using Debug = UnityEngine.Debug;
 
 namespace LLMUnity
 {
@@ -15,6 +17,20 @@ namespace LLMUnity
             this.phraseId = phraseId;
             this.startIndex = startIndex;
             this.endIndex = endIndex;
+        }
+    }
+
+    public class Phrase
+    {
+        public string text;
+        public List<int> sentenceIds;
+
+        public Phrase(string text) : this(text, new List<int>()) {}
+
+        public Phrase(string text, List<int> sentenceIds)
+        {
+            this.text = text;
+            this.sentenceIds = sentenceIds;
         }
     }
 
@@ -69,24 +85,30 @@ namespace LLMUnity
         public string Title { get; private set; }
         public string Actor { get; private set; }
 
-        Dictionary<int, string> phrases;
-        Dictionary<int, List<Sentence>> phraseSentences;
-        int nextPhraseId;
+        List<Phrase> phrases;
+        List<Sentence> sentences;
         SentenceSplitter sentenceSplitter;
+        ModelKeySearch search;
 
-        public Dialogue(string actor = "", string title = "")
+        public Dialogue(string actor = "", string title = "", EmbeddingModel embedder = null) : this(actor, title, embedder, typeof(ANNModelSearch)) {}
+
+        public Dialogue(string actor = "", string title = "", EmbeddingModel embedder = null, Type modelSearchType = null)
         {
             Actor = actor;
             Title = title;
-            phrases = new Dictionary<int, string>();
-            phraseSentences = new Dictionary<int, List<Sentence>>();
-            nextPhraseId = 0;
+            phrases = new List<Phrase>();
+            sentences = new List<Sentence>();
             sentenceSplitter = new SentenceSplitter();
+            search = null;
+            if (embedder != null && modelSearchType != null)
+            {
+                search = (ModelKeySearch)Activator.CreateInstance(modelSearchType, embedder);
+            }
         }
 
         public void SetSentenceSplitting(char[] delimiters, bool trimSentences = true)
         {
-            if (nextPhraseId > 0) throw new Exception("Sentence splitting can't change when there are phrases in the Dialogue");
+            if (sentences.Count > 0) throw new Exception("Sentence splitting can't change when there are phrases in the Dialogue");
             if (delimiters == null)
             {
                 sentenceSplitter = null;
@@ -102,42 +124,85 @@ namespace LLMUnity
             SetSentenceSplitting(null);
         }
 
+        public string GetPhrase(Sentence sentence)
+        {
+            return phrases[sentence.phraseId].text;
+        }
+
+        public string GetSentence(Sentence sentence)
+        {
+            return GetPhrase(sentence).Substring(sentence.startIndex, sentence.endIndex - sentence.startIndex + 1);
+        }
+
         public void Add(string text)
         {
-            int phraseId = nextPhraseId++;
-            phrases[phraseId] = text;
-            if (sentenceSplitter == null)
+
+            List<(int, int)> subindices;
+            if (sentenceSplitter == null) subindices = new List<(int, int)> { (0, text.Length - 1) };
+            else subindices = sentenceSplitter.Split(text);
+
+            int phraseId = phrases.Count;
+            Phrase phrase = new Phrase(text);
+            phrases.Add(phrase);
+            foreach ((int startIndex, int endIndex) in subindices)
             {
-                phraseSentences[phraseId] = new List<Sentence> { new Sentence(phraseId, 0, text.Length - 1) };
-            }
-            else
-            {
-                phraseSentences[phraseId] = new List<Sentence>();
-                List<(int, int)> subindices = sentenceSplitter.Split(text);
-                foreach ((int startIndex, int endIndex) in subindices)
-                {
-                    phraseSentences[phraseId].Add(new Sentence(phraseId, startIndex, endIndex));
-                }
+                int sentenceId = sentences.Count;
+                Sentence sentence = new Sentence(phraseId, startIndex, endIndex);
+
+                sentences.Add(sentence);
+                phrase.sentenceIds.Add(sentenceId);
+                search?.Add(sentenceId, GetSentence(sentence));
             }
         }
 
         public List<string> GetPhrases()
         {
-            return phrases.Values.ToList();
+            List<string> phraseTexts = new List<string>();
+            foreach (Phrase phrase in phrases) phraseTexts.Add(phrase.text);
+            return phraseTexts;
         }
 
         public List<string> GetSentences()
         {
             List<string> allSentences = new List<string>();
-            foreach ((int phraseId, List<Sentence> sentences) in phraseSentences)
+            foreach (Sentence sentence in sentences)
             {
-                string phrase = phrases[phraseId];
-                foreach (Sentence sentence in sentences)
-                {
-                    allSentences.Add(phrase.Substring(sentence.startIndex, sentence.endIndex - sentence.startIndex + 1));
-                }
+                allSentences.Add(GetSentence(sentence));
             }
             return allSentences;
+        }
+
+        public string[] Search(string queryString, int k, bool returnSentences = false)
+        {
+            if (search == null) throw new Exception("No search method defined!");
+            int[] keys = search.SearchKey(queryString, k);
+            string[] result = new string[keys.Length];
+            for (int i = 0; i < keys.Length; i++)
+            {
+                Sentence sentence = sentences[keys[i]];
+                result[i] = returnSentences ? GetSentence(sentence) : GetPhrase(sentence);
+            }
+            return result;
+        }
+
+        public string[] SearchPhrases(string queryString, int k)
+        {
+            return Search(queryString, k, false);
+        }
+
+        public string[] SearchSentences(string queryString, int k)
+        {
+            return Search(queryString, k, true);
+        }
+
+        public int NumPhrases()
+        {
+            return phrases.Count;
+        }
+
+        public int NumSentences()
+        {
+            return sentences.Count;
         }
     }
 
@@ -146,10 +211,16 @@ namespace LLMUnity
         Dictionary<string, Dictionary<string, Dialogue>> dialogues;
         char[] delimiters = SentenceSplitter.DefaultDelimiters;
         bool trimSentences = true;
+        EmbeddingModel embedder;
+        Type modelSearchType;
 
-        public DialogueManager()
+        public DialogueManager(EmbeddingModel embedder = null) : this(embedder, typeof(ANNModelSearch)) {}
+
+        public DialogueManager(EmbeddingModel embedder = null, Type modelSearchType = null)
         {
             dialogues = new Dictionary<string, Dictionary<string, Dialogue>>();
+            this.embedder = embedder;
+            this.modelSearchType = modelSearchType;
         }
 
         public void SetSentenceSplitting(char[] delimiters, bool trimSentences = true)
@@ -167,7 +238,7 @@ namespace LLMUnity
         {
             if (!dialogues.ContainsKey(actor) || !dialogues[actor].ContainsKey(title))
             {
-                Dialogue dialogue = new Dialogue(actor, title);
+                Dialogue dialogue = new Dialogue(actor, title, embedder, modelSearchType);
                 dialogue.SetSentenceSplitting(delimiters, trimSentences);
                 if (!dialogues.ContainsKey(actor))
                 {
@@ -180,39 +251,89 @@ namespace LLMUnity
 
         public void Add(string actor, string text)
         {
-            Add(actor, "", text);
+            Add(actor, null, text);
         }
 
-        public List<string> Get(string actor = null, string title = null)
+        public List<Dialogue> Filter(string actor = null, string title = null)
         {
-            List<string> phrases = new List<string>();
+            List<Dialogue> filtering = new List<Dialogue>();
             foreach ((string actorName, Dictionary<string, Dialogue> actorDialogues) in dialogues)
             {
                 foreach ((string titleName, Dialogue dialogue) in actorDialogues)
                 {
                     if ((actor == null || actor == actorName) && (title == null || title == titleName))
                     {
-                        phrases.AddRange(dialogue.GetPhrases());
+                        filtering.Add(dialogue);
                     }
                 }
             }
-            return phrases;
+            return filtering;
+        }
+
+        public List<string> Get(string actor = null, string title = null, bool returnSentences = false)
+        {
+            List<Dialogue> dialogues = Filter(actor, title);
+            List<string> result = new List<string>();
+            foreach (Dialogue dialogue in dialogues)
+            {
+                result.AddRange(returnSentences ? dialogue.GetSentences() : dialogue.GetPhrases());
+            }
+            return result;
+        }
+
+        public List<string> GetPhrases(string actor = null, string title = null)
+        {
+            return Get(actor, title, false);
         }
 
         public List<string> GetSentences(string actor = null, string title = null)
         {
-            List<string> sentences = new List<string>();
-            foreach ((string actorName, Dictionary<string, Dialogue> actorDialogues) in dialogues)
+            return Get(actor, title, true);
+        }
+
+        public string[] Search(string queryString, int k, string actor = null, string title = null, bool returnSentences = false)
+        {
+            if (embedder == null) throw new Exception("No search method defined!");
+
+            List<Dialogue> dialogues = Filter(actor, title);
+            List<string> result = new List<string>();
+            foreach (Dialogue dialogue in dialogues)
             {
-                foreach ((string titleName, Dialogue dialogue) in actorDialogues)
-                {
-                    if ((actor == null || actor == actorName) && (title == null || title == titleName))
-                    {
-                        sentences.AddRange(dialogue.GetSentences());
-                    }
-                }
+                result.AddRange(dialogue.Search(queryString, k, returnSentences));
             }
-            return sentences;
+            return result.ToArray();
+        }
+
+        public string[] SearchPhrases(string queryString, int k, string actor = null, string title = null)
+        {
+            return Search(queryString, k, actor, title, false);
+        }
+
+        public string[] SearchSentences(string queryString, int k, string actor = null, string title = null)
+        {
+            return Search(queryString, k, actor, title, true);
+        }
+
+        public int NumPhrases(string actor = null, string title = null)
+        {
+            int num = 0;
+            List<Dialogue> dialogues = Filter(actor, title);
+            foreach (Dialogue dialogue in dialogues)
+            {
+                num += dialogue.NumPhrases();
+            }
+            return num;
+        }
+
+        public int NumSentences(string actor = null, string title = null)
+        {
+            int num = 0;
+            List<Dialogue> dialogues = Filter(actor, title);
+            foreach (Dialogue dialogue in dialogues)
+            {
+                num += dialogue.NumSentences();
+            }
+            return num;
         }
     }
 }
