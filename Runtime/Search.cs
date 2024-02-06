@@ -7,40 +7,46 @@ using Cloud.Unum.USearch;
 
 namespace LLMUnity
 {
-    public abstract class Search<T, E> where E : Embedder<T>
+    public abstract class ModelSearchBase
     {
-        protected E embedder;
-        protected Dictionary<string, T> embeddings;
+        protected EmbeddingModel embedder;
+        protected Dictionary<string, TensorFloat> embeddings;
 
-        public abstract void Insert(string inputString, T encoding);
-        public abstract List<string> RetrieveSimilar(string queryString, int k);
-
-        public Search(E embedder)
+        public ModelSearchBase(EmbeddingModel embedder)
         {
-            embeddings = new Dictionary<string, T>();
+            embeddings = new Dictionary<string, TensorFloat>();
             this.embedder = embedder;
         }
 
-        public T Add(string inputString)
+        public TensorFloat Encode(string inputString)
         {
-            T embedding = embedder.Encode(inputString);
-            Insert(inputString, embedding);
-            return embedding;
+            return embedder.Encode(inputString);
         }
 
-        public T[] Add(string[] inputStrings)
+        public TensorFloat[] Encode(List<string> inputStrings, int batchSize = 64)
         {
-            T[] inputEmbeddings = new T[inputStrings.Length];
-            for (int i = 0; i < inputStrings.Length; i++)
+            List<TensorFloat> inputEmbeddings = new List<TensorFloat>();
+            for (int i = 0; i < inputStrings.Count; i += batchSize)
             {
-                inputEmbeddings[i] = Add(inputStrings[i]);
+                int takeCount = Math.Min(batchSize, inputStrings.Count - i);
+                List<string> batch = new List<string>(inputStrings.GetRange(i, takeCount));
+                inputEmbeddings.AddRange((TensorFloat[])embedder.Split(embedder.Encode(batch)));
             }
-            return inputEmbeddings;
+            if (inputStrings.Count != inputEmbeddings.Count)
+            {
+                throw new Exception($"Number of computed embeddings ({inputEmbeddings.Count}) different than inputs ({inputStrings.Count})");
+            }
+            return inputEmbeddings.ToArray();
         }
 
-        public List<string> GetKNN(string[] inputStrings, float[] scores, int k = -1)
+
+        public string[] Search(string queryString, int k)
         {
-            var sortedLists = inputStrings.Zip(scores, (first, second) => new { First = first, Second = second })
+            TensorFloat queryEmbedding = embedder.Encode(queryString);
+            TensorFloat storeEmbedding = embedder.Concat(embeddings.Values.ToArray());
+            float[] scores = embedder.SimilarityScores(queryEmbedding, storeEmbedding);
+
+            var sortedLists = embeddings.Keys.Zip(scores, (first, second) => new { First = first, Second = second })
                 .OrderByDescending(item => item.Second)
                 .ToList();
             List<string> results = new List<string>();
@@ -49,7 +55,7 @@ namespace LLMUnity
             {
                 results.Add(sortedLists[i].First);
             }
-            return results;
+            return results.ToArray();
         }
 
         public int Count()
@@ -58,13 +64,20 @@ namespace LLMUnity
         }
     }
 
-    public class ModelSearch : Search<TensorFloat, EmbeddingModel>
+    public class ModelSearch : ModelSearchBase
     {
         public ModelSearch(EmbeddingModel embedder) : base(embedder) {}
 
-        public override void Insert(string inputString, TensorFloat encoding)
+        protected void Insert(string inputString, TensorFloat encoding)
         {
             embeddings[inputString] = encoding;
+        }
+
+        public TensorFloat Add(string inputString)
+        {
+            TensorFloat embedding = Encode(inputString);
+            Insert(inputString, embedding);
+            return embedding;
         }
 
         public TensorFloat[] Add(string[] inputStrings, int batchSize = 64)
@@ -74,41 +87,69 @@ namespace LLMUnity
 
         public TensorFloat[] Add(List<string> inputStrings, int batchSize = 64)
         {
-            List<TensorFloat> inputEmbeddings = new List<TensorFloat>();
-            for (int i = 0; i < inputStrings.Count; i += batchSize)
-            {
-                int takeCount = Math.Min(batchSize, inputStrings.Count - i);
-                List<string> batch = new List<string>(inputStrings.GetRange(i, takeCount));
-                inputEmbeddings.AddRange((TensorFloat[])embedder.Split(embedder.Encode(batch)));
-                Console.WriteLine(takeCount);
-            }
-
-            if (inputStrings.Count != inputEmbeddings.Count)
-            {
-                throw new Exception($"Number of computed embeddings ({inputEmbeddings.Count}) different than inputs ({inputStrings.Count})");
-            }
+            TensorFloat[] inputEmbeddings = Encode(inputStrings, batchSize);
             for (int i = 0; i < inputStrings.Count; i++)
             {
                 Insert(inputStrings[i], inputEmbeddings[i]);
             }
             return inputEmbeddings.ToArray();
         }
+    }
 
-        public override List<string> RetrieveSimilar(string queryString, int k)
+    public class ModelKeySearch : ModelSearchBase
+    {
+        protected Dictionary<string, int> valueToKey;
+
+        public ModelKeySearch(EmbeddingModel embedder) : base(embedder)
         {
-            TensorFloat queryEmbedding = embedder.Encode(queryString);
-            TensorFloat storeEmbedding = embedder.Concat(embeddings.Values.ToArray());
-            float[] scores = embedder.SimilarityScores(queryEmbedding, storeEmbedding);
-            return GetKNN(embeddings.Keys.ToArray(), scores, k);
+            valueToKey = new Dictionary<string, int>();
+        }
+
+        public virtual void Insert(int key, string value, TensorFloat encoding)
+        {
+            Console.WriteLine("damn");
+            embeddings[value] = encoding;
+            valueToKey[value] = key;
+        }
+
+        public TensorFloat Add(int key, string inputString)
+        {
+            TensorFloat embedding = Encode(inputString);
+            Insert(key, inputString, embedding);
+            return embedding;
+        }
+
+        public TensorFloat[] Add(int[] keys, string[] inputStrings, int batchSize = 64)
+        {
+            return Add(new List<int>(keys), new List<string>(inputStrings), batchSize);
+        }
+
+        public TensorFloat[] Add(List<int> keys, List<string> inputStrings, int batchSize = 64)
+        {
+            TensorFloat[] inputEmbeddings = Encode(inputStrings, batchSize);
+            for (int i = 0; i < inputStrings.Count; i++)
+            {
+                Insert(keys[i], inputStrings[i], inputEmbeddings[i]);
+            }
+            return inputEmbeddings.ToArray();
+        }
+
+        public int[] SearchKey(string queryString, int k)
+        {
+            string[] results = Search(queryString, k);
+            int[] keys = new int[results.Length];
+            for (int i = 0; i < results.Length; i++)
+            {
+                keys[i] = valueToKey[results[i]];
+            }
+            return keys;
         }
     }
 
-    public class ANNModelSearch : ModelSearch
+    public class ANNModelSearch : ModelKeySearch
     {
         USearchIndex index;
-        Dictionary<ulong, string> USearchToText;
-        ulong nextKey;
-        object insertLock = new object();
+        protected Dictionary<int, string> keyToValue;
 
         public ANNModelSearch(
             EmbeddingModel embedder,
@@ -125,33 +166,38 @@ namespace LLMUnity
         ) : base(embedder)
         {
             this.index = index;
-            USearchToText = new Dictionary<ulong, string>();
-            nextKey = 0;
+            keyToValue = new Dictionary<int, string>();
         }
 
-        public override void Insert(string inputString, TensorFloat encoding)
+        public override void Insert(int key, string value, TensorFloat encoding)
         {
-            if (USearchToText.ContainsValue(inputString)) return;
+            Console.WriteLine("noice");
             encoding.MakeReadable();
-            lock (insertLock)
-            {
-                ulong key = nextKey++;
-                USearchToText[key] = inputString;
-                index.Add(key, encoding.ToReadOnlyArray());
-            }
+            index.Add((ulong)key, encoding.ToReadOnlyArray());
+            keyToValue[key] = value;
         }
 
-        public override List<string> RetrieveSimilar(string queryString, int k)
+        public new string[] Search(string queryString, int k)
+        {
+            int[] results = SearchKey(queryString, k);
+            string[] values = new string[results.Length];
+            for (int i = 0; i < results.Length; i++)
+            {
+                values[i] = keyToValue[results[i]];
+            }
+            return values;
+        }
+
+        public new int[] SearchKey(string queryString, int k)
         {
             TensorFloat encoding = embedder.Encode(queryString);
             encoding.MakeReadable();
             index.Search(encoding.ToReadOnlyArray(), k, out ulong[] keys, out float[] distances);
-            List<string> result = new List<string>();
+
+            int[] intKeys = new int[keys.Length];
             for (int i = 0; i < keys.Length; i++)
-            {
-                result.Add(USearchToText[keys[i]]);
-            }
-            return result;
+                intKeys[i] = (int)keys[i];
+            return intKeys;
         }
 
         public new int Count()
