@@ -39,8 +39,7 @@ namespace LLMUnity
             return inputEmbeddings.ToArray();
         }
 
-
-        public string[] Search(string queryString, int k)
+        public virtual string[] Search(string queryString, int k)
         {
             TensorFloat queryEmbedding = embedder.Encode(queryString);
             TensorFloat storeEmbedding = embedder.Concat(embeddings.Values.ToArray());
@@ -58,7 +57,7 @@ namespace LLMUnity
             return results.ToArray();
         }
 
-        public int Count()
+        public virtual int Count()
         {
             return embeddings.Count;
         }
@@ -107,24 +106,23 @@ namespace LLMUnity
 
         public virtual void Insert(int key, string value, TensorFloat encoding)
         {
-            Console.WriteLine("damn");
             embeddings[value] = encoding;
             valueToKey[value] = key;
         }
 
-        public TensorFloat Add(int key, string inputString)
+        public virtual TensorFloat Add(int key, string inputString)
         {
             TensorFloat embedding = Encode(inputString);
             Insert(key, inputString, embedding);
             return embedding;
         }
 
-        public TensorFloat[] Add(int[] keys, string[] inputStrings, int batchSize = 64)
+        public virtual TensorFloat[] Add(int[] keys, string[] inputStrings, int batchSize = 64)
         {
             return Add(new List<int>(keys), new List<string>(inputStrings), batchSize);
         }
 
-        public TensorFloat[] Add(List<int> keys, List<string> inputStrings, int batchSize = 64)
+        public virtual TensorFloat[] Add(List<int> keys, List<string> inputStrings, int batchSize = 64)
         {
             TensorFloat[] inputEmbeddings = Encode(inputStrings, batchSize);
             for (int i = 0; i < inputStrings.Count; i++)
@@ -134,7 +132,7 @@ namespace LLMUnity
             return inputEmbeddings.ToArray();
         }
 
-        public int[] SearchKey(string queryString, int k)
+        public virtual int[] SearchKey(string queryString, int k)
         {
             string[] results = Search(queryString, k);
             int[] keys = new int[results.Length];
@@ -150,6 +148,8 @@ namespace LLMUnity
     {
         USearchIndex index;
         protected Dictionary<int, string> keyToValue;
+
+        public ANNModelSearch(EmbeddingModel embedder) : this(embedder, MetricKind.Cos, 32, 40, 16) {}
 
         public ANNModelSearch(
             EmbeddingModel embedder,
@@ -171,13 +171,12 @@ namespace LLMUnity
 
         public override void Insert(int key, string value, TensorFloat encoding)
         {
-            Console.WriteLine("noice");
             encoding.MakeReadable();
             index.Add((ulong)key, encoding.ToReadOnlyArray());
             keyToValue[key] = value;
         }
 
-        public new string[] Search(string queryString, int k)
+        public override string[] Search(string queryString, int k)
         {
             int[] results = SearchKey(queryString, k);
             string[] values = new string[results.Length];
@@ -188,7 +187,7 @@ namespace LLMUnity
             return values;
         }
 
-        public new int[] SearchKey(string queryString, int k)
+        public override int[] SearchKey(string queryString, int k)
         {
             TensorFloat encoding = embedder.Encode(queryString);
             encoding.MakeReadable();
@@ -200,7 +199,7 @@ namespace LLMUnity
             return intKeys;
         }
 
-        public new int Count()
+        public override int Count()
         {
             return (int)index.Size();
         }
