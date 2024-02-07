@@ -140,6 +140,14 @@ namespace LLMUnity
             return scores;
         }
 
+        public float[] SimilarityDistances(TensorFloat InputSequence, TensorFloat ComparisonSequences)
+        {
+            float[] scores = SimilarityScores(InputSequence, ComparisonSequences);
+            float[] distances = new float[scores.Length];
+            for (int i = 0; i < scores.Length; i++) distances[i] = 1 - scores[i];
+            return distances;
+        }
+
         Tuple<List<List<int>>, List<List<int>>, List<List<int>>> Tokenize(List<string> candidates)
         {
             List<List<int>> sentences = new List<List<int>>();
