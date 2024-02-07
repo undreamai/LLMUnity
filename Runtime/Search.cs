@@ -39,22 +39,38 @@ namespace LLMUnity
             return inputEmbeddings.ToArray();
         }
 
+        public virtual string[] Search(TensorFloat encoding, int k)
+        {
+            return Search(encoding, k, out float[] distances);
+        }
+
         public virtual string[] Search(string queryString, int k)
         {
-            TensorFloat queryEmbedding = embedder.Encode(queryString);
-            TensorFloat storeEmbedding = embedder.Concat(embeddings.Values.ToArray());
-            float[] scores = embedder.SimilarityScores(queryEmbedding, storeEmbedding);
+            return Search(queryString, k, out float[] distances);
+        }
 
-            var sortedLists = embeddings.Keys.Zip(scores, (first, second) => new { First = first, Second = second })
-                .OrderByDescending(item => item.Second)
+        public virtual string[] Search(TensorFloat encoding, int k, out float[] distances)
+        {
+            TensorFloat storeEmbedding = embedder.Concat(embeddings.Values.ToArray());
+            float[] unsortedDistances = embedder.SimilarityDistances(encoding, storeEmbedding);
+
+            var sortedLists = embeddings.Keys.Zip(unsortedDistances, (first, second) => new { First = first, Second = second })
+                .OrderBy(item => item.Second)
                 .ToList();
-            List<string> results = new List<string>();
             int kmax = k == -1 ? sortedLists.Count : Math.Min(k, sortedLists.Count);
+            string[] results = new string[kmax];
+            distances = new float[kmax];
             for (int i = 0; i < kmax; i++)
             {
-                results.Add(sortedLists[i].First);
+                results[i] = sortedLists[i].First;
+                distances[i] = sortedLists[i].Second;
             }
-            return results.ToArray();
+            return results;
+        }
+
+        public virtual string[] Search(string queryString, int k, out float[] distances)
+        {
+            return Search(embedder.Encode(queryString), k, out distances);
         }
 
         public virtual int Count()
@@ -132,15 +148,30 @@ namespace LLMUnity
             return inputEmbeddings.ToArray();
         }
 
-        public virtual int[] SearchKey(string queryString, int k)
+        public virtual int[] SearchKey(TensorFloat embedding, int k, out float[] distances)
         {
-            string[] results = Search(queryString, k);
+            string[] results = Search(embedding, k, out distances);
             int[] keys = new int[results.Length];
             for (int i = 0; i < results.Length; i++)
             {
                 keys[i] = valueToKey[results[i]];
             }
             return keys;
+        }
+
+        public virtual int[] SearchKey(string queryString, int k, out float[] distances)
+        {
+            return SearchKey(Encode(queryString), k, out distances);
+        }
+
+        public virtual int[] SearchKey(TensorFloat encoding, int k)
+        {
+            return SearchKey(encoding, k, out float[] distances);
+        }
+
+        public virtual int[] SearchKey(string queryString, int k)
+        {
+            return SearchKey(queryString, k, out float[] distances);
         }
     }
 
@@ -176,9 +207,19 @@ namespace LLMUnity
             keyToValue[key] = value;
         }
 
+        public override string[] Search(TensorFloat encoding, int k)
+        {
+            return Search(encoding, k, out float[] distances);
+        }
+
         public override string[] Search(string queryString, int k)
         {
-            int[] results = SearchKey(queryString, k);
+            return Search(queryString, k, out float[] distances);
+        }
+
+        public override string[] Search(TensorFloat encoding, int k, out float[] distances)
+        {
+            int[] results = SearchKey(encoding, k, out distances);
             string[] values = new string[results.Length];
             for (int i = 0; i < results.Length; i++)
             {
@@ -187,16 +228,35 @@ namespace LLMUnity
             return values;
         }
 
+        public override string[] Search(string queryString, int k, out float[] distances)
+        {
+            return Search(embedder.Encode(queryString), k, out distances);
+        }
+
+        public override int[] SearchKey(TensorFloat encoding, int k)
+        {
+            return SearchKey(encoding, k, out float[] distances);
+        }
+
         public override int[] SearchKey(string queryString, int k)
         {
-            TensorFloat encoding = embedder.Encode(queryString);
+            return SearchKey(queryString, k, out float[] distances);
+        }
+
+        public override int[] SearchKey(TensorFloat encoding, int k, out float[] distances)
+        {
             encoding.MakeReadable();
-            index.Search(encoding.ToReadOnlyArray(), k, out ulong[] keys, out float[] distances);
+            index.Search(encoding.ToReadOnlyArray(), k, out ulong[] keys, out distances);
 
             int[] intKeys = new int[keys.Length];
             for (int i = 0; i < keys.Length; i++)
                 intKeys[i] = (int)keys[i];
             return intKeys;
+        }
+
+        public override int[] SearchKey(string queryString, int k, out float[] distances)
+        {
+            return SearchKey(embedder.Encode(queryString), k, out distances);
         }
 
         public override int Count()
