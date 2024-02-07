@@ -13,15 +13,84 @@ using HuggingFace.SharpTransformers.PreTokenizers;
 using HuggingFace.SharpTransformers.Tokenizers;
 using HuggingFace.SharpTransformers.PostProcessors;
 using System.IO;
+using System.Runtime.Serialization;
+using System.IO.Compression;
 
 namespace LLMUnity
 {
-    public abstract class Embedder<T>
+    [DataContract]
+    public class EmbeddingModelSkeleton
     {
-        public abstract T Encode(string input);
+        [DataMember]
+        public string ModelPath { get; protected set; }
+        [DataMember]
+        public string TokenizerPath { get; protected set; }
+        [DataMember]
+        public BackendType Backend { get; protected set; }
+        [DataMember]
+        public string OutputLayerName { get; protected set; }
+        [DataMember]
+        public bool UseMeanPooling { get; protected set; }
+        [DataMember]
+        public int Dimensions { get; protected set; }
+
+        public EmbeddingModelSkeleton(string modelPath, string tokenizerPath, BackendType backend = BackendType.CPU, string outputLayerName = "last_hidden_state", bool useMeanPooling = true, int dimensions = 384)
+        {
+            ModelPath = modelPath;
+            TokenizerPath = tokenizerPath;
+            Backend = backend;
+            OutputLayerName = outputLayerName;
+            UseMeanPooling = useMeanPooling;
+            Dimensions = dimensions;
+        }
+
+        public static string GetEmbeddingModelPath(string dirname)
+        {
+            return Path.Combine(dirname, "EmbeddingModel.json");
+        }
+
+        public virtual void Save(ZipArchive archive, string dirname = "")
+        {
+            Saver.Save(this, archive, GetEmbeddingModelPath(dirname));
+        }
+
+        public static EmbeddingModelSkeleton Load(ZipArchive archive, string dirname = "")
+        {
+            return Saver.Load<EmbeddingModel>(archive, GetEmbeddingModelPath(dirname));
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hash = 17;
+                hash = hash * 23 + (ModelPath != null ? ModelPath.GetHashCode() : 0);
+                hash = hash * 23 + (TokenizerPath != null ? TokenizerPath.GetHashCode() : 0);
+                hash = hash * 23 + Backend.GetHashCode();
+                hash = hash * 23 + (OutputLayerName != null ? OutputLayerName.GetHashCode() : 0);
+                hash = hash * 23 + UseMeanPooling.GetHashCode();
+                hash = hash * 23 + Dimensions;
+                return hash;
+            }
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || !(obj is EmbeddingModelSkeleton))
+                return false;
+
+            EmbeddingModelSkeleton other = (EmbeddingModelSkeleton)obj;
+            return ModelPath == other.ModelPath &&
+                TokenizerPath == other.TokenizerPath &&
+                Backend == other.Backend &&
+                OutputLayerName == other.OutputLayerName &&
+                UseMeanPooling == other.UseMeanPooling &&
+                Dimensions == other.Dimensions;
+        }
     }
 
-    public class EmbeddingModel : Embedder<TensorFloat>
+    [DataContract]
+    public class EmbeddingModel : EmbeddingModelSkeleton
     {
         Model runtimeModel;
         IWorker worker;
@@ -32,11 +101,9 @@ namespace LLMUnity
         BertPreTokenizer bertPreTok;
         WordPieceTokenizer wordPieceTokenizer;
         TemplateProcessing templateProcessing;
-        string outputLayerName;
-        bool useMeanPooling;
-        public int Dimensions { get; private set; }
 
-        public EmbeddingModel(string modelPath, string tokenizerPath, BackendType backend = BackendType.CPU, string outputLayerName = "last_hidden_state", bool useMeanPooling = true, int dimensions = 384)
+        public EmbeddingModel(string modelPath, string tokenizerPath, BackendType backend = BackendType.CPU, string outputLayerName = "last_hidden_state", bool useMeanPooling = true, int dimensions = 384) :
+            base(modelPath, tokenizerPath, backend, outputLayerName, useMeanPooling, dimensions)
         {
             runtimeModel = ModelLoader.Load(modelPath);
             string tokenizerJsonContent = File.ReadAllText(tokenizerPath);
@@ -50,9 +117,6 @@ namespace LLMUnity
             bertPreTok = new BertPreTokenizer(JObject.FromObject(tokenizerJsonData["pre_tokenizer"]));
             wordPieceTokenizer = new WordPieceTokenizer(JObject.FromObject(tokenizerJsonData["model"]));
             templateProcessing = new TemplateProcessing(JObject.FromObject(tokenizerJsonData["post_processor"]));
-            this.outputLayerName = outputLayerName;
-            this.useMeanPooling = useMeanPooling;
-            Dimensions = dimensions;
         }
 
         public void Destroy()
@@ -81,7 +145,7 @@ namespace LLMUnity
             return tensors;
         }
 
-        public override TensorFloat Encode(string input)
+        public TensorFloat Encode(string input)
         {
             return Encode(new List<string> { input });
         }
@@ -98,10 +162,10 @@ namespace LLMUnity
             // Step 2: Compute embedding and get the output
             worker.Execute(inputSentencesTokensTensor);
             // Step 3: Get the output from the neural network
-            TensorFloat outputTensor = worker.PeekOutput(outputLayerName) as TensorFloat;
+            TensorFloat outputTensor = worker.PeekOutput(OutputLayerName) as TensorFloat;
             // Step 4: Perform pooling
             TensorFloat MeanPooledTensor = outputTensor;
-            if (useMeanPooling)
+            if (UseMeanPooling)
             {
                 MeanPooledTensor = MeanPooling(inputSentencesTokensTensor["attention_mask"], outputTensor, ops);
             }
@@ -338,19 +402,40 @@ namespace LLMUnity
         {
             return inputIds.Select(innerList => innerList.Select(_ => 0).ToList()).ToList();
         }
+
+        public new static EmbeddingModel Load(ZipArchive archive, string name = "EmbeddingModel.json")
+        {
+            EmbeddingModelSkeleton skeleton = EmbeddingModelSkeleton.Load(archive, name);
+            return ModelManager.Model(skeleton);
+        }
     }
 
-    public class BGEModel : EmbeddingModel
+    public class ModelManager
     {
-        public BGEModel(string modelPath, string tokenizerPath, BackendType backend = BackendType.CPU) :
-            base(modelPath, tokenizerPath, backend, "sentence_embedding", false, 384)
-        {}
-    }
+        static Dictionary<EmbeddingModelSkeleton, EmbeddingModel> models = new Dictionary<EmbeddingModelSkeleton, EmbeddingModel>();
 
-    public class MiniLMModel : EmbeddingModel
-    {
-        public MiniLMModel(string modelPath, string tokenizerPath, BackendType backend = BackendType.CPU) :
-            base(modelPath, tokenizerPath, backend, "last_hidden_state", true, 384)
-        {}
+        public static EmbeddingModel Model(string modelPath, string tokenizerPath, BackendType backend = BackendType.CPU, string outputLayerName = "last_hidden_state", bool useMeanPooling = true, int dimensions = 384)
+        {
+            return Model(new EmbeddingModelSkeleton(modelPath, tokenizerPath, backend, outputLayerName, useMeanPooling, dimensions));
+        }
+
+        public static EmbeddingModel Model(EmbeddingModelSkeleton skeleton)
+        {
+            if (!models.ContainsKey(skeleton))
+            {
+                models[skeleton] = new EmbeddingModel(skeleton.ModelPath, skeleton.TokenizerPath, skeleton.Backend, skeleton.OutputLayerName, skeleton.UseMeanPooling, skeleton.Dimensions);
+            }
+            return models[skeleton];
+        }
+
+        public static EmbeddingModel BGEModel(string modelPath, string tokenizerPath, BackendType backend = BackendType.CPU)
+        {
+            return Model(new EmbeddingModelSkeleton(modelPath, tokenizerPath, backend, "sentence_embedding", false, 384));
+        }
+
+        public static EmbeddingModel MiniLMModel(string modelPath, string tokenizerPath, BackendType backend = BackendType.CPU)
+        {
+            return Model(new EmbeddingModelSkeleton(modelPath, tokenizerPath, backend, "last_hidden_state", true, 384));
+        }
     }
 }
