@@ -17,10 +17,6 @@ class HamletSearch : MonoBehaviour
             "Assets/StreamingAssets/bge-small-en-v1.5.sentis",
             "Assets/StreamingAssets/bge-small-en-v1.5.tokenizer.json"
         );
-        // embedder = new BGEModel(
-        //     "Assets/StreamingAssets/bge-base-en-v1.5.sentis",
-        //     "Assets/StreamingAssets/bge-base-en-v1.5.tokenizer.json"
-        // );
     }
 
     void Start()
