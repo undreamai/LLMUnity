@@ -4,6 +4,7 @@ using System.Diagnostics;
 using Debug = UnityEngine.Debug;
 using System.Text.RegularExpressions;
 using LLMUnity;
+using System;
 
 class HamletSearch : MonoBehaviour
 {
@@ -13,7 +14,7 @@ class HamletSearch : MonoBehaviour
 
     public void OnEnable()
     {
-        embedder = new BGEModel(
+        embedder = ModelManager.BGEModel(
             "Assets/StreamingAssets/bge-small-en-v1.5.sentis",
             "Assets/StreamingAssets/bge-small-en-v1.5.tokenizer.json"
         );
@@ -37,6 +38,9 @@ class HamletSearch : MonoBehaviour
             Debug.Log($"act {act} embedded {dialogueManager.GetSentences(null, act).Count} sentences in {stopwatch.Elapsed.TotalMilliseconds / 1000f} secs");
         }
         Debug.Log($"embedded {dialogueManager.NumPhrases()} phrases, {dialogueManager.NumSentences()} sentences in {elapsedTotal} secs");
+
+        dialogueManager.Save("test.zip");
+        dialogueManager = DialogueManager.Load("test.zip");
 
         stopwatch.Reset(); stopwatch.Start();
         string[] similar = dialogueManager.Search("should i be?", 10);
