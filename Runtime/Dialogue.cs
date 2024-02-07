@@ -1,8 +1,9 @@
 using System.Collections.Generic;
 using System;
 using System.Linq;
-using System.Diagnostics;
-using Debug = UnityEngine.Debug;
+using System.Collections.Concurrent;
+using System.Threading.Tasks;
+using Unity.Sentis;
 
 namespace LLMUnity
 {
@@ -172,10 +173,15 @@ namespace LLMUnity
             return allSentences;
         }
 
-        public string[] Search(string queryString, int k, bool returnSentences = false)
+        public string[] Search(string queryString, int k, out float[] distances, bool returnSentences = false)
+        {
+            return Search(search.Encode(queryString), k, out distances, returnSentences);
+        }
+
+        public string[] Search(TensorFloat encoding, int k, out float[] distances, bool returnSentences = false)
         {
             if (search == null) throw new Exception("No search method defined!");
-            int[] keys = search.SearchKey(queryString, k);
+            int[] keys = search.SearchKey(encoding, k, out distances);
             string[] result = new string[keys.Length];
             for (int i = 0; i < keys.Length; i++)
             {
@@ -185,14 +191,34 @@ namespace LLMUnity
             return result;
         }
 
+        public string[] Search(TensorFloat encoding, int k, bool returnSentences = false)
+        {
+            return Search(encoding, k, out float[] distances, returnSentences);
+        }
+
+        public string[] Search(string queryString, int k, bool returnSentences = false)
+        {
+            return Search(queryString, k, out float[] distances, returnSentences);
+        }
+
+        public string[] SearchPhrases(string queryString, int k, out float[] distances)
+        {
+            return Search(queryString, k, out distances, false);
+        }
+
         public string[] SearchPhrases(string queryString, int k)
         {
-            return Search(queryString, k, false);
+            return SearchPhrases(queryString, k, out float[] distances);
+        }
+
+        public string[] SearchSentences(string queryString, int k, out float[] distances)
+        {
+            return Search(queryString, k, out distances, true);
         }
 
         public string[] SearchSentences(string queryString, int k)
         {
-            return Search(queryString, k, true);
+            return SearchSentences(queryString, k, out float[] distances);
         }
 
         public int NumPhrases()
@@ -291,27 +317,57 @@ namespace LLMUnity
             return Get(actor, title, true);
         }
 
-        public string[] Search(string queryString, int k, string actor = null, string title = null, bool returnSentences = false)
+        public string[] Search(string queryString, int k, out float[] distances, string actor = null, string title = null, bool returnSentences = false)
         {
             if (embedder == null) throw new Exception("No search method defined!");
-
             List<Dialogue> dialogues = Filter(actor, title);
-            List<string> result = new List<string>();
-            foreach (Dialogue dialogue in dialogues)
+            ConcurrentBag<(string, float)> resultPairs = new ConcurrentBag<(string, float)>();
+
+            var encoding = embedder.Encode(queryString);
+            Parallel.ForEach(dialogues, dialogue =>
             {
-                result.AddRange(dialogue.Search(queryString, k, returnSentences));
+                string[] searchResults = dialogue.Search(encoding, k, out float[] searchDistances, returnSentences);
+                for (int i = 0; i < searchResults.Length; i++)
+                {
+                    resultPairs.Add((searchResults[i], searchDistances[i]));
+                }
+            });
+
+            var sortedLists = resultPairs.OrderBy(item => item.Item2).ToList();
+            int kmax = k == -1 ? sortedLists.Count : Math.Min(k, sortedLists.Count);
+            string[] results = new string[kmax];
+            distances = new float[kmax];
+            for (int i = 0; i < kmax; i++)
+            {
+                results[i] = sortedLists[i].Item1;
+                distances[i] = sortedLists[i].Item2;
             }
-            return result.ToArray();
+            return results;
+        }
+
+        public string[] Search(string queryString, int k, string actor = null, string title = null, bool returnSentences = false)
+        {
+            return Search(queryString, k, out float[] distances, actor, title, returnSentences);
+        }
+
+        public string[] SearchPhrases(string queryString, int k, out float[] distances, string actor = null, string title = null)
+        {
+            return Search(queryString, k, out distances, actor, title, false);
         }
 
         public string[] SearchPhrases(string queryString, int k, string actor = null, string title = null)
         {
-            return Search(queryString, k, actor, title, false);
+            return SearchPhrases(queryString, k, out float[] distances, actor, title);
+        }
+
+        public string[] SearchSentences(string queryString, int k, out float[] distances, string actor = null, string title = null)
+        {
+            return Search(queryString, k, out distances, actor, title, true);
         }
 
         public string[] SearchSentences(string queryString, int k, string actor = null, string title = null)
         {
-            return Search(queryString, k, actor, title, true);
+            return SearchSentences(queryString, k, out float[] distances, actor, title);
         }
 
         public int NumPhrases(string actor = null, string title = null)
