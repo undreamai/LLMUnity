@@ -44,6 +44,11 @@ namespace Cloud.Unum.USearch
             Load(path, name);
         }
 
+        public USearchIndex(ZipArchive zipArchive, string name = "")
+        {
+            Load(zipArchive, name);
+        }
+
         public void Init(IndexOptions options)
         {
             _indexOptions = options;
@@ -62,40 +67,45 @@ namespace Cloud.Unum.USearch
             return name == "" ? "indexOptions" : name + ".indexOptions";
         }
 
-        private void Load(string path, string name = "")
+        public void Load(string path, string name = "")
+        {
+            using (FileStream zipFileStream = new FileStream(path, FileMode.Open))
+            using (ZipArchive zipArchive = new ZipArchive(zipFileStream, ZipArchiveMode.Read))
+            {
+                Load(zipArchive, name);
+            }
+        }
+
+        public void Load(ZipArchive zipArchive, string name = "")
         {
             try
             {
-                using (FileStream zipFileStream = new FileStream(path, FileMode.Open))
-                using (ZipArchive zipArchive = new ZipArchive(zipFileStream, ZipArchiveMode.Read))
+                var entry = zipArchive.GetEntry(GetIndexOptionsFilename(name));
+                using (Stream fileStream = entry.Open())
                 {
-                    var entry = zipArchive.GetEntry(GetIndexOptionsFilename(name));
-                    using (Stream fileStream = entry.Open())
+                    LoadIndexOptions(fileStream);
+                }
+
+                entry = zipArchive.GetEntry(GetIndexFilename(name));
+                using (Stream entryStream = entry.Open())
+                using (MemoryStream memoryStream = new MemoryStream())
+                {
+                    entryStream.CopyTo(memoryStream);
+                    // Access the length and create a buffer
+                    byte[] managedBuffer = new byte[memoryStream.Length];
+                    memoryStream.Position = 0;  // Reset the position to the beginning
+                    memoryStream.Read(managedBuffer, 0, managedBuffer.Length);
+
+                    GCHandle handle = GCHandle.Alloc(managedBuffer, GCHandleType.Pinned);
+                    try
                     {
-                        LoadIndexOptions(fileStream);
+                        IntPtr unmanagedBuffer = handle.AddrOfPinnedObject();
+                        usearch_load_buffer(_index, unmanagedBuffer, (UIntPtr)managedBuffer.Length, out IntPtr error);
+                        HandleError(error);
                     }
-
-                    entry = zipArchive.GetEntry(GetIndexFilename(name));
-                    using (Stream entryStream = entry.Open())
-                    using (MemoryStream memoryStream = new MemoryStream())
+                    finally
                     {
-                        entryStream.CopyTo(memoryStream);
-                        // Access the length and create a buffer
-                        byte[] managedBuffer = new byte[memoryStream.Length];
-                        memoryStream.Position = 0;  // Reset the position to the beginning
-                        memoryStream.Read(managedBuffer, 0, managedBuffer.Length);
-
-                        GCHandle handle = GCHandle.Alloc(managedBuffer, GCHandleType.Pinned);
-                        try
-                        {
-                            IntPtr unmanagedBuffer = handle.AddrOfPinnedObject();
-                            usearch_load_buffer(_index, unmanagedBuffer, (UIntPtr)managedBuffer.Length, out IntPtr error);
-                            HandleError(error);
-                        }
-                        finally
-                        {
-                            handle.Free();
-                        }
+                        handle.Free();
                     }
                 }
             }
@@ -107,19 +117,23 @@ namespace Cloud.Unum.USearch
 
         public void Save(string path, string name = "", FileMode mode = FileMode.Create)
         {
-            string indexPath = path + GetIndexFilename(name);
-            string indexOptionsPath = path + GetIndexOptionsFilename(name);
+            using (FileStream zipFileStream = new FileStream(path, mode))
+            using (ZipArchive zipArchive = new ZipArchive(zipFileStream, ZipArchiveMode.Create)){
+                Save(zipArchive, name);
+            }
+        }
+
+        public void Save(ZipArchive zipArchive, string name = "")
+        {
+            string indexPath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            string indexOptionsPath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
             usearch_save(_index, indexPath, out IntPtr error);
             HandleError(error);
             SaveIndexOptions(indexOptionsPath);
             try
             {
-                using (FileStream zipFileStream = new FileStream(path, mode))
-                using (ZipArchive zipArchive = new ZipArchive(zipFileStream, ZipArchiveMode.Create))
-                {
-                    zipArchive.CreateEntryFromFile(indexPath, GetIndexFilename(name));
-                    zipArchive.CreateEntryFromFile(indexOptionsPath, GetIndexOptionsFilename(name));
-                }
+                zipArchive.CreateEntryFromFile(indexPath, GetIndexFilename(name));
+                zipArchive.CreateEntryFromFile(indexOptionsPath, GetIndexOptionsFilename(name));
             }
             catch (Exception ex)
             {

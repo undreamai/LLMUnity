@@ -4,13 +4,20 @@ using System.Linq;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using Unity.Sentis;
+using System.Runtime.Serialization;
+using System.IO;
+using System.IO.Compression;
 
 namespace LLMUnity
 {
+    [DataContract]
     public class Sentence
     {
+        [DataMember]
         public int phraseId;
+        [DataMember]
         public int startIndex;
+        [DataMember]
         public int endIndex;
 
         public Sentence(int phraseId, int startIndex, int endIndex)
@@ -21,9 +28,12 @@ namespace LLMUnity
         }
     }
 
+    [DataContract]
     public class Phrase
     {
+        [DataMember]
         public string text;
+        [DataMember]
         public List<int> sentenceIds;
 
         public Phrase(string text) : this(text, new List<int>()) {}
@@ -35,10 +45,13 @@ namespace LLMUnity
         }
     }
 
+    [DataContract]
     public class SentenceSplitter
     {
         public static char[] DefaultDelimiters = new char[] { '.', '!', ':', ';', '?', '\n', '\r', };
+        [DataMember]
         char[] delimiters;
+        [DataMember]
         bool trimSentences = true;
 
         public SentenceSplitter(char[] delimiters, bool trimSentences = true)
@@ -47,7 +60,7 @@ namespace LLMUnity
             this.trimSentences = trimSentences;
         }
 
-        public SentenceSplitter() : this(SentenceSplitter.DefaultDelimiters, true) {}
+        public SentenceSplitter() : this(DefaultDelimiters, true) {}
 
         public List<(int, int)> Split(string input)
         {
@@ -81,13 +94,19 @@ namespace LLMUnity
         }
     }
 
+    [DataContract]
     public class Dialogue
     {
+        [DataMember]
         public string Title { get; private set; }
+        [DataMember]
         public string Actor { get; private set; }
 
+        [DataMember]
         List<Phrase> phrases;
+        [DataMember]
         List<Sentence> sentences;
+        [DataMember]
         SentenceSplitter sentenceSplitter;
         ModelKeySearch search;
 
@@ -125,6 +144,16 @@ namespace LLMUnity
             SetSentenceSplitting(null);
         }
 
+        public void SetSearch(ModelKeySearch search)
+        {
+            this.search = search;
+        }
+
+        public void SetEmbedder(EmbeddingModel embedder)
+        {
+            search.SetEmbedder(embedder);
+        }
+
         public string GetPhrase(Sentence sentence)
         {
             return phrases[sentence.phraseId].text;
@@ -137,7 +166,6 @@ namespace LLMUnity
 
         public void Add(string text)
         {
-
             List<(int, int)> subindices;
             if (sentenceSplitter == null) subindices = new List<(int, int)> { (0, text.Length - 1) };
             else subindices = sentenceSplitter.Split(text);
@@ -230,15 +258,57 @@ namespace LLMUnity
         {
             return sentences.Count;
         }
+
+        public void Save(string filePath, string dirname="")
+        {
+            using (FileStream stream = new FileStream(filePath, FileMode.Create))
+            using (ZipArchive archive = new ZipArchive(stream, ZipArchiveMode.Create))
+            {
+                Save(archive, dirname);
+            }
+        }
+
+        public static string GetDialoguePath(string dirname){
+            return Path.Combine(dirname, "Dialogue.json");
+        }
+
+        public void Save(ZipArchive archive, string dirname)
+        {
+            Saver.Save(this, archive, GetDialoguePath(dirname));
+            search.Save(archive, dirname);
+        }
+
+        public static Dialogue Load(string filePath, string dirname)
+        {
+            using (FileStream stream = new FileStream(filePath, FileMode.Open))
+            using (ZipArchive archive = new ZipArchive(stream, ZipArchiveMode.Read))
+            {
+                return Load(archive, dirname);
+            }
+        }
+
+        public static Dialogue Load(ZipArchive archive, string dirname)
+        {
+            Dialogue dialogue = Saver.Load<Dialogue>(archive, GetDialoguePath(dirname));
+            ModelKeySearch search = (ModelKeySearch) ModelSearchBase.CastLoad(archive, dirname);
+            dialogue.SetSearch(search);
+            return dialogue;
+        }
     }
 
+    [DataContract]
     public class DialogueManager
     {
         Dictionary<string, Dictionary<string, Dialogue>> dialogues;
+        [DataMember]
         char[] delimiters = SentenceSplitter.DefaultDelimiters;
+        [DataMember]
         bool trimSentences = true;
+        [DataMember]
         EmbeddingModel embedder;
         Type modelSearchType;
+        [DataMember]
+        string modelSearchTypeName;
 
         public DialogueManager(EmbeddingModel embedder = null) : this(embedder, typeof(ANNModelSearch)) {}
 
@@ -247,6 +317,7 @@ namespace LLMUnity
             dialogues = new Dictionary<string, Dictionary<string, Dialogue>>();
             this.embedder = embedder;
             this.modelSearchType = modelSearchType;
+            this.modelSearchTypeName = modelSearchType.FullName;
         }
 
         public void SetSentenceSplitting(char[] delimiters, bool trimSentences = true)
@@ -258,6 +329,15 @@ namespace LLMUnity
         public void SetNoSentenceSplitting()
         {
             SetSentenceSplitting(null);
+        }
+
+        public void AddDialogue(string actor, string title, Dialogue dialogue)
+        {
+            if (!dialogues.ContainsKey(actor))
+            {
+                dialogues[actor] = new Dictionary<string, Dialogue>();
+            }
+            dialogues[actor][title] = dialogue;
         }
 
         public void Add(string actor, string title, string text)
@@ -324,14 +404,16 @@ namespace LLMUnity
             ConcurrentBag<(string, float)> resultPairs = new ConcurrentBag<(string, float)>();
 
             var encoding = embedder.Encode(queryString);
-            Parallel.ForEach(dialogues, dialogue =>
-            {
-                string[] searchResults = dialogue.Search(encoding, k, out float[] searchDistances, returnSentences);
-                for (int i = 0; i < searchResults.Length; i++)
+            Task.Run(() =>
+            {Parallel.ForEach(dialogues, dialogue =>
                 {
-                    resultPairs.Add((searchResults[i], searchDistances[i]));
-                }
-            });
+                    string[] searchResults = dialogue.Search(encoding, k, out float[] searchDistances, returnSentences);
+                    for (int i = 0; i < searchResults.Length; i++)
+                    {
+                        resultPairs.Add((searchResults[i], searchDistances[i]));
+                    }
+                });
+            }).Wait();
 
             var sortedLists = resultPairs.OrderBy(item => item.Item2).ToList();
             int kmax = k == -1 ? sortedLists.Count : Math.Min(k, sortedLists.Count);
@@ -390,6 +472,77 @@ namespace LLMUnity
                 num += dialogue.NumSentences();
             }
             return num;
+        }
+
+        public static string GetDialogueManagerPath(string dirname){
+            return Path.Combine(dirname, "DialogueManager.json");
+        }
+        public static string GetDialoguesPath(string dirname){
+            return Path.Combine(dirname, "Dialogues.json");
+        }
+
+        public void Save(string filePath, string dirname="")
+        {
+            using (FileStream stream = new FileStream(filePath, FileMode.Create))
+            using (ZipArchive archive = new ZipArchive(stream, ZipArchiveMode.Create))
+            {
+                Save(archive, dirname);
+            }
+        }
+
+        public void Save(ZipArchive archive, string dirname="")
+        {
+            Saver.Save(this, archive, GetDialogueManagerPath(dirname));
+
+            embedder.Save(archive, dirname);
+
+            List<string> dialogueDirs = new List<string>();
+            foreach ((string actorName, Dictionary<string, Dialogue> actorDialogues) in dialogues)
+            {
+                foreach ((string titleName, Dialogue dialogue) in actorDialogues)
+                {
+                    string basedir = $"{dirname}/Dialogues/{Saver.EscapeFileName(actorName)}/{Saver.EscapeFileName(titleName)}";
+                    dialogue.Save(archive, basedir);
+                    dialogueDirs.Add(basedir);
+                }
+            }
+
+            ZipArchiveEntry dialoguesEntry = archive.CreateEntry(GetDialoguesPath(dirname));
+            using (StreamWriter writer = new StreamWriter(dialoguesEntry.Open()))
+            {
+                writer.Write(string.Join("\n", dialogueDirs));
+            }
+        }
+
+        public static DialogueManager Load(string filePath, string dirname="")
+        {
+            using (FileStream stream = new FileStream(filePath, FileMode.Open))
+            using (ZipArchive archive = new ZipArchive(stream, ZipArchiveMode.Read))
+            {
+                DialogueManager dialogueManager = Saver.Load<DialogueManager>(archive, GetDialogueManagerPath(dirname));
+                dialogueManager.modelSearchType = Type.GetType(dialogueManager.modelSearchTypeName);
+
+                dialogueManager.embedder = EmbeddingModel.Load(archive, dirname);
+
+                ZipArchiveEntry dialoguesEntry = archive.GetEntry(GetDialoguesPath(dirname));
+                List<string> dialogueDirs = new List<string>();
+                dialogueManager.dialogues = new Dictionary<string, Dictionary<string, Dialogue>>();
+                using (StreamReader reader = new StreamReader(dialoguesEntry.Open()))
+                {
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        dialogueDirs.Add(line);
+                    }
+                }
+
+                foreach (string basedir in dialogueDirs)
+                {
+                    Dialogue dialogue = Dialogue.Load(archive, basedir);
+                    dialogueManager.AddDialogue(dialogue.Actor, dialogue.Title, dialogue);
+                }
+                return dialogueManager;
+            }
         }
     }
 }

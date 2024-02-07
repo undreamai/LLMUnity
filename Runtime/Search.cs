@@ -3,18 +3,29 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.Sentis;
 using Cloud.Unum.USearch;
+using System.Runtime.Serialization;
+using System.IO;
+using System.IO.Compression;
+using System.Reflection;
 
 
 namespace LLMUnity
 {
-    public abstract class ModelSearchBase
+    [DataContract]
+    public class ModelSearchBase
     {
         protected EmbeddingModel embedder;
+        [DataMember]
         protected Dictionary<string, TensorFloat> embeddings;
 
         public ModelSearchBase(EmbeddingModel embedder)
         {
             embeddings = new Dictionary<string, TensorFloat>();
+            this.embedder = embedder;
+        }
+
+        public void SetEmbedder(EmbeddingModel embedder)
+        {
             this.embedder = embedder;
         }
 
@@ -77,8 +88,66 @@ namespace LLMUnity
         {
             return embeddings.Count;
         }
+
+        public virtual void Save(string filePath, string dirname)
+        {
+            using (FileStream stream = new FileStream(filePath, FileMode.Create))
+            using (ZipArchive archive = new ZipArchive(stream, ZipArchiveMode.Create))
+            {
+                Save(archive, dirname);
+            }
+        }
+
+        public static string GetSearchTypePath(string dirname){
+            return Path.Combine(dirname, "SearchType.txt");
+        }
+
+        public static string GetSearchPath(string dirname){
+            return Path.Combine(dirname, "Search.json");
+        }
+
+        public virtual void Save(ZipArchive archive, string dirname)
+        {
+            ZipArchiveEntry typeEntry = archive.CreateEntry(GetSearchTypePath(dirname));
+            using (StreamWriter writer = new StreamWriter(typeEntry.Open()))
+            {
+                writer.Write(GetType().FullName);
+            }
+            Saver.Save(this, archive, GetSearchPath(dirname));
+            embedder.Save(archive, dirname);
+        }
+
+        public static ModelSearchBase CastLoad(ZipArchive archive, string dirname)
+        {
+            ZipArchiveEntry typeEntry = archive.GetEntry(GetSearchTypePath(dirname));
+            Type modelSearchType;
+            using (StreamReader reader = new StreamReader(typeEntry.Open()))
+            {
+                modelSearchType = Type.GetType(reader.ReadLine());
+            }
+            MethodInfo methodInfo = modelSearchType.GetMethod("Load", new Type[] { typeof(ZipArchive), typeof(string) });
+            return (ModelSearchBase) Convert.ChangeType(methodInfo.Invoke(null, new object[]{archive, dirname}), modelSearchType);
+        }
+
+        public static T Load<T>(string filePath, string dirname) where T: ModelSearchBase
+        {
+            using (FileStream stream = new FileStream(filePath, FileMode.Open))
+            using (ZipArchive archive = new ZipArchive(stream, ZipArchiveMode.Read))
+            {
+                return Load<T>(archive, dirname);
+            }
+        }
+
+        public static T Load<T>(ZipArchive archive, string dirname) where T: ModelSearchBase
+        {
+            T search = Saver.Load<T>(archive, GetSearchPath(dirname));
+            EmbeddingModel embedder = EmbeddingModel.Load(archive, dirname);
+            search.SetEmbedder(embedder);
+            return search;
+        }
     }
 
+    [DataContract]
     public class ModelSearch : ModelSearchBase
     {
         public ModelSearch(EmbeddingModel embedder) : base(embedder) {}
@@ -109,10 +178,22 @@ namespace LLMUnity
             }
             return inputEmbeddings.ToArray();
         }
+
+        public static ModelSearch Load(string filePath, string dirname)
+        {
+            return Load<ModelSearch>(filePath, dirname);
+        }
+
+        public static ModelSearch Load(ZipArchive archive, string dirname)
+        {
+            return Load<ModelSearch>(archive, dirname);
+        }
     }
 
+    [DataContract]
     public class ModelKeySearch : ModelSearchBase
     {
+        [DataMember]
         protected Dictionary<string, int> valueToKey;
 
         public ModelKeySearch(EmbeddingModel embedder) : base(embedder)
@@ -173,11 +254,23 @@ namespace LLMUnity
         {
             return SearchKey(queryString, k, out float[] distances);
         }
+
+        public static ModelKeySearch Load(string filePath, string dirname)
+        {
+            return Load<ModelKeySearch>(filePath, dirname);
+        }
+
+        public static ModelKeySearch Load(ZipArchive archive, string dirname)
+        {
+            return Load<ModelKeySearch>(archive, dirname);
+        }
     }
 
+    [DataContract]
     public class ANNModelSearch : ModelKeySearch
     {
         USearchIndex index;
+        [DataMember]
         protected Dictionary<int, string> keyToValue;
 
         public ANNModelSearch(EmbeddingModel embedder) : this(embedder, MetricKind.Cos, 32, 40, 16) {}
@@ -198,6 +291,10 @@ namespace LLMUnity
         {
             this.index = index;
             keyToValue = new Dictionary<int, string>();
+        }
+
+        public void SetIndex(USearchIndex index){
+            this.index = index;
         }
 
         public override void Insert(int key, string value, TensorFloat encoding)
@@ -262,6 +359,33 @@ namespace LLMUnity
         public override int Count()
         {
             return (int)index.Size();
+        }
+
+        public static string GetIndexPath(string dirname){
+            return Path.Combine(dirname, "USearch");
+        }
+
+        public override void Save(ZipArchive archive, string dirname)
+        {
+            base.Save(archive, dirname);
+            index.Save(archive, GetIndexPath(dirname));
+        }
+
+        public new static ANNModelSearch Load(string filePath, string dirname)
+        {
+            using (FileStream stream = new FileStream(filePath, FileMode.Open))
+            using (ZipArchive archive = new ZipArchive(stream, ZipArchiveMode.Read))
+            {
+                return Load(archive, dirname);
+            }
+        }
+
+        public new static ANNModelSearch Load(ZipArchive archive, string dirname)
+        {
+            ANNModelSearch search = Load<ANNModelSearch>(archive, dirname);
+            USearchIndex index = new USearchIndex(archive, GetIndexPath(dirname));
+            search.SetIndex(index);
+            return search;
         }
     }
 }
