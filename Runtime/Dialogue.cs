@@ -206,7 +206,7 @@ namespace LLMUnity
             return Search(search.Encode(queryString), k, out distances, returnSentences);
         }
 
-        public string[] Search(TensorFloat encoding, int k, out float[] distances, bool returnSentences = false)
+        public string[] Search(float[] encoding, int k, out float[] distances, bool returnSentences = false)
         {
             if (search == null) throw new Exception("No search method defined!");
             int[] keys = search.SearchKey(encoding, k, out distances);
@@ -219,7 +219,7 @@ namespace LLMUnity
             return result;
         }
 
-        public string[] Search(TensorFloat encoding, int k, bool returnSentences = false)
+        public string[] Search(float[] encoding, int k, bool returnSentences = false)
         {
             return Search(encoding, k, out float[] distances, returnSentences);
         }
@@ -403,7 +403,9 @@ namespace LLMUnity
             List<Dialogue> dialogues = Filter(actor, title);
             ConcurrentBag<(string, float)> resultPairs = new ConcurrentBag<(string, float)>();
 
-            var encoding = embedder.Encode(queryString);
+            TensorFloat encodingTensor = embedder.Encode(queryString);
+            encodingTensor.MakeReadable();
+            float[] encoding = encodingTensor.ToReadOnlyArray();
             Task.Run(() =>
             {Parallel.ForEach(dialogues, dialogue =>
                 {
