@@ -10,6 +10,9 @@
     "com.unity.sentis": "1.2.0-exp.2",
     "com.unity.nuget.newtonsoft-json": "3.2.1"
   },
+  "testables": [
+    "undream.llmunity.Runtime.Tests"
+  ],
   "keywords": [
     "llm",
     "large language model",

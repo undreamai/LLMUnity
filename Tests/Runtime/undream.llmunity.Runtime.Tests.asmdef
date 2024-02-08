@@ -1,0 +1,11 @@
+{
+  "name": "undream.llmunity.Runtime.Tests",
+  "references": [
+    "Unity.Sentis",
+    "undream.llmunity.Runtime"
+  ],
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ]
+}
+
