@@ -447,5 +447,10 @@ namespace LLMUnity
         {
             return Model(new EmbeddingModelSkeleton(modelPath, tokenizerPath, backend, "last_hidden_state", true, 384));
         }
+
+        public static int Count()
+        {
+            return models.Count();
+        }
     }
 }
