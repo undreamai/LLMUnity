@@ -84,8 +84,6 @@ namespace LLMUnityTests
         public void TestEncode()
         {
             float[] encoding = model.Encode("how is the weather today?").ToReadOnlyArray();
-            Debug.Log(encoding[0]);
-            Debug.Log(encoding[383]);
             Assert.That(ApproxEqual(encoding[0], -0.029100293293595314f));
             Assert.That(ApproxEqual(encoding[383], 0.017599990591406822f));
         }
