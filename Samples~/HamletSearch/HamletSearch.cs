@@ -39,8 +39,13 @@ class HamletSearch : MonoBehaviour
         }
         Debug.Log($"embedded {dialogueManager.NumPhrases()} phrases, {dialogueManager.NumSentences()} sentences in {elapsedTotal} secs");
 
+        stopwatch.Reset(); stopwatch.Start();
         dialogueManager.Save("test.zip");
+        Debug.Log($"saving took {stopwatch.Elapsed.TotalMilliseconds / 1000f} secs");
+
+        stopwatch.Reset(); stopwatch.Start();
         dialogueManager = DialogueManager.Load("test.zip");
+        Debug.Log($"loading took {stopwatch.Elapsed.TotalMilliseconds / 1000f} secs");
 
         stopwatch.Reset(); stopwatch.Start();
         string[] similar = dialogueManager.Search("should i be?", 10);
