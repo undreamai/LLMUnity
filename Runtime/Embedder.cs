@@ -49,9 +49,19 @@ namespace LLMUnity
             return Path.Combine(dirname, "EmbeddingModel.json");
         }
 
+        public virtual void Save(string path, string dirname = "")
+        {
+            Saver.Save(this, path, GetEmbeddingModelPath(dirname));
+        }
+
         public virtual void Save(ZipArchive archive, string dirname = "")
         {
             Saver.Save(this, archive, GetEmbeddingModelPath(dirname));
+        }
+
+        public static EmbeddingModelSkeleton Load(string path, string dirname = "")
+        {
+            return Saver.Load<EmbeddingModel>(path, GetEmbeddingModelPath(dirname));
         }
 
         public static EmbeddingModelSkeleton Load(ZipArchive archive, string dirname = "")
