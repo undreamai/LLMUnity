@@ -1,7 +1,9 @@
 using NUnit.Framework;
 using LLMUnity;
 using System;
-using System.Collections.Generic;
+using System.IO;
+using UnityEngine;
+using Cloud.Unum.USearch;
 
 namespace LLMUnityTests
 {
@@ -20,7 +22,7 @@ namespace LLMUnityTests
                 "how are you today?",
                 "the weather is nice!",
                 "perfect"
-            }; ;
+            };
             string text = String.Join("", sentences);
 
             string[] sentencesSpace = (string[])sentences.Clone();
@@ -76,6 +78,137 @@ namespace LLMUnityTests
             sentencesBack = SentenceSplitter.IndicesToSentences(textSpace, splitterQuestionNoTrim.Split(textSpace));
             Assert.AreEqual(sentencesGT, sentencesBack);
 
+        }
+    }
+    public class TestDialogue
+    {
+        EmbeddingModel model;
+        string modelPath;
+        string tokenizerPath;
+        string[] sentences = new string[]{
+            "hi.",
+            "how are you today?",
+            "how is the weather today?",
+            "is it raining?"
+        };
+
+        [SetUp]
+        public void SetUp()
+        {
+            modelPath = Path.Combine(Application.streamingAssetsPath, "bge-small-en-v1.5.sentis");
+            tokenizerPath = Path.Combine(Application.streamingAssetsPath, "bge-small-en-v1.5.tokenizer.json");
+            model = new EmbeddingModel(modelPath, tokenizerPath, Unity.Sentis.BackendType.CPU, "sentence_embedding", false, 384);
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            model.Destroy();
+        }
+
+        [Test]
+        public void TestAdd()
+        {
+            Dialogue dialogue = new Dialogue("", "", model);
+            foreach (string sentence in sentences)
+                dialogue.Add(sentence);
+            Assert.AreEqual(dialogue.GetPhrases().ToArray(), sentences);
+            Assert.AreEqual(dialogue.GetSentences().ToArray(), sentences);
+            Assert.AreEqual(dialogue.NumPhrases(), sentences.Length);
+            Assert.AreEqual(dialogue.NumSentences(), sentences.Length);
+
+            string[] phrases = new string[] { sentences[0] + " " + sentences[1], sentences[2] + sentences[3] };
+            dialogue = new Dialogue("", "", model);
+            foreach (string phrase in phrases)
+                dialogue.Add(phrase);
+            Assert.AreEqual(dialogue.GetPhrases().ToArray(), phrases);
+            Assert.AreEqual(dialogue.GetSentences().ToArray(), sentences);
+            Assert.AreEqual(dialogue.NumPhrases(), phrases.Length);
+            Assert.AreEqual(dialogue.NumSentences(), sentences.Length);
+        }
+
+        public bool ApproxEqual(float x1, float x2, float tolerance = 0.00001f)
+        {
+            return Mathf.Abs(x1 - x2) < tolerance;
+        }
+
+        [Test]
+        public void TestSearch()
+        {
+            Dialogue dialogue = new Dialogue("", "", model);
+            foreach (string sentence in sentences)
+                dialogue.Add(sentence);
+            string[] result;
+            string[] resultGT;
+            float trueSimilarity = 0.79276246f;
+
+            result = dialogue.Search(sentences[3], 2);
+            resultGT = new string[] { sentences[3], sentences[2] };
+            Assert.AreEqual(result, resultGT);
+
+            result = dialogue.Search(sentences[3], 2, out float[] distances);
+            Assert.AreEqual(result, resultGT);
+            Assert.AreEqual(distances.Length, 2);
+            Assert.That(ApproxEqual(distances[0], 0));
+            Assert.That(ApproxEqual(distances[1], 1 - trueSimilarity));
+
+            string[] phrases = new string[]{
+                sentences[0] + sentences[1],
+                sentences[2],
+                sentences[2] + sentences[2] + sentences[2] + sentences[2] +
+                sentences[3] + sentences[3] + sentences[3] + sentences[3]
+            };
+            dialogue = new Dialogue("", "", model);
+            foreach (string phrase in phrases)
+                dialogue.Add(phrase);
+
+            result = dialogue.SearchSentences(sentences[3], 5, out distances);
+            resultGT = new string[] { sentences[3], sentences[3], sentences[3], sentences[3], sentences[2] };
+            Assert.AreEqual(result, resultGT);
+            Assert.AreEqual(distances.Length, 5);
+            for (int i = 0; i < 4; i++)
+                Assert.That(ApproxEqual(distances[i], 0));
+            Assert.That(ApproxEqual(distances[4], 1 - trueSimilarity));
+
+            float trueSimilarity2 = 0.7036853f;
+            result = dialogue.SearchPhrases(sentences[3], 4, out distances);
+            resultGT = new string[] { phrases[2], phrases[1], phrases[0] };
+            Assert.AreEqual(result, resultGT);
+            Assert.AreEqual(distances.Length, 3);
+            Assert.That(ApproxEqual(distances[0], 0));
+            Assert.That(ApproxEqual(distances[1], 1 - trueSimilarity));
+            Debug.Log(distances[2]);
+            Assert.That(ApproxEqual(distances[2], 1 - trueSimilarity2));
+        }
+
+        [Test]
+        public void TestSaveLoad()
+        {
+            Dialogue dialogue = new Dialogue("", "", model);
+            foreach (string sentence in sentences)
+                dialogue.Add(sentence);
+
+            string path = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            dialogue.Save(path, "test");
+            var loadedDialogue = Dialogue.Load(path, "test");
+            File.Delete(path);
+
+            Assert.AreEqual(dialogue.NumSentences(), loadedDialogue.NumSentences());
+            Assert.AreEqual(dialogue.NumPhrases(), loadedDialogue.NumPhrases());
+
+            string[] result;
+            string[] resultGT;
+            float trueSimilarity = 0.79276246f;
+
+            result = dialogue.Search(sentences[3], 2);
+            resultGT = new string[] { sentences[3], sentences[2] };
+            Assert.AreEqual(result, resultGT);
+
+            result = dialogue.Search(sentences[3], 2, out float[] distances);
+            Assert.AreEqual(result, resultGT);
+            Assert.AreEqual(distances.Length, 2);
+            Assert.That(ApproxEqual(distances[0], 0));
+            Assert.That(ApproxEqual(distances[1], 1 - trueSimilarity));
         }
     }
 }
