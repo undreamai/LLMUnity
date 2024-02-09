@@ -113,26 +113,28 @@ namespace LLMUnity
         public string Actor { get; private set; }
 
         [DataMember]
-        List<Phrase> phrases;
+        SortedDictionary<int, Phrase> phrases;
         [DataMember]
-        List<Sentence> sentences;
+        SortedDictionary<int, Sentence> sentences;
+        [DataMember]
+        int nextPhraseId = 0;
+        [DataMember]
+        int nextSentenceId = 0;
         [DataMember]
         SentenceSplitter sentenceSplitter;
-        ModelKeySearch search;
+        ANNModelSearch search;
 
-        public Dialogue(string actor = "", string title = "", EmbeddingModel embedder = null) : this(actor, title, embedder, typeof(ANNModelSearch)) {}
-
-        public Dialogue(string actor = "", string title = "", EmbeddingModel embedder = null, Type modelSearchType = null)
+        public Dialogue(string actor = "", string title = "", EmbeddingModel embedder = null)
         {
             Actor = actor;
             Title = title;
-            phrases = new List<Phrase>();
-            sentences = new List<Sentence>();
+            phrases = new SortedDictionary<int, Phrase>();
+            sentences = new SortedDictionary<int, Sentence>();
             sentenceSplitter = new SentenceSplitter();
             search = null;
-            if (embedder != null && modelSearchType != null)
+            if (embedder != null)
             {
-                search = (ModelKeySearch)Activator.CreateInstance(modelSearchType, embedder);
+                search = new ANNModelSearch(embedder);
             }
         }
 
@@ -154,7 +156,7 @@ namespace LLMUnity
             SetSentenceSplitting(null);
         }
 
-        public void SetSearch(ModelKeySearch search)
+        public void SetSearch(ANNModelSearch search)
         {
             this.search = search;
         }
@@ -180,31 +182,56 @@ namespace LLMUnity
             if (sentenceSplitter == null) subindices = new List<(int, int)> { (0, text.Length - 1) };
             else subindices = sentenceSplitter.Split(text);
 
-            int phraseId = phrases.Count;
+            int phraseId = nextPhraseId++;
             Phrase phrase = new Phrase(text);
-            phrases.Add(phrase);
+            phrases[phraseId] = phrase;
             foreach ((int startIndex, int endIndex) in subindices)
             {
-                int sentenceId = sentences.Count;
+                int sentenceId = nextSentenceId++;
                 Sentence sentence = new Sentence(phraseId, startIndex, endIndex);
-
-                sentences.Add(sentence);
+                sentences[sentenceId] = sentence;
                 phrase.sentenceIds.Add(sentenceId);
                 search?.Add(sentenceId, GetSentence(sentence));
             }
         }
 
+        public int Remove(string text)
+        {
+            List<int> removePhraseIds = new List<int>();
+            foreach (var phrasePair in phrases)
+            {
+                Phrase phrase = phrasePair.Value;
+                if (phrase.text == text)
+                {
+                    foreach (int sentenceId in phrase.sentenceIds)
+                    {
+                        sentences.Remove(sentenceId);
+                        search?.Remove(sentenceId);
+                    }
+                    removePhraseIds.Add(phrasePair.Key);
+                }
+            }
+            foreach (int phraseId in removePhraseIds)
+            {
+                phrases.Remove(phraseId);
+            }
+            return removePhraseIds.Count;
+        }
+
         public List<string> GetPhrases()
         {
             List<string> phraseTexts = new List<string>();
-            foreach (Phrase phrase in phrases) phraseTexts.Add(phrase.text);
+            foreach (Phrase phrase in phrases.Values)
+            {
+                phraseTexts.Add(phrase.text);
+            }
             return phraseTexts;
         }
 
         public List<string> GetSentences()
         {
             List<string> allSentences = new List<string>();
-            foreach (Sentence sentence in sentences)
+            foreach (Sentence sentence in sentences.Values)
             {
                 allSentences.Add(GetSentence(sentence));
             }
@@ -333,7 +360,7 @@ namespace LLMUnity
         public static Dialogue Load(ZipArchive archive, string dirname)
         {
             Dialogue dialogue = Saver.Load<Dialogue>(archive, GetDialoguePath(dirname));
-            ModelKeySearch search = (ModelKeySearch)ModelSearchBase.CastLoad(archive, dirname);
+            ANNModelSearch search = ANNModelSearch.Load(archive, dirname);
             dialogue.SetSearch(search);
             return dialogue;
         }
@@ -349,18 +376,10 @@ namespace LLMUnity
         bool trimSentences = true;
         [DataMember]
         EmbeddingModel embedder;
-        Type modelSearchType;
-        [DataMember]
-        string modelSearchTypeName;
-
-        public DialogueManager(EmbeddingModel embedder = null) : this(embedder, typeof(ANNModelSearch)) {}
-
-        public DialogueManager(EmbeddingModel embedder = null, Type modelSearchType = null)
+        public DialogueManager(EmbeddingModel embedder = null)
         {
             dialogues = new Dictionary<string, Dictionary<string, Dialogue>>();
             this.embedder = embedder;
-            this.modelSearchType = modelSearchType;
-            this.modelSearchTypeName = modelSearchType.FullName;
         }
 
         public void SetSentenceSplitting(char[] delimiters, bool trimSentences = true)
@@ -387,7 +406,7 @@ namespace LLMUnity
         {
             if (!dialogues.ContainsKey(actor) || !dialogues[actor].ContainsKey(title))
             {
-                Dialogue dialogue = new Dialogue(actor, title, embedder, modelSearchType);
+                Dialogue dialogue = new Dialogue(actor, title, embedder);
                 dialogue.SetSentenceSplitting(delimiters, trimSentences);
                 if (!dialogues.ContainsKey(actor))
                 {
@@ -568,7 +587,6 @@ namespace LLMUnity
             using (ZipArchive archive = new ZipArchive(stream, ZipArchiveMode.Read))
             {
                 DialogueManager dialogueManager = Saver.Load<DialogueManager>(archive, GetDialogueManagerPath(dirname));
-                dialogueManager.modelSearchType = Type.GetType(dialogueManager.modelSearchTypeName);
 
                 dialogueManager.embedder = EmbeddingModel.Load(archive, dirname);
 
