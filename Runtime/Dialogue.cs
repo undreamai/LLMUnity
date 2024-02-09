@@ -219,14 +219,46 @@ namespace LLMUnity
         public string[] Search(float[] encoding, int k, out float[] distances, bool returnSentences = false)
         {
             if (search == null) throw new Exception("No search method defined!");
-            int[] keys = search.SearchKey(encoding, k, out distances);
-            string[] result = new string[keys.Length];
-            for (int i = 0; i < keys.Length; i++)
+
+            if (returnSentences)
             {
-                Sentence sentence = sentences[keys[i]];
-                result[i] = returnSentences ? GetSentence(sentence) : GetPhrase(sentence);
+                int[] keys = search.SearchKey(encoding, k, out distances);
+                string[] result = new string[keys.Length];
+                for (int i = 0; i < keys.Length; i++)
+                {
+                    Sentence sentence = sentences[keys[i]];
+                    result[i] = returnSentences ? GetSentence(sentence) : GetPhrase(sentence);
+                }
+                return result;
             }
-            return result;
+            else
+            {
+                List<int> phraseKeys;
+                List<float> phraseDistances;
+                int currK = k;
+                do
+                {
+                    int[] keys = search.SearchKey(encoding, currK, out float[] iterDistances);
+                    phraseDistances = new List<float>();
+                    phraseKeys = new List<int>();
+                    for (int i = 0; i < keys.Length; i++)
+                    {
+                        int phraseId = sentences[keys[i]].phraseId;
+                        if (phraseKeys.Contains(phraseId)) continue;
+                        phraseKeys.Add(phraseId);
+                        phraseDistances.Add(iterDistances[i]);
+                    }
+                    if (currK >= search.Count()) break;
+                    currK *= 2;
+                }
+                while (phraseKeys.Count() < k);
+
+                distances = phraseDistances.ToArray();
+                string[] result = new string[phraseKeys.Count];
+                for (int i = 0; i < phraseKeys.Count; i++)
+                    result[i] = phrases[phraseKeys[i]].text;
+                return result;
+            }
         }
 
         public string[] Search(float[] encoding, int k, bool returnSentences = false)
