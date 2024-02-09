@@ -43,7 +43,8 @@ namespace LLMUnity
             {
                 int takeCount = Math.Min(batchSize, inputStrings.Count - i);
                 List<string> batch = new List<string>(inputStrings.GetRange(i, takeCount));
-                foreach (TensorFloat tensor in embedder.Split(embedder.Encode(batch))){
+                foreach (TensorFloat tensor in embedder.Split(embedder.Encode(batch)))
+                {
                     tensor.MakeReadable();
                     inputEmbeddings.Add(tensor.ToReadOnlyArray());
                 }
@@ -64,7 +65,7 @@ namespace LLMUnity
         {
             return Search(queryString, k, out float[] distances);
         }
-        
+
         public static float DotProduct(float[] vector1, float[] vector2)
         {
             if (vector1.Length != vector2.Length)
@@ -79,12 +80,14 @@ namespace LLMUnity
             return result;
         }
 
-        public static float InverseDotProduct(float[] vector1, float[] vector2){
+        public static float InverseDotProduct(float[] vector1, float[] vector2)
+        {
             return 1 - DotProduct(vector1, vector2);
         }
 
-        public static float[] InverseDotProduct(float[] vector1, float[][] vector2){
-            float[] results =new float[vector2.Length];
+        public static float[] InverseDotProduct(float[] vector1, float[][] vector2)
+        {
+            float[] results = new float[vector2.Length];
             for (int i = 0; i < vector2.Length; i++)
             {
                 results[i] = InverseDotProduct(vector1, vector2[i]);
@@ -129,11 +132,13 @@ namespace LLMUnity
             }
         }
 
-        public static string GetSearchTypePath(string dirname){
+        public static string GetSearchTypePath(string dirname)
+        {
             return Path.Combine(dirname, "SearchType.txt");
         }
 
-        public static string GetSearchPath(string dirname){
+        public static string GetSearchPath(string dirname)
+        {
             return Path.Combine(dirname, "Search.json");
         }
 
@@ -166,10 +171,10 @@ namespace LLMUnity
                 modelSearchType = Type.GetType(reader.ReadLine());
             }
             MethodInfo methodInfo = modelSearchType.GetMethod("Load", new Type[] { typeof(ZipArchive), typeof(string) });
-            return (ModelSearchBase) Convert.ChangeType(methodInfo.Invoke(null, new object[]{archive, dirname}), modelSearchType);
+            return (ModelSearchBase)Convert.ChangeType(methodInfo.Invoke(null, new object[] { archive, dirname }), modelSearchType);
         }
 
-        public static T Load<T>(string filePath, string dirname) where T: ModelSearchBase
+        public static T Load<T>(string filePath, string dirname) where T : ModelSearchBase
         {
             using (FileStream stream = new FileStream(filePath, FileMode.Open))
             using (ZipArchive archive = new ZipArchive(stream, ZipArchiveMode.Read))
@@ -178,7 +183,7 @@ namespace LLMUnity
             }
         }
 
-        public static T Load<T>(ZipArchive archive, string dirname) where T: ModelSearchBase
+        public static T Load<T>(ZipArchive archive, string dirname) where T : ModelSearchBase
         {
             T search = Saver.Load<T>(archive, GetSearchPath(dirname));
             EmbeddingModel embedder = EmbeddingModel.Load(archive, dirname);
@@ -219,6 +224,11 @@ namespace LLMUnity
             return inputEmbeddings;
         }
 
+        public bool Remove(string inputString)
+        {
+            return embeddings.Remove(inputString);
+        }
+
         public static ModelSearch Load(string filePath, string dirname)
         {
             return Load<ModelSearch>(filePath, dirname);
@@ -230,21 +240,43 @@ namespace LLMUnity
         }
     }
 
-    [DataContract]
-    public class ModelKeySearch : ModelSearchBase
-    {
-        [DataMember]
-        protected Dictionary<string, int> valueToKey;
 
-        public ModelKeySearch(EmbeddingModel embedder) : base(embedder)
+    [DataContract]
+    public class ANNModelSearch : ModelSearchBase
+    {
+        USearchIndex index;
+        [DataMember]
+        protected SortedDictionary<int, string> keyToValue;
+
+        public ANNModelSearch(EmbeddingModel embedder) : this(embedder, MetricKind.Cos, 32, 40, 16) {}
+
+        public ANNModelSearch(
+            EmbeddingModel embedder,
+            MetricKind metricKind = MetricKind.Cos,
+            ulong connectivity = 32,
+            ulong expansionAdd = 40,
+            ulong expansionSearch = 16,
+            bool multi = false
+        ) : this(embedder, new USearchIndex((ulong)embedder.Dimensions, metricKind, connectivity, expansionAdd, expansionSearch, multi)) {}
+
+        public ANNModelSearch(
+            EmbeddingModel embedder,
+            USearchIndex index
+        ) : base(embedder)
         {
-            valueToKey = new Dictionary<string, int>();
+            this.index = index;
+            keyToValue = new SortedDictionary<int, string>();
         }
 
-        public virtual void Insert(int key, string value, float[] encoding)
+        public void SetIndex(USearchIndex index)
         {
-            embeddings[value] = encoding;
-            valueToKey[value] = key;
+            this.index = index;
+        }
+
+        public void Insert(int key, string value, float[] encoding)
+        {
+            index.Add((ulong)key, encoding);
+            keyToValue[key] = value;
         }
 
         public virtual float[] Add(int key, string inputString)
@@ -269,78 +301,9 @@ namespace LLMUnity
             return inputEmbeddings.ToArray();
         }
 
-        public virtual int[] SearchKey(float[] embedding, int k, out float[] distances)
+        public bool Remove(int key)
         {
-            string[] results = Search(embedding, k, out distances);
-            int[] keys = new int[results.Length];
-            for (int i = 0; i < results.Length; i++)
-            {
-                keys[i] = valueToKey[results[i]];
-            }
-            return keys;
-        }
-
-        public virtual int[] SearchKey(string queryString, int k, out float[] distances)
-        {
-            return SearchKey(Encode(queryString), k, out distances);
-        }
-
-        public virtual int[] SearchKey(float[] encoding, int k)
-        {
-            return SearchKey(encoding, k, out float[] distances);
-        }
-
-        public virtual int[] SearchKey(string queryString, int k)
-        {
-            return SearchKey(queryString, k, out float[] distances);
-        }
-
-        public static ModelKeySearch Load(string filePath, string dirname)
-        {
-            return Load<ModelKeySearch>(filePath, dirname);
-        }
-
-        public static ModelKeySearch Load(ZipArchive archive, string dirname)
-        {
-            return Load<ModelKeySearch>(archive, dirname);
-        }
-    }
-
-    [DataContract]
-    public class ANNModelSearch : ModelKeySearch
-    {
-        USearchIndex index;
-        [DataMember]
-        protected Dictionary<int, string> keyToValue;
-
-        public ANNModelSearch(EmbeddingModel embedder) : this(embedder, MetricKind.Cos, 32, 40, 16) {}
-
-        public ANNModelSearch(
-            EmbeddingModel embedder,
-            MetricKind metricKind = MetricKind.Cos,
-            ulong connectivity = 32,
-            ulong expansionAdd = 40,
-            ulong expansionSearch = 16,
-            bool multi = false
-        ) : this(embedder, new USearchIndex((ulong)embedder.Dimensions, metricKind, connectivity, expansionAdd, expansionSearch, multi)) {}
-
-        public ANNModelSearch(
-            EmbeddingModel embedder,
-            USearchIndex index
-        ) : base(embedder)
-        {
-            this.index = index;
-            keyToValue = new Dictionary<int, string>();
-        }
-
-        public void SetIndex(USearchIndex index){
-            this.index = index;
-        }
-
-        public override void Insert(int key, string value, float[] encoding)
-        {
-            index.Add((ulong)key, encoding);
-            keyToValue[key] = value;
+            return index.Remove((ulong)key) > 0 && keyToValue.Remove(key);
         }
 
         public override string[] Search(float[] encoding, int k)
@@ -369,17 +332,17 @@ namespace LLMUnity
             return Search(Encode(queryString), k, out distances);
         }
 
-        public override int[] SearchKey(float[] encoding, int k)
+        public int[] SearchKey(float[] encoding, int k)
         {
             return SearchKey(encoding, k, out float[] distances);
         }
 
-        public override int[] SearchKey(string queryString, int k)
+        public int[] SearchKey(string queryString, int k)
         {
             return SearchKey(queryString, k, out float[] distances);
         }
 
-        public override int[] SearchKey(float[] encoding, int k, out float[] distances)
+        public int[] SearchKey(float[] encoding, int k, out float[] distances)
         {
             index.Search(encoding, k, out ulong[] keys, out distances);
             int[] intKeys = new int[keys.Length];
@@ -388,7 +351,7 @@ namespace LLMUnity
             return intKeys;
         }
 
-        public override int[] SearchKey(string queryString, int k, out float[] distances)
+        public int[] SearchKey(string queryString, int k, out float[] distances)
         {
             return SearchKey(Encode(queryString), k, out distances);
         }
@@ -398,7 +361,8 @@ namespace LLMUnity
             return (int)index.Size();
         }
 
-        public static string GetIndexPath(string dirname){
+        public static string GetIndexPath(string dirname)
+        {
             return Path.Combine(dirname, "USearch");
         }
 
@@ -408,7 +372,7 @@ namespace LLMUnity
             index.Save(archive, GetIndexPath(dirname));
         }
 
-        public new static ANNModelSearch Load(string filePath, string dirname)
+        public static ANNModelSearch Load(string filePath, string dirname)
         {
             using (FileStream stream = new FileStream(filePath, FileMode.Open))
             using (ZipArchive archive = new ZipArchive(stream, ZipArchiveMode.Read))
@@ -417,7 +381,7 @@ namespace LLMUnity
             }
         }
 
-        public new static ANNModelSearch Load(ZipArchive archive, string dirname)
+        public static ANNModelSearch Load(ZipArchive archive, string dirname)
         {
             ANNModelSearch search = Load<ANNModelSearch>(archive, dirname);
             USearchIndex index = new USearchIndex(archive, GetIndexPath(dirname));
