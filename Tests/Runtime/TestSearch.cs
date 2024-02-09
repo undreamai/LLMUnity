@@ -60,13 +60,21 @@ namespace LLMUnityTests
             search.Add(new List<string>() { raining, random });
             search.Add(weather);
             Assert.AreEqual(search.Count(), 3);
+            search.Remove(weather);
+            Assert.AreEqual(search.Count(), 2);
+            search.Add(weather);
+            Assert.AreEqual(search.Count(), 3);
         }
 
-        public void TestKeyAdd(ModelKeySearch search)
+        public void TestKeyAdd(ANNModelSearch search)
         {
             search.Add(1, weather);
             Assert.AreEqual(search.Count(), 1);
             search.Add(new List<int>() { 2, 3 }, new List<string>() { raining, random });
+            Assert.AreEqual(search.Count(), 3);
+            search.Remove(2);
+            Assert.AreEqual(search.Count(), 2);
+            search.Add(2, raining);
             Assert.AreEqual(search.Count(), 3);
         }
 
@@ -81,13 +89,13 @@ namespace LLMUnityTests
             float trueSimilarity = 0.79276246f;
             Assert.That(ApproxEqual(distances[1], 1 - trueSimilarity));
 
-            if (search.GetType() == typeof(ModelKeySearch))
+            if (search.GetType() == typeof(ANNModelSearch))
             {
-                TestSearchKey((ModelKeySearch)search);
+                TestSearchKey((ANNModelSearch)search);
             }
         }
 
-        public void TestSearchKey(ModelKeySearch search)
+        public void TestSearchKey(ANNModelSearch search)
         {
             int[] result = search.SearchKey(weather, 2, out float[] distances);
             Assert.AreEqual(result.Length, 2);
@@ -108,7 +116,7 @@ namespace LLMUnityTests
             }
             else
             {
-                TestKeyAdd((ModelKeySearch)search);
+                TestKeyAdd((ANNModelSearch)search);
             }
             TestSearchFunctions(search);
             TestSaveLoad(search, weather);
@@ -119,13 +127,6 @@ namespace LLMUnityTests
         public void FullTestModelSearch()
         {
             ModelSearch search = new ModelSearch(model);
-            FullTest(search);
-        }
-
-        [Test]
-        public void FullTestModelKeySearch()
-        {
-            ModelKeySearch search = new ModelKeySearch(model);
             FullTest(search);
         }
 
