@@ -422,6 +422,17 @@ namespace LLMUnity
             Add(actor, null, text);
         }
 
+        public int Remove(string actor, string title, string text)
+        {
+            List<Dialogue> dialogues = Filter(actor, title);
+            int removed = 0;
+            foreach (Dialogue dialogue in dialogues)
+            {
+                removed += dialogue.Remove(text);
+            }
+            return removed;
+        }
+
         public List<Dialogue> Filter(string actor = null, string title = null)
         {
             List<Dialogue> filtering = new List<Dialogue>();
@@ -438,7 +449,7 @@ namespace LLMUnity
             return filtering;
         }
 
-        public List<string> Get(string actor = null, string title = null, bool returnSentences = false)
+        public string[] Get(string actor = null, string title = null, bool returnSentences = false)
         {
             List<Dialogue> dialogues = Filter(actor, title);
             List<string> result = new List<string>();
@@ -446,15 +457,15 @@ namespace LLMUnity
             {
                 result.AddRange(returnSentences ? dialogue.GetSentences() : dialogue.GetPhrases());
             }
-            return result;
+            return result.ToArray();
         }
 
-        public List<string> GetPhrases(string actor = null, string title = null)
+        public string[] GetPhrases(string actor = null, string title = null)
         {
             return Get(actor, title, false);
         }
 
-        public List<string> GetSentences(string actor = null, string title = null)
+        public string[] GetSentences(string actor = null, string title = null)
         {
             return Get(actor, title, true);
         }
