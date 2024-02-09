@@ -92,6 +92,16 @@ namespace LLMUnity
             }
             return indices;
         }
+
+        public static string[] IndicesToSentences(string input, List<(int, int)> indices)
+        {
+            string[] sentences = new string[indices.Count];
+            for (int i = 0; i < indices.Count; i++)
+            {
+                sentences[i] = input.Substring(indices[i].Item1, indices[i].Item2 - indices[i].Item1 + 1);
+            }
+            return sentences;
+        }
     }
 
     [DataContract]
@@ -259,7 +269,7 @@ namespace LLMUnity
             return sentences.Count;
         }
 
-        public void Save(string filePath, string dirname="")
+        public void Save(string filePath, string dirname = "")
         {
             using (FileStream stream = new FileStream(filePath, FileMode.Create))
             using (ZipArchive archive = new ZipArchive(stream, ZipArchiveMode.Create))
@@ -268,7 +278,8 @@ namespace LLMUnity
             }
         }
 
-        public static string GetDialoguePath(string dirname){
+        public static string GetDialoguePath(string dirname)
+        {
             return Path.Combine(dirname, "Dialogue.json");
         }
 
@@ -290,7 +301,7 @@ namespace LLMUnity
         public static Dialogue Load(ZipArchive archive, string dirname)
         {
             Dialogue dialogue = Saver.Load<Dialogue>(archive, GetDialoguePath(dirname));
-            ModelKeySearch search = (ModelKeySearch) ModelSearchBase.CastLoad(archive, dirname);
+            ModelKeySearch search = (ModelKeySearch)ModelSearchBase.CastLoad(archive, dirname);
             dialogue.SetSearch(search);
             return dialogue;
         }
@@ -407,7 +418,8 @@ namespace LLMUnity
             encodingTensor.MakeReadable();
             float[] encoding = encodingTensor.ToReadOnlyArray();
             Task.Run(() =>
-            {Parallel.ForEach(dialogues, dialogue =>
+            {
+                Parallel.ForEach(dialogues, dialogue =>
                 {
                     string[] searchResults = dialogue.Search(encoding, k, out float[] searchDistances, returnSentences);
                     for (int i = 0; i < searchResults.Length; i++)
@@ -476,14 +488,16 @@ namespace LLMUnity
             return num;
         }
 
-        public static string GetDialogueManagerPath(string dirname){
+        public static string GetDialogueManagerPath(string dirname)
+        {
             return Path.Combine(dirname, "DialogueManager.json");
         }
-        public static string GetDialoguesPath(string dirname){
+        public static string GetDialoguesPath(string dirname)
+        {
             return Path.Combine(dirname, "Dialogues.json");
         }
 
-        public void Save(string filePath, string dirname="")
+        public void Save(string filePath, string dirname = "")
         {
             using (FileStream stream = new FileStream(filePath, FileMode.Create))
             using (ZipArchive archive = new ZipArchive(stream, ZipArchiveMode.Create))
@@ -492,7 +506,7 @@ namespace LLMUnity
             }
         }
 
-        public void Save(ZipArchive archive, string dirname="")
+        public void Save(ZipArchive archive, string dirname = "")
         {
             Saver.Save(this, archive, GetDialogueManagerPath(dirname));
 
@@ -516,7 +530,7 @@ namespace LLMUnity
             }
         }
 
-        public static DialogueManager Load(string filePath, string dirname="")
+        public static DialogueManager Load(string filePath, string dirname = "")
         {
             using (FileStream stream = new FileStream(filePath, FileMode.Open))
             using (ZipArchive archive = new ZipArchive(stream, ZipArchiveMode.Read))
