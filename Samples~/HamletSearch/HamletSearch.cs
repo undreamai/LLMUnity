@@ -35,7 +35,7 @@ class HamletSearch : MonoBehaviour
                 dialogueManager.Add(actor, act, message);
 
             elapsedTotal += (float)stopwatch.Elapsed.TotalMilliseconds / 1000f;
-            Debug.Log($"act {act} embedded {dialogueManager.GetSentences(null, act).Count} sentences in {stopwatch.Elapsed.TotalMilliseconds / 1000f} secs");
+            Debug.Log($"act {act} embedded {dialogueManager.GetSentences(null, act).Length} sentences in {stopwatch.Elapsed.TotalMilliseconds / 1000f} secs");
         }
         Debug.Log($"embedded {dialogueManager.NumPhrases()} phrases, {dialogueManager.NumSentences()} sentences in {elapsedTotal} secs");
 
