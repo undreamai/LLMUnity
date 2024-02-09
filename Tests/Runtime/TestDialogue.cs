@@ -3,7 +3,6 @@ using LLMUnity;
 using System;
 using System.IO;
 using UnityEngine;
-using Cloud.Unum.USearch;
 
 namespace LLMUnityTests
 {
@@ -117,14 +116,40 @@ namespace LLMUnityTests
             Assert.AreEqual(dialogue.NumPhrases(), sentences.Length);
             Assert.AreEqual(dialogue.NumSentences(), sentences.Length);
 
-            string[] phrases = new string[] { sentences[0] + " " + sentences[1], sentences[2] + sentences[3] };
+            dialogue.Remove(sentences[1]);
+            string[] sentencesGT = new string[] { sentences[0], sentences[2], sentences[3] };
+            Assert.AreEqual(dialogue.GetPhrases().ToArray(), sentencesGT);
+            Assert.AreEqual(dialogue.GetSentences().ToArray(), sentencesGT);
+            Assert.AreEqual(dialogue.NumPhrases(), sentencesGT.Length);
+            Assert.AreEqual(dialogue.NumSentences(), sentencesGT.Length);
+
+            dialogue.Add(sentences[1]);
+            dialogue.Add(sentences[1]);
+            dialogue.Remove(sentences[1]);
+            Assert.AreEqual(dialogue.GetPhrases().ToArray(), sentencesGT);
+            Assert.AreEqual(dialogue.GetSentences().ToArray(), sentencesGT);
+            Assert.AreEqual(dialogue.NumPhrases(), sentencesGT.Length);
+            Assert.AreEqual(dialogue.NumSentences(), sentencesGT.Length);
+
+            string[] phrases = new string[] { sentences[0] + " " + sentences[1], sentences[1] + sentences[2], sentences[2] + sentences[3] };
             dialogue = new Dialogue("", "", model);
             foreach (string phrase in phrases)
                 dialogue.Add(phrase);
-            Assert.AreEqual(dialogue.GetPhrases().ToArray(), phrases);
+            dialogue.Remove(phrases[1]);
+            string[] phrasesGT = new string[] { phrases[0], phrases[2] };
+            Assert.AreEqual(dialogue.GetPhrases().ToArray(), new string[] { phrases[0], phrases[2] });
             Assert.AreEqual(dialogue.GetSentences().ToArray(), sentences);
-            Assert.AreEqual(dialogue.NumPhrases(), phrases.Length);
-            Assert.AreEqual(dialogue.NumSentences(), sentences.Length);
+            Assert.AreEqual(dialogue.NumPhrases(), 2);
+            Assert.AreEqual(dialogue.NumSentences(), 4);
+
+            dialogue.Add(phrases[1]);
+            phrasesGT = new string[] { phrases[0], phrases[2], phrases[1] };
+            sentencesGT = new string[] { sentences[0], sentences[1], sentences[2], sentences[3], sentences[1], sentences[2] };
+
+            Assert.AreEqual(dialogue.GetPhrases().ToArray(), phrasesGT);
+            Assert.AreEqual(dialogue.GetSentences().ToArray(), sentencesGT);
+            Assert.AreEqual(dialogue.NumPhrases(), phrasesGT.Length);
+            Assert.AreEqual(dialogue.NumSentences(), sentencesGT.Length);
         }
 
         public bool ApproxEqual(float x1, float x2, float tolerance = 0.00001f)
