@@ -4,26 +4,23 @@ using System.Diagnostics;
 using Debug = UnityEngine.Debug;
 using System.Text.RegularExpressions;
 using LLMUnity;
-using System;
 
 class HamletSearch : MonoBehaviour
 {
-    EmbeddingModel embedder;
+    public Embedding embedding;
     public bool fullPlay;
     public TextAsset gutenbergText;
 
-    public void OnEnable()
-    {
-        embedder = ModelManager.BGEModel(
-            "Assets/StreamingAssets/bge-small-en-v1.5.sentis",
-            "Assets/StreamingAssets/bge-small-en-v1.5.tokenizer.json"
-        );
-    }
-
     void Start()
     {
+        EmbeddingModel model = embedding.GetModel();
+        if (model == null)
+        {
+            throw new System.Exception("Please select an embedding model in the HamletSearch GameObject!");
+        }
+
         Dictionary<string, List<(string, string)>> hamlet = ReadGutenbergFile(gutenbergText.text);
-        DialogueManager dialogueManager = new DialogueManager(embedder);
+        DialogueManager dialogueManager = new DialogueManager(model);
         Stopwatch stopwatch = new Stopwatch();
 
         float elapsedTotal = 0;
@@ -116,10 +113,5 @@ class HamletSearch : MonoBehaviour
         }
         Debug.Log($"{numLines} lines, {numWords} words");
         return messages;
-    }
-
-    public void OnDisable()
-    {
-        embedder.Destroy();
     }
 }
