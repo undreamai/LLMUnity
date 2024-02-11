@@ -15,6 +15,8 @@ using HuggingFace.SharpTransformers.PostProcessors;
 using System.IO;
 using System.Runtime.Serialization;
 using System.IO.Compression;
+using System.Reflection;
+using System.Threading.Tasks;
 
 namespace LLMUnity
 {
@@ -438,6 +440,21 @@ namespace LLMUnity
             return models[skeleton];
         }
 
+        public static async Task<(string, string)> DownloadUndreamAI(string modelUrl, Callback<float> progresscallback = null)
+        {
+            string modelBasename = Path.GetFileName(modelUrl).Split("?")[0];
+            string modelName = modelBasename.Replace(".zip", "");
+            string dirname = LLMUnitySetup.GetAssetPath(modelName);
+            if (!Directory.Exists(dirname))
+            {
+                string modelZip = Path.Combine(Application.temporaryCachePath, modelBasename);
+                await LLMUnitySetup.DownloadFile(modelUrl, modelZip, true, false, null, progresscallback);
+                LLMUnitySetup.ExtractZip(modelZip, dirname);
+                File.Delete(modelZip);
+            }
+            return (Path.Combine(dirname, modelName + ".sentis"), Path.Combine(dirname, modelName + ".tokenizer.json"));
+        }
+
         public static EmbeddingModel BGEModel(string modelPath, string tokenizerPath, BackendType backend = BackendType.CPU)
         {
             return Model(new EmbeddingModelSkeleton(modelPath, tokenizerPath, backend, "sentence_embedding", false, 384));
@@ -448,9 +465,79 @@ namespace LLMUnity
             return Model(new EmbeddingModelSkeleton(modelPath, tokenizerPath, backend, "last_hidden_state", true, 384));
         }
 
+        public static async Task<EmbeddingModel> BGESmallModel(BackendType backend = BackendType.CPU, Callback<float> progresscallback = null)
+        {
+            string modelUrl = "https://huggingface.co/undreamai/bge-small-en-v1.5-sentis/resolve/main/bge-small-en-v1.5.zip?download=true";
+            (string modelPath, string tokenizerPath) = await DownloadUndreamAI(modelUrl, progresscallback);
+            return BGEModel(modelPath, tokenizerPath, backend);
+        }
+
+        public static async Task<EmbeddingModel> BGEBaseModel(BackendType backend = BackendType.CPU, Callback<float> progresscallback = null)
+        {
+            string modelUrl = "https://huggingface.co/undreamai/bge-base-en-v1.5-sentis/resolve/main/bge-base-en-v1.5.zip?download=true";
+            (string modelPath, string tokenizerPath) = await DownloadUndreamAI(modelUrl, progresscallback);
+            return BGEModel(modelPath, tokenizerPath, backend);
+        }
+
+        public static async Task<EmbeddingModel> MiniLMModel(BackendType backend = BackendType.CPU, Callback<float> progresscallback = null)
+        {
+            string modelUrl = "https://huggingface.co/undreamai/all-MiniLM-L6-v2-sentis/resolve/main/all-MiniLM-L6-v2.zip?download=true";
+            (string modelPath, string tokenizerPath) = await DownloadUndreamAI(modelUrl, progresscallback);
+            return MiniLMModel(modelPath, tokenizerPath, backend);
+        }
+
         public static int Count()
         {
             return models.Count();
+        }
+    }
+
+    public class Embedding : MonoBehaviour
+    {
+        public string Model = "";
+        public bool GPU = false;
+        public int SelectedOption;
+
+        [HideInInspector] public float downloadProgress = 1;
+        [HideInInspector] public EmbeddingModel embedding = null;        
+        public readonly (string, string)[] options = new (string, string)[]{
+            ("None", null),
+            ("bge-small-en-v1.5", "BGESmallModel"),
+            ("bge-base-en-v1.5", "BGEBaseModel"),
+            ("all-MiniLM-L6-v2", "MiniLMModel")
+        };
+
+        public void Awake()
+        {
+            SelectModel(SelectedOption);
+        }
+
+        public async void SelectModel(int optionIndex)
+        {
+            SelectedOption = optionIndex;
+            string methodName = options[SelectedOption].Item2;
+            if (methodName != null)
+            {
+                Type type = typeof(ModelManager);
+                MethodInfo method = type.GetMethod(methodName);
+                object[] arguments = { GPU? BackendType.GPUCompute: BackendType.CPU, (Callback<float>) SetDownloadProgress };
+                embedding = await (Task<EmbeddingModel>) method.Invoke(null, arguments);
+            }
+        }
+
+        public void SetDownloadProgress(float progress)
+        {
+            downloadProgress = progress;
+        }
+        
+        public EmbeddingModel GetModel()
+        {
+            return embedding;
+        }
+
+        public void OnDestroy()
+        {
+            embedding?.Destroy();
         }
     }
 }
