@@ -73,6 +73,12 @@ namespace LLMUnity
             }
         }
 
+        public static string GetAssetPath(string relPath = "")
+        {
+            // Path to store llm server binaries and models
+            return Path.Combine(Application.streamingAssetsPath, relPath).Replace('\\', '/');
+        }
+
 #if UNITY_EDITOR
         public class DownloadStatus
         {
