@@ -29,7 +29,7 @@ class HamletSearch : MonoBehaviour
             if (!fullPlay && act != "ACT III") continue;
             stopwatch.Reset(); stopwatch.Start();
             foreach ((string actor, string message) in messages)
-                dialogueManager.Add(actor, act, message);
+                dialogueManager.Add(actor, message, act);
 
             elapsedTotal += (float)stopwatch.Elapsed.TotalMilliseconds / 1000f;
             Debug.Log($"act {act} embedded {dialogueManager.GetSentences(null, act).Length} sentences in {stopwatch.Elapsed.TotalMilliseconds / 1000f} secs");

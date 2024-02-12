@@ -38,7 +38,7 @@ namespace LLMUnity
             SetSentenceSplitting(null);
         }
 
-        public void Add(string actor, string title, string text)
+        public void Add(string actor, string text, string title="")
         {
             if (!dialogueParts.ContainsKey(actor) || !dialogueParts[actor].ContainsKey(title))
             {
@@ -53,12 +53,7 @@ namespace LLMUnity
             dialogueParts[actor][title].Add(text);
         }
 
-        public void Add(string actor, string text)
-        {
-            Add(actor, null, text);
-        }
-
-        public int Remove(string actor, string title, string text)
+        public int Remove(string actor, string text, string title=null)
         {
             List<SearchEngine> dialogueParts = Filter(actor, title);
             int removed = 0;

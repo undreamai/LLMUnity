@@ -12,11 +12,11 @@ namespace LLMUnityTests
         string modelPath;
         string tokenizerPath;
         List<(string, string, string)> phrases = new List<(string, string, string)>(){
-            ("Hamlet", "ACT I", "To be, or not to be, that is the question. Whether tis nobler in the mind to suffer."),
-            ("Hamlet", "ACT I", "Or to take arms against a sea of troubles, and by opposing end them? To die—to sleep."),
-            ("Hamlet", "ACT II", "I humbly thank you; well, well, well."),
-            ("Ophelia", "ACT II", "Good my lord."),
-            ("Ophelia", "ACT II", "How does your honour for this many a day?")
+            ("Hamlet", "To be, or not to be, that is the question. Whether tis nobler in the mind to suffer.", "ACT I"),
+            ("Hamlet", "Or to take arms against a sea of troubles, and by opposing end them? To die—to sleep.", "ACT I"),
+            ("Hamlet", "I humbly thank you; well, well, well.", "ACT II"),
+            ("Ophelia", "Good my lord.", "ACT II"),
+            ("Ophelia", "How does your honour for this many a day?", "ACT II")
         };
 
         [SetUp]
@@ -52,8 +52,8 @@ namespace LLMUnityTests
             Assert.AreEqual(manager.NumPhrases("Hamlet", "ACT I"), 2);
             Assert.AreEqual(manager.NumSentences("Hamlet", "ACT II"), 2);
 
-            Assert.AreEqual(manager.GetPhrases("Hamlet", "ACT II"), new string[] { phrases[2].Item3 });
-            string[] sentencesGT = phrases[2].Item3.Split(";");
+            Assert.AreEqual(manager.GetPhrases("Hamlet", "ACT II"), new string[] { phrases[2].Item2 });
+            string[] sentencesGT = phrases[2].Item2.Split(";");
             sentencesGT[0] += ";";
             sentencesGT[1] = sentencesGT[1].Trim();
             Assert.AreEqual(manager.GetSentences("Hamlet", "ACT II"), sentencesGT);
@@ -61,24 +61,24 @@ namespace LLMUnityTests
             manager.Add(phrases[3].Item1, phrases[3].Item2, phrases[3].Item3);
             Assert.AreEqual(manager.NumPhrases("Ophelia"), 3);
             Assert.AreEqual(manager.NumSentences("Ophelia"), 3);
-            manager.Remove(null, null, phrases[2].Item3);
+            manager.Remove(null, phrases[2].Item2);
             Assert.AreEqual(manager.NumPhrases("Hamlet"), 2);
             Assert.AreEqual(manager.NumSentences("Hamlet"), 4);
-            manager.Remove(null, null, phrases[3].Item3);
+            manager.Remove(null, phrases[3].Item2);
             Assert.AreEqual(manager.NumPhrases("Ophelia"), 1);
             Assert.AreEqual(manager.NumSentences("Ophelia"), 1);
             manager.Add("Ophelia", phrases[0].Item2, phrases[0].Item3);
-            manager.Remove("Hamlet", null, phrases[0].Item3);
+            manager.Remove("Hamlet", phrases[0].Item2);
             Assert.AreEqual(manager.NumPhrases("Ophelia"), 2);
             Assert.AreEqual(manager.NumSentences("Ophelia"), 3);
             Assert.AreEqual(manager.NumPhrases("Hamlet"), 1);
             Assert.AreEqual(manager.NumSentences("Hamlet"), 2);
 
-            sentencesGT = phrases[1].Item3.Split("?");
+            sentencesGT = phrases[1].Item2.Split("?");
             sentencesGT[0] += "?";
             sentencesGT[1] = sentencesGT[1].Trim();
             Assert.AreEqual(manager.GetSentences("Hamlet"), sentencesGT);
-            Assert.AreEqual(manager.GetPhrases("Ophelia"), new string[] { phrases[4].Item3, phrases[0].Item3 });
+            Assert.AreEqual(manager.GetPhrases("Ophelia"), new string[] { phrases[4].Item2, phrases[0].Item2 });
         }
 
         [Test]
@@ -99,7 +99,7 @@ namespace LLMUnityTests
             Assert.AreEqual(manager.NumSentences(), loadedManager.NumSentences());
             Assert.AreEqual(manager.NumPhrases(), loadedManager.NumPhrases());
 
-            manager.Remove(null, null, phrases[2].Item3);
+            manager.Remove(null, phrases[2].Item2);
             Assert.AreEqual(manager.NumPhrases("Hamlet"), 2);
             Assert.AreEqual(manager.NumSentences("Hamlet"), 4);
         }
@@ -112,14 +112,14 @@ namespace LLMUnityTests
                 manager.Add(phrase.Item1, phrase.Item2, phrase.Item3);
             manager.Add("Ophelia", phrases[0].Item2, phrases[0].Item3);
 
-            string[] results = manager.SearchPhrases(phrases[0].Item3, 2);
-            Assert.AreEqual(results, new string[] { phrases[0].Item3, phrases[0].Item3 });
+            string[] results = manager.SearchPhrases(phrases[0].Item2, 2);
+            Assert.AreEqual(results, new string[] { phrases[0].Item2, phrases[0].Item2 });
 
-            results = manager.SearchPhrases(phrases[0].Item3, 2, "Hamlet");
-            Assert.AreEqual(results[0], phrases[0].Item3);
-            Assert.AreNotEqual(results[1], phrases[0].Item3);
-            results = manager.SearchPhrases(phrases[1].Item3, 1, "Ophelia");
-            Assert.AreNotEqual(results[0], phrases[1].Item3);
+            results = manager.SearchPhrases(phrases[0].Item2, 2, "Hamlet");
+            Assert.AreEqual(results[0], phrases[0].Item2);
+            Assert.AreNotEqual(results[1], phrases[0].Item2);
+            results = manager.SearchPhrases(phrases[1].Item2, 1, "Ophelia");
+            Assert.AreNotEqual(results[0], phrases[1].Item2);
         }
     }
 }
