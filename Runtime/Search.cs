@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.IO;
@@ -45,19 +44,14 @@ namespace LLMUnity
     [DataContract]
     public class SentenceSplitter
     {
-        public static char[] DefaultDelimiters = new char[] { '.', '!', ':', ';', '?', '\n', '\r', };
+        public const string DefaultDelimiters = ".!:;?\n\r";
         [DataMember]
-        char[] delimiters;
-        [DataMember]
-        bool trimSentences = true;
+        string delimiters;
 
-        public SentenceSplitter(char[] delimiters, bool trimSentences = true)
+        public SentenceSplitter(string delimiters = DefaultDelimiters)
         {
             this.delimiters = delimiters;
-            this.trimSentences = trimSentences;
         }
-
-        public SentenceSplitter() : this(DefaultDelimiters, true) {}
 
         public List<(int, int)> Split(string input)
         {
@@ -66,7 +60,7 @@ namespace LLMUnity
             bool sawDelimiter = true;
             for (int i = 0; i < input.Length; i++)
             {
-                if (sawDelimiter && trimSentences)
+                if (sawDelimiter)
                 {
                     while (char.IsWhiteSpace(input[i]) && i < input.Length - 1) i++;
                     startIndex = i;
@@ -75,11 +69,11 @@ namespace LLMUnity
                 if (delimiters.Contains(input[i]) || i == input.Length - 1)
                 {
                     int endIndex = i;
-                    if (i == input.Length - 1 && trimSentences)
+                    if (i == input.Length - 1)
                     {
                         while (char.IsWhiteSpace(input[endIndex]) && endIndex > startIndex) endIndex--;
                     }
-                    if (endIndex > startIndex || !trimSentences || (trimSentences && !char.IsWhiteSpace(input[startIndex]) && !delimiters.Contains(input[startIndex])))
+                    if (endIndex > startIndex || (!char.IsWhiteSpace(input[startIndex]) && !delimiters.Contains(input[startIndex])))
                     {
                         indices.Add((startIndex, endIndex));
                     }
@@ -116,30 +110,12 @@ namespace LLMUnity
         SentenceSplitter sentenceSplitter;
         ANNModelSearch searchMethod;
 
-        public SearchEngine(EmbeddingModel embedder)
+        public SearchEngine(EmbeddingModel embedder, string delimiters = SentenceSplitter.DefaultDelimiters)
         {
             phrases = new SortedDictionary<int, Phrase>();
             sentences = new SortedDictionary<int, Sentence>();
-            sentenceSplitter = new SentenceSplitter();
+            sentenceSplitter = delimiters == null ? null : new SentenceSplitter(delimiters);
             searchMethod = new ANNModelSearch(embedder);
-        }
-
-        public void SetSentenceSplitting(char[] delimiters, bool trimSentences = true)
-        {
-            if (sentences.Count > 0) throw new Exception("Sentence splitting can't change when there are phrases in the Search");
-            if (delimiters == null)
-            {
-                sentenceSplitter = null;
-            }
-            else
-            {
-                sentenceSplitter = new SentenceSplitter(delimiters, trimSentences);
-            }
-        }
-
-        public void SetNoSentenceSplitting()
-        {
-            SetSentenceSplitting(null);
         }
 
         public void SetSearchMethod(ANNModelSearch searchMethod)
