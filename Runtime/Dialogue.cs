@@ -15,35 +15,22 @@ namespace LLMUnity
     {
         Dictionary<string, Dictionary<string, SearchEngine>> dialogueParts;
         [DataMember]
-        char[] delimiters = SentenceSplitter.DefaultDelimiters;
-        [DataMember]
-        bool trimSentences = true;
+        string delimiters;
         [DataMember]
         EmbeddingModel embedder;
 
-        public Dialogue(EmbeddingModel embedder)
+        public Dialogue(EmbeddingModel embedder, string delimiters = SentenceSplitter.DefaultDelimiters)
         {
             dialogueParts = new Dictionary<string, Dictionary<string, SearchEngine>>();
             this.embedder = embedder;
-        }
-
-        public void SetSentenceSplitting(char[] delimiters, bool trimSentences = true)
-        {
             this.delimiters = delimiters;
-            this.trimSentences = trimSentences;
         }
 
-        public void SetNoSentenceSplitting()
-        {
-            SetSentenceSplitting(null);
-        }
-
-        public void Add(string actor, string text, string title="")
+        public void Add(string actor, string text, string title = "")
         {
             if (!dialogueParts.ContainsKey(actor) || !dialogueParts[actor].ContainsKey(title))
             {
-                SearchEngine search = new SearchEngine(embedder);
-                search.SetSentenceSplitting(delimiters, trimSentences);
+                SearchEngine search = new SearchEngine(embedder, delimiters);
                 if (!dialogueParts.ContainsKey(actor))
                 {
                     dialogueParts[actor] = new Dictionary<string, SearchEngine>();
@@ -53,7 +40,7 @@ namespace LLMUnity
             dialogueParts[actor][title].Add(text);
         }
 
-        public int Remove(string actor, string text, string title=null)
+        public int Remove(string actor, string text, string title = null)
         {
             List<SearchEngine> dialogueParts = Filter(actor, title);
             int removed = 0;
@@ -104,11 +91,21 @@ namespace LLMUnity
         public string[] Search(string queryString, int k, out float[] distances, string actor = null, string title = null, bool returnSentences = false)
         {
             List<SearchEngine> dialogueParts = Filter(actor, title);
-            ConcurrentBag<(string, float)> resultPairs = new ConcurrentBag<(string, float)>();
+            if (dialogueParts.Count == 0)
+            {
+                distances = null;
+                return null;
+            }
+            if (dialogueParts.Count == 1)
+            {
+                return dialogueParts[0].Search(queryString, k, out distances, returnSentences);
+            }
 
             TensorFloat encodingTensor = embedder.Encode(queryString);
             encodingTensor.MakeReadable();
             float[] encoding = encodingTensor.ToReadOnlyArray();
+
+            ConcurrentBag<(string, float)> resultPairs = new ConcurrentBag<(string, float)>();
             Task.Run(() =>
             {
                 Parallel.ForEach(dialogueParts, dialogue =>
