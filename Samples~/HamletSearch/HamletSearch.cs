@@ -20,7 +20,7 @@ class HamletSearch : MonoBehaviour
         }
 
         Dictionary<string, List<(string, string)>> hamlet = ReadGutenbergFile(gutenbergText.text);
-        DialogueManager dialogueManager = new DialogueManager(model);
+        Dialogue dialogueManager = new Dialogue(model);
         Stopwatch stopwatch = new Stopwatch();
 
         float elapsedTotal = 0;
@@ -41,7 +41,7 @@ class HamletSearch : MonoBehaviour
         Debug.Log($"saving took {stopwatch.Elapsed.TotalMilliseconds / 1000f} secs");
 
         stopwatch.Reset(); stopwatch.Start();
-        dialogueManager = DialogueManager.Load("test.zip");
+        dialogueManager = Dialogue.Load("test.zip");
         Debug.Log($"loading took {stopwatch.Elapsed.TotalMilliseconds / 1000f} secs");
 
         stopwatch.Reset(); stopwatch.Start();
