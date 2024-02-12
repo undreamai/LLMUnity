@@ -147,14 +147,16 @@ namespace LLMUnity
             int phraseId = nextPhraseId++;
             Phrase phrase = new Phrase(text);
             phrases[phraseId] = phrase;
+            List<string> sentenceTexts = new List<string>();
             foreach ((int startIndex, int endIndex) in subindices)
             {
                 int sentenceId = nextSentenceId++;
                 Sentence sentence = new Sentence(phraseId, startIndex, endIndex);
                 sentences[sentenceId] = sentence;
                 phrase.sentenceIds.Add(sentenceId);
-                searchMethod?.Add(sentenceId, GetSentence(sentence));
+                sentenceTexts.Add(GetSentence(sentence));
             }
+            searchMethod.Add(phrase.sentenceIds, sentenceTexts);
         }
 
         public int Remove(string text)
@@ -168,7 +170,7 @@ namespace LLMUnity
                     foreach (int sentenceId in phrase.sentenceIds)
                     {
                         sentences.Remove(sentenceId);
-                        searchMethod?.Remove(sentenceId);
+                        searchMethod.Remove(sentenceId);
                     }
                     removePhraseIds.Add(phrasePair.Key);
                 }
@@ -248,12 +250,12 @@ namespace LLMUnity
             }
         }
 
-        public string[] Search(float[] encoding, int k, bool returnSentences = false)
+        public string[] Search(float[] encoding, int k=1, bool returnSentences = false)
         {
             return Search(encoding, k, out float[] distances, returnSentences);
         }
 
-        public string[] Search(string queryString, int k, bool returnSentences = false)
+        public string[] Search(string queryString, int k=1, bool returnSentences = false)
         {
             return Search(queryString, k, out float[] distances, returnSentences);
         }
@@ -263,7 +265,7 @@ namespace LLMUnity
             return Search(queryString, k, out distances, false);
         }
 
-        public string[] SearchPhrases(string queryString, int k)
+        public string[] SearchPhrases(string queryString, int k=1)
         {
             return SearchPhrases(queryString, k, out float[] distances);
         }
@@ -273,7 +275,7 @@ namespace LLMUnity
             return Search(queryString, k, out distances, true);
         }
 
-        public string[] SearchSentences(string queryString, int k)
+        public string[] SearchSentences(string queryString, int k=1)
         {
             return SearchSentences(queryString, k, out float[] distances);
         }

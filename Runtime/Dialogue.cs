@@ -26,7 +26,7 @@ namespace LLMUnity
             this.delimiters = delimiters;
         }
 
-        public void Add(string actor, string text, string title = "")
+        public void Add(string text, string actor="", string title = "")
         {
             if (!dialogueParts.ContainsKey(actor) || !dialogueParts[actor].ContainsKey(title))
             {
@@ -40,7 +40,7 @@ namespace LLMUnity
             dialogueParts[actor][title].Add(text);
         }
 
-        public int Remove(string actor, string text, string title = null)
+        public int Remove(string text, string actor=null, string title = null)
         {
             List<SearchEngine> dialogueParts = Filter(actor, title);
             int removed = 0;
@@ -130,7 +130,7 @@ namespace LLMUnity
             return results;
         }
 
-        public string[] Search(string queryString, int k, string actor = null, string title = null, bool returnSentences = false)
+        public string[] Search(string queryString, int k=1, string actor = null, string title = null, bool returnSentences = false)
         {
             return Search(queryString, k, out float[] distances, actor, title, returnSentences);
         }
@@ -140,7 +140,7 @@ namespace LLMUnity
             return Search(queryString, k, out distances, actor, title, false);
         }
 
-        public string[] SearchPhrases(string queryString, int k, string actor = null, string title = null)
+        public string[] SearchPhrases(string queryString, int k=1, string actor = null, string title = null)
         {
             return SearchPhrases(queryString, k, out float[] distances, actor, title);
         }
@@ -150,7 +150,7 @@ namespace LLMUnity
             return Search(queryString, k, out distances, actor, title, true);
         }
 
-        public string[] SearchSentences(string queryString, int k, string actor = null, string title = null)
+        public string[] SearchSentences(string queryString, int k=1, string actor = null, string title = null)
         {
             return SearchSentences(queryString, k, out float[] distances, actor, title);
         }
