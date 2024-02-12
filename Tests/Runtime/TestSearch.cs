@@ -12,9 +12,7 @@ namespace LLMUnityTests
         public void TestSplit()
         {
             SentenceSplitter splitter = new SentenceSplitter();
-            SentenceSplitter splitterNoTrim = new SentenceSplitter(SentenceSplitter.DefaultDelimiters, false);
-            SentenceSplitter splitterQuestion = new SentenceSplitter(new char[] { '?' }, true);
-            SentenceSplitter splitterQuestionNoTrim = new SentenceSplitter(new char[] { '?' }, false);
+            SentenceSplitter splitterQuestion = new SentenceSplitter("?");
 
             string[] sentences = new string[]{
                 "hi.",
@@ -48,13 +46,6 @@ namespace LLMUnityTests
             sentencesBack = SentenceSplitter.IndicesToSentences(textMultiSpace, splitter.Split(textMultiSpace));
             Assert.AreEqual(sentences, sentencesBack);
 
-            //splitterNoTrim
-            sentencesBack = SentenceSplitter.IndicesToSentences(text, splitterNoTrim.Split(text));
-            Assert.AreEqual(sentences, sentencesBack);
-
-            sentencesBack = SentenceSplitter.IndicesToSentences(textSpace, splitterNoTrim.Split(textSpace));
-            Assert.AreEqual(sentencesSpace, sentencesBack);
-
             //splitterQuestion
             sentencesGT = new string[] { sentences[0] + sentences[1], sentences[2] + sentences[3] };
             sentencesBack = SentenceSplitter.IndicesToSentences(text, splitterQuestion.Split(text));
@@ -67,16 +58,6 @@ namespace LLMUnityTests
             sentencesGT = new string[] { sentences[0] + "  " + sentences[1], sentences[2] + sentences[3] };
             sentencesBack = SentenceSplitter.IndicesToSentences(textMultiSpace, splitterQuestion.Split(textMultiSpace));
             Assert.AreEqual(sentencesGT, sentencesBack);
-
-            //splitterQuestionNoTrim
-            sentencesGT = new string[] { sentences[0] + sentences[1], sentences[2] + sentences[3] };
-            sentencesBack = SentenceSplitter.IndicesToSentences(text, splitterQuestionNoTrim.Split(text));
-            Assert.AreEqual(sentencesGT, sentencesBack);
-
-            sentencesGT = new string[] { sentencesSpace[0] + sentencesSpace[1], sentencesSpace[2] + sentencesSpace[3] };
-            sentencesBack = SentenceSplitter.IndicesToSentences(textSpace, splitterQuestionNoTrim.Split(textSpace));
-            Assert.AreEqual(sentencesGT, sentencesBack);
-
         }
     }
 
