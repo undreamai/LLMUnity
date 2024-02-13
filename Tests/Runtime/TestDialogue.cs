@@ -2,7 +2,6 @@ using NUnit.Framework;
 using LLMUnity;
 using System.IO;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace LLMUnityTests
 {
@@ -67,7 +66,6 @@ namespace LLMUnityTests
         [Test]
         public void TestSaveLoad()
         {
-                Debug.Log("TestSaveLoad");
             string path = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
 
             Dialogue manager = new Dialogue(model);

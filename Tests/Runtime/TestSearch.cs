@@ -2,7 +2,6 @@ using NUnit.Framework;
 using LLMUnity;
 using System;
 using System.IO;
-using UnityEngine;
 
 namespace LLMUnityTests
 {
@@ -162,7 +161,6 @@ namespace LLMUnityTests
             Assert.AreEqual(distances.Length, 3);
             Assert.That(ApproxEqual(distances[0], 0));
             Assert.That(ApproxEqual(distances[1], 1 - trueSimilarity));
-            Debug.Log(distances[2]);
             Assert.That(ApproxEqual(distances[2], 1 - trueSimilarity2));
         }
 

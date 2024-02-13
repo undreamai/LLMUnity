@@ -3,36 +3,24 @@ using LLMUnity;
 using Unity.Sentis;
 using System.IO;
 using UnityEngine;
-using System.Threading;
-using System.Threading.Tasks;
-using Unity.Android.Types;
-
 
 namespace LLMUnityTests
 {
-
-    // [SetUpFixture]
     public class SetupTests
     {
-        public static ManualResetEvent downloadBlock = new ManualResetEvent(false);
         private static readonly object lockObject = new object();
+        public static string modelPath;
+        public static string tokenizerPath;
 
-
-        static readonly SemaphoreSlim semaphore = new SemaphoreSlim(1, 1);
-        public static string modelPath, tokenizerPath;
         public static (string, string) DownloadModel()
         {
             lock(lockObject){
-                Debug.Log("down");
                 string modelUrl = "https://huggingface.co/undreamai/bge-small-en-v1.5-sentis/resolve/main/bge-small-en-v1.5.zip?download=true";
                 (modelPath, tokenizerPath) = ModelManager.DownloadUndreamAI(modelUrl);
-  Debug.Log("up");
-                // downloadBlock.Set();
             }
             return (modelPath, tokenizerPath);
         }
     }
-
 
     public class TestWithEmbeddings
     {
@@ -45,11 +33,7 @@ namespace LLMUnityTests
         [SetUp]
         public void SetUp()
         {
-            Debug.Log("SetUp");
             SetupTests.DownloadModel();
-            Debug.Log("Setdown");
-            // await SetupTests.DownloadModel();
-            // SetupTests.downloadBlock.WaitOne();
             model = new EmbeddingModel(SetupTests.modelPath, SetupTests.tokenizerPath, BackendType.CPU, "sentence_embedding", false, 384);
         }
 
