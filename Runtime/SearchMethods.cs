@@ -248,16 +248,16 @@ namespace LLMUnity
         [DataMember]
         protected SortedDictionary<int, string> keyToValue;
 
-        public ANNModelSearch(EmbeddingModel embedder) : this(embedder, MetricKind.Cos, 32, 40, 16) {}
+        public ANNModelSearch(EmbeddingModel embedder) : this(embedder, ScalarKind.Float16, MetricKind.Cos, 32, 40, 16) {}
 
         public ANNModelSearch(
             EmbeddingModel embedder,
+            ScalarKind quantization = ScalarKind.Float16,
             MetricKind metricKind = MetricKind.Cos,
             ulong connectivity = 32,
             ulong expansionAdd = 40,
-            ulong expansionSearch = 16,
-            bool multi = false
-        ) : this(embedder, new USearchIndex((ulong)embedder.Dimensions, metricKind, connectivity, expansionAdd, expansionSearch, multi)) {}
+            ulong expansionSearch = 16
+        ) : this(embedder, new USearchIndex((ulong)embedder.Dimensions, metricKind, quantization, connectivity, expansionAdd, expansionSearch, false)) {}
 
         public ANNModelSearch(
             EmbeddingModel embedder,

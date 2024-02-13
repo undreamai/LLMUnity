@@ -3,6 +3,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.IO;
 using System.IO.Compression;
+using Cloud.Unum.USearch;
 
 namespace LLMUnity
 {
@@ -110,7 +111,15 @@ namespace LLMUnity
         SentenceSplitter sentenceSplitter;
         ANNModelSearch searchMethod;
 
-        public SearchEngine(EmbeddingModel embedder, string delimiters = SentenceSplitter.DefaultDelimiters)
+        public SearchEngine(
+            EmbeddingModel embedder,
+            string delimiters = SentenceSplitter.DefaultDelimiters,
+            ScalarKind quantization = ScalarKind.Float16,
+            MetricKind metricKind = MetricKind.Cos,
+            ulong connectivity = 32,
+            ulong expansionAdd = 40,
+            ulong expansionSearch = 16
+        )
         {
             phrases = new SortedDictionary<int, Phrase>();
             sentences = new SortedDictionary<int, Sentence>();

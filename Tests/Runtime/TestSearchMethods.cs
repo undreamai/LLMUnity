@@ -16,7 +16,7 @@ namespace LLMUnityTests
         string raining = "is it raining?";
         string random = "something completely random";
 
-        public bool ApproxEqual(float x1, float x2, float tolerance = 0.00001f)
+        public bool ApproxEqual(float x1, float x2, float tolerance = 0.0001f)
         {
             return Mathf.Abs(x1 - x2) < tolerance;
         }

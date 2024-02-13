@@ -7,6 +7,8 @@ using Unity.Sentis;
 using System.Runtime.Serialization;
 using System.IO;
 using System.IO.Compression;
+using Cloud.Unum.USearch;
+using UnityEngine;
 
 namespace LLMUnity
 {
@@ -18,19 +20,36 @@ namespace LLMUnity
         string delimiters;
         [DataMember]
         EmbeddingModel embedder;
+        [DataMember]
+        ScalarKind quantization;
 
-        public Dialogue(EmbeddingModel embedder, string delimiters = SentenceSplitter.DefaultDelimiters)
+        public Dialogue(
+            EmbeddingModel embedder,
+            string delimiters = SentenceSplitter.DefaultDelimiters,
+            ScalarKind quantization = ScalarKind.Float16
+        )
         {
             dialogueParts = new Dictionary<string, Dictionary<string, SearchEngine>>();
             this.embedder = embedder;
             this.delimiters = delimiters;
+            this.quantization = quantization;
+        }
+
+        public EmbeddingModel GetEmbedder()
+        {
+            return embedder;
+        }
+
+        public void SetEmbedder(EmbeddingModel model)
+        {
+            embedder = model;
         }
 
         public void Add(string text, string actor="", string title = "")
         {
             if (!dialogueParts.ContainsKey(actor) || !dialogueParts[actor].ContainsKey(title))
             {
-                SearchEngine search = new SearchEngine(embedder, delimiters);
+                SearchEngine search = new SearchEngine(embedder, delimiters, quantization);
                 if (!dialogueParts.ContainsKey(actor))
                 {
                     dialogueParts[actor] = new Dictionary<string, SearchEngine>();
@@ -233,7 +252,7 @@ namespace LLMUnity
             {
                 Dialogue dialogue = Saver.Load<Dialogue>(archive, GetDialoguePath(dirname));
 
-                dialogue.embedder = EmbeddingModel.Load(archive, dirname);
+                dialogue.SetEmbedder(EmbeddingModel.Load(archive, dirname));
 
                 ZipArchiveEntry dialoguesEntry = archive.GetEntry(GetDialogueEntriesPath(dirname));
                 List<string> dialogueDirs = new List<string>();

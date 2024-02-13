@@ -19,6 +19,7 @@ namespace Cloud.Unum.USearch
         public USearchIndex(
             ulong dimensions,
             MetricKind metricKind = MetricKind.Cos,
+            ScalarKind quantization = ScalarKind.Float16,
             ulong connectivity = 32,
             ulong expansionAdd = 40,
             ulong expansionSearch = 16,
@@ -29,7 +30,7 @@ namespace Cloud.Unum.USearch
             {
                 metric_kind = metricKind,
                 metric = default,
-                quantization = ScalarKind.Float32,
+                quantization = quantization,
                 dimensions = dimensions,
                 connectivity = connectivity,
                 expansion_add = expansionAdd,
