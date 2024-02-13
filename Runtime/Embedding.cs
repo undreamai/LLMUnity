@@ -440,18 +440,37 @@ namespace LLMUnity
             return models[skeleton];
         }
 
-        public static async Task<(string, string)> DownloadUndreamAI(string modelUrl, Callback<float> progresscallback = null)
+        public static async Task DownloadAndUnzip(string modelUrl, string dirname, Callback<float> progresscallback = null, bool async = true)
         {
-            string modelBasename = Path.GetFileName(modelUrl).Split("?")[0];
-            string modelName = modelBasename.Replace(".zip", "");
-            string dirname = LLMUnitySetup.GetAssetPath(modelName);
             if (!Directory.Exists(dirname))
             {
-                string modelZip = Path.Combine(Application.temporaryCachePath, modelBasename);
-                await LLMUnitySetup.DownloadFile(modelUrl, modelZip, true, false, null, progresscallback);
+                string modelZip = Path.Combine(Application.temporaryCachePath, Path.GetFileName(modelUrl));
+                await LLMUnitySetup.DownloadFile(modelUrl, modelZip, true, false, null, progresscallback, async);
                 LLMUnitySetup.ExtractZip(modelZip, dirname);
                 File.Delete(modelZip);
             }
+        }
+
+        public static string ModelExtractDir(string modelUrl)
+        {
+            string modelBasename = Path.GetFileName(modelUrl).Split("?")[0];
+            string dirname = LLMUnitySetup.GetAssetPath(modelBasename.Replace(".zip", ""));
+            return dirname;
+        }
+
+        public static async Task<(string, string)> DownloadUndreamAIAsync(string modelUrl, Callback<float> progresscallback = null)
+        {
+            string dirname = ModelExtractDir(modelUrl);
+            string modelName = Path.GetFileName(dirname);
+            await DownloadAndUnzip(modelUrl, dirname, progresscallback, true);
+            return (Path.Combine(dirname, modelName + ".sentis"), Path.Combine(dirname, modelName + ".tokenizer.json"));
+        }
+
+        public static (string, string) DownloadUndreamAI(string modelUrl, Callback<float> progresscallback = null)
+        {
+            string dirname = ModelExtractDir(modelUrl);
+            string modelName = Path.GetFileName(dirname);
+            _ = DownloadAndUnzip(modelUrl, dirname, progresscallback, false);
             return (Path.Combine(dirname, modelName + ".sentis"), Path.Combine(dirname, modelName + ".tokenizer.json"));
         }
 
@@ -468,21 +487,21 @@ namespace LLMUnity
         public static async Task<EmbeddingModel> BGESmallModel(BackendType backend = BackendType.CPU, Callback<float> progresscallback = null)
         {
             string modelUrl = "https://huggingface.co/undreamai/bge-small-en-v1.5-sentis/resolve/main/bge-small-en-v1.5.zip?download=true";
-            (string modelPath, string tokenizerPath) = await DownloadUndreamAI(modelUrl, progresscallback);
+            (string modelPath, string tokenizerPath) = await DownloadUndreamAIAsync(modelUrl, progresscallback);
             return BGEModel(modelPath, tokenizerPath, backend);
         }
 
         public static async Task<EmbeddingModel> BGEBaseModel(BackendType backend = BackendType.CPU, Callback<float> progresscallback = null)
         {
             string modelUrl = "https://huggingface.co/undreamai/bge-base-en-v1.5-sentis/resolve/main/bge-base-en-v1.5.zip?download=true";
-            (string modelPath, string tokenizerPath) = await DownloadUndreamAI(modelUrl, progresscallback);
+            (string modelPath, string tokenizerPath) = await DownloadUndreamAIAsync(modelUrl, progresscallback);
             return BGEModel(modelPath, tokenizerPath, backend);
         }
 
         public static async Task<EmbeddingModel> MiniLMModel(BackendType backend = BackendType.CPU, Callback<float> progresscallback = null)
         {
             string modelUrl = "https://huggingface.co/undreamai/all-MiniLM-L6-v2-sentis/resolve/main/all-MiniLM-L6-v2.zip?download=true";
-            (string modelPath, string tokenizerPath) = await DownloadUndreamAI(modelUrl, progresscallback);
+            (string modelPath, string tokenizerPath) = await DownloadUndreamAIAsync(modelUrl, progresscallback);
             return MiniLMModel(modelPath, tokenizerPath, backend);
         }
 
@@ -499,7 +518,7 @@ namespace LLMUnity
         public int SelectedOption;
 
         [HideInInspector] public float downloadProgress = 1;
-        [HideInInspector] public EmbeddingModel embedding = null;        
+        [HideInInspector] public EmbeddingModel embedding = null;
         public readonly (string, string)[] options = new (string, string)[]{
             ("None", null),
             ("bge-small-en-v1.5", "BGESmallModel"),
@@ -520,8 +539,8 @@ namespace LLMUnity
             {
                 Type type = typeof(ModelManager);
                 MethodInfo method = type.GetMethod(methodName);
-                object[] arguments = { GPU? BackendType.GPUCompute: BackendType.CPU, (Callback<float>) SetDownloadProgress };
-                embedding = await (Task<EmbeddingModel>) method.Invoke(null, arguments);
+                object[] arguments = { GPU ? BackendType.GPUCompute : BackendType.CPU, (Callback<float>)SetDownloadProgress };
+                embedding = await (Task<EmbeddingModel>)method.Invoke(null, arguments);
             }
         }
 
@@ -529,7 +548,7 @@ namespace LLMUnity
         {
             downloadProgress = progress;
         }
-        
+
         public EmbeddingModel GetModel()
         {
             return embedding;
