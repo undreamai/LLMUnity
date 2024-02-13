@@ -32,7 +32,7 @@ class HamletSearch : MonoBehaviour
             throw new System.Exception("Please select an embedding model in the HamletSearch GameObject!");
         }
 
-        string sampleDir = Path.GetDirectoryName(Directory.GetFiles(Application.dataPath, "HamletSearch.cs", SearchOption.AllDirectories)[0]);
+        string sampleDir = Directory.GetDirectories(Application.dataPath, "HamletSearch", SearchOption.AllDirectories)[0];
         string filename = Path.Combine(sampleDir, "embeddings.zip");
         if (File.Exists(filename))
         {
