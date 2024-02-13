@@ -466,12 +466,6 @@ MonoBehaviour:
       m_Image: {fileID: 0}
     - m_Text: Horatio
       m_Image: {fileID: 0}
-    - m_Text: Rosencrantz
-      m_Image: {fileID: 0}
-    - m_Text: Guildenstern
-      m_Image: {fileID: 0}
-    - m_Text: Fortinbras
-      m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []

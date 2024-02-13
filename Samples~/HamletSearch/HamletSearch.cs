@@ -28,12 +28,6 @@ class HamletSearch : MonoBehaviour
     {
         PlayerText.interactable = false;
 
-        EmbeddingModel model = Embedding.GetModel();
-        if (model == null)
-        {
-            throw new System.Exception("Please select an Embedding model in the HamletSearch GameObject!");
-        }
-
         string sampleDir = Directory.GetDirectories(Application.dataPath, "HamletSearch", SearchOption.AllDirectories)[0];
         string filename = Path.Combine(sampleDir, "Embeddings.zip");
         if (File.Exists(filename))
@@ -91,10 +85,20 @@ class HamletSearch : MonoBehaviour
 
     Dialogue CreateEmbeddings(string filename)
     {
-        Dialogue dialogue;
+        EmbeddingModel model = Embedding.GetModel();
+        if (model == null)
+        {
+            throw new System.Exception("Please select an Embedding model in the HamletSearch GameObject!");
+        }
 
         Dictionary<string, List<(string, string)>> hamlet = ReadGutenbergFile(GutenbergText.text);
-        dialogue = new Dialogue(Embedding.GetModel());
+        Dialogue dialogue = new Dialogue(model);
+
+        List<string> characters = new List<string>();
+        foreach (var option in CharacterSelect.options)
+        {
+            characters.Add(option.text.ToUpper());
+        }
 
         Stopwatch stopwatch = new Stopwatch();
         stopwatch.Start();
@@ -102,7 +106,7 @@ class HamletSearch : MonoBehaviour
         {
             foreach ((string actor, string message) in messages)
             {
-                dialogue.Add(message, actor);
+                if (characters.Contains(actor)) dialogue.Add(message, actor);
                 // if you want only Hamlet, you could instead do:
                 // if (actor == "HAMLET") dialogue.Add(message);
             }
