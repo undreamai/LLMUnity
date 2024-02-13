@@ -61,31 +61,14 @@ namespace LLMUnityTests
         }
     }
 
-    public class TestDialogue
+    public class TestDialogue: TestWithEmbeddings
     {
-        EmbeddingModel model;
-        string modelPath;
-        string tokenizerPath;
         string[] sentences = new string[]{
             "hi.",
             "how are you today?",
             "how is the weather today?",
             "is it raining?"
         };
-
-        [SetUp]
-        public void SetUp()
-        {
-            modelPath = Path.Combine(Application.streamingAssetsPath, "bge-small-en-v1.5.sentis");
-            tokenizerPath = Path.Combine(Application.streamingAssetsPath, "bge-small-en-v1.5.tokenizer.json");
-            model = new EmbeddingModel(modelPath, tokenizerPath, Unity.Sentis.BackendType.CPU, "sentence_embedding", false, 384);
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            model.Destroy();
-        }
 
         [Test]
         public void TestAdd()
@@ -132,11 +115,6 @@ namespace LLMUnityTests
             Assert.AreEqual(searchEngine.GetSentences().ToArray(), sentencesGT);
             Assert.AreEqual(searchEngine.NumPhrases(), phrasesGT.Length);
             Assert.AreEqual(searchEngine.NumSentences(), sentencesGT.Length);
-        }
-
-        public bool ApproxEqual(float x1, float x2, float tolerance = 0.0001f)
-        {
-            return Mathf.Abs(x1 - x2) < tolerance;
         }
 
         [Test]

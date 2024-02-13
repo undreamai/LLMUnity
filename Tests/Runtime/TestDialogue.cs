@@ -1,16 +1,13 @@
 using NUnit.Framework;
 using LLMUnity;
 using System.IO;
-using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace LLMUnityTests
 {
-    public class TestDialogueManager
+    public class TestDialogueManager: TestWithEmbeddings
     {
-        EmbeddingModel model;
-        string modelPath;
-        string tokenizerPath;
         List<(string, string, string)> phrases = new List<(string, string, string)>(){
             ("To be, or not to be, that is the question. Whether tis nobler in the mind to suffer.", "Hamlet", "ACT I"),
             ("Or to take arms against a sea of troubles, and by opposing end them? To die—to sleep.", "Hamlet", "ACT I"),
@@ -18,20 +15,6 @@ namespace LLMUnityTests
             ("Good my lord.", "Ophelia", "ACT II"),
             ("How does your honour for this many a day?", "Ophelia", "ACT II")
         };
-
-        [SetUp]
-        public void SetUp()
-        {
-            modelPath = Path.Combine(Application.streamingAssetsPath, "bge-small-en-v1.5.sentis");
-            tokenizerPath = Path.Combine(Application.streamingAssetsPath, "bge-small-en-v1.5.tokenizer.json");
-            model = new EmbeddingModel(modelPath, tokenizerPath, Unity.Sentis.BackendType.CPU, "sentence_embedding", false, 384);
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            model.Destroy();
-        }
 
         [Test]
         public void TestAdd()
@@ -84,6 +67,7 @@ namespace LLMUnityTests
         [Test]
         public void TestSaveLoad()
         {
+                Debug.Log("TestSaveLoad");
             string path = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
 
             Dialogue manager = new Dialogue(model);

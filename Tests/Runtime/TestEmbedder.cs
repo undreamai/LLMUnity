@@ -3,10 +3,63 @@ using LLMUnity;
 using Unity.Sentis;
 using System.IO;
 using UnityEngine;
+using System.Threading;
+using System.Threading.Tasks;
+using Unity.Android.Types;
 
 
 namespace LLMUnityTests
 {
+
+    // [SetUpFixture]
+    public class SetupTests
+    {
+        public static ManualResetEvent downloadBlock = new ManualResetEvent(false);
+        private static readonly object lockObject = new object();
+
+
+        static readonly SemaphoreSlim semaphore = new SemaphoreSlim(1, 1);
+        public static string modelPath, tokenizerPath;
+        public static (string, string) DownloadModel()
+        {
+            lock(lockObject){
+                Debug.Log("down");
+                string modelUrl = "https://huggingface.co/undreamai/bge-small-en-v1.5-sentis/resolve/main/bge-small-en-v1.5.zip?download=true";
+                (modelPath, tokenizerPath) = ModelManager.DownloadUndreamAI(modelUrl);
+  Debug.Log("up");
+                // downloadBlock.Set();
+            }
+            return (modelPath, tokenizerPath);
+        }
+    }
+
+
+    public class TestWithEmbeddings
+    {
+        protected EmbeddingModel model;
+        public bool ApproxEqual(float x1, float x2, float tolerance = 0.0001f)
+        {
+            return Mathf.Abs(x1 - x2) < tolerance;
+        }
+
+        [SetUp]
+        public void SetUp()
+        {
+            Debug.Log("SetUp");
+            SetupTests.DownloadModel();
+            Debug.Log("Setdown");
+            // await SetupTests.DownloadModel();
+            // SetupTests.downloadBlock.WaitOne();
+            model = new EmbeddingModel(SetupTests.modelPath, SetupTests.tokenizerPath, BackendType.CPU, "sentence_embedding", false, 384);
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            if (model != null) model.Destroy();
+        }
+    }
+
     public class TestEmbeddingModelSkeleton
     {
         [Test]
@@ -41,25 +94,8 @@ namespace LLMUnityTests
         }
     }
 
-    public class TestEmbeddingModel
+    public class TestEmbeddingModel: TestWithEmbeddings
     {
-        EmbeddingModel model;
-        string modelPath;
-        string tokenizerPath;
-
-        public bool ApproxEqual(float x1, float x2, float tolerance = 0.00001f)
-        {
-            return Mathf.Abs(x1 - x2) < tolerance;
-        }
-
-        [SetUp]
-        public void SetUp()
-        {
-            modelPath = Path.Combine(Application.streamingAssetsPath, "bge-small-en-v1.5.sentis");
-            tokenizerPath = Path.Combine(Application.streamingAssetsPath, "bge-small-en-v1.5.tokenizer.json");
-            model = new EmbeddingModel(modelPath, tokenizerPath, BackendType.CPU, "sentence_embedding", false, 384);
-        }
-
         [Test]
         public void TestEquality()
         {
@@ -121,22 +157,16 @@ namespace LLMUnityTests
         [Test]
         public void TestModelManager()
         {
-            EmbeddingModel bge1 = ModelManager.BGEModel(modelPath, tokenizerPath);
+            EmbeddingModel bge1 = ModelManager.BGEModel(model.ModelPath, model.TokenizerPath);
             Assert.AreEqual(ModelManager.Count(), 1);
-            EmbeddingModel bge2 = ModelManager.BGEModel(modelPath, tokenizerPath);
+            EmbeddingModel bge2 = ModelManager.BGEModel(model.ModelPath, model.TokenizerPath);
             Assert.AreEqual(ModelManager.Count(), 1);
-            EmbeddingModel lm1 = ModelManager.MiniLMModel(modelPath, tokenizerPath);
+            EmbeddingModel lm1 = ModelManager.MiniLMModel(model.ModelPath, model.TokenizerPath);
             Assert.AreEqual(ModelManager.Count(), 2);
-            EmbeddingModel lm2 = ModelManager.Model(modelPath, tokenizerPath, BackendType.CPU, "last_hidden_state", true, 384);
+            EmbeddingModel lm2 = ModelManager.Model(model.ModelPath, model.TokenizerPath, BackendType.CPU, "last_hidden_state", true, 384);
             Assert.AreEqual(ModelManager.Count(), 2);
             Assert.AreEqual(bge1, bge2);
             Assert.AreEqual(lm1, lm2);
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            model.Destroy();
         }
     }
 }

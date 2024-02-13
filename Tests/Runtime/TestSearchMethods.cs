@@ -1,33 +1,15 @@
 using NUnit.Framework;
 using LLMUnity;
-using Unity.Sentis;
 using System.IO;
-using UnityEngine;
 using System.Collections.Generic;
 
 namespace LLMUnityTests
 {
-    public class TestSearch
+    public class TestSearch: TestWithEmbeddings
     {
-        EmbeddingModel model;
-        string modelPath;
-        string tokenizerPath;
         string weather = "how is the weather today?";
         string raining = "is it raining?";
         string random = "something completely random";
-
-        public bool ApproxEqual(float x1, float x2, float tolerance = 0.0001f)
-        {
-            return Mathf.Abs(x1 - x2) < tolerance;
-        }
-
-        [SetUp]
-        public void SetUp()
-        {
-            modelPath = Path.Combine(Application.streamingAssetsPath, "bge-small-en-v1.5.sentis");
-            tokenizerPath = Path.Combine(Application.streamingAssetsPath, "bge-small-en-v1.5.tokenizer.json");
-            model = new EmbeddingModel(modelPath, tokenizerPath, BackendType.CPU, "sentence_embedding", false, 384);
-        }
 
         public void TestEncode(SearchMethod search)
         {
@@ -135,12 +117,6 @@ namespace LLMUnityTests
         {
             ANNModelSearch search = new ANNModelSearch(model);
             FullTest(search);
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            model.Destroy();
         }
     }
 }
