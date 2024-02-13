@@ -444,7 +444,7 @@ namespace LLMUnity
         {
             if (!Directory.Exists(dirname))
             {
-                string modelZip = Path.Combine(Application.temporaryCachePath, Path.GetFileName(modelUrl));
+                string modelZip = Path.GetTempFileName() + ".zip";
                 await LLMUnitySetup.DownloadFile(modelUrl, modelZip, true, false, null, progresscallback, async);
                 LLMUnitySetup.ExtractZip(modelZip, dirname);
                 File.Delete(modelZip);
