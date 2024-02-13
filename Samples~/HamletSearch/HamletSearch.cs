@@ -6,84 +6,95 @@ using System.Text.RegularExpressions;
 using LLMUnity;
 using System.IO;
 using UnityEngine.UI;
-using Unity.VisualScripting;
 
 class HamletSearch : MonoBehaviour
 {
-    public InputField playerText;
+    public Dropdown CharacterSelect;
+    public InputField PlayerText;
     public Text AIText;
-    public Embedding embedding;
-    public TextAsset gutenbergText;
+    public Embedding Embedding;
+    public TextAsset GutenbergText;
 
+    string Character;
     Dialogue dialogue;
 
     void Start()
     {
         StartCoroutine(InitDialogue());
+        CharacterSelect.onValueChanged.AddListener(DropdownChange);
     }
 
     IEnumerator<string> InitDialogue()
     {
-        playerText.interactable = false;
+        PlayerText.interactable = false;
 
-        EmbeddingModel model = embedding.GetModel();
+        EmbeddingModel model = Embedding.GetModel();
         if (model == null)
         {
-            throw new System.Exception("Please select an embedding model in the HamletSearch GameObject!");
+            throw new System.Exception("Please select an Embedding model in the HamletSearch GameObject!");
         }
 
         string sampleDir = Directory.GetDirectories(Application.dataPath, "HamletSearch", SearchOption.AllDirectories)[0];
-        string filename = Path.Combine(sampleDir, "embeddings.zip");
+        string filename = Path.Combine(sampleDir, "Embeddings.zip");
         if (File.Exists(filename))
         {
-            playerText.text = "Loading dialogues...";
+            PlayerText.text = "Loading dialogues...";
             yield return null;
             dialogue = Dialogue.Load(filename);
         }
         else
         {
-            playerText.text = "Creating embeddings...";
+            PlayerText.text = "Creating Embeddings...";
             yield return null;
             dialogue = CreateEmbeddings(filename);
         }
 
-        playerText.interactable = true;
+        PlayerText.interactable = true;
         InitPlayerText();
     }
 
     void InitPlayerText()
     {
-        playerText.onSubmit.AddListener(onInputFieldSubmit);
-        playerText.onValueChanged.AddListener(onValueChanged);
-        playerText.Select();
-        playerText.text = "";
+        DropdownChange(CharacterSelect.value);
+        PlayerText.onSubmit.AddListener(OnInputFieldSubmit);
+        PlayerText.onValueChanged.AddListener(OnValueChanged);
+        PlayerText.Select();
+        PlayerText.text = "";
     }
 
-    void onValueChanged(string newText)
+    void OnValueChanged(string newText)
     {
         // Get rid of newline character added when we press enter
         if (Input.GetKey(KeyCode.Return))
         {
-            if (playerText.text.Trim() == "")
-                playerText.text = "";
+            if (PlayerText.text.Trim() == "")
+                PlayerText.text = "";
         }
     }
 
-    void onInputFieldSubmit(string message)
+    void OnInputFieldSubmit(string message)
     {
-        playerText.interactable = false;
-        AIText.text = dialogue.Search(message)[0];
-        playerText.interactable = true;
-        playerText.Select();
-        playerText.text = "";
+        PlayerText.interactable = false;
+        AIText.text = dialogue.Search(message, 1, Character)[0];
+        // if you want only Hamlet, you could instead do:
+        // AIText.text = dialogue.Search(message)[0];
+        PlayerText.interactable = true;
+        PlayerText.Select();
+        PlayerText.text = "";
+    }
+
+    void DropdownChange(int selection)
+    {
+        Character = CharacterSelect.options[selection].text.ToUpper();
+        Debug.Log($"{Character}: {dialogue.NumPhrases(Character)} phrases available");
     }
 
     Dialogue CreateEmbeddings(string filename)
     {
         Dialogue dialogue;
 
-        Dictionary<string, List<(string, string)>> hamlet = ReadGutenbergFile(gutenbergText.text);
-        dialogue = new Dialogue(embedding.GetModel());
+        Dictionary<string, List<(string, string)>> hamlet = ReadGutenbergFile(GutenbergText.text);
+        dialogue = new Dialogue(Embedding.GetModel());
 
         Stopwatch stopwatch = new Stopwatch();
         stopwatch.Start();
@@ -91,7 +102,9 @@ class HamletSearch : MonoBehaviour
         {
             foreach ((string actor, string message) in messages)
             {
-                if (actor == "HAMLET") dialogue.Add(message);
+                dialogue.Add(message, actor);
+                // if you want only Hamlet, you could instead do:
+                // if (actor == "HAMLET") dialogue.Add(message);
             }
         }
         Debug.Log($"embedded {dialogue.NumPhrases()} phrases, {dialogue.NumSentences()} sentences in {stopwatch.Elapsed.TotalMilliseconds / 1000f} secs");
@@ -108,6 +121,7 @@ class HamletSearch : MonoBehaviour
 
         string act = null;
         string name = null;
+        string name2 = null;
         string message = "";
         bool add = false;
         Dialogue dialogue = null;
@@ -134,10 +148,12 @@ class HamletSearch : MonoBehaviour
                 if (dialogue != null && message != "")
                 {
                     messages[act].Add((name, message));
+                    if (name2 != null) messages[act].Add((name2, message));
                 }
                 act = line.Replace(".", "");
                 messages[act] = new List<(string, string)>();
                 name = null;
+                name2 = null;
                 message = "";
             }
             else if (nameRegex.IsMatch(line))
@@ -145,9 +161,16 @@ class HamletSearch : MonoBehaviour
                 if (name != null && message != "")
                 {
                     messages[act].Add((name, message));
+                    if (name2 != null) messages[act].Add((name2, message));
                 }
                 message = "";
                 name = line.Replace(".", "");
+                if (name.Contains("and"))
+                {
+                    string[] names = name.Split(" and ");
+                    name = names[0];
+                    name2 = names[1];
+                }
             }
             else if (name != null)
             {
