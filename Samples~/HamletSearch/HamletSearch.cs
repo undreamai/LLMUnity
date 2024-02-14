@@ -24,6 +24,34 @@ class HamletSearch : MonoBehaviour
         CharacterSelect.onValueChanged.AddListener(DropdownChange);
     }
 
+    Dialogue CreateEmbeddings(EmbeddingModel model, string filename)
+    {
+        Dictionary<string, List<(string, string)>> hamlet = ReadGutenbergFile(GutenbergText.text);
+        Dialogue dialogue = new Dialogue(model);
+
+        List<string> characters = new List<string>();
+        foreach (var option in CharacterSelect.options)
+        {
+            characters.Add(option.text.ToUpper());
+        }
+
+        Stopwatch stopwatch = new Stopwatch();
+        stopwatch.Start();
+        foreach ((string act, List<(string, string)> messages) in hamlet)
+        {
+            foreach ((string actor, string message) in messages)
+            {
+                if (characters.Contains(actor)) dialogue.Add(message, actor);
+                // if you want only Hamlet, you could instead do:
+                // if (actor == "HAMLET") dialogue.Add(message);
+            }
+        }
+        Debug.Log($"embedded {dialogue.NumPhrases()} phrases, {dialogue.NumSentences()} sentences in {stopwatch.Elapsed.TotalMilliseconds / 1000f} secs");
+
+        dialogue.Save(filename);
+        return dialogue;
+    }
+
     IEnumerator<string> InitDialogue()
     {
         PlayerText.interactable = false;
@@ -97,34 +125,6 @@ class HamletSearch : MonoBehaviour
     {
         Character = CharacterSelect.options[selection].text.ToUpper();
         Debug.Log($"{Character}: {dialogue.NumPhrases(Character)} phrases available");
-    }
-
-    Dialogue CreateEmbeddings(EmbeddingModel model, string filename)
-    {
-        Dictionary<string, List<(string, string)>> hamlet = ReadGutenbergFile(GutenbergText.text);
-        Dialogue dialogue = new Dialogue(model);
-
-        List<string> characters = new List<string>();
-        foreach (var option in CharacterSelect.options)
-        {
-            characters.Add(option.text.ToUpper());
-        }
-
-        Stopwatch stopwatch = new Stopwatch();
-        stopwatch.Start();
-        foreach ((string act, List<(string, string)> messages) in hamlet)
-        {
-            foreach ((string actor, string message) in messages)
-            {
-                if (characters.Contains(actor)) dialogue.Add(message, actor);
-                // if you want only Hamlet, you could instead do:
-                // if (actor == "HAMLET") dialogue.Add(message);
-            }
-        }
-        Debug.Log($"embedded {dialogue.NumPhrases()} phrases, {dialogue.NumSentences()} sentences in {stopwatch.Elapsed.TotalMilliseconds / 1000f} secs");
-
-        dialogue.Save(filename);
-        return dialogue;
     }
 
     public Dictionary<string, List<(string, string)>> ReadGutenbergFile(string text)
