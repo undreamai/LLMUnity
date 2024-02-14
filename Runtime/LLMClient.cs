@@ -135,6 +135,7 @@ namespace LLMUnity
             nKeep = -1;
             await InitPrompt(clearChat);
         }
+
         private async Task InitNKeep()
         {
             if (setNKeepToPrompt && nKeep == -1)
@@ -185,27 +186,18 @@ namespace LLMUnity
             return RoleString(role) + " " + message;
         }
 
-        public string ConstructPrompt(string message, string context = null)
-        {
-            string newPrompt = currentPrompt;
-            newPrompt += RoleMessageString(playerName, message);
-            
-            if (context != null && context != "")
-            {
-                newPrompt += "\nUse the following context to answer.";
-                newPrompt += $"\nContext:\n{context}\n";
-            }
-
-            newPrompt += RoleString(AIName);
-            Debug.Log(newPrompt);
-            return newPrompt;
-        }
-
-        public ChatRequest GenerateRequest(string message, string context = null)
+        public ChatRequest GenerateRequest(string message, bool openAIFormat = false)
         {
             // setup the request struct
             ChatRequest chatRequest = new ChatRequest();
-            chatRequest.prompt = ConstructPrompt(message, context);
+            if (openAIFormat)
+            {
+                chatRequest.messages = chat;
+            }
+            else
+            {
+                chatRequest.prompt = currentPrompt + RoleMessageString(playerName, message) + RoleString(AIName);
+            }
             chatRequest.temperature = temperature;
             chatRequest.top_k = topK;
             chatRequest.top_p = topP;
@@ -286,7 +278,7 @@ namespace LLMUnity
             // call the callback function while the answer is received
             // call the completionCallback function when the answer is fully received
             await InitNKeep();
-            string json = JsonUtility.ToJson(GenerateRequest(question, context));
+            string json = JsonUtility.ToJson(GenerateRequest(question));
             string result;
             if (stream)
             {
