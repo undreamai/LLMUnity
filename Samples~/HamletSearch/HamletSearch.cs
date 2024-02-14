@@ -12,7 +12,7 @@ class HamletSearch : MonoBehaviour
     public Dropdown CharacterSelect;
     public InputField PlayerText;
     public Text AIText;
-    public Embedding Embedding;
+    public Embedding embedding;
     public TextAsset GutenbergText;
 
     string Character;
@@ -28,19 +28,25 @@ class HamletSearch : MonoBehaviour
     {
         PlayerText.interactable = false;
 
+        EmbeddingModel model = embedding.GetModel();
+        if (model == null)
+        {
+            throw new System.Exception("Please select an Embedding model in the HamletSearch GameObject!");
+        }
+
         string sampleDir = Directory.GetDirectories(Application.dataPath, "HamletSearch", SearchOption.AllDirectories)[0];
         string filename = Path.Combine(sampleDir, "Embeddings.zip");
         if (File.Exists(filename))
         {
             PlayerText.text = "Loading dialogues...";
             yield return null;
-            dialogue = Dialogue.Load(filename);
+            dialogue = Dialogue.Load(model, filename);
         }
         else
         {
             PlayerText.text = "Creating Embeddings...";
             yield return null;
-            dialogue = CreateEmbeddings(filename);
+            dialogue = CreateEmbeddings(model, filename);
         }
 
         PlayerText.interactable = true;
@@ -83,14 +89,8 @@ class HamletSearch : MonoBehaviour
         Debug.Log($"{Character}: {dialogue.NumPhrases(Character)} phrases available");
     }
 
-    Dialogue CreateEmbeddings(string filename)
+    Dialogue CreateEmbeddings(EmbeddingModel model, string filename)
     {
-        EmbeddingModel model = Embedding.GetModel();
-        if (model == null)
-        {
-            throw new System.Exception("Please select an Embedding model in the HamletSearch GameObject!");
-        }
-
         Dictionary<string, List<(string, string)>> hamlet = ReadGutenbergFile(GutenbergText.text);
         Dialogue dialogue = new Dialogue(model);
 
@@ -143,7 +143,9 @@ class HamletSearch : MonoBehaviour
 
             line = line.Replace("\r", "");
             line = Regex.Replace(line, skipPattern, "");
-            if (line == "") continue;
+            string lineTrim = line.Trim();
+            if (lineTrim == "" || lineTrim.StartsWith("Re-enter ") || lineTrim.StartsWith("Enter ") || lineTrim.StartsWith("SCENE")) continue;
+
             numWords += line.Split(new[] { ' ', '\t' }, System.StringSplitOptions.RemoveEmptyEntries).Length;
             numLines++;
 
@@ -151,6 +153,7 @@ class HamletSearch : MonoBehaviour
             {
                 if (dialogue != null && message != "")
                 {
+                    message = message.Trim();
                     messages[act].Add((name, message));
                     if (name2 != null) messages[act].Add((name2, message));
                 }
@@ -164,6 +167,7 @@ class HamletSearch : MonoBehaviour
             {
                 if (name != null && message != "")
                 {
+                    message = message.Trim();
                     messages[act].Add((name, message));
                     if (name2 != null) messages[act].Add((name2, message));
                 }

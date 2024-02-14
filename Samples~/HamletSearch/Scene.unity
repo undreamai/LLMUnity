@@ -2431,7 +2431,7 @@ MonoBehaviour:
   CharacterSelect: {fileID: 272611076}
   PlayerText: {fileID: 1736746842}
   AIText: {fileID: 379533026}
-  Embedding: {fileID: 1842083047}
+  embedding: {fileID: 1842083047}
   GutenbergText: {fileID: 4900000, guid: be0ffe8c7b44139218ffd530749f1644, type: 3}
 --- !u!4 &1842083046
 Transform:
