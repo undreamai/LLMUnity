@@ -34,8 +34,14 @@ class HamletSearch : MonoBehaviour
             throw new System.Exception("Please select an Embedding model in the HamletSearch GameObject!");
         }
 
+        string filename;
+#if UNITY_EDITOR
         string sampleDir = Directory.GetDirectories(Application.dataPath, "HamletSearch", SearchOption.AllDirectories)[0];
-        string filename = Path.Combine(sampleDir, "Embeddings.zip");
+        filename = Path.Combine(sampleDir, "Embeddings.zip");
+#else
+        filename = Path.Combine(Application.streamingAssetsPath, "Embeddings.zip");
+#endif
+
         if (File.Exists(filename))
         {
             PlayerText.text = "Loading dialogues...";
@@ -44,9 +50,13 @@ class HamletSearch : MonoBehaviour
         }
         else
         {
+#if UNITY_EDITOR
             PlayerText.text = "Creating Embeddings...";
             yield return null;
             dialogue = CreateEmbeddings(model, filename);
+#else
+            throw new System.Exception("The embeddings could not be found!");
+#endif
         }
 
         PlayerText.interactable = true;
