@@ -173,7 +173,7 @@ namespace LLMUnityTests
 
             string path = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
             searchEngine.Save(path, "test");
-            var loadedDialogue = SearchEngine.Load(path, "test");
+            var loadedDialogue = SearchEngine.Load(model, path, "test");
             File.Delete(path);
 
             Assert.AreEqual(searchEngine.NumSentences(), loadedDialogue.NumSentences());

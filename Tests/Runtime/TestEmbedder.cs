@@ -16,7 +16,7 @@ namespace LLMUnityTests
         {
             lock(lockObject){
                 string modelUrl = "https://huggingface.co/undreamai/bge-small-en-v1.5-sentis/resolve/main/bge-small-en-v1.5.zip?download=true";
-                (modelPath, tokenizerPath) = ModelManager.DownloadUndreamAI(modelUrl);
+                (modelPath, tokenizerPath) = ModelDownloader.DownloadUndreamAI(modelUrl);
             }
             return (modelPath, tokenizerPath);
         }
@@ -25,10 +25,6 @@ namespace LLMUnityTests
     public class TestWithEmbeddings
     {
         protected EmbeddingModel model;
-        public bool ApproxEqual(float x1, float x2, float tolerance = 0.0001f)
-        {
-            return Mathf.Abs(x1 - x2) < tolerance;
-        }
 
         [SetUp]
         public void SetUp()
@@ -42,39 +38,10 @@ namespace LLMUnityTests
         {
             if (model != null) model.Destroy();
         }
-    }
 
-    public class TestEmbeddingModelSkeleton
-    {
-        [Test]
-        public void TestEquality()
+        public bool ApproxEqual(float x1, float x2, float tolerance = 0.0001f)
         {
-            EmbeddingModelSkeleton skeleton1 = new EmbeddingModelSkeleton("model", "config", BackendType.CPU, "last_hidden_state", true, 384);
-            EmbeddingModelSkeleton skeleton2 = new EmbeddingModelSkeleton("model", "config", BackendType.CPU, "last_hidden_state", true, 384);
-            Assert.AreEqual(skeleton1, skeleton2);
-            Assert.AreEqual(skeleton1.GetHashCode(), skeleton2.GetHashCode());
-            Assert.That(skeleton1.Equals(skeleton2));
-
-            skeleton2 = new EmbeddingModelSkeleton("model", "config", BackendType.GPUCompute, "last_hidden_state", true, 384);
-            Assert.AreNotEqual(skeleton1, skeleton2);
-            Assert.AreNotEqual(skeleton1.GetHashCode(), skeleton2.GetHashCode());
-            Assert.That(!skeleton1.Equals(skeleton2));
-
-            skeleton2 = new EmbeddingModelSkeleton("model2", "config", BackendType.CPU, "last_hidden_state", true, 384);
-            Assert.AreNotEqual(skeleton1, skeleton2);
-            Assert.AreNotEqual(skeleton1.GetHashCode(), skeleton2.GetHashCode());
-            Assert.That(!skeleton1.Equals(skeleton2));
-        }
-
-        [Test]
-        public void TestSaveLoad()
-        {
-            EmbeddingModelSkeleton skeleton1 = new EmbeddingModelSkeleton("model", "config", BackendType.CPU, "last_hidden_state", true, 384);
-            string path = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-            skeleton1.Save(path);
-            EmbeddingModelSkeleton skeleton2 = EmbeddingModelSkeleton.Load(path);
-            Assert.AreEqual(skeleton1, skeleton2);
-            File.Delete(path);
+            return Mathf.Abs(x1 - x2) < tolerance;
         }
     }
 
@@ -83,21 +50,29 @@ namespace LLMUnityTests
         [Test]
         public void TestEquality()
         {
-            EmbeddingModelSkeleton skeleton1 = new EmbeddingModelSkeleton("model", "config", BackendType.CPU, "last_hidden_state", true, 384);
-            EmbeddingModelSkeleton skeleton2 = new EmbeddingModelSkeleton("model", "config", BackendType.CPU, "last_hidden_state", true, 384);
+            EmbeddingModel skeleton1 = new EmbeddingModel(SetupTests.modelPath, SetupTests.tokenizerPath, BackendType.CPU, "last_hidden_state", true, 384);
+            EmbeddingModel skeleton2 = new EmbeddingModel(SetupTests.modelPath, SetupTests.tokenizerPath, BackendType.CPU, "last_hidden_state", true, 384);
             Assert.AreEqual(skeleton1, skeleton2);
             Assert.AreEqual(skeleton1.GetHashCode(), skeleton2.GetHashCode());
             Assert.That(skeleton1.Equals(skeleton2));
 
-            skeleton2 = new EmbeddingModelSkeleton("model", "config", BackendType.GPUCompute, "last_hidden_state", true, 384);
+            skeleton2 = new EmbeddingModel(SetupTests.modelPath, SetupTests.tokenizerPath, BackendType.GPUCompute, "last_hidden_state", true, 384);
             Assert.AreNotEqual(skeleton1, skeleton2);
             Assert.AreNotEqual(skeleton1.GetHashCode(), skeleton2.GetHashCode());
             Assert.That(!skeleton1.Equals(skeleton2));
 
-            skeleton2 = new EmbeddingModelSkeleton("model2", "config", BackendType.CPU, "last_hidden_state", true, 384);
+            string path = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            File.Copy(SetupTests.tokenizerPath, path);
+            using (StreamWriter writer = new StreamWriter(path, true))
+            {
+                writer.WriteLine("");
+            }
+            skeleton2 = new EmbeddingModel(SetupTests.modelPath, path, BackendType.CPU, "last_hidden_state", true, 384);
+
             Assert.AreNotEqual(skeleton1, skeleton2);
             Assert.AreNotEqual(skeleton1.GetHashCode(), skeleton2.GetHashCode());
             Assert.That(!skeleton1.Equals(skeleton2));
+            File.Delete(path);
         }
 
         [Test]
@@ -139,18 +114,14 @@ namespace LLMUnityTests
         }
 
         [Test]
-        public void TestModelManager()
+        public void TestSaveLoadHashCode()
         {
-            EmbeddingModel bge1 = ModelManager.BGEModel(model.ModelPath, model.TokenizerPath);
-            Assert.AreEqual(ModelManager.Count(), 1);
-            EmbeddingModel bge2 = ModelManager.BGEModel(model.ModelPath, model.TokenizerPath);
-            Assert.AreEqual(ModelManager.Count(), 1);
-            EmbeddingModel lm1 = ModelManager.MiniLMModel(model.ModelPath, model.TokenizerPath);
-            Assert.AreEqual(ModelManager.Count(), 2);
-            EmbeddingModel lm2 = ModelManager.Model(model.ModelPath, model.TokenizerPath, BackendType.CPU, "last_hidden_state", true, 384);
-            Assert.AreEqual(ModelManager.Count(), 2);
-            Assert.AreEqual(bge1, bge2);
-            Assert.AreEqual(lm1, lm2);
+            EmbeddingModel model = new EmbeddingModel(SetupTests.modelPath, SetupTests.tokenizerPath, BackendType.CPU, "last_hidden_state", true, 384);
+            string path = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            model.SaveHashCode(path);
+            int hashcode = EmbeddingModel.LoadHashCode(path);
+            File.Delete(path);
+            Assert.AreEqual(model.GetHashCode(), hashcode);
         }
     }
 }

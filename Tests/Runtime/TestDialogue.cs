@@ -70,12 +70,17 @@ namespace LLMUnityTests
 
             Dialogue manager = new Dialogue(model);
             manager.Save(path);
-            Dialogue loadedManager = Dialogue.Load(path);
+            Dialogue loadedManager = Dialogue.Load(model, path);
+            File.Delete(path);
+
+            Assert.AreEqual(manager.NumSentences(), loadedManager.NumSentences());
+            Assert.AreEqual(manager.NumPhrases(), loadedManager.NumPhrases());
 
             foreach (var phrase in phrases)
                 manager.Add(phrase.Item1, phrase.Item2, phrase.Item3);
             manager.Save(path);
-            loadedManager = Dialogue.Load(path);
+            
+            loadedManager = Dialogue.Load(model, path);
             File.Delete(path);
 
             Assert.AreEqual(manager.NumSentences(), loadedManager.NumSentences());

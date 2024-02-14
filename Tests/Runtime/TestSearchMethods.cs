@@ -2,6 +2,7 @@ using NUnit.Framework;
 using LLMUnity;
 using System.IO;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace LLMUnityTests
 {
@@ -28,7 +29,13 @@ namespace LLMUnityTests
         {
             string path = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
             search.Save(path, "");
-            var loadedSearch = SearchMethod.CastLoad(path, "");
+            
+            MethodInfo method = search.GetType().GetMethod(
+                "Load", new System.Type[] { typeof(EmbeddingModel), typeof(string), typeof(string) }
+            );
+            object[] arguments = { model, path, "" };
+            SearchMethod loadedSearch = (SearchMethod) method.Invoke(null, arguments);
+            
             Assert.AreEqual(search.GetType(), loadedSearch.GetType());
             Assert.AreEqual(search.Count(), loadedSearch.Count());
             Assert.AreEqual(loadedSearch.Search(example, 1)[0], example);
