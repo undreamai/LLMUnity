@@ -47,6 +47,11 @@
       "displayName": "HamletSearch",
       "description": "Example demonstrating search of relevant text with embeddings.",
       "path": "Samples~/HamletSearch"
+    },
+    {
+      "displayName": "LLMUnityBot",
+      "description": "A simple bot using a LLM and search of relevant text with embeddings.",
+      "path": "Samples~/LLMUnityBot"
     }
    ],
    "author": {
