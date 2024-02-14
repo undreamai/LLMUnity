@@ -166,10 +166,12 @@ namespace LLMUnity
             nKeep = tokens.Count;
         }
 
+#if UNITY_EDITOR
         public async void SetGrammar(string path)
         {
             grammar = await LLMUnitySetup.AddAsset(path, LLMUnitySetup.GetAssetPath());
         }
+#endif
 
         private string RoleString(string role)
         {
@@ -278,13 +280,7 @@ namespace LLMUnity
             return result.tokens;
         }
 
-        public List<float> EmbeddingContent(EmbeddingResult result)
-        {
-            // get the tokens from a tokenize result received from the endpoint
-            return result.embedding;
-        }
-
-        public async Task Chat(string question, Callback<string> callback = null, EmptyCallback completionCallback = null, bool addToHistory = true, string context = null)
+        public async Task<string> Chat(string question, Callback<string> callback = null, EmptyCallback completionCallback = null, bool addToHistory = true)
         {
             // handle a chat message by the user
             // call the callback function while the answer is received
@@ -306,20 +302,21 @@ namespace LLMUnity
                 AddPlayerMessage(question);
                 AddAIMessage(result);
             }
+            return result;
         }
 
-        public async Task Warmup(EmptyCallback completionCallback = null, string question = "hi")
+        public async Task<string> Warmup(EmptyCallback completionCallback = null, string question = "hi")
         {
-            await Chat(question, null, completionCallback, false);
+            return await Chat(question, null, completionCallback, false);
         }
 
-        public async Task Tokenize(string question, Callback<List<int>> callback = null)
+        public async Task<List<int>> Tokenize(string question, Callback<List<int>> callback = null)
         {
             // handle the tokenization of a message by the user
             TokenizeRequest tokenizeRequest = new TokenizeRequest();
             tokenizeRequest.content = question;
             string json = JsonUtility.ToJson(tokenizeRequest);
-            await PostRequest<TokenizeResult, List<int>>(json, "tokenize", TokenizeContent, callback);
+            return await PostRequest<TokenizeResult, List<int>>(json, "tokenize", TokenizeContent, callback);
         }
 
         public Ret ConvertContent<Res, Ret>(string response, ContentCallback<Res, Ret> getContent = null)

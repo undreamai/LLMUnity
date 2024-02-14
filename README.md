@@ -10,8 +10,8 @@
 [![Reddit](https://img.shields.io/badge/Reddit-%23FF4500.svg?style=flat&logo=Reddit&logoColor=white)](https://www.reddit.com/user/UndreamAI)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-blue?style=flat&logo=linkedin&labelColor=blue)](https://www.linkedin.com/company/undreamai)
 
-LLMUnity allows to integrate LLMs (Large Language Models) in the Unity engine.<br>
-It allows to build create intelligent characters that your players can interact for an immersive experience.<br>
+LLMUnity enables seamless integration of Large Language Models (LLMs) within the Unity engine.<br>
+It allows to create intelligent characters that your players can interact with for an immersive experience.<br>
 LLMUnity is built on top of the awesome [llama.cpp](https://github.com/ggerganov/llama.cpp) and [llamafile](https://github.com/Mozilla-Ocho/llamafile) libraries.
 
 <sub>
@@ -30,7 +30,7 @@ LLMUnity is built on top of the awesome [llama.cpp](https://github.com/ggerganov
 ## At a glance
 - :computer: Cross-platform! Supports Windows, Linux and macOS ([supported versions](https://github.com/Mozilla-Ocho/llamafile?tab=readme-ov-file#supported-oses-and-cpus))
 - :house: Runs locally without internet access but also supports remote servers
-- :zap: Fast inference on CPU and GPU
+- :zap: Fast inference on CPU and GPU (NVIDIA and AMD)
 - :hugs: Support of the major LLM models ([supported models](https://github.com/ggerganov/llama.cpp?tab=readme-ov-file#description))
 - :wrench: Easy to setup, call with a single line code
 - :moneybag: Free to use for both personal and commercial purposes
@@ -47,6 +47,9 @@ LLMUnity is built on top of the awesome [llama.cpp](https://github.com/ggerganov
 - Open the Package Manager in Unity: `Window > Package Manager`
 - Click the `+` button and select `Add package from git URL`
 - Use the repository URL `https://github.com/undreamai/LLMUnity.git` and click `Add`
+
+On _macOS_ you further need to have Xcode Command Line Tools installed:
+- From inside a terminal run `xcode-select --install`
 
 ## How to use
 For a step-by-step tutorial you can have a look at our guide: 
@@ -134,7 +137,8 @@ You can also:
     // your game function
     ...
     string message = "Hello bot!"
-    await llm.Chat(message, HandleReply, ReplyCompleted);
+    string reply = await llm.Chat(message, HandleReply, ReplyCompleted);
+    Debug.Log(reply);
     ...
   }
 ```
