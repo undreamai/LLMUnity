@@ -17,6 +17,10 @@ using System.Runtime.Serialization;
 using System.IO.Compression;
 using System.Reflection;
 using System.Threading.Tasks;
+using System.Diagnostics;
+using Debug = UnityEngine.Debug;
+using System.Security.Cryptography;
+using HuggingFace.SharpTransformers.NormalizersUtils;
 
 namespace LLMUnity
 {
@@ -113,6 +117,7 @@ namespace LLMUnity
         BertPreTokenizer bertPreTok;
         WordPieceTokenizer wordPieceTokenizer;
         TemplateProcessing templateProcessing;
+        int? hashcode = null;
 
         public EmbeddingModel(string modelPath, string tokenizerPath, BackendType backend = BackendType.CPU, string outputLayerName = "last_hidden_state", bool useMeanPooling = true, int dimensions = 384) :
             base(modelPath, tokenizerPath, backend, outputLayerName, useMeanPooling, dimensions)
@@ -129,6 +134,31 @@ namespace LLMUnity
             bertPreTok = new BertPreTokenizer(JObject.FromObject(tokenizerJsonData["pre_tokenizer"]));
             wordPieceTokenizer = new WordPieceTokenizer(JObject.FromObject(tokenizerJsonData["model"]));
             templateProcessing = new TemplateProcessing(JObject.FromObject(tokenizerJsonData["post_processor"]));
+        }
+
+        public override int GetHashCode()
+        {
+            if (hashcode == null)
+            {
+                string hash = "";
+                hash += Saver.ComputeMD5(ModelPath);
+                hash += Saver.ComputeMD5(TokenizerPath);
+                hash += Backend;
+                hash += OutputLayerName;
+                hash += UseMeanPooling;
+                hash += Dimensions;
+                hashcode = hash.GetHashCode();
+            }
+            return hashcode.Value;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+            return GetHashCode() == ((EmbeddingModel)obj).GetHashCode();
         }
 
         public void Destroy()
