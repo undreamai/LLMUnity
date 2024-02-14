@@ -183,18 +183,27 @@ namespace LLMUnity
             return RoleString(role) + " " + message;
         }
 
-        public ChatRequest GenerateRequest(string message, bool openAIFormat = false)
+        public string ConstructPrompt(string message, string context = null)
+        {
+            string newPrompt = currentPrompt;
+            newPrompt += RoleMessageString(playerName, message);
+            
+            if (context != null && context != "")
+            {
+                newPrompt += "\nUse the following context to answer.";
+                newPrompt += $"\nContext:\n{context}\n";
+            }
+
+            newPrompt += RoleString(AIName);
+            Debug.Log(newPrompt);
+            return newPrompt;
+        }
+
+        public ChatRequest GenerateRequest(string message, string context = null)
         {
             // setup the request struct
             ChatRequest chatRequest = new ChatRequest();
-            if (openAIFormat)
-            {
-                chatRequest.messages = chat;
-            }
-            else
-            {
-                chatRequest.prompt = currentPrompt + RoleMessageString(playerName, message) + RoleString(AIName);
-            }
+            chatRequest.prompt = ConstructPrompt(message, context);
             chatRequest.temperature = temperature;
             chatRequest.top_k = topK;
             chatRequest.top_p = topP;
@@ -275,13 +284,13 @@ namespace LLMUnity
             return result.embedding;
         }
 
-        public async Task Chat(string question, Callback<string> callback = null, EmptyCallback completionCallback = null, bool addToHistory = true)
+        public async Task Chat(string question, Callback<string> callback = null, EmptyCallback completionCallback = null, bool addToHistory = true, string context = null)
         {
             // handle a chat message by the user
             // call the callback function while the answer is received
             // call the completionCallback function when the answer is fully received
             await InitNKeep();
-            string json = JsonUtility.ToJson(GenerateRequest(question));
+            string json = JsonUtility.ToJson(GenerateRequest(question, context));
             string result;
             if (stream)
             {

@@ -308,30 +308,30 @@ namespace LLMUnity
             }
         }
 
-        public static string GetSearchPath(string dirname)
+        public static string GetSearchPath(string dirname="")
         {
             return Path.Combine(dirname, "SearchEngine.json");
         }
 
-        public void Save(ZipArchive archive, string dirname)
+        public void Save(ZipArchive archive, string dirname="")
         {
             Saver.Save(this, archive, GetSearchPath(dirname));
             searchMethod.Save(archive, dirname);
         }
 
-        public static SearchEngine Load(string filePath, string dirname)
+        public static SearchEngine Load(EmbeddingModel embedder, string filePath, string dirname="")
         {
             using (FileStream stream = new FileStream(filePath, FileMode.Open))
             using (ZipArchive archive = new ZipArchive(stream, ZipArchiveMode.Read))
             {
-                return Load(archive, dirname);
+                return Load(embedder, archive, dirname);
             }
         }
 
-        public static SearchEngine Load(ZipArchive archive, string dirname)
+        public static SearchEngine Load(EmbeddingModel embedder, ZipArchive archive, string dirname="")
         {
             SearchEngine search = Saver.Load<SearchEngine>(archive, GetSearchPath(dirname));
-            ANNModelSearch searchMethod = ANNModelSearch.Load(archive, dirname);
+            ANNModelSearch searchMethod = ANNModelSearch.Load(embedder, archive, dirname);
             search.SetSearchMethod(searchMethod);
             return search;
         }

@@ -17,15 +17,11 @@ using System.Runtime.Serialization;
 using System.IO.Compression;
 using System.Reflection;
 using System.Threading.Tasks;
-using System.Diagnostics;
-using Debug = UnityEngine.Debug;
-using System.Security.Cryptography;
-using HuggingFace.SharpTransformers.NormalizersUtils;
 
 namespace LLMUnity
 {
     [DataContract]
-    public class EmbeddingModelSkeleton
+    public class EmbeddingModel
     {
         [DataMember]
         public string ModelPath { get; protected set; }
@@ -40,74 +36,6 @@ namespace LLMUnity
         [DataMember]
         public int Dimensions { get; protected set; }
 
-        public EmbeddingModelSkeleton(string modelPath, string tokenizerPath, BackendType backend = BackendType.CPU, string outputLayerName = "last_hidden_state", bool useMeanPooling = true, int dimensions = 384)
-        {
-            ModelPath = modelPath;
-            TokenizerPath = tokenizerPath;
-            Backend = backend;
-            OutputLayerName = outputLayerName;
-            UseMeanPooling = useMeanPooling;
-            Dimensions = dimensions;
-        }
-
-        public static string GetEmbeddingModelPath(string dirname)
-        {
-            return Path.Combine(dirname, "EmbeddingModel.json");
-        }
-
-        public virtual void Save(string path, string dirname = "")
-        {
-            Saver.Save(this, path, GetEmbeddingModelPath(dirname));
-        }
-
-        public virtual void Save(ZipArchive archive, string dirname = "")
-        {
-            Saver.Save(this, archive, GetEmbeddingModelPath(dirname));
-        }
-
-        public static EmbeddingModelSkeleton Load(string path, string dirname = "")
-        {
-            return Saver.Load<EmbeddingModel>(path, GetEmbeddingModelPath(dirname));
-        }
-
-        public static EmbeddingModelSkeleton Load(ZipArchive archive, string dirname = "")
-        {
-            return Saver.Load<EmbeddingModel>(archive, GetEmbeddingModelPath(dirname));
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hash = 17;
-                hash = hash * 23 + (ModelPath != null ? ModelPath.GetHashCode() : 0);
-                hash = hash * 23 + (TokenizerPath != null ? TokenizerPath.GetHashCode() : 0);
-                hash = hash * 23 + Backend.GetHashCode();
-                hash = hash * 23 + (OutputLayerName != null ? OutputLayerName.GetHashCode() : 0);
-                hash = hash * 23 + UseMeanPooling.GetHashCode();
-                hash = hash * 23 + Dimensions;
-                return hash;
-            }
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (obj == null || !(obj is EmbeddingModelSkeleton))
-                return false;
-
-            EmbeddingModelSkeleton other = (EmbeddingModelSkeleton)obj;
-            return ModelPath == other.ModelPath &&
-                TokenizerPath == other.TokenizerPath &&
-                Backend == other.Backend &&
-                OutputLayerName == other.OutputLayerName &&
-                UseMeanPooling == other.UseMeanPooling &&
-                Dimensions == other.Dimensions;
-        }
-    }
-
-    [DataContract]
-    public class EmbeddingModel : EmbeddingModelSkeleton
-    {
         Model runtimeModel;
         IWorker worker;
         ITensorAllocator allocator;
@@ -119,9 +47,15 @@ namespace LLMUnity
         TemplateProcessing templateProcessing;
         int? hashcode = null;
 
-        public EmbeddingModel(string modelPath, string tokenizerPath, BackendType backend = BackendType.CPU, string outputLayerName = "last_hidden_state", bool useMeanPooling = true, int dimensions = 384) :
-            base(modelPath, tokenizerPath, backend, outputLayerName, useMeanPooling, dimensions)
+        public EmbeddingModel(string modelPath, string tokenizerPath, BackendType backend = BackendType.CPU, string outputLayerName = "last_hidden_state", bool useMeanPooling = true, int dimensions = 384)
         {
+            ModelPath = modelPath;
+            TokenizerPath = tokenizerPath;
+            Backend = backend;
+            OutputLayerName = outputLayerName;
+            UseMeanPooling = useMeanPooling;
+            Dimensions = dimensions;
+
             runtimeModel = ModelLoader.Load(modelPath);
             string tokenizerJsonContent = File.ReadAllText(tokenizerPath);
             tokenizerJsonData = JsonConvert.DeserializeObject<JObject>(tokenizerJsonContent);
@@ -159,6 +93,47 @@ namespace LLMUnity
                 return false;
             }
             return GetHashCode() == ((EmbeddingModel)obj).GetHashCode();
+        }
+
+        public static string GetHashCodePath(string dirname)
+        {
+            return Path.Combine(dirname, "EmbeddingModelHashCode.txt");
+        }
+
+        public virtual void SaveHashCode(string path, string dirname = "")
+        {
+            using (FileStream stream = new FileStream(path, FileMode.Create))
+            using (ZipArchive archive = new ZipArchive(stream, ZipArchiveMode.Create))
+            {
+                SaveHashCode(archive, dirname);
+            }
+        }
+
+        public virtual void SaveHashCode(ZipArchive archive, string dirname = "")
+        {
+            ZipArchiveEntry modelEntry = archive.CreateEntry(GetHashCodePath(dirname));
+            using (StreamWriter writer = new StreamWriter(modelEntry.Open()))
+            {
+                writer.WriteLine(GetHashCode());
+            }
+        }
+
+        public static int LoadHashCode(string path, string dirname = "")
+        {
+            using (FileStream stream = new FileStream(path, FileMode.Open))
+            using (ZipArchive archive = new ZipArchive(stream, ZipArchiveMode.Read))
+            {
+                return LoadHashCode(archive, dirname);
+            }
+        }
+
+        public static int LoadHashCode(ZipArchive archive, string dirname = "")
+        {
+            ZipArchiveEntry modelEntry = archive.GetEntry(GetHashCodePath(dirname));
+            using (StreamReader reader = new StreamReader(modelEntry.Open()))
+            {
+                return int.Parse(reader.ReadLine());
+            }
         }
 
         public void Destroy()
@@ -444,32 +419,10 @@ namespace LLMUnity
         {
             return inputIds.Select(innerList => innerList.Select(_ => 0).ToList()).ToList();
         }
-
-        public new static EmbeddingModel Load(ZipArchive archive, string name = "EmbeddingModel.json")
-        {
-            EmbeddingModelSkeleton skeleton = EmbeddingModelSkeleton.Load(archive, name);
-            return ModelManager.Model(skeleton);
-        }
     }
 
-    public class ModelManager
+    public class ModelDownloader
     {
-        static Dictionary<EmbeddingModelSkeleton, EmbeddingModel> models = new Dictionary<EmbeddingModelSkeleton, EmbeddingModel>();
-
-        public static EmbeddingModel Model(string modelPath, string tokenizerPath, BackendType backend = BackendType.CPU, string outputLayerName = "last_hidden_state", bool useMeanPooling = true, int dimensions = 384)
-        {
-            return Model(new EmbeddingModelSkeleton(modelPath, tokenizerPath, backend, outputLayerName, useMeanPooling, dimensions));
-        }
-
-        public static EmbeddingModel Model(EmbeddingModelSkeleton skeleton)
-        {
-            if (!models.ContainsKey(skeleton))
-            {
-                models[skeleton] = new EmbeddingModel(skeleton.ModelPath, skeleton.TokenizerPath, skeleton.Backend, skeleton.OutputLayerName, skeleton.UseMeanPooling, skeleton.Dimensions);
-            }
-            return models[skeleton];
-        }
-
         public static async Task DownloadAndUnzip(string modelUrl, string dirname, Callback<float> progresscallback = null, bool async = true)
         {
             if (!Directory.Exists(dirname))
@@ -503,41 +456,39 @@ namespace LLMUnity
             _ = DownloadAndUnzip(modelUrl, dirname, progresscallback, false);
             return (Path.Combine(dirname, modelName + ".sentis"), Path.Combine(dirname, modelName + ".tokenizer.json"));
         }
+    }
 
+    public class EmbeddingModels
+    {
         public static EmbeddingModel BGEModel(string modelPath, string tokenizerPath, BackendType backend = BackendType.CPU)
         {
-            return Model(new EmbeddingModelSkeleton(modelPath, tokenizerPath, backend, "sentence_embedding", false, 384));
+            return new EmbeddingModel(modelPath, tokenizerPath, backend, "sentence_embedding", false, 384);
         }
 
         public static EmbeddingModel MiniLMModel(string modelPath, string tokenizerPath, BackendType backend = BackendType.CPU)
         {
-            return Model(new EmbeddingModelSkeleton(modelPath, tokenizerPath, backend, "last_hidden_state", true, 384));
+            return new EmbeddingModel(modelPath, tokenizerPath, backend, "last_hidden_state", true, 384);
         }
 
         public static async Task<EmbeddingModel> BGESmallModel(BackendType backend = BackendType.CPU, Callback<float> progresscallback = null)
         {
             string modelUrl = "https://huggingface.co/undreamai/bge-small-en-v1.5-sentis/resolve/main/bge-small-en-v1.5.zip?download=true";
-            (string modelPath, string tokenizerPath) = await DownloadUndreamAIAsync(modelUrl, progresscallback);
+            (string modelPath, string tokenizerPath) = await ModelDownloader.DownloadUndreamAIAsync(modelUrl, progresscallback);
             return BGEModel(modelPath, tokenizerPath, backend);
         }
 
         public static async Task<EmbeddingModel> BGEBaseModel(BackendType backend = BackendType.CPU, Callback<float> progresscallback = null)
         {
             string modelUrl = "https://huggingface.co/undreamai/bge-base-en-v1.5-sentis/resolve/main/bge-base-en-v1.5.zip?download=true";
-            (string modelPath, string tokenizerPath) = await DownloadUndreamAIAsync(modelUrl, progresscallback);
+            (string modelPath, string tokenizerPath) = await ModelDownloader.DownloadUndreamAIAsync(modelUrl, progresscallback);
             return BGEModel(modelPath, tokenizerPath, backend);
         }
 
         public static async Task<EmbeddingModel> MiniLMModel(BackendType backend = BackendType.CPU, Callback<float> progresscallback = null)
         {
             string modelUrl = "https://huggingface.co/undreamai/all-MiniLM-L6-v2-sentis/resolve/main/all-MiniLM-L6-v2.zip?download=true";
-            (string modelPath, string tokenizerPath) = await DownloadUndreamAIAsync(modelUrl, progresscallback);
+            (string modelPath, string tokenizerPath) = await ModelDownloader.DownloadUndreamAIAsync(modelUrl, progresscallback);
             return MiniLMModel(modelPath, tokenizerPath, backend);
-        }
-
-        public static int Count()
-        {
-            return models.Count();
         }
     }
 
@@ -548,7 +499,7 @@ namespace LLMUnity
         public int SelectedOption;
 
         [HideInInspector] public float downloadProgress = 1;
-        [HideInInspector] public EmbeddingModel embedding = null;
+        [HideInInspector] public EmbeddingModel embeddingModel = null;
         public readonly (string, string)[] options = new (string, string)[]{
             ("None", null),
             ("bge-small-en-v1.5", "BGESmallModel"),
@@ -567,10 +518,10 @@ namespace LLMUnity
             string methodName = options[SelectedOption].Item2;
             if (methodName != null)
             {
-                Type type = typeof(ModelManager);
+                Type type = typeof(EmbeddingModels);
                 MethodInfo method = type.GetMethod(methodName);
                 object[] arguments = { GPU ? BackendType.GPUCompute : BackendType.CPU, (Callback<float>)SetDownloadProgress };
-                embedding = await (Task<EmbeddingModel>)method.Invoke(null, arguments);
+                embeddingModel = await (Task<EmbeddingModel>)method.Invoke(null, arguments);
             }
         }
 
@@ -581,12 +532,12 @@ namespace LLMUnity
 
         public EmbeddingModel GetModel()
         {
-            return embedding;
+            return embeddingModel;
         }
 
         public void OnDestroy()
         {
-            embedding?.Destroy();
+            embeddingModel?.Destroy();
         }
     }
 }

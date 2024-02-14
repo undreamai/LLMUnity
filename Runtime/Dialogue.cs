@@ -8,7 +8,6 @@ using System.Runtime.Serialization;
 using System.IO;
 using System.IO.Compression;
 using Cloud.Unum.USearch;
-using UnityEngine;
 
 namespace LLMUnity
 {
@@ -196,6 +195,11 @@ namespace LLMUnity
             return num;
         }
 
+        public static string GetModelHashPath(string dirname)
+        {
+            return Path.Combine(dirname, "EmbedderHash.txt");
+        }
+
         public static string GetDialoguePath(string dirname)
         {
             return Path.Combine(dirname, "Dialogue.json");
@@ -218,8 +222,8 @@ namespace LLMUnity
         public void Save(ZipArchive archive, string dirname = "")
         {
             Saver.Save(this, archive, GetDialoguePath(dirname));
-
-            embedder.Save(archive, dirname);
+            
+            embedder.SaveHashCode(archive, dirname);
 
             List<string> dialoguePartLines = new List<string>();
             foreach ((string actorName, Dictionary<string, SearchEngine> actorDialogues) in dialogueParts)
@@ -245,14 +249,17 @@ namespace LLMUnity
             }
         }
 
-        public static Dialogue Load(string filePath, string dirname = "")
+        public static Dialogue Load(EmbeddingModel embedder, string filePath, string dirname = "")
         {
             using (FileStream stream = new FileStream(filePath, FileMode.Open))
             using (ZipArchive archive = new ZipArchive(stream, ZipArchiveMode.Read))
             {
                 Dialogue dialogue = Saver.Load<Dialogue>(archive, GetDialoguePath(dirname));
 
-                dialogue.SetEmbedder(EmbeddingModel.Load(archive, dirname));
+                int embedderHash = EmbeddingModel.LoadHashCode(archive, dirname);
+                if (embedder.GetHashCode() != embedderHash)
+                    throw new Exception($"The Dialogue object uses different embedding model than the Dialogue object stored in {filePath}");
+                dialogue.SetEmbedder(embedder);
 
                 ZipArchiveEntry dialoguesEntry = archive.GetEntry(GetDialogueEntriesPath(dirname));
                 List<string> dialogueDirs = new List<string>();
@@ -265,12 +272,11 @@ namespace LLMUnity
                         string actor = line;
                         string title = reader.ReadLine();
                         string basedir = reader.ReadLine();
-
                         if (!dialogue.dialogueParts.ContainsKey(actor))
                         {
                             dialogue.dialogueParts[actor] = new Dictionary<string, SearchEngine>();
                         }
-                        dialogue.dialogueParts[actor][title] = SearchEngine.Load(archive, basedir);
+                        dialogue.dialogueParts[actor][title] = SearchEngine.Load(embedder, archive, basedir);
                     }
                 }
                 return dialogue;

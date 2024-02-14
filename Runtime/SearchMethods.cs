@@ -6,7 +6,6 @@ using Cloud.Unum.USearch;
 using System.Runtime.Serialization;
 using System.IO;
 using System.IO.Compression;
-using System.Reflection;
 
 
 namespace LLMUnity
@@ -123,7 +122,7 @@ namespace LLMUnity
             return embeddings.Count;
         }
 
-        public virtual void Save(string filePath, string dirname)
+        public virtual void Save(string filePath, string dirname="")
         {
             using (FileStream stream = new FileStream(filePath, FileMode.Create))
             using (ZipArchive archive = new ZipArchive(stream, ZipArchiveMode.Create))
@@ -132,17 +131,17 @@ namespace LLMUnity
             }
         }
 
-        public static string GetSearchTypePath(string dirname)
+        public static string GetSearchTypePath(string dirname="")
         {
             return Path.Combine(dirname, "SearchType.txt");
         }
 
-        public static string GetSearchPath(string dirname)
+        public static string GetSearchPath(string dirname="")
         {
             return Path.Combine(dirname, "Search.json");
         }
 
-        public virtual void Save(ZipArchive archive, string dirname)
+        public virtual void Save(ZipArchive archive, string dirname="")
         {
             ZipArchiveEntry typeEntry = archive.CreateEntry(GetSearchTypePath(dirname));
             using (StreamWriter writer = new StreamWriter(typeEntry.Open()))
@@ -150,44 +149,28 @@ namespace LLMUnity
                 writer.Write(GetType().FullName);
             }
             Saver.Save(this, archive, GetSearchPath(dirname));
-            embedder.Save(archive, dirname);
+            
+            embedder.SaveHashCode(archive, dirname);
         }
 
-        public static SearchMethod CastLoad(string filePath, string dirname)
+        public static T Load<T>(EmbeddingModel embedder, string filePath, string dirname="") where T : SearchMethod
         {
             using (FileStream stream = new FileStream(filePath, FileMode.Open))
             using (ZipArchive archive = new ZipArchive(stream, ZipArchiveMode.Read))
             {
-                return CastLoad(archive, dirname);
+                return Load<T>(embedder, archive, dirname);
             }
         }
 
-        public static SearchMethod CastLoad(ZipArchive archive, string dirname)
-        {
-            ZipArchiveEntry typeEntry = archive.GetEntry(GetSearchTypePath(dirname));
-            Type modelSearchType;
-            using (StreamReader reader = new StreamReader(typeEntry.Open()))
-            {
-                modelSearchType = Type.GetType(reader.ReadLine());
-            }
-            MethodInfo methodInfo = modelSearchType.GetMethod("Load", new Type[] { typeof(ZipArchive), typeof(string) });
-            return (SearchMethod)Convert.ChangeType(methodInfo.Invoke(null, new object[] { archive, dirname }), modelSearchType);
-        }
-
-        public static T Load<T>(string filePath, string dirname) where T : SearchMethod
-        {
-            using (FileStream stream = new FileStream(filePath, FileMode.Open))
-            using (ZipArchive archive = new ZipArchive(stream, ZipArchiveMode.Read))
-            {
-                return Load<T>(archive, dirname);
-            }
-        }
-
-        public static T Load<T>(ZipArchive archive, string dirname) where T : SearchMethod
+        public static T Load<T>(EmbeddingModel embedder, ZipArchive archive, string dirname="") where T : SearchMethod
         {
             T search = Saver.Load<T>(archive, GetSearchPath(dirname));
-            EmbeddingModel embedder = EmbeddingModel.Load(archive, dirname);
+
+            int embedderHash = EmbeddingModel.LoadHashCode(archive, dirname);
+            if (embedder.GetHashCode() != embedderHash)
+                throw new Exception($"The Search object uses different embedding model than the Search object stored");
             search.SetEmbedder(embedder);
+
             return search;
         }
     }
@@ -229,14 +212,14 @@ namespace LLMUnity
             return embeddings.Remove(inputString);
         }
 
-        public static ModelSearch Load(string filePath, string dirname)
+        public static ModelSearch Load(EmbeddingModel embedder, string filePath, string dirname="")
         {
-            return Load<ModelSearch>(filePath, dirname);
+            return Load<ModelSearch>(embedder, filePath, dirname);
         }
 
-        public static ModelSearch Load(ZipArchive archive, string dirname)
+        public static ModelSearch Load(EmbeddingModel embedder, ZipArchive archive, string dirname="")
         {
-            return Load<ModelSearch>(archive, dirname);
+            return Load<ModelSearch>(embedder, archive, dirname);
         }
     }
 
@@ -361,29 +344,29 @@ namespace LLMUnity
             return (int)index.Size();
         }
 
-        public static string GetIndexPath(string dirname)
+        public static string GetIndexPath(string dirname="")
         {
             return Path.Combine(dirname, "USearch");
         }
 
-        public override void Save(ZipArchive archive, string dirname)
+        public override void Save(ZipArchive archive, string dirname="")
         {
             base.Save(archive, dirname);
             index.Save(archive, GetIndexPath(dirname));
         }
 
-        public static ANNModelSearch Load(string filePath, string dirname)
+        public static ANNModelSearch Load(EmbeddingModel embedder, string filePath, string dirname="")
         {
             using (FileStream stream = new FileStream(filePath, FileMode.Open))
             using (ZipArchive archive = new ZipArchive(stream, ZipArchiveMode.Read))
             {
-                return Load(archive, dirname);
+                return Load(embedder, archive, dirname);
             }
         }
 
-        public static ANNModelSearch Load(ZipArchive archive, string dirname)
+        public static ANNModelSearch Load(EmbeddingModel embedder, ZipArchive archive, string dirname="")
         {
-            ANNModelSearch search = Load<ANNModelSearch>(archive, dirname);
+            ANNModelSearch search = Load<ANNModelSearch>(embedder, archive, dirname);
             USearchIndex index = new USearchIndex(archive, GetIndexPath(dirname));
             search.SetIndex(index);
             return search;
