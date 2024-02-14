@@ -427,10 +427,14 @@ namespace LLMUnity
         {
             if (!Directory.Exists(dirname))
             {
+#if UNITY_EDITOR
                 string modelZip = Path.GetTempFileName() + ".zip";
                 await LLMUnitySetup.DownloadFile(modelUrl, modelZip, true, false, null, progresscallback, async);
                 LLMUnitySetup.ExtractZip(modelZip, dirname);
                 File.Delete(modelZip);
+#else
+                throw new Exception($"Can't download file {modelUrl} from play mode!");
+#endif
             }
         }
 
