@@ -1,6 +1,8 @@
+using System;
 using System.IO;
 using System.IO.Compression;
 using System.Runtime.Serialization.Json;
+using System.Security.Cryptography;
 
 namespace LLMUnity
 {
@@ -57,6 +59,18 @@ namespace LLMUnity
         public static string RemoveExtension(string name)
         {
             return Path.Combine(Path.GetDirectoryName(name), Path.GetFileNameWithoutExtension(name));
+        }
+
+        public static string ComputeMD5(string filePath)
+        {
+            using (var md5 = MD5.Create())
+            {
+                using (var stream = File.OpenRead(filePath))
+                {
+                    byte[] hash = md5.ComputeHash(stream);
+                    return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
+                }
+            }
         }
     }
 }
