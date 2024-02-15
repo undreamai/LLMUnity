@@ -75,7 +75,7 @@ class HamletSearch : MonoBehaviour
         {
 #if UNITY_EDITOR
             // create and store the embeddings (in Unity editor)
-            PlayerText.text = "Creating Embeddings...";
+            PlayerText.text = "Creating Embeddings (only once)...";
             yield return null;
             dialogue = CreateEmbeddings(model, filename);
 #else
