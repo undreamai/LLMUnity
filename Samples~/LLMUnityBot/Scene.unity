@@ -315,7 +315,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -271}
+  m_AnchoredPosition: {x: 0, y: -230}
   m_SizeDelta: {x: 413.0949, y: 24.6768}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &191351081
@@ -372,7 +372,7 @@ GameObject:
   - component: {fileID: 247050141}
   - component: {fileID: 247050140}
   m_Layer: 5
-  m_Name: Text (Legacy) (1)
+  m_Name: Notes
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -394,8 +394,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.0000076294, y: -320.07587}
-  m_SizeDelta: {x: 550.6501, y: 24.5771}
+  m_AnchoredPosition: {x: -1, y: -322}
+  m_SizeDelta: {x: 594.3686, y: 44.419}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &247050140
 MonoBehaviour:
@@ -430,8 +430,10 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'To build the scene, copy the Embeddings.zip inside the Assets/StreamingAssets
-    folder
+  m_Text: 'Before running the scene, select a model for the LLM and Embedding GameObject.
+
+    To
+    build the scene, copy the Embeddings.zip inside the Assets/StreamingAssets folder.
 
 '
 --- !u!222 &247050141
@@ -1363,6 +1365,54 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1290703736}
   m_CullTransparentMesh: 1
+--- !u!1 &1320107141
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1320107143}
+  - component: {fileID: 1320107142}
+  m_Layer: 0
+  m_Name: Embedding
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1320107142
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1320107141}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66e2adadc5fb3e3a5862391f8dd49844, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Model: 
+  GPU: 0
+  SelectedOption: 0
+  downloadProgress: 1
+--- !u!4 &1320107143
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1320107141}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1343354785
 GameObject:
   m_ObjectHideFlags: 0
@@ -1786,7 +1836,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1842083046}
   - component: {fileID: 1842083048}
-  - component: {fileID: 1842083047}
   m_Layer: 0
   m_Name: LLMUnityBot
   m_TagString: Untagged
@@ -1809,22 +1858,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1842083047
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1842083044}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 66e2adadc5fb3e3a5862391f8dd49844, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Model: 
-  GPU: 0
-  SelectedOption: 1
-  downloadProgress: 1
 --- !u!114 &1842083048
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1839,7 +1872,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlayerText: {fileID: 1736746842}
   AIText: {fileID: 379533026}
-  embedding: {fileID: 1842083047}
+  embedding: {fileID: 1320107142}
   llm: {fileID: 1887981421}
 --- !u!1 &1887981420
 GameObject:
@@ -1941,3 +1974,4 @@ SceneRoots:
   - {fileID: 1745045323}
   - {fileID: 1842083046}
   - {fileID: 1887981422}
+  - {fileID: 1320107143}

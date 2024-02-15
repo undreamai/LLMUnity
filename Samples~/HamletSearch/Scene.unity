@@ -236,7 +236,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 180}
+  m_AnchoredPosition: {x: -0.9999851, y: 209.993}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &102275137
@@ -315,7 +315,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -235}
+  m_AnchoredPosition: {x: -0.9999851, y: -198}
   m_SizeDelta: {x: 246.7487, y: 54.6133}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &191351081
@@ -372,7 +372,7 @@ GameObject:
   - component: {fileID: 247050141}
   - component: {fileID: 247050140}
   m_Layer: 5
-  m_Name: Text (Legacy) (1)
+  m_Name: Notes
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -394,8 +394,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.0000076294, y: -320.07587}
-  m_SizeDelta: {x: 550.6501, y: 24.5771}
+  m_AnchoredPosition: {x: 0, y: -328.89}
+  m_SizeDelta: {x: 615.2761, y: 62.1404}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &247050140
 MonoBehaviour:
@@ -430,10 +430,10 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'To build the scene, copy the Embeddings.zip inside the Assets/StreamingAssets
-    folder
+  m_Text: 'Before running the scene, select a model from the Embedding GameObject.
 
-'
+    To
+    build the scene, copy the Embeddings.zip inside the Assets/StreamingAssets folder.'
 --- !u!222 &247050141
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -626,7 +626,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -12.999996}
+  m_AnchoredPosition: {x: -0.9999851, y: 16.993004}
   m_SizeDelta: {x: 180, y: 36}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &272611076
@@ -1299,7 +1299,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -109.99999}
+  m_AnchoredPosition: {x: -0.9999851, y: -80.00699}
   m_SizeDelta: {x: 500, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &654183277
@@ -2493,6 +2493,54 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1564078632}
   m_CullTransparentMesh: 1
+--- !u!1 &1607798390
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1607798392}
+  - component: {fileID: 1607798391}
+  m_Layer: 0
+  m_Name: Embedding
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1607798391
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1607798390}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66e2adadc5fb3e3a5862391f8dd49844, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Model: 
+  GPU: 0
+  SelectedOption: 0
+  downloadProgress: 1
+--- !u!4 &1607798392
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1607798390}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 532.6726, y: 327.60593, z: -0.91715884}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1736746840
 GameObject:
   m_ObjectHideFlags: 0
@@ -2530,7 +2578,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 117.006996}
+  m_AnchoredPosition: {x: -1, y: 147}
   m_SizeDelta: {x: 500, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1736746842
@@ -2717,7 +2765,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1842083046}
   - component: {fileID: 1842083045}
-  - component: {fileID: 1842083047}
   m_Layer: 0
   m_Name: HamletSearch
   m_TagString: Untagged
@@ -2740,7 +2787,7 @@ MonoBehaviour:
   CharacterSelect: {fileID: 272611076}
   PlayerText: {fileID: 1736746842}
   AIText: {fileID: 379533026}
-  embedding: {fileID: 1842083047}
+  embedding: {fileID: 1607798391}
   GutenbergText: {fileID: 4900000, guid: be0ffe8c7b44139218ffd530749f1644, type: 3}
 --- !u!4 &1842083046
 Transform:
@@ -2757,22 +2804,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1842083047
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1842083044}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 66e2adadc5fb3e3a5862391f8dd49844, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Model: 
-  GPU: 0
-  SelectedOption: 1
-  downloadProgress: 1
 --- !u!1 &2050714464
 GameObject:
   m_ObjectHideFlags: 0
@@ -2861,3 +2892,4 @@ SceneRoots:
   - {fileID: 1532498605}
   - {fileID: 1745045323}
   - {fileID: 1842083046}
+  - {fileID: 1607798392}
