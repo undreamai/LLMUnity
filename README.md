@@ -12,7 +12,7 @@
 
 LLMUnity enables seamless integration of Large Language Models (LLMs) within the Unity engine.<br>
 It allows to create intelligent characters that your players can interact with for an immersive experience.<br>
-LLMUnity is built on top of the awesome [llama.cpp](https://github.com/ggerganov/llama.cpp) and [llamafile](https://github.com/Mozilla-Ocho/llamafile) libraries.
+LLMUnity is built on top of the awesome [llama.cpp](https://github.com/ggerganov/llama.cpp), [llamafile](https://github.com/Mozilla-Ocho/llamafile) and [usearch](https://github.com/unum-cloud/usearch) libraries.
 
 <sub>
 <a href="#at-a-glance" style="color: black">At a glance</a>&nbsp;&nbsp;•&nbsp;
@@ -28,15 +28,22 @@ LLMUnity is built on top of the awesome [llama.cpp](https://github.com/ggerganov
 </sub>
 
 ## At a glance
-- :computer: Cross-platform! Supports Windows, Linux and macOS ([supported versions](https://github.com/Mozilla-Ocho/llamafile?tab=readme-ov-file#supported-oses-and-cpus))
-- :house: Runs locally without internet access but also supports remote servers
-- :zap: Fast inference on CPU and GPU (NVIDIA and AMD)
-- :hugs: Support of the major LLM models ([supported models](https://github.com/ggerganov/llama.cpp?tab=readme-ov-file#description))
-- :wrench: Easy to setup, call with a single line code
+
+- 💬 Craft your own NPC AI that the player interacts with in natural language
+- 🖌️ The NPC can respond creatively according to your character definition
+- 🗝️ ... or with predefined answers that stick to your script!
+- 🔍 You can even build an intelligent search engine with our RAG system
+
+**Features**
+- :computer: Cross-platform! Windows, Linux and macOS ([versions](https://github.com/Mozilla-Ocho/llamafile?tab=readme-ov-file#supported-oses))
+- :house: Runs locally without internet access. No data ever leave the game!
+- :zap: Fast inference on CPU and GPU (Nvidia and AMD)
+- :hugs: Support of the major LLM models ([models](https://github.com/ggerganov/llama.cpp?tab=readme-ov-file#description))
+- :wrench: Easy to setup, call with a single line of code
 - :moneybag: Free to use for both personal and commercial purposes
 
-🧪 Tested on Unity: 2021 LTS, 2022 LTS, 2023<br>
-:vertical_traffic_light: [Upcoming Releases](https://github.com/orgs/undreamai/projects/2/views/10)
+Tested on Unity: 2021 LTS, 2022 LTS, 2023<br>
+[Upcoming Releases](https://github.com/orgs/undreamai/projects/2/views/10)
 
 ## How to help
 - Join us at [Discord](https://discord.gg/RwXKQb6zdv) and say hi!
