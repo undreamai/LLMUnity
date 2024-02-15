@@ -26,7 +26,12 @@ namespace LLMUnity
         [ModelAdvanced] public int contextSize = 512;
         [ModelAdvanced] public int batchSize = 512;
 
-        [HideInInspector] public string modelUrl = "https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.2-GGUF/resolve/main/mistral-7b-instruct-v0.2.Q4_K_M.gguf?download=true";
+        [HideInInspector] public readonly (string, string)[] modelOptions = new (string, string)[]{
+            ("Download model", null),
+            ("Phi 2 (small, best)", "https://huggingface.co/TheBloke/phi-2-GGUF/resolve/main/phi-2.Q4_K_M.gguf?download=true"),
+            ("Mistral 7B Instruct v0.2 (medium, best)", "https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.2-GGUF/resolve/main/mistral-7b-instruct-v0.2.Q4_K_M.gguf?download=true")
+        };
+        public int SelectedOption = 0;
         private static readonly string serverZipUrl = "https://github.com/Mozilla-Ocho/llamafile/releases/download/0.6/llamafile-0.6.zip";
         private static readonly string server = Path.Combine(GetAssetPath(Path.GetFileNameWithoutExtension(serverZipUrl)), "bin/llamafile");
         private static readonly string apeARMUrl = "https://cosmo.zip/pub/cosmos/bin/ape-arm64.elf";
@@ -77,10 +82,12 @@ namespace LLMUnity
             binariesProgress = binariesDone / 4f + 1f / 4f * progress;
         }
 
-        public void DownloadModel()
+        public void DownloadModel(int optionIndex)
         {
             // download default model and disable model editor properties until the model is set
             modelProgress = 0;
+            SelectedOption = optionIndex;
+            string modelUrl = modelOptions[optionIndex].Item2;
             string modelName = Path.GetFileName(modelUrl).Split("?")[0];
             string modelPath = GetAssetPath(modelName);
             Task downloadTask = LLMUnitySetup.DownloadFile(modelUrl, modelPath, false, false, SetModel, SetModelProgress);
