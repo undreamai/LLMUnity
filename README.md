@@ -36,7 +36,7 @@ LLMUnity is built on top of the awesome [llama.cpp](https://github.com/ggerganov
 **Features**
 - :computer: Cross-platform! Windows, Linux and macOS ([versions](https://github.com/Mozilla-Ocho/llamafile?tab=readme-ov-file#supported-oses))
 - :house: Runs locally without internet access. No data ever leave the game!
-- :zap: Fast inference on CPU and GPU (Nvidia and AMD)
+- :zap: Blazing fast inference on CPU and GPU (Nvidia and AMD)
 - :hugs: Support of the major LLM models ([models](https://github.com/ggerganov/llama.cpp?tab=readme-ov-file#description))
 - :wrench: Easy to setup, call with a single line of code
 - :moneybag: Free to use for both personal and commercial purposes
@@ -67,7 +67,7 @@ For a step-by-step tutorial you can have a look at our guide:
 [How to Use LLMs in Unity](https://towardsdatascience.com/how-to-use-llms-in-unity-308c9c0f637c)
 
 Create a GameObject for the LLM :chess_pawn::
-- Create an empty GameObject.<br>In the GameObject Inspector click `Add Component` and select the LLM script (`Scripts>LLM`).
+- Create an empty GameObject.<br>In the GameObject Inspector click `Add Component` and select the LLM script.
 - Download the default model with the `Download Model` button (~4GB).<br>Or load your own .gguf model with the `Load model` button (see [Use your own model](#use-your-own-model)).
 - Define the role of your AI in the `Prompt`. You can also define the name of the AI (`AI Name`) and the player (`Player Name`).
 - (Optional) By default you receive the reply from the model as is it is produced in real-time (recommended).<br>If you want the full reply in one go, deselect the `Stream` option.
@@ -124,7 +124,7 @@ See the [ServerClient](Samples~/ServerClient) sample for a server-client example
 
 To use multiple characters:
 - create a single GameObject for the LLM as above for the first character.
-- for every additional character create a GameObject using the LLMClient script (`Scripts>LLMClient`) instead of the LLM script.<br>
+- for every additional character create a GameObject using the LLMClient script instead of the LLM script.<br>
 Define the prompt (and other parameters) of the LLMClient for the character
 
 Then in your script:
@@ -251,6 +251,80 @@ You can also build a remote server that does the processing and have local clien
 - Create characters with the `LLMClient` script. The characters can be configured to connect to the remote instance by providing the IP address and port of the server in the `host`/`port` properties.
 
 </details>
+
+## Search functionality
+LLMUnity implements a super-fast similarity search functionality with a Retrieval-Augmented Generation (RAG) system. This works as follows.
+
+**Building the data** You provide text inputs (a phrase, paragraph, document) to add in the data<br>
+Each input is split into sentences (optional) and encoded into embeddings with a deep learning model.
+
+**Searching** You can then search for an query text input. <br>
+The input is again encoded and the most similar text inputs or sentences in the data are retrieved.
+
+To use search, create a GameObject for the Embedding :chess_pawn::
+- create an empty GameObject.<br>In the GameObject Inspector click `Add Component` and select the `Embedding` script).
+- select the model you prefer from the drop-down list to download it (bge small, bge base or MiniLM v6).
+<br>
+
+In your script you can then use it as follows :unicorn::
+``` c#
+using LLMUnity;
+
+public class MyScript {
+  public Embedding embedding;
+  SearchEngine search;
+
+  void CreateEmbeddings(string filename, string[] inputs){
+    // build your embeddings or load them
+    EmbeddingModel model = embedding.GetModel();
+    if (File.Exists(filename)){
+      search = SearchEngine.Load(model, filename);
+    } else {
+      search = new SearchEngine(model);
+      foreach (string input in inputs) search.Add(input);
+      search.Save(filename);
+    }
+    return search;
+  }
+  
+  void Game(){
+    // your game function
+    ...
+    string[] inputs = new string[]{
+      "Hi! I'm an LLM.", "the weather is nice. I like it.", "I'm a RAG system"
+    };
+    CreateEmbeddings("Embeddings.zip", inputs);
+    // get the 2 most similar phrases
+    string[] similar = search.Search("hello!", 2);
+    // or get the 2 most similar sentences
+    string[] similarSentences = search.SearchSentences("hello!", 2);
+    ...
+  }
+}
+```
+
+- Finally, in the Inspector of the GameObject of your script, select the Embedding GameObject created above as the embedding property.
+
+If you want to manage a dialogue, LLMUnity provides the `Dialogue` class for ease of use:
+``` c#
+Dialogue dialogue = new Dialogue(model);
+
+// add a text
+dialogue.Add("the weather is nice");
+// add a text for a character
+dialogue.Add("hi I'm Luke", "Luke");
+// add a text for a character and a dialogue part
+dialogue.Add("Hi again", "Luke", "ACT 2");
+
+// search for a text
+string[] similar = dialogue.Search("how is the weather?", 1);
+// search for a text for a character
+string[] similar = dialogue.Search("hi there!", 2, "Luke");
+// search for a text for a character and dialogue part
+string[] similar = dialogue.Search("hello!", 3, "Luke", "ACT 2");
+```
+
+That's all :sparkles:!
 
 ## Examples
 The [Samples~](Samples~) folder contains several examples of interaction :robot::
