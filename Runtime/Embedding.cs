@@ -500,12 +500,12 @@ namespace LLMUnity
     {
         public string Model = "";
         public bool GPU = false;
-        public int SelectedOption;
+        public int SelectedOption = 0;
 
         [HideInInspector] public float downloadProgress = 1;
         [HideInInspector] public EmbeddingModel embeddingModel = null;
         public readonly (string, string)[] options = new (string, string)[]{
-            ("None", null),
+            ("Download model", null),
             ("bge-small-en-v1.5 (small, best)", "BGESmallModel"),
             ("bge-base-en-v1.5 (medium, best)", "BGEBaseModel"),
             ("all-MiniLM-L6-v2 (small, standard)", "MiniLMModel")
