@@ -254,9 +254,11 @@ You can also build a remote server that does the processing and have local clien
 
 ## Examples
 The [Samples~](Samples~) folder contains several examples of interaction :robot::
-- [SimpleInteraction](Samples~/SimpleInteraction): Demonstrates simple interaction between a player and a AI
-- [ServerClient](Samples~/ServerClient): Demonstrates simple interaction between a player and multiple AIs using a `LLM` and a `LLMClient`
-- [ChatBot](Samples~/ChatBot): Demonstrates interaction between a player and a AI with a UI similar to a messaging app (see image below)
+- [SimpleInteraction](Samples~/SimpleInteraction): Simple interaction between a player and a AI
+- [ServerClient](Samples~/ServerClient): Simple interaction between a player and multiple characters using a `LLM` and a `LLMClient`
+- [HamletSearch](Samples~/HamletSearch): Interaction with predefined answers using the search functionality
+- [LLMUnityBot](Samples~/LLMUnityBot): Interaction by searching and providing relevant context to the AI using the search functionality
+- [ChatBot](Samples~/ChatBot): Interaction between a player and a AI with a UI similar to a messaging app (see image below)
   
 <img width="400" src=".github/demo.gif">
 
@@ -265,8 +267,7 @@ To install a sample:
 - Select the `LLMUnity` Package. From the `Samples` Tab, click `Import` next to the sample you want to install.
 
 The samples can be run with the `Scene.unity` scene they contain inside their folder.<br>
-In the scene, select the `LLM` GameObject and click the `Download Model` button to download the default model.<br>
-You can also load your own model in .gguf format with the `Load model` button (see [Use your own model](#use-your-own-model)).<br>
+In the scene, select the `LLM` GameObject download the default model (`Download model`) or load an existing .gguf model (`Load model`).<br>
 Save the scene, run and enjoy!
 
 ## Use your own model
