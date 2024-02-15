@@ -517,7 +517,9 @@ namespace LLMUnity
         public async void SelectModel(int optionIndex)
         {
             SelectedOption = optionIndex;
+#if UNITY_EDITOR
             EditorUtility.SetDirty(this);
+#endif
             string methodName = options[SelectedOption].Item2;
             if (methodName != null)
             {
