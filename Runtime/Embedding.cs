@@ -60,7 +60,7 @@ namespace LLMUnity
             string tokenizerJsonContent = File.ReadAllText(tokenizerPath);
             tokenizerJsonData = JsonConvert.DeserializeObject<JObject>(tokenizerJsonContent);
 
-            worker = WorkerFactory.CreateWorker(BackendType.CPU, runtimeModel);
+            worker = WorkerFactory.CreateWorker(backend, runtimeModel);
             allocator = new TensorCachingAllocator();
             ops = WorkerFactory.CreateOps(backend, allocator);
 
@@ -498,7 +498,6 @@ namespace LLMUnity
 
     public class Embedding : MonoBehaviour
     {
-        public string Model = "";
         public bool GPU = false;
         public int SelectedOption = 0;
 
