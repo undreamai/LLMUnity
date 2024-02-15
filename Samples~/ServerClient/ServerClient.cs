@@ -26,16 +26,19 @@ public class ServerClientInteraction
     {
         playerText.interactable = false;
         AIText.text = "...";
+        // ask the LLM to reply for the message
         _ = llm.Chat(message, SetAIText, AIReplyComplete);
     }
 
     public void SetAIText(string text)
     {
+        // write the reply in a streaming fashion
         AIText.text = text;
     }
 
     public void AIReplyComplete()
     {
+        // the reply is complete, allow the player to provide the next input
         playerText.interactable = true;
         playerText.Select();
         playerText.text = "";
@@ -44,11 +47,13 @@ public class ServerClientInteraction
 
 public class ServerClient : MonoBehaviour
 {
+    // LLM object for the first character
     public LLM llm;
     public InputField playerText1;
     public Text AIText1;
     ServerClientInteraction interaction1;
 
+    // LLMClient object for the second character
     public LLMClient llmClient;
     public InputField playerText2;
     public Text AIText2;

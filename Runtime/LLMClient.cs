@@ -136,12 +136,6 @@ namespace LLMUnity
             await InitPrompt(clearChat);
         }
 
-        protected static string GetAssetPath(string relPath = "")
-        {
-            // Path to store llm server binaries and models
-            return Path.Combine(Application.streamingAssetsPath, relPath).Replace('\\', '/');
-        }
-
         private async Task InitNKeep()
         {
             if (setNKeepToPrompt && nKeep == -1)
@@ -163,7 +157,7 @@ namespace LLMUnity
         {
             if (grammar != null && grammar != "")
             {
-                grammarString = File.ReadAllText(GetAssetPath(grammar));
+                grammarString = File.ReadAllText(LLMUnitySetup.GetAssetPath(grammar));
             }
         }
 
@@ -176,7 +170,7 @@ namespace LLMUnity
 #if UNITY_EDITOR
         public async void SetGrammar(string path)
         {
-            grammar = await LLMUnitySetup.AddAsset(path, GetAssetPath());
+            grammar = await LLMUnitySetup.AddAsset(path, LLMUnitySetup.GetAssetPath());
         }
 #endif
 

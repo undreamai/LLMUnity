@@ -12,36 +12,46 @@
 
 LLMUnity enables seamless integration of Large Language Models (LLMs) within the Unity engine.<br>
 It allows to create intelligent characters that your players can interact with for an immersive experience.<br>
-LLMUnity is built on top of the awesome [llama.cpp](https://github.com/ggerganov/llama.cpp) and [llamafile](https://github.com/Mozilla-Ocho/llamafile) libraries.
+LLMUnity is built on top of the awesome [llama.cpp](https://github.com/ggerganov/llama.cpp), [llamafile](https://github.com/Mozilla-Ocho/llamafile) and [usearch](https://github.com/unum-cloud/usearch) libraries.
 
 <sub>
 <a href="#at-a-glance" style="color: black">At a glance</a>&nbsp;&nbsp;•&nbsp;
 <a href="#how-to-help" style=color: black>How to help</a>&nbsp;&nbsp;•&nbsp;
+<a href="#games-using-llmunity" style=color: black>Games using LLMUnity</a>&nbsp;&nbsp;•&nbsp;
 <a href="#setup" style=color: black>Setup</a>&nbsp;&nbsp;•&nbsp;
 <a href="#how-to-use" style=color: black>How to use</a>&nbsp;&nbsp;•&nbsp;
+<a href="#search-system" style=color: black>Search system</a>&nbsp;&nbsp;•&nbsp;
 <a href="#examples" style=color: black>Examples</a>&nbsp;&nbsp;•&nbsp;
 <a href="#use-your-own-model" style=color: black>Use your own model</a>&nbsp;&nbsp;•&nbsp;
-<a href="#multiple-ai--remote-server" style=color: black>Multiple AI / Remote server</a>&nbsp;&nbsp;•&nbsp;
 <a href="#options" style=color: black>Options</a>&nbsp;&nbsp;•&nbsp;
-<a href="#games-using-llmunity" style=color: black>Games using LLMUnity</a>&nbsp;&nbsp;•&nbsp;
 <a href="#license" style=color: black>License</a>
 </sub>
 
 ## At a glance
-- :computer: Cross-platform! Supports Windows, Linux and macOS ([supported versions](https://github.com/Mozilla-Ocho/llamafile?tab=readme-ov-file#supported-oses-and-cpus))
-- :house: Runs locally without internet access but also supports remote servers
-- :zap: Fast inference on CPU and GPU (NVIDIA and AMD)
-- :hugs: Support of the major LLM models ([supported models](https://github.com/ggerganov/llama.cpp?tab=readme-ov-file#description))
-- :wrench: Easy to setup, call with a single line code
+
+- 💬 Craft your own NPC AI that the player interacts with in natural language
+- 🖌️ The NPC can respond creatively according to your character definition
+- 🗝️ or with predefined answers that stick to your script!
+- 🔍 You can even build an intelligent search engine with our search system (RAG)
+
+**Features**
+- :computer: Cross-platform! Windows, Linux and macOS ([versions](https://github.com/Mozilla-Ocho/llamafile?tab=readme-ov-file#supported-oses))
+- :house: Runs locally without internet access. No data ever leave the game!
+- :zap: Blazing fast inference on CPU and GPU (Nvidia and AMD)
+- :hugs: Support of the major LLM models ([models](https://github.com/ggerganov/llama.cpp?tab=readme-ov-file#description))
+- :wrench: Easy to setup, call with a single line of code
 - :moneybag: Free to use for both personal and commercial purposes
 
-🧪 Tested on Unity: 2021 LTS, 2022 LTS, 2023<br>
-:vertical_traffic_light: [Upcoming Releases](https://github.com/orgs/undreamai/projects/2/views/10)
+Tested on Unity: 2021 LTS, 2022 LTS, 2023<br>
+[Upcoming Releases](https://github.com/orgs/undreamai/projects/2/views/10)
 
 ## How to help
 - Join us at [Discord](https://discord.gg/RwXKQb6zdv) and say hi!
 - ⭐ Star the repo and spread the word about the project!
 - Submit feature requests or bugs as [issues](https://github.com/undreamai/LLMUnity/issues) or even submit a PR and become a collaborator!
+
+## Games using LLMUnity
+- [Verbal Verdict](https://store.steampowered.com/app/2778780/Verbal_Verdict/)
 
 ## Setup
 - Open the Package Manager in Unity: `Window > Package Manager`
@@ -60,13 +70,12 @@ For a step-by-step tutorial you can have a look at our guide:
 
 [How to Use LLMs in Unity](https://towardsdatascience.com/how-to-use-llms-in-unity-308c9c0f637c)
 
-Create a GameObject for the LLM :chess_pawn::
-- Create an empty GameObject. In the GameObject Inspector click `Add Component` and select the LLM script (`Scripts>LLM`).
-- Download the default model with the `Download Model` button (this will take a while as it is ~4GB).<br>You can also load your own model in .gguf format with the `Load model` button (see [Use your own model](#use-your-own-model)).
+The first step is to create a GameObject for the LLM :chess_pawn::
+- Create an empty GameObject.<br>In the GameObject Inspector click `Add Component` and select the LLM script.
+- Download the default model with the `Download Model` button (~4GB).<br>Or load your own .gguf model with the `Load model` button (see [Use your own model](#use-your-own-model)).
 - Define the role of your AI in the `Prompt`. You can also define the name of the AI (`AI Name`) and the player (`Player Name`).
-- (Optional) By default the LLM script is set up to receive the reply from the model as is it is produced in real-time (recommended). If you prefer to receive the full reply in one go, you can deselect the `Stream` option.
+- (Optional) By default you receive the reply from the model as is it is produced in real-time (recommended).<br>If you want the full reply in one go, deselect the `Stream` option.
 - (Optional) Adjust the server or model settings to your preference (see [Options](#options)).
-<br>
 
 In your script you can then use it as follows :unicorn::
 ``` c#
@@ -89,8 +98,8 @@ public class MyScript {
   }
 }
 ```
-You can also specify a function to call when the model reply has been completed.<br>
-This is useful if the `Stream` option is selected for continuous output from the model (default behaviour):
+You can also specify a function to call when the model reply is complete.<br>
+This is useful if the `Stream` option is selected (default behaviour) to continue the conversation:
 ``` c#
   void ReplyCompleted(){
     // do something when the reply from the model is complete
@@ -108,11 +117,73 @@ This is useful if the `Stream` option is selected for continuous output from the
 
 - Finally, in the Inspector of the GameObject of your script, select the LLM GameObject created above as the llm property.
 
-That's all :sparkles:!
-<br><br>
-You can also:
+That's all :sparkles:! You can also:
 
+<details>
+<summary>Build multiple characters</summary>
 
+LLMUnity allows to build multiple AI characters efficiently, where each character has it own prompt.<br>
+See the [ServerClient](Samples~/ServerClient) sample for a server-client example.
+
+To use multiple characters:
+- create a single GameObject for the LLM as above for the first character.
+- for every additional character create a GameObject using the LLMClient script instead of the LLM script.<br>
+Define the prompt (and other parameters) of the LLMClient for the character
+
+Then in your script:
+``` c#
+using LLMUnity;
+
+public class MyScript {
+  public LLM cat;
+  public LLMClient dog;
+  public LLMClient bird;
+  
+  void HandleCatReply(string reply){
+    // do something with the reply from the cat character
+    Debug.Log(reply);
+  }
+
+  void HandleDogReply(string reply){
+    // do something with the reply from the dog character
+    Debug.Log(reply);
+  }
+
+  void HandleBirdReply(string reply){
+    // do something with the reply from the bird character
+    Debug.Log(reply);
+  }
+  
+  void Game(){
+    // your game function
+    ...
+    _ = cat.Chat("Hi cat!", HandleCatReply);
+    _ = dog.Chat("Hello dog!", HandleDogReply);
+    _ = bird.Chat("Hiya bird!", HandleBirdReply);
+    ...
+  }
+}
+```
+
+</details>
+<details>
+<summary>Process the prompt at the beginning of your app for faster initial processing time</summary>
+
+``` c#
+  void WarmupCompleted(){
+    // do something when the warmup is complete
+    Debug.Log("The AI is warm");
+  }
+
+  void Game(){
+    // your game function
+    ...
+    _ = llm.Warmup(WarmupCompleted);
+    ...
+  }
+```
+
+</details>
 <details>
 <summary>Add or not the message to the chat/prompt history</summary>
 
@@ -145,24 +216,6 @@ You can also:
 
 </details>
 <details>
-<summary>Process the prompt at the beginning of your app for faster initial processing time</summary>
-
-``` c#
-  void WarmupCompleted(){
-    // do something when the warmup is complete
-    Debug.Log("The AI is warm");
-  }
-
-  void Game(){
-    // your game function
-    ...
-    _ = llm.Warmup(WarmupCompleted);
-    ...
-  }
-```
-
-</details>
-<details>
 <summary>Add a LLM / LLMClient component dynamically</summary>
 
 ``` c#
@@ -182,6 +235,7 @@ public class MyScript : MonoBehaviour
         await llm.SetModel("mistral-7b-instruct-v0.2.Q4_K_M.gguf");
         llm.prompt = "A chat between a curious human and an artificial intelligence assistant.";
         gameObject.SetActive(true);
+
         // or a LLMClient object
         gameObject.SetActive(false);
         llmclient = gameObject.AddComponent<LLMClient>();
@@ -192,13 +246,95 @@ public class MyScript : MonoBehaviour
 ```
 
 </details>
+<details>
+<summary>Use a remote server</summary>
 
+You can also build a remote server that does the processing and have local clients that interact with it.To do that:
+- Create a server based on the `LLM` script or a standard [llama.cpp server](https://github.com/ggerganov/llama.cpp/blob/master/examples/server).
+- Create characters with the `LLMClient` script. The characters can be configured to connect to the remote instance by providing the IP address and port of the server in the `host`/`port` properties.
+
+</details>
+
+## Search system
+LLMUnity implements a super-fast similarity search functionality with a Retrieval-Augmented Generation (RAG) system.<br>
+This works as follows.
+
+**Building the data** You provide text inputs (a phrase, paragraph, document) to add in the data<br>
+Each input is split into sentences (optional) and encoded into embeddings with a deep learning model.
+
+**Searching** You can then search for an query text input. <br>
+The input is again encoded and the most similar text inputs or sentences in the data are retrieved.
+
+To use search:
+- create an empty GameObject for the embedding model 🔍.<br>In the GameObject Inspector click `Add Component` and select the `Embedding` script).
+- select the model you prefer from the drop-down list to download it (bge small, bge base or MiniLM v6).
+
+In your script you can then use it as follows :unicorn::
+``` c#
+using LLMUnity;
+
+public class MyScript {
+  public Embedding embedding;
+  SearchEngine search;
+
+  void Game(){
+    ...
+    string[] inputs = new string[]{
+      "Hi! I'm an LLM.", "the weather is nice. I like it.", "I'm a RAG system"
+    };
+    // build the embedding
+    EmbeddingModel model = embedding.GetModel();
+    search = new SearchEngine(model);
+    foreach (string input in inputs) search.Add(input);
+    // get the 2 most similar phrases
+    string[] similar = search.Search("hello!", 2);
+    // or get the 2 most similar sentences
+    string[] similarSentences = search.SearchSentences("hello!", 2);
+    ...
+  }
+}
+```
+- Finally, in the Inspector of the GameObject of your script, select the Embedding GameObject created above as the embedding property.
+
+You can save the data along with the embeddings:
+
+``` c#
+search.Save("Embeddings.zip");
+```
+and load them from disk:
+``` c#
+SearchEngine search = SearchEngine.Load(model, "Embeddings.zip");
+```
+
+
+If you want to manage dialogues, LLMUnity provides the `Dialogue` class for ease of use:
+``` c#
+Dialogue dialogue = new Dialogue(model);
+
+// add a text
+dialogue.Add("the weather is nice");
+// add a text for a character
+dialogue.Add("hi I'm Luke", "Luke");
+// add a text for a character and a dialogue part
+dialogue.Add("Hi again", "Luke", "ACT 2");
+
+// search for similar texts
+string[] similar = dialogue.Search("how is the weather?", 3);
+// search for similar texts within a character
+string[] similar = dialogue.Search("hi there!", 2, "Luke");
+// search for similar texts within a character and dialogue part
+string[] similar = dialogue.Search("hello!", 3, "Luke", "ACT 2");
+```
+
+That's all :sparkles:!
 
 ## Examples
 The [Samples~](Samples~) folder contains several examples of interaction :robot::
-- [SimpleInteraction](Samples~/SimpleInteraction): Demonstrates simple interaction between a player and a AI
-- [ServerClient](Samples~/ServerClient): Demonstrates simple interaction between a player and multiple AIs using a `LLM` and a `LLMClient`
-- [ChatBot](Samples~/ChatBot): Demonstrates interaction between a player and a AI with a UI similar to a messaging app (see image below)
+- [SimpleInteraction](Samples~/SimpleInteraction): Simple interaction between a player and a AI
+- [ServerClient](Samples~/ServerClient): Simple interaction between a player and multiple characters using a `LLM` and a `LLMClient`
+- [ChatBot](Samples~/ChatBot): Interaction between a player and a AI with a UI similar to a messaging app (see image below)
+- [HamletSearch](Samples~/HamletSearch): Interaction with predefined answers using the search functionality
+- [LLMUnityBot](Samples~/LLMUnityBot): Interaction by searching and providing relevant context to the AI using the search functionality
   
 <img width="400" src=".github/demo.gif">
 
@@ -207,31 +343,17 @@ To install a sample:
 - Select the `LLMUnity` Package. From the `Samples` Tab, click `Import` next to the sample you want to install.
 
 The samples can be run with the `Scene.unity` scene they contain inside their folder.<br>
-In the scene, select the `LLM` GameObject and click the `Download Model` button to download the default model.<br>
-You can also load your own model in .gguf format with the `Load model` button (see [Use your own model](#use-your-own-model)).<br>
+In the scene, select the `LLM` GameObject download the default model (`Download model`) or load an existing .gguf model (`Load model`).<br>
 Save the scene, run and enjoy!
 
 ## Use your own model
-LLMUnity uses the Mistral 7B Instruct model by default, quantised with the Q4 method ([link](https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.2-GGUF/resolve/main/mistral-7b-instruct-v0.2.Q4_K_M.gguf?download=true)).<br>
+LLMUnity uses the [Microsoft Phi-2](https://huggingface.co/microsoft/phi-2) or [Mistral 7B Instruct](https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.2) model by default, quantised with the Q4 method.<br>
 Alternative models can be downloaded from [HuggingFace](https://huggingface.co/models).<br>
 The required model format is .gguf as defined by the llama.cpp.<br>
 The easiest way is to download gguf models directly by [TheBloke](https://huggingface.co/TheBloke) who has converted an astonishing number of models :rainbow:!<br>
 Otherwise other model formats can be converted to gguf with the `convert.py` script of the llama.cpp as described [here](https://github.com/ggerganov/llama.cpp/tree/master?tab=readme-ov-file#prepare-data--run).
 
 :grey_exclamation: Before using any model make sure you **check their license** :grey_exclamation:
-
-## Multiple AI / Remote server
-LLMUnity allows to have multiple AI characters efficiently.<br>
-Each character can be implemented with a different client with its own prompt (and other parameters), and all of the clients send their requests to a single server.<br>
-This is essential as multiple server instances would require additional compute resources.<br>
-
-In addition to the `LLM` server functionality, we define the `LLMClient` class that handles the client functionality.<br>
-The `LLMClient` contains a subset of options of the `LLM` class described in the [Options](#options).<br>
-To use multiple instances, you can define one `LLM` GameObject (as described in [How to use](#how-to-use)) and then multiple `LLMClient` objects.
-See the [ServerClient](Samples~/ServerClient) sample for a server-client example.
-
-The `LLMClient` can be configured to connect to a remote instance by providing the IP address of the server in the `host` property.<br>
-The server can be either a LLMUnity server or a standard [llama.cpp server](https://github.com/ggerganov/llama.cpp/blob/master/examples/server).
 
 ## Options
 
@@ -302,8 +424,6 @@ If it is not selected, the full reply from the model is received in one go
 - `AI Name` the name of the AI
 - `Prompt` a description of the AI role
 
-## Games using LLMUnity
-- [Verbal Verdict](https://store.steampowered.com/app/2778780/Verbal_Verdict/)
 
 ## License
 The license of LLMUnity is MIT ([LICENSE.md](LICENSE.md)) and uses third-party software with MIT and Apache licenses ([Third Party Notices.md](<Third Party Notices.md>)).

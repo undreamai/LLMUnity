@@ -1,0 +1,85 @@
+// This file is generated. Do not modify by hand.
+// XML documentation file not found. To check if public methods have XML comments,
+// make sure the XML doc file is present and located next to the scraped dll
+namespace Cloud.Unum.USearch
+{
+    public struct IndexOptions
+    {
+        public System.UInt64 connectivity;
+        public System.UInt64 dimensions;
+        public System.UInt64 expansion_add;
+        public System.UInt64 expansion_search;
+        public System.IntPtr metric;
+        public MetricKind metric_kind;
+        public bool multi;
+        public ScalarKind quantization;
+        public IndexOptions(MetricKind metricKind = MetricKind.Unknown, System.IntPtr metric = default(System.IntPtr), ScalarKind quantization = ScalarKind.Unknown, System.UInt64 dimensions = 0, System.UInt64 connectivity = 0, System.UInt64 expansionAdd = 0, System.UInt64 expansionSearch = 0, bool multi = false) {}
+    }
+
+    public enum MetricKind
+    {
+        Cos = 1,
+        Hamming = 7,
+        Haversine = 4,
+        Ip = 2,
+        Jaccard = 6,
+        L2sq = 3,
+        Pearson = 5,
+        Sorensen = 9,
+        Tanimoto = 8,
+        Unknown = 0,
+    }
+
+    public enum ScalarKind
+    {
+        Byte1 = 5,
+        Float16 = 3,
+        Float32 = 1,
+        Float64 = 2,
+        Int8 = 4,
+        Unknown = 0,
+    }
+
+    public class USearchException : System.Exception
+    {
+        public USearchException(string message) {}
+    }
+
+    public class USearchIndex : System.IDisposable
+    {
+        public USearchIndex(System.IO.Compression.ZipArchive zipArchive, string name = @"") {}
+        public USearchIndex(string path, string name = @"") {}
+        public USearchIndex(System.UInt64 dimensions, MetricKind metricKind = MetricKind.Cos, System.UInt64 connectivity = 32, System.UInt64 expansionAdd = 40, System.UInt64 expansionSearch = 16, bool multi = false) {}
+        public void Add(System.UInt64 key, double[] vector);
+        public void Add(System.UInt64 key, float[] vector);
+        public void Add(System.UInt64[] keys, double[][] vectors);
+        public void Add(System.UInt64[] keys, float[][] vectors);
+        public System.UInt64 Capacity();
+        public System.UInt64 Connectivity();
+        public bool Contains(System.UInt64 key);
+        public int Count(System.UInt64 key);
+        public System.UInt64 Dimensions();
+        public void Dispose();
+        protected virtual void Dispose(bool disposing);
+        protected override void Finalize();
+        public int Get(System.UInt64 key, out double[] vector);
+        public int Get(System.UInt64 key, out float[] vector);
+        public int Get(System.UInt64 key, int count, out double[][] vectors);
+        public int Get(System.UInt64 key, int count, out float[][] vectors);
+        public IndexOptions GetIndexOptions();
+        public void Init(IndexOptions options);
+        public void Load(System.IO.Compression.ZipArchive zipArchive, string name = @"");
+        public void Load(string path, string name = @"");
+        public void LoadIndexOptions(System.IO.Stream fileStream);
+        public void LoadIndexOptions(string path);
+        public int Remove(System.UInt64 key);
+        public int Rename(System.UInt64 keyFrom, System.UInt64 keyTo);
+        public void Save(System.IO.Compression.ZipArchive zipArchive, string name = @"");
+        public void Save(string path, string name = @"", System.IO.FileMode mode = System.IO.FileMode.Create);
+        public void SaveIndexOptions(System.IO.Stream fileStream);
+        public void SaveIndexOptions(string path);
+        public int Search(double[] queryVector, int count, out System.UInt64[] keys, out float[] distances);
+        public int Search(float[] queryVector, int count, out System.UInt64[] keys, out float[] distances);
+        public System.UInt64 Size();
+    }
+}
