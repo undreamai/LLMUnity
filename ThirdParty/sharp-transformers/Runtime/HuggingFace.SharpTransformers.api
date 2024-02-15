@@ -1,0 +1,127 @@
+// This file is generated. Do not modify by hand.
+// XML documentation file not found. To check if public methods have XML comments,
+// make sure the XML doc file is present and located next to the scraped dll
+namespace HuggingFace.SharpTransformers.Normalizers
+{
+    public class BertNormalizer : Normalizer
+    {
+        public BertNormalizer(Newtonsoft.Json.Linq.JObject config) {}
+        public bool IsChineseChar(int unicodeCodePoint);
+        public string Normalize(string text);
+        public string StripAccents(string text);
+        public string TokenizeChineseChars(string text);
+    }
+
+    public abstract class Normalizer
+    {
+        public Newtonsoft.Json.Linq.JObject Config;
+        public Normalizer(Newtonsoft.Json.Linq.JObject config) {}
+        public string Call(string text);
+        public static Normalizer FromConfig(Newtonsoft.Json.Linq.JObject config);
+        public virtual string Normalize(string text);
+    }
+
+    public class NormalizerSequence : Normalizer
+    {
+        public System.Collections.Generic.List<Normalizer> Normalizers;
+        public NormalizerSequence(Newtonsoft.Json.Linq.JObject config) {}
+        public string Normalize(string text);
+    }
+
+    public class Prepend : Normalizer
+    {
+        public Prepend(Newtonsoft.Json.Linq.JObject config) {}
+        public override string Normalize(string text);
+    }
+}
+
+namespace HuggingFace.SharpTransformers.NormalizersUtils
+{
+    public static class Utils
+    {
+        public static string createPattern(Newtonsoft.Json.Linq.JToken pattern, bool invert = true);
+    }
+}
+
+namespace HuggingFace.SharpTransformers.PostProcessors
+{
+    public abstract class PostProcessor
+    {
+        public Newtonsoft.Json.Linq.JObject Config;
+        public PostProcessor(Newtonsoft.Json.Linq.JObject config) {}
+        public virtual System.Collections.Generic.List<string> Call(System.Collections.Generic.List<string> tokens, System.Collections.Generic.List<string> tokensPair = default(System.Collections.Generic.List<string>));
+        public static PostProcessor FromConfig(Newtonsoft.Json.Linq.JObject config);
+        public virtual System.Collections.Generic.List<string> PostProcess(System.Collections.Generic.List<string> tokens, System.Collections.Generic.List<string> tokensPair = default(System.Collections.Generic.List<string>));
+    }
+
+    public class TemplateProcessing : PostProcessor
+    {
+        public Newtonsoft.Json.Linq.JArray Pair;
+        public Newtonsoft.Json.Linq.JArray Single;
+        public TemplateProcessing(Newtonsoft.Json.Linq.JObject config) {}
+        public override System.Collections.Generic.List<string> PostProcess(System.Collections.Generic.List<string> tokens, System.Collections.Generic.List<string> tokensPair = default(System.Collections.Generic.List<string>));
+    }
+}
+
+namespace HuggingFace.SharpTransformers.PreTokenizers
+{
+    public class BertPreTokenizer : PreTokenizer
+    {
+        public BertPreTokenizer(Newtonsoft.Json.Linq.JObject config) {}
+        public override System.Collections.Generic.List<string> PreTokenizeText(string text);
+    }
+
+    public class PreTokenizer
+    {
+        public Newtonsoft.Json.Linq.JObject Config;
+        public PreTokenizer(Newtonsoft.Json.Linq.JObject config) {}
+        public System.Collections.Generic.List<string> Call(string text);
+        public static PreTokenizer FromConfig(Newtonsoft.Json.Linq.JObject config);
+        public System.Collections.Generic.List<string> PreTokenize(object text);
+        public virtual System.Collections.Generic.List<string> PreTokenizeText(string text);
+    }
+}
+
+namespace HuggingFace.SharpTransformers.Tokenizers
+{
+    public abstract class TokenizerModel
+    {
+        public Newtonsoft.Json.Linq.JObject Config;
+        public string EndOfWordSuffix;
+        public bool FuseUnk = false;
+        public Newtonsoft.Json.Linq.JObject TokenizerData;
+        public System.Collections.Generic.Dictionary<string, int> TokensToIds;
+        public string UnkToken;
+        public System.Nullable<int> UnkTokenId;
+        public System.Collections.Generic.List<string> Vocab;
+        public bool FuseUnknown { get; set; }
+        public string UnknownToken { get; set; }
+        public int UnknownTokenId { get; set; }
+        public TokenizerModel(Newtonsoft.Json.Linq.JObject config) {}
+        public TokenizerModel(Newtonsoft.Json.Linq.JObject config, Newtonsoft.Json.Linq.JObject tokenizerData) {}
+        public System.Collections.Generic.List<string> Call(System.Collections.Generic.List<string> tokens);
+        public System.Collections.Generic.List<string> ConvertIdsToTokens(System.Collections.Generic.List<int> ids);
+        public System.Collections.Generic.List<int> ConvertTokensToIds(System.Collections.Generic.List<string> tokens);
+        public virtual System.Collections.Generic.List<string> Encode(System.Collections.Generic.List<string> tokens);
+        public static TokenizerModel FromConfig(Newtonsoft.Json.Linq.JObject config, Newtonsoft.Json.Linq.JObject tokenizerData);
+        public System.Collections.Generic.List<int> Fuse(System.Collections.Generic.List<int> arr, int value);
+    }
+
+    public class WordPieceTokenizer : TokenizerModel
+    {
+        public string ContinuingSubwordPrefix;
+        public WordPieceTokenizer(Newtonsoft.Json.Linq.JObject config) {}
+        public System.Collections.Generic.List<string> ConvertIdsToTokens(System.Collections.Generic.List<int> ids);
+        public System.Collections.Generic.List<int> ConvertTokensToIds(System.Collections.Generic.List<string> tokens);
+        public System.Collections.Generic.List<string> Encode(System.Collections.Generic.List<string> tokens);
+        public System.Collections.Generic.List<int> Fuse(System.Collections.Generic.List<int> arr, int value);
+    }
+}
+
+namespace TokenizersUtils
+{
+    public static class Utils
+    {
+        public static System.Collections.Generic.List<int> Fuse(System.Collections.Generic.List<int> arr, int value);
+    }
+}
