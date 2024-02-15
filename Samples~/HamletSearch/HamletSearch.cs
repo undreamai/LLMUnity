@@ -26,9 +26,8 @@ class HamletSearch : MonoBehaviour
 
     Dialogue CreateEmbeddings(EmbeddingModel model, string filename)
     {
+        // read the hamlet play for the specified characters
         Dictionary<string, List<(string, string)>> hamlet = ReadGutenbergFile(GutenbergText.text);
-        Dialogue dialogue = new Dialogue(model);
-
         List<string> characters = new List<string>();
         foreach (var option in CharacterSelect.options)
         {
@@ -37,6 +36,8 @@ class HamletSearch : MonoBehaviour
 
         Stopwatch stopwatch = new Stopwatch();
         stopwatch.Start();
+        // build the embeddings
+        Dialogue dialogue = new Dialogue(model);
         foreach ((string act, List<(string, string)> messages) in hamlet)
         {
             foreach ((string actor, string message) in messages)
@@ -47,7 +48,7 @@ class HamletSearch : MonoBehaviour
             }
         }
         Debug.Log($"embedded {dialogue.NumPhrases()} phrases, {dialogue.NumSentences()} sentences in {stopwatch.Elapsed.TotalMilliseconds / 1000f} secs");
-
+        // store the embeddings
         dialogue.Save(filename);
         return dialogue;
     }
@@ -72,6 +73,7 @@ class HamletSearch : MonoBehaviour
 
         if (File.Exists(filename))
         {
+            // load the embeddings
             PlayerText.text = "Loading dialogues...";
             yield return null;
             dialogue = Dialogue.Load(model, filename);
@@ -79,10 +81,12 @@ class HamletSearch : MonoBehaviour
         else
         {
 #if UNITY_EDITOR
+            // create and store the embeddings (in Unity editor)
             PlayerText.text = "Creating Embeddings...";
             yield return null;
             dialogue = CreateEmbeddings(model, filename);
 #else
+            // if in play mode throw an error
             throw new System.Exception("The embeddings could not be found!");
 #endif
         }
@@ -113,9 +117,12 @@ class HamletSearch : MonoBehaviour
     void OnInputFieldSubmit(string message)
     {
         PlayerText.interactable = false;
+
+        // search for the most similar text and reply
         AIText.text = dialogue.Search(message, 1, Character)[0];
         // if you want only Hamlet, you could instead do:
         // AIText.text = dialogue.Search(message)[0];
+
         PlayerText.interactable = true;
         PlayerText.Select();
         PlayerText.text = "";
@@ -123,12 +130,14 @@ class HamletSearch : MonoBehaviour
 
     void DropdownChange(int selection)
     {
+        // select another character
         Character = CharacterSelect.options[selection].text.ToUpper();
         Debug.Log($"{Character}: {dialogue.NumPhrases(Character)} phrases available");
     }
 
     public Dictionary<string, List<(string, string)>> ReadGutenbergFile(string text)
     {
+        // read the Hamlet play from the Gutenberg file
         string skipPattern = @"\[.*?\]";
         string namePattern = "^[A-Z and]+\\.$";
         Regex nameRegex = new Regex(namePattern);

@@ -35,11 +35,11 @@ class LLMUnityBot : MonoBehaviour
         // Remove emojis
         fileContents = Regex.Replace(fileContents, @"\p{Cs}", "");
 
-        // build the embeddings chapter-by-chapter
         SearchEngine search = new SearchEngine(model);
         Stopwatch stopwatch = new Stopwatch();
         stopwatch.Start();
 
+        // build the embeddings in chunks of 4 sentences
         string[] parts = SplitText(fileContents, 4);
         foreach (string part in parts)
         {
@@ -47,6 +47,7 @@ class LLMUnityBot : MonoBehaviour
         }
         Debug.Log($"embedded {search.NumPhrases()} chapters, {search.NumSentences()} sentences in {stopwatch.Elapsed.TotalMilliseconds / 1000f} secs");
 
+        // store the embeddings
         search.Save(filename);
         return search;
     }
@@ -71,6 +72,7 @@ class LLMUnityBot : MonoBehaviour
 
         if (File.Exists(filename))
         {
+            // load the embeddings
             PlayerText.text = "Loading embeddings...";
             yield return null;
             search = SearchEngine.Load(model, filename);
@@ -78,10 +80,12 @@ class LLMUnityBot : MonoBehaviour
         else
         {
 #if UNITY_EDITOR
+            // create and store the embeddings (in Unity editor)
             PlayerText.text = "Creating Embeddings...";
             yield return null;
             search = CreateEmbeddings(model, filename);
 #else
+            // if in play mode throw an error
             throw new System.Exception("The embeddings could not be found!");
 #endif
         }
@@ -112,9 +116,11 @@ class LLMUnityBot : MonoBehaviour
     {
         PlayerText.interactable = false;
 
-        // find the 5 most similar sentences
+        // find the 2 most similar sentences
         string[] similar = search.Search(message, 2);
         string context = String.Join("\n", similar);
+
+        // create a prompt using the similar sentences as context
         string prompt = $"Answer the following question based on the given context.\n\nContext:{context}\n\nQuestion:{message}";
         _ = llm.Chat(prompt, SetAIText, AIReplyComplete, false);
 
