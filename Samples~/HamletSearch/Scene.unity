@@ -686,14 +686,6 @@ MonoBehaviour:
       m_Image: {fileID: 0}
     - m_Text: Ghost
       m_Image: {fileID: 0}
-    - m_Text: Polonius
-      m_Image: {fileID: 0}
-    - m_Text: Laertes
-      m_Image: {fileID: 0}
-    - m_Text: Ophelia
-      m_Image: {fileID: 0}
-    - m_Text: Horatio
-      m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -2522,8 +2514,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66e2adadc5fb3e3a5862391f8dd49844, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Model: 
-  GPU: 0
   SelectedOption: 0
   downloadProgress: 1
 --- !u!4 &1607798392
