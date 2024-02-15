@@ -32,7 +32,7 @@ LLMUnity is built on top of the awesome [llama.cpp](https://github.com/ggerganov
 - 💬 Craft your own NPC AI that the player interacts with in natural language
 - 🖌️ The NPC can respond creatively according to your character definition
 - 🗝️ ... or with predefined answers that stick to your script!
-- 🔍 You can even build an intelligent search engine with our RAG system
+- 🔍 You can even build an intelligent search engine with our search system (RAG)
 
 **Features**
 - :computer: Cross-platform! Windows, Linux and macOS ([versions](https://github.com/Mozilla-Ocho/llamafile?tab=readme-ov-file#supported-oses))
@@ -256,7 +256,8 @@ You can also build a remote server that does the processing and have local clien
 </details>
 
 ## Search system
-LLMUnity implements a super-fast similarity search functionality with a Retrieval-Augmented Generation (RAG) system. This works as follows.
+LLMUnity implements a super-fast similarity search functionality with a Retrieval-Augmented Generation (RAG) system.<br>
+This works as follows.
 
 **Building the data** You provide text inputs (a phrase, paragraph, document) to add in the data<br>
 Each input is split into sentences (optional) and encoded into embeddings with a deep learning model.
