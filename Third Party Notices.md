@@ -52,6 +52,20 @@ Origin: [link](https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.2-GGUF)<br
 License Type: "Apache 2.0"<br>
 License: [link](https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.2-GGUF)
 
+### microsoft/phi-2
+
+Developer: Microsoft<br>
+Origin: [link](https://huggingface.co/microsoft/phi-2)<br>
+License Type: "MIT"<br>
+License: [link](https://huggingface.co/microsoft/phi-2#license)
+
+##### modified by: TheBloke/phi-2-GGUF
+
+Developer: TheBloke<br>
+Origin: [link](https://huggingface.co/TheBloke/phi-2-GGUF)<br>
+License Type: "MIT"<br>
+License: [link](https://huggingface.co/TheBloke/phi-2-GGUF#license)
+
 ### BAAI/bge-small-en-v1.5
 
 Developer: BAAI<br>
