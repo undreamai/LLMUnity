@@ -498,8 +498,7 @@ namespace LLMUnity
 
     public class Embedding : MonoBehaviour
     {
-        public bool GPU = false;
-        public int SelectedOption = 0;
+        [SerializeField] public int SelectedOption = 0;
 
         [HideInInspector] public float downloadProgress = 1;
         [HideInInspector] public EmbeddingModel embeddingModel = null;
@@ -523,7 +522,7 @@ namespace LLMUnity
             {
                 Type type = typeof(EmbeddingModels);
                 MethodInfo method = type.GetMethod(methodName);
-                object[] arguments = { GPU ? BackendType.GPUCompute : BackendType.CPU, (Callback<float>)SetDownloadProgress };
+                object[] arguments = { BackendType.CPU, (Callback<float>)SetDownloadProgress };
                 embeddingModel = await (Task<EmbeddingModel>)method.Invoke(null, arguments);
             }
         }

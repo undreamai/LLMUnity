@@ -30,7 +30,6 @@ namespace LLMUnity
                 embdeddingScript.SelectModel(newIndex);
             }
             ShowProgress(embdeddingScript.downloadProgress, "Downloading model");
-            EditorGUILayout.PropertyField(embdeddingScriptSO.FindProperty("GPU"));
             embdeddingScriptSO.ApplyModifiedProperties();
         }
     }
