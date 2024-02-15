@@ -120,10 +120,10 @@ namespace LLMUnity
                 File.Move(tmpPath, savePath);
                 AssetDatabase.StopAssetEditing();
                 Debug.Log($"Download complete!");
-
-                progresscallback?.Invoke(1f);
-                callback?.Invoke(savePath);
             }
+
+            progresscallback?.Invoke(1f);
+            callback?.Invoke(savePath);
         }
 
         public static async Task<string> AddAsset(string assetPath, string basePath)
