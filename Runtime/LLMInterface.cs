@@ -119,12 +119,6 @@ namespace LLMUnity
     }
 
     [Serializable]
-    public struct EmbeddingResult
-    {
-        public List<float> embedding;
-    }
-
-    [Serializable]
     public struct ServerStatus
     {
         public DateTime timestamp;
