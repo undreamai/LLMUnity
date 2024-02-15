@@ -63,14 +63,7 @@ class HamletSearch : MonoBehaviour
             throw new System.Exception("Please select an Embedding model in the HamletSearch GameObject!");
         }
 
-        string filename;
-#if UNITY_EDITOR
-        string sampleDir = Directory.GetDirectories(Application.dataPath, "HamletSearch", SearchOption.AllDirectories)[0];
-        filename = Path.Combine(sampleDir, "Embeddings.zip");
-#else
-        filename = Path.Combine(Application.streamingAssetsPath, "Embeddings.zip");
-#endif
-
+        string filename = Path.Combine(Application.streamingAssetsPath, "HamletSearch_Embeddings.zip");
         if (File.Exists(filename))
         {
             // load the embeddings

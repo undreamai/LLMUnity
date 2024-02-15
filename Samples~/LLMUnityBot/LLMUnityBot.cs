@@ -62,14 +62,7 @@ class LLMUnityBot : MonoBehaviour
             throw new System.Exception("Please select an Embedding model in the LLMUnityBot GameObject!");
         }
 
-        string filename;
-#if UNITY_EDITOR
-        string sampleDir = Directory.GetDirectories(Application.dataPath, "LLMUnityBot", SearchOption.AllDirectories)[0];
-        filename = Path.Combine(sampleDir, "Embeddings.zip");
-#else
-        filename = Path.Combine(Application.streamingAssetsPath, "Embeddings.zip");
-#endif
-
+        string filename = Path.Combine(Application.streamingAssetsPath, "LLMUnityBot_Embeddings.zip");
         if (File.Exists(filename))
         {
             // load the embeddings
@@ -81,7 +74,7 @@ class LLMUnityBot : MonoBehaviour
         {
 #if UNITY_EDITOR
             // create and store the embeddings (in Unity editor)
-            PlayerText.text = "Creating Embeddings...";
+            PlayerText.text = "Creating Embeddings (only once)...";
             yield return null;
             search = CreateEmbeddings(model, filename);
 #else
