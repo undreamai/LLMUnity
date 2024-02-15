@@ -116,6 +116,8 @@ class LLMUnityBot : MonoBehaviour
     {
         PlayerText.interactable = false;
 
+        AIText.text = "...";
+
         // find the 2 most similar sentences
         string[] similar = search.Search(message, 2);
         string context = String.Join("\n", similar);
