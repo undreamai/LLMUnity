@@ -21,7 +21,6 @@ LLMUnity is built on top of the awesome [llama.cpp](https://github.com/ggerganov
 <a href="#how-to-use" style=color: black>How to use</a>&nbsp;&nbsp;•&nbsp;
 <a href="#examples" style=color: black>Examples</a>&nbsp;&nbsp;•&nbsp;
 <a href="#use-your-own-model" style=color: black>Use your own model</a>&nbsp;&nbsp;•&nbsp;
-<a href="#multiple-ai--remote-server" style=color: black>Multiple AI / Remote server</a>&nbsp;&nbsp;•&nbsp;
 <a href="#options" style=color: black>Options</a>&nbsp;&nbsp;•&nbsp;
 <a href="#games-using-llmunity" style=color: black>Games using LLMUnity</a>&nbsp;&nbsp;•&nbsp;
 <a href="#license" style=color: black>License</a>
@@ -68,10 +67,10 @@ For a step-by-step tutorial you can have a look at our guide:
 [How to Use LLMs in Unity](https://towardsdatascience.com/how-to-use-llms-in-unity-308c9c0f637c)
 
 Create a GameObject for the LLM :chess_pawn::
-- Create an empty GameObject. In the GameObject Inspector click `Add Component` and select the LLM script (`Scripts>LLM`).
-- Download the default model with the `Download Model` button (this will take a while as it is ~4GB).<br>You can also load your own model in .gguf format with the `Load model` button (see [Use your own model](#use-your-own-model)).
+- Create an empty GameObject.<br>In the GameObject Inspector click `Add Component` and select the LLM script (`Scripts>LLM`).
+- Download the default model with the `Download Model` button (~4GB).<br>Or load your own .gguf model with the `Load model` button (see [Use your own model](#use-your-own-model)).
 - Define the role of your AI in the `Prompt`. You can also define the name of the AI (`AI Name`) and the player (`Player Name`).
-- (Optional) By default the LLM script is set up to receive the reply from the model as is it is produced in real-time (recommended). If you prefer to receive the full reply in one go, you can deselect the `Stream` option.
+- (Optional) By default you receive the reply from the model as is it is produced in real-time (recommended).<br>If you want the full reply in one go, deselect the `Stream` option.
 - (Optional) Adjust the server or model settings to your preference (see [Options](#options)).
 <br>
 
@@ -96,8 +95,8 @@ public class MyScript {
   }
 }
 ```
-You can also specify a function to call when the model reply has been completed.<br>
-This is useful if the `Stream` option is selected for continuous output from the model (default behaviour):
+You can also specify a function to call when the model reply is complete.<br>
+This is useful if the `Stream` option is selected (default behaviour) to continue the conversation:
 ``` c#
   void ReplyCompleted(){
     // do something when the reply from the model is complete
@@ -115,11 +114,73 @@ This is useful if the `Stream` option is selected for continuous output from the
 
 - Finally, in the Inspector of the GameObject of your script, select the LLM GameObject created above as the llm property.
 
-That's all :sparkles:!
-<br><br>
-You can also:
+That's all :sparkles:! You can also:
 
+<details>
+<summary>Build multiple characters</summary>
 
+LLMUnity allows to build multiple AI characters efficiently, where each character has it own prompt.<br>
+See the [ServerClient](Samples~/ServerClient) sample for a server-client example.
+
+To use multiple characters:
+- create a single GameObject for the LLM as above for the first character.
+- for every additional character create a GameObject using the LLMClient script (`Scripts>LLMClient`) instead of the LLM script.<br>
+Define the prompt (and other parameters) of the LLMClient for the character
+
+Then in your script:
+``` c#
+using LLMUnity;
+
+public class MyScript {
+  public LLM cat;
+  public LLMClient dog;
+  public LLMClient bird;
+  
+  void HandleCatReply(string reply){
+    // do something with the reply from the cat character
+    Debug.Log(reply);
+  }
+
+  void HandleDogReply(string reply){
+    // do something with the reply from the dog character
+    Debug.Log(reply);
+  }
+
+  void HandleBirdReply(string reply){
+    // do something with the reply from the bird character
+    Debug.Log(reply);
+  }
+  
+  void Game(){
+    // your game function
+    ...
+    _ = cat.Chat("Hi cat!", HandleCatReply);
+    _ = dog.Chat("Hello dog!", HandleDogReply);
+    _ = bird.Chat("Hiya bird!", HandleBirdReply);
+    ...
+  }
+}
+```
+
+</details>
+<details>
+<summary>Process the prompt at the beginning of your app for faster initial processing time</summary>
+
+``` c#
+  void WarmupCompleted(){
+    // do something when the warmup is complete
+    Debug.Log("The AI is warm");
+  }
+
+  void Game(){
+    // your game function
+    ...
+    _ = llm.Warmup(WarmupCompleted);
+    ...
+  }
+```
+
+</details>
 <details>
 <summary>Add or not the message to the chat/prompt history</summary>
 
@@ -152,24 +213,6 @@ You can also:
 
 </details>
 <details>
-<summary>Process the prompt at the beginning of your app for faster initial processing time</summary>
-
-``` c#
-  void WarmupCompleted(){
-    // do something when the warmup is complete
-    Debug.Log("The AI is warm");
-  }
-
-  void Game(){
-    // your game function
-    ...
-    _ = llm.Warmup(WarmupCompleted);
-    ...
-  }
-```
-
-</details>
-<details>
 <summary>Add a LLM / LLMClient component dynamically</summary>
 
 ``` c#
@@ -189,6 +232,7 @@ public class MyScript : MonoBehaviour
         await llm.SetModel("mistral-7b-instruct-v0.2.Q4_K_M.gguf");
         llm.prompt = "A chat between a curious human and an artificial intelligence assistant.";
         gameObject.SetActive(true);
+
         // or a LLMClient object
         gameObject.SetActive(false);
         llmclient = gameObject.AddComponent<LLMClient>();
@@ -199,7 +243,14 @@ public class MyScript : MonoBehaviour
 ```
 
 </details>
+<details>
+<summary>Use a remote server</summary>
 
+You can also build a remote server that does the processing and have local clients that interact with it.To do that:
+- Create a server based on the `LLM` script or a standard [llama.cpp server](https://github.com/ggerganov/llama.cpp/blob/master/examples/server).
+- Create characters with the `LLMClient` script. The characters can be configured to connect to the remote instance by providing the IP address and port of the server in the `host`/`port` properties.
+
+</details>
 
 ## Examples
 The [Samples~](Samples~) folder contains several examples of interaction :robot::
@@ -226,19 +277,6 @@ The easiest way is to download gguf models directly by [TheBloke](https://huggin
 Otherwise other model formats can be converted to gguf with the `convert.py` script of the llama.cpp as described [here](https://github.com/ggerganov/llama.cpp/tree/master?tab=readme-ov-file#prepare-data--run).
 
 :grey_exclamation: Before using any model make sure you **check their license** :grey_exclamation:
-
-## Multiple AI / Remote server
-LLMUnity allows to have multiple AI characters efficiently.<br>
-Each character can be implemented with a different client with its own prompt (and other parameters), and all of the clients send their requests to a single server.<br>
-This is essential as multiple server instances would require additional compute resources.<br>
-
-In addition to the `LLM` server functionality, we define the `LLMClient` class that handles the client functionality.<br>
-The `LLMClient` contains a subset of options of the `LLM` class described in the [Options](#options).<br>
-To use multiple instances, you can define one `LLM` GameObject (as described in [How to use](#how-to-use)) and then multiple `LLMClient` objects.
-See the [ServerClient](Samples~/ServerClient) sample for a server-client example.
-
-The `LLMClient` can be configured to connect to a remote instance by providing the IP address of the server in the `host` property.<br>
-The server can be either a LLMUnity server or a standard [llama.cpp server](https://github.com/ggerganov/llama.cpp/blob/master/examples/server).
 
 ## Options
 
