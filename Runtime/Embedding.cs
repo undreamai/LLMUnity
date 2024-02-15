@@ -77,7 +77,7 @@ namespace LLMUnity
                 string hash = "";
                 hash += Saver.ComputeMD5(ModelPath);
                 hash += Saver.ComputeMD5(TokenizerPath);
-                hash += Backend;
+                // hash += Backend;
                 hash += OutputLayerName;
                 hash += UseMeanPooling;
                 hash += Dimensions;

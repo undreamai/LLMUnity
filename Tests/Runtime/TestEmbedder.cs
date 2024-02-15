@@ -56,7 +56,7 @@ namespace LLMUnityTests
             Assert.AreEqual(skeleton1.GetHashCode(), skeleton2.GetHashCode());
             Assert.That(skeleton1.Equals(skeleton2));
 
-            skeleton2 = new EmbeddingModel(SetupTests.modelPath, SetupTests.tokenizerPath, BackendType.GPUCompute, "last_hidden_state", true, 384);
+            skeleton2 = new EmbeddingModel(SetupTests.modelPath, SetupTests.tokenizerPath, BackendType.CPU, "last_hidden_state2", true, 384);
             Assert.AreNotEqual(skeleton1, skeleton2);
             Assert.AreNotEqual(skeleton1.GetHashCode(), skeleton2.GetHashCode());
             Assert.That(!skeleton1.Equals(skeleton2));
