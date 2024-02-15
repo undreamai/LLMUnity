@@ -1,0 +1,12 @@
+{
+  "name": "undream.llmunity.Runtime.Tests",
+  "references": [
+    "Unity.Sentis",
+    "undream.llmunity.Runtime",
+    "Cloud.Unum.USearch"
+  ],
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ]
+}
+
