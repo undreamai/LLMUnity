@@ -17,12 +17,13 @@ LLMUnity is built on top of the awesome [llama.cpp](https://github.com/ggerganov
 <sub>
 <a href="#at-a-glance" style="color: black">At a glance</a>&nbsp;&nbsp;•&nbsp;
 <a href="#how-to-help" style=color: black>How to help</a>&nbsp;&nbsp;•&nbsp;
+<a href="#games-using-llmunity" style=color: black>Games using LLMUnity</a>&nbsp;&nbsp;•&nbsp;
 <a href="#setup" style=color: black>Setup</a>&nbsp;&nbsp;•&nbsp;
 <a href="#how-to-use" style=color: black>How to use</a>&nbsp;&nbsp;•&nbsp;
+<a href="#search-system" style=color: black>Search system</a>&nbsp;&nbsp;•&nbsp;
 <a href="#examples" style=color: black>Examples</a>&nbsp;&nbsp;•&nbsp;
 <a href="#use-your-own-model" style=color: black>Use your own model</a>&nbsp;&nbsp;•&nbsp;
 <a href="#options" style=color: black>Options</a>&nbsp;&nbsp;•&nbsp;
-<a href="#games-using-llmunity" style=color: black>Games using LLMUnity</a>&nbsp;&nbsp;•&nbsp;
 <a href="#license" style=color: black>License</a>
 </sub>
 
@@ -49,6 +50,9 @@ Tested on Unity: 2021 LTS, 2022 LTS, 2023<br>
 - ⭐ Star the repo and spread the word about the project!
 - Submit feature requests or bugs as [issues](https://github.com/undreamai/LLMUnity/issues) or even submit a PR and become a collaborator!
 
+## Games using LLMUnity
+- [Verbal Verdict](https://store.steampowered.com/app/2778780/Verbal_Verdict/)
+
 ## Setup
 - Open the Package Manager in Unity: `Window > Package Manager`
 - Click the `+` button and select `Add package from git URL`
@@ -66,13 +70,12 @@ For a step-by-step tutorial you can have a look at our guide:
 
 [How to Use LLMs in Unity](https://towardsdatascience.com/how-to-use-llms-in-unity-308c9c0f637c)
 
-Create a GameObject for the LLM :chess_pawn::
+The first step is to create a GameObject for the LLM :chess_pawn::
 - Create an empty GameObject.<br>In the GameObject Inspector click `Add Component` and select the LLM script.
 - Download the default model with the `Download Model` button (~4GB).<br>Or load your own .gguf model with the `Load model` button (see [Use your own model](#use-your-own-model)).
 - Define the role of your AI in the `Prompt`. You can also define the name of the AI (`AI Name`) and the player (`Player Name`).
 - (Optional) By default you receive the reply from the model as is it is produced in real-time (recommended).<br>If you want the full reply in one go, deselect the `Stream` option.
 - (Optional) Adjust the server or model settings to your preference (see [Options](#options)).
-<br>
 
 In your script you can then use it as follows :unicorn::
 ``` c#
@@ -252,7 +255,7 @@ You can also build a remote server that does the processing and have local clien
 
 </details>
 
-## Search functionality
+## Search system
 LLMUnity implements a super-fast similarity search functionality with a Retrieval-Augmented Generation (RAG) system. This works as follows.
 
 **Building the data** You provide text inputs (a phrase, paragraph, document) to add in the data<br>
@@ -261,10 +264,9 @@ Each input is split into sentences (optional) and encoded into embeddings with a
 **Searching** You can then search for an query text input. <br>
 The input is again encoded and the most similar text inputs or sentences in the data are retrieved.
 
-To use search, create a GameObject for the Embedding :chess_pawn::
-- create an empty GameObject.<br>In the GameObject Inspector click `Add Component` and select the `Embedding` script).
+To use search:
+- create an empty GameObject for the embedding model 🔍.<br>In the GameObject Inspector click `Add Component` and select the `Embedding` script).
 - select the model you prefer from the drop-down list to download it (bge small, bge base or MiniLM v6).
-<br>
 
 In your script you can then use it as follows :unicorn::
 ``` c#
@@ -274,26 +276,15 @@ public class MyScript {
   public Embedding embedding;
   SearchEngine search;
 
-  void CreateEmbeddings(string filename, string[] inputs){
-    // build your embeddings or load them
-    EmbeddingModel model = embedding.GetModel();
-    if (File.Exists(filename)){
-      search = SearchEngine.Load(model, filename);
-    } else {
-      search = new SearchEngine(model);
-      foreach (string input in inputs) search.Add(input);
-      search.Save(filename);
-    }
-    return search;
-  }
-  
   void Game(){
-    // your game function
     ...
     string[] inputs = new string[]{
       "Hi! I'm an LLM.", "the weather is nice. I like it.", "I'm a RAG system"
     };
-    CreateEmbeddings("Embeddings.zip", inputs);
+    // build the embedding
+    EmbeddingModel model = embedding.GetModel();
+    search = new SearchEngine(model);
+    foreach (string input in inputs) search.Add(input);
     // get the 2 most similar phrases
     string[] similar = search.Search("hello!", 2);
     // or get the 2 most similar sentences
@@ -302,10 +293,20 @@ public class MyScript {
   }
 }
 ```
-
 - Finally, in the Inspector of the GameObject of your script, select the Embedding GameObject created above as the embedding property.
 
-If you want to manage a dialogue, LLMUnity provides the `Dialogue` class for ease of use:
+You can save the data along with the embeddings:
+
+``` c#
+search.Save("Embeddings.zip");
+```
+and load them from disk:
+``` c#
+SearchEngine search = SearchEngine.Load(model, "Embeddings.zip");
+```
+
+
+If you want to manage dialogues, LLMUnity provides the `Dialogue` class for ease of use:
 ``` c#
 Dialogue dialogue = new Dialogue(model);
 
@@ -316,11 +317,11 @@ dialogue.Add("hi I'm Luke", "Luke");
 // add a text for a character and a dialogue part
 dialogue.Add("Hi again", "Luke", "ACT 2");
 
-// search for a text
-string[] similar = dialogue.Search("how is the weather?", 1);
-// search for a text for a character
+// search for similar texts
+string[] similar = dialogue.Search("how is the weather?", 3);
+// search for similar texts within a character
 string[] similar = dialogue.Search("hi there!", 2, "Luke");
-// search for a text for a character and dialogue part
+// search for similar texts within a character and dialogue part
 string[] similar = dialogue.Search("hello!", 3, "Luke", "ACT 2");
 ```
 
@@ -330,9 +331,9 @@ That's all :sparkles:!
 The [Samples~](Samples~) folder contains several examples of interaction :robot::
 - [SimpleInteraction](Samples~/SimpleInteraction): Simple interaction between a player and a AI
 - [ServerClient](Samples~/ServerClient): Simple interaction between a player and multiple characters using a `LLM` and a `LLMClient`
+- [ChatBot](Samples~/ChatBot): Interaction between a player and a AI with a UI similar to a messaging app (see image below)
 - [HamletSearch](Samples~/HamletSearch): Interaction with predefined answers using the search functionality
 - [LLMUnityBot](Samples~/LLMUnityBot): Interaction by searching and providing relevant context to the AI using the search functionality
-- [ChatBot](Samples~/ChatBot): Interaction between a player and a AI with a UI similar to a messaging app (see image below)
   
 <img width="400" src=".github/demo.gif">
 
@@ -422,8 +423,6 @@ If it is not selected, the full reply from the model is received in one go
 - `AI Name` the name of the AI
 - `Prompt` a description of the AI role
 
-## Games using LLMUnity
-- [Verbal Verdict](https://store.steampowered.com/app/2778780/Verbal_Verdict/)
 
 ## License
 The license of LLMUnity is MIT ([LICENSE.md](LICENSE.md)) and uses third-party software with MIT and Apache licenses ([Third Party Notices.md](<Third Party Notices.md>)).
