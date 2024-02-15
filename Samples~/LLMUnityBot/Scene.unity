@@ -394,8 +394,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -1, y: -322}
-  m_SizeDelta: {x: 594.3686, y: 44.419}
+  m_AnchoredPosition: {x: -1, y: -330.05356}
+  m_SizeDelta: {x: 594.3686, y: 28.3119}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &247050140
 MonoBehaviour:
@@ -431,9 +431,6 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: 'Before running the scene, select a model for the LLM and Embedding GameObject.
-
-    To
-    build the scene, copy the Embeddings.zip inside the Assets/StreamingAssets folder.
 
 '
 --- !u!222 &247050141
@@ -1394,8 +1391,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66e2adadc5fb3e3a5862391f8dd49844, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Model: 
-  GPU: 0
   SelectedOption: 0
   downloadProgress: 1
 --- !u!4 &1320107143

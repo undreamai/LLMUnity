@@ -394,8 +394,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -328.89}
-  m_SizeDelta: {x: 615.2761, y: 62.1404}
+  m_AnchoredPosition: {x: 0, y: -342.3642}
+  m_SizeDelta: {x: 615.2761, y: 35.192}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &247050140
 MonoBehaviour:
@@ -430,10 +430,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Before running the scene, select a model from the Embedding GameObject.
-
-    To
-    build the scene, copy the Embeddings.zip inside the Assets/StreamingAssets folder.'
+  m_Text: Before running the scene, select a model from the Embedding GameObject.
 --- !u!222 &247050141
 CanvasRenderer:
   m_ObjectHideFlags: 0
