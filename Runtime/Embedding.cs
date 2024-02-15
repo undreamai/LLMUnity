@@ -498,7 +498,7 @@ namespace LLMUnity
 
     public class Embedding : MonoBehaviour
     {
-        [SerializeField] public int SelectedOption = 0;
+        public int SelectedOption = 0;
 
         [HideInInspector] public float downloadProgress = 1;
         [HideInInspector] public EmbeddingModel embeddingModel = null;
@@ -517,6 +517,7 @@ namespace LLMUnity
         public async void SelectModel(int optionIndex)
         {
             SelectedOption = optionIndex;
+            EditorUtility.SetDirty(this);
             string methodName = options[SelectedOption].Item2;
             if (methodName != null)
             {
