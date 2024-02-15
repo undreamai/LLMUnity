@@ -506,9 +506,9 @@ namespace LLMUnity
         [HideInInspector] public EmbeddingModel embeddingModel = null;
         public readonly (string, string)[] options = new (string, string)[]{
             ("None", null),
-            ("bge-small-en-v1.5", "BGESmallModel"),
-            ("bge-base-en-v1.5", "BGEBaseModel"),
-            ("all-MiniLM-L6-v2", "MiniLMModel")
+            ("bge-small-en-v1.5 (small, best)", "BGESmallModel"),
+            ("bge-base-en-v1.5 (medium, best)", "BGEBaseModel"),
+            ("all-MiniLM-L6-v2 (small, standard)", "MiniLMModel")
         };
 
         public void Awake()
