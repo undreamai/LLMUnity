@@ -1,0 +1,47 @@
+TextField {
+    white-space: normal;
+    text-overflow: ellipsis;
+}
+
+#unity-text-input {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    font-size: 20px;
+    -unity-text-align: middle-left;
+}
+
+TextField > Label {
+    color: rgb(255, 255, 255);
+    -unity-text-align: middle-right;
+    font-size: 20px;
+}
+
+#Response > Label {
+    -unity-text-align: middle-left;
+}
+
+#Response > #unity-text-input {
+    background-color: rgba(51, 150, 217, 0.78);
+    border-left-color: rgba(255, 255, 255, 0.39);
+    border-right-color: rgba(255, 255, 255, 0.39);
+    border-top-color: rgba(255, 255, 255, 0.39);
+    border-bottom-color: rgba(255, 255, 255, 0.39);
+    border-top-width: 2px;
+    border-right-width: 2px;
+    border-bottom-width: 2px;
+    border-left-width: 2px;
+}
+
+#Prompt > #unity-text-input {
+    border-left-color: rgba(255, 255, 255, 0.39);
+    border-right-color: rgba(255, 255, 255, 0.39);
+    border-top-color: rgba(255, 255, 255, 0.39);
+    border-bottom-color: rgba(255, 255, 255, 0.39);
+    border-top-width: 2px;
+    border-right-width: 2px;
+    border-bottom-width: 2px;
+    border-left-width: 2px;
+    background-color: rgba(44, 203, 111, 0.78);
+}

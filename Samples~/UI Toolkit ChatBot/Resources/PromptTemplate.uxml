@@ -1,0 +1,4 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/_LLMUnityExplorer/UI/Style/MainTextField.uss?fileID=7433441132597879392&amp;guid=89b8910a4c011d047acb3f994623fa90&amp;type=3#MainTextField" />
+    <ui:TextField picking-mode="Ignore" label="Prompt" name="Prompt" multiline="true" auto-correction="true" style="margin-bottom: 20px; margin-top: 10px;" />
+</ui:UXML>

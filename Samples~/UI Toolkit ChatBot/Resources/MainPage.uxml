@@ -1,0 +1,11 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:Template name="PromptTemplate" src="project://database/Assets/Sample%20UI%20Toolkit/UI%20Toolkit/Resources/PromptTemplate.uxml?fileID=9197481963319205126&amp;guid=9fd940f05a5e3cb4cbf879450d8302b8&amp;type=3#PromptTemplate" />
+    <ui:Template name="ResponeTemplate" src="project://database/Assets/Sample%20UI%20Toolkit/UI%20Toolkit/Resources/ResponseTemplate.uxml?fileID=9197481963319205126&amp;guid=e237b0615c76c454e93d13bb4b08da35&amp;type=3#ResponseTemplate" />
+    <Style src="project://database/Assets/Sample%20UI%20Toolkit/UI%20Toolkit/Style/MainTextField.uss?fileID=7433441132597879392&amp;guid=89b8910a4c011d047acb3f994623fa90&amp;type=3#MainTextField" />
+    <ui:VisualElement name="Container" style="flex-grow: 1; background-color: rgb(105, 67, 163); justify-content: flex-start; background-image: url(&apos;project://database/Assets/Sample%20UI%20Toolkit/UI%20Toolkit/DesignerBackground_003.png?fileID=2800000&amp;guid=d4db7a3e0d276cc40b30ae0ef031763e&amp;type=3#DesignerBackground_003&apos;); -unity-background-scale-mode: scale-and-crop;">
+        <ui:ScrollView name="ChatScrollView" horizontal-scroller-visibility="Hidden">
+            <ui:Instance template="PromptTemplate" name="PromptTemplate" />
+            <ui:Instance template="ResponeTemplate" name="ResponseTemplate" />
+        </ui:ScrollView>
+    </ui:VisualElement>
+</ui:UXML>
