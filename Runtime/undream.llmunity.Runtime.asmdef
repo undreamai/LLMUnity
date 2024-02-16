@@ -1,3 +1,9 @@
 {
-    "name": "undream.llmunity.Runtime"
+    "name": "undream.llmunity.Runtime",
+    "rootNamespace": "",
+    "references": [
+        "Unity.Sentis",
+        "HuggingFace.SharpTransformers",
+        "Cloud.Unum.USearch"
+    ]
 }

@@ -73,6 +73,12 @@ namespace LLMUnity
             }
         }
 
+        public static string GetAssetPath(string relPath = "")
+        {
+            // Path to store llm server binaries and models
+            return Path.Combine(Application.streamingAssetsPath, relPath).Replace('\\', '/');
+        }
+
 #if UNITY_EDITOR
         public class DownloadStatus
         {
@@ -91,7 +97,9 @@ namespace LLMUnity
 
         public static async Task DownloadFile(
             string fileUrl, string savePath, bool overwrite = false, bool executable = false,
-            TaskCallback<string> callback = null, Callback<float> progresscallback = null)
+            TaskCallback<string> callback = null, Callback<float> progresscallback = null,
+            bool async=true
+        )
         {
             // download a file to the specified path
             if (File.Exists(savePath) && !overwrite)
@@ -106,7 +114,12 @@ namespace LLMUnity
                 WebClient client = new WebClient();
                 DownloadStatus downloadStatus = new DownloadStatus(progresscallback);
                 client.DownloadProgressChanged += downloadStatus.DownloadProgressChanged;
-                await client.DownloadFileTaskAsync(fileUrl, tmpPath);
+                if (async)
+                {
+                    await client.DownloadFileTaskAsync(fileUrl, tmpPath);
+                } else {
+                    client.DownloadFile(fileUrl, tmpPath);
+                }
                 if (executable) makeExecutable(tmpPath);
 
                 AssetDatabase.StartAssetEditing();
@@ -114,10 +127,10 @@ namespace LLMUnity
                 File.Move(tmpPath, savePath);
                 AssetDatabase.StopAssetEditing();
                 Debug.Log($"Download complete!");
-
-                progresscallback?.Invoke(1f);
-                callback?.Invoke(savePath);
             }
+
+            progresscallback?.Invoke(1f);
+            callback?.Invoke(savePath);
         }
 
         public static async Task<string> AddAsset(string assetPath, string basePath)

@@ -1,3 +1,11 @@
+## v1.1.0
+- no changes
+## v1.0.6
+#### 🐛 Fixes
+
+- Fix Mac command spaces (PR: #71)
+
+
 ## v1.0.5
 #### 🚀 Features
 
