@@ -26,13 +26,18 @@ namespace LLMUnity
         [ModelAdvanced] public int contextSize = 512;
         [ModelAdvanced] public int batchSize = 512;
 
-        [HideInInspector] public string modelUrl = "https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.2-GGUF/resolve/main/mistral-7b-instruct-v0.2.Q4_K_M.gguf?download=true";
+        [HideInInspector] public readonly (string, string)[] modelOptions = new (string, string)[]{
+            ("Download model", null),
+            ("Phi 2 (small, best)", "https://huggingface.co/TheBloke/phi-2-GGUF/resolve/main/phi-2.Q4_K_M.gguf?download=true"),
+            ("Mistral 7B Instruct v0.2 (medium, best)", "https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.2-GGUF/resolve/main/mistral-7b-instruct-v0.2.Q4_K_M.gguf?download=true")
+        };
+        public int SelectedOption = 0;
         private static readonly string serverZipUrl = "https://github.com/Mozilla-Ocho/llamafile/releases/download/0.6/llamafile-0.6.zip";
-        private static readonly string server = Path.Combine(GetAssetPath(Path.GetFileNameWithoutExtension(serverZipUrl)), "bin/llamafile");
+        private static readonly string server = Path.Combine(LLMUnitySetup.GetAssetPath(Path.GetFileNameWithoutExtension(serverZipUrl)), "bin/llamafile");
         private static readonly string apeARMUrl = "https://cosmo.zip/pub/cosmos/bin/ape-arm64.elf";
-        private static readonly string apeARM = GetAssetPath("ape-arm64.elf");
+        private static readonly string apeARM = LLMUnitySetup.GetAssetPath("ape-arm64.elf");
         private static readonly string apeX86_64Url = "https://cosmo.zip/pub/cosmos/bin/ape-x86_64.elf";
-        private static readonly string apeX86_64 = GetAssetPath("ape-x86_64.elf");
+        private static readonly string apeX86_64 = LLMUnitySetup.GetAssetPath("ape-x86_64.elf");
 
         [HideInInspector] public static float binariesProgress = 1;
         [HideInInspector] public float modelProgress = 1;
@@ -65,7 +70,7 @@ namespace LLMUnity
                 string serverZip = Path.Combine(Application.temporaryCachePath, "llamafile.zip");
                 await LLMUnitySetup.DownloadFile(serverZipUrl, serverZip, true, false, null, SetBinariesProgress);
                 binariesDone += 1;
-                LLMUnitySetup.ExtractZip(serverZip, GetAssetPath());
+                LLMUnitySetup.ExtractZip(serverZip, LLMUnitySetup.GetAssetPath());
                 File.Delete(serverZip);
                 binariesDone += 1;
             }
@@ -77,12 +82,14 @@ namespace LLMUnity
             binariesProgress = binariesDone / 4f + 1f / 4f * progress;
         }
 
-        public void DownloadModel()
+        public void DownloadModel(int optionIndex)
         {
             // download default model and disable model editor properties until the model is set
             modelProgress = 0;
+            SelectedOption = optionIndex;
+            string modelUrl = modelOptions[optionIndex].Item2;
             string modelName = Path.GetFileName(modelUrl).Split("?")[0];
-            string modelPath = GetAssetPath(modelName);
+            string modelPath = LLMUnitySetup.GetAssetPath(modelName);
             Task downloadTask = LLMUnitySetup.DownloadFile(modelUrl, modelPath, false, false, SetModel, SetModelProgress);
         }
 
@@ -95,7 +102,7 @@ namespace LLMUnity
         {
             // set the model and enable the model editor properties
             modelCopyProgress = 0;
-            model = await LLMUnitySetup.AddAsset(path, GetAssetPath());
+            model = await LLMUnitySetup.AddAsset(path, LLMUnitySetup.GetAssetPath());
             EditorUtility.SetDirty(this);
             modelCopyProgress = 1;
         }
@@ -104,7 +111,7 @@ namespace LLMUnity
         {
             // set the lora and enable the model editor properties
             modelCopyProgress = 0;
-            lora = await LLMUnitySetup.AddAsset(path, GetAssetPath());
+            lora = await LLMUnitySetup.AddAsset(path, LLMUnitySetup.GetAssetPath());
             EditorUtility.SetDirty(this);
             modelCopyProgress = 1;
         }
@@ -232,13 +239,13 @@ namespace LLMUnity
 
             // Start the LLM server in a cross-platform way
             if (model == "") throw new Exception("No model file provided!");
-            string modelPath = GetAssetPath(model);
+            string modelPath = LLMUnitySetup.GetAssetPath(model);
             if (!File.Exists(modelPath)) throw new Exception($"File {modelPath} not found!");
 
             string loraPath = "";
             if (lora != "")
             {
-                loraPath = GetAssetPath(lora);
+                loraPath = LLMUnitySetup.GetAssetPath(lora);
                 if (!File.Exists(loraPath)) throw new Exception($"File {loraPath} not found!");
             }
 

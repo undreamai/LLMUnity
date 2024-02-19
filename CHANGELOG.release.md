@@ -1,4 +1,4 @@
-### 🐛 Fixes
+### 📦 General
 
-- Fix Mac command spaces (PR: #71)
+- Refactoring and small enhancements (PR: #80)
 

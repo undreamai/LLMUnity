@@ -9,10 +9,19 @@ namespace LLMUnity
         public void AddModelLoaders(SerializedObject llmScriptSO, LLM llmScript)
         {
             EditorGUILayout.BeginHorizontal();
-            if (GUILayout.Button("Download model", GUILayout.Width(buttonWidth)))
+
+            string[] options = new string[llmScript.modelOptions.Length];
+            for (int i = 0; i < llmScript.modelOptions.Length; i++)
             {
-                llmScript.DownloadModel();
+                options[i] = llmScript.modelOptions[i].Item1;
             }
+
+            int newIndex = EditorGUILayout.Popup("Model", llmScript.SelectedOption, options);
+            if (newIndex != llmScript.SelectedOption)
+            {
+                llmScript.DownloadModel(newIndex);
+            }
+
             if (GUILayout.Button("Load model", GUILayout.Width(buttonWidth)))
             {
                 EditorApplication.delayCall += () =>

@@ -1,3 +1,9 @@
+## v1.1.1
+#### 📦 General
+
+- Refactoring and small enhancements (PR: #80)
+
+
 ## v1.0.6
 #### 🐛 Fixes
 
