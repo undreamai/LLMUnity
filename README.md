@@ -269,7 +269,8 @@ You can also load your own model in .gguf format with the `Load model` button (s
 Save the scene, run and enjoy!
 
 ## Use your own model
-LLMUnity uses the Mistral 7B Instruct model by default, quantised with the Q4 method ([link](https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.2-GGUF/resolve/main/mistral-7b-instruct-v0.2.Q4_K_M.gguf?download=true)).<br>
+LLMUnity uses the [Mistral 7B Instruct](https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.2) or [Microsoft Phi-2](https://huggingface.co/microsoft/phi-2) model by default, quantised with the Q4 method.<br>
+
 Alternative models can be downloaded from [HuggingFace](https://huggingface.co/models).<br>
 The required model format is .gguf as defined by the llama.cpp.<br>
 The easiest way is to download gguf models directly by [TheBloke](https://huggingface.co/TheBloke) who has converted an astonishing number of models :rainbow:!<br>
