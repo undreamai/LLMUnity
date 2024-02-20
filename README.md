@@ -64,7 +64,7 @@ For a step-by-step tutorial you can have a look at our guide:
 
 The first step is to create a GameObject for the LLM :chess_pawn::
 - Create an empty GameObject.<br>In the GameObject Inspector click `Add Component` and select the LLM script.
-- Download the default model with the `Download Model` button (~4GB).<br>Or load your own .gguf model with the `Load model` button (see [Use your own model](#use-your-own-model)).
+- Download one of the default models with the `Download Model` button (~GBs).<br>Or load your own .gguf model with the `Load model` button (see [Use your own model](#use-your-own-model)).
 - Define the role of your AI in the `Prompt`. You can also define the name of the AI (`AI Name`) and the player (`Player Name`).
 - (Optional) By default you receive the reply from the model as is it is produced in real-time (recommended).<br>If you want the full reply in one go, deselect the `Stream` option.
 - (Optional) Adjust the server or model settings to your preference (see [Options](#options)).
@@ -272,9 +272,10 @@ Save the scene, run and enjoy!
 LLMUnity uses the [Mistral 7B Instruct](https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.2) or [Microsoft Phi-2](https://huggingface.co/microsoft/phi-2) model by default, quantised with the Q4 method.<br>
 
 Alternative models can be downloaded from [HuggingFace](https://huggingface.co/models).<br>
+The models should be able to use the ChatML prompt format as this is hardcoded at the moment in llama.cpp.<br>
 The required model format is .gguf as defined by the llama.cpp.<br>
 The easiest way is to download gguf models directly by [TheBloke](https://huggingface.co/TheBloke) who has converted an astonishing number of models :rainbow:!<br>
-Otherwise other model formats can be converted to gguf with the `convert.py` script of the llama.cpp as described [here](https://github.com/ggerganov/llama.cpp/tree/master?tab=readme-ov-file#prepare-data--run).
+Otherwise other model formats can be converted to gguf with the `convert.py` script of the llama.cpp as described [here](https://github.com/ggerganov/llama.cpp/tree/master?tab=readme-ov-file#prepare-data--run).<br>
 
 :grey_exclamation: Before using any model make sure you **check their license** :grey_exclamation:
 
