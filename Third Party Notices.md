@@ -1,25 +1,51 @@
+# THIRD-PARTY SOFTWARE NOTICES AND INFORMATION
+
 This package contains third-party software components governed by the license(s) indicated below:
 
-Component Name: llama.cpp
+## Software
 
-License Type: "MIT"
+### llama.cpp
 
-[llama.cpp License](https://github.com/ggerganov/llama.cpp/blob/master/LICENSE)
+Developer: llama.cpp<br>
+Origin: [link](https://github.com/ggerganov/llama.cpp)<br>
+License Type: "MIT"<br>
+License: [link](https://github.com/ggerganov/llama.cpp/blob/master/LICENSE)
 
-Component Name: llamafile
+### llamafile
 
-License Type: "Apache 2.0"
+Developer: Mozilla Ocho<br>
+Origin: [link](https://github.com/Mozilla-Ocho/llamafile)<br>
+License Type: "Apache 2.0"<br>
+License: [link](https://github.com/Mozilla-Ocho/llamafile/blob/main/LICENSE)
 
-[llamafile License](https://github.com/Mozilla-Ocho/llamafile/blob/main/LICENSE)
+---
 
-Component Name: "mistralai/Mistral-7B-Instruct-v0.2"
+## Models
 
-License Type: "Apache 2.0"
+### mistralai/Mistral-7B-Instruct-v0.2
 
-[mistralai/Mistral-7B-Instruct-v0.2 License](https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.2/blob/main/README.md)
+Developer: Mistral AI<br>
+Origin: [link](https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.2)<br>
+License Type: "Apache 2.0"<br>
+License: [link](https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.2)
 
-Component Name: TheBloke/Mistral-7B-Instruct-v0.2-GGUF
+##### modified by: TheBloke/Mistral-7B-Instruct-v0.2-GGUF
 
-License Type: "Apache 2.0"
+Developer: TheBloke<br>
+Origin: [link](https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.2-GGUF)<br>
+License Type: "Apache 2.0"<br>
+License: [link](https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.2-GGUF)
 
-[TheBloke/Mistral-7B-Instruct-v0.2-GGUF License](https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.2-GGUF/blob/main/README.md)
+### microsoft/phi-2
+
+Developer: Microsoft<br>
+Origin: [link](https://huggingface.co/microsoft/phi-2)<br>
+License Type: "MIT"<br>
+License: [link](https://huggingface.co/microsoft/phi-2#license)
+
+##### modified by: TheBloke/phi-2-GGUF
+
+Developer: TheBloke<br>
+Origin: [link](https://huggingface.co/TheBloke/phi-2-GGUF)<br>
+License Type: "MIT"<br>
+License: [link](https://huggingface.co/TheBloke/phi-2-GGUF#license)
