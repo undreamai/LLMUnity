@@ -84,7 +84,7 @@ public class MyScript {
   void Game(){
     // your game function
     ...
-    string message = "Hello bot!"
+    string message = "Hello bot!";
     _ = llm.Chat(message, HandleReply);
     ...
   }
@@ -101,7 +101,7 @@ This is useful if the `Stream` option is selected for continuous output from the
   void Game(){
     // your game function
     ...
-    string message = "Hello bot!"
+    string message = "Hello bot!";
     _ = llm.Chat(message, HandleReply, ReplyCompleted);
     ...
   }
