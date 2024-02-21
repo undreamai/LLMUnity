@@ -149,7 +149,7 @@ namespace LLMUnity
             // set stopwords
             if (stop == null || stop.Count == 0)
             {
-                stop = new List<string> { RoleString(playerName), playerName + ":" };
+                stop = new List<string> { "\n<|im_start|>", "<|im_start|>", "\n<|im_end|>", "<|im_end|>", playerName + ":", AIName + ":" };
             }
         }
 
@@ -178,13 +178,13 @@ namespace LLMUnity
         public string RoleString(string role)
         {
             // role as a delimited string for the model
-            return "\n### " + role + ":";
+            return "\n<|im_start|>" + role + "\n";
         }
 
         public string RoleMessageString(string role, string message)
         {
             // role and the role message
-            return RoleString(role) + " " + message;
+            return RoleString(role) + message + "<|im_end|>\n";
         }
 
         public ChatRequest GenerateRequest(string message, bool openAIFormat = false)
