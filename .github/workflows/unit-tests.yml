@@ -1,0 +1,28 @@
+name: LLMUnity Package Tests
+
+on:
+  push:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install Unity
+        uses: game-ci/setup-unity@v2
+        with:
+          unityVersion: 2020.3.17f1
+          components: "unity-test-framework"
+
+      - name: Build LLMUnity package
+        run: |
+          unity -batchmode -quit -createProject ../LLMUnityProject
+          cp -R ../LLMUnity ../LLMUnityProject/Assets/LLMUnity
+          unity -batchmode -quit -projectPath ../LLMUnityProject -exportPackage Assets/LLMUnity ../LLMUnityProject/LLMUnity.unitypackage
+
+      - name: Run LLMUnity package tests
+        run: |
+          unity -batchmode -runTests -testPlatform editmode -projectPath ../LLMUnityProject
