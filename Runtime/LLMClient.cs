@@ -82,8 +82,8 @@ namespace LLMUnity
         [Chat] public string AIName = "Assistant";
         [TextArea(5, 10), Chat] public string prompt = "A chat between a curious human and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the human's questions.";
 
-        private string currentPrompt;
-        private List<ChatMessage> chat;
+        protected string currentPrompt;
+        protected List<ChatMessage> chat;
         private List<(string, string)> requestHeaders;
         public bool setNKeepToPrompt = true;
 
@@ -175,13 +175,13 @@ namespace LLMUnity
 
 #endif
 
-        private string RoleString(string role)
+        public string RoleString(string role)
         {
             // role as a delimited string for the model
             return "\n### " + role + ":";
         }
 
-        private string RoleMessageString(string role, string message)
+        public string RoleMessageString(string role, string message)
         {
             // role and the role message
             return RoleString(role) + " " + message;

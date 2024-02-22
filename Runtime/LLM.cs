@@ -26,7 +26,8 @@ namespace LLMUnity
         [ModelAdvanced] public int contextSize = 512;
         [ModelAdvanced] public int batchSize = 512;
 
-        [HideInInspector] public readonly (string, string)[] modelOptions = new (string, string)[]{
+        [HideInInspector] public readonly (string, string)[] modelOptions = new(string, string)[]
+        {
             ("Download model", null),
             ("Phi 2 (small, best)", "https://huggingface.co/TheBloke/phi-2-GGUF/resolve/main/phi-2.Q4_K_M.gguf?download=true"),
             ("Mistral 7B Instruct v0.2 (medium, best)", "https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.2-GGUF/resolve/main/mistral-7b-instruct-v0.2.Q4_K_M.gguf?download=true")
@@ -144,7 +145,7 @@ namespace LLMUnity
             return apeExe;
         }
 
-        bool IsPortInUse()
+        public bool IsPortInUse()
         {
             try
             {
