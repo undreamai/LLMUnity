@@ -16,6 +16,8 @@ jobs:
         with:
           unityVersion: 2020.3.17f1
           components: "unity-test-framework"
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
 
       - name: Build LLMUnity package
         run: |
