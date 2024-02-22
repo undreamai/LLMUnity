@@ -12,7 +12,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Install Unity
-        uses: game-ci/setup-unity@v2
+        uses: game-ci/unity-builder@v2
         with:
           unityVersion: 2020.3.17f1
           components: "unity-test-framework"
