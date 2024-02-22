@@ -6,6 +6,9 @@
   "unity": "2022.3",
   "unityRelease": "16f1",
   "documentationUrl": "https://github.com/undreamai/LLMUnity",
+  "testables": [
+    "undream.llmunity.Runtime.Tests"
+  ],
   "keywords": [
     "llm",
     "large language model",
