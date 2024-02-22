@@ -12,9 +12,9 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Install Unity
-        uses: game-ci/unity-builder@v2
+        uses: game-ci/unity-builder@v4
         with:
-          unityVersion: 2020.3.17f1
+          unityVersion: 2022.3.16f1
           components: "unity-test-framework"
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
