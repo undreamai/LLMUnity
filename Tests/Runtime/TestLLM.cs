@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System;
 using System.Collections;
 using UnityEngine.TestTools;
-using System.IO;
 
 namespace LLMUnityTests
 {
