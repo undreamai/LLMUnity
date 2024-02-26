@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System;
 using System.Collections;
 using UnityEngine.TestTools;
+using System.IO;
 
 namespace LLMUnityTests
 {
@@ -41,7 +42,7 @@ namespace LLMUnityTests
         GameObject gameObject;
         LLMNoAwake llm;
         int port = 15555;
-        string AIReply = ":::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::";
+        string AIReply = "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
         Exception error = null;
 
         public TestLLM()
@@ -69,7 +70,7 @@ namespace LLMUnityTests
             llm.temperature = 0;
             llm.seed = 0;
             llm.stream = false;
-            llm.numPredict = 128;
+            llm.numPredict = 20;
             llm.parallelPrompts = 1;
 
             gameObject.SetActive(true);
@@ -121,7 +122,7 @@ namespace LLMUnityTests
         {
             Assert.That(llm.nKeep == (await llm.Tokenize(llm.prompt)).Count);
             Assert.That(llm.stop.Count > 0);
-            Assert.That(llm.GetCurrentPrompt() == llm.prompt);
+            Assert.That(llm.GetCurrentPrompt() == llm.RoleMessageString("system", llm.prompt));
             Assert.That(llm.GetChat().Count == 1);
         }
 
@@ -133,19 +134,19 @@ namespace LLMUnityTests
         public void TestWarmup()
         {
             Assert.That(llm.GetChat().Count == 1);
-            Assert.That(llm.GetCurrentPrompt() == llm.prompt);
+            Assert.That(llm.GetCurrentPrompt() == llm.RoleMessageString("system", llm.prompt));
         }
 
         public void TestChat(string reply)
         {
-            Assert.That(llm.GetCurrentPrompt() == llm.prompt);
+            Assert.That(llm.GetCurrentPrompt() == llm.RoleMessageString("system", llm.prompt));
             Assert.That(reply == AIReply);
         }
 
         public void TestPostChat()
         {
             Assert.That(llm.GetChat().Count == 3);
-            string newPrompt = llm.prompt + llm.RoleMessageString(llm.playerName, "hi") + llm.RoleMessageString(llm.AIName, AIReply);
+            string newPrompt = llm.RoleMessageString("system", llm.prompt) + llm.RoleMessageString(llm.playerName, "hi") + llm.RoleMessageString(llm.AIName, AIReply);
             Assert.That(llm.GetCurrentPrompt() == newPrompt);
         }
     }
