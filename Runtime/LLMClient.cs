@@ -78,8 +78,8 @@ namespace LLMUnity
         public Dictionary<int, string> logitBias = null;
         public string grammarString;
 
-        [Chat] public string playerName = "Human";
-        [Chat] public string AIName = "Assistant";
+        [Chat] public string playerName = "user";
+        [Chat] public string AIName = "assistant";
         [TextArea(5, 10), Chat] public string prompt = "A chat between a curious human and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the human's questions.";
 
         protected string currentPrompt;
@@ -121,12 +121,17 @@ namespace LLMUnity
             {
                 chat[0] = promptMessage;
             }
+            currentPrompt = ComputePrompt();
+        }
 
-            currentPrompt = prompt;
-            for (int i = 1; i < chat.Count; i++)
+        public string ComputePrompt()
+        {
+            string chatPrompt = "";
+            for (int i = 0; i < chat.Count; i++)
             {
-                currentPrompt += RoleMessageString(chat[i].role, chat[i].content);
+                chatPrompt += RoleMessageString(chat[i].role, chat[i].content);
             }
+            return chatPrompt;
         }
 
         public async Task SetPrompt(string newPrompt, bool clearChat = true)
@@ -178,7 +183,7 @@ namespace LLMUnity
         public string RoleString(string role)
         {
             // role as a delimited string for the model
-            return "\n<|im_start|>" + role + "\n";
+            return "<|im_start|>" + role + "\n";
         }
 
         public string RoleMessageString(string role, string message)
