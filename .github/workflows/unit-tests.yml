@@ -1,10 +1,7 @@
-
 name: Run Unity Tests
 
 on:
-  workflow_dispatch:
-  pull_request:
-    branches: [main]
+  push:
 
 jobs:   
   test:
