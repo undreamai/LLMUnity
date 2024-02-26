@@ -1,12 +1,14 @@
 name: Run Unity Tests
 
 on:
-  push:
+  pull_request:
+    types: [closed]
 
 jobs:   
   test:
     name: Run Tests
     runs-on: ubuntu-latest
+    if: startsWith(github.base_ref, 'release/') && github.event.pull_request.merged == true
     steps:
         - name: Checkout Repo
           uses: actions/checkout@v4
