@@ -262,28 +262,21 @@ namespace LLMUnity
 
             string GPUArgument = numGPULayers <= 0 ? "" : $" -ngl {numGPULayers}";
             LLMUnitySetup.makeExecutable(server);
-            RunServerCommand(server, arguments + GPUArgument);
-
-            if (asynchronousStartup) await WaitOneASync(serverBlock, TimeSpan.FromSeconds(60));
-            else serverBlock.WaitOne(60000);
+            await RunAndWait(server, arguments + GPUArgument);
 
             if (process.HasExited && mmapCrash)
             {
                 Debug.Log("Mmap error, fallback to no mmap use");
                 serverBlock.Reset();
                 arguments += " --no-mmap";
-                RunServerCommand(server, arguments + GPUArgument);
-                if (asynchronousStartup) await WaitOneASync(serverBlock, TimeSpan.FromSeconds(60));
-                else serverBlock.WaitOne(60000);
+                await RunAndWait(server, arguments + GPUArgument);
             }
 
             if (process.HasExited && numGPULayers > 0)
             {
                 Debug.Log("GPU failed, fallback to CPU");
                 serverBlock.Reset();
-                RunServerCommand(server, arguments);
-                if (asynchronousStartup) await WaitOneASync(serverBlock, TimeSpan.FromSeconds(60));
-                else serverBlock.WaitOne(60000);
+                await RunAndWait(server, arguments);
             }
 
             if (process.HasExited) throw new Exception("Server could not be started!");
@@ -302,6 +295,13 @@ namespace LLMUnity
         public void OnDestroy()
         {
             StopProcess();
+        }
+
+        private async Task RunAndWait(string exe, string args, int seconds = 60)
+        {
+            RunServerCommand(exe, args);
+            if (asynchronousStartup) await WaitOneASync(serverBlock, TimeSpan.FromSeconds(seconds));
+            else serverBlock.WaitOne(seconds * 1000);
         }
 
         /// Wrapper from https://stackoverflow.com/a/18766131
