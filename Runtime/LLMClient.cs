@@ -82,8 +82,8 @@ namespace LLMUnity
         [Chat] public string AIName = "Assistant";
         [TextArea(5, 10), Chat] public string prompt = "A chat between a curious human and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the human's questions.";
 
-        private string currentPrompt;
-        private List<ChatMessage> chat;
+        protected string currentPrompt;
+        protected List<ChatMessage> chat;
         private List<(string, string)> requestHeaders;
         public bool setNKeepToPrompt = true;
 
@@ -135,6 +135,7 @@ namespace LLMUnity
             nKeep = -1;
             await InitPrompt(clearChat);
         }
+
         private async Task InitNKeep()
         {
             if (setNKeepToPrompt && nKeep == -1)
@@ -171,15 +172,16 @@ namespace LLMUnity
         {
             grammar = await LLMUnitySetup.AddAsset(path, LLMUnitySetup.GetAssetPath());
         }
+
 #endif
 
-        private string RoleString(string role)
+        public string RoleString(string role)
         {
             // role as a delimited string for the model
             return "\n### " + role + ":";
         }
 
-        private string RoleMessageString(string role, string message)
+        public string RoleMessageString(string role, string message)
         {
             // role and the role message
             return RoleString(role) + " " + message;
@@ -358,15 +360,16 @@ namespace LLMUnity
                     // Check if progress has changed
                     if (currentProgress != lastProgress && callback != null)
                     {
+                        if (request.result != UnityWebRequest.Result.Success) throw new System.Exception(request.error);
                         callback?.Invoke(ConvertContent(request.downloadHandler.text, getContent));
                         lastProgress = currentProgress;
                     }
                     // Wait for the next frame
                     await Task.Yield();
                 }
+                if (request.result != UnityWebRequest.Result.Success) throw new System.Exception(request.error);
                 result = ConvertContent(request.downloadHandler.text, getContent);
                 callback?.Invoke(result);
-                if (request.result != UnityWebRequest.Result.Success) throw new System.Exception(request.error);
             }
             return result;
         }

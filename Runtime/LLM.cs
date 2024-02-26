@@ -25,8 +25,10 @@ namespace LLMUnity
         [ModelAddonAdvanced] public string lora = "";
         [ModelAdvanced] public int contextSize = 512;
         [ModelAdvanced] public int batchSize = 512;
+        [ModelAdvanced] public bool asynchronousStartup = false;
 
-        [HideInInspector] public readonly (string, string)[] modelOptions = new (string, string)[]{
+        [HideInInspector] public readonly (string, string)[] modelOptions = new(string, string)[]
+        {
             ("Download model", null),
             ("Phi 2 (small, best)", "https://huggingface.co/TheBloke/phi-2-GGUF/resolve/main/phi-2.Q4_K_M.gguf?download=true"),
             ("Mistral 7B Instruct v0.2 (medium, best)", "https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.2-GGUF/resolve/main/mistral-7b-instruct-v0.2.Q4_K_M.gguf?download=true")
@@ -118,10 +120,11 @@ namespace LLMUnity
 
 #endif
 
-        new public void Awake()
+        new public async void Awake()
         {
-            // start the llm server and run the OnEnable of the client
-            StartLLMServer();
+            // start the llm server and run the Awake of the client
+            await StartLLMServer();
+
             base.Awake();
         }
 
@@ -144,14 +147,17 @@ namespace LLMUnity
             return apeExe;
         }
 
-        bool IsPortInUse()
+        public bool IsPortInUse()
         {
             try
             {
-                TcpClient c = new TcpClient(host, port);
+                using (TcpClient c = new TcpClient())
+                {
+                    c.Connect(host, port);
+                }
                 return true;
             }
-            catch {}
+            catch { }
             return false;
         }
 
@@ -188,7 +194,7 @@ namespace LLMUnity
                     serverBlock.Set();
                 }
             }
-            catch {}
+            catch { }
         }
 
         private void ProcessExited(object sender, EventArgs e)
@@ -233,7 +239,7 @@ namespace LLMUnity
             process = LLMUnitySetup.CreateProcess(binary, arguments, CheckIfListening, ProcessError, ProcessExited, environment);
         }
 
-        private void StartLLMServer()
+        private async Task StartLLMServer()
         {
             if (IsPortInUse()) throw new Exception($"Port {port} is already in use, please use another port or kill all llamafile processes using it!");
 
@@ -257,7 +263,9 @@ namespace LLMUnity
             string GPUArgument = numGPULayers <= 0 ? "" : $" -ngl {numGPULayers}";
             LLMUnitySetup.makeExecutable(server);
             RunServerCommand(server, arguments + GPUArgument);
-            serverBlock.WaitOne(60000);
+
+            if (asynchronousStartup) await WaitOneASync(serverBlock, TimeSpan.FromSeconds(60));
+            else serverBlock.WaitOne(60000);
 
             if (process.HasExited && mmapCrash)
             {
@@ -265,7 +273,8 @@ namespace LLMUnity
                 serverBlock.Reset();
                 arguments += " --no-mmap";
                 RunServerCommand(server, arguments + GPUArgument);
-                serverBlock.WaitOne(60000);
+                if (asynchronousStartup) await WaitOneASync(serverBlock, TimeSpan.FromSeconds(60));
+                else serverBlock.WaitOne(60000);
             }
 
             if (process.HasExited && numGPULayers > 0)
@@ -273,7 +282,8 @@ namespace LLMUnity
                 Debug.Log("GPU failed, fallback to CPU");
                 serverBlock.Reset();
                 RunServerCommand(server, arguments);
-                serverBlock.WaitOne(60000);
+                if (asynchronousStartup) await WaitOneASync(serverBlock, TimeSpan.FromSeconds(60));
+                else serverBlock.WaitOne(60000);
             }
 
             if (process.HasExited) throw new Exception("Server could not be started!");
@@ -292,6 +302,22 @@ namespace LLMUnity
         public void OnDestroy()
         {
             StopProcess();
+        }
+
+        /// Wrapper from https://stackoverflow.com/a/18766131
+        private static Task WaitOneASync(WaitHandle handle, TimeSpan timeout)
+        {
+            var tcs = new TaskCompletionSource<object>();
+            var registration = ThreadPool.RegisterWaitForSingleObject(handle, (state, timedOut) =>
+            {
+                var localTcs = (TaskCompletionSource<object>)state;
+                if (timedOut)
+                    localTcs.TrySetCanceled();
+                else
+                    localTcs.TrySetResult(null);
+            }, tcs, timeout, executeOnlyOnce: true);
+            tcs.Task.ContinueWith((_, state) => ((RegisteredWaitHandle)state).Unregister(null), registration, TaskScheduler.Default);
+            return tcs.Task;
         }
     }
 }
