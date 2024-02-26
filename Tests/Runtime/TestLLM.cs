@@ -3,6 +3,9 @@ using LLMUnity;
 using UnityEngine;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System;
+using System.Collections;
+using UnityEngine.TestTools;
 
 namespace LLMUnityTests
 {
@@ -39,7 +42,7 @@ namespace LLMUnityTests
         LLMNoAwake llm;
         int port = 15555;
         string AIReply = ":::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::";
-
+        Exception error = null;
 
         public TestLLM()
         {
@@ -67,13 +70,14 @@ namespace LLMUnityTests
             llm.seed = 0;
             llm.stream = false;
             llm.numPredict = 128;
+            llm.parallelPrompts = 1;
 
             gameObject.SetActive(true);
         }
 
-        [Test]
-        public async void RunTests()
+        public async Task RunTests()
         {
+            error = null;
             try
             {
                 Assert.That(!llm.IsPortInUse());
@@ -88,9 +92,22 @@ namespace LLMUnityTests
                 await llm.SetPrompt("You are");
                 TestInitParameters();
             }
-            finally
+            catch  (Exception e)
             {
-                llm.CallOnDestroy();
+                error = e;
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator RunTestsWait()
+        {
+            Task task = RunTests();
+            while (!task.IsCompleted) yield return null;
+            llm.CallOnDestroy();
+            if (error != null)
+            {
+                Debug.LogError(error.ToString());
+                throw (error);
             }
         }
 
