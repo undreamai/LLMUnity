@@ -1,32 +1,35 @@
-name: LLMUnity Package Tests
+
+name: Run Unity Tests
 
 on:
-  push:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
 
-jobs:
-  build-and-test:
+jobs:   
+  test:
+    name: Run Tests
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+        - name: Checkout Repo
+          uses: actions/checkout@v4
 
-      - name: Install Unity
-        uses: game-ci/unity-builder@v4
-        with:
-          unityVersion: 2022.3.16f1
-          components: "unity-test-framework"
-        env:
-          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+        - name: Setup Environment
+          run: |
+            mkdir Package~
+            mv Editor Package~/
+            mv Runtime Package~/
+            mv Tests Package~/
+            mv package.json Package~/package.json         
 
-      - name: Build LLMUnity package
-        run: |
-          unity -batchmode -quit -createProject ../LLMUnityProject
-          cp -R ../LLMUnity ../LLMUnityProject/Assets/LLMUnity
-          unity -batchmode -quit -projectPath ../LLMUnityProject -exportPackage Assets/LLMUnity ../LLMUnityProject/LLMUnity.unitypackage
-
-      - name: Run LLMUnity package tests
-        run: |
-          unity -batchmode -runTests -testPlatform editmode -projectPath ../LLMUnityProject
+        - name: Run Tests
+          uses: game-ci/unity-test-runner@v4
+          env:
+            UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+            UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+            UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          with:             
+            packageMode: true
+            projectPath: Package~/
+            testMode: playmode
+            unityVersion: 2022.3.16f1
