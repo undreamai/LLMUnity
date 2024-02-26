@@ -20,12 +20,12 @@ namespace LLMUnity
         [Server] public int numGPULayers = 0;
         [ServerAdvanced] public int parallelPrompts = -1;
         [ServerAdvanced] public bool debug = false;
+        [ServerAdvanced] public bool asynchronousStartup = false;
 
         [Model] public string model = "";
         [ModelAddonAdvanced] public string lora = "";
         [ModelAdvanced] public int contextSize = 512;
         [ModelAdvanced] public int batchSize = 512;
-        [ModelAdvanced] public bool asynchronousStartup = false;
 
         [HideInInspector] public readonly (string, string)[] modelOptions = new(string, string)[]
         {
@@ -157,7 +157,7 @@ namespace LLMUnity
                 }
                 return true;
             }
-            catch { }
+            catch {}
             return false;
         }
 
@@ -194,7 +194,7 @@ namespace LLMUnity
                     serverBlock.Set();
                 }
             }
-            catch { }
+            catch {}
         }
 
         private void ProcessExited(object sender, EventArgs e)
