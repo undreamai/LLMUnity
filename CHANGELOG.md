@@ -1,3 +1,9 @@
+## v1.1.2
+#### 🚀 Features
+
+- LLM server unit tests (PR: #90)
+
+
 ## v1.1.1
 #### 📦 General
 
