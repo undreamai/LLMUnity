@@ -46,8 +46,6 @@ public class GGUFReader
     private const uint GGUF_MAGIC = 0x46554747; // "GGUF"
     private const int GGUF_VERSION = 3;
     private readonly List<int> READER_SUPPORTED_VERSIONS = new List<int> { 2, GGUF_VERSION };
-
-    private char byte_order = 'I'; // 'I' - same as host, 'S' - swapped
     private Dictionary<GGUFValueType, Type> gguf_scalar_to_np = new Dictionary<GGUFValueType, Type>
     {
         { GGUFValueType.UINT8, typeof(byte) },
@@ -82,7 +80,6 @@ public class GGUFReader
         uint temp_version = BitConverter.ToUInt32(ReadBytes(offs, 4));
         if ((temp_version & 65535) == 0)
         {
-            byte_order = 'S';
             byte[] tempBytes = ReadBytes(offs, 4);
             Array.Reverse(tempBytes);
             temp_version = BitConverter.ToUInt32(tempBytes, 0);
