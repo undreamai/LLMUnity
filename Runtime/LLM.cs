@@ -107,6 +107,7 @@ namespace LLMUnity
             // set the model and enable the model editor properties
             modelCopyProgress = 0;
             model = await LLMUnitySetup.AddAsset(path, LLMUnitySetup.GetAssetPath());
+            template = ChatTemplate.FromGGUF(path, out chatTemplate);
             EditorUtility.SetDirty(this);
             modelCopyProgress = 1;
         }
