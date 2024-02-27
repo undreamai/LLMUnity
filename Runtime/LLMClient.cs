@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.IO;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -78,12 +79,11 @@ namespace LLMUnity
         public Dictionary<int, string> logitBias = null;
         public string grammarString;
 
-        [Chat] public string playerName = "user";
-        [Chat] public string AIName = "assistant";
         [TextArea(5, 10), Chat] public string prompt = "A chat between a curious human and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the human's questions.";
 
-        protected string currentPrompt;
         protected List<ChatMessage> chat;
+        [Model] public string chatTemplate = "chatml";
+        public ChatTemplate template;
         private List<(string, string)> requestHeaders;
         public bool setNKeepToPrompt = true;
 
@@ -96,9 +96,9 @@ namespace LLMUnity
         public async void Awake()
         {
             // initialise the prompt and set the keep tokens based on its length
-            InitStop();
             InitGrammar();
             await InitPrompt();
+            template = ChatMLTemplate.templates[chatTemplate];
         }
 
         private async Task InitPrompt(bool clearChat = true)
@@ -121,17 +121,6 @@ namespace LLMUnity
             {
                 chat[0] = promptMessage;
             }
-            currentPrompt = ComputePrompt();
-        }
-
-        public string ComputePrompt()
-        {
-            string chatPrompt = "";
-            for (int i = 0; i < chat.Count; i++)
-            {
-                chatPrompt += RoleMessageString(chat[i].role, chat[i].content);
-            }
-            return chatPrompt;
         }
 
         public async Task SetPrompt(string newPrompt, bool clearChat = true)
@@ -146,15 +135,6 @@ namespace LLMUnity
             if (setNKeepToPrompt && nKeep == -1)
             {
                 await Tokenize(prompt, SetNKeep);
-            }
-        }
-
-        private void InitStop()
-        {
-            // set stopwords
-            if (stop == null || stop.Count == 0)
-            {
-                stop = new List<string> { "\n<|im_start|>", "<|im_start|>", "\n<|im_end|>", "<|im_end|>", playerName + ":", AIName + ":" };
             }
         }
 
@@ -179,31 +159,11 @@ namespace LLMUnity
         }
 
 #endif
-
-        public string RoleString(string role)
-        {
-            // role as a delimited string for the model
-            return "<|im_start|>" + role + "\n";
-        }
-
-        public string RoleMessageString(string role, string message)
-        {
-            // role and the role message
-            return RoleString(role) + message + "<|im_end|>\n";
-        }
-
-        public ChatRequest GenerateRequest(string message, bool openAIFormat = false)
+        public ChatRequest GenerateRequest(string message)
         {
             // setup the request struct
             ChatRequest chatRequest = new ChatRequest();
-            if (openAIFormat)
-            {
-                chatRequest.messages = chat;
-            }
-            else
-            {
-                chatRequest.prompt = currentPrompt + RoleMessageString(playerName, message) + RoleString(AIName);
-            }
+            chatRequest.prompt = template.ComputePrompt(chat);
             chatRequest.temperature = temperature;
             chatRequest.top_k = topK;
             chatRequest.top_p = topP;
@@ -211,7 +171,7 @@ namespace LLMUnity
             chatRequest.n_predict = numPredict;
             chatRequest.n_keep = nKeep;
             chatRequest.stream = stream;
-            chatRequest.stop = stop;
+            chatRequest.stop = template.stop.Concat(stop).ToList();
             chatRequest.tfs_z = tfsZ;
             chatRequest.typical_p = typicalP;
             chatRequest.repeat_penalty = repeatPenalty;
@@ -236,17 +196,16 @@ namespace LLMUnity
         {
             // add the question / answer to the chat list, update prompt
             chat.Add(new ChatMessage { role = role, content = content });
-            currentPrompt += RoleMessageString(role, content);
         }
 
         private void AddPlayerMessage(string content)
         {
-            AddMessage(playerName, content);
+            AddMessage("user", content);
         }
 
         private void AddAIMessage(string content)
         {
-            AddMessage(AIName, content);
+            AddMessage("assistant", content);
         }
 
         public string ChatContent(ChatResult result)
