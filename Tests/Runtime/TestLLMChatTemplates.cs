@@ -1,0 +1,75 @@
+using LLMUnity;
+using System.Collections.Generic;
+using NUnit.Framework.Internal;
+using NUnit.Framework;
+using UnityEngine;
+
+namespace LLMUnityTests
+{
+    public class TestChatTemplate
+    {
+        List<ChatMessage> messages = new List<ChatMessage>()
+        {
+            new ChatMessage {role = "system", content = "you are a bot"},
+            new ChatMessage {role = "user", content = "Hello, how are you?"},
+            new ChatMessage {role = "assistant", content = "I'm doing great. How can I help you today?"},
+            new ChatMessage {role = "user", content = "I'd like to show off how chat templating works!"},
+            new ChatMessage {role = "assistant", content = "chat template is awesome"},
+            new ChatMessage {role = "user", content = "do you think so?"},
+        };
+
+        [Test]
+        public void TestChatML()
+        {
+            Assert.AreEqual(
+                new ChatMLTemplate().ComputePrompt(messages),
+                "<|im_start|>system\nyou are a bot<|im_end|>\n<|im_start|>user\nHello, how are you?<|im_end|>\n<|im_start|>assistant\nI'm doing great. How can I help you today?<|im_end|>\n<|im_start|>user\nI'd like to show off how chat templating works!<|im_end|>\n<|im_start|>assistant\nchat template is awesome<|im_end|>\n<|im_start|>user\ndo you think so?<|im_end|>\n<|im_start|>assistant\n"
+            );
+        }
+
+        [Test]
+        public void TestMistralInstruct()
+        {
+            Assert.AreEqual(
+                new MistralInstructTemplate().ComputePrompt(messages),
+                "<s>[INST] you are a bot\n\nHello, how are you? [/INST]I'm doing great. How can I help you today?</s>[INST] I'd like to show off how chat templating works! [/INST]chat template is awesome</s>[INST] do you think so? [/INST]"
+            );
+        }
+
+        [Test]
+        public void TestLLama2()
+        {
+            Assert.AreEqual(
+                new LLama2Template().ComputePrompt(messages),
+                "<s>[INST] <<SYS>>\nyou are a bot\n<</SYS>> Hello, how are you? [/INST]I'm doing great. How can I help you today? </s><s>[INST] I'd like to show off how chat templating works! [/INST]chat template is awesome </s><s>[INST] do you think so? [/INST]"
+            );
+        }
+
+        [Test]
+        public void TestAlpaca()
+        {
+            Assert.AreEqual(
+                new AlpacaTemplate().ComputePrompt(messages),
+                "you are a bot\n\n### Instruction: Hello, how are you?\n\n### Response: I'm doing great. How can I help you today?</s>### Instruction: I'd like to show off how chat templating works!\n\n### Response: chat template is awesome</s>### Instruction: do you think so?\n\n"
+            );
+        }
+
+        [Test]
+        public void TestPhi2()
+        {
+            Assert.AreEqual(
+                new Phi2Template().ComputePrompt(messages),
+                "you are a bot\n\nuser: Hello, how are you?\nassistant: I'm doing great. How can I help you today?\nuser: I'd like to show off how chat templating works!\nassistant: chat template is awesome\nuser: do you think so?\nassistant: "
+            );
+        }
+
+        [Test]
+        public void TestZephyr()
+        {
+            Assert.AreEqual(
+                new ZephyrTemplate().ComputePrompt(messages),
+                "<|system|>\nyou are a bot</s>\n<|user|>\nHello, how are you?</s>\n<|assistant|>\nI'm doing great. How can I help you today?</s>\n<|user|>\nI'd like to show off how chat templating works!</s>\n<|assistant|>\nchat template is awesome</s>\n<|user|>\ndo you think so?</s>\n<|assistant|>\n"
+            );
+        }
+    }
+}
