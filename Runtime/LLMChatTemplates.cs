@@ -53,31 +53,31 @@ namespace LLMUnity
             return null;
         }
 
-        public static ChatTemplate FromGGUF(string path, out string name)
+        public static string FromGGUF(string path)
         {
             GGUFReader reader = new GGUFReader(path, "r");
             ReaderField field;
+            string name;
 
             if (reader.fields.TryGetValue("tokenizer.chat_template", out field))
             {
                 string template = System.Text.Encoding.UTF8.GetString((byte[])field.parts[field.parts.Count - 1]);
                 name = FromTemplate(template);
-                if (name != null) return templates[name];
+                if (name != null) return name;
             }
             if (reader.fields.TryGetValue("general.name", out field))
             {
                 string modelName = System.Text.Encoding.UTF8.GetString((byte[])field.parts[field.parts.Count - 1]);
                 name = FromName(modelName);
-                if (name != null) return templates[name];
+                if (name != null) return name;
             }
 
             string filename = Path.GetFileNameWithoutExtension(path);
             name = FromName(filename);
-            if (name != null) return templates[name];
+            if (name != null) return name;
 
             Debug.Log("No chat template could be matched, fallback to ChatML");
-            name = "chatml";
-            return templates[name];
+            return "chatml";
         }
     }
 
