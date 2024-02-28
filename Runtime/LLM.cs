@@ -6,7 +6,6 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEditor;
-using UnityEditor.PackageManager;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
@@ -36,7 +35,7 @@ namespace LLMUnity
             ("Zephyr 7B (medium, alternative for conversation)", "https://huggingface.co/TheBloke/zephyr-7B-beta-GGUF/resolve/main/zephyr-7b-beta.Q4_K_M.gguf?download=true"),
             ("Phi 2 (small, decent)", "https://huggingface.co/TheBloke/phi-2-GGUF/resolve/main/phi-2.Q4_K_M.gguf?download=true"),
         };
-        public int SelectedOption = 0;
+        public int SelectedModel = 0;
         private static readonly string serverZipUrl = "https://github.com/Mozilla-Ocho/llamafile/releases/download/0.6/llamafile-0.6.zip";
         private static readonly string server = Path.Combine(LLMUnitySetup.GetAssetPath(Path.GetFileNameWithoutExtension(serverZipUrl)), "bin/llamafile");
         private static readonly string apeARMUrl = "https://cosmo.zip/pub/cosmos/bin/ape-arm64.elf";
@@ -90,9 +89,10 @@ namespace LLMUnity
         public void DownloadModel(int optionIndex)
         {
             // download default model and disable model editor properties until the model is set
-            modelProgress = 0;
-            SelectedOption = optionIndex;
+            SelectedModel = optionIndex;
             string modelUrl = modelOptions[optionIndex].Item2;
+            if (modelUrl == null) return;
+            modelProgress = 0;
             string modelName = Path.GetFileName(modelUrl).Split("?")[0];
             string modelPath = LLMUnitySetup.GetAssetPath(modelName);
             Task downloadTask = LLMUnitySetup.DownloadFile(modelUrl, modelPath, false, false, SetModel, SetModelProgress);
