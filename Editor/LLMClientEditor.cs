@@ -89,7 +89,6 @@ namespace LLMUnity
 
         public void AddModelLoadersSettings(SerializedObject llmScriptSO, LLMClient llmScript)
         {
-            if (!llmScriptSO.FindProperty("advancedOptions").boolValue) return; // at the moment we only have advanced parameters here
             EditorGUILayout.LabelField("Model Settings", EditorStyles.boldLabel);
             AddModelAddonLoaders(llmScriptSO, llmScript);
             AddModelSettings(llmScriptSO);
