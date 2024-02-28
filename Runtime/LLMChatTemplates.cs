@@ -6,8 +6,14 @@ namespace LLMUnity
 {
     public abstract class ChatTemplate
     {
-        public readonly List<string> stop;
+        public List<string> stop;
+        public abstract void SetStop();
         public abstract string ComputePrompt(List<ChatMessage> messages);
+
+        public ChatTemplate()
+        {
+            SetStop();
+        }
 
         public static Dictionary<string, ChatTemplate> templates = new Dictionary<string, ChatTemplate>()
         {
@@ -83,8 +89,6 @@ namespace LLMUnity
 
     public class ChatMLTemplate : ChatTemplate
     {
-        public new readonly List<string> stop = new List<string> { "\n<|im_start|>", "<|im_start|>", "\n<|im_end|>", "<|im_end|>"};
-
         public string RoleString(string role)
         {
             // role as a delimited string for the model
@@ -95,6 +99,11 @@ namespace LLMUnity
         {
             // role and the role message
             return RoleString(role) + message + "<|im_end|>\n";
+        }
+
+        public override void SetStop()
+        {
+            stop = new List<string> { "\n<|im_start|>", "<|im_start|>", "\n<|im_end|>", "<|im_end|>"};
         }
 
         public override string ComputePrompt(List<ChatMessage> messages)
@@ -111,7 +120,10 @@ namespace LLMUnity
 
     public class MistralInstructTemplate : ChatTemplate
     {
-        public new readonly List<string> stop = new List<string> { "\n[INST]", "[INST]", "\n[/INST]", "[/INST]" };
+        public override void SetStop()
+        {
+            stop = new List<string> { "\n[INST]", "[INST]", "\n[/INST]", "[/INST]" };
+        }
 
         public override string ComputePrompt(List<ChatMessage> messages)
         {
@@ -136,7 +148,10 @@ namespace LLMUnity
 
     public class LLama2Template : ChatTemplate
     {
-        public new readonly List<string> stop = new List<string> { "\n[INST]", "[INST]", "\n[/INST]", "[/INST]" };
+        public override void SetStop()
+        {
+            stop = new List<string> { "\n[INST]", "[INST]", "\n[/INST]", "[/INST]" };
+        }
 
         public override string ComputePrompt(List<ChatMessage> messages)
         {
@@ -161,7 +176,10 @@ namespace LLMUnity
 
     public class AlpacaTemplate : ChatTemplate
     {
-        public new readonly List<string> stop = new List<string> { "\n###", "###" };
+        public override void SetStop()
+        {
+            stop = new List<string> { "\n###", "###" };
+        }
 
         public override string ComputePrompt(List<ChatMessage> messages)
         {
@@ -183,7 +201,10 @@ namespace LLMUnity
 
     public class Phi2Template : ChatTemplate
     {
-        public new readonly List<string> stop = new List<string> { "\nuser:", "user:", "\nassistant:", "assistant:"};
+        public override void SetStop()
+        {
+            stop = new List<string> { "\nuser:", "user:", "\nassistant:", "assistant:"};
+        }
 
         public override string ComputePrompt(List<ChatMessage> messages)
         {
@@ -206,7 +227,10 @@ namespace LLMUnity
 
     public class ZephyrTemplate : ChatTemplate
     {
-        public new readonly List<string> stop = new List<string> { "\n<|user|>", "<|user|>", "\n<|assistant|>", "<|assistant|>"};
+        public override void SetStop()
+        {
+            stop = new List<string> { "\n<|user|>", "<|user|>", "\n<|assistant|>", "<|assistant|>"};
+        }
 
         public override string ComputePrompt(List<ChatMessage> messages)
         {
