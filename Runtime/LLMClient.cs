@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.IO;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -75,7 +74,7 @@ namespace LLMUnity
         [ModelExpert] public bool ignoreEos = false;
 
         public int nKeep = -1;
-        public List<string> stop = null;
+        public List<string> stop = new List<string>();
         public Dictionary<int, string> logitBias = null;
         public string grammarString;
 
@@ -87,6 +86,7 @@ namespace LLMUnity
         private List<(string, string)> requestHeaders;
         private string previousEndpoint;
         public bool setNKeepToPrompt = true;
+        private List<string> stopAll;
 
         public LLMClient()
         {
@@ -99,6 +99,9 @@ namespace LLMUnity
             // initialise the prompt and set the keep tokens based on its length
             InitGrammar();
             await InitPrompt();
+            stopAll = new List<string>();
+            if (template.stop != null) stopAll.AddRange(template.stop);
+            if (stop != null) stopAll.AddRange(stop);
         }
 
         public LLM GetServer()
@@ -207,7 +210,7 @@ namespace LLMUnity
         }
 
 #endif
-        public ChatRequest GenerateRequest(string message)
+        public ChatRequest GenerateRequest()
         {
             // setup the request struct
             ChatRequest chatRequest = new ChatRequest();
@@ -219,7 +222,7 @@ namespace LLMUnity
             chatRequest.n_predict = numPredict;
             chatRequest.n_keep = nKeep;
             chatRequest.stream = stream;
-            chatRequest.stop = template.stop.Concat(stop).ToList();
+            chatRequest.stop = stopAll;
             chatRequest.tfs_z = tfsZ;
             chatRequest.typical_p = typicalP;
             chatRequest.repeat_penalty = repeatPenalty;
@@ -291,7 +294,14 @@ namespace LLMUnity
             // call the callback function while the answer is received
             // call the completionCallback function when the answer is fully received
             await InitNKeep();
-            string json = JsonUtility.ToJson(GenerateRequest(question));
+
+            AddPlayerMessage(question);
+            string json = JsonUtility.ToJson(GenerateRequest());
+            if (!addToHistory)
+            {
+                chat.RemoveAt(chat.Count - 1);
+            }
+
             string result;
             if (stream)
             {
@@ -302,9 +312,9 @@ namespace LLMUnity
                 result = await PostRequest<ChatResult, string>(json, "completion", ChatContent, callback);
             }
             completionCallback?.Invoke();
+
             if (addToHistory)
             {
-                AddPlayerMessage(question);
                 AddAIMessage(result);
             }
             return result;
