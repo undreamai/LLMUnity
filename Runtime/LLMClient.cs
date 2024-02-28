@@ -82,9 +82,10 @@ namespace LLMUnity
         [TextArea(5, 10), Chat] public string prompt = "A chat between a curious human and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the human's questions.";
 
         protected List<ChatMessage> chat;
-        [Model] public string chatTemplate = "chatml";
+        [Model] public string chatTemplate;
         public ChatTemplate template;
         private List<(string, string)> requestHeaders;
+        private string previousEndpoint;
         public bool setNKeepToPrompt = true;
 
         public LLMClient()
@@ -98,8 +99,55 @@ namespace LLMUnity
             // initialise the prompt and set the keep tokens based on its length
             InitGrammar();
             await InitPrompt();
-            template = ChatMLTemplate.templates[chatTemplate];
         }
+
+        public LLM GetServer()
+        {
+            foreach (LLM server in FindObjectsOfType<LLM>())
+            {
+                if (server.host == host && server.port == port)
+                {
+                    return server;
+                }
+            }
+            return null;
+        }
+
+#if UNITY_EDITOR
+        public virtual void SetTemplate(string templateName)
+        {
+            chatTemplate = templateName;
+            template = ChatTemplate.templates[templateName];
+        }
+
+        public void SetInitialTemplate()
+        {
+            string templateName = "chatml";
+            if (GetType() == typeof(LLMClient))
+            {
+                LLM server = GetServer();
+                if (server != null) templateName = server.chatTemplate;
+            }
+            SetTemplate(templateName);
+        }
+
+        private void OnValidate()
+        {
+            string newEndpoint = host + ":" + port;
+            if (newEndpoint != previousEndpoint)
+            {
+                if (GetType() == typeof(LLMClient))
+                {
+                    SetInitialTemplate();
+                }
+                else
+                {
+                    SetTemplate(chatTemplate);
+                }
+                previousEndpoint = newEndpoint;
+            }
+        }
+#endif
 
         private async Task InitPrompt(bool clearChat = true)
         {
