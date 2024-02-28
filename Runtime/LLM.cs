@@ -6,6 +6,7 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEditor;
+using UnityEditor.PackageManager;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
@@ -107,10 +108,19 @@ namespace LLMUnity
             // set the model and enable the model editor properties
             modelCopyProgress = 0;
             model = await LLMUnitySetup.AddAsset(path, LLMUnitySetup.GetAssetPath());
-            chatTemplate = ChatTemplate.FromGGUF(path);
-            template = ChatTemplate.templates[chatTemplate];
+            SetTemplate(ChatTemplate.FromGGUF(path));
             EditorUtility.SetDirty(this);
             modelCopyProgress = 1;
+        }
+
+        public override void SetTemplate(string templateName)
+        {
+            base.SetTemplate(templateName);
+            foreach (LLMClient client in GetListeningClients())
+            {
+                client.chatTemplate = chatTemplate;
+                client.template = template;
+            }
         }
 
         public async Task SetLora(string path)
@@ -123,6 +133,20 @@ namespace LLMUnity
         }
 
 #endif
+
+        public List<LLMClient> GetListeningClients()
+        {
+            List<LLMClient> clients = new List<LLMClient>();
+            foreach (LLMClient client in FindObjectsOfType<LLMClient>())
+            {
+                if (client.GetType() == typeof(LLM)) continue;
+                if (client.host == host && client.port == port)
+                {
+                    clients.Add(client);
+                }
+            }
+            return clients;
+        }
 
         new public async void Awake()
         {
@@ -259,7 +283,7 @@ namespace LLMUnity
                 if (!File.Exists(loraPath)) throw new Exception($"File {loraPath} not found!");
             }
 
-            int slots = parallelPrompts == -1 ? FindObjectsOfType<LLMClient>().Length : parallelPrompts;
+            int slots = parallelPrompts == -1 ? GetListeningClients().Count + 1 : parallelPrompts;
             string arguments = $" --port {port} -m {EscapeSpaces(modelPath)} -c {contextSize} -b {batchSize} --log-disable --nobrowser -np {slots}";
             if (numThreads > 0) arguments += $" -t {numThreads}";
             if (loraPath != "") arguments += $" --lora {EscapeSpaces(loraPath)}";
