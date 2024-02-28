@@ -46,7 +46,7 @@ namespace LLMUnity
         [HideInInspector] public bool advancedOptions = false;
         [HideInInspector] public bool expertOptions = false;
 
-        [ClientAdvanced] public string host = "localhost";
+        [ServerAdvanced] public string host = "localhost";
         [ServerAdvanced] public int port = 13333;
         [Server] public bool stream = true;
 
