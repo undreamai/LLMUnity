@@ -136,7 +136,7 @@ namespace LLMUnity
             string newEndpoint = host + ":" + port;
             if (newEndpoint != previousEndpoint)
             {
-                string template = "chatml";
+                string template = ChatTemplate.DefaultTemplate;
                 if (GetType() == typeof(LLMClient))
                 {
                     LLM server = GetServer();
