@@ -9,6 +9,7 @@
 #### 🐛 Fixes
 
 - Fix remote server functionality (PR: #96)
+- Fix Max issue needing to run llamafile manually the first time (PR: #98)
 
 #### 📦 General
 
