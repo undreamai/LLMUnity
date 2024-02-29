@@ -78,11 +78,16 @@ namespace LLMUnity
 
                 using (ZipArchive archive = ZipFile.OpenRead(serverZip))
                 {
-                    ZipArchiveEntry entry = archive.GetEntry(Path.Combine(Path.GetFileNameWithoutExtension(serverZipUrl), "bin/llamafile"));
-                    if (entry == null) throw new Exception("llamafile could not be extracted!");
-                    AssetDatabase.StartAssetEditing();
-                    entry.ExtractToFile(server, true);
-                    AssetDatabase.StopAssetEditing();
+                    foreach (ZipArchiveEntry entry in archive.Entries)
+                    {
+                        if (entry.Name == "llamafile")
+                        {
+                            AssetDatabase.StartAssetEditing();
+                            entry.ExtractToFile(server, true);
+                            AssetDatabase.StopAssetEditing();
+                            break;
+                        }
+                    }
                 }
                 File.Delete(serverZip);
                 binariesDone += 1;
