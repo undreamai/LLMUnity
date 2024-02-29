@@ -275,7 +275,7 @@ You can also load your own model in .gguf format with the `Load model` button (s
 Save the scene, run and enjoy!
 
 ## Use your own model
-LLMUnity uses the [Mistral 7B Instruct](https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.2) or [Microsoft Phi-2](https://huggingface.co/microsoft/phi-2) model by default, quantised with the Q4 method.<br>
+LLMUnity uses the [Mistral 7B Instruct](https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.2), [OpenHermes 2.5](https://huggingface.co/teknium/OpenHermes-2.5-Mistral-7B) or [Microsoft Phi-2](https://huggingface.co/microsoft/phi-2) model by default, quantised with the Q4 method.<br>
 
 Alternative models can be downloaded from [HuggingFace](https://huggingface.co/models).<br>
 The models should be able to use the ChatML prompt format as this is hardcoded at the moment in llama.cpp.<br>
@@ -312,9 +312,10 @@ If it is not selected, the full reply from the model is received in one go
 </details>
 
 #### :hugs: Model Settings
-- `Download model` click to download the default model ([Mistral 7B Instruct](https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.2-GGUF/resolve/main/mistral-7b-instruct-v0.2.Q4_K_M.gguf?download=true))
+- `Download model` click to download one of the default models
 - `Load model` click to load your own model in .gguf format
 - `Model` the model being used (inside the Assets/StreamingAssets folder)
+- <details><summary><code>Chat Template</code> the chat template to use for constructing the prompts</summary> The chat template is determined automatically by the chat template of the model (if it exists) or the model name. The "chatml" and "alpaca" templates work with most of the models.</details>
 - <details><summary>Advanced options</summary>
 
   - `Load lora` click to load a LORA model in .bin format
