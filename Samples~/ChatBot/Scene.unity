@@ -445,28 +445,51 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   advancedOptions: 0
+  expertOptions: 0
   host: localhost
   port: 13333
   stream: 1
+  grammar: 
   seed: 0
+  numPredict: 256
+  cachePrompt: 1
   temperature: 0.2
   topK: 40
   topP: 0.9
-  nPredict: 256
-  playerName: Human
-  AIName: Assistant
+  minP: 0.05
+  repeatPenalty: 1.1
+  presencePenalty: 0
+  frequencyPenalty: 0
+  tfsZ: 1
+  typicalP: 1
+  repeatLastN: 64
+  penalizeNl: 1
+  penaltyPrompt: 
+  mirostat: 0
+  mirostatTau: 5
+  mirostatEta: 0.1
+  nProbs: 0
+  ignoreEos: 0
+  nKeep: -1
+  stop: []
+  grammarString: 
+  playerName: user
+  AIName: assistant
   prompt: A chat between a curious human and an artificial intelligence assistant.
     The assistant gives helpful, detailed, and polite answers to the human's questions.
+  chatTemplate: chatml
+  setNKeepToPrompt: 1
   modelHide: 1
   numThreads: -1
   numGPULayers: 0
   parallelPrompts: -1
   debug: 0
+  asynchronousStartup: 0
   model: 
   lora: 
   contextSize: 512
   batchSize: 512
-  modelUrl: https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.2-GGUF/resolve/main/mistral-7b-instruct-v0.2.Q4_K_M.gguf?download=true
+  SelectedModel: 0
   modelProgress: 1
   modelCopyProgress: 1
 --- !u!1 &1051131186
