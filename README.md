@@ -107,6 +107,11 @@ This is useful if the `Stream` option is selected for continuous output from the
   }
 ```
 
+To stop the chat without waiting its completion you can use:
+``` c#
+    llm.CancelRequests();
+```
+
 - Finally, in the Inspector of the GameObject of your script, select the LLM GameObject created above as the llm property.
 
 That's all :sparkles:!
