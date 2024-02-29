@@ -55,12 +55,12 @@ namespace LLMUnity
 
         public virtual void AddModelLoaders(SerializedObject llmScriptSO, LLMClient llmScript)
         {
-            string[] templateOptions = ChatTemplate.templates.Keys.ToList().ToArray();
-            int index = Array.IndexOf(templateOptions, llmScript.chatTemplate);
+            string[] templateOptions = ChatTemplate.templatesDescription.Keys.ToList().ToArray();
+            int index = Array.IndexOf(ChatTemplate.templatesDescription.Values.ToList().ToArray(), llmScript.chatTemplate);
             int newIndex = EditorGUILayout.Popup("Chat Template", index, templateOptions);
             if (newIndex != index)
             {
-                llmScript.SetTemplate(templateOptions[newIndex]);
+                llmScript.SetTemplate(ChatTemplate.templatesDescription[templateOptions[newIndex]]);
             }
         }
 
