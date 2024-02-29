@@ -36,6 +36,8 @@ Origin: [link](https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.2-GGUF)<br
 License Type: "Apache 2.0"<br>
 License: [link](https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.2-GGUF)
 
+<br>
+
 ### microsoft/phi-2
 
 Developer: Microsoft<br>
@@ -49,3 +51,19 @@ Developer: TheBloke<br>
 Origin: [link](https://huggingface.co/TheBloke/phi-2-GGUF)<br>
 License Type: "MIT"<br>
 License: [link](https://huggingface.co/TheBloke/phi-2-GGUF#license)
+
+<br>
+
+### teknium/OpenHermes-2.5-Mistral-7B
+
+Developer: teknium<br>
+Origin: [link](https://huggingface.co/teknium/OpenHermes-2.5-Mistral-7B)<br>
+License Type: "Apache 2.0"<br>
+License: [link](https://huggingface.co/teknium/OpenHermes-2.5-Mistral-7B)
+
+##### modified by: TheBloke/OpenHermes-2.5-Mistral-7B-GGUF
+
+Developer: TheBloke<br>
+Origin: [link](https://huggingface.co/TheBloke/OpenHermes-2.5-Mistral-7B-GGUF)<br>
+License Type: "Apache 2.0"<br>
+License: [link](https://huggingface.co/TheBloke/OpenHermes-2.5-Mistral-7B-GGUF)
