@@ -30,6 +30,7 @@ namespace LLMUnity
                     string path = EditorUtility.OpenFilePanelWithFilters("Select a gguf model file", "", new string[] { "Model Files", "gguf" });
                     if (!string.IsNullOrEmpty(path))
                     {
+                        llmScript.SelectedModel = 0;
                         llmScript.SetModel(path);
                     }
                 };
