@@ -115,7 +115,7 @@ namespace LLMUnityTests
         public async void TestInitParameters()
         {
             Assert.That(llm.nKeep == (await llm.Tokenize(llm.prompt)).Count);
-            Assert.That(llm.stop.Count > 0);
+            Assert.That(llm.template.GetStop().Length > 0);
             Assert.That(llm.GetChat().Count == 1);
         }
 
