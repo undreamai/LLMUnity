@@ -1,4 +1,4 @@
-### 📦 General
+### 🚀 Features
 
-- Refactoring and small enhancements (PR: #80)
+- LLM server unit tests (PR: #90)
 

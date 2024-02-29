@@ -1,0 +1,34 @@
+name: Run Unity Tests
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:   
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    if: startsWith(github.base_ref, 'release/') && github.event.pull_request.merged == true
+    steps:
+        - name: Checkout Repo
+          uses: actions/checkout@v4
+
+        - name: Setup Environment
+          run: |
+            mkdir Package~
+            mv Editor Package~/
+            mv Runtime Package~/
+            mv Tests Package~/
+            mv package.json Package~/package.json         
+
+        - name: Run Tests
+          uses: game-ci/unity-test-runner@v4
+          env:
+            UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+            UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+            UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          with:             
+            packageMode: true
+            projectPath: Package~/
+            testMode: playmode
+            unityVersion: 2022.3.16f1
