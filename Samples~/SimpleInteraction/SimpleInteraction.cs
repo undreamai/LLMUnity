@@ -32,4 +32,10 @@ public class SimpleInteraction : MonoBehaviour
         playerText.Select();
         playerText.text = "";
     }
+
+    public void CancelRequests()
+    {
+        llm.CancelRequests();
+        AIReplyComplete();
+    }
 }
