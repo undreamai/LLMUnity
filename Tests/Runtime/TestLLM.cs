@@ -36,7 +36,7 @@ namespace LLMUnityTests
         GameObject gameObject;
         LLMNoAwake llm;
         int port = 15555;
-        string AIReply = "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
+        string AIReply = "antantantantantantantantantantantantantantantantantantantantant";
         Exception error = null;
 
         public TestLLM()

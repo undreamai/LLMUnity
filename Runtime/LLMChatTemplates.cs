@@ -29,6 +29,7 @@ namespace LLMUnity
                 typeof(MistralInstructTemplate),
                 typeof(LLama2ChatTemplate),
                 typeof(LLama2Template),
+                typeof(Phi2Template),
                 typeof(ZephyrTemplate),
             };
 
@@ -123,6 +124,7 @@ namespace LLMUnity
         protected virtual string SystemSuffix() { return ""; }
         protected virtual string PlayerPrefix() { return ""; }
         protected virtual string AIPrefix() { return ""; }
+        protected virtual string PrefixMessageSeparator() { return ""; }
         protected virtual string RequestPrefix() { return ""; }
         protected virtual string RequestSuffix() { return ""; }
         protected virtual string PairSuffix() { return ""; }
@@ -145,14 +147,14 @@ namespace LLMUnity
                 {
                     Debug.Log($"Role was {messages[i].role}, was expecting {playerName}");
                 }
-                chatPrompt += PlayerPrefix() + messages[i].content + RequestSuffix();
+                chatPrompt += PlayerPrefix() + PrefixMessageSeparator() + messages[i].content + RequestSuffix();
                 if (i < messages.Count - 1)
                 {
                     if (messages[i + 1].role != AIName)
                     {
                         Debug.Log($"Role was {messages[i + 1].role}, was expecting {AIName}");
                     }
-                    chatPrompt += AIPrefix() + messages[i + 1].content + PairSuffix();
+                    chatPrompt += AIPrefix() + PrefixMessageSeparator() + messages[i + 1].content + PairSuffix();
                 }
             }
             chatPrompt += AIPrefix();
@@ -177,7 +179,7 @@ namespace LLMUnity
 
         public override string GetName() { return "chatml"; }
         public override string GetDescription() { return "chatml (best overall)"; }
-        public override string[] GetNameMatches() { return new string[] {"chatml", "hermes", "phi"}; }
+        public override string[] GetNameMatches() { return new string[] {"chatml", "hermes"}; }
         public override string[] GetChatTemplateMatches() { return new string[] {"{% for message in messages %}{{'<|im_start|>' + message['role'] + '\n' + message['content'] + '<|im_end|>' + '\n'}}{% endfor %}{% if add_generation_prompt %}{{ '<|im_start|>assistant\n' }}{% endif %}"}; }
 
         protected override string SystemPrefix() { return "<|im_start|>system\n"; }
@@ -220,8 +222,9 @@ namespace LLMUnity
         public override string GetDescription() { return "llama (modified for chat)"; }
         public override string[] GetNameMatches() { return new string[] {"llama"}; }
 
-        protected override string PlayerPrefix() { return "### " + playerName + ": "; }
-        protected override string AIPrefix() { return "### " + AIName + ": "; }
+        protected override string PlayerPrefix() { return "### " + playerName + ":"; }
+        protected override string AIPrefix() { return "### " + AIName + ":"; }
+        protected override string PrefixMessageSeparator() { return " "; }
 
         public override string[] GetStop()
         {
@@ -258,8 +261,9 @@ namespace LLMUnity
         public override string[] GetNameMatches() { return new string[] {"mistral"}; }
         public override string[] GetChatTemplateMatches() { return new string[] {"{{ bos_token }}{% for message in messages %}{% if (message['role'] == 'user') != (loop.index0 % 2 == 0) %}{{ raise_exception('Conversation roles must alternate user/assistant/user/assistant/...') }}{% endif %}{% if message['role'] == 'user' %}{{ '[INST] ' + message['content'] + ' [/INST]' }}{% elif message['role'] == 'assistant' %}{{ message['content'] + eos_token}}{% else %}{{ raise_exception('Only user and assistant roles are supported!') }}{% endif %}{% endfor %}"}; }
 
-        protected override string PlayerPrefix() { return "### " + playerName + ": "; }
-        protected override string AIPrefix() { return "### " + AIName + ": "; }
+        protected override string PlayerPrefix() { return "### " + playerName + ":"; }
+        protected override string AIPrefix() { return "### " + AIName + ":"; }
+        protected override string PrefixMessageSeparator() { return " "; }
 
         public override string[] GetStop()
         {
@@ -272,18 +276,40 @@ namespace LLMUnity
         public AlpacaTemplate(string playerName = "user", string AIName = "assistant") : base(playerName, AIName) {}
 
         public override string GetName() { return "alpaca"; }
-        public override string GetDescription() { return "alpaca"; }
+        public override string GetDescription() { return "alpaca (best alternative)"; }
         public override string[] GetNameMatches() { return new string[] {"alpaca"}; }
 
         protected override string SystemSuffix() { return "\n\n"; }
         protected override string RequestSuffix() { return "\n"; }
-        protected override string PlayerPrefix() { return "### " + playerName + ": "; }
-        protected override string AIPrefix() { return "### " + AIName + ": "; }
+        protected override string PlayerPrefix() { return "### " + playerName + ":"; }
+        protected override string AIPrefix() { return "### " + AIName + ":"; }
+        protected override string PrefixMessageSeparator() { return " "; }
         protected override string PairSuffix() { return "\n"; }
 
         public override string[] GetStop()
         {
             return AddStopNewlines(new string[] { "###" });
+        }
+    }
+
+    public class Phi2Template : ChatTemplate
+    {
+        public Phi2Template(string playerName = "user", string AIName = "assistant") : base(playerName, AIName) {}
+
+        public override string GetName() { return "phi"; }
+        public override string GetDescription() { return "phi"; }
+        public override string[] GetNameMatches() { return new string[] {"phi"}; }
+
+        protected override string SystemSuffix() { return "\n\n"; }
+        protected override string RequestSuffix() { return "\n"; }
+        protected override string PlayerPrefix() { return playerName + ":"; }
+        protected override string AIPrefix() { return AIName + ":"; }
+        protected override string PrefixMessageSeparator() { return " "; }
+        protected override string PairSuffix() { return "\n"; }
+
+        public override string[] GetStop()
+        {
+            return AddStopNewlines(new string[] { playerName + ":", AIName + ":" });
         }
     }
 
