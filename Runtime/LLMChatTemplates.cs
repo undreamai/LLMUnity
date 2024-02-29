@@ -19,30 +19,29 @@ namespace LLMUnity
 
         public static Dictionary<string, Type> templates = new Dictionary<string, Type>()
         {
-            {"chatml", typeof(ChatMLTemplate)},
+            {"chatml (best overall)", typeof(ChatMLTemplate)},
             {"mistral (modified for chat)", typeof(MistralChatTemplate)},
             {"mistral instruct", typeof(MistralInstructTemplate)},
             {"llama (modified for chat)", typeof(LLama2ChatTemplate)},
             {"llama", typeof(LLama2Template)},
             {"alpaca", typeof(AlpacaTemplate)},
-            {"phi", typeof(Phi2Template)},
             {"zephyr", typeof(ZephyrTemplate)},
         };
 
         public static Dictionary<string, string> modelTemplates = new Dictionary<string, string>()
         {
-            {"chatml", "chatml"},
-            {"hermes", "chatml"},
+            {"chatml", "chatml (best overall)"},
+            {"hermes", "chatml (best overall)"},
+            {"phi", "chatml (best overall)"},
             {"mistral", "mistral (modified for chat)"},
             {"llama", "llama (modified for chat)"},
             {"alpaca", "alpaca"},
-            {"phi", "phi"},
             {"zephyr", "zephyr"},
         };
 
         public static Dictionary<string, string> chatTemplates = new Dictionary<string, string>()
         {
-            {"{% for message in messages %}{{'<|im_start|>' + message['role'] + '\n' + message['content'] + '<|im_end|>' + '\n'}}{% endfor %}{% if add_generation_prompt %}{{ '<|im_start|>assistant\n' }}{% endif %}", "chatml"},
+            {"{% for message in messages %}{{'<|im_start|>' + message['role'] + '\n' + message['content'] + '<|im_end|>' + '\n'}}{% endfor %}{% if add_generation_prompt %}{{ '<|im_start|>assistant\n' }}{% endif %}", "chatml (best overall)"},
             {"{{ bos_token }}{% for message in messages %}{% if (message['role'] == 'user') != (loop.index0 % 2 == 0) %}{{ raise_exception('Conversation roles must alternate user/assistant/user/assistant/...') }}{% endif %}{% if message['role'] == 'user' %}{{ '[INST] ' + message['content'] + ' [/INST]' }}{% elif message['role'] == 'assistant' %}{{ message['content'] + eos_token}}{% else %}{{ raise_exception('Only user and assistant roles are supported!') }}{% endif %}{% endfor %}", "mistral (modified for chat)"},
             {"{% for message in messages %}\n{% if message['role'] == 'user' %}\n{{ '<|user|>\n' + message['content'] + eos_token }}\n{% elif message['role'] == 'system' %}\n{{ '<|system|>\n' + message['content'] + eos_token }}\n{% elif message['role'] == 'assistant' %}\n{{ '<|assistant|>\n'  + message['content'] + eos_token }}\n{% endif %}\n{% if loop.last and add_generation_prompt %}\n{{ '<|assistant|>' }}\n{% endif %}\n{% endfor %}", "zephyr"}
         };
@@ -232,31 +231,14 @@ namespace LLMUnity
         public AlpacaTemplate(string playerName = "user", string AIName = "assistant") : base(playerName, AIName) {}
 
         protected override string SystemSuffix() { return "\n\n"; }
-        protected override string RequestSuffix() { return "\n\n"; }
+        protected override string RequestSuffix() { return "\n"; }
         protected override string PlayerPrefix() { return "### " + playerName + ": "; }
         protected override string AIPrefix() { return "### " + AIName + ": "; }
-        protected override string PairSuffix() { return "</s>"; }
-
-        public override List<string> GetStop()
-        {
-            return AddStopNewlines(new List<string> { "###" });
-        }
-    }
-
-
-    public class Phi2Template : ChatTemplate
-    {
-        public Phi2Template(string playerName = "user", string AIName = "assistant") : base(playerName, AIName) {}
-
-        protected override string SystemSuffix() { return "\n\n"; }
-        protected override string RequestSuffix() { return "\n"; }
-        protected override string PlayerPrefix() { return playerName + ": "; }
-        protected override string AIPrefix() { return AIName + ": "; }
         protected override string PairSuffix() { return "\n"; }
 
         public override List<string> GetStop()
         {
-            return AddStopNewlines(new List<string> { playerName + ":", AIName + ":" });
+            return AddStopNewlines(new List<string> { "###" });
         }
     }
 
@@ -266,14 +248,14 @@ namespace LLMUnity
 
         protected override string SystemPrefix() { return "<|system|>\n"; }
         protected override string SystemSuffix() { return "</s>\n"; }
-        protected override string PlayerPrefix() { return $"<|{playerName}|>\n"; }
-        protected override string AIPrefix() { return $"<|{AIName}|>\n"; }
+        protected override string PlayerPrefix() { return $"<|user|>\n"; }
+        protected override string AIPrefix() { return $"<|assistant|>\n"; }
         protected override string RequestSuffix() { return "</s>\n"; }
         protected override string PairSuffix() { return "</s>\n"; }
 
         public override List<string> GetStop()
         {
-            return AddStopNewlines(new List<string> { $"<|{playerName}|>", $"<|{AIName}|>" });
+            return AddStopNewlines(new List<string> { $"<|user|>", $"<|assistant|>" });
         }
     }
 }
