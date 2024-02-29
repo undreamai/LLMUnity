@@ -135,6 +135,10 @@ namespace LLMUnity
             nKeep = -1;
             await InitPrompt(clearChat);
         }
+<<<<<<< HEAD
+
+=======
+>>>>>>> 7be2ff410608b592067d87bedfa5ddc78583faac
         private async Task InitNKeep()
         {
             if (setNKeepToPrompt && nKeep == -1)

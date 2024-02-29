@@ -1,9 +1,14 @@
+<<<<<<< HEAD
+## v1.1.0
+- no changes
+=======
 ## v1.1.1
 #### 📦 General
 
 - Refactoring and small enhancements (PR: #80)
 
 
+>>>>>>> 7be2ff410608b592067d87bedfa5ddc78583faac
 ## v1.0.6
 #### 🐛 Fixes
 

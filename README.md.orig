@@ -12,7 +12,11 @@
 
 LLMUnity enables seamless integration of Large Language Models (LLMs) within the Unity engine.<br>
 It allows to create intelligent characters that your players can interact with for an immersive experience.<br>
+<<<<<<< HEAD
+LLMUnity is built on top of the awesome [llama.cpp](https://github.com/ggerganov/llama.cpp), [llamafile](https://github.com/Mozilla-Ocho/llamafile) and [usearch](https://github.com/unum-cloud/usearch) libraries.
+=======
 LLMUnity is built on top of the awesome [llama.cpp](https://github.com/ggerganov/llama.cpp) and [llamafile](https://github.com/Mozilla-Ocho/llamafile) libraries.
+>>>>>>> 7be2ff410608b592067d87bedfa5ddc78583faac
 
 <sub>
 <a href="#at-a-glance" style="color: black">At a glance</a>&nbsp;&nbsp;•&nbsp;
@@ -28,6 +32,16 @@ LLMUnity is built on top of the awesome [llama.cpp](https://github.com/ggerganov
 </sub>
 
 ## At a glance
+<<<<<<< HEAD
+
+- 💬 Craft your own NPC AI that the player interacts with in natural language
+- 🖌️ The NPC can respond creatively according to your character definition
+- 🗝️ or with predefined answers that stick to your script!
+- 🔍 You can even build an intelligent search engine with our search system (RAG)
+
+**Features**
+=======
+>>>>>>> 7be2ff410608b592067d87bedfa5ddc78583faac
 - :computer: Cross-platform! Windows, Linux and macOS ([versions](https://github.com/Mozilla-Ocho/llamafile?tab=readme-ov-file#supported-oses))
 - :house: Runs locally without internet access. No data ever leave the game!
 - :zap: Blazing fast inference on CPU and GPU (Nvidia and AMD)
@@ -65,7 +79,11 @@ For a step-by-step tutorial you can have a look at our guide:
 
 The first step is to create a GameObject for the LLM :chess_pawn::
 - Create an empty GameObject.<br>In the GameObject Inspector click `Add Component` and select the LLM script.
+<<<<<<< HEAD
+- Download the default model with the `Download Model` button (~4GB).<br>Or load your own .gguf model with the `Load model` button (see [Use your own model](#use-your-own-model)).
+=======
 - Download one of the default models with the `Download Model` button (~GBs).<br>Or load your own .gguf model with the `Load model` button (see [Use your own model](#use-your-own-model)).
+>>>>>>> 7be2ff410608b592067d87bedfa5ddc78583faac
 - Define the role of your AI in the `Prompt`. You can also define the name of the AI (`AI Name`) and the player (`Player Name`).
 - (Optional) By default you receive the reply from the model as is it is produced in real-time (recommended).<br>If you want the full reply in one go, deselect the `Stream` option.
 - (Optional) Adjust the server or model settings to your preference (see [Options](#options)).
@@ -241,6 +259,15 @@ public class MyScript : MonoBehaviour
 </details>
 <details>
 <summary>Use a remote server</summary>
+<<<<<<< HEAD
+=======
+
+You can also build a remote server that does the processing and have local clients that interact with it.To do that:
+- Create a server based on the `LLM` script or a standard [llama.cpp server](https://github.com/ggerganov/llama.cpp/blob/master/examples/server).
+- Create characters with the `LLMClient` script. The characters can be configured to connect to the remote instance by providing the IP address and port of the server in the `host`/`port` properties.
+
+</details>
+>>>>>>> 7be2ff410608b592067d87bedfa5ddc78583faac
 
 You can also build a remote server that does the processing and have local clients that interact with it.To do that:
 - Create a server based on the `LLM` script or a standard [llama.cpp server](https://github.com/ggerganov/llama.cpp/blob/master/examples/server).
@@ -340,8 +367,12 @@ In the scene, select the `LLM` GameObject download the default model (`Download 
 Save the scene, run and enjoy!
 
 ## Use your own model
+<<<<<<< HEAD
+LLMUnity uses the [Microsoft Phi-2](https://huggingface.co/microsoft/phi-2) or [Mistral 7B Instruct](https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.2) model by default, quantised with the Q4 method.<br>
+=======
 LLMUnity uses the [Mistral 7B Instruct](https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.2) or [Microsoft Phi-2](https://huggingface.co/microsoft/phi-2) model by default, quantised with the Q4 method.<br>
 
+>>>>>>> 7be2ff410608b592067d87bedfa5ddc78583faac
 Alternative models can be downloaded from [HuggingFace](https://huggingface.co/models).<br>
 The models should be able to use the ChatML prompt format as this is hardcoded at the moment in llama.cpp.<br>
 The required model format is .gguf as defined by the llama.cpp.<br>
@@ -419,5 +450,9 @@ If it is not selected, the full reply from the model is received in one go
 - `AI Name` the name of the AI
 - `Prompt` a description of the AI role
 
+<<<<<<< HEAD
+
+=======
+>>>>>>> 7be2ff410608b592067d87bedfa5ddc78583faac
 ## License
 The license of LLMUnity is MIT ([LICENSE.md](LICENSE.md)) and uses third-party software with MIT and Apache licenses ([Third Party Notices.md](<Third Party Notices.md>)).
