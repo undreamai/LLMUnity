@@ -98,9 +98,7 @@ namespace LLMUnity
             // initialise the prompt and set the keep tokens based on its length
             InitGrammar();
             await InitPrompt();
-            stopAll = new List<string>();
-            stopAll.AddRange(template.GetStop());
-            if (stop != null) stopAll.AddRange(stop);
+            LoadTemplate();
         }
 
         public LLM GetServer()
@@ -200,6 +198,14 @@ namespace LLMUnity
         {
             // set the tokens to keep
             nKeep = tokens.Count;
+        }
+
+        private void LoadTemplate()
+        {
+            template = ChatTemplate.GetTemplate(chatTemplate, playerName, AIName);
+            stopAll = new List<string>();
+            stopAll.AddRange(template.GetStop());
+            if (stop != null) stopAll.AddRange(stop);
         }
 
 #if UNITY_EDITOR
