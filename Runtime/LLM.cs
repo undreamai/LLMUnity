@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
@@ -37,7 +38,7 @@ namespace LLMUnity
         };
         public int SelectedModel = 0;
         private static readonly string serverZipUrl = "https://github.com/Mozilla-Ocho/llamafile/releases/download/0.6/llamafile-0.6.zip";
-        private static readonly string server = Path.Combine(LLMUnitySetup.GetAssetPath(Path.GetFileNameWithoutExtension(serverZipUrl)), "bin/llamafile");
+        private static readonly string server = LLMUnitySetup.GetAssetPath("llamafile");
         private static readonly string apeARMUrl = "https://cosmo.zip/pub/cosmos/bin/ape-arm64.elf";
         private static readonly string apeARM = LLMUnitySetup.GetAssetPath("ape-arm64.elf");
         private static readonly string apeX86_64Url = "https://cosmo.zip/pub/cosmos/bin/ape-x86_64.elf";
@@ -74,7 +75,13 @@ namespace LLMUnity
                 string serverZip = Path.Combine(Application.temporaryCachePath, "llamafile.zip");
                 await LLMUnitySetup.DownloadFile(serverZipUrl, serverZip, true, false, null, SetBinariesProgress);
                 binariesDone += 1;
-                LLMUnitySetup.ExtractZip(serverZip, LLMUnitySetup.GetAssetPath());
+
+                using (ZipArchive archive = ZipFile.OpenRead(serverZip))
+                {
+                    ZipArchiveEntry entry = archive.GetEntry(Path.Combine(Path.GetFileNameWithoutExtension(serverZipUrl), "bin/llamafile"));
+                    if (entry == null) throw new Exception("llamafile could not be extracted!");
+                    entry.ExtractToFile(server, true);
+                }
                 File.Delete(serverZip);
                 binariesDone += 1;
             }
