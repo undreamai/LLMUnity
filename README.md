@@ -251,7 +251,8 @@ public class MyScript : MonoBehaviour
 
 You can also build a remote server that does the processing and have local clients that interact with it.To do that:
 - Create a server based on the `LLM` script or a standard [llama.cpp server](https://github.com/ggerganov/llama.cpp/blob/master/examples/server).
-- Create characters with the `LLMClient` script. The characters can be configured to connect to the remote instance by providing the IP address and port of the server in the `host`/`port` properties.
+- If using the `LLM` script for the server, enable the `Remote` option (Advanced options)
+- Create characters with the `LLMClient` script. The characters can be configured to connect to the remote instance by providing the IP address (starting with "http://") and port of the server in the `host`/`port` properties.
 
 </details>
 
@@ -305,6 +306,7 @@ If it is not selected, the full reply from the model is received in one go
 
   - `Parallel Prompts` number of prompts that can happen in parallel (default: -1 = number of LLM/LLMClient objects)
   - `Debug` select to log the output of the model in the Unity Editor
+  - `Remote` select to allow remote access to the server
   - `Port` port to run the server
 
 </details>
