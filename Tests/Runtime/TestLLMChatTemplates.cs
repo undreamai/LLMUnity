@@ -68,16 +68,7 @@ namespace LLMUnityTests
         {
             Assert.AreEqual(
                 new AlpacaTemplate().ComputePrompt(messages),
-                "you are a bot\n\n### user: Hello, how are you?\n\n### assistant: I'm doing great. How can I help you today?</s>### user: I'd like to show off how chat templating works!\n\n### assistant: chat template is awesome</s>### user: do you think so?\n\n### assistant: "
-            );
-        }
-
-        [Test]
-        public void TestPhi2()
-        {
-            Assert.AreEqual(
-                new Phi2Template().ComputePrompt(messages),
-                "you are a bot\n\nuser: Hello, how are you?\nassistant: I'm doing great. How can I help you today?\nuser: I'd like to show off how chat templating works!\nassistant: chat template is awesome\nuser: do you think so?\nassistant: "
+                "you are a bot\n\n### user: Hello, how are you?\n### assistant: I'm doing great. How can I help you today?\n### user: I'd like to show off how chat templating works!\n### assistant: chat template is awesome\n### user: do you think so?\n### assistant: "
             );
         }
 
