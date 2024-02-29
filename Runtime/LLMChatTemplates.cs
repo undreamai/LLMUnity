@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
-using UnityEngine.Assertions;
 
 namespace LLMUnity
 {
@@ -11,40 +10,57 @@ namespace LLMUnity
         public string playerName;
         public string AIName;
 
+        public static string DefaultTemplate;
+        public static Type[] templateClasses;
+        public static Dictionary<string, Type> templates;
+        public static Dictionary<string, string> templatesDescription;
+        public static Dictionary<string, string> modelTemplates;
+        public static Dictionary<string, string> chatTemplates;
+
+        static ChatTemplate()
+        {
+            DefaultTemplate = "chatml";
+
+            templateClasses = new Type[]
+            {
+                typeof(ChatMLTemplate),
+                typeof(AlpacaTemplate),
+                typeof(MistralChatTemplate),
+                typeof(MistralInstructTemplate),
+                typeof(LLama2ChatTemplate),
+                typeof(LLama2Template),
+                typeof(ZephyrTemplate),
+            };
+
+            templates = new Dictionary<string, Type>();
+            templatesDescription = new Dictionary<string, string>();
+            modelTemplates = new Dictionary<string, string>();
+            chatTemplates = new Dictionary<string, string>();
+            foreach (Type templateClass in templateClasses)
+            {
+                ChatTemplate template = (ChatTemplate)Activator.CreateInstance(templateClass, "", "");
+                if (templates.ContainsKey(template.GetName())) Debug.LogError($"{template.GetName()} already in templates");
+                templates[template.GetName()] = templateClass;
+                if (templatesDescription.ContainsKey(template.GetDescription())) Debug.LogError($"{template.GetDescription()} already in templatesDescription");
+                templatesDescription[template.GetDescription()] = template.GetName();
+                foreach (string match in template.GetNameMatches())
+                {
+                    if (modelTemplates.ContainsKey(match)) Debug.LogError($"{match} already in modelTemplates");
+                    modelTemplates[match] = template.GetName();
+                }
+                foreach (string match in template.GetChatTemplateMatches())
+                {
+                    if (chatTemplates.ContainsKey(match)) Debug.LogError($"{match} already in chatTemplates");
+                    chatTemplates[match] = template.GetName();
+                }
+            }
+        }
+
         public ChatTemplate(string playerName = "user", string AIName = "assistant")
         {
             this.playerName = playerName;
             this.AIName = AIName;
         }
-
-        public static Dictionary<string, Type> templates = new Dictionary<string, Type>()
-        {
-            {"chatml (best overall)", typeof(ChatMLTemplate)},
-            {"alpaca (best alternative)", typeof(AlpacaTemplate)},
-            {"mistral (modified for chat)", typeof(MistralChatTemplate)},
-            {"mistral instruct", typeof(MistralInstructTemplate)},
-            {"llama (modified for chat)", typeof(LLama2ChatTemplate)},
-            {"llama", typeof(LLama2Template)},
-            {"zephyr", typeof(ZephyrTemplate)},
-        };
-
-        public static Dictionary<string, string> modelTemplates = new Dictionary<string, string>()
-        {
-            {"chatml", "chatml (best overall)"},
-            {"hermes", "chatml (best overall)"},
-            {"phi", "chatml (best overall)"},
-            {"mistral", "mistral (modified for chat)"},
-            {"llama", "llama (modified for chat)"},
-            {"alpaca", "alpaca (best alternative)"},
-            {"zephyr", "zephyr"},
-        };
-
-        public static Dictionary<string, string> chatTemplates = new Dictionary<string, string>()
-        {
-            {"{% for message in messages %}{{'<|im_start|>' + message['role'] + '\n' + message['content'] + '<|im_end|>' + '\n'}}{% endfor %}{% if add_generation_prompt %}{{ '<|im_start|>assistant\n' }}{% endif %}", "chatml (best overall)"},
-            {"{{ bos_token }}{% for message in messages %}{% if (message['role'] == 'user') != (loop.index0 % 2 == 0) %}{{ raise_exception('Conversation roles must alternate user/assistant/user/assistant/...') }}{% endif %}{% if message['role'] == 'user' %}{{ '[INST] ' + message['content'] + ' [/INST]' }}{% elif message['role'] == 'assistant' %}{{ message['content'] + eos_token}}{% else %}{{ raise_exception('Only user and assistant roles are supported!') }}{% endif %}{% endfor %}", "mistral (modified for chat)"},
-            {"{% for message in messages %}\n{% if message['role'] == 'user' %}\n{{ '<|user|>\n' + message['content'] + eos_token }}\n{% elif message['role'] == 'system' %}\n{{ '<|system|>\n' + message['content'] + eos_token }}\n{% elif message['role'] == 'assistant' %}\n{{ '<|assistant|>\n'  + message['content'] + eos_token }}\n{% endif %}\n{% if loop.last and add_generation_prompt %}\n{{ '<|assistant|>' }}\n{% endif %}\n{% endfor %}", "zephyr"}
-        };
 
         public static string FromName(string name)
         {
@@ -88,7 +104,7 @@ namespace LLMUnity
             if (name != null) return name;
 
             Debug.Log("No chat template could be matched, fallback to ChatML");
-            return "chatml";
+            return DefaultTemplate;
         }
 
         public static ChatTemplate GetTemplate(string template, string playerName, string AIName)
@@ -96,7 +112,12 @@ namespace LLMUnity
             return (ChatTemplate)Activator.CreateInstance(templates[template], playerName, AIName);
         }
 
-        public abstract List<string> GetStop();
+        public abstract string GetName();
+        public abstract string GetDescription();
+        public virtual string[] GetNameMatches() { return new string[] {}; }
+        public virtual string[] GetChatTemplateMatches() { return new string[] {}; }
+        public abstract string[] GetStop();
+
         protected virtual string PromptPrefix() { return ""; }
         protected virtual string SystemPrefix() { return ""; }
         protected virtual string SystemSuffix() { return ""; }
@@ -138,7 +159,7 @@ namespace LLMUnity
             return chatPrompt;
         }
 
-        public List<string> AddStopNewlines(List<string> stop)
+        public string[] AddStopNewlines(string[] stop)
         {
             List<string> stopWithNewLines = new List<string>();
             foreach (string stopword in stop)
@@ -146,13 +167,18 @@ namespace LLMUnity
                 stopWithNewLines.Add(stopword);
                 stopWithNewLines.Add("\n" + stopword);
             }
-            return stopWithNewLines;
+            return stopWithNewLines.ToArray();
         }
     }
 
     public class ChatMLTemplate : ChatTemplate
     {
         public ChatMLTemplate(string playerName = "user", string AIName = "assistant") : base(playerName, AIName) {}
+
+        public override string GetName() { return "chatml"; }
+        public override string GetDescription() { return "chatml (best overall)"; }
+        public override string[] GetNameMatches() { return new string[] {"chatml", "hermes", "phi"}; }
+        public override string[] GetChatTemplateMatches() { return new string[] {"{% for message in messages %}{{'<|im_start|>' + message['role'] + '\n' + message['content'] + '<|im_end|>' + '\n'}}{% endfor %}{% if add_generation_prompt %}{{ '<|im_start|>assistant\n' }}{% endif %}"}; }
 
         protected override string SystemPrefix() { return "<|im_start|>system\n"; }
         protected override string SystemSuffix() { return "<|im_end|>\n"; }
@@ -161,9 +187,9 @@ namespace LLMUnity
         protected override string RequestSuffix() { return "<|im_end|>\n"; }
         protected override string PairSuffix() { return "<|im_end|>\n"; }
 
-        public override List<string> GetStop()
+        public override string[] GetStop()
         {
-            return AddStopNewlines(new List<string> { "<|im_start|>", "<|im_end|>" });
+            return AddStopNewlines(new string[] { "<|im_start|>", "<|im_end|>" });
         }
     }
 
@@ -171,15 +197,18 @@ namespace LLMUnity
     {
         public LLama2Template(string playerName = "user", string AIName = "assistant") : base(playerName, AIName) {}
 
+        public override string GetName() { return "llama"; }
+        public override string GetDescription() { return "llama"; }
+
         protected override string SystemPrefix() { return "<<SYS>>\n"; }
         protected override string SystemSuffix() { return "\n<</SYS>> "; }
         protected override string RequestPrefix() { return "<s>[INST] "; }
         protected override string RequestSuffix() { return " [/INST]"; }
         protected override string PairSuffix() { return " </s>"; }
 
-        public override List<string> GetStop()
+        public override string[] GetStop()
         {
-            return AddStopNewlines(new List<string> { "[INST]", "[/INST]" });
+            return AddStopNewlines(new string[] { "[INST]", "[/INST]" });
         }
     }
 
@@ -187,18 +216,25 @@ namespace LLMUnity
     {
         public LLama2ChatTemplate(string playerName = "user", string AIName = "assistant") : base(playerName, AIName) {}
 
+        public override string GetName() { return "llama chat"; }
+        public override string GetDescription() { return "llama (modified for chat)"; }
+        public override string[] GetNameMatches() { return new string[] {"llama"}; }
+
         protected override string PlayerPrefix() { return "### " + playerName + ": "; }
         protected override string AIPrefix() { return "### " + AIName + ": "; }
 
-        public override List<string> GetStop()
+        public override string[] GetStop()
         {
-            return AddStopNewlines(new List<string> { "[INST]", "[/INST]", "###" });
+            return AddStopNewlines(new string[] { "[INST]", "[/INST]", "###" });
         }
     }
 
     public class MistralInstructTemplate : ChatTemplate
     {
         public MistralInstructTemplate(string playerName = "user", string AIName = "assistant") : base(playerName, AIName) {}
+
+        public override string GetName() { return "mistral instruct"; }
+        public override string GetDescription() { return "mistral instruct"; }
 
         protected override string PromptPrefix() { return "<s>"; }
         protected override string SystemPrefix() { return ""; }
@@ -207,9 +243,9 @@ namespace LLMUnity
         protected override string RequestSuffix() { return " [/INST]"; }
         protected override string PairSuffix() { return "</s>"; }
 
-        public override List<string> GetStop()
+        public override string[] GetStop()
         {
-            return AddStopNewlines(new List<string> { "[INST]", "[/INST]" });
+            return AddStopNewlines(new string[] { "[INST]", "[/INST]" });
         }
     }
 
@@ -217,12 +253,17 @@ namespace LLMUnity
     {
         public MistralChatTemplate(string playerName = "user", string AIName = "assistant") : base(playerName, AIName) {}
 
+        public override string GetName() { return "mistral chat"; }
+        public override string GetDescription() { return "mistral (modified for chat)"; }
+        public override string[] GetNameMatches() { return new string[] {"mistral"}; }
+        public override string[] GetChatTemplateMatches() { return new string[] {"{{ bos_token }}{% for message in messages %}{% if (message['role'] == 'user') != (loop.index0 % 2 == 0) %}{{ raise_exception('Conversation roles must alternate user/assistant/user/assistant/...') }}{% endif %}{% if message['role'] == 'user' %}{{ '[INST] ' + message['content'] + ' [/INST]' }}{% elif message['role'] == 'assistant' %}{{ message['content'] + eos_token}}{% else %}{{ raise_exception('Only user and assistant roles are supported!') }}{% endif %}{% endfor %}"}; }
+
         protected override string PlayerPrefix() { return "### " + playerName + ": "; }
         protected override string AIPrefix() { return "### " + AIName + ": "; }
 
-        public override List<string> GetStop()
+        public override string[] GetStop()
         {
-            return AddStopNewlines(new List<string> { "[INST]", "[/INST]", "###" });
+            return AddStopNewlines(new string[] { "[INST]", "[/INST]", "###" });
         }
     }
 
@@ -230,21 +271,30 @@ namespace LLMUnity
     {
         public AlpacaTemplate(string playerName = "user", string AIName = "assistant") : base(playerName, AIName) {}
 
+        public override string GetName() { return "alpaca"; }
+        public override string GetDescription() { return "alpaca"; }
+        public override string[] GetNameMatches() { return new string[] {"alpaca"}; }
+
         protected override string SystemSuffix() { return "\n\n"; }
         protected override string RequestSuffix() { return "\n"; }
         protected override string PlayerPrefix() { return "### " + playerName + ": "; }
         protected override string AIPrefix() { return "### " + AIName + ": "; }
         protected override string PairSuffix() { return "\n"; }
 
-        public override List<string> GetStop()
+        public override string[] GetStop()
         {
-            return AddStopNewlines(new List<string> { "###" });
+            return AddStopNewlines(new string[] { "###" });
         }
     }
 
     public class ZephyrTemplate : ChatTemplate
     {
         public ZephyrTemplate(string playerName = "user", string AIName = "assistant") : base(playerName, AIName) {}
+
+        public override string GetName() { return "zephyr"; }
+        public override string GetDescription() { return "zephyr"; }
+        public override string[] GetNameMatches() { return new string[] {"zephyr"}; }
+        public override string[] GetChatTemplateMatches() { return new string[] {"{% for message in messages %}\n{% if message['role'] == 'user' %}\n{{ '<|user|>\n' + message['content'] + eos_token }}\n{% elif message['role'] == 'system' %}\n{{ '<|system|>\n' + message['content'] + eos_token }}\n{% elif message['role'] == 'assistant' %}\n{{ '<|assistant|>\n'  + message['content'] + eos_token }}\n{% endif %}\n{% if loop.last and add_generation_prompt %}\n{{ '<|assistant|>' }}\n{% endif %}\n{% endfor %}"}; }
 
         protected override string SystemPrefix() { return "<|system|>\n"; }
         protected override string SystemSuffix() { return "</s>\n"; }
@@ -253,9 +303,9 @@ namespace LLMUnity
         protected override string RequestSuffix() { return "</s>\n"; }
         protected override string PairSuffix() { return "</s>\n"; }
 
-        public override List<string> GetStop()
+        public override string[] GetStop()
         {
-            return AddStopNewlines(new List<string> { $"<|user|>", $"<|assistant|>" });
+            return AddStopNewlines(new string[] { $"<|user|>", $"<|assistant|>" });
         }
     }
 }
