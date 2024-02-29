@@ -21,6 +21,7 @@ namespace LLMUnity
         [ServerAdvanced] public int parallelPrompts = -1;
         [ServerAdvanced] public bool debug = false;
         [ServerAdvanced] public bool asynchronousStartup = false;
+        [ServerAdvanced] public bool remote = false;
 
         [Model] public string model = "";
         [ModelAddonAdvanced] public string lora = "";
@@ -284,6 +285,7 @@ namespace LLMUnity
 
             int slots = parallelPrompts == -1 ? GetListeningClients().Count + 1 : parallelPrompts;
             string arguments = $" --port {port} -m {EscapeSpaces(modelPath)} -c {contextSize} -b {batchSize} --log-disable --nobrowser -np {slots}";
+            if (remote) arguments += $" --host 0.0.0.0";
             if (numThreads > 0) arguments += $" -t {numThreads}";
             if (loraPath != "") arguments += $" --lora {EscapeSpaces(loraPath)}";
 
