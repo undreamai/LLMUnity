@@ -49,7 +49,11 @@ namespace LLMUnity
         public void AddServerSettings(SerializedObject llmScriptSO)
         {
             List<Type> attributeClasses = new List<Type> { typeof(ServerAttribute) };
-            if (llmScriptSO.FindProperty("advancedOptions").boolValue) attributeClasses.Add(typeof(ServerAdvancedAttribute));
+            if (llmScriptSO.FindProperty("advancedOptions").boolValue)
+            {
+                if (llmScriptSO.targetObject.GetType() == typeof(LLMClient)) attributeClasses.Add(typeof(ClientAdvancedAttribute));
+                attributeClasses.Add(typeof(ServerAdvancedAttribute));
+            }
             ShowPropertiesOfClass("Server Settings", llmScriptSO, orderedTypes, attributeClasses, true);
         }
 
