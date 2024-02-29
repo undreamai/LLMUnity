@@ -20,11 +20,11 @@ namespace LLMUnity
         public static Dictionary<string, Type> templates = new Dictionary<string, Type>()
         {
             {"chatml (best overall)", typeof(ChatMLTemplate)},
+            {"alpaca (best alternative)", typeof(AlpacaTemplate)},
             {"mistral (modified for chat)", typeof(MistralChatTemplate)},
             {"mistral instruct", typeof(MistralInstructTemplate)},
             {"llama (modified for chat)", typeof(LLama2ChatTemplate)},
             {"llama", typeof(LLama2Template)},
-            {"alpaca", typeof(AlpacaTemplate)},
             {"zephyr", typeof(ZephyrTemplate)},
         };
 
@@ -35,7 +35,7 @@ namespace LLMUnity
             {"phi", "chatml (best overall)"},
             {"mistral", "mistral (modified for chat)"},
             {"llama", "llama (modified for chat)"},
-            {"alpaca", "alpaca"},
+            {"alpaca", "alpaca (best alternative)"},
             {"zephyr", "zephyr"},
         };
 
