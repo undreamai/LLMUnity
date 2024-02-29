@@ -90,6 +90,12 @@ namespace LLMUnitySamples
             inputBubble.ReActivateInputField();
         }
 
+        public void CancelRequests()
+        {
+            llm.CancelRequests();
+            AllowInput();
+        }
+
         IEnumerator<string> BlockInteraction()
         {
             // prevent from change until next frame
