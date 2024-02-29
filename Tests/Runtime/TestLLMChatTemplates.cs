@@ -41,7 +41,7 @@ namespace LLMUnityTests
         {
             Assert.AreEqual(
                 new MistralChatTemplate().ComputePrompt(messages),
-                "<s>[INST] you are a bot\n\n### user: Hello, how are you? [/INST]### assistant: I'm doing great. How can I help you today?</s>[INST] ### user: I'd like to show off how chat templating works! [/INST]### assistant: chat template is awesome</s>[INST] ### user: do you think so? [/INST]### assistant: "
+                "<s>[INST] you are a bot\n\n### user: Hello, how are you? [/INST]### assistant: I'm doing great. How can I help you today?</s>[INST] ### user: I'd like to show off how chat templating works! [/INST]### assistant: chat template is awesome</s>[INST] ### user: do you think so? [/INST]### assistant:"
             );
         }
 
@@ -59,7 +59,7 @@ namespace LLMUnityTests
         {
             Assert.AreEqual(
                 new LLama2ChatTemplate().ComputePrompt(messages),
-                "<s>[INST] <<SYS>>\nyou are a bot\n<</SYS>> ### user: Hello, how are you? [/INST]### assistant: I'm doing great. How can I help you today? </s><s>[INST] ### user: I'd like to show off how chat templating works! [/INST]### assistant: chat template is awesome </s><s>[INST] ### user: do you think so? [/INST]### assistant: "
+                "<s>[INST] <<SYS>>\nyou are a bot\n<</SYS>> ### user: Hello, how are you? [/INST]### assistant: I'm doing great. How can I help you today? </s><s>[INST] ### user: I'd like to show off how chat templating works! [/INST]### assistant: chat template is awesome </s><s>[INST] ### user: do you think so? [/INST]### assistant:"
             );
         }
 
@@ -68,7 +68,16 @@ namespace LLMUnityTests
         {
             Assert.AreEqual(
                 new AlpacaTemplate().ComputePrompt(messages),
-                "you are a bot\n\n### user: Hello, how are you?\n### assistant: I'm doing great. How can I help you today?\n### user: I'd like to show off how chat templating works!\n### assistant: chat template is awesome\n### user: do you think so?\n### assistant: "
+                "you are a bot\n\n### user: Hello, how are you?\n### assistant: I'm doing great. How can I help you today?\n### user: I'd like to show off how chat templating works!\n### assistant: chat template is awesome\n### user: do you think so?\n### assistant:"
+            );
+        }
+
+        [Test]
+        public void TestPhi2()
+        {
+            Assert.AreEqual(
+                new Phi2Template().ComputePrompt(messages),
+                "you are a bot\n\nuser: Hello, how are you?\nassistant: I'm doing great. How can I help you today?\nuser: I'd like to show off how chat templating works!\nassistant: chat template is awesome\nuser: do you think so?\nassistant:"
             );
         }
 
