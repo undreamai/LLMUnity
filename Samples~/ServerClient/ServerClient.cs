@@ -61,4 +61,12 @@ public class ServerClient : MonoBehaviour
         interaction1.Start();
         interaction2.Start();
     }
+
+    public void CancelRequests()
+    {
+        llm.CancelRequests();
+        llmClient.CancelRequests();
+        interaction1.AIReplyComplete();
+        interaction2.AIReplyComplete();
+    }
 }
