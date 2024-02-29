@@ -78,6 +78,8 @@ namespace LLMUnity
         public Dictionary<int, string> logitBias = null;
         public string grammarString;
 
+        [Chat] public string playerName = "user";
+        [Chat] public string AIName = "assistant";
         [TextArea(5, 10), Chat] public string prompt = "A chat between a curious human and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the human's questions.";
 
         protected List<ChatMessage> chat;
@@ -100,7 +102,7 @@ namespace LLMUnity
             InitGrammar();
             await InitPrompt();
             stopAll = new List<string>();
-            if (template.stop != null) stopAll.AddRange(template.stop);
+            stopAll.AddRange(template.GetStop());
             if (stop != null) stopAll.AddRange(stop);
         }
 
@@ -120,7 +122,7 @@ namespace LLMUnity
         public virtual void SetTemplate(string templateName)
         {
             chatTemplate = templateName;
-            template = ChatTemplate.templates[templateName];
+            template = ChatTemplate.GetTemplate(templateName, playerName, AIName);
         }
 
         private void Reset()
@@ -251,12 +253,12 @@ namespace LLMUnity
 
         private void AddPlayerMessage(string content)
         {
-            AddMessage("user", content);
+            AddMessage(playerName, content);
         }
 
         private void AddAIMessage(string content)
         {
-            AddMessage("assistant", content);
+            AddMessage(AIName, content);
         }
 
         public string ChatContent(ChatResult result)
@@ -311,12 +313,13 @@ namespace LLMUnity
             {
                 result = await PostRequest<ChatResult, string>(json, "completion", ChatContent, callback);
             }
-            completionCallback?.Invoke();
 
             if (addToHistory)
             {
                 AddAIMessage(result);
             }
+
+            completionCallback?.Invoke();
             return result;
         }
 
