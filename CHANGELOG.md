@@ -1,7 +1,12 @@
-## v1.1.2
+## v1.2.0
 #### 🚀 Features
 
 - LLM server unit tests (PR: #90)
+- Implement chat templates (PR: #92)
+
+#### 📦 General
+
+- Async startup support (PR: #89)
 
 
 ## v1.1.1
