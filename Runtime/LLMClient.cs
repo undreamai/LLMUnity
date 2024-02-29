@@ -85,16 +85,13 @@ namespace LLMUnity
         protected List<ChatMessage> chat;
         public string chatTemplate;
         public ChatTemplate template;
-        private List<(string, string)> requestHeaders;
+        private List<(string, string)> requestHeaders = new List<(string, string)> { ("Content-Type", "application/json") };
         private string previousEndpoint;
         public bool setNKeepToPrompt = true;
         private List<string> stopAll;
-
-        public LLMClient()
-        {
-            // initialise headers and chat lists
-            requestHeaders = new List<(string, string)> { ("Content-Type", "application/json") };
-        }
+        private List<UnityWebRequest> WIPRequests = new List<UnityWebRequest>();
+        static object chatPromptLock = new object();
+        static object chatAddLock = new object();
 
         public async void Awake()
         {
@@ -297,10 +294,10 @@ namespace LLMUnity
             // call the completionCallback function when the answer is fully received
             await InitNKeep();
 
-            AddPlayerMessage(question);
-            string json = JsonUtility.ToJson(GenerateRequest());
-            if (!addToHistory)
-            {
+            string json;
+            lock (chatPromptLock) {
+                AddPlayerMessage(question);
+                json = JsonUtility.ToJson(GenerateRequest());
                 chat.RemoveAt(chat.Count - 1);
             }
 
@@ -316,7 +313,10 @@ namespace LLMUnity
 
             if (addToHistory)
             {
-                AddAIMessage(result);
+                lock (chatAddLock) {
+                    AddPlayerMessage(question);
+                    AddAIMessage(result);
+                }
             }
 
             completionCallback?.Invoke();
@@ -360,6 +360,15 @@ namespace LLMUnity
             return response.Trim().Replace("\n\n", "").Split("data: ");
         }
 
+        public void CancelRequests()
+        {
+            foreach (UnityWebRequest request in WIPRequests)
+            {
+                request.Abort();
+            }
+            WIPRequests.Clear();
+        }
+
         public async Task<Ret> PostRequest<Res, Ret>(string json, string endpoint, ContentCallback<Res, Ret> getContent, Callback<Ret> callback = null)
         {
             // send a post request to the server and call the relevant callbacks to convert the received content and handle it
@@ -368,6 +377,8 @@ namespace LLMUnity
             byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(json);
             using (var request = UnityWebRequest.Put($"{host}:{port}/{endpoint}", jsonToSend))
             {
+                WIPRequests.Add(request);
+
                 request.method = "POST";
                 if (requestHeaders != null)
                 {
@@ -391,6 +402,8 @@ namespace LLMUnity
                     // Wait for the next frame
                     await Task.Yield();
                 }
+                WIPRequests.Remove(request);
+
                 if (request.result != UnityWebRequest.Result.Success) throw new System.Exception(request.error);
                 result = ConvertContent(request.downloadHandler.text, getContent);
                 callback?.Invoke(result);
