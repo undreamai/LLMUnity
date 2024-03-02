@@ -1,0 +1,9 @@
+{
+  "name": "undream.llmunity.Runtime.Tests",
+  "references": [
+    "undream.llmunity.Runtime"
+  ],
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ]
+}

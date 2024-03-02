@@ -6,8 +6,9 @@ namespace LLMUnity
     [CustomEditor(typeof(LLM))]
     public class LLMEditor : LLMClientEditor
     {
-        public void AddModelLoaders(SerializedObject llmScriptSO, LLM llmScript)
+        public override void AddModelLoaders(SerializedObject llmScriptSO, LLMClient llmClientScript)
         {
+            LLM llmScript = (LLM)llmClientScript;
             EditorGUILayout.BeginHorizontal();
 
             string[] options = new string[llmScript.modelOptions.Length];
@@ -16,8 +17,8 @@ namespace LLMUnity
                 options[i] = llmScript.modelOptions[i].Item1;
             }
 
-            int newIndex = EditorGUILayout.Popup("Model", llmScript.SelectedOption, options);
-            if (newIndex != llmScript.SelectedOption)
+            int newIndex = EditorGUILayout.Popup("Model", llmScript.SelectedModel, options);
+            if (newIndex != llmScript.SelectedModel)
             {
                 llmScript.DownloadModel(newIndex);
             }
@@ -29,18 +30,23 @@ namespace LLMUnity
                     string path = EditorUtility.OpenFilePanelWithFilters("Select a gguf model file", "", new string[] { "Model Files", "gguf" });
                     if (!string.IsNullOrEmpty(path))
                     {
+                        llmScript.SelectedModel = 0;
                         llmScript.SetModel(path);
                     }
                 };
             }
             EditorGUILayout.EndHorizontal();
+            base.AddModelLoaders(llmScriptSO, llmScript);
         }
 
-        public void AddModelAddonLoaders(SerializedObject llmScriptSO, LLM llmScript)
+        public override void AddModelAddonLoaders(SerializedObject llmScriptSO, LLMClient llmClientScript, bool layout)
         {
+            LLM llmScript = (LLM)llmClientScript;
             if (llmScriptSO.FindProperty("advancedOptions").boolValue)
             {
                 EditorGUILayout.BeginHorizontal();
+                GUILayout.Label("Lora / Grammar", GUILayout.Width(EditorGUIUtility.labelWidth));
+
                 if (GUILayout.Button("Load lora", GUILayout.Width(buttonWidth)))
                 {
                     EditorApplication.delayCall += () =>
@@ -55,17 +61,9 @@ namespace LLMUnity
                 base.AddModelAddonLoaders(llmScriptSO, llmScript, false);
                 EditorGUILayout.EndHorizontal();
             }
-        }
-
-        public void AddModelLoadersSettings(SerializedObject llmScriptSO, LLM llmScript)
-        {
-            EditorGUILayout.LabelField("Model Settings", EditorStyles.boldLabel);
-            AddModelLoaders(llmScriptSO, llmScript);
-            AddModelAddonLoaders(llmScriptSO, llmScript);
             ShowProgress(LLM.binariesProgress, "Setup Binaries");
             ShowProgress(llmScript.modelProgress, "Model Downloading");
             ShowProgress(llmScript.modelCopyProgress, "Model Copying");
-            AddModelSettings(llmScriptSO);
         }
 
         void ShowProgress(float progress, string progressText)

@@ -3,6 +3,7 @@ using UnityEditor;
 using UnityEngine;
 using System.Reflection;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace LLMUnity
 {
@@ -48,15 +49,34 @@ namespace LLMUnity
         public void AddServerSettings(SerializedObject llmScriptSO)
         {
             List<Type> attributeClasses = new List<Type> { typeof(ServerAttribute) };
-            if (llmScriptSO.FindProperty("advancedOptions").boolValue) attributeClasses.Add(typeof(ServerAdvancedAttribute));
+            if (llmScriptSO.FindProperty("advancedOptions").boolValue)
+            {
+                if (llmScriptSO.targetObject.GetType() == typeof(LLMClient)) attributeClasses.Add(typeof(ClientAdvancedAttribute));
+                attributeClasses.Add(typeof(ServerAdvancedAttribute));
+            }
             ShowPropertiesOfClass("Server Settings", llmScriptSO, orderedTypes, attributeClasses, true);
         }
 
-        public void AddModelAddonLoaders(SerializedObject llmScriptSO, LLMClient llmScript, bool layout = true)
+        public virtual void AddModelLoaders(SerializedObject llmScriptSO, LLMClient llmScript)
+        {
+            string[] templateOptions = ChatTemplate.templatesDescription.Keys.ToList().ToArray();
+            int index = Array.IndexOf(ChatTemplate.templatesDescription.Values.ToList().ToArray(), llmScript.chatTemplate);
+            int newIndex = EditorGUILayout.Popup("Chat Template", index, templateOptions);
+            if (newIndex != index)
+            {
+                llmScript.SetTemplate(ChatTemplate.templatesDescription[templateOptions[newIndex]]);
+            }
+        }
+
+        public virtual void AddModelAddonLoaders(SerializedObject llmScriptSO, LLMClient llmScript, bool layout = true)
         {
             if (llmScriptSO.FindProperty("advancedOptions").boolValue)
             {
-                if (layout) EditorGUILayout.BeginHorizontal();
+                if (layout)
+                {
+                    EditorGUILayout.BeginHorizontal();
+                    GUILayout.Label("Grammar", GUILayout.Width(EditorGUIUtility.labelWidth));
+                }
                 if (GUILayout.Button("Load grammar", GUILayout.Width(buttonWidth)))
                 {
                     EditorApplication.delayCall += () =>
@@ -84,13 +104,14 @@ namespace LLMUnity
             {
                 attributeClasses.Add(typeof(ModelExpertAttribute));
             }
-            ShowPropertiesOfClass("", llmScriptSO, orderedTypes, attributeClasses, true);
+            ShowPropertiesOfClass("", llmScriptSO, orderedTypes, attributeClasses, false);
+            Space();
         }
 
         public void AddModelLoadersSettings(SerializedObject llmScriptSO, LLMClient llmScript)
         {
-            if (!llmScriptSO.FindProperty("advancedOptions").boolValue) return; // at the moment we only have advanced parameters here
             EditorGUILayout.LabelField("Model Settings", EditorStyles.boldLabel);
+            AddModelLoaders(llmScriptSO, llmScript);
             AddModelAddonLoaders(llmScriptSO, llmScript);
             AddModelSettings(llmScriptSO);
         }

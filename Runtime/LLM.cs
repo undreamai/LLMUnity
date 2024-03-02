@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,20 +21,24 @@ namespace LLMUnity
         [Server] public int numGPULayers = 0;
         [ServerAdvanced] public int parallelPrompts = -1;
         [ServerAdvanced] public bool debug = false;
+        [ServerAdvanced] public bool asynchronousStartup = false;
+        [ServerAdvanced] public bool remote = false;
 
         [Model] public string model = "";
         [ModelAddonAdvanced] public string lora = "";
         [ModelAdvanced] public int contextSize = 512;
         [ModelAdvanced] public int batchSize = 512;
 
-        [HideInInspector] public readonly (string, string)[] modelOptions = new (string, string)[]{
+        [HideInInspector] public readonly (string, string)[] modelOptions = new(string, string)[]
+        {
             ("Download model", null),
-            ("Phi 2 (small, best)", "https://huggingface.co/TheBloke/phi-2-GGUF/resolve/main/phi-2.Q4_K_M.gguf?download=true"),
-            ("Mistral 7B Instruct v0.2 (medium, best)", "https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.2-GGUF/resolve/main/mistral-7b-instruct-v0.2.Q4_K_M.gguf?download=true")
+            ("Mistral 7B Instruct v0.2 (medium, best overall)", "https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.2-GGUF/resolve/main/mistral-7b-instruct-v0.2.Q4_K_M.gguf?download=true"),
+            ("OpenHermes 2.5 7B (medium, best for conversation)", "https://huggingface.co/TheBloke/OpenHermes-2.5-Mistral-7B-GGUF/resolve/main/openhermes-2.5-mistral-7b.Q4_K_M.gguf?download=true"),
+            ("Phi 2 (small, decent)", "https://huggingface.co/TheBloke/phi-2-GGUF/resolve/main/phi-2.Q4_K_M.gguf?download=true"),
         };
-        public int SelectedOption = 0;
+        public int SelectedModel = 0;
         private static readonly string serverZipUrl = "https://github.com/Mozilla-Ocho/llamafile/releases/download/0.6/llamafile-0.6.zip";
-        private static readonly string server = Path.Combine(LLMUnitySetup.GetAssetPath(Path.GetFileNameWithoutExtension(serverZipUrl)), "bin/llamafile");
+        private static readonly string server = LLMUnitySetup.GetAssetPath("llamafile");
         private static readonly string apeARMUrl = "https://cosmo.zip/pub/cosmos/bin/ape-arm64.elf";
         private static readonly string apeARM = LLMUnitySetup.GetAssetPath("ape-arm64.elf");
         private static readonly string apeX86_64Url = "https://cosmo.zip/pub/cosmos/bin/ape-x86_64.elf";
@@ -70,7 +75,20 @@ namespace LLMUnity
                 string serverZip = Path.Combine(Application.temporaryCachePath, "llamafile.zip");
                 await LLMUnitySetup.DownloadFile(serverZipUrl, serverZip, true, false, null, SetBinariesProgress);
                 binariesDone += 1;
-                LLMUnitySetup.ExtractZip(serverZip, LLMUnitySetup.GetAssetPath());
+
+                using (ZipArchive archive = ZipFile.OpenRead(serverZip))
+                {
+                    foreach (ZipArchiveEntry entry in archive.Entries)
+                    {
+                        if (entry.Name == "llamafile")
+                        {
+                            AssetDatabase.StartAssetEditing();
+                            entry.ExtractToFile(server, true);
+                            AssetDatabase.StopAssetEditing();
+                            break;
+                        }
+                    }
+                }
                 File.Delete(serverZip);
                 binariesDone += 1;
             }
@@ -85,9 +103,10 @@ namespace LLMUnity
         public void DownloadModel(int optionIndex)
         {
             // download default model and disable model editor properties until the model is set
-            modelProgress = 0;
-            SelectedOption = optionIndex;
+            SelectedModel = optionIndex;
             string modelUrl = modelOptions[optionIndex].Item2;
+            if (modelUrl == null) return;
+            modelProgress = 0;
             string modelName = Path.GetFileName(modelUrl).Split("?")[0];
             string modelPath = LLMUnitySetup.GetAssetPath(modelName);
             Task downloadTask = LLMUnitySetup.DownloadFile(modelUrl, modelPath, false, false, SetModel, SetModelProgress);
@@ -103,8 +122,19 @@ namespace LLMUnity
             // set the model and enable the model editor properties
             modelCopyProgress = 0;
             model = await LLMUnitySetup.AddAsset(path, LLMUnitySetup.GetAssetPath());
+            SetTemplate(ChatTemplate.FromGGUF(path));
             EditorUtility.SetDirty(this);
             modelCopyProgress = 1;
+        }
+
+        public override void SetTemplate(string templateName)
+        {
+            base.SetTemplate(templateName);
+            foreach (LLMClient client in GetListeningClients())
+            {
+                client.chatTemplate = chatTemplate;
+                client.template = template;
+            }
         }
 
         public async Task SetLora(string path)
@@ -118,10 +148,25 @@ namespace LLMUnity
 
 #endif
 
-        new public void Awake()
+        public List<LLMClient> GetListeningClients()
         {
-            // start the llm server and run the OnEnable of the client
-            StartLLMServer();
+            List<LLMClient> clients = new List<LLMClient>();
+            foreach (LLMClient client in FindObjectsOfType<LLMClient>())
+            {
+                if (client.GetType() == typeof(LLM)) continue;
+                if (client.host == host && client.port == port)
+                {
+                    clients.Add(client);
+                }
+            }
+            return clients;
+        }
+
+        new public async void Awake()
+        {
+            // start the llm server and run the Awake of the client
+            await StartLLMServer();
+
             base.Awake();
         }
 
@@ -144,11 +189,14 @@ namespace LLMUnity
             return apeExe;
         }
 
-        bool IsPortInUse()
+        public bool IsPortInUse()
         {
             try
             {
-                TcpClient c = new TcpClient(host, port);
+                using (TcpClient c = new TcpClient())
+                {
+                    c.Connect(host, port);
+                }
                 return true;
             }
             catch {}
@@ -211,14 +259,13 @@ namespace LLMUnity
             string arguments = args;
 
             List<(string, string)> environment = null;
-            if (numGPULayers <= 0)
-            {
-                // prevent nvcc building if not using GPU
-                environment = new List<(string, string)> { ("PATH", ""), ("CUDA_PATH", "") };
-            }
-
             if (Application.platform == RuntimePlatform.LinuxEditor || Application.platform == RuntimePlatform.LinuxPlayer)
             {
+                if (numGPULayers <= 0)
+                {
+                    // prevent nvcc building if not using GPU
+                    environment = new List<(string, string)> { ("PATH", ""), ("CUDA_PATH", "") };
+                }
                 // use APE binary directly if on Linux
                 arguments = $"{EscapeSpaces(binary)} {arguments}";
                 binary = SelectApeBinary();
@@ -233,7 +280,7 @@ namespace LLMUnity
             process = LLMUnitySetup.CreateProcess(binary, arguments, CheckIfListening, ProcessError, ProcessExited, environment);
         }
 
-        private void StartLLMServer()
+        private async Task StartLLMServer()
         {
             if (IsPortInUse()) throw new Exception($"Port {port} is already in use, please use another port or kill all llamafile processes using it!");
 
@@ -249,31 +296,29 @@ namespace LLMUnity
                 if (!File.Exists(loraPath)) throw new Exception($"File {loraPath} not found!");
             }
 
-            int slots = parallelPrompts == -1 ? FindObjectsOfType<LLMClient>().Length : parallelPrompts;
+            int slots = parallelPrompts == -1 ? GetListeningClients().Count + 1 : parallelPrompts;
             string arguments = $" --port {port} -m {EscapeSpaces(modelPath)} -c {contextSize} -b {batchSize} --log-disable --nobrowser -np {slots}";
+            if (remote) arguments += $" --host 0.0.0.0";
             if (numThreads > 0) arguments += $" -t {numThreads}";
             if (loraPath != "") arguments += $" --lora {EscapeSpaces(loraPath)}";
 
             string GPUArgument = numGPULayers <= 0 ? "" : $" -ngl {numGPULayers}";
             LLMUnitySetup.makeExecutable(server);
-            RunServerCommand(server, arguments + GPUArgument);
-            serverBlock.WaitOne(60000);
+            await RunAndWait(server, arguments + GPUArgument);
 
             if (process.HasExited && mmapCrash)
             {
                 Debug.Log("Mmap error, fallback to no mmap use");
                 serverBlock.Reset();
                 arguments += " --no-mmap";
-                RunServerCommand(server, arguments + GPUArgument);
-                serverBlock.WaitOne(60000);
+                await RunAndWait(server, arguments + GPUArgument);
             }
 
             if (process.HasExited && numGPULayers > 0)
             {
                 Debug.Log("GPU failed, fallback to CPU");
                 serverBlock.Reset();
-                RunServerCommand(server, arguments);
-                serverBlock.WaitOne(60000);
+                await RunAndWait(server, arguments);
             }
 
             if (process.HasExited) throw new Exception("Server could not be started!");
@@ -292,6 +337,29 @@ namespace LLMUnity
         public void OnDestroy()
         {
             StopProcess();
+        }
+
+        private async Task RunAndWait(string exe, string args, int seconds = 60)
+        {
+            RunServerCommand(exe, args);
+            if (asynchronousStartup) await WaitOneASync(serverBlock, TimeSpan.FromSeconds(seconds));
+            else serverBlock.WaitOne(seconds * 1000);
+        }
+
+        /// Wrapper from https://stackoverflow.com/a/18766131
+        private static Task WaitOneASync(WaitHandle handle, TimeSpan timeout)
+        {
+            var tcs = new TaskCompletionSource<object>();
+            var registration = ThreadPool.RegisterWaitForSingleObject(handle, (state, timedOut) =>
+            {
+                var localTcs = (TaskCompletionSource<object>)state;
+                if (timedOut)
+                    localTcs.TrySetCanceled();
+                else
+                    localTcs.TrySetResult(null);
+            }, tcs, timeout, executeOnlyOnce: true);
+            tcs.Task.ContinueWith((_, state) => ((RegisteredWaitHandle)state).Unregister(null), registration, TaskScheduler.Default);
+            return tcs.Task;
         }
     }
 }

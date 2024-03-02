@@ -74,32 +74,80 @@ namespace LLMUnity
         [ModelExpert] public bool ignoreEos = false;
 
         public int nKeep = -1;
-        public List<string> stop = null;
+        public List<string> stop = new List<string>();
         public Dictionary<int, string> logitBias = null;
         public string grammarString;
 
-        [Chat] public string playerName = "Human";
-        [Chat] public string AIName = "Assistant";
+        [Chat] public string playerName = "user";
+        [Chat] public string AIName = "assistant";
         [TextArea(5, 10), Chat] public string prompt = "A chat between a curious human and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the human's questions.";
 
-        private string currentPrompt;
-        private List<ChatMessage> chat;
-        private List<(string, string)> requestHeaders;
+        protected List<ChatMessage> chat;
+        public string chatTemplate;
+        public ChatTemplate template;
+        private List<(string, string)> requestHeaders = new List<(string, string)> { ("Content-Type", "application/json") };
+        private string previousEndpoint;
         public bool setNKeepToPrompt = true;
-
-        public LLMClient()
-        {
-            // initialise headers and chat lists
-            requestHeaders = new List<(string, string)> { ("Content-Type", "application/json") };
-        }
+        private List<string> stopAll;
+        private List<UnityWebRequest> WIPRequests = new List<UnityWebRequest>();
+        static object chatPromptLock = new object();
+        static object chatAddLock = new object();
 
         public async void Awake()
         {
             // initialise the prompt and set the keep tokens based on its length
-            InitStop();
             InitGrammar();
             await InitPrompt();
+            LoadTemplate();
         }
+
+        public LLM GetServer()
+        {
+            foreach (LLM server in FindObjectsOfType<LLM>())
+            {
+                if (server.host == host && server.port == port)
+                {
+                    return server;
+                }
+            }
+            return null;
+        }
+
+#if UNITY_EDITOR
+        public virtual void SetTemplate(string templateName)
+        {
+            chatTemplate = templateName;
+            template = ChatTemplate.GetTemplate(templateName, playerName, AIName);
+        }
+
+        private void Reset()
+        {
+            previousEndpoint = "";
+            OnValidate();
+        }
+
+        private void OnValidate()
+        {
+            string newEndpoint = host + ":" + port;
+            if (newEndpoint != previousEndpoint)
+            {
+                string template = ChatTemplate.DefaultTemplate;
+                if (GetType() == typeof(LLMClient))
+                {
+                    LLM server = GetServer();
+                    if (server != null) template = server.chatTemplate;
+                }
+                else
+                {
+                    if (chatTemplate != null && chatTemplate != "")
+                        template = chatTemplate;
+                }
+                SetTemplate(template);
+                previousEndpoint = newEndpoint;
+            }
+        }
+
+#endif
 
         private async Task InitPrompt(bool clearChat = true)
         {
@@ -121,12 +169,6 @@ namespace LLMUnity
             {
                 chat[0] = promptMessage;
             }
-
-            currentPrompt = prompt;
-            for (int i = 1; i < chat.Count; i++)
-            {
-                currentPrompt += RoleMessageString(chat[i].role, chat[i].content);
-            }
         }
 
         public async Task SetPrompt(string newPrompt, bool clearChat = true)
@@ -135,20 +177,12 @@ namespace LLMUnity
             nKeep = -1;
             await InitPrompt(clearChat);
         }
+
         private async Task InitNKeep()
         {
             if (setNKeepToPrompt && nKeep == -1)
             {
                 await Tokenize(prompt, SetNKeep);
-            }
-        }
-
-        private void InitStop()
-        {
-            // set stopwords
-            if (stop == null || stop.Count == 0)
-            {
-                stop = new List<string> { RoleString(playerName), playerName + ":" };
             }
         }
 
@@ -166,37 +200,26 @@ namespace LLMUnity
             nKeep = tokens.Count;
         }
 
+        private void LoadTemplate()
+        {
+            template = ChatTemplate.GetTemplate(chatTemplate, playerName, AIName);
+            stopAll = new List<string>();
+            stopAll.AddRange(template.GetStop());
+            if (stop != null) stopAll.AddRange(stop);
+        }
+
 #if UNITY_EDITOR
         public async void SetGrammar(string path)
         {
             grammar = await LLMUnitySetup.AddAsset(path, LLMUnitySetup.GetAssetPath());
         }
+
 #endif
-
-        private string RoleString(string role)
-        {
-            // role as a delimited string for the model
-            return "\n### " + role + ":";
-        }
-
-        private string RoleMessageString(string role, string message)
-        {
-            // role and the role message
-            return RoleString(role) + " " + message;
-        }
-
-        public ChatRequest GenerateRequest(string message, bool openAIFormat = false)
+        public ChatRequest GenerateRequest()
         {
             // setup the request struct
             ChatRequest chatRequest = new ChatRequest();
-            if (openAIFormat)
-            {
-                chatRequest.messages = chat;
-            }
-            else
-            {
-                chatRequest.prompt = currentPrompt + RoleMessageString(playerName, message) + RoleString(AIName);
-            }
+            chatRequest.prompt = template.ComputePrompt(chat);
             chatRequest.temperature = temperature;
             chatRequest.top_k = topK;
             chatRequest.top_p = topP;
@@ -204,7 +227,7 @@ namespace LLMUnity
             chatRequest.n_predict = numPredict;
             chatRequest.n_keep = nKeep;
             chatRequest.stream = stream;
-            chatRequest.stop = stop;
+            chatRequest.stop = stopAll;
             chatRequest.tfs_z = tfsZ;
             chatRequest.typical_p = typicalP;
             chatRequest.repeat_penalty = repeatPenalty;
@@ -229,7 +252,6 @@ namespace LLMUnity
         {
             // add the question / answer to the chat list, update prompt
             chat.Add(new ChatMessage { role = role, content = content });
-            currentPrompt += RoleMessageString(role, content);
         }
 
         private void AddPlayerMessage(string content)
@@ -277,7 +299,14 @@ namespace LLMUnity
             // call the callback function while the answer is received
             // call the completionCallback function when the answer is fully received
             await InitNKeep();
-            string json = JsonUtility.ToJson(GenerateRequest(question));
+
+            string json;
+            lock (chatPromptLock) {
+                AddPlayerMessage(question);
+                json = JsonUtility.ToJson(GenerateRequest());
+                chat.RemoveAt(chat.Count - 1);
+            }
+
             string result;
             if (stream)
             {
@@ -287,12 +316,16 @@ namespace LLMUnity
             {
                 result = await PostRequest<ChatResult, string>(json, "completion", ChatContent, callback);
             }
-            completionCallback?.Invoke();
+
             if (addToHistory)
             {
-                AddPlayerMessage(question);
-                AddAIMessage(result);
+                lock (chatAddLock) {
+                    AddPlayerMessage(question);
+                    AddAIMessage(result);
+                }
             }
+
+            completionCallback?.Invoke();
             return result;
         }
 
@@ -333,6 +366,15 @@ namespace LLMUnity
             return response.Trim().Replace("\n\n", "").Split("data: ");
         }
 
+        public void CancelRequests()
+        {
+            foreach (UnityWebRequest request in WIPRequests)
+            {
+                request.Abort();
+            }
+            WIPRequests.Clear();
+        }
+
         public async Task<Ret> PostRequest<Res, Ret>(string json, string endpoint, ContentCallback<Res, Ret> getContent, Callback<Ret> callback = null)
         {
             // send a post request to the server and call the relevant callbacks to convert the received content and handle it
@@ -341,6 +383,8 @@ namespace LLMUnity
             byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(json);
             using (var request = UnityWebRequest.Put($"{host}:{port}/{endpoint}", jsonToSend))
             {
+                WIPRequests.Add(request);
+
                 request.method = "POST";
                 if (requestHeaders != null)
                 {
@@ -364,9 +408,11 @@ namespace LLMUnity
                     // Wait for the next frame
                     await Task.Yield();
                 }
+                WIPRequests.Remove(request);
+
+                if (request.result != UnityWebRequest.Result.Success) throw new System.Exception(request.error);
                 result = ConvertContent(request.downloadHandler.text, getContent);
                 callback?.Invoke(result);
-                if (request.result != UnityWebRequest.Result.Success) throw new System.Exception(request.error);
             }
             return result;
         }

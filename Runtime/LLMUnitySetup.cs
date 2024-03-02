@@ -164,20 +164,6 @@ namespace LLMUnity
             }
             return fullPath.Substring(basePathSlash.Length + 1);
         }
-
-        public static void ExtractZip(string zipPath, string extractToPath)
-        {
-            Debug.Log($"extracting {zipPath} to {extractToPath}");
-            AssetDatabase.StartAssetEditing();
-            if (!Directory.Exists(extractToPath))
-            {
-                Directory.CreateDirectory(extractToPath);
-            }
-            ZipFile.ExtractToDirectory(zipPath, extractToPath);
-            AssetDatabase.StopAssetEditing();
-            Debug.Log($"extraction complete!");
-        }
-
 #endif
     }
 }
