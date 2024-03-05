@@ -83,7 +83,7 @@ namespace LLMUnity
         [TextArea(5, 10), Chat] public string prompt = "A chat between a curious human and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the human's questions.";
 
         protected List<ChatMessage> chat;
-        public string chatTemplate;
+        public string chatTemplate = ChatTemplate.DefaultTemplate;
         public ChatTemplate template;
         private List<(string, string)> requestHeaders = new List<(string, string)> { ("Content-Type", "application/json") };
         private string previousEndpoint;
@@ -95,7 +95,6 @@ namespace LLMUnity
 
         public async void Awake()
         {
-            // initialise the prompt and set the keep tokens based on its length
             InitGrammar();
             await InitPrompt();
             LoadTemplate();
@@ -131,18 +130,13 @@ namespace LLMUnity
             string newEndpoint = host + ":" + port;
             if (newEndpoint != previousEndpoint)
             {
-                string template = ChatTemplate.DefaultTemplate;
+                string templateToSet = chatTemplate;
                 if (GetType() == typeof(LLMClient))
                 {
                     LLM server = GetServer();
-                    if (server != null) template = server.chatTemplate;
+                    if (server != null) templateToSet = server.chatTemplate;
                 }
-                else
-                {
-                    if (chatTemplate != null && chatTemplate != "")
-                        template = chatTemplate;
-                }
-                SetTemplate(template);
+                SetTemplate(templateToSet);
                 previousEndpoint = newEndpoint;
             }
         }
