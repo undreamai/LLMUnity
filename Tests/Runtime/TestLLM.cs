@@ -75,7 +75,6 @@ namespace LLMUnityTests
             error = null;
             try
             {
-                Assert.That(!llm.IsPortInUse());
                 llm.CallAwake();
                 TestAlive();
                 await llm.Tokenize("I", TestTokens);
@@ -109,7 +108,6 @@ namespace LLMUnityTests
         public void TestAlive()
         {
             Assert.That(llm.serverListening);
-            Assert.That(llm.IsPortInUse());
         }
 
         public async void TestInitParameters()

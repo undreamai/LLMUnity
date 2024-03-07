@@ -5,8 +5,8 @@ using UnityEngine;
 using Debug = UnityEngine.Debug;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using System.IO.Compression;
 using System.Net;
+using System;
 
 namespace LLMUnity
 {
@@ -98,7 +98,7 @@ namespace LLMUnity
         public static async Task DownloadFile(
             string fileUrl, string savePath, bool overwrite = false, bool executable = false,
             TaskCallback<string> callback = null, Callback<float> progresscallback = null,
-            bool async=true
+            bool async = true
         )
         {
             // download a file to the specified path
@@ -117,7 +117,9 @@ namespace LLMUnity
                 if (async)
                 {
                     await client.DownloadFileTaskAsync(fileUrl, tmpPath);
-                } else {
+                }
+                else
+                {
                     client.DownloadFile(fileUrl, tmpPath);
                 }
                 if (executable) makeExecutable(tmpPath);
@@ -164,6 +166,112 @@ namespace LLMUnity
             }
             return fullPath.Substring(basePathSlash.Length + 1);
         }
+
 #endif
+
+        static string GetPIDFile()
+        {
+            string persistDir = Path.Combine(Application.persistentDataPath, "LLMUnity");
+            if (!Directory.Exists(persistDir))
+            {
+                Directory.CreateDirectory(persistDir);
+            }
+            return Path.Combine(persistDir, "server_process.txt");
+        }
+
+        public static void SaveServerPID(int pid)
+        {
+            try
+            {
+                using (StreamWriter writer = new StreamWriter(GetPIDFile(), true))
+                {
+                    writer.WriteLine(pid);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError("Error saving PID to file: " + e.Message);
+            }
+        }
+
+        static List<int> ReadServerPIDs()
+        {
+            List<int> pids = new List<int>();
+            string pidfile = GetPIDFile();
+            if (!File.Exists(pidfile)) return pids;
+
+            try
+            {
+                using (StreamReader reader = new StreamReader(pidfile))
+                {
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        if (int.TryParse(line, out int pid))
+                        {
+                            pids.Add(pid);
+                        }
+                        else
+                        {
+                            Debug.LogError("Invalid file entry: " + line);
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError("Error reading from file: " + e.Message);
+            }
+            return pids;
+        }
+
+        public static string GetCommandLineArguments(Process process)
+        {
+            if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer)
+            {
+                return process.MainModule.FileName.Replace('\\', '/');
+            }
+            else
+            {
+                return RunProcess("ps", $"-o command -p {process.Id}").Replace("COMMAND\n", "");
+            }
+        }
+
+        public static void KillServerAfterUnityCrash(string serverBinary)
+        {
+            foreach (int pid in ReadServerPIDs())
+            {
+                try
+                {
+                    Process process = Process.GetProcessById(pid);
+                    string command = GetCommandLineArguments(process);
+                    if (command.Contains(serverBinary))
+                    {
+                        Debug.Log($"killing existing server with {pid}: {command}");
+                        process.Kill();
+                        process.WaitForExit();
+                    }
+                }
+                catch (Exception) {}
+            }
+
+            string pidfile = GetPIDFile();
+            if (File.Exists(pidfile)) File.Delete(pidfile);
+        }
+
+        public static void DeleteServerPID(int pid)
+        {
+            string pidfile = GetPIDFile();
+            if (!File.Exists(pidfile)) return;
+
+            List<int> pidEntries = ReadServerPIDs();
+            pidEntries.Remove(pid);
+
+            File.Delete(pidfile);
+            foreach (int pidEntry in pidEntries)
+            {
+                SaveServerPID(pidEntry);
+            }
+        }
     }
 }
