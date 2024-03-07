@@ -2,46 +2,49 @@ using UnityEngine;
 using LLMUnity;
 using UnityEngine.UI;
 
-public class SimpleInteraction : MonoBehaviour
+namespace LLMUnitySamples
 {
-    public LLM llm;
-    public InputField playerText;
-    public Text AIText;
-
-    void Start()
+    public class SimpleInteraction : MonoBehaviour
     {
-        playerText.onSubmit.AddListener(onInputFieldSubmit);
-        playerText.Select();
-    }
+        public LLM llm;
+        public InputField playerText;
+        public Text AIText;
 
-    void onInputFieldSubmit(string message)
-    {
-        playerText.interactable = false;
-        AIText.text = "...";
-        _ = llm.Chat(message, SetAIText, AIReplyComplete);
-    }
+        void Start()
+        {
+            playerText.onSubmit.AddListener(onInputFieldSubmit);
+            playerText.Select();
+        }
 
-    public void SetAIText(string text)
-    {
-        AIText.text = text;
-    }
+        void onInputFieldSubmit(string message)
+        {
+            playerText.interactable = false;
+            AIText.text = "...";
+            _ = llm.Chat(message, SetAIText, AIReplyComplete);
+        }
 
-    public void AIReplyComplete()
-    {
-        playerText.interactable = true;
-        playerText.Select();
-        playerText.text = "";
-    }
+        public void SetAIText(string text)
+        {
+            AIText.text = text;
+        }
 
-    public void CancelRequests()
-    {
-        llm.CancelRequests();
-        AIReplyComplete();
-    }
+        public void AIReplyComplete()
+        {
+            playerText.interactable = true;
+            playerText.Select();
+            playerText.text = "";
+        }
 
-    public void ExitGame()
-    {
-        Debug.Log("Exit button clicked");
-        Application.Quit();
+        public void CancelRequests()
+        {
+            llm.CancelRequests();
+            AIReplyComplete();
+        }
+
+        public void ExitGame()
+        {
+            Debug.Log("Exit button clicked");
+            Application.Quit();
+        }
     }
 }
