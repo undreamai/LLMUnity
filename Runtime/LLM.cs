@@ -174,7 +174,7 @@ namespace LLMUnity
             }
         }
 
-        new public async void Awake()
+        new public async Task Awake()
         {
             if (killExistingServersOnStart) KillServersAfterUnityCrash();
             await StartLLMServer();
