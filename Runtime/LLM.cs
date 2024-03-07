@@ -174,7 +174,7 @@ namespace LLMUnity
             }
         }
 
-        new public async Task Awake()
+        new public async void Awake()
         {
             if (killExistingServersOnStart) KillServersAfterUnityCrash();
             await StartLLMServer();
@@ -279,13 +279,14 @@ namespace LLMUnity
 
         private async Task StartLLMServer()
         {
+            bool portInUse = false;
             try
             {
                 await Tokenize("hi");
-                Debug.LogError($"Port {port} is already in use, please use another port or kill all llamafile processes using it!");
-                return;
+                portInUse = true;
             }
             catch {}
+            if (portInUse) throw new Exception($"Port {port} is already in use, please use another port or kill all llamafile processes using it!");
 
             // Start the LLM server in a cross-platform way
             if (model == "") throw new Exception("No model file provided!");
