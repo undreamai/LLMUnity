@@ -306,8 +306,10 @@ If it is not selected, the full reply from the model is received in one go
 
   - `Parallel Prompts` number of prompts that can happen in parallel (default: -1 = number of LLM/LLMClient objects)
   - `Debug` select to log the output of the model in the Unity Editor
+  - `Asynchronous Startup` allows to start the server asynchronously
   - `Remote` select to allow remote access to the server
   - `Port` port to run the server
+  - `killExistingServersOnStart` kills existing servers by the Unity project on startup to handle Unity crashes
 
 </details>
 
