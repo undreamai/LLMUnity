@@ -309,7 +309,7 @@ If it is not selected, the full reply from the model is received in one go
   - `Asynchronous Startup` allows to start the server asynchronously
   - `Remote` select to allow remote access to the server
   - `Port` port to run the server
-  - `killExistingServersOnStart` kills existing servers by the Unity project on startup to handle Unity crashes
+  - `Kill Existing Servers On Start` kills existing servers by the Unity project on startup to handle Unity crashes
 
 </details>
 
