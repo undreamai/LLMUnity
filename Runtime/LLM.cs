@@ -23,6 +23,7 @@ namespace LLMUnity
         [ServerAdvanced] public bool debug = false;
         [ServerAdvanced] public bool asynchronousStartup = false;
         [ServerAdvanced] public bool remote = false;
+        [ServerAdvanced] public bool killExistingServersOnStart = true;
 
         [Model] public string model = "";
         [ModelAddonAdvanced] public string lora = "";
@@ -175,7 +176,7 @@ namespace LLMUnity
 
         new public async void Awake()
         {
-            KillServersAfterUnityCrash();
+            if (killExistingServersOnStart) KillServersAfterUnityCrash();
             await StartLLMServer();
             base.Awake();
         }
@@ -281,7 +282,8 @@ namespace LLMUnity
             try
             {
                 await Tokenize("hi");
-                throw new Exception($"Port {port} is already in use, please use another port or kill all llamafile processes using it!");
+                Debug.LogError($"Port {port} is already in use, please use another port or kill all llamafile processes using it!");
+                return;
             }
             catch {}
 
