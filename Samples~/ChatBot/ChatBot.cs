@@ -153,5 +153,11 @@ namespace LLMUnitySamples
                 lastBubbleOutsideFOV = -1;
             }
         }
+
+        public void ExitGame()
+        {
+            Debug.Log("Exit button clicked");
+            Application.Quit();
+        }
     }
 }
