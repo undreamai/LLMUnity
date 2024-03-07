@@ -1,8 +1,8 @@
 {
-  "name": "ai.undream.llmunity",
+  "name": "ai.undream.llm",
   "version": "1.2.4",
-  "displayName": "LLMUnity",
-  "description": "LLMUnity allows to run and distribute LLM models in the Unity engine.",
+  "displayName": "LLM for Unity",
+  "description": "LLM for Unity allows to run and distribute Large Language Models (LLMs) in the Unity engine.",
   "unity": "2022.3",
   "unityRelease": "16f1",
   "documentationUrl": "https://github.com/undreamai/LLMUnity",
@@ -13,6 +13,7 @@
     "llm",
     "large language model",
     "Llama",
+    "GPT",
     "ChatGPT",
     "artificial intelligence",
     "AI",
@@ -26,17 +27,17 @@
    "samples": [
     {
       "displayName": "ChatBot",
-      "description": "ChatBot example using LLMUnity.",
+      "description": "ChatBot example.",
       "path": "Samples~/ChatBot"
     },
     {
       "displayName": "SimpleInteraction",
-      "description": "Minimal example using LLMUnity.",
+      "description": "Minimal interaction example.",
       "path": "Samples~/SimpleInteraction"
     },
     {
       "displayName": "ServerClient",
-      "description": "Example with two AIs using LLMUnity.",
+      "description": "Example with two AIs.",
       "path": "Samples~/ServerClient"
     }
    ],
