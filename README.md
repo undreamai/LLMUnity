@@ -10,14 +10,14 @@
 [![Reddit](https://img.shields.io/badge/Reddit-%23FF4500.svg?style=flat&logo=Reddit&logoColor=white)](https://www.reddit.com/user/UndreamAI)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-blue?style=flat&logo=linkedin&labelColor=blue)](https://www.linkedin.com/company/undreamai)
 
-LLMUnity enables seamless integration of Large Language Models (LLMs) within the Unity engine.<br>
+LLM for Unity enables seamless integration of Large Language Models (LLMs) within the Unity engine.<br>
 It allows to create intelligent characters that your players can interact with for an immersive experience.<br>
-LLMUnity is built on top of the awesome [llama.cpp](https://github.com/ggerganov/llama.cpp) and [llamafile](https://github.com/Mozilla-Ocho/llamafile) libraries.
+LLM for Unity is built on top of the awesome [llama.cpp](https://github.com/ggerganov/llama.cpp) and [llamafile](https://github.com/Mozilla-Ocho/llamafile) libraries.
 
 <sub>
 <a href="#at-a-glance" style="color: black">At a glance</a>&nbsp;&nbsp;•&nbsp;
 <a href="#how-to-help" style=color: black>How to help</a>&nbsp;&nbsp;•&nbsp;
-<a href="#games-using-llmunity" style=color: black>Games using LLMUnity</a>&nbsp;&nbsp;•&nbsp;
+<a href="#games-using-llm-for-unity" style=color: black>Games using LLM for Unity</a>&nbsp;&nbsp;•&nbsp;
 <a href="#setup" style=color: black>Setup</a>&nbsp;&nbsp;•&nbsp;
 <a href="#how-to-use" style=color: black>How to use</a>&nbsp;&nbsp;•&nbsp;
 <a href="#examples" style=color: black>Examples</a>&nbsp;&nbsp;•&nbsp;
@@ -42,7 +42,7 @@ LLMUnity is built on top of the awesome [llama.cpp](https://github.com/ggerganov
 - ⭐ Star the repo and spread the word about the project!
 - Submit feature requests or bugs as [issues](https://github.com/undreamai/LLMUnity/issues) or even submit a PR and become a collaborator!
 
-## Games using LLMUnity
+## Games using LLM for Unity
 - [Verbal Verdict](https://store.steampowered.com/app/2778780/Verbal_Verdict/)
 
 ## Setup
@@ -122,7 +122,7 @@ You can also:
 <details>
 <summary>Build multiple characters</summary>
 
-LLMUnity allows to build multiple AI characters efficiently, where each character has it own prompt.<br>
+LLM for Unity allows to build multiple AI characters efficiently, where each character has it own prompt.<br>
 See the [ServerClient](Samples~/ServerClient) sample for a server-client example.
 
 To use multiple characters:
@@ -281,7 +281,7 @@ The [Samples~](Samples~) folder contains several examples of interaction :robot:
 
 To install a sample:
 - Open the Package Manager: `Window > Package Manager`
-- Select the `LLMUnity` Package. From the `Samples` Tab, click `Import` next to the sample you want to install.
+- Select the `LLM for Unity` Package. From the `Samples` Tab, click `Import` next to the sample you want to install.
 
 The samples can be run with the `Scene.unity` scene they contain inside their folder.<br>
 In the scene, select the `LLM` GameObject and click the `Download Model` button to download the default model.<br>
@@ -289,7 +289,7 @@ You can also load your own model in .gguf format with the `Load model` button (s
 Save the scene, run and enjoy!
 
 ## Use your own model
-LLMUnity uses the [Mistral 7B Instruct](https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.2), [OpenHermes 2.5](https://huggingface.co/teknium/OpenHermes-2.5-Mistral-7B) or [Microsoft Phi-2](https://huggingface.co/microsoft/phi-2) model by default, quantised with the Q4 method.<br>
+LLM for Unity uses the [Mistral 7B Instruct](https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.2), [OpenHermes 2.5](https://huggingface.co/teknium/OpenHermes-2.5-Mistral-7B) or [Microsoft Phi-2](https://huggingface.co/microsoft/phi-2) model by default, quantised with the Q4 method.<br>
 
 Alternative models can be downloaded from [HuggingFace](https://huggingface.co/models).<br>
 The models should be able to use the ChatML prompt format as this is hardcoded at the moment in llama.cpp.<br>
@@ -373,4 +373,4 @@ If it is not selected, the full reply from the model is received in one go
 - `Prompt` a description of the AI role
 
 ## License
-The license of LLMUnity is MIT ([LICENSE.md](LICENSE.md)) and uses third-party software with MIT and Apache licenses ([Third Party Notices.md](<Third Party Notices.md>)).
+The license of LLM for Unity is MIT ([LICENSE.md](LICENSE.md)) and uses third-party software with MIT and Apache licenses ([Third Party Notices.md](<Third Party Notices.md>)).
