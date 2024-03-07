@@ -1,3 +1,9 @@
+## v1.2.1
+#### 🐛 Fixes
+
+- Kill server after Unity crash (PR: #101)
+
+
 ## v1.2.0
 #### 🚀 Features
 
