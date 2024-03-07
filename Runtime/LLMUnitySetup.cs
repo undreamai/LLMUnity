@@ -253,7 +253,6 @@ namespace LLMUnity
                     }
                 }
                 catch (Exception) {}
-                DeleteServerPID(pid);
             }
 
             string pidfile = GetPIDFile();
