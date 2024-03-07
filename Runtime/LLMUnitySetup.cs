@@ -229,7 +229,7 @@ namespace LLMUnity
         {
             if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer)
             {
-                return process.StartInfo.Arguments;
+                return process.MainModule.FileName.Replace('\\', '/');
             }
             else
             {
