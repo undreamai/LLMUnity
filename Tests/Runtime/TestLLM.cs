@@ -11,12 +11,16 @@ namespace LLMUnityTests
 {
     public class LLMNoAwake : LLM
     {
-        public new async Task Awake() {}
+        public new void Awake() {}
         public new void OnDestroy() {}
 
         public async Task CallAwake()
         {
-            await base.Awake();
+            base.Awake();
+            while (!serverListening)
+            {
+                await Task.Delay(100);
+            }
         }
 
         public void CallOnDestroy()
