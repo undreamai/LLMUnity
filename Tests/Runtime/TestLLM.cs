@@ -11,12 +11,12 @@ namespace LLMUnityTests
 {
     public class LLMNoAwake : LLM
     {
-        public new void Awake() {}
+        public new async Task Awake() {}
         public new void OnDestroy() {}
 
-        public void CallAwake()
+        public async Task CallAwake()
         {
-            base.Awake();
+            await base.Awake();
         }
 
         public void CallOnDestroy()
@@ -36,7 +36,7 @@ namespace LLMUnityTests
         GameObject gameObject;
         LLMNoAwake llm;
         int port = 15555;
-        string AIReply = "antantantantantantantantantantantantantantantantantantantantant";
+        string AIReply = "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
         Exception error = null;
 
         public TestLLM()
@@ -75,7 +75,7 @@ namespace LLMUnityTests
             error = null;
             try
             {
-                llm.CallAwake();
+                await llm.CallAwake();
                 TestAlive();
                 await llm.Tokenize("I", TestTokens);
                 await llm.Warmup();
