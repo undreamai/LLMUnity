@@ -69,4 +69,10 @@ public class ServerClient : MonoBehaviour
         interaction1.AIReplyComplete();
         interaction2.AIReplyComplete();
     }
+
+    public void ExitGame()
+    {
+        Debug.Log("Exit button clicked");
+        Application.Quit();
+    }
 }

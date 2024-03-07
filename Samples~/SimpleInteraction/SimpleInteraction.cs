@@ -38,4 +38,10 @@ public class SimpleInteraction : MonoBehaviour
         llm.CancelRequests();
         AIReplyComplete();
     }
+
+    public void ExitGame()
+    {
+        Debug.Log("Exit button clicked");
+        Application.Quit();
+    }
 }
