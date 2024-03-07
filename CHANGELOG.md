@@ -1,3 +1,9 @@
+## v1.2.2
+#### 🐛 Fixes
+
+- use namespaces in all classes (PR: #104)
+
+
 ## v1.2.1
 #### 🐛 Fixes
 
