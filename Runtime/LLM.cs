@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
-using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEditor;
@@ -279,13 +278,7 @@ namespace LLMUnity
 
         private async Task StartLLMServer()
         {
-            bool portInUse = false;
-            try
-            {
-                await Tokenize("hi");
-                portInUse = true;
-            }
-            catch {}
+            bool portInUse = asynchronousStartup ? await IsServerReachableAsync() : IsServerReachable();
             if (portInUse) throw new Exception($"Port {port} is already in use, please use another port or kill all llamafile processes using it!");
 
             // Start the LLM server in a cross-platform way

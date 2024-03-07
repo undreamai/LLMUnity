@@ -369,6 +369,39 @@ namespace LLMUnity
             WIPRequests.Clear();
         }
 
+        public bool IsServerReachable(int timeout = 5)
+        {
+            using (UnityWebRequest webRequest = UnityWebRequest.Head($"{host}:{port}/tokenize"))
+            {
+                webRequest.timeout = timeout;
+                webRequest.SendWebRequest();
+                while (!webRequest.isDone) {}
+                if (webRequest.result == UnityWebRequest.Result.ConnectionError)
+                {
+                    return false;
+                }
+                return true;
+            }
+        }
+
+        public async Task<bool> IsServerReachableAsync(int timeout = 5)
+        {
+            using (UnityWebRequest webRequest = UnityWebRequest.Head($"{host}:{port}/tokenize"))
+            {
+                webRequest.timeout = timeout;
+                webRequest.SendWebRequest();
+                while (!webRequest.isDone)
+                {
+                    await Task.Yield();
+                }
+                if (webRequest.result == UnityWebRequest.Result.ConnectionError)
+                {
+                    return false;
+                }
+                return true;
+            }
+        }
+
         public async Task<Ret> PostRequest<Res, Ret>(string json, string endpoint, ContentCallback<Res, Ret> getContent, Callback<Ret> callback = null)
         {
             // send a post request to the server and call the relevant callbacks to convert the received content and handle it
