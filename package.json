@@ -1,6 +1,6 @@
 {
   "name": "ai.undream.llmunity",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "displayName": "LLMUnity",
   "description": "LLMUnity allows to run and distribute LLM models in the Unity engine.",
   "unity": "2022.3",
