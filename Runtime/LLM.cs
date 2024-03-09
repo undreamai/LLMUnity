@@ -177,7 +177,7 @@ namespace LLMUnity
         {
             if (killExistingServersOnStart) KillServersAfterUnityCrash();
             if (asynchronousStartup) await StartLLMServer();
-            else StartLLMServer();
+            else _ = StartLLMServer();
             base.Awake();
         }
 
