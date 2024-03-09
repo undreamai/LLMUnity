@@ -165,12 +165,12 @@ namespace LLMUnity
             }
         }
 
-        public async Task SetPrompt(string newPrompt, bool clearChat = true)
+        public void SetPrompt(string newPrompt, bool clearChat = true)
         {
             prompt = newPrompt;
             nKeep = -1;
             InitPrompt(clearChat);
-            await InitNKeep();
+            _ = InitNKeep();
         }
 
         private async Task InitNKeep()
