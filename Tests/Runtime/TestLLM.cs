@@ -42,6 +42,7 @@ namespace LLMUnityTests
         int port = 15555;
         string AIReply = "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
         Exception error = null;
+        string prompt = "You";
 
         public TestLLM()
         {
@@ -64,7 +65,7 @@ namespace LLMUnityTests
             Assert.AreEqual(llm.model, modelPath);
 
             llm.port = port;
-            llm.prompt = "You";
+            llm.prompt = prompt;
             llm.temperature = 0;
             llm.seed = 0;
             llm.stream = false;
@@ -83,12 +84,14 @@ namespace LLMUnityTests
                 TestAlive();
                 await llm.Tokenize("I", TestTokens);
                 await llm.Warmup();
-                TestInitParameters();
+                TestInitParameters((await llm.Tokenize(prompt)).Count, 1);
                 TestWarmup();
                 await llm.Chat("hi", TestChat);
                 TestPostChat();
-                await llm.SetPrompt("You are");
-                TestInitParameters();
+                prompt = "You are";
+                llm.SetPrompt(prompt);
+                await llm.Chat("hi");
+                TestInitParameters((await llm.Tokenize(prompt)).Count, 3);
             }
             catch  (Exception e)
             {
@@ -114,11 +117,11 @@ namespace LLMUnityTests
             Assert.That(llm.serverListening);
         }
 
-        public async void TestInitParameters()
+        public void TestInitParameters(int nkeep, int chats)
         {
-            Assert.That(llm.nKeep == (await llm.Tokenize(llm.prompt)).Count);
+            Assert.That(llm.nKeep == nkeep);
             Assert.That(llm.template.GetStop().Length > 0);
-            Assert.That(llm.GetChat().Count == 1);
+            Assert.That(llm.GetChat().Count == chats);
         }
 
         public void TestTokens(List<int> tokens)

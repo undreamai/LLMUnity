@@ -93,11 +93,12 @@ namespace LLMUnity
         static object chatPromptLock = new object();
         static object chatAddLock = new object();
 
-        public async void Awake()
+        public void Awake()
         {
             InitGrammar();
-            await InitPrompt();
+            InitPrompt();
             LoadTemplate();
+            _ = InitNKeep();
         }
 
         public LLM GetServer()
@@ -143,9 +144,8 @@ namespace LLMUnity
 
 #endif
 
-        private async Task InitPrompt(bool clearChat = true)
+        private void InitPrompt(bool clearChat = true)
         {
-            await InitNKeep();
             if (chat != null)
             {
                 if (clearChat) chat.Clear();
@@ -165,11 +165,12 @@ namespace LLMUnity
             }
         }
 
-        public async Task SetPrompt(string newPrompt, bool clearChat = true)
+        public void SetPrompt(string newPrompt, bool clearChat = true)
         {
             prompt = newPrompt;
             nKeep = -1;
-            await InitPrompt(clearChat);
+            InitPrompt(clearChat);
+            _ = InitNKeep();
         }
 
         private async Task InitNKeep()

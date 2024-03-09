@@ -1,5 +1,4 @@
 ### 🐛 Fixes
 
-- use namespaces in all classes (PR: #104)
-- await separately in StartServer (PR: #107)
+- Fix async server 2 (PR: #108)
 
