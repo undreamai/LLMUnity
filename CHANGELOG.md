@@ -1,3 +1,9 @@
+## v1.2.3
+#### 🐛 Fixes
+
+- Fix async server 2 (PR: #108)
+
+
 ## v1.2.2
 #### 🐛 Fixes
 
