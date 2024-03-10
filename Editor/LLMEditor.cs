@@ -89,8 +89,7 @@ namespace LLMUnity
             AddModelLoadersSettings(llmScriptSO, llmScript);
             GUI.enabled = true;
             AddChatSettings(llmScriptSO);
-
-            EditorGUI.EndChangeCheck();
+            
             if (EditorGUI.EndChangeCheck())
                 Repaint();
 
