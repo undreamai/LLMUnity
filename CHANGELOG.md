@@ -1,3 +1,9 @@
+## v1.2.4
+#### 🚀 Features
+
+- Use llamafile v0.6.2 (PR: #111)
+
+
 ## v1.2.3
 #### 🐛 Fixes
 

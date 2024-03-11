@@ -1,4 +1,4 @@
-### 🐛 Fixes
+### 🚀 Features
 
-- Fix async server 2 (PR: #108)
+- Use llamafile v0.6.2 (PR: #111)
 
