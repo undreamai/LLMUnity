@@ -407,7 +407,7 @@ namespace LLMUnity
         {
             // send a post request to the server and call the relevant callbacks to convert the received content and handle it
             // this function has streaming functionality i.e. handles the answer while it is being received
-            Ret result;
+            Ret result = default;
             byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(json);
             using (var request = UnityWebRequest.Put($"{host}:{port}/{endpoint}", jsonToSend))
             {
@@ -438,8 +438,8 @@ namespace LLMUnity
                 }
                 WIPRequests.Remove(request);
 
-                if (request.result != UnityWebRequest.Result.Success) throw new System.Exception(request.error);
-                result = ConvertContent(request.downloadHandler.text, getContent);
+                if (request.result != UnityWebRequest.Result.Success) Debug.LogError(request.error);
+                else result = ConvertContent(request.downloadHandler.text, getContent);
                 callback?.Invoke(result);
             }
             return result;

@@ -1,4 +1,12 @@
+### 🚀 Features
+
+- Use llamafile v0.6.2 (PR: #111)
+
 ### 🐛 Fixes
 
-- Fix async server 2 (PR: #108)
+- use Debug.LogError instead of Exception for more verbosity (PR: #113)
+
+### 📦 General
+
+- Removed duplicate EditorGUI.EndChangeCheck() (PR: #110)
 
