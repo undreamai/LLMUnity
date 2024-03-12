@@ -210,11 +210,11 @@ namespace LLMUnity
         }
 
 #endif
-        public ChatRequest GenerateRequest()
+        public ChatRequest GenerateRequest(string prompt)
         {
             // setup the request struct
             ChatRequest chatRequest = new ChatRequest();
-            chatRequest.prompt = template.ComputePrompt(chat);
+            chatRequest.prompt = prompt;
             chatRequest.temperature = temperature;
             chatRequest.top_k = topK;
             chatRequest.top_p = topP;
@@ -298,7 +298,8 @@ namespace LLMUnity
             string json;
             lock (chatPromptLock) {
                 AddPlayerMessage(question);
-                json = JsonUtility.ToJson(GenerateRequest());
+                string prompt = template.ComputePrompt(chat);
+                json = JsonUtility.ToJson(GenerateRequest(prompt));
                 chat.RemoveAt(chat.Count - 1);
             }
 
@@ -320,6 +321,26 @@ namespace LLMUnity
                 }
             }
 
+            completionCallback?.Invoke();
+            return result;
+        }
+
+        public async Task<string> Complete(string prompt, Callback<string> callback = null, EmptyCallback completionCallback = null)
+        {
+            // handle a completion request by the user
+            // call the callback function while the answer is received
+            // call the completionCallback function when the answer is fully received
+
+            string json = JsonUtility.ToJson(GenerateRequest(prompt));
+            string result;
+            if (stream)
+            {
+                result = await PostRequest<MultiChatResult, string>(json, "completion", MultiChatContent, callback);
+            }
+            else
+            {
+                result = await PostRequest<ChatResult, string>(json, "completion", ChatContent, callback);
+            }
             completionCallback?.Invoke();
             return result;
         }
