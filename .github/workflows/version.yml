@@ -22,11 +22,13 @@ jobs:
             version="${GITHUB_HEAD_REF#release/}"
             echo $version > VERSION
             sed -i "s/\"version\": \".*\"/\"version\": \"${version#v}\"/" package.json
+            sed -i "s/public static string Version = \".*\";/public static string Version = \"$version\";/" Runtime/LLMUnitySetup.cs
 
             git config --global user.name $GITHUB_ACTOR
             git config --global user.email $GITHUB_ACTOR@users.noreply.github.com
             git add VERSION
             git add package.json
+            git add Runtime/LLMUnitySetup.cs
             git commit -m "update VERSION"
   
       - name: Push changes
