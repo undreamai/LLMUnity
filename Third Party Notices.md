@@ -4,6 +4,8 @@ This package contains third-party software components governed by the license(s)
 
 ## Software
 
+The following software libraries are used for the LLM functionality:
+
 ### llama.cpp
 
 Developer: llama.cpp<br>
@@ -21,6 +23,8 @@ License: [link](https://github.com/Mozilla-Ocho/llamafile/blob/main/LICENSE)
 ---
 
 ## Models
+
+The following models can be downloaded with LLMUnity:
 
 ### mistralai/Mistral-7B-Instruct-v0.2
 
@@ -67,3 +71,23 @@ Developer: TheBloke<br>
 Origin: [link](https://huggingface.co/TheBloke/OpenHermes-2.5-Mistral-7B-GGUF)<br>
 License Type: "Apache 2.0"<br>
 License: [link](https://huggingface.co/TheBloke/OpenHermes-2.5-Mistral-7B-GGUF)
+
+---
+
+## Testing
+
+The following model is used for testing purposes:
+
+### BEE-spoke-data/smol_llama-220M-openhermes
+
+Developer: BEEspoke Data<br>
+Origin: [link](https://huggingface.co/BEE-spoke-data/smol_llama-220M-openhermes)<br>
+License Type: "Apache 2.0"<br>
+License: [link](https://huggingface.co/BEE-spoke-data/smol_llama-220M-openhermes)
+
+##### modified by: afrideva/smol_llama-220M-openhermes-GGUF
+
+Developer: afrideva<br>
+Origin: [link](https://huggingface.co/afrideva/smol_llama-220M-openhermes-GGUF)<br>
+License Type: "Apache 2.0"<br>
+License: [link](https://huggingface.co/afrideva/smol_llama-220M-openhermes-GGUF)
