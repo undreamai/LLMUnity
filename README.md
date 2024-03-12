@@ -200,6 +200,20 @@ public class MyScript {
 
 </details>
 <details>
+<summary>Use pure text completion</summary>
+
+``` c#
+  void Game(){
+    // your game function
+    ...
+    string message = "The cat is away";
+    _ = llm.Complete(message, HandleReply, ReplyCompleted);
+    ...
+  }
+```
+
+</details>
+<details>
 <summary>Wait for the reply before proceeding to the next lines of code</summary>
 
   For this you can use the `async`/`await` functionality:
