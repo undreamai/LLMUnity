@@ -17,6 +17,8 @@ namespace LLMUnity
 
     public class LLMUnitySetup : MonoBehaviour
     {
+        public static string Version = "v1.2.3";
+
         public static Process CreateProcess(
             string command, string commandArgs = "",
             Callback<string> outputCallback = null, Callback<string> errorCallback = null, System.EventHandler exitCallback = null,
