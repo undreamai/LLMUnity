@@ -1,6 +1,7 @@
 ### 🚀 Features
 
 - Use llamafile v0.6.2 (PR: #111)
+- Pure text completion functionality (PR: #115)
 
 ### 🐛 Fixes
 
