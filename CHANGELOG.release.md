@@ -14,4 +14,5 @@
 
 - Removed duplicate EditorGUI.EndChangeCheck() (PR: #110)
 - Provide access to LLMUnity version (PR: #117)
+- Rebrand to "LLM for Unity" for Asset store (PR: #121)
 
