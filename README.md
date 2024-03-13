@@ -46,11 +46,18 @@ LLM for Unity is built on top of the awesome [llama.cpp](https://github.com/gger
 - [Verbal Verdict](https://store.steampowered.com/app/2778780/Verbal_Verdict/)
 
 ## Setup
+_Method 1: Install using the asset store_
+- Open the [LLMUnity](https://assetstore.unity.com/packages/slug/273604) asset page and click `Add to My Assets`
+- Open the Package Manager in Unity: `Window > Package Manager`
+- Select the `Packages: My Assets` option from the drop-down
+- Select the `LLMUnity` package, click `Download` and then `Import`
+
+_Method 2: Install using the GitHub repo:_
 - Open the Package Manager in Unity: `Window > Package Manager`
 - Click the `+` button and select `Add package from git URL`
 - Use the repository URL `https://github.com/undreamai/LLMUnity.git` and click `Add`
 
-On _macOS_ you further need to have Xcode Command Line Tools installed:
+On _macOS_ you need the Xcode Command Line Tools:
 - From inside a terminal run `xcode-select --install`
 
 ## How to use
