@@ -262,7 +262,7 @@ namespace LLMUnity
         public string ChatContent(ChatResult result)
         {
             // get content from a chat result received from the endpoint
-            return result.content;
+            return result.content.Trim();
         }
 
         public string MultiChatContent(MultiChatResult result)
@@ -273,7 +273,7 @@ namespace LLMUnity
             {
                 response += resultPart.content;
             }
-            return response;
+            return response.Trim();
         }
 
         public string ChatOpenAIContent(ChatOpenAIResult result)
