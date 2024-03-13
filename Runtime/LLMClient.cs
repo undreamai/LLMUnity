@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -88,7 +89,6 @@ namespace LLMUnity
         private List<(string, string)> requestHeaders = new List<(string, string)> { ("Content-Type", "application/json") };
         private string previousEndpoint;
         public bool setNKeepToPrompt = true;
-        private List<string> stopAll;
         private List<UnityWebRequest> WIPRequests = new List<UnityWebRequest>();
         static object chatPromptLock = new object();
         static object chatAddLock = new object();
@@ -117,7 +117,7 @@ namespace LLMUnity
         public virtual void SetTemplate(string templateName)
         {
             chatTemplate = templateName;
-            template = ChatTemplate.GetTemplate(templateName, playerName, AIName);
+            LoadTemplate();
         }
 
         private void Reset()
@@ -197,10 +197,7 @@ namespace LLMUnity
 
         private void LoadTemplate()
         {
-            template = ChatTemplate.GetTemplate(chatTemplate, playerName, AIName);
-            stopAll = new List<string>();
-            stopAll.AddRange(template.GetStop());
-            if (stop != null) stopAll.AddRange(stop);
+            template = ChatTemplate.GetTemplate(chatTemplate);
         }
 
 #if UNITY_EDITOR
@@ -210,6 +207,13 @@ namespace LLMUnity
         }
 
 #endif
+        List<string> GetStopwords()
+        {
+            List<string> stopAll = new List<string>(template.GetStop(playerName, AIName));
+            if (stop != null) stopAll.AddRange(stop);
+            return stopAll;
+        }
+
         public ChatRequest GenerateRequest(string prompt)
         {
             // setup the request struct
@@ -222,7 +226,7 @@ namespace LLMUnity
             chatRequest.n_predict = numPredict;
             chatRequest.n_keep = nKeep;
             chatRequest.stream = stream;
-            chatRequest.stop = stopAll;
+            chatRequest.stop = GetStopwords();
             chatRequest.tfs_z = tfsZ;
             chatRequest.typical_p = typicalP;
             chatRequest.repeat_penalty = repeatPenalty;
@@ -298,7 +302,7 @@ namespace LLMUnity
             string json;
             lock (chatPromptLock) {
                 AddPlayerMessage(question);
-                string prompt = template.ComputePrompt(chat);
+                string prompt = template.ComputePrompt(chat, AIName);
                 json = JsonUtility.ToJson(GenerateRequest(prompt));
                 chat.RemoveAt(chat.Count - 1);
             }
