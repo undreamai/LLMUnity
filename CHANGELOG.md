@@ -3,6 +3,7 @@
 
 - Use llamafile v0.6.2 (PR: #111)
 - Pure text completion functionality (PR: #115)
+- Allow change of roles after starting the interaction (PR: #120)
 
 #### 🐛 Fixes
 
