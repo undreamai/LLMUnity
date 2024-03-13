@@ -11,4 +11,5 @@
 ### 📦 General
 
 - Removed duplicate EditorGUI.EndChangeCheck() (PR: #110)
+- Provide access to LLMUnity version (PR: #117)
 
