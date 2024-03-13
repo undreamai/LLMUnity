@@ -7,9 +7,6 @@ namespace LLMUnity
 {
     public abstract class ChatTemplate
     {
-        public string playerName;
-        public string AIName;
-
         public static string DefaultTemplate;
         public static Type[] templateClasses;
         public static Dictionary<string, Type> templates;
@@ -39,7 +36,7 @@ namespace LLMUnity
             chatTemplates = new Dictionary<string, string>();
             foreach (Type templateClass in templateClasses)
             {
-                ChatTemplate template = (ChatTemplate)Activator.CreateInstance(templateClass, "", "");
+                ChatTemplate template = (ChatTemplate)Activator.CreateInstance(templateClass);
                 if (templates.ContainsKey(template.GetName())) Debug.LogError($"{template.GetName()} already in templates");
                 templates[template.GetName()] = templateClass;
                 if (templatesDescription.ContainsKey(template.GetDescription())) Debug.LogError($"{template.GetDescription()} already in templatesDescription");
@@ -55,12 +52,6 @@ namespace LLMUnity
                     chatTemplates[match] = template.GetName();
                 }
             }
-        }
-
-        public ChatTemplate(string playerName = "user", string AIName = "assistant")
-        {
-            this.playerName = playerName;
-            this.AIName = AIName;
         }
 
         public static string FromName(string name)
@@ -108,28 +99,28 @@ namespace LLMUnity
             return DefaultTemplate;
         }
 
-        public static ChatTemplate GetTemplate(string template, string playerName, string AIName)
+        public static ChatTemplate GetTemplate(string template)
         {
-            return (ChatTemplate)Activator.CreateInstance(templates[template], playerName, AIName);
+            return (ChatTemplate)Activator.CreateInstance(templates[template]);
         }
 
         public abstract string GetName();
         public abstract string GetDescription();
         public virtual string[] GetNameMatches() { return new string[] {}; }
         public virtual string[] GetChatTemplateMatches() { return new string[] {}; }
-        public abstract string[] GetStop();
+        public abstract string[] GetStop(string playerName, string AIName);
 
         protected virtual string PromptPrefix() { return ""; }
         protected virtual string SystemPrefix() { return ""; }
         protected virtual string SystemSuffix() { return ""; }
-        protected virtual string PlayerPrefix() { return ""; }
-        protected virtual string AIPrefix() { return ""; }
+        protected virtual string PlayerPrefix(string playerName) { return ""; }
+        protected virtual string AIPrefix(string AIName) { return ""; }
         protected virtual string PrefixMessageSeparator() { return ""; }
         protected virtual string RequestPrefix() { return ""; }
         protected virtual string RequestSuffix() { return ""; }
         protected virtual string PairSuffix() { return ""; }
 
-        public virtual string ComputePrompt(List<ChatMessage> messages)
+        public virtual string ComputePrompt(List<ChatMessage> messages, string AIName)
         {
             string chatPrompt = PromptPrefix();
             string systemPrompt = "";
@@ -143,21 +134,13 @@ namespace LLMUnity
             {
                 chatPrompt += RequestPrefix();
                 if (i == 1 && systemPrompt != "") chatPrompt += systemPrompt;
-                if (messages[i].role != playerName)
-                {
-                    Debug.Log($"Role was {messages[i].role}, was expecting {playerName}");
-                }
-                chatPrompt += PlayerPrefix() + PrefixMessageSeparator() + messages[i].content + RequestSuffix();
+                chatPrompt += PlayerPrefix(messages[i].role) + PrefixMessageSeparator() + messages[i].content + RequestSuffix();
                 if (i < messages.Count - 1)
                 {
-                    if (messages[i + 1].role != AIName)
-                    {
-                        Debug.Log($"Role was {messages[i + 1].role}, was expecting {AIName}");
-                    }
-                    chatPrompt += AIPrefix() + PrefixMessageSeparator() + messages[i + 1].content + PairSuffix();
+                    chatPrompt += AIPrefix(messages[i + 1].role) + PrefixMessageSeparator() + messages[i + 1].content + PairSuffix();
                 }
             }
-            chatPrompt += AIPrefix();
+            chatPrompt += AIPrefix(AIName);
             return chatPrompt;
         }
 
@@ -175,8 +158,6 @@ namespace LLMUnity
 
     public class ChatMLTemplate : ChatTemplate
     {
-        public ChatMLTemplate(string playerName = "user", string AIName = "assistant") : base(playerName, AIName) {}
-
         public override string GetName() { return "chatml"; }
         public override string GetDescription() { return "chatml (best overall)"; }
         public override string[] GetNameMatches() { return new string[] {"chatml", "hermes"}; }
@@ -184,12 +165,12 @@ namespace LLMUnity
 
         protected override string SystemPrefix() { return "<|im_start|>system\n"; }
         protected override string SystemSuffix() { return "<|im_end|>\n"; }
-        protected override string PlayerPrefix() { return $"<|im_start|>{playerName}\n"; }
-        protected override string AIPrefix() { return $"<|im_start|>{AIName}\n"; }
+        protected override string PlayerPrefix(string playerName) { return $"<|im_start|>{playerName}\n"; }
+        protected override string AIPrefix(string AIName) { return $"<|im_start|>{AIName}\n"; }
         protected override string RequestSuffix() { return "<|im_end|>\n"; }
         protected override string PairSuffix() { return "<|im_end|>\n"; }
 
-        public override string[] GetStop()
+        public override string[] GetStop(string playerName, string AIName)
         {
             return AddStopNewlines(new string[] { "<|im_start|>", "<|im_end|>" });
         }
@@ -197,8 +178,6 @@ namespace LLMUnity
 
     public class LLama2Template : ChatTemplate
     {
-        public LLama2Template(string playerName = "user", string AIName = "assistant") : base(playerName, AIName) {}
-
         public override string GetName() { return "llama"; }
         public override string GetDescription() { return "llama"; }
 
@@ -208,7 +187,7 @@ namespace LLMUnity
         protected override string RequestSuffix() { return " [/INST]"; }
         protected override string PairSuffix() { return " </s>"; }
 
-        public override string[] GetStop()
+        public override string[] GetStop(string playerName, string AIName)
         {
             return AddStopNewlines(new string[] { "[INST]", "[/INST]" });
         }
@@ -216,17 +195,15 @@ namespace LLMUnity
 
     public class LLama2ChatTemplate : LLama2Template
     {
-        public LLama2ChatTemplate(string playerName = "user", string AIName = "assistant") : base(playerName, AIName) {}
-
         public override string GetName() { return "llama chat"; }
         public override string GetDescription() { return "llama (modified for chat)"; }
         public override string[] GetNameMatches() { return new string[] {"llama"}; }
 
-        protected override string PlayerPrefix() { return "### " + playerName + ":"; }
-        protected override string AIPrefix() { return "### " + AIName + ":"; }
+        protected override string PlayerPrefix(string playerName) { return "### " + playerName + ":"; }
+        protected override string AIPrefix(string AIName) { return "### " + AIName + ":"; }
         protected override string PrefixMessageSeparator() { return " "; }
 
-        public override string[] GetStop()
+        public override string[] GetStop(string playerName, string AIName)
         {
             return AddStopNewlines(new string[] { "[INST]", "[/INST]", "###" });
         }
@@ -234,8 +211,6 @@ namespace LLMUnity
 
     public class MistralInstructTemplate : ChatTemplate
     {
-        public MistralInstructTemplate(string playerName = "user", string AIName = "assistant") : base(playerName, AIName) {}
-
         public override string GetName() { return "mistral instruct"; }
         public override string GetDescription() { return "mistral instruct"; }
 
@@ -246,7 +221,7 @@ namespace LLMUnity
         protected override string RequestSuffix() { return " [/INST]"; }
         protected override string PairSuffix() { return "</s>"; }
 
-        public override string[] GetStop()
+        public override string[] GetStop(string playerName, string AIName)
         {
             return AddStopNewlines(new string[] { "[INST]", "[/INST]" });
         }
@@ -254,18 +229,16 @@ namespace LLMUnity
 
     public class MistralChatTemplate : MistralInstructTemplate
     {
-        public MistralChatTemplate(string playerName = "user", string AIName = "assistant") : base(playerName, AIName) {}
-
         public override string GetName() { return "mistral chat"; }
         public override string GetDescription() { return "mistral (modified for chat)"; }
         public override string[] GetNameMatches() { return new string[] {"mistral"}; }
         public override string[] GetChatTemplateMatches() { return new string[] {"{{ bos_token }}{% for message in messages %}{% if (message['role'] == 'user') != (loop.index0 % 2 == 0) %}{{ raise_exception('Conversation roles must alternate user/assistant/user/assistant/...') }}{% endif %}{% if message['role'] == 'user' %}{{ '[INST] ' + message['content'] + ' [/INST]' }}{% elif message['role'] == 'assistant' %}{{ message['content'] + eos_token}}{% else %}{{ raise_exception('Only user and assistant roles are supported!') }}{% endif %}{% endfor %}"}; }
 
-        protected override string PlayerPrefix() { return "### " + playerName + ":"; }
-        protected override string AIPrefix() { return "### " + AIName + ":"; }
+        protected override string PlayerPrefix(string playerName) { return "### " + playerName + ":"; }
+        protected override string AIPrefix(string AIName) { return "### " + AIName + ":"; }
         protected override string PrefixMessageSeparator() { return " "; }
 
-        public override string[] GetStop()
+        public override string[] GetStop(string playerName, string AIName)
         {
             return AddStopNewlines(new string[] { "[INST]", "[/INST]", "###" });
         }
@@ -273,20 +246,18 @@ namespace LLMUnity
 
     public class AlpacaTemplate : ChatTemplate
     {
-        public AlpacaTemplate(string playerName = "user", string AIName = "assistant") : base(playerName, AIName) {}
-
         public override string GetName() { return "alpaca"; }
         public override string GetDescription() { return "alpaca (best alternative)"; }
         public override string[] GetNameMatches() { return new string[] {"alpaca"}; }
 
         protected override string SystemSuffix() { return "\n\n"; }
         protected override string RequestSuffix() { return "\n"; }
-        protected override string PlayerPrefix() { return "### " + playerName + ":"; }
-        protected override string AIPrefix() { return "### " + AIName + ":"; }
+        protected override string PlayerPrefix(string playerName) { return "### " + playerName + ":"; }
+        protected override string AIPrefix(string AIName) { return "### " + AIName + ":"; }
         protected override string PrefixMessageSeparator() { return " "; }
         protected override string PairSuffix() { return "\n"; }
 
-        public override string[] GetStop()
+        public override string[] GetStop(string playerName, string AIName)
         {
             return AddStopNewlines(new string[] { "###" });
         }
@@ -294,20 +265,18 @@ namespace LLMUnity
 
     public class Phi2Template : ChatTemplate
     {
-        public Phi2Template(string playerName = "user", string AIName = "assistant") : base(playerName, AIName) {}
-
         public override string GetName() { return "phi"; }
         public override string GetDescription() { return "phi"; }
         public override string[] GetNameMatches() { return new string[] {"phi"}; }
 
         protected override string SystemSuffix() { return "\n\n"; }
         protected override string RequestSuffix() { return "\n"; }
-        protected override string PlayerPrefix() { return playerName + ":"; }
-        protected override string AIPrefix() { return AIName + ":"; }
+        protected override string PlayerPrefix(string playerName) { return playerName + ":"; }
+        protected override string AIPrefix(string AIName) { return AIName + ":"; }
         protected override string PrefixMessageSeparator() { return " "; }
         protected override string PairSuffix() { return "\n"; }
 
-        public override string[] GetStop()
+        public override string[] GetStop(string playerName, string AIName)
         {
             return AddStopNewlines(new string[] { playerName + ":", AIName + ":" });
         }
@@ -315,8 +284,6 @@ namespace LLMUnity
 
     public class ZephyrTemplate : ChatTemplate
     {
-        public ZephyrTemplate(string playerName = "user", string AIName = "assistant") : base(playerName, AIName) {}
-
         public override string GetName() { return "zephyr"; }
         public override string GetDescription() { return "zephyr"; }
         public override string[] GetNameMatches() { return new string[] {"zephyr"}; }
@@ -324,12 +291,12 @@ namespace LLMUnity
 
         protected override string SystemPrefix() { return "<|system|>\n"; }
         protected override string SystemSuffix() { return "</s>\n"; }
-        protected override string PlayerPrefix() { return $"<|user|>\n"; }
-        protected override string AIPrefix() { return $"<|assistant|>\n"; }
+        protected override string PlayerPrefix(string playerName) { return $"<|user|>\n"; }
+        protected override string AIPrefix(string AIName) { return $"<|assistant|>\n"; }
         protected override string RequestSuffix() { return "</s>\n"; }
         protected override string PairSuffix() { return "</s>\n"; }
 
-        public override string[] GetStop()
+        public override string[] GetStop(string playerName, string AIName)
         {
             return AddStopNewlines(new string[] { $"<|user|>", $"<|assistant|>" });
         }
