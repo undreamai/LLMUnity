@@ -6,6 +6,7 @@
 ### 🐛 Fixes
 
 - use Debug.LogError instead of Exception for more verbosity (PR: #113)
+- Trim chat responses (PR: #118)
 
 ### 📦 General
 
