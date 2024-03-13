@@ -89,7 +89,13 @@ namespace LLMUnityTests
                 TestInitParameters((await llm.Tokenize(prompt)).Count, 1);
                 TestWarmup();
                 await llm.Chat("How can I increase my meme production/output? Currently, I only create them in ancient babylonian which is time consuming.", TestChat);
-                TestPostChat();
+                TestPostChat(3);
+                llm.SetPrompt(llm.prompt);
+                llm.AIName = "False response";
+                await llm.Chat("How can I increase my meme production/output? Currently, I only create them in ancient babylonian which is time consuming.", TestChat2);
+                TestPostChat(3);
+                await llm.Chat("bye!");
+                TestPostChat(5);
                 prompt = "How are you?";
                 llm.SetPrompt(prompt);
                 await llm.Chat("hi");
@@ -142,9 +148,15 @@ namespace LLMUnityTests
             Assert.That(reply.Trim() == AIReply);
         }
 
-        public void TestPostChat()
+        public void TestChat2(string reply)
         {
-            Assert.That(llm.GetChat().Count == 3);
+            string AIReply = "One possible solution is to use a more advanced natural language processing library like NLTK or sp";
+            Assert.That(reply.Trim() == AIReply);
+        }
+
+        public void TestPostChat(int num)
+        {
+            Assert.That(llm.GetChat().Count == num);
         }
     }
 }
