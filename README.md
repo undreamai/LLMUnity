@@ -47,7 +47,7 @@ LLM for Unity is built on top of the awesome [llama.cpp](https://github.com/gger
 
 ## Setup
 _Method 1: Install using the asset store_
-- Open the [LLMUnity](https://assetstore.unity.com/packages/slug/273604) asset page and click `Add to My Assets`
+- Open the [LLM for Unity](https://assetstore.unity.com/packages/slug/273604) asset page and click `Add to My Assets`
 - Open the Package Manager in Unity: `Window > Package Manager`
 - Select the `Packages: My Assets` option from the drop-down
 - Select the `LLMUnity` package, click `Download` and then `Import`
