@@ -316,7 +316,8 @@ namespace LLMUnity
             if (numThreads > 0) arguments += $" -t {numThreads}";
             if (loraPath != "") arguments += $" --lora {EscapeSpaces(loraPath)}";
 
-            string GPUArgument = numGPULayers <= 0 ? "" : $" -ngl {numGPULayers}";
+            string noGPUArgument = " -ngl 0 --gpu no";
+            string GPUArgument = numGPULayers <= 0 ? noGPUArgument : $" -ngl {numGPULayers}";
             LLMUnitySetup.makeExecutable(server);
 
             RunServerCommand(server, arguments + GPUArgument);
@@ -339,7 +340,7 @@ namespace LLMUnity
                 Debug.Log("GPU failed, fallback to CPU");
                 serverBlock.Reset();
 
-                RunServerCommand(server, arguments);
+                RunServerCommand(server, arguments + noGPUArgument);
                 if (asynchronousStartup) await WaitOneASync(serverBlock, TimeSpan.FromSeconds(60));
                 else serverBlock.WaitOne(60000);
             }
