@@ -254,15 +254,8 @@ namespace LLMUnity
         {
             string binary = exe;
             string arguments = args;
-
-            List<(string, string)> environment = null;
             if (Application.platform == RuntimePlatform.LinuxEditor || Application.platform == RuntimePlatform.LinuxPlayer)
             {
-                if (numGPULayers <= 0)
-                {
-                    // prevent nvcc building if not using GPU
-                    environment = new List<(string, string)> { ("PATH", ""), ("CUDA_PATH", "") };
-                }
                 // use APE binary directly if on Linux
                 arguments = $"{EscapeSpaces(binary)} {arguments}";
                 binary = SelectApeBinary();
@@ -274,7 +267,7 @@ namespace LLMUnity
                 binary = "sh";
             }
             Debug.Log($"Server command: {binary} {arguments}");
-            process = LLMUnitySetup.CreateProcess(binary, arguments, CheckIfListening, ProcessError, ProcessExited, environment);
+            process = LLMUnitySetup.CreateProcess(binary, arguments, CheckIfListening, ProcessError, ProcessExited);
         }
 
         private async Task StartLLMServer()
