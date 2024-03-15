@@ -50,6 +50,7 @@ namespace LLMUnity
         [ClientAdvanced] public string host = "localhost";
         [ServerAdvanced] public int port = 13333;
         [Server] public bool stream = true;
+        [ServerAdvanced] public string password = "";
 
         [ModelAddonAdvanced] public string grammar = null;
         [ModelAdvanced] public int seed = 0;
@@ -86,7 +87,6 @@ namespace LLMUnity
         protected List<ChatMessage> chat;
         public string chatTemplate = ChatTemplate.DefaultTemplate;
         public ChatTemplate template;
-        private List<(string, string)> requestHeaders = new List<(string, string)> { ("Content-Type", "application/json") };
         private string previousEndpoint;
         public bool setNKeepToPrompt = true;
         private List<UnityWebRequest> WIPRequests = new List<UnityWebRequest>();
@@ -135,7 +135,11 @@ namespace LLMUnity
                 if (GetType() == typeof(LLMClient))
                 {
                     LLM server = GetServer();
-                    if (server != null) templateToSet = server.chatTemplate;
+                    if (server != null)
+                    {
+                        templateToSet = server.chatTemplate;
+                        password = server.password;
+                    }
                 }
                 SetTemplate(templateToSet);
                 previousEndpoint = newEndpoint;
@@ -428,22 +432,48 @@ namespace LLMUnity
             }
         }
 
+        public async Task TestAuthorisation(byte[] jsonToSend, string endpoint)
+        {
+            using (var request = UnityWebRequest.Put($"{host}:{port}/{endpoint}", jsonToSend))
+            {
+                request.method = "POST";
+                request.SetRequestHeader("Content-Type", "application/json");
+
+                var asyncOperation = request.SendWebRequest();
+                while (!asyncOperation.isDone)
+                {
+                    await Task.Yield();
+                }
+
+                if (request.responseCode != 401)
+                {
+                    string error = "Unauthorised server response";
+                    Debug.LogError(error);
+                    throw new Exception(error);
+                }
+            }
+        }
+
         public async Task<Ret> PostRequest<Res, Ret>(string json, string endpoint, ContentCallback<Res, Ret> getContent, Callback<Ret> callback = null)
         {
             // send a post request to the server and call the relevant callbacks to convert the received content and handle it
             // this function has streaming functionality i.e. handles the answer while it is being received
             Ret result = default;
             byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(json);
+
+            if (endpoint == "completion" && password != "")
+            {
+                await TestAuthorisation(jsonToSend, endpoint);
+            }
+
+
             using (var request = UnityWebRequest.Put($"{host}:{port}/{endpoint}", jsonToSend))
             {
                 WIPRequests.Add(request);
 
                 request.method = "POST";
-                if (requestHeaders != null)
-                {
-                    for (int i = 0; i < requestHeaders.Count; i++)
-                        request.SetRequestHeader(requestHeaders[i].Item1, requestHeaders[i].Item2);
-                }
+                request.SetRequestHeader("Content-Type", "application/json");
+                if (password != "") request.SetRequestHeader("Authorization", $"Bearer {password}");
 
                 // Start the request asynchronously
                 var asyncOperation = request.SendWebRequest();
