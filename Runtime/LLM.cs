@@ -54,6 +54,7 @@ namespace LLMUnity
         private ManualResetEvent serverBlock = new ManualResetEvent(false);
         static object crashKillLock = new object();
         static bool crashKill = false;
+        private string keyfile = "";
 
 #if UNITY_EDITOR
         [InitializeOnLoadMethod]
@@ -222,6 +223,7 @@ namespace LLMUnity
         {
             // Read the output of the llm binary and check if the server has been started and listening
             DebugLog(message);
+            if (keyfile != "" && File.Exists(keyfile)) File.Delete(keyfile);
             if (serverListening) return;
             try
             {
@@ -252,8 +254,19 @@ namespace LLMUnity
 
         private void RunServerCommand(string exe, string args)
         {
+            string passwordArgs = "";
+            if (password != "")
+            {
+                keyfile = Path.Combine(Application.temporaryCachePath, Path.GetTempFileName());
+                using (StreamWriter writer = new StreamWriter(keyfile))
+                {
+                    writer.WriteLine(password);
+                }
+                passwordArgs = $" --api-key-file {keyfile}";
+            }
+
             string binary = exe;
-            string arguments = args;
+            string arguments = args + passwordArgs;
             if (Application.platform == RuntimePlatform.LinuxEditor || Application.platform == RuntimePlatform.LinuxPlayer)
             {
                 // use APE binary directly if on Linux
