@@ -317,7 +317,7 @@ namespace LLMUnity
                 result = await PostRequest<ChatResult, string>(json, "completion", ChatContent, callback);
             }
 
-            if (addToHistory)
+            if (addToHistory && result != null)
             {
                 lock (chatAddLock) {
                     AddPlayerMessage(question);
