@@ -1,6 +1,6 @@
 {
   "name": "ai.undream.llm",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "displayName": "LLM for Unity",
   "description": "LLM for Unity allows to run and distribute Large Language Models (LLMs) in the Unity engine.",
   "unity": "2022.3",
