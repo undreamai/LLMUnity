@@ -1,3 +1,9 @@
+## v1.2.5
+#### 🐛 Fixes
+
+- Add to chat history only if the response is not null (PR: #123)
+
+
 ## v1.2.4
 #### 🚀 Features
 
