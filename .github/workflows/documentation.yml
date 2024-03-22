@@ -1,0 +1,28 @@
+name: Release
+on:
+    push:
+#   pull_request:
+#     types: [closed]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    # if: github.base_ref == 'main' && startsWith(github.head_ref, 'release/') && github.event.pull_request.merged == true
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+            fetch-depth: 0
+            path: .
+
+      - name: Install Graphviz
+        run: sudo apt install -y graphviz
+
+      - name: Create documentation
+        run: .github/doxygen/run.sh
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./html
