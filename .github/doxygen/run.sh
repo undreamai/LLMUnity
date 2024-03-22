@@ -15,5 +15,5 @@ if [ ! -f $doxygen ]; then
 fi
 
 $doxygen .github/doxygen/Doxyfile
-mkdir -p html/.github/
-cp .github/*png .github/*.gif html/.github/
+mkdir -p html/images/
+cp .github/*png .github/*.gif html/images/
