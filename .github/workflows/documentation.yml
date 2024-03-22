@@ -1,13 +1,12 @@
 name: Release
 on:
-    push:
-#   pull_request:
-#     types: [closed]
+  pull_request:
+    types: [closed]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    # if: github.base_ref == 'main' && startsWith(github.head_ref, 'release/') && github.event.pull_request.merged == true
+    if: github.base_ref == 'main' && startsWith(github.head_ref, 'release/') && github.event.pull_request.merged == true
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
