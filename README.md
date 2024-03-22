@@ -27,15 +27,15 @@ LLM for Unity is built on top of the awesome [llama.cpp](https://github.com/gger
 </sub>
 
 ## At a glance
-- :computer: Cross-platform! Windows, Linux and macOS ([versions](https://github.com/Mozilla-Ocho/llamafile?tab=readme-ov-file#supported-oses))
-- :house: Runs locally without internet access. No data ever leave the game!
-- :zap: Blazing fast inference on CPU and GPU (Nvidia and AMD)
-- :hugs: Support of the major LLM models ([models](https://github.com/ggerganov/llama.cpp?tab=readme-ov-file#description))
-- :wrench: Easy to setup, call with a single line of code
-- :moneybag: Free to use for both personal and commercial purposes
+- 💻 Cross-platform! Windows, Linux and macOS ([versions](https://github.com/Mozilla-Ocho/llamafile?tab=readme-ov-file#supported-oses))
+- 🏠 Runs locally without internet access. No data ever leave the game!
+- ⚡ Blazing fast inference on CPU and GPU (Nvidia and AMD)
+- 🤗 Support of the major LLM models ([models](https://github.com/ggerganov/llama.cpp?tab=readme-ov-file#description))
+- 🔧 Easy to setup, call with a single line of code
+- 💰 Free to use for both personal and commercial purposes
 
 🧪 Tested on Unity: 2021 LTS, 2022 LTS, 2023<br>
-:vertical_traffic_light: [Upcoming Releases](https://github.com/orgs/undreamai/projects/2/views/10)
+🚦 [Upcoming Releases](https://github.com/orgs/undreamai/projects/2/views/10)
 
 ## How to help
 - Join us at [Discord](https://discord.gg/RwXKQb6zdv) and say hi!
@@ -69,14 +69,14 @@ For a step-by-step tutorial you can have a look at our guide:
 
 [How to Use LLMs in Unity](https://towardsdatascience.com/how-to-use-llms-in-unity-308c9c0f637c)
 
-The first step is to create a GameObject for the LLM :chess_pawn::
+The first step is to create a GameObject for the LLM ♟️:
 - Create an empty GameObject.<br>In the GameObject Inspector click `Add Component` and select the LLM script.
 - Download one of the default models with the `Download Model` button (~GBs).<br>Or load your own .gguf model with the `Load model` button (see [Use your own model](#use-your-own-model)).
 - Define the role of your AI in the `Prompt`. You can also define the name of the AI (`AI Name`) and the player (`Player Name`).
 - (Optional) By default you receive the reply from the model as is it is produced in real-time (recommended).<br>If you want the full reply in one go, deselect the `Stream` option.
 - (Optional) Adjust the server or model settings to your preference (see [Options](#options)).
 
-In your script you can then use it as follows :unicorn::
+In your script you can then use it as follows 🦄:
 ``` c#
 using LLMUnity;
 
@@ -121,7 +121,7 @@ To stop the chat without waiting its completion you can use:
 
 - Finally, in the Inspector of the GameObject of your script, select the LLM GameObject created above as the llm property.
 
-That's all :sparkles:!
+That's all ✨!
 <br><br>
 You can also:
 
@@ -279,7 +279,7 @@ You can also build a remote server that does the processing and have local clien
 
 
 ## Examples
-The [Samples~](Samples~) folder contains several examples of interaction :robot::
+The [Samples~](Samples~) folder contains several examples of interaction 🤖:
 - [SimpleInteraction](Samples~/SimpleInteraction): Demonstrates simple interaction between a player and a AI
 - [ServerClient](Samples~/ServerClient): Demonstrates simple interaction between a player and multiple AIs using a `LLM` and a `LLMClient`
 - [ChatBot](Samples~/ChatBot): Demonstrates interaction between a player and a AI with a UI similar to a messaging app (see image below)
@@ -301,17 +301,17 @@ LLM for Unity uses the [Mistral 7B Instruct](https://huggingface.co/mistralai/Mi
 Alternative models can be downloaded from [HuggingFace](https://huggingface.co/models).<br>
 The models should be able to use the ChatML prompt format as this is hardcoded at the moment in llama.cpp.<br>
 The required model format is .gguf as defined by the llama.cpp.<br>
-The easiest way is to download gguf models directly by [TheBloke](https://huggingface.co/TheBloke) who has converted an astonishing number of models :rainbow:!<br>
+The easiest way is to download gguf models directly by [TheBloke](https://huggingface.co/TheBloke) who has converted an astonishing number of models 🌈!<br>
 Otherwise other model formats can be converted to gguf with the `convert.py` script of the llama.cpp as described [here](https://github.com/ggerganov/llama.cpp/tree/master?tab=readme-ov-file#prepare-data--run).<br>
 
-:grey_exclamation: Before using any model make sure you **check their license** :grey_exclamation:
+❕ Before using any model make sure you **check their license** ❕
 
 ## Options
 
 - `Show/Hide Advanced Options` Toggle to show/hide advanced options from below
 - `Show/Hide Expert Options` Toggle to show/hide expert options from below
 
-#### :computer: Server Settings
+#### 💻 Server Settings
 
 <div>
 <img width="300" src=".github/GameObject.png" align="right"/>
@@ -334,7 +334,7 @@ If it is not selected, the full reply from the model is received in one go
 
 </details>
 
-#### :hugs: Model Settings
+#### 🤗 Model Settings
 - `Download model` click to download one of the default models
 - `Load model` click to load your own model in .gguf format
 - `Model` the model being used (inside the Assets/StreamingAssets folder)
@@ -374,7 +374,7 @@ If it is not selected, the full reply from the model is received in one go
 
 </details>
 
-#### :left_speech_bubble: Chat Settings
+#### 🗨️ Chat Settings
 - `Player Name` the name of the player
 - `AI Name` the name of the AI
 - `Prompt` a description of the AI role
