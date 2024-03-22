@@ -1,0 +1,7 @@
+<map id="LLMUnity.LLama2Template" name="LLMUnity.LLama2Template">
+<area shape="rect" id="Node000001" title=" " alt="" coords="21,79,217,104"/>
+<area shape="rect" id="Node000003" href="$classLLMUnity_1_1LLama2ChatTemplate.html" title=" " alt="" coords="5,152,232,177"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="121,118,121,152,116,152,116,118"/>
+<area shape="rect" id="Node000002" href="$classLLMUnity_1_1ChatTemplate.html" title=" " alt="" coords="63,5,175,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="121,44,121,79,116,79,116,44"/>
+</map>
