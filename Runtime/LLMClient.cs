@@ -113,13 +113,13 @@ namespace LLMUnity
             return null;
         }
 
-#if UNITY_EDITOR
         public virtual void SetTemplate(string templateName)
         {
             chatTemplate = templateName;
             LoadTemplate();
         }
 
+#if UNITY_EDITOR
         private void Reset()
         {
             previousEndpoint = "";
