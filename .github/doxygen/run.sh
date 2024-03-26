@@ -15,5 +15,8 @@ if [ ! -f $doxygen ]; then
 fi
 
 $doxygen .github/doxygen/Doxyfile
-mkdir -p html/images/
-cp .github/*png .github/*.gif html/images/
+
+output_dir=html
+mkdir -p $output_dir/images/
+cp .github/*png .github/*.gif $output_dir/images/
+sed -i 's/^\s*\[\s*\"LLM for Unity\",.*\[\s*//; s/^  ] ]//' $output_dir/navtreedata.js
