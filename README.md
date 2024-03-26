@@ -5,10 +5,12 @@
 
 <h3 align="center">Create characters in Unity with LLMs!</h3>
 
+[![Made with Unity](https://img.shields.io/badge/Unity%20Asset%20Store-black.svg?style=flat&logo=unity)](https://assetstore.unity.com/packages/slug/273604)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 <a href="https://discord.gg/RwXKQb6zdv"><img src="https://discordapp.com/api/guilds/1194779009284841552/widget.png?style=shield"/></a>
 [![Reddit](https://img.shields.io/badge/Reddit-%23FF4500.svg?style=flat&logo=Reddit&logoColor=white)](https://www.reddit.com/user/UndreamAI)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-blue?style=flat&logo=linkedin&labelColor=blue)](https://www.linkedin.com/company/undreamai)
+<a href="https://github.com/undreamai/LLMUnity"><img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/undreamai/LLMUnity?style=flat&logo=github&color=f5f5f5"/></a>
 
 LLM for Unity enables seamless integration of Large Language Models (LLMs) within the Unity engine.<br>
 It allows to create intelligent characters that your players can interact with for an immersive experience.<br>
@@ -27,10 +29,10 @@ LLM for Unity is built on top of the awesome [llama.cpp](https://github.com/gger
 </sub>
 
 ## At a glance
-- 💻 Cross-platform! Windows, Linux and macOS ([versions](https://github.com/Mozilla-Ocho/llamafile?tab=readme-ov-file#supported-oses))
+- 💻 Cross-platform! Windows, Linux and macOS
 - 🏠 Runs locally without internet access. No data ever leave the game!
-- ⚡ Blazing fast inference on CPU and GPU (Nvidia and AMD)
-- 🤗 Support of the major LLM models ([models](https://github.com/ggerganov/llama.cpp?tab=readme-ov-file#description))
+- ⚡ Blazing fast inference on CPU and GPU (Nvidia, AMD, Apple Metal)
+- 🤗 Support of the major LLM models
 - 🔧 Easy to setup, call with a single line of code
 - 💰 Free to use for both personal and commercial purposes
 
@@ -38,9 +40,9 @@ LLM for Unity is built on top of the awesome [llama.cpp](https://github.com/gger
 🚦 [Upcoming Releases](https://github.com/orgs/undreamai/projects/2/views/10)
 
 ## How to help
+- [⭐ Star the repo](https://github.com/undreamai/LLMUnity) and spread the word about the project!
 - Join us at [Discord](https://discord.gg/RwXKQb6zdv) and say hi!
-- ⭐ Star the repo and spread the word about the project!
-- Submit feature requests or bugs as [issues](https://github.com/undreamai/LLMUnity/issues) or even submit a PR and become a collaborator!
+- Submit feature requests or bugs as issues or even submit a PR and become a collaborator
 
 ## Games using LLM for Unity
 - [Verbal Verdict](https://store.steampowered.com/app/2778780/Verbal_Verdict/)
