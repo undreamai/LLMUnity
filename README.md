@@ -1,6 +1,10 @@
 
 <p align="center">
-<img src=".github/logo.png" height="150"/>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset=".github/logo_white.png">
+  <source media="(prefers-color-scheme: light)" srcset=".github/logo.png">
+  <img src=".github/logo.png" height="150"/>
+</picture>
 </p>
 
 <h3 align="center">Create characters in Unity with LLMs!</h3>
