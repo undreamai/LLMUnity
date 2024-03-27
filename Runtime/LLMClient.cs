@@ -269,21 +269,57 @@ namespace LLMUnity
             AddMessage(AIName, content);
         }
 
-        public string ChatContent(ChatResult result)
+        class ChatContentWrapper
         {
-            // get content from a chat result received from the endpoint
-            return result.content.Trim();
+            string prompt;
+            LLM server;
+
+            public ChatContentWrapper(string prompt, LLM server = null)
+            {
+                this.prompt = prompt;
+                this.server = server;
+            }
+
+            public bool PromptIntercepted()
+            {
+                bool intercepted = (server != null && !server.processedPrompts.Contains(prompt));
+                if (intercepted) Debug.LogError("Prompt intercepted!");
+                return intercepted;
+            }
+
+            public string ChatContent(ChatResult result)
+            {
+                // get content from a chat result received from the endpoint
+                if (PromptIntercepted()) return "";
+                return result.content.Trim();
+            }
+
+            public string MultiChatContent(MultiChatResult result)
+            {
+                // get content from a chat result received from the endpoint
+                if (PromptIntercepted()) return "";
+                string response = "";
+                foreach (ChatResult resultPart in result.data)
+                {
+                    response += resultPart.content;
+                }
+                return response.Trim();
+            }
         }
 
-        public string MultiChatContent(MultiChatResult result)
+        public async Task<string> ChatContentRequest(string prompt, string json, Callback<string> callback = null)
         {
-            // get content from a chat result received from the endpoint
-            string response = "";
-            foreach (ChatResult resultPart in result.data)
+            string result = "";
+            ChatContentWrapper contentWrapper = new ChatContentWrapper(prompt, server);
+            if (stream)
             {
-                response += resultPart.content;
+                result = await PostRequest<MultiChatResult, string>(json, "completion", contentWrapper.MultiChatContent, callback);
             }
-            return response.Trim();
+            else
+            {
+                result = await PostRequest<ChatResult, string>(json, "completion", contentWrapper.ChatContent, callback);
+            }
+            return result;
         }
 
         public string ChatOpenAIContent(ChatOpenAIResult result)
@@ -306,22 +342,15 @@ namespace LLMUnity
             await InitNKeep();
 
             string json;
+            string prompt;
             lock (chatPromptLock) {
                 AddPlayerMessage(question);
-                string prompt = template.ComputePrompt(chat, AIName);
+                prompt = template.ComputePrompt(chat, AIName);
                 json = JsonUtility.ToJson(GenerateRequest(prompt));
                 chat.RemoveAt(chat.Count - 1);
             }
 
-            string result;
-            if (stream)
-            {
-                result = await PostRequest<MultiChatResult, string>(json, "completion", MultiChatContent, callback);
-            }
-            else
-            {
-                result = await PostRequest<ChatResult, string>(json, "completion", ChatContent, callback);
-            }
+            string result = await ChatContentRequest(prompt, json, callback);
 
             if (addToHistory && result != null)
             {
@@ -342,15 +371,7 @@ namespace LLMUnity
             // call the completionCallback function when the answer is fully received
 
             string json = JsonUtility.ToJson(GenerateRequest(prompt));
-            string result;
-            if (stream)
-            {
-                result = await PostRequest<MultiChatResult, string>(json, "completion", MultiChatContent, callback);
-            }
-            else
-            {
-                result = await PostRequest<ChatResult, string>(json, "completion", ChatContent, callback);
-            }
+            string result = await ChatContentRequest(prompt, json, callback);
             completionCallback?.Invoke();
             return result;
         }
@@ -477,7 +498,6 @@ namespace LLMUnity
                     await Task.Yield();
                 }
                 WIPRequests.Remove(request);
-
                 if (request.result != UnityWebRequest.Result.Success) Debug.LogError(request.error);
                 else result = ConvertContent(request.downloadHandler.text, getContent);
                 callback?.Invoke(result);
