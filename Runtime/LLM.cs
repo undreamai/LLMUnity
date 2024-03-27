@@ -238,6 +238,7 @@ namespace LLMUnity
 
         private void ProcessExited(object sender, EventArgs e)
         {
+            serverListening = false;
             serverBlock.Set();
         }
 
