@@ -128,5 +128,7 @@ namespace LLMUnity
         public string message;
         public string hostname;
         public int port;
+        public string to_eval;
+        public string cached;
     }
 }
