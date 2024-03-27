@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -92,16 +91,18 @@ namespace LLMUnity
         private List<UnityWebRequest> WIPRequests = new List<UnityWebRequest>();
         static object chatPromptLock = new object();
         static object chatAddLock = new object();
+        private LLM server;
 
         public void Awake()
         {
+            SetServer();
             InitGrammar();
             InitPrompt();
             LoadTemplate();
             _ = InitNKeep();
         }
 
-        public LLM GetServer()
+        LLM GetServer()
         {
             foreach (LLM server in FindObjectsOfType<LLM>())
             {
@@ -111,6 +112,11 @@ namespace LLMUnity
                 }
             }
             return null;
+        }
+
+        void SetServer()
+        {
+            server = GetServer();
         }
 
         public virtual void SetTemplate(string templateName)
@@ -433,6 +439,15 @@ namespace LLMUnity
             // send a post request to the server and call the relevant callbacks to convert the received content and handle it
             // this function has streaming functionality i.e. handles the answer while it is being received
             Ret result = default;
+            string errorMessage = "";
+            if (host == "localhost" && server == null) errorMessage += "No server found!";
+            if (server != null && !server.serverListening) errorMessage += "Server is not listening!";
+            if (errorMessage != "")
+            {
+                Debug.LogError(errorMessage);
+                return result;
+            }
+
             byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(json);
             using (var request = UnityWebRequest.Put($"{host}:{port}/{endpoint}", jsonToSend))
             {
