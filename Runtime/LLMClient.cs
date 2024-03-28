@@ -455,7 +455,7 @@ namespace LLMUnity
             string errorMessage = "";
             if (host == "localhost" && server == null) errorMessage += "No server found!";
             if (server != null && !server.serverListening) errorMessage += "Server is not listening!";
-            if (server != null && LLMUnitySetup.NumServersForPort(port) != 1) errorMessage += "Multiple servers found for port!";
+            if (server != null && LLMUnitySetup.NumServersForPort(port) > 1) errorMessage += "Multiple servers found for port!";
             if (errorMessage != "")
             {
                 Debug.LogError(errorMessage);
