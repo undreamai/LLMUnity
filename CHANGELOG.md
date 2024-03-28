@@ -1,3 +1,9 @@
+## v1.2.6
+#### 🐛 Fixes
+
+- Add server security for interceptions from external llamafile servers (PR: #132)
+
+
 ## v1.2.5
 #### 🐛 Fixes
 

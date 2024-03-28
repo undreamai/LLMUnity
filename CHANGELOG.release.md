@@ -1,5 +1,4 @@
 ### 🐛 Fixes
 
-- Add to chat history only if the response is not null (PR: #123)
-- Allow SetTemplate function in Runtime (PR: #129)
+- Add server security for interceptions from external llamafile servers (PR: #132)
 
