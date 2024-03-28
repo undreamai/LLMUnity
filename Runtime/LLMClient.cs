@@ -59,7 +59,7 @@ namespace LLMUnity
         /// If it is not selected, the full reply from the model is received in one go </summary>
         [Server] public bool stream = true;
 
-        /// <summary> grammar file used for the LLM in .cbnf format </summary>
+        /// <summary> grammar file used for the LLM in .cbnf format (relative to the Assets/StreamingAssets folder) </summary>
         [ModelAddonAdvanced] public string grammar = null;
         /// <summary> seed for reproducibility. For random results every time set to -1. </summary>
         [ModelAdvanced] public int seed = 0;
