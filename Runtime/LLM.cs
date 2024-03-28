@@ -14,21 +14,58 @@ namespace LLMUnity
     [DefaultExecutionOrder(-2)]
     public class LLM : LLMClient
     {
-        [HideInInspector] public bool modelHide = true;
-
+        /// <summary> number of threads to use (-1 = all) </summary>
         [Server] public int numThreads = -1;
+        /// <summary> number of model layers to offload to the GPU (0 = GPU not used).
+        /// Use a large number i.e. >30 to utilise the GPU as much as possible.
+        /// If the user's GPU is not supported, the LLM will fall back to the CPU </summary>
         [Server] public int numGPULayers = 0;
+        /// <summary> number of prompts that can happen in parallel (-1 = number of LLM/LLMClient objects) </summary>
         [ServerAdvanced] public int parallelPrompts = -1;
+        /// <summary> select to log the output of the LLM in the Unity Editor. </summary>
         [ServerAdvanced] public bool debug = false;
+        /// <summary> allows to start the server asynchronously.
+        /// This is useful to not block Unity while the server is initialised.
+        /// For example it can be used as follows:
+        /// \code
+        /// void Start(){
+        ///     StartCoroutine(Loading());
+        ///     ...
+        /// }
+        ///
+        /// IEnumerator<string> Loading()
+        /// {
+        ///     // show loading screen
+        ///     while (!llm.serverListening)
+        ///     {
+        ///         yield return null;
+        ///     }
+        ///     Debug.Log("Server is ready");
+        /// }
+        /// \endcode
+        /// </summary>
         [ServerAdvanced] public bool asynchronousStartup = false;
+        /// <summary> select to allow remote access to the server. </summary>
         [ServerAdvanced] public bool remote = false;
+        /// <summary> Select to kill existing servers created by the package at startup.
+        /// Useful in case of game crashes where the servers didn't have the chance to terminate</summary>
         [ServerAdvanced] public bool killExistingServersOnStart = true;
 
+        /// <summary> the path of the model being used (relative to the Assets/StreamingAssets folder).
+        /// Models with .gguf format are allowed.</summary>
         [Model] public string model = "";
+        /// <summary> the path of the LORA model being used (relative to the Assets/StreamingAssets folder).
+        /// Models with .bin format are allowed.</summary>
         [ModelAddonAdvanced] public string lora = "";
+        /// <summary> Size of the prompt context (0 = context size of the model).
+        /// This is the number of tokens the model can take as input when generating responses. </summary>
         [ModelAdvanced] public int contextSize = 512;
+        /// <summary> Batch size for prompt processing. </summary>
         [ModelAdvanced] public int batchSize = 512;
+        /// <summary> Boolean set to true if the server has started and is ready to receive requests, false otherwise. </summary>
+        public bool serverListening { get; private set; } = false;
 
+        /// \cond HIDE
         [HideInInspector] public readonly (string, string)[] modelOptions = new(string, string)[]
         {
             ("Download model", null),
@@ -47,13 +84,14 @@ namespace LLMUnity
         [HideInInspector] public static float binariesProgress = 1;
         [HideInInspector] public float modelProgress = 1;
         [HideInInspector] public float modelCopyProgress = 1;
+        [HideInInspector] public bool modelHide = true;
         private static float binariesDone = 0;
         private Process process;
         private bool mmapCrash = false;
-        public bool serverListening { get; private set; } = false;
         private ManualResetEvent serverBlock = new ManualResetEvent(false);
         static object crashKillLock = new object();
         static bool crashKill = false;
+        /// \endcond
 
 #if UNITY_EDITOR
         [InitializeOnLoadMethod]
