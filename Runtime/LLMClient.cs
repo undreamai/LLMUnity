@@ -271,18 +271,18 @@ namespace LLMUnity
 
         class ChatContentWrapper
         {
-            string prompt;
+            string promptCheck;
             LLM server;
 
-            public ChatContentWrapper(string prompt, LLM server = null)
+            public ChatContentWrapper(string promptCheck, LLM server = null)
             {
-                this.prompt = prompt;
+                this.promptCheck = promptCheck;
                 this.server = server;
             }
 
             public bool PromptIntercepted()
             {
-                bool intercepted = (server != null && !server.processedPrompts.Contains(prompt));
+                bool intercepted = (server != null && !server.processedPrompts.Contains(promptCheck));
                 if (intercepted) Debug.LogError("Prompt intercepted!");
                 return intercepted;
             }
@@ -310,7 +310,8 @@ namespace LLMUnity
         public async Task<string> ChatContentRequest(string prompt, string json, Callback<string> callback = null)
         {
             string result = "";
-            ChatContentWrapper contentWrapper = new ChatContentWrapper(prompt, server);
+            string promptCheck = server == null ? prompt : await Detokenize(await Tokenize(prompt));
+            ChatContentWrapper contentWrapper = new ChatContentWrapper(promptCheck, server);
             if (stream)
             {
                 result = await PostRequest<MultiChatResult, string>(json, "completion", contentWrapper.MultiChatContent, callback);
@@ -332,6 +333,12 @@ namespace LLMUnity
         {
             // get the tokens from a tokenize result received from the endpoint
             return result.tokens;
+        }
+
+        public string DetokenizeContent(TokenizeRequest result)
+        {
+            // get content from a chat result received from the endpoint
+            return result.content;
         }
 
         public async Task<string> Chat(string question, Callback<string> callback = null, EmptyCallback completionCallback = null, bool addToHistory = true)
@@ -388,6 +395,15 @@ namespace LLMUnity
             tokenizeRequest.content = question;
             string json = JsonUtility.ToJson(tokenizeRequest);
             return await PostRequest<TokenizeResult, List<int>>(json, "tokenize", TokenizeContent, callback);
+        }
+
+        public async Task<string> Detokenize(List<int> tokens, Callback<string> callback = null)
+        {
+            // handle the detokenization of a message by the user
+            TokenizeResult tokenizeRequest = new TokenizeResult();
+            tokenizeRequest.tokens = tokens;
+            string json = JsonUtility.ToJson(tokenizeRequest);
+            return await PostRequest<TokenizeRequest, string>(json, "detokenize", DetokenizeContent, callback);
         }
 
         public Ret ConvertContent<Res, Ret>(string response, ContentCallback<Res, Ret> getContent = null)
