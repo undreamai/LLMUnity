@@ -340,38 +340,38 @@ If it is not selected, the full reply from the model is received in one go
 #### 🤗 Model Settings
 - `Download model` click to download one of the default models
 - `Load model` click to load your own model in .gguf format
-- `Model` the model being used (inside the Assets/StreamingAssets folder)
+- `Model` the path of the model being used (relative to the Assets/StreamingAssets folder)
 - <details><summary><code>Chat Template</code> the chat template to use for constructing the prompts</summary> The chat template is determined automatically by the chat template of the model (if it exists) or the model name. The "chatml" and "alpaca" templates work with most of the models.</details>
 - <details><summary>Advanced options</summary>
 
   - `Load lora` click to load a LORA model in .bin format
   - `Load grammar` click to load a grammar in .gbnf format
-  - `Lora` the LORA model being used (inside the Assets/StreamingAssets folder)
-  - `Grammar` the grammar being used (inside the Assets/StreamingAssets folder)
-  - `Context Size` Size of the prompt context (0 = context size of the model)
-  - `Batch Size` Batch size for prompt processing (default: 512)
+  - `Lora` the path of the Lora being used (relative to the Assets/StreamingAssets folder)
+  - `Grammar` the path of the Grammar being used (relative to the Assets/StreamingAssets folder)
+  - <details><summary><code>Context Size</code> size of the prompt context (0 = context size of the model)</summary> This is the number of tokens the model can take as input when generating responses.</details>
+  - `Batch Size` batch size for prompt processing (default: 512)
   - `Seed` seed for reproducibility. For random results every time select -1
   - <details><summary><code>Cache Prompt</code> save the ongoing prompt from the chat (default: true)</summary> Saves the prompt as it is being created by the chat to avoid reprocessing the entire prompt every time</details>
   - <details><summary><code>Num Predict</code> number of tokens to predict (default: 256, -1 = infinity, -2 = until context filled)</summary>This is the amount of tokens the model will maximum predict. When N predict is reached the model will stop generating. This means words / sentences might not get finished if this is too low. </details>
-  - <details><summary><code>Temperature</code> LLM temperature, lower values give more deterministic answers</summary>The temperature setting adjusts how random the generated responses are. Turning it up makes the generated choices more varied and unpredictable. Turning it down  makes the generated responses more predictable and focused on the most likely options.</details>
+  - <details><summary><code>Temperature</code> LLM temperature, lower values give more deterministic answers (default: 0.2)</summary>The temperature setting adjusts how random the generated responses are. Turning it up makes the generated choices more varied and unpredictable. Turning it down  makes the generated responses more predictable and focused on the most likely options.</details>
   - <details><summary><code>Top K</code> top-k sampling (default: 40, 0 = disabled)</summary>The top k value controls the top k most probable tokens at each step of generation. This value can help fine tune the output and make this adhere to specific patterns or constraints.</details>
   - <details><summary><code>Top P</code> top-p sampling (default: 0.9, 1.0 = disabled)</summary>The top p value controls the cumulative probability of generated tokens. The model will generate tokens until this theshold (p) is reached. By lowering this value you can shorten output & encourage / discourage more diverse output.</details>
   - <details><summary><code>Min P</code> minimum probability for a token to be used (default: 0.05)</summary> The probability is defined relative to the probability of the most likely token.</details>
-  - <details><summary><code>Repeat Penalty</code> Control the repetition of token sequences in the generated text (default: 1.1)</summary>The penalty is applied to repeated tokens.</details>
+  - <details><summary><code>Repeat Penalty</code> control the repetition of token sequences in the generated text (default: 1.1)</summary>The penalty is applied to repeated tokens.</details>
   - <details><summary><code>Presence Penalty</code> repeated token presence penalty (default: 0.0, 0.0 = disabled)</summary> Positive values penalize new tokens based on whether they appear in the text so far, increasing the model's likelihood to talk about new topics.</details>
   - <details><summary><code>Frequency Penalty</code> repeated token frequency penalty (default: 0.0, 0.0 = disabled)</summary> Positive values penalize new tokens based on their existing frequency in the text so far, decreasing the model's likelihood to repeat the same line verbatim.</details>
 - <details><summary>Expert options</summary>
 
-  - `tfs_z`: Enable tail free sampling with parameter z (default: 1.0, 1.0 = disabled).
-  - `typical_p`: Enable locally typical sampling with parameter p (default: 1.0, 1.0 = disabled).
-  - `repeat_last_n`: Last n tokens to consider for penalizing repetition (default: 64, 0 = disabled, -1 = ctx-size).
-  - `penalize_nl`: Penalize newline tokens when applying the repeat penalty (default: true).
-  - `penalty_prompt`: Prompt for the purpose of the penalty evaluation. Can be either `null`, a string or an array of numbers representing tokens (default: `null` = use original `prompt`).
-  - `mirostat`: Enable Mirostat sampling, controlling perplexity during text generation (default: 0, 0 = disabled, 1 = Mirostat, 2 = Mirostat 2.0).
-  - `mirostat_tau`: Set the Mirostat target entropy, parameter tau (default: 5.0).
-  - `mirostat_eta`: Set the Mirostat learning rate, parameter eta (default: 0.1).
-  - `n_probs`: If greater than 0, the response also contains the probabilities of top N tokens for each generated token (default: 0)
-  - `ignore_eos`: Ignore end of stream token and continue generating (default: false).
+  - `Tfs_z`: enable tail free sampling with parameter z (default: 1.0, 1.0 = disabled).
+  - `Typical P`: enable locally typical sampling with parameter p (default: 1.0, 1.0 = disabled).
+  - `Repeat Last N`: last n tokens to consider for penalizing repetition (default: 64, 0 = disabled, -1 = ctx-size).
+  - `Penalize Nl`: penalize newline tokens when applying the repeat penalty (default: true).
+  - `Penalty Prompt`: prompt for the purpose of the penalty evaluation. Can be either `null`, a string or an array of numbers representing tokens (default: `null` = use original `prompt`).
+  - `Mirostat`: enable Mirostat sampling, controlling perplexity during text generation (default: 0, 0 = disabled, 1 = Mirostat, 2 = Mirostat 2.0).
+  - `Mirostat Tau`: set the Mirostat target entropy, parameter tau (default: 5.0).
+  - `Mirostat Eta`: set the Mirostat learning rate, parameter eta (default: 0.1).
+  - `N Probs`: if greater than 0, the response also contains the probabilities of top N tokens for each generated token (default: 0)
+  - `Ignore Eos`: ignore end of stream token and continue generating (default: false).
 
     </details>
 
@@ -380,7 +380,7 @@ If it is not selected, the full reply from the model is received in one go
 #### 🗨️ Chat Settings
 - `Player Name` the name of the player
 - `AI Name` the name of the AI
-- `Prompt` a description of the AI role
+- `Prompt` description of the AI role
 
 ## License
 The license of LLM for Unity is MIT ([LICENSE.md](LICENSE.md)) and uses third-party software with MIT and Apache licenses ([Third Party Notices.md](<Third Party Notices.md>)).
