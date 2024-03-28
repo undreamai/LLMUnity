@@ -135,11 +135,12 @@ namespace LLMUnity
             binariesProgress = 1;
         }
 
-        public static void SetBinariesProgress(float progress)
+        static void SetBinariesProgress(float progress)
         {
             binariesProgress = binariesDone / 4f + 1f / 4f * progress;
         }
 
+        /// \cond HIDE
         public void DownloadModel(int optionIndex)
         {
             // download default model and disable model editor properties until the model is set
@@ -152,11 +153,19 @@ namespace LLMUnity
             Task downloadTask = LLMUnitySetup.DownloadFile(modelUrl, modelPath, false, false, SetModel, SetModelProgress);
         }
 
-        public void SetModelProgress(float progress)
+        /// \endcond
+
+        void SetModelProgress(float progress)
         {
             modelProgress = progress;
         }
 
+        /// <summary>
+        /// Allows to set the model used by the LLM.
+        /// The model provided is copied to the Assets/StreamingAssets folder that allows it to also work in the build.
+        /// Models supported are in .gguf format.
+        /// </summary>
+        /// <param name="path">path to model to use (.gguf format)</param>
         public async Task SetModel(string path)
         {
             // set the model and enable the model editor properties
@@ -176,6 +185,12 @@ namespace LLMUnity
             }
         }
 
+        /// <summary>
+        /// Allows to set a LORA model to use in the LLM.
+        /// The model provided is copied to the Assets/StreamingAssets folder that allows it to also work in the build.
+        /// Models supported are in .bin format.
+        /// </summary>
+        /// <param name="path">path to LORA model to use (.bin format)</param>
         public async Task SetLora(string path)
         {
             // set the lora and enable the model editor properties
@@ -187,7 +202,7 @@ namespace LLMUnity
 
 #endif
 
-        public List<LLMClient> GetListeningClients()
+        List<LLMClient> GetListeningClients()
         {
             List<LLMClient> clients = new List<LLMClient>();
             foreach (LLMClient client in FindObjectsOfType<LLMClient>())
@@ -210,6 +225,13 @@ namespace LLMUnity
             }
         }
 
+        /// <summary>
+        /// The Unity Awake function that initializes the state before the application starts.
+        /// The following actions are executed:
+        /// - existing servers are killed (if killExistingServersOnStart=true)
+        /// - the LLM server is started (async if asynchronousStartup, synchronous otherwise)
+        /// Additionally the Awake of the LLMClient is called to initialise the client part of the LLM object.
+        /// </summary>
         new public async void Awake()
         {
             if (killExistingServersOnStart) KillServersAfterUnityCrash();
@@ -380,6 +402,9 @@ namespace LLMUnity
             else LLMUnitySetup.SaveServerPID(process.Id);
         }
 
+        /// <summary>
+        /// Allows to stop the LLM server.
+        /// </summary>
         public void StopProcess()
         {
             // kill the llm server
@@ -395,6 +420,10 @@ namespace LLMUnity
             }
         }
 
+        /// <summary>
+        /// The Unity OnDestroy function called when the onbject is destroyed.
+        /// The function StopProcess is called to stop the LLM server.
+        /// </summary>
         public void OnDestroy()
         {
             StopProcess();
