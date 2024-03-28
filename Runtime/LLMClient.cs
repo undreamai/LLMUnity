@@ -269,56 +269,34 @@ namespace LLMUnity
             AddMessage(AIName, content);
         }
 
-        class ChatContentWrapper
+        public string ChatContent(ChatResult result)
         {
-            string promptCheck;
-            LLM server;
-
-            public ChatContentWrapper(string promptCheck, LLM server = null)
-            {
-                this.promptCheck = promptCheck;
-                this.server = server;
-            }
-
-            public bool PromptIntercepted()
-            {
-                bool intercepted = (server != null && !server.processedPrompts.Contains(promptCheck));
-                if (intercepted) Debug.LogError("Prompt intercepted!");
-                return intercepted;
-            }
-
-            public string ChatContent(ChatResult result)
-            {
-                // get content from a chat result received from the endpoint
-                if (PromptIntercepted()) return "";
-                return result.content.Trim();
-            }
-
-            public string MultiChatContent(MultiChatResult result)
-            {
-                // get content from a chat result received from the endpoint
-                if (PromptIntercepted()) return "";
-                string response = "";
-                foreach (ChatResult resultPart in result.data)
-                {
-                    response += resultPart.content;
-                }
-                return response.Trim();
-            }
+            // get content from a chat result received from the endpoint
+            return result.content.Trim();
         }
 
-        public async Task<string> ChatContentRequest(string prompt, string json, Callback<string> callback = null)
+        public string MultiChatContent(MultiChatResult result)
+        {
+            // get content from a chat result received from the endpoint
+            string response = "";
+            foreach (ChatResult resultPart in result.data)
+            {
+                response += resultPart.content;
+            }
+            return response.Trim();
+        }
+
+        public async Task<string> ChatContentRequest(string json, Callback<string> callback = null)
         {
             string result = "";
-            string promptCheck = server == null ? prompt : await Detokenize(await Tokenize(prompt));
-            ChatContentWrapper contentWrapper = new ChatContentWrapper(promptCheck, server);
+            float startTime = Time.realtimeSinceStartup;
             if (stream)
             {
-                result = await PostRequest<MultiChatResult, string>(json, "completion", contentWrapper.MultiChatContent, callback);
+                result = await PostRequest<MultiChatResult, string>(json, "completion", MultiChatContent, callback);
             }
             else
             {
-                result = await PostRequest<ChatResult, string>(json, "completion", contentWrapper.ChatContent, callback);
+                result = await PostRequest<ChatResult, string>(json, "completion", ChatContent, callback);
             }
             return result;
         }
@@ -357,7 +335,7 @@ namespace LLMUnity
                 chat.RemoveAt(chat.Count - 1);
             }
 
-            string result = await ChatContentRequest(prompt, json, callback);
+            string result = await ChatContentRequest(json, callback);
 
             if (addToHistory && result != null)
             {
@@ -378,7 +356,7 @@ namespace LLMUnity
             // call the completionCallback function when the answer is fully received
 
             string json = JsonUtility.ToJson(GenerateRequest(prompt));
-            string result = await ChatContentRequest(prompt, json, callback);
+            string result = await ChatContentRequest(json, callback);
             completionCallback?.Invoke();
             return result;
         }
@@ -479,6 +457,7 @@ namespace LLMUnity
             string errorMessage = "";
             if (host == "localhost" && server == null) errorMessage += "No server found!";
             if (server != null && !server.serverListening) errorMessage += "Server is not listening!";
+            if (server != null && LLMUnitySetup.NumServersForPort(port) != 1) errorMessage += "Multiple servers found for port!";
             if (errorMessage != "")
             {
                 Debug.LogError(errorMessage);
