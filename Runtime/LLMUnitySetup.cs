@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Net;
 using System;
+using System.Net.NetworkInformation;
 
 namespace LLMUnity
 {
@@ -275,6 +276,18 @@ namespace LLMUnity
             {
                 SaveServerPID(pidEntry);
             }
+        }
+
+        public static int NumServersForPort(int port)
+        {
+            IPGlobalProperties ipProperties = IPGlobalProperties.GetIPGlobalProperties();
+            TcpConnectionInformation[] tcpConnections = ipProperties.GetActiveTcpConnections();
+            int num = 0;
+            foreach (TcpConnectionInformation info in tcpConnections)
+            {
+                if (info.LocalEndPoint.Port == port && info.RemoteEndPoint.Address.ToString() == "0.0.0.0" && info.RemoteEndPoint.Port == 0) num++;
+            }
+            return num;
         }
     }
 }
