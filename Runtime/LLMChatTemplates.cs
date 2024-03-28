@@ -12,12 +12,21 @@ namespace LLMUnity
     /// </summary>
     public abstract class ChatTemplate
     {
+        /// <summary> the default template used when it can't be determined ("chatml") </summary>
         public static string DefaultTemplate;
-        public static Type[] templateClasses;
+        /// <summary> a dictionary from chat template name to chat template type.
+        /// It can be used to get the chat template names supported with:
+        /// \code
+        /// ChatTemplate.templates.Keys
+        /// \endcode
+        /// </summary>
         public static Dictionary<string, Type> templates;
+        /// \cond HIDE
+        public static Type[] templateClasses;
         public static Dictionary<string, string> templatesDescription;
         public static Dictionary<string, string> modelTemplates;
         public static Dictionary<string, string> chatTemplates;
+        /// \endcond
 
         static ChatTemplate()
         {
@@ -59,6 +68,12 @@ namespace LLMUnity
             }
         }
 
+        /// <summary>
+        /// Determines the chat template name from a search name.
+        /// It searches if any of the chat template names is a substring of the provided name.
+        /// </summary>
+        /// <param name="name">search name</param>
+        /// <returns>chat template name</returns>
         public static string FromName(string name)
         {
             if (name == null) return null;
@@ -70,6 +85,11 @@ namespace LLMUnity
             return null;
         }
 
+        /// <summary>
+        /// Determines the chat template name from a Jinja template.
+        /// </summary>
+        /// <param name="template">Jinja template</param>
+        /// <returns>chat template name</returns>
         public static string FromTemplate(string template)
         {
             if (template == null) return null;
@@ -79,6 +99,16 @@ namespace LLMUnity
             return null;
         }
 
+        /// <summary>
+        /// Determines the chat template name from a GGUF file.
+        /// It reads the GGUF file and then determines the chat template name based on:
+        /// - the jinja template defined in the file (if it exists and matched)
+        /// - the model name defined in the file (if it exists and matched)
+        /// - the filename defined in the file (if matched)
+        /// - otherwises uses the DefaultTemplate
+        /// </summary>
+        /// <param name="path">GGUF file path</param>
+        /// <returns>template name</returns>
         public static string FromGGUF(string path)
         {
             GGUFReader reader = new GGUFReader(path);
@@ -97,16 +127,26 @@ namespace LLMUnity
             return DefaultTemplate;
         }
 
+        /// <summary>
+        /// Creates the chat template based on the provided chat template name
+        /// </summary>
+        /// <param name="template">chat template name</param>
+        /// <returns>chat template</returns>
         public static ChatTemplate GetTemplate(string template)
         {
             return (ChatTemplate)Activator.CreateInstance(templates[template]);
         }
 
-        public abstract string GetName();
-        public abstract string GetDescription();
+        /// <summary> Returns the chat template name </summary>
+        public virtual string GetName() { return ""; }
+        /// <summary> Returns the chat template description </summary>
+        public virtual string GetDescription() { return ""; }
+        /// <summary> Returns an array of names that can be used to match the chat template </summary>
         public virtual string[] GetNameMatches() { return new string[] {}; }
+        /// <summary> Returns an array of jinja templates that can be used to match the chat template </summary>
         public virtual string[] GetChatTemplateMatches() { return new string[] {}; }
-        public abstract string[] GetStop(string playerName, string AIName);
+        /// <summary> Returns an array of the stopwords used by the template </summary>
+        public virtual string[] GetStop(string playerName, string AIName) { return new string[] {}; }
 
         protected virtual string PromptPrefix() { return ""; }
         protected virtual string SystemPrefix() { return ""; }
@@ -118,6 +158,10 @@ namespace LLMUnity
         protected virtual string RequestSuffix() { return ""; }
         protected virtual string PairSuffix() { return ""; }
 
+        /// <summary> Constructs the prompt using the template based on a list of ChatMessages </summary>
+        /// <param name="messages"> list of ChatMessages e.g. the LLMClient chat </param>
+        /// <param name="AIName"> the AI name </param>
+        /// <returns>prompt</returns>
         public virtual string ComputePrompt(List<ChatMessage> messages, string AIName)
         {
             string chatPrompt = PromptPrefix();
@@ -142,7 +186,7 @@ namespace LLMUnity
             return chatPrompt;
         }
 
-        public string[] AddStopNewlines(string[] stop)
+        protected string[] AddStopNewlines(string[] stop)
         {
             List<string> stopWithNewLines = new List<string>();
             foreach (string stopword in stop)
