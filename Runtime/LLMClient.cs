@@ -289,7 +289,6 @@ namespace LLMUnity
         public async Task<string> ChatContentRequest(string json, Callback<string> callback = null)
         {
             string result = "";
-            float startTime = Time.realtimeSinceStartup;
             if (stream)
             {
                 result = await PostRequest<MultiChatResult, string>(json, "completion", MultiChatContent, callback);
@@ -327,10 +326,9 @@ namespace LLMUnity
             await InitNKeep();
 
             string json;
-            string prompt;
             lock (chatPromptLock) {
                 AddPlayerMessage(question);
-                prompt = template.ComputePrompt(chat, AIName);
+                string prompt = template.ComputePrompt(chat, AIName);
                 json = JsonUtility.ToJson(GenerateRequest(prompt));
                 chat.RemoveAt(chat.Count - 1);
             }
