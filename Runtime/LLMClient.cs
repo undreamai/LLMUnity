@@ -1,4 +1,5 @@
 /// @file
+/// @brief File implementing the LLM client.
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -44,6 +45,9 @@ namespace LLMUnity
     /// \endcond
 
     [DefaultExecutionOrder(-1)]
+    /// <summary>
+    /// Class implementing the LLM client.
+    /// </summary>
     public class LLMClient : MonoBehaviour
     {
         /// <summary> toggle to show/hide advanced options in the GameObject </summary>

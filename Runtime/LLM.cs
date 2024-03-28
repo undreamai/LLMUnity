@@ -1,4 +1,5 @@
 /// @file
+/// @brief File implementing the LLM server.
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -13,6 +14,9 @@ using Debug = UnityEngine.Debug;
 namespace LLMUnity
 {
     [DefaultExecutionOrder(-2)]
+    /// <summary>
+    /// Class implementing the LLM server.
+    /// </summary>
     public class LLM : LLMClient
     {
         /// <summary> number of threads to use (-1 = all) </summary>
