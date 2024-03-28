@@ -204,7 +204,7 @@ namespace LLMUnity
                 string templateToSet = chatTemplate;
                 if (GetType() == typeof(LLMClient))
                 {
-                    LLM server = GetServer();
+                    SetServer();
                     if (server != null) templateToSet = server.chatTemplate;
                 }
                 SetTemplate(templateToSet);
