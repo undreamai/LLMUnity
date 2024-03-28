@@ -1,3 +1,5 @@
+/// @file
+/// @brief File implementing the chat templates.
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -5,6 +7,9 @@ using UnityEngine;
 
 namespace LLMUnity
 {
+    /// <summary>
+    /// Class implementing the skeleton of a chat template
+    /// </summary>
     public abstract class ChatTemplate
     {
         public static string DefaultTemplate;
@@ -148,7 +153,9 @@ namespace LLMUnity
             return stopWithNewLines.ToArray();
         }
     }
-
+    /// <summary>
+    /// Class implementing the ChatML template
+    /// </summary>
     public class ChatMLTemplate : ChatTemplate
     {
         public override string GetName() { return "chatml"; }
@@ -169,6 +176,9 @@ namespace LLMUnity
         }
     }
 
+    /// <summary>
+    /// Class implementing the LLama2 template
+    /// </summary>
     public class LLama2Template : ChatTemplate
     {
         public override string GetName() { return "llama"; }
@@ -186,6 +196,9 @@ namespace LLMUnity
         }
     }
 
+    /// <summary>
+    /// Class implementing a modified version of the LLama2 template for chat
+    /// </summary>
     public class LLama2ChatTemplate : LLama2Template
     {
         public override string GetName() { return "llama chat"; }
@@ -202,6 +215,9 @@ namespace LLMUnity
         }
     }
 
+    /// <summary>
+    /// Class implementing the Mistral Instruct template
+    /// </summary>
     public class MistralInstructTemplate : ChatTemplate
     {
         public override string GetName() { return "mistral instruct"; }
@@ -220,6 +236,9 @@ namespace LLMUnity
         }
     }
 
+    /// <summary>
+    /// Class implementing a modified version of the Mistral Instruct template for chat
+    /// </summary>
     public class MistralChatTemplate : MistralInstructTemplate
     {
         public override string GetName() { return "mistral chat"; }
@@ -237,6 +256,9 @@ namespace LLMUnity
         }
     }
 
+    /// <summary>
+    /// Class implementing the Alpaca template
+    /// </summary>
     public class AlpacaTemplate : ChatTemplate
     {
         public override string GetName() { return "alpaca"; }
@@ -256,6 +278,9 @@ namespace LLMUnity
         }
     }
 
+    /// <summary>
+    /// Class implementing the Phi-2 template
+    /// </summary>
     public class Phi2Template : ChatTemplate
     {
         public override string GetName() { return "phi"; }
@@ -275,6 +300,9 @@ namespace LLMUnity
         }
     }
 
+    /// <summary>
+    /// Class implementing the Zephyr template
+    /// </summary>
     public class ZephyrTemplate : ChatTemplate
     {
         public override string GetName() { return "zephyr"; }
