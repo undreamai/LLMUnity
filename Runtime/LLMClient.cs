@@ -148,6 +148,15 @@ namespace LLMUnity
         public string grammarString;
         /// \endcond
 
+        /// <summary>
+        /// The Unity Awake function that initializes the state before the application starts.
+        /// The following actions are executed:
+        /// - the corresponding LLM server is defined (if ran locally)
+        /// - the grammar is set based on the grammar file
+        /// - the prompt and chat history are initialised
+        /// - the chat template is constructed
+        /// - the number of tokens to keep are based on the system prompt (if setNKeepToPrompt=true)
+        /// </summary>
         public void Awake()
         {
             SetServer();
