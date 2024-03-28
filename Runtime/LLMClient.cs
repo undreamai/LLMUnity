@@ -7,7 +7,7 @@ using UnityEngine.Networking;
 
 namespace LLMUnity
 {
-    /// \cond HIDE_CLASS
+    /// \cond HIDE
     public sealed class FloatAttribute : PropertyAttribute
     {
         public float Min { get; private set; }
@@ -75,10 +75,10 @@ namespace LLMUnity
         /// Turning it up makes the generated choices more varied and unpredictable.
         /// Turning it down makes the generated responses more predictable and focused on the most likely options. </summary>
         [ModelAdvanced, Float(0f, 2f)] public float temperature = 0.2f;
-        /// <summary> top-k sampling (0 = disabled)
+        /// <summary> top-k sampling (0 = disabled).
         /// The top k value controls the top k most probable tokens at each step of generation. This value can help fine tune the output and make this adhere to specific patterns or constraints. </summary>
         [ModelAdvanced, Int(-1, 100)] public int topK = 40;
-        /// <summary> top-p sampling (1.0 = disabled)
+        /// <summary> top-p sampling (1.0 = disabled).
         /// The top p value controls the cumulative probability of generated tokens.
         /// The model will generate tokens until this theshold (p) is reached.
         /// By lowering this value you can shorten output & encourage / discourage more diverse output. </summary>
@@ -89,10 +89,10 @@ namespace LLMUnity
         /// <summary> control the repetition of token sequences in the generated text.
         /// The penalty is applied to repeated tokens. </summary>
         [ModelAdvanced, Float(0f, 1f)] public float repeatPenalty = 1.1f;
-        /// <summary> repeated token presence penalty (0.0 = disabled)
+        /// <summary> repeated token presence penalty (0.0 = disabled).
         /// Positive values penalize new tokens based on whether they appear in the text so far, increasing the model's likelihood to talk about new topics. </summary>
         [ModelAdvanced, Float(0f, 1f)] public float presencePenalty = 0f;
-        /// <summary> repeated token frequency penalty (0.0 = disabled)
+        /// <summary> repeated token frequency penalty (0.0 = disabled).
         /// Positive values penalize new tokens based on their existing frequency in the text so far, decreasing the model's likelihood to repeat the same line verbatim. </summary>
         [ModelAdvanced, Float(0f, 1f)] public float frequencyPenalty = 0f;
 
@@ -102,7 +102,7 @@ namespace LLMUnity
         [ModelExpert, Float(0f, 1f)] public float typicalP = 1f;
         /// <summary> last n tokens to consider for penalizing repetition (0 = disabled, -1 = ctx-size). </summary>
         [ModelExpert, Int(0, 2048)] public int repeatLastN = 64;
-        /// <summary> penalize newline tokens when applying the repeat penalty . </summary>
+        /// <summary> penalize newline tokens when applying the repeat penalty. </summary>
         [ModelExpert] public bool penalizeNl = true;
         /// <summary> prompt for the purpose of the penalty evaluation.
         /// Can be either null, a string or an array of numbers representing tokens (null/"" = use original prompt) </summary>
@@ -113,7 +113,7 @@ namespace LLMUnity
         [ModelExpert, Float(0f, 10f)] public float mirostatTau = 5f;
         /// <summary> set the Mirostat learning rate, parameter eta. </summary>
         [ModelExpert, Float(0f, 1f)] public float mirostatEta = 0.1f;
-        /// <summary> if greater than 0, the response also contains the probabilities of top N tokens for each generated token </summary>
+        /// <summary> if greater than 0, the response also contains the probabilities of top N tokens for each generated token. </summary>
         [ModelExpert, Int(0, 10)] public int nProbs = 0;
         /// <summary> ignore end of stream token and continue generating. </summary>
         [ModelExpert] public bool ignoreEos = false;
@@ -135,6 +135,7 @@ namespace LLMUnity
         /// <summary> option to set the number of tokens to retain from the prompt (nKeep) based on the LLM/LLMClient (system) prompt </summary>
         public bool setNKeepToPrompt = true;
 
+        /// \cond HIDE
         protected List<ChatMessage> chat;
         private LLM server;
         private List<(string, string)> requestHeaders = new List<(string, string)> { ("Content-Type", "application/json") };
@@ -145,6 +146,7 @@ namespace LLMUnity
         public string chatTemplate = ChatTemplate.DefaultTemplate;
         private ChatTemplate template;
         public string grammarString;
+        /// \endcond
 
         public void Awake()
         {
