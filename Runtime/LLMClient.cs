@@ -132,7 +132,7 @@ namespace LLMUnity
         [Chat] public string AIName = "assistant";
         /// <summary> a description of the AI role. This defines the LLM/LLMClient system prompt </summary>
         [TextArea(5, 10), Chat] public string prompt = "A chat between a curious human and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the human's questions.";
-        /// <summary> option to set the number of tokens to retain from the prompt (nKeep) based on the LLM/LLMClient (system) prompt </summary>
+        /// <summary> option to set the number of tokens to retain from the prompt (nKeep) based on the LLM/LLMClient system prompt </summary>
         public bool setNKeepToPrompt = true;
 
         /// \cond HIDE
@@ -183,6 +183,18 @@ namespace LLMUnity
             server = GetServer();
         }
 
+        /// <summary>
+        /// Set the chat template for the LLM/LLMClient.
+        /// </summary>
+        /// <param name="templateName"> the chat template to use.
+        /// The following templates are available:
+        /// - chatml
+        /// - alpaca
+        /// - mistral chat
+        /// - mistral instruct
+        /// - llama chat
+        /// - llama
+        /// - phi </param>
         public virtual void SetTemplate(string templateName)
         {
             chatTemplate = templateName;
@@ -235,6 +247,11 @@ namespace LLMUnity
             }
         }
 
+        /// <summary>
+        /// Set the system prompt for the LLM/LLMClient.
+        /// </summary>
+        /// <param name="newPrompt"> the system prompt </param>
+        /// <param name="clearChat"> whether to clear (true) or keep (false) the current chat history on top of the system prompt. </param>
         public void SetPrompt(string newPrompt, bool clearChat = true)
         {
             prompt = newPrompt;
@@ -271,6 +288,10 @@ namespace LLMUnity
         }
 
 #if UNITY_EDITOR
+        /// <summary>
+        /// Set the grammar file of the LLM/LLMClient
+        /// </summary>
+        /// <param name="path">path to the grammar file</param>
         public async void SetGrammar(string path)
         {
             grammar = await LLMUnitySetup.AddAsset(path, LLMUnitySetup.GetAssetPath());
@@ -382,7 +403,42 @@ namespace LLMUnity
             return result.content;
         }
 
-        public async Task<string> Chat(string question, Callback<string> callback = null, EmptyCallback completionCallback = null, bool addToHistory = true)
+        /// <summary>
+        /// Chat functionality of the LLM.
+        /// It calls the LLM completion based on the provided query including the previous chat history.
+        /// The function allows callbacks when the response is partially or fully received.
+        /// The question is added to the history if specified.
+        ///
+        /// It can be used as follows:
+        /// \code
+        /// public class MyScript {
+        ///     public LLM llm;
+        ///     void HandleReply(string reply){
+        ///         // do something with the reply from the model
+        ///         Debug.Log(reply);
+        ///     }
+        ///
+        ///     void ReplyCompleted(){
+        ///         // do something when the reply from the model is complete
+        ///         Debug.Log("The AI replied");
+        ///     }
+        ///
+        ///     void Game(){
+        ///         // your game function
+        ///         ...
+        ///         string message = "Hello bot!";
+        ///         _ = llm.Chat(message, HandleReply);
+        ///         ...
+        ///     }
+        /// }
+        /// \endcode
+        /// </summary>
+        /// <param name="query">user query</param>
+        /// <param name="callback">callback function that receives the response as string</param>
+        /// <param name="completionCallback">callback function called when the full response has been received</param>
+        /// <param name="addToHistory">whether to add the user query to the chat history</param>
+        /// <returns>the LLM response</returns>
+        public async Task<string> Chat(string query, Callback<string> callback = null, EmptyCallback completionCallback = null, bool addToHistory = true)
         {
             // handle a chat message by the user
             // call the callback function while the answer is received
@@ -391,7 +447,7 @@ namespace LLMUnity
 
             string json;
             lock (chatPromptLock) {
-                AddPlayerMessage(question);
+                AddPlayerMessage(query);
                 string prompt = template.ComputePrompt(chat, AIName);
                 json = JsonUtility.ToJson(GenerateRequest(prompt));
                 chat.RemoveAt(chat.Count - 1);
@@ -402,7 +458,7 @@ namespace LLMUnity
             if (addToHistory && result != null)
             {
                 lock (chatAddLock) {
-                    AddPlayerMessage(question);
+                    AddPlayerMessage(query);
                     AddAIMessage(result);
                 }
             }
@@ -411,6 +467,39 @@ namespace LLMUnity
             return result;
         }
 
+        /// <summary>
+        /// Pure completion functionality of the LLM.
+        /// It calls the LLM completion based solely on the provided prompt (no formatting by the chat template).
+        /// The function allows callbacks when the response is partially or fully received.
+        ///
+        /// It can be used as follows:
+        /// \code
+        /// public class MyScript {
+        ///     public LLM llm;
+        ///     void HandleReply(string reply){
+        ///         // do something with the reply from the model
+        ///         Debug.Log(reply);
+        ///     }
+        ///
+        ///     void ReplyCompleted(){
+        ///         // do something when the reply from the model is complete
+        ///         Debug.Log("The AI replied");
+        ///     }
+        ///
+        ///     void Game(){
+        ///         // your game function
+        ///         ...
+        ///         string message = "Hello bot!";
+        ///         _ = llm.Complete(message, HandleReply);
+        ///         ...
+        ///     }
+        /// }
+        /// \endcode
+        /// </summary>
+        /// <param name="prompt">user query</param>
+        /// <param name="callback">callback function that receives the response as string</param>
+        /// <param name="completionCallback">callback function called when the full response has been received</param>
+        /// <returns>the LLM response</returns>
         public async Task<string> Complete(string prompt, Callback<string> callback = null, EmptyCallback completionCallback = null)
         {
             // handle a completion request by the user
@@ -423,20 +512,42 @@ namespace LLMUnity
             return result;
         }
 
-        public async Task<string> Warmup(EmptyCallback completionCallback = null, string question = "hi")
+        /// <summary>
+        /// Allow to warm-up a model by processing the prompt.
+        /// The prompt processing will be cached (if cachePrompt=true) allowing for faster initialisation.
+        /// The function allows callback for when the prompt is processed and the response received.
+        ///
+        /// The function calls the Chat function with a predefined query without adding it to history.
+        /// </summary>
+        /// <param name="completionCallback">callback function called when the full response has been received</param>
+        /// <param name="query">user prompt used during the initialisation (not added to history)</param>
+        /// <returns>the LLM response</returns>
+        public async Task<string> Warmup(EmptyCallback completionCallback = null, string query = "hi")
         {
-            return await Chat(question, null, completionCallback, false);
+            return await Chat(query, null, completionCallback, false);
         }
 
-        public async Task<List<int>> Tokenize(string question, Callback<List<int>> callback = null)
+        /// <summary>
+        /// Tokenises the provided query.
+        /// </summary>
+        /// <param name="query">query to tokenise</param>
+        /// <param name="callback">callback function called with the result tokens</param>
+        /// <returns>list of the tokens</returns>
+        public async Task<List<int>> Tokenize(string query, Callback<List<int>> callback = null)
         {
             // handle the tokenization of a message by the user
             TokenizeRequest tokenizeRequest = new TokenizeRequest();
-            tokenizeRequest.content = question;
+            tokenizeRequest.content = query;
             string json = JsonUtility.ToJson(tokenizeRequest);
             return await PostRequest<TokenizeResult, List<int>>(json, "tokenize", TokenizeContent, callback);
         }
 
+        /// <summary>
+        /// Detokenises the provided tokens to a string.
+        /// </summary>
+        /// <param name="tokens">tokens to detokenise</param>
+        /// <param name="callback">callback function called with the result string</param>
+        /// <returns>the detokenised string</returns>
         public async Task<string> Detokenize(List<int> tokens, Callback<string> callback = null)
         {
             // handle the detokenization of a message by the user
@@ -469,6 +580,9 @@ namespace LLMUnity
             return response.Trim().Replace("\n\n", "").Split("data: ");
         }
 
+        /// <summary>
+        /// Cancel the ongoing requests e.g. Chat, Complete.
+        /// </summary>
         public void CancelRequests()
         {
             foreach (UnityWebRequest request in WIPRequests)
@@ -478,6 +592,11 @@ namespace LLMUnity
             WIPRequests.Clear();
         }
 
+        /// <summary>
+        /// Checks if the server is reachable by calling a sample request (synchronous implementation).
+        /// </summary>
+        /// <param name="timeout">max time to wait for reply</param>
+        /// <returns>if the server is reachable</returns>
         public bool IsServerReachable(int timeout = 5)
         {
             using (UnityWebRequest webRequest = UnityWebRequest.Head($"{host}:{port}/tokenize"))
@@ -493,6 +612,11 @@ namespace LLMUnity
             }
         }
 
+        /// <summary>
+        /// Checks if the server is reachable by calling a sample request (async implementation).
+        /// </summary>
+        /// <param name="timeout">max time to wait for reply</param>
+        /// <returns>if the server is reachable</returns>
         public async Task<bool> IsServerReachableAsync(int timeout = 5)
         {
             using (UnityWebRequest webRequest = UnityWebRequest.Head($"{host}:{port}/tokenize"))
