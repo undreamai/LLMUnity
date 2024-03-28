@@ -56,6 +56,7 @@ namespace LLMUnity
 
         public static string FromName(string name)
         {
+            if (name == null) return null;
             string nameLower = name.ToLower();
             foreach (var pair in modelTemplates)
             {
@@ -66,6 +67,7 @@ namespace LLMUnity
 
         public static string FromTemplate(string template)
         {
+            if (template == null) return null;
             string templateTrim = template.Trim();
             if (chatTemplates.TryGetValue(templateTrim, out string value))
                 return value;
@@ -74,25 +76,16 @@ namespace LLMUnity
 
         public static string FromGGUF(string path)
         {
-            GGUFReader reader = new GGUFReader(path, "r");
-            ReaderField field;
+            GGUFReader reader = new GGUFReader(path);
             string name;
 
-            if (reader.fields.TryGetValue("tokenizer.chat_template", out field))
-            {
-                string template = System.Text.Encoding.UTF8.GetString((byte[])field.parts[field.parts.Count - 1]);
-                name = FromTemplate(template);
-                if (name != null) return name;
-            }
-            if (reader.fields.TryGetValue("general.name", out field))
-            {
-                string modelName = System.Text.Encoding.UTF8.GetString((byte[])field.parts[field.parts.Count - 1]);
-                name = FromName(modelName);
-                if (name != null) return name;
-            }
+            name = FromTemplate(reader.GetStringField("tokenizer.chat_template"));
+            if (name != null) return name;
 
-            string filename = Path.GetFileNameWithoutExtension(path);
-            name = FromName(filename);
+            name = FromName(reader.GetStringField("general.name"));
+            if (name != null) return name;
+
+            name = FromName(Path.GetFileNameWithoutExtension(path));
             if (name != null) return name;
 
             Debug.Log("No chat template could be matched, fallback to ChatML");
