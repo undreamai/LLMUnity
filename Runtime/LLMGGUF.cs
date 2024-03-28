@@ -7,7 +7,6 @@ using System.Runtime.InteropServices;
 
 namespace LLMUnity
 {
-
     /// \cond HIDE
     public enum GGUFValueType
     {
