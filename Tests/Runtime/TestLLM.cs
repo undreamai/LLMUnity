@@ -128,7 +128,7 @@ namespace LLMUnityTests
         public void TestInitParameters(int nkeep, int chats)
         {
             Assert.That(llm.nKeep == nkeep);
-            Assert.That(llm.template.GetStop(llm.playerName, llm.AIName).Length > 0);
+            Assert.That(ChatTemplate.GetTemplate(llm.chatTemplate).GetStop(llm.playerName, llm.AIName).Length > 0);
             Assert.That(llm.GetChat().Count == chats);
         }
 
