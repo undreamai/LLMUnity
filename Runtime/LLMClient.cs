@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -92,16 +91,18 @@ namespace LLMUnity
         private List<UnityWebRequest> WIPRequests = new List<UnityWebRequest>();
         static object chatPromptLock = new object();
         static object chatAddLock = new object();
+        private LLM server;
 
         public void Awake()
         {
+            SetServer();
             InitGrammar();
             InitPrompt();
             LoadTemplate();
             _ = InitNKeep();
         }
 
-        public LLM GetServer()
+        LLM GetServer()
         {
             foreach (LLM server in FindObjectsOfType<LLM>())
             {
@@ -111,6 +112,11 @@ namespace LLMUnity
                 }
             }
             return null;
+        }
+
+        void SetServer()
+        {
+            server = GetServer();
         }
 
         public virtual void SetTemplate(string templateName)
@@ -280,6 +286,20 @@ namespace LLMUnity
             return response.Trim();
         }
 
+        public async Task<string> ChatContentRequest(string json, Callback<string> callback = null)
+        {
+            string result = "";
+            if (stream)
+            {
+                result = await PostRequest<MultiChatResult, string>(json, "completion", MultiChatContent, callback);
+            }
+            else
+            {
+                result = await PostRequest<ChatResult, string>(json, "completion", ChatContent, callback);
+            }
+            return result;
+        }
+
         public string ChatOpenAIContent(ChatOpenAIResult result)
         {
             // get content from a char result received from the endpoint in open AI format
@@ -290,6 +310,12 @@ namespace LLMUnity
         {
             // get the tokens from a tokenize result received from the endpoint
             return result.tokens;
+        }
+
+        public string DetokenizeContent(TokenizeRequest result)
+        {
+            // get content from a chat result received from the endpoint
+            return result.content;
         }
 
         public async Task<string> Chat(string question, Callback<string> callback = null, EmptyCallback completionCallback = null, bool addToHistory = true)
@@ -307,15 +333,7 @@ namespace LLMUnity
                 chat.RemoveAt(chat.Count - 1);
             }
 
-            string result;
-            if (stream)
-            {
-                result = await PostRequest<MultiChatResult, string>(json, "completion", MultiChatContent, callback);
-            }
-            else
-            {
-                result = await PostRequest<ChatResult, string>(json, "completion", ChatContent, callback);
-            }
+            string result = await ChatContentRequest(json, callback);
 
             if (addToHistory && result != null)
             {
@@ -336,15 +354,7 @@ namespace LLMUnity
             // call the completionCallback function when the answer is fully received
 
             string json = JsonUtility.ToJson(GenerateRequest(prompt));
-            string result;
-            if (stream)
-            {
-                result = await PostRequest<MultiChatResult, string>(json, "completion", MultiChatContent, callback);
-            }
-            else
-            {
-                result = await PostRequest<ChatResult, string>(json, "completion", ChatContent, callback);
-            }
+            string result = await ChatContentRequest(json, callback);
             completionCallback?.Invoke();
             return result;
         }
@@ -361,6 +371,15 @@ namespace LLMUnity
             tokenizeRequest.content = question;
             string json = JsonUtility.ToJson(tokenizeRequest);
             return await PostRequest<TokenizeResult, List<int>>(json, "tokenize", TokenizeContent, callback);
+        }
+
+        public async Task<string> Detokenize(List<int> tokens, Callback<string> callback = null)
+        {
+            // handle the detokenization of a message by the user
+            TokenizeResult tokenizeRequest = new TokenizeResult();
+            tokenizeRequest.tokens = tokens;
+            string json = JsonUtility.ToJson(tokenizeRequest);
+            return await PostRequest<TokenizeRequest, string>(json, "detokenize", DetokenizeContent, callback);
         }
 
         public Ret ConvertContent<Res, Ret>(string response, ContentCallback<Res, Ret> getContent = null)
@@ -433,6 +452,16 @@ namespace LLMUnity
             // send a post request to the server and call the relevant callbacks to convert the received content and handle it
             // this function has streaming functionality i.e. handles the answer while it is being received
             Ret result = default;
+            string errorMessage = "";
+            if (host == "localhost" && server == null) errorMessage += "No server found!";
+            if (server != null && !server.serverListening) errorMessage += "Server is not listening!";
+            if (server != null && LLMUnitySetup.NumServersForPort(port) > 1) errorMessage += "Multiple servers found for port!";
+            if (errorMessage != "")
+            {
+                Debug.LogError(errorMessage);
+                return result;
+            }
+
             byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(json);
             using (var request = UnityWebRequest.Put($"{host}:{port}/{endpoint}", jsonToSend))
             {
@@ -462,7 +491,6 @@ namespace LLMUnity
                     await Task.Yield();
                 }
                 WIPRequests.Remove(request);
-
                 if (request.result != UnityWebRequest.Result.Success) Debug.LogError(request.error);
                 else result = ConvertContent(request.downloadHandler.text, getContent);
                 callback?.Invoke(result);
