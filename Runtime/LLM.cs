@@ -54,7 +54,6 @@ namespace LLMUnity
         private ManualResetEvent serverBlock = new ManualResetEvent(false);
         static object crashKillLock = new object();
         static bool crashKill = false;
-        public List<string> processedPrompts = new List<string>();
 
 #if UNITY_EDITOR
         [InitializeOnLoadMethod]
@@ -222,7 +221,8 @@ namespace LLMUnity
         private void CheckIfListening(string message)
         {
             // Read the output of the llm binary and check if the server has been started and listening
-            if (!message.Contains("VERBOSE")) DebugLog(message);
+            DebugLog(message);
+            if (serverListening) return;
             try
             {
                 ServerStatus status = JsonUtility.FromJson<ServerStatus>(message);
@@ -231,10 +231,6 @@ namespace LLMUnity
                     Debug.Log("LLM Server started!");
                     serverListening = true;
                     serverBlock.Set();
-                }
-                if (status.level == "VERBOSE" && status.message == "prompt ingested")
-                {
-                    processedPrompts.Add(status.cached + status.to_eval);
                 }
             }
             catch {}
@@ -309,7 +305,7 @@ namespace LLMUnity
             }
 
             int slots = parallelPrompts == -1 ? GetListeningClients().Count + 1 : parallelPrompts;
-            string arguments = $" --port {port} -m {EscapeSpaces(modelPath)} -c {contextSize} -b {batchSize} --log-disable --nobrowser -np {slots} -v";
+            string arguments = $" --port {port} -m {EscapeSpaces(modelPath)} -c {contextSize} -b {batchSize} --log-disable --nobrowser -np {slots}";
             if (remote) arguments += $" --host 0.0.0.0";
             if (numThreads > 0) arguments += $" -t {numThreads}";
             if (loraPath != "") arguments += $" --lora {EscapeSpaces(loraPath)}";
