@@ -305,7 +305,7 @@ namespace LLMUnity
             return stopAll;
         }
 
-        public ChatRequest GenerateRequest(string prompt)
+        ChatRequest GenerateRequest(string prompt)
         {
             // setup the request struct
             ChatRequest chatRequest = new ChatRequest();
@@ -354,13 +354,13 @@ namespace LLMUnity
             AddMessage(AIName, content);
         }
 
-        public string ChatContent(ChatResult result)
+        string ChatContent(ChatResult result)
         {
             // get content from a chat result received from the endpoint
             return result.content.Trim();
         }
 
-        public string MultiChatContent(MultiChatResult result)
+        string MultiChatContent(MultiChatResult result)
         {
             // get content from a chat result received from the endpoint
             string response = "";
@@ -371,7 +371,7 @@ namespace LLMUnity
             return response.Trim();
         }
 
-        public async Task<string> ChatContentRequest(string json, Callback<string> callback = null)
+        async Task<string> CompletionRequest(string json, Callback<string> callback = null)
         {
             string result = "";
             if (stream)
@@ -385,19 +385,19 @@ namespace LLMUnity
             return result;
         }
 
-        public string ChatOpenAIContent(ChatOpenAIResult result)
+        string ChatOpenAIContent(ChatOpenAIResult result)
         {
             // get content from a char result received from the endpoint in open AI format
             return result.choices[0].message.content;
         }
 
-        public List<int> TokenizeContent(TokenizeResult result)
+        List<int> TokenizeContent(TokenizeResult result)
         {
             // get the tokens from a tokenize result received from the endpoint
             return result.tokens;
         }
 
-        public string DetokenizeContent(TokenizeRequest result)
+        string DetokenizeContent(TokenizeRequest result)
         {
             // get content from a chat result received from the endpoint
             return result.content;
@@ -453,7 +453,7 @@ namespace LLMUnity
                 chat.RemoveAt(chat.Count - 1);
             }
 
-            string result = await ChatContentRequest(json, callback);
+            string result = await CompletionRequest(json, callback);
 
             if (addToHistory && result != null)
             {
@@ -507,7 +507,7 @@ namespace LLMUnity
             // call the completionCallback function when the answer is fully received
 
             string json = JsonUtility.ToJson(GenerateRequest(prompt));
-            string result = await ChatContentRequest(json, callback);
+            string result = await CompletionRequest(json, callback);
             completionCallback?.Invoke();
             return result;
         }
@@ -557,7 +557,7 @@ namespace LLMUnity
             return await PostRequest<TokenizeRequest, string>(json, "detokenize", DetokenizeContent, callback);
         }
 
-        public Ret ConvertContent<Res, Ret>(string response, ContentCallback<Res, Ret> getContent = null)
+        Ret ConvertContent<Res, Ret>(string response, ContentCallback<Res, Ret> getContent = null)
         {
             // template function to convert the json received and get the content
             response = response.Trim();
@@ -575,7 +575,7 @@ namespace LLMUnity
             return getContent(JsonUtility.FromJson<Res>(response));
         }
 
-        public string[] MultiResponse(string response)
+        string[] MultiResponse(string response)
         {
             return response.Trim().Replace("\n\n", "").Split("data: ");
         }
@@ -635,7 +635,7 @@ namespace LLMUnity
             }
         }
 
-        public async Task<Ret> PostRequest<Res, Ret>(string json, string endpoint, ContentCallback<Res, Ret> getContent, Callback<Ret> callback = null)
+        async Task<Ret> PostRequest<Res, Ret>(string json, string endpoint, ContentCallback<Res, Ret> getContent, Callback<Ret> callback = null)
         {
             // send a post request to the server and call the relevant callbacks to convert the received content and handle it
             // this function has streaming functionality i.e. handles the answer while it is being received
