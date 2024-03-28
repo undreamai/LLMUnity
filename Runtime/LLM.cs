@@ -134,8 +134,7 @@ namespace LLMUnity
             base.SetTemplate(templateName);
             foreach (LLMClient client in GetListeningClients())
             {
-                client.chatTemplate = chatTemplate;
-                client.template = template;
+                client.SetTemplate(templateName);
             }
         }
 

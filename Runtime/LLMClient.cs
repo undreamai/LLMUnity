@@ -143,7 +143,7 @@ namespace LLMUnity
         static object chatPromptLock = new object();
         static object chatAddLock = new object();
         public string chatTemplate = ChatTemplate.DefaultTemplate;
-        public ChatTemplate template;
+        private ChatTemplate template;
         public string grammarString;
 
         public void Awake()
