@@ -1,3 +1,5 @@
+/// @file
+/// @brief File implementing the GGUF reader.
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -5,6 +7,8 @@ using System.Runtime.InteropServices;
 
 namespace LLMUnity
 {
+
+    /// \cond HIDE
     public enum GGUFValueType
     {
         UINT8 = 0,
@@ -42,7 +46,11 @@ namespace LLMUnity
         public Array data;
         public ReaderField field;
     }
+    /// \endcond
 
+    /// <summary>
+    /// Class implementing the GGUF reader.
+    /// </summary>
     public class GGUFReader
     {
         private const uint GGUF_MAGIC = 0x46554747; // "GGUF"
@@ -69,7 +77,11 @@ namespace LLMUnity
         public Dictionary<string, ReaderField> fields = new Dictionary<string, ReaderField>();
         public List<ReaderTensor> tensors = new List<ReaderTensor>();
 
-        public GGUFReader(string path, string mode = "r")
+        /// <summary>
+        /// Constructor of the GGUF reader that parses a GGUF file and retrieves the fields.
+        /// </summary>
+        /// <param name="path">GGUF file path to read</param>
+        public GGUFReader(string path)
         {
             // data = new MemoryStream(File.ReadAllBytes(path));
             data = new FileStream(path, FileMode.Open, FileAccess.Read);
@@ -102,11 +114,28 @@ namespace LLMUnity
             data.Close();
         }
 
+        /// <summary>
+        /// Allows to retrieve location info for a GGUF field.
+        /// </summary>
+        /// <param name="key"> GGUF field to retrieve </param>
+        /// <returns> Retrieved location info as ReaderField </returns>
         public ReaderField GetField(string key)
         {
             if (fields.TryGetValue(key, out ReaderField value))
                 return value;
             return null;
+        }
+
+        /// <summary>
+        /// Allows to retrieve a string GGUF field.
+        /// </summary>
+        /// <param name="key"> GGUF field to retrieve </param>
+        /// <returns> Retrieved GGUF value </returns>
+        public string GetStringField(string key)
+        {
+            ReaderField field = GetField(key);
+            if (field == null || field.parts.Count == 0) return null;
+            return System.Text.Encoding.UTF8.GetString((byte[])field.parts[field.parts.Count - 1]);
         }
 
         private byte[] ReadBytes(int offset, int count)
