@@ -1,3 +1,5 @@
+/// @file
+/// @brief File implementing helper functions for setup and process management.
 using UnityEditor;
 using System.Diagnostics;
 using System.IO;
@@ -9,6 +11,9 @@ using System.Net;
 using System;
 using System.Net.NetworkInformation;
 
+/// @defgroup llm LLM
+/// @defgroup template Chat Templates
+/// @defgroup utils Utils
 namespace LLMUnity
 {
     public delegate void EmptyCallback();
@@ -16,11 +21,17 @@ namespace LLMUnity
     public delegate Task TaskCallback<T>(T message);
     public delegate T2 ContentCallback<T, T2>(T message);
 
+    /// @ingroup utils
+    /// <summary>
+    /// Class implementing helper functions for setup and process management.
+    /// </summary>
     public class LLMUnitySetup : MonoBehaviour
     {
         // DON'T CHANGE! the version is autocompleted with a GitHub action
+        /// <summary> LLM for Unity version </summary>
         public static string Version = "v1.2.6";
 
+        /// \cond HIDE
         public static Process CreateProcess(
             string command, string commandArgs = "",
             Callback<string> outputCallback = null, Callback<string> errorCallback = null, System.EventHandler exitCallback = null,
@@ -289,5 +300,7 @@ namespace LLMUnity
             }
             return num;
         }
+
+        /// \endcond
     }
 }

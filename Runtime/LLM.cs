@@ -14,6 +14,7 @@ using Debug = UnityEngine.Debug;
 namespace LLMUnity
 {
     [DefaultExecutionOrder(-2)]
+    /// @ingroup llm
     /// <summary>
     /// Class implementing the LLM server.
     /// </summary>

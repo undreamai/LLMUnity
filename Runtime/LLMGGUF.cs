@@ -47,6 +47,7 @@ namespace LLMUnity
     }
     /// \endcond
 
+    /// @ingroup utils
     /// <summary>
     /// Class implementing the GGUF reader.
     /// </summary>
