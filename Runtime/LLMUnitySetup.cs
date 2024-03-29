@@ -16,10 +16,12 @@ using System.Net.NetworkInformation;
 /// @defgroup utils Utils
 namespace LLMUnity
 {
+    /// \cond HIDE
     public delegate void EmptyCallback();
     public delegate void Callback<T>(T message);
     public delegate Task TaskCallback<T>(T message);
     public delegate T2 ContentCallback<T, T2>(T message);
+    /// \endcond
 
     /// @ingroup utils
     /// <summary>

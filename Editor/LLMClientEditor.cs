@@ -135,7 +135,7 @@ namespace LLMUnity
             AddServerSettings(llmScriptSO);
             AddModelLoadersSettings(llmScriptSO, llmScript);
             AddChatSettings(llmScriptSO);
-            
+
             if (EditorGUI.EndChangeCheck())
                 Repaint();
 
