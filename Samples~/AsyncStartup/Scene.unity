@@ -1143,7 +1143,7 @@ GameObject:
   - component: {fileID: 1125954390}
   - component: {fileID: 1125954389}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: AsyncStartup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1343,8 +1343,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: SimpleInteraction, Assembly-CSharp
+      - m_Target: {fileID: 1125954389}
+        m_TargetAssemblyTypeName: LLMUnitySamples.AsyncStartup, Assembly-CSharp
         m_MethodName: ExitGame
         m_Mode: 1
         m_Arguments:
