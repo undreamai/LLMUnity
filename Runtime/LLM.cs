@@ -70,6 +70,8 @@ namespace LLMUnity
         [ModelAdvanced] public int batchSize = 512;
         /// <summary> Boolean set to true if the server has started and is ready to receive requests, false otherwise. </summary>
         public bool serverListening { get; private set; } = false;
+        /// <summary> Boolean set to true if the server as well as the client functionality has fully started, false otherwise. </summary>
+        public bool serverStarted { get; private set; } = false;
 
         /// \cond HIDE
         [HideInInspector] public readonly (string, string)[] modelOptions = new(string, string)[]
@@ -244,6 +246,7 @@ namespace LLMUnity
             if (asynchronousStartup) await StartLLMServer();
             else _ = StartLLMServer();
             base.Awake();
+            serverStarted = true;
         }
 
         private string SelectApeBinary()
