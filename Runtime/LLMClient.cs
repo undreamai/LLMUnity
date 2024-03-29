@@ -45,6 +45,7 @@ namespace LLMUnity
     /// \endcond
 
     [DefaultExecutionOrder(-1)]
+    /// @ingroup llm
     /// <summary>
     /// Class implementing the LLM client.
     /// </summary>

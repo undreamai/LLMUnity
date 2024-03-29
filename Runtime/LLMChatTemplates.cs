@@ -1,12 +1,12 @@
 /// @file
 /// @brief File implementing the chat templates.
-using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
 namespace LLMUnity
 {
+    /// @ingroup template
     /// <summary>
     /// Class implementing the skeleton of a chat template
     /// </summary>
@@ -197,6 +197,7 @@ namespace LLMUnity
         }
     }
 
+    /// @ingroup template
     /// <summary>
     /// Class implementing the ChatML template
     /// </summary>
@@ -220,6 +221,7 @@ namespace LLMUnity
         }
     }
 
+    /// @ingroup template
     /// <summary>
     /// Class implementing the LLama2 template
     /// </summary>
@@ -240,6 +242,7 @@ namespace LLMUnity
         }
     }
 
+    /// @ingroup template
     /// <summary>
     /// Class implementing a modified version of the LLama2 template for chat
     /// </summary>
@@ -259,6 +262,7 @@ namespace LLMUnity
         }
     }
 
+    /// @ingroup template
     /// <summary>
     /// Class implementing the Mistral Instruct template
     /// </summary>
@@ -280,6 +284,7 @@ namespace LLMUnity
         }
     }
 
+    /// @ingroup template
     /// <summary>
     /// Class implementing a modified version of the Mistral Instruct template for chat
     /// </summary>
@@ -300,6 +305,7 @@ namespace LLMUnity
         }
     }
 
+    /// @ingroup template
     /// <summary>
     /// Class implementing the Alpaca template
     /// </summary>
@@ -322,6 +328,7 @@ namespace LLMUnity
         }
     }
 
+    /// @ingroup template
     /// <summary>
     /// Class implementing the Phi-2 template
     /// </summary>
@@ -344,6 +351,7 @@ namespace LLMUnity
         }
     }
 
+    /// @ingroup template
     /// <summary>
     /// Class implementing the Zephyr template
     /// </summary>
