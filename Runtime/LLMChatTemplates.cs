@@ -20,9 +20,9 @@ namespace LLMUnity
         /// ChatTemplate.templates.Keys
         /// \endcode
         /// </summary>
-        public static Dictionary<string, Type> templates;
+        public static Dictionary<string, ChatTemplate> templates;
         /// \cond HIDE
-        public static Type[] templateClasses;
+        public static ChatTemplate[] templateClasses;
         public static Dictionary<string, string> templatesDescription;
         public static Dictionary<string, string> modelTemplates;
         public static Dictionary<string, string> chatTemplates;
@@ -32,27 +32,26 @@ namespace LLMUnity
         {
             DefaultTemplate = "chatml";
 
-            templateClasses = new Type[]
+            templateClasses = new ChatTemplate[]
             {
-                typeof(ChatMLTemplate),
-                typeof(AlpacaTemplate),
-                typeof(MistralChatTemplate),
-                typeof(MistralInstructTemplate),
-                typeof(LLama2ChatTemplate),
-                typeof(LLama2Template),
-                typeof(Phi2Template),
-                typeof(ZephyrTemplate),
+                new ChatMLTemplate(),
+                new AlpacaTemplate(),
+                new MistralChatTemplate(),
+                new MistralInstructTemplate(),
+                new LLama2ChatTemplate(),
+                new LLama2Template(),
+                new Phi2Template(),
+                new ZephyrTemplate(),
             };
 
-            templates = new Dictionary<string, Type>();
+            templates = new Dictionary<string, ChatTemplate>();
             templatesDescription = new Dictionary<string, string>();
             modelTemplates = new Dictionary<string, string>();
             chatTemplates = new Dictionary<string, string>();
-            foreach (Type templateClass in templateClasses)
+            foreach (ChatTemplate template in templateClasses)
             {
-                ChatTemplate template = (ChatTemplate)Activator.CreateInstance(templateClass);
                 if (templates.ContainsKey(template.GetName())) Debug.LogError($"{template.GetName()} already in templates");
-                templates[template.GetName()] = templateClass;
+                templates[template.GetName()] = template;
                 if (templatesDescription.ContainsKey(template.GetDescription())) Debug.LogError($"{template.GetDescription()} already in templatesDescription");
                 templatesDescription[template.GetDescription()] = template.GetName();
                 foreach (string match in template.GetNameMatches())
@@ -134,7 +133,7 @@ namespace LLMUnity
         /// <returns>chat template</returns>
         public static ChatTemplate GetTemplate(string template)
         {
-            return (ChatTemplate)Activator.CreateInstance(templates[template]);
+            return templates[template];
         }
 
         /// <summary> Returns the chat template name </summary>
@@ -197,6 +196,7 @@ namespace LLMUnity
             return stopWithNewLines.ToArray();
         }
     }
+
     /// <summary>
     /// Class implementing the ChatML template
     /// </summary>
