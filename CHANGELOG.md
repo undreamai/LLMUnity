@@ -7,6 +7,10 @@
 
 - Add server security for interceptions from external llamafile servers (PR: #132)
 
+#### 📦 General
+
+- Add sample to demonstrates the async functionality (PR: #136)
+
 
 ## v1.2.5
 #### 🐛 Fixes
