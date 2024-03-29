@@ -5,7 +5,6 @@
   <navindex>
     <tab type="mainpage" visible="yes" title=""/>
     <tab type="topics" visible="yes" title="API" intro=""/>
-    <tab type="filelist" visible="yes" title="Files" intro=""/>
     <tab type="user" url="https://github.com/undreamai/LLMUnity" visible="yes" title="Code↗" intro=""/>
     <!-- <tab type="pages" visible="yes" title="" intro=""/> -->
     <!-- <tab type="modules" visible="yes" title="" intro="">
