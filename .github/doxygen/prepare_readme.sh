@@ -3,7 +3,7 @@
 if [ "$(basename "$1")" == "README.md" ]; then
     PREFIX="# Overview\n\n"
     # Read the existing content of README.md
-    EXISTING_CONTENT=`cat "$1" | sed -e 's: c#:{.cs}:g' | sed -e 's:\.github/:images/:g' | sed -e '/<sub>/,/<\/sub>/d' | sed -e 's:(Samples~:(https\://github.com/undreamai/LLMUnity/tree/main/Samples~:g'`
+    EXISTING_CONTENT=`cat "$1"| sed -e 's:<p :<h1 :g'| sed -e 's:</p>:</h1>:g' | sed -e 's: c#:{.cs}:g' | sed -e 's:\.github/:images/:g' | sed -e '/<sub>/,/<\/sub>/d' | sed -e 's:(Samples~:(https\://github.com/undreamai/LLMUnity/tree/main/Samples~:g'`
 
     # Prepend the new content to the existing content
     echo -e "$PREFIX$EXISTING_CONTENT$SUFFIX"
