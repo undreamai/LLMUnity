@@ -145,6 +145,7 @@ How to help</h1>
 Games using LLM for Unity</h1>
 <ul>
 <li><a href="https://store.steampowered.com/app/2778780/Verbal_Verdict/">Verbal Verdict</a></li>
+<li><a href="https://store.steampowered.com/app/2786750/I_Chatbot_AISYLUM">I, Chatbot: AISYLUM</a></li>
 </ul>
 <h1><a class="anchor" id="autotoc_md4"></a>
 Setup</h1>
@@ -175,38 +176,42 @@ Or load your own .gguf model with the <code>Load model</code> button (see Use yo
 If you want the full reply in one go, deselect the <code>Stream</code> option.</li>
 <li>(Optional) Adjust the server or model settings to your preference (see Options).</li>
 </ul>
-<p>In your script you can then use it as follows 🦄: </p><div class="fragment"><div class="line">using LLMUnity;</div>
+<p>In your script you can then use it as follows 🦄: </p><div class="fragment"><div class="line"><span class="keyword">using </span><a class="code hl_namespace" href="namespaceLLMUnity.html">LLMUnity</a>;</div>
 <div class="line"> </div>
-<div class="line">public class MyScript {</div>
-<div class="line">  public LLM llm;</div>
+<div class="line"><span class="keyword">public</span> <span class="keyword">class </span>MyScript {</div>
+<div class="line">  <span class="keyword">public</span> <a class="code hl_class" href="classLLMUnity_1_1LLM.html">LLM</a> llm;</div>
 <div class="line">  </div>
-<div class="line">  void HandleReply(string reply){</div>
-<div class="line">    // do something with the reply from the model</div>
+<div class="line">  <span class="keywordtype">void</span> HandleReply(<span class="keywordtype">string</span> reply){</div>
+<div class="line">    <span class="comment">// do something with the reply from the model</span></div>
 <div class="line">    Debug.Log(reply);</div>
 <div class="line">  }</div>
 <div class="line">  </div>
-<div class="line">  void Game(){</div>
-<div class="line">    // your game function</div>
+<div class="line">  <span class="keywordtype">void</span> Game(){</div>
+<div class="line">    <span class="comment">// your game function</span></div>
 <div class="line">    ...</div>
-<div class="line">    string message = &quot;Hello bot!&quot;;</div>
-<div class="line">    _ = llm.Chat(message, HandleReply);</div>
+<div class="line">    <span class="keywordtype">string</span> message = <span class="stringliteral">&quot;Hello bot!&quot;</span>;</div>
+<div class="line">    _ = llm.<a class="code hl_function" href="classLLMUnity_1_1LLMClient.html#adf78bb425d542394156740244dbf0458">Chat</a>(message, HandleReply);</div>
 <div class="line">    ...</div>
 <div class="line">  }</div>
 <div class="line">}</div>
+<div class="ttc" id="aclassLLMUnity_1_1LLMClient_html_adf78bb425d542394156740244dbf0458"><div class="ttname"><a href="classLLMUnity_1_1LLMClient.html#adf78bb425d542394156740244dbf0458">LLMUnity.LLMClient.Chat</a></div><div class="ttdeci">async Task&lt; string &gt; Chat(string query, Callback&lt; string &gt; callback=null, EmptyCallback completionCallback=null, bool addToHistory=true)</div><div class="ttdoc">Chat functionality of the LLM. It calls the LLM completion based on the provided query including the ...</div><div class="ttdef"><b>Definition</b> <a href="LLMClient_8cs_source.html#l00446">LLMClient.cs:446</a></div></div>
+<div class="ttc" id="aclassLLMUnity_1_1LLM_html"><div class="ttname"><a href="classLLMUnity_1_1LLM.html">LLMUnity.LLM</a></div><div class="ttdoc">Class implementing the LLM server.</div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00021">LLM.cs:22</a></div></div>
+<div class="ttc" id="anamespaceLLMUnity_html"><div class="ttname"><a href="namespaceLLMUnity.html">LLMUnity</a></div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00014">LLM.cs:15</a></div></div>
 </div><!-- fragment --><p> You can also specify a function to call when the model reply has been completed.<br  />
- This is useful if the <code>Stream</code> option is selected for continuous output from the model (default behaviour): </p><div class="fragment"><div class="line">void ReplyCompleted(){</div>
-<div class="line">  // do something when the reply from the model is complete</div>
-<div class="line">  Debug.Log(&quot;The AI replied&quot;);</div>
+ This is useful if the <code>Stream</code> option is selected for continuous output from the model (default behaviour): </p><div class="fragment"><div class="line"><span class="keywordtype">void</span> ReplyCompleted(){</div>
+<div class="line">  <span class="comment">// do something when the reply from the model is complete</span></div>
+<div class="line">  Debug.Log(<span class="stringliteral">&quot;The AI replied&quot;</span>);</div>
 <div class="line">}</div>
 <div class="line"> </div>
-<div class="line">void Game(){</div>
-<div class="line">  // your game function</div>
+<div class="line"><span class="keywordtype">void</span> Game(){</div>
+<div class="line">  <span class="comment">// your game function</span></div>
 <div class="line">  ...</div>
-<div class="line">  string message = &quot;Hello bot!&quot;;</div>
-<div class="line">  _ = llm.Chat(message, HandleReply, ReplyCompleted);</div>
+<div class="line">  <span class="keywordtype">string</span> message = <span class="stringliteral">&quot;Hello bot!&quot;</span>;</div>
+<div class="line">  _ = llm.<a class="code hl_function" href="classLLMUnity_1_1LLMClient.html#adf78bb425d542394156740244dbf0458">Chat</a>(message, HandleReply, ReplyCompleted);</div>
 <div class="line">  ...</div>
 <div class="line">}</div>
-</div><!-- fragment --><p>To stop the chat without waiting its completion you can use: </p><div class="fragment"><div class="line">llm.CancelRequests();</div>
+</div><!-- fragment --><p>To stop the chat without waiting its completion you can use: </p><div class="fragment"><div class="line">llm.<a class="code hl_function" href="classLLMUnity_1_1LLMClient.html#a50b5235db5f784c7a0b4f8f3d3e7f2fe">CancelRequests</a>();</div>
+<div class="ttc" id="aclassLLMUnity_1_1LLMClient_html_a50b5235db5f784c7a0b4f8f3d3e7f2fe"><div class="ttname"><a href="classLLMUnity_1_1LLMClient.html#a50b5235db5f784c7a0b4f8f3d3e7f2fe">LLMUnity.LLMClient.CancelRequests</a></div><div class="ttdeci">void CancelRequests()</div><div class="ttdoc">Cancel the ongoing requests e.g. Chat, Complete.</div><div class="ttdef"><b>Definition</b> <a href="LLMClient_8cs_source.html#l00591">LLMClient.cs:591</a></div></div>
 </div><!-- fragment --><ul>
 <li>Finally, in the Inspector of the GameObject of your script, select the LLM GameObject created above as the llm property.</li>
 </ul>
@@ -224,65 +229,67 @@ Build multiple characters</summary>
 <li>for every additional character create a GameObject using the LLMClient script instead of the LLM script.<br  />
  Define the prompt (and other parameters) of the LLMClient for the character</li>
 </ul>
-<p>Then in your script: </p><div class="fragment"><div class="line">using LLMUnity;</div>
+<p>Then in your script: </p><div class="fragment"><div class="line"><span class="keyword">using </span><a class="code hl_namespace" href="namespaceLLMUnity.html">LLMUnity</a>;</div>
 <div class="line"> </div>
-<div class="line">public class MyScript {</div>
-<div class="line">  public LLM cat;</div>
-<div class="line">  public LLMClient dog;</div>
-<div class="line">  public LLMClient bird;</div>
+<div class="line"><span class="keyword">public</span> <span class="keyword">class </span>MyScript {</div>
+<div class="line">  <span class="keyword">public</span> <a class="code hl_class" href="classLLMUnity_1_1LLM.html">LLM</a> cat;</div>
+<div class="line">  <span class="keyword">public</span> <a class="code hl_class" href="classLLMUnity_1_1LLMClient.html">LLMClient</a> dog;</div>
+<div class="line">  <span class="keyword">public</span> <a class="code hl_class" href="classLLMUnity_1_1LLMClient.html">LLMClient</a> bird;</div>
 <div class="line">  </div>
-<div class="line">  void HandleCatReply(string reply){</div>
-<div class="line">    // do something with the reply from the cat character</div>
+<div class="line">  <span class="keywordtype">void</span> HandleCatReply(<span class="keywordtype">string</span> reply){</div>
+<div class="line">    <span class="comment">// do something with the reply from the cat character</span></div>
 <div class="line">    Debug.Log(reply);</div>
 <div class="line">  }</div>
 <div class="line"> </div>
-<div class="line">  void HandleDogReply(string reply){</div>
-<div class="line">    // do something with the reply from the dog character</div>
+<div class="line">  <span class="keywordtype">void</span> HandleDogReply(<span class="keywordtype">string</span> reply){</div>
+<div class="line">    <span class="comment">// do something with the reply from the dog character</span></div>
 <div class="line">    Debug.Log(reply);</div>
 <div class="line">  }</div>
 <div class="line"> </div>
-<div class="line">  void HandleBirdReply(string reply){</div>
-<div class="line">    // do something with the reply from the bird character</div>
+<div class="line">  <span class="keywordtype">void</span> HandleBirdReply(<span class="keywordtype">string</span> reply){</div>
+<div class="line">    <span class="comment">// do something with the reply from the bird character</span></div>
 <div class="line">    Debug.Log(reply);</div>
 <div class="line">  }</div>
 <div class="line">  </div>
-<div class="line">  void Game(){</div>
-<div class="line">    // your game function</div>
+<div class="line">  <span class="keywordtype">void</span> Game(){</div>
+<div class="line">    <span class="comment">// your game function</span></div>
 <div class="line">    ...</div>
-<div class="line">    _ = cat.Chat(&quot;Hi cat!&quot;, HandleCatReply);</div>
-<div class="line">    _ = dog.Chat(&quot;Hello dog!&quot;, HandleDogReply);</div>
-<div class="line">    _ = bird.Chat(&quot;Hiya bird!&quot;, HandleBirdReply);</div>
+<div class="line">    _ = cat.<a class="code hl_function" href="classLLMUnity_1_1LLMClient.html#adf78bb425d542394156740244dbf0458">Chat</a>(<span class="stringliteral">&quot;Hi cat!&quot;</span>, HandleCatReply);</div>
+<div class="line">    _ = dog.<a class="code hl_function" href="classLLMUnity_1_1LLMClient.html#adf78bb425d542394156740244dbf0458">Chat</a>(<span class="stringliteral">&quot;Hello dog!&quot;</span>, HandleDogReply);</div>
+<div class="line">    _ = bird.<a class="code hl_function" href="classLLMUnity_1_1LLMClient.html#adf78bb425d542394156740244dbf0458">Chat</a>(<span class="stringliteral">&quot;Hiya bird!&quot;</span>, HandleBirdReply);</div>
 <div class="line">    ...</div>
 <div class="line">  }</div>
 <div class="line">}</div>
+<div class="ttc" id="aclassLLMUnity_1_1LLMClient_html"><div class="ttname"><a href="classLLMUnity_1_1LLMClient.html">LLMUnity.LLMClient</a></div><div class="ttdoc">Class implementing the LLM client.</div><div class="ttdef"><b>Definition</b> <a href="LLMClient_8cs_source.html#l00052">LLMClient.cs:53</a></div></div>
 </div><!-- fragment --><p></p>
 </details>
 <details >
 <summary >
 Process the prompt at the beginning of your app for faster initial processing time</summary>
 <p></p>
-<div class="fragment"><div class="line">void WarmupCompleted(){</div>
-<div class="line">  // do something when the warmup is complete</div>
-<div class="line">  Debug.Log(&quot;The AI is warm&quot;);</div>
+<div class="fragment"><div class="line"><span class="keywordtype">void</span> WarmupCompleted(){</div>
+<div class="line">  <span class="comment">// do something when the warmup is complete</span></div>
+<div class="line">  Debug.Log(<span class="stringliteral">&quot;The AI is warm&quot;</span>);</div>
 <div class="line">}</div>
 <div class="line"> </div>
-<div class="line">void Game(){</div>
-<div class="line">  // your game function</div>
+<div class="line"><span class="keywordtype">void</span> Game(){</div>
+<div class="line">  <span class="comment">// your game function</span></div>
 <div class="line">  ...</div>
-<div class="line">  _ = llm.Warmup(WarmupCompleted);</div>
+<div class="line">  _ = llm.<a class="code hl_function" href="classLLMUnity_1_1LLMClient.html#a25549a9833f3a3e4254cd17c7d3ccd4d">Warmup</a>(WarmupCompleted);</div>
 <div class="line">  ...</div>
 <div class="line">}</div>
+<div class="ttc" id="aclassLLMUnity_1_1LLMClient_html_a25549a9833f3a3e4254cd17c7d3ccd4d"><div class="ttname"><a href="classLLMUnity_1_1LLMClient.html#a25549a9833f3a3e4254cd17c7d3ccd4d">LLMUnity.LLMClient.Warmup</a></div><div class="ttdeci">async Task&lt; string &gt; Warmup(EmptyCallback completionCallback=null, string query=&quot;hi&quot;)</div><div class="ttdoc">Allow to warm-up a model by processing the prompt. The prompt processing will be cached (if cacheProm...</div><div class="ttdef"><b>Definition</b> <a href="LLMClient_8cs_source.html#l00530">LLMClient.cs:530</a></div></div>
 </div><!-- fragment --><p></p>
 </details>
 <details >
 <summary >
 Add or not the message to the chat/prompt history</summary>
 <p></p>
-<p>The last argument of the <code>Chat</code> function is a boolean that specifies whether to add the message to the history (default: true): </p><div class="fragment"><div class="line">void Game(){</div>
-<div class="line">  // your game function</div>
+<p>The last argument of the <code>Chat</code> function is a boolean that specifies whether to add the message to the history (default: true): </p><div class="fragment"><div class="line"><span class="keywordtype">void</span> Game(){</div>
+<div class="line">  <span class="comment">// your game function</span></div>
 <div class="line">  ...</div>
-<div class="line">  string message = &quot;Hello bot!&quot;;</div>
-<div class="line">  _ = llm.Chat(message, HandleReply, ReplyCompleted, false);</div>
+<div class="line">  <span class="keywordtype">string</span> message = <span class="stringliteral">&quot;Hello bot!&quot;</span>;</div>
+<div class="line">  _ = llm.<a class="code hl_function" href="classLLMUnity_1_1LLMClient.html#adf78bb425d542394156740244dbf0458">Chat</a>(message, HandleReply, ReplyCompleted, <span class="keyword">false</span>);</div>
 <div class="line">  ...</div>
 <div class="line">}</div>
 </div><!-- fragment --><p></p>
@@ -291,24 +298,25 @@ Add or not the message to the chat/prompt history</summary>
 <summary >
 Use pure text completion</summary>
 <p></p>
-<div class="fragment"><div class="line">void Game(){</div>
-<div class="line">  // your game function</div>
+<div class="fragment"><div class="line"><span class="keywordtype">void</span> Game(){</div>
+<div class="line">  <span class="comment">// your game function</span></div>
 <div class="line">  ...</div>
-<div class="line">  string message = &quot;The cat is away&quot;;</div>
-<div class="line">  _ = llm.Complete(message, HandleReply, ReplyCompleted);</div>
+<div class="line">  <span class="keywordtype">string</span> message = <span class="stringliteral">&quot;The cat is away&quot;</span>;</div>
+<div class="line">  _ = llm.<a class="code hl_function" href="classLLMUnity_1_1LLMClient.html#afb93776d4bd9d8bd843896a7c4bf7e65">Complete</a>(message, HandleReply, ReplyCompleted);</div>
 <div class="line">  ...</div>
 <div class="line">}</div>
+<div class="ttc" id="aclassLLMUnity_1_1LLMClient_html_afb93776d4bd9d8bd843896a7c4bf7e65"><div class="ttname"><a href="classLLMUnity_1_1LLMClient.html#afb93776d4bd9d8bd843896a7c4bf7e65">LLMUnity.LLMClient.Complete</a></div><div class="ttdeci">async Task&lt; string &gt; Complete(string prompt, Callback&lt; string &gt; callback=null, EmptyCallback completionCallback=null)</div><div class="ttdoc">Pure completion functionality of the LLM. It calls the LLM completion based solely on the provided pr...</div><div class="ttdef"><b>Definition</b> <a href="LLMClient_8cs_source.html#l00508">LLMClient.cs:508</a></div></div>
 </div><!-- fragment --><p></p>
 </details>
 <details >
 <summary >
 Wait for the reply before proceeding to the next lines of code</summary>
 <p></p>
-<p>For this you can use the <code>async</code>/<code>await</code> functionality: </p><div class="fragment"><div class="line">async void Game(){</div>
-<div class="line">  // your game function</div>
+<p>For this you can use the <code>async</code>/<code>await</code> functionality: </p><div class="fragment"><div class="line">async <span class="keywordtype">void</span> Game(){</div>
+<div class="line">  <span class="comment">// your game function</span></div>
 <div class="line">  ...</div>
-<div class="line">  string message = &quot;Hello bot!&quot;;</div>
-<div class="line">  string reply = await llm.Chat(message, HandleReply, ReplyCompleted);</div>
+<div class="line">  <span class="keywordtype">string</span> message = <span class="stringliteral">&quot;Hello bot!&quot;</span>;</div>
+<div class="line">  <span class="keywordtype">string</span> reply = await llm.<a class="code hl_function" href="classLLMUnity_1_1LLMClient.html#adf78bb425d542394156740244dbf0458">Chat</a>(message, HandleReply, ReplyCompleted);</div>
 <div class="line">  Debug.Log(reply);</div>
 <div class="line">  ...</div>
 <div class="line">}</div>
@@ -318,30 +326,31 @@ Wait for the reply before proceeding to the next lines of code</summary>
 <summary >
 Add a LLM / LLMClient component dynamically</summary>
 <p></p>
-<div class="fragment"><div class="line">using UnityEngine;</div>
-<div class="line">using LLMUnity;</div>
+<div class="fragment"><div class="line"><span class="keyword">using </span>UnityEngine;</div>
+<div class="line"><span class="keyword">using </span><a class="code hl_namespace" href="namespaceLLMUnity.html">LLMUnity</a>;</div>
 <div class="line"> </div>
-<div class="line">public class MyScript : MonoBehaviour</div>
+<div class="line"><span class="keyword">public</span> <span class="keyword">class </span>MyScript : MonoBehaviour</div>
 <div class="line">{</div>
-<div class="line">    LLM llm;</div>
-<div class="line">    LLMClient llmclient;</div>
+<div class="line">    <a class="code hl_class" href="classLLMUnity_1_1LLM.html">LLM</a> llm;</div>
+<div class="line">    <a class="code hl_class" href="classLLMUnity_1_1LLMClient.html">LLMClient</a> llmclient;</div>
 <div class="line"> </div>
-<div class="line">    async void Start()</div>
+<div class="line">    async <span class="keywordtype">void</span> Start()</div>
 <div class="line">    {</div>
-<div class="line">        // Add and setup a LLM object</div>
-<div class="line">        gameObject.SetActive(false);</div>
-<div class="line">        llm = gameObject.AddComponent&lt;LLM&gt;();</div>
-<div class="line">        await llm.SetModel(&quot;mistral-7b-instruct-v0.2.Q4_K_M.gguf&quot;);</div>
-<div class="line">        llm.prompt = &quot;A chat between a curious human and an artificial intelligence assistant.&quot;;</div>
-<div class="line">        gameObject.SetActive(true);</div>
+<div class="line">        <span class="comment">// Add and setup a LLM object</span></div>
+<div class="line">        gameObject.SetActive(<span class="keyword">false</span>);</div>
+<div class="line">        llm = gameObject.AddComponent&lt;<a class="code hl_class" href="classLLMUnity_1_1LLM.html">LLM</a>&gt;();</div>
+<div class="line">        await llm.<a class="code hl_function" href="classLLMUnity_1_1LLM.html#a244797da23b679c6dc74dc886fe7648b">SetModel</a>(<span class="stringliteral">&quot;mistral-7b-instruct-v0.2.Q4_K_M.gguf&quot;</span>);</div>
+<div class="line">        llm.prompt = <span class="stringliteral">&quot;A chat between a curious human and an artificial intelligence assistant.&quot;</span>;</div>
+<div class="line">        gameObject.SetActive(<span class="keyword">true</span>);</div>
 <div class="line"> </div>
-<div class="line">        // or a LLMClient object</div>
-<div class="line">        gameObject.SetActive(false);</div>
-<div class="line">        llmclient = gameObject.AddComponent&lt;LLMClient&gt;();</div>
-<div class="line">        llmclient.prompt = &quot;A chat between a curious human and an artificial intelligence assistant.&quot;;</div>
-<div class="line">        gameObject.SetActive(true);</div>
+<div class="line">        <span class="comment">// or a LLMClient object</span></div>
+<div class="line">        gameObject.SetActive(<span class="keyword">false</span>);</div>
+<div class="line">        llmclient = gameObject.AddComponent&lt;<a class="code hl_class" href="classLLMUnity_1_1LLMClient.html">LLMClient</a>&gt;();</div>
+<div class="line">        llmclient.prompt = <span class="stringliteral">&quot;A chat between a curious human and an artificial intelligence assistant.&quot;</span>;</div>
+<div class="line">        gameObject.SetActive(<span class="keyword">true</span>);</div>
 <div class="line">    }</div>
 <div class="line">}</div>
+<div class="ttc" id="aclassLLMUnity_1_1LLM_html_a244797da23b679c6dc74dc886fe7648b"><div class="ttname"><a href="classLLMUnity_1_1LLM.html#a244797da23b679c6dc74dc886fe7648b">LLMUnity.LLM.SetModel</a></div><div class="ttdeci">async Task SetModel(string path)</div><div class="ttdoc">Allows to set the model used by the LLM. The model provided is copied to the Assets/StreamingAssets f...</div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00175">LLM.cs:175</a></div></div>
 </div><!-- fragment --><p></p>
 </details>
 <details >
