@@ -73,9 +73,8 @@ namespace LLMUnity
 
         // private MemoryStream data;
         private FileStream data;
-
+        /// <summary> Dictionary of GGUF fields to location info </summary>
         public Dictionary<string, ReaderField> fields = new Dictionary<string, ReaderField>();
-        public List<ReaderTensor> tensors = new List<ReaderTensor>();
 
         /// <summary>
         /// Constructor of the GGUF reader that parses a GGUF file and retrieves the fields.
