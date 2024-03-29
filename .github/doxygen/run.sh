@@ -19,4 +19,4 @@ $doxygen .github/doxygen/Doxyfile
 output_dir=html
 mkdir -p $output_dir/images/
 cp .github/*png .github/*.gif $output_dir/images/
-sed -i 's/^\s*\[\s*\"LLM for Unity\",.*\[\s*//; s/^  ] ]//' $output_dir/navtreedata.js
+sed -i 's:LLM for Unity:Package:g' $output_dir/navtreedata.js
