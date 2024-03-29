@@ -8,6 +8,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>LLM for Unity: LLMUnity.GGUFReader Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link rel="shortcut icon" href="logo_tiny.png" type="image/png">
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
 <!-- ... other metadata & script includes ... -->
@@ -31,7 +32,7 @@
 <script type="text/javascript" src="search/search.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
-<link href="doxygen-awesome-custom.css" rel="stylesheet" type="text/css"/>
+<link href="custom.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen-awesome-sidebar-only-darkmode-toggle.css" rel="stylesheet" type="text/css"/>
 </head>
@@ -46,7 +47,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_tiny.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">LLM for Unity
-   &#160;<span id="projectnumber">v1.2.5</span>
+   &#160;<span id="projectnumber">v1.2.6</span>
    </div>
    <div id="projectbrief">Create characters in Unity with LLMs!</div>
   </td>
@@ -115,30 +116,38 @@ $(function(){initNavTree('classLLMUnity_1_1GGUFReader.html',''); initResizable()
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="classLLMUnity_1_1GGUFReader-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">LLMUnity.GGUFReader Class Reference</div></div>
+  <div class="headertitle"><div class="title">LLMUnity.GGUFReader Class Reference<div class="ingroups"><a class="el" href="group__utils.html">Utils</a></div></div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Class implementing the GGUF reader.  
+ <a href="#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a4daa311109e942a349405c18e6e590b6" id="r_a4daa311109e942a349405c18e6e590b6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4daa311109e942a349405c18e6e590b6">GGUFReader</a> (string path, string mode=&quot;r&quot;)</td></tr>
-<tr class="separator:a4daa311109e942a349405c18e6e590b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af80f28cb469725c6707e8aee1a332ac6" id="r_af80f28cb469725c6707e8aee1a332ac6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classLLMUnity_1_1ReaderField.html">ReaderField</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af80f28cb469725c6707e8aee1a332ac6">GetField</a> (string key)</td></tr>
+<tr class="memitem:a6373fc9f2577137c2e7f1e05b0e20d92" id="r_a6373fc9f2577137c2e7f1e05b0e20d92"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6373fc9f2577137c2e7f1e05b0e20d92">GGUFReader</a> (string path)</td></tr>
+<tr class="memdesc:a6373fc9f2577137c2e7f1e05b0e20d92"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor of the GGUF reader that parses a GGUF file and retrieves the fields.  <br /></td></tr>
+<tr class="separator:a6373fc9f2577137c2e7f1e05b0e20d92"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af80f28cb469725c6707e8aee1a332ac6" id="r_af80f28cb469725c6707e8aee1a332ac6"><td class="memItemLeft" align="right" valign="top">ReaderField&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af80f28cb469725c6707e8aee1a332ac6">GetField</a> (string key)</td></tr>
+<tr class="memdesc:af80f28cb469725c6707e8aee1a332ac6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allows to retrieve location info for a GGUF field.  <br /></td></tr>
 <tr class="separator:af80f28cb469725c6707e8aee1a332ac6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad2355ac7292bda7f4e2168ada895c6d9" id="r_ad2355ac7292bda7f4e2168ada895c6d9"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad2355ac7292bda7f4e2168ada895c6d9">GetStringField</a> (string key)</td></tr>
+<tr class="memdesc:ad2355ac7292bda7f4e2168ada895c6d9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allows to retrieve a string GGUF field.  <br /></td></tr>
+<tr class="separator:ad2355ac7292bda7f4e2168ada895c6d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:aed747865098917e6a8d26c44a2ac82bc" id="r_aed747865098917e6a8d26c44a2ac82bc"><td class="memItemLeft" align="right" valign="top">Dictionary&lt; string, <a class="el" href="classLLMUnity_1_1ReaderField.html">ReaderField</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aed747865098917e6a8d26c44a2ac82bc">fields</a> = new Dictionary&lt;string, <a class="el" href="classLLMUnity_1_1ReaderField.html">ReaderField</a>&gt;()</td></tr>
+<tr class="memitem:aed747865098917e6a8d26c44a2ac82bc" id="r_aed747865098917e6a8d26c44a2ac82bc"><td class="memItemLeft" align="right" valign="top">Dictionary&lt; string, ReaderField &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aed747865098917e6a8d26c44a2ac82bc">fields</a> = new Dictionary&lt;string, ReaderField&gt;()</td></tr>
+<tr class="memdesc:aed747865098917e6a8d26c44a2ac82bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dictionary of GGUF fields to location info.  <br /></td></tr>
 <tr class="separator:aed747865098917e6a8d26c44a2ac82bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3fdc6c1bc7133c61476df4cf02620661" id="r_a3fdc6c1bc7133c61476df4cf02620661"><td class="memItemLeft" align="right" valign="top">List&lt; <a class="el" href="classLLMUnity_1_1ReaderTensor.html">ReaderTensor</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3fdc6c1bc7133c61476df4cf02620661">tensors</a> = new List&lt;<a class="el" href="classLLMUnity_1_1ReaderTensor.html">ReaderTensor</a>&gt;()</td></tr>
-<tr class="separator:a3fdc6c1bc7133c61476df4cf02620661"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock">
-<p class="definition">Definition at line <a class="el" href="LLMGGUF_8cs_source.html#l00046">46</a> of file <a class="el" href="LLMGGUF_8cs_source.html">LLMGGUF.cs</a>.</p>
+<div class="textblock"><p>Class implementing the GGUF reader. </p>
+
+<p class="definition">Definition at line <a class="el" href="LLMGGUF_8cs_source.html#l00054">54</a> of file <a class="el" href="LLMGGUF_8cs_source.html">LLMGGUF.cs</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a4daa311109e942a349405c18e6e590b6" name="a4daa311109e942a349405c18e6e590b6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4daa311109e942a349405c18e6e590b6">&#9670;&#160;</a></span>GGUFReader()</h2>
+<a id="a6373fc9f2577137c2e7f1e05b0e20d92" name="a6373fc9f2577137c2e7f1e05b0e20d92"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6373fc9f2577137c2e7f1e05b0e20d92">&#9670;&#160;</a></span>GGUFReader()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -149,12 +158,8 @@ Public Attributes</h2></td></tr>
         <tr>
           <td class="memname">LLMUnity.GGUFReader.GGUFReader </td>
           <td>(</td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>path</em>, </span></td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>path</em></span></td><td>)</td>
           <td></td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>mode</em><span class="paramdefsep"> = </span><span class="paramdefval">&quot;r&quot;</span></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -164,7 +169,15 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMGGUF_8cs_source.html#l00072">72</a> of file <a class="el" href="LLMGGUF_8cs_source.html">LLMGGUF.cs</a>.</p>
+<p>Constructor of the GGUF reader that parses a GGUF file and retrieves the fields. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">path</td><td>GGUF file path to read</td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="LLMGGUF_8cs_source.html#l00083">83</a> of file <a class="el" href="LLMGGUF_8cs_source.html">LLMGGUF.cs</a>.</p>
 
 </div>
 </div>
@@ -179,7 +192,7 @@ Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classLLMUnity_1_1ReaderField.html">ReaderField</a> LLMUnity.GGUFReader.GetField </td>
+          <td class="memname">ReaderField LLMUnity.GGUFReader.GetField </td>
           <td>(</td>
           <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>key</em></span></td><td>)</td>
           <td></td>
@@ -192,7 +205,52 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMGGUF_8cs_source.html#l00105">105</a> of file <a class="el" href="LLMGGUF_8cs_source.html">LLMGGUF.cs</a>.</p>
+<p>Allows to retrieve location info for a GGUF field. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">key</td><td>GGUF field to retrieve </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Retrieved location info as ReaderField </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="LLMGGUF_8cs_source.html#l00121">121</a> of file <a class="el" href="LLMGGUF_8cs_source.html">LLMGGUF.cs</a>.</p>
+
+</div>
+</div>
+<a id="ad2355ac7292bda7f4e2168ada895c6d9" name="ad2355ac7292bda7f4e2168ada895c6d9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad2355ac7292bda7f4e2168ada895c6d9">&#9670;&#160;</a></span>GetStringField()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">string LLMUnity.GGUFReader.GetStringField </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>key</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Allows to retrieve a string GGUF field. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">key</td><td>GGUF field to retrieve </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Retrieved GGUF value </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="LLMGGUF_8cs_source.html#l00133">133</a> of file <a class="el" href="LLMGGUF_8cs_source.html">LLMGGUF.cs</a>.</p>
 
 </div>
 </div>
@@ -204,28 +262,14 @@ Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">Dictionary&lt;string, <a class="el" href="classLLMUnity_1_1ReaderField.html">ReaderField</a>&gt; LLMUnity.GGUFReader.fields = new Dictionary&lt;string, <a class="el" href="classLLMUnity_1_1ReaderField.html">ReaderField</a>&gt;()</td>
+          <td class="memname">Dictionary&lt;string, ReaderField&gt; LLMUnity.GGUFReader.fields = new Dictionary&lt;string, ReaderField&gt;()</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMGGUF_8cs_source.html#l00069">69</a> of file <a class="el" href="LLMGGUF_8cs_source.html">LLMGGUF.cs</a>.</p>
+<p>Dictionary of GGUF fields to location info. </p>
 
-</div>
-</div>
-<a id="a3fdc6c1bc7133c61476df4cf02620661" name="a3fdc6c1bc7133c61476df4cf02620661"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3fdc6c1bc7133c61476df4cf02620661">&#9670;&#160;</a></span>tensors</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">List&lt;<a class="el" href="classLLMUnity_1_1ReaderTensor.html">ReaderTensor</a>&gt; LLMUnity.GGUFReader.tensors = new List&lt;<a class="el" href="classLLMUnity_1_1ReaderTensor.html">ReaderTensor</a>&gt;()</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="LLMGGUF_8cs_source.html#l00070">70</a> of file <a class="el" href="LLMGGUF_8cs_source.html">LLMGGUF.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMGGUF_8cs_source.html#l00077">77</a> of file <a class="el" href="LLMGGUF_8cs_source.html">LLMGGUF.cs</a>.</p>
 
 </div>
 </div>

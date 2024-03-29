@@ -8,6 +8,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>LLM for Unity: LLMUnity Namespace Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link rel="shortcut icon" href="logo_tiny.png" type="image/png">
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
 <!-- ... other metadata & script includes ... -->
@@ -31,7 +32,7 @@
 <script type="text/javascript" src="search/search.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
-<link href="doxygen-awesome-custom.css" rel="stylesheet" type="text/css"/>
+<link href="custom.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen-awesome-sidebar-only-darkmode-toggle.css" rel="stylesheet" type="text/css"/>
 </head>
@@ -46,7 +47,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_tiny.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">LLM for Unity
-   &#160;<span id="projectnumber">v1.2.5</span>
+   &#160;<span id="projectnumber">v1.2.6</span>
    </div>
    <div id="projectbrief">Create characters in Unity with LLMs!</div>
   </td>
@@ -112,9 +113,7 @@ $(function(){initNavTree('namespaceLLMUnity.html',''); initResizable(); });
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
-<a href="#enum-members">Enumerations</a> &#124;
-<a href="#func-members">Functions</a>  </div>
+<a href="#nested-classes">Classes</a>  </div>
   <div class="headertitle"><div class="title">LLMUnity Namespace Reference</div></div>
 </div><!--header-->
 <div class="contents">
@@ -122,137 +121,45 @@ $(function(){initNavTree('namespaceLLMUnity.html',''); initResizable(); });
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1AlpacaTemplate.html">AlpacaTemplate</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1ChatAttribute.html">ChatAttribute</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structLLMUnity_1_1ChatMessage.html">ChatMessage</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class implementing the Alpaca template.  <a href="classLLMUnity_1_1AlpacaTemplate.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1ChatMLTemplate.html">ChatMLTemplate</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structLLMUnity_1_1ChatOpenAIRequest.html">ChatOpenAIRequest</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structLLMUnity_1_1ChatOpenAIResult.html">ChatOpenAIResult</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structLLMUnity_1_1ChatOpenAIResultChoice.html">ChatOpenAIResultChoice</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structLLMUnity_1_1ChatOpenAIResultNumTokens.html">ChatOpenAIResultNumTokens</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structLLMUnity_1_1ChatRequest.html">ChatRequest</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structLLMUnity_1_1ChatResult.html">ChatResult</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class implementing the ChatML template.  <a href="classLLMUnity_1_1ChatMLTemplate.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1ChatTemplate.html">ChatTemplate</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1ClientAdvancedAttribute.html">ClientAdvancedAttribute</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1ClientAttribute.html">ClientAttribute</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1FloatAttribute.html">FloatAttribute</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class implementing the skeleton of a chat template.  <a href="classLLMUnity_1_1ChatTemplate.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1GGUFReader.html">GGUFReader</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1IntAttribute.html">IntAttribute</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class implementing the GGUF reader.  <a href="classLLMUnity_1_1GGUFReader.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLama2ChatTemplate.html">LLama2ChatTemplate</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class implementing a modified version of the LLama2 template for chat.  <a href="classLLMUnity_1_1LLama2ChatTemplate.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLama2Template.html">LLama2Template</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class implementing the LLama2 template.  <a href="classLLMUnity_1_1LLama2Template.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLM.html">LLM</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class implementing the LLM server.  <a href="classLLMUnity_1_1LLM.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html">LLMClient</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class implementing the LLM client.  <a href="classLLMUnity_1_1LLMClient.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMUnitySetup.html">LLMUnitySetup</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class implementing helper functions for setup and process management.  <a href="classLLMUnity_1_1LLMUnitySetup.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1MistralChatTemplate.html">MistralChatTemplate</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class implementing a modified version of the Mistral Instruct template for chat.  <a href="classLLMUnity_1_1MistralChatTemplate.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1MistralInstructTemplate.html">MistralInstructTemplate</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1ModelAddonAdvancedAttribute.html">ModelAddonAdvancedAttribute</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1ModelAddonAttribute.html">ModelAddonAttribute</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1ModelAdvancedAttribute.html">ModelAdvancedAttribute</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1ModelAttribute.html">ModelAttribute</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1ModelExpertAttribute.html">ModelExpertAttribute</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structLLMUnity_1_1MultiChatResult.html">MultiChatResult</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class implementing the Mistral Instruct template.  <a href="classLLMUnity_1_1MistralInstructTemplate.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1Phi2Template.html">Phi2Template</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1ReaderField.html">ReaderField</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1ReaderTensor.html">ReaderTensor</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1ServerAdvancedAttribute.html">ServerAdvancedAttribute</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1ServerAttribute.html">ServerAttribute</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structLLMUnity_1_1ServerStatus.html">ServerStatus</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structLLMUnity_1_1TokenizeRequest.html">TokenizeRequest</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structLLMUnity_1_1TokenizeResult.html">TokenizeResult</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class implementing the Phi-2 template.  <a href="classLLMUnity_1_1Phi2Template.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1ZephyrTemplate.html">ZephyrTemplate</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class implementing the Zephyr template.  <a href="classLLMUnity_1_1ZephyrTemplate.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
-Enumerations</h2></td></tr>
-<tr class="memitem:acce7fed19b6156bb9fc78b35759c0129" id="r_acce7fed19b6156bb9fc78b35759c0129"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><b>GGUFValueType</b> { <br />
-&#160;&#160;<b>UINT8</b> = 0
-, <b>INT8</b> = 1
-, <b>UINT16</b> = 2
-, <b>INT16</b> = 3
-, <br />
-&#160;&#160;<b>UINT32</b> = 4
-, <b>INT32</b> = 5
-, <b>FLOAT32</b> = 6
-, <b>BOOL</b> = 7
-, <br />
-&#160;&#160;<b>STRING</b> = 8
-, <b>ARRAY</b> = 9
-, <b>UINT64</b> = 10
-, <b>INT64</b> = 11
-, <br />
-&#160;&#160;<b>FLOAT64</b> = 12
-<br />
- }</td></tr>
-<tr class="separator:acce7fed19b6156bb9fc78b35759c0129"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
-Functions</h2></td></tr>
-<tr class="memitem:a4773c0c0fbd124d2a2a46f5988ad62e5" id="r_a4773c0c0fbd124d2a2a46f5988ad62e5"><td class="memItemLeft" align="right" valign="top"><a id="a4773c0c0fbd124d2a2a46f5988ad62e5" name="a4773c0c0fbd124d2a2a46f5988ad62e5"></a>
-delegate void&#160;</td><td class="memItemRight" valign="bottom"><b>EmptyCallback</b> ()</td></tr>
-<tr class="separator:a4773c0c0fbd124d2a2a46f5988ad62e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6f989ae4ab6d5641158f3f85aca8bc65" id="r_a6f989ae4ab6d5641158f3f85aca8bc65"><td class="memItemLeft" align="right" valign="top"><a id="a6f989ae4ab6d5641158f3f85aca8bc65" name="a6f989ae4ab6d5641158f3f85aca8bc65"></a>
-delegate void&#160;</td><td class="memItemRight" valign="bottom"><b>Callback&lt; T &gt;</b> (T message)</td></tr>
-<tr class="separator:a6f989ae4ab6d5641158f3f85aca8bc65"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab929d914876412396091fc29a004a7c8" id="r_ab929d914876412396091fc29a004a7c8"><td class="memItemLeft" align="right" valign="top"><a id="ab929d914876412396091fc29a004a7c8" name="ab929d914876412396091fc29a004a7c8"></a>
-delegate Task&#160;</td><td class="memItemRight" valign="bottom"><b>TaskCallback&lt; T &gt;</b> (T message)</td></tr>
-<tr class="separator:ab929d914876412396091fc29a004a7c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a111f642e5fefc27f46bb43c33b088088" id="r_a111f642e5fefc27f46bb43c33b088088"><td class="memItemLeft" align="right" valign="top"><a id="a111f642e5fefc27f46bb43c33b088088" name="a111f642e5fefc27f46bb43c33b088088"></a>
-delegate T2&#160;</td><td class="memItemRight" valign="bottom"><b>ContentCallback&lt; T, T2 &gt;</b> (T message)</td></tr>
-<tr class="separator:a111f642e5fefc27f46bb43c33b088088"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Enumeration Type Documentation</h2>
-<a id="acce7fed19b6156bb9fc78b35759c0129" name="acce7fed19b6156bb9fc78b35759c0129"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acce7fed19b6156bb9fc78b35759c0129">&#9670;&#160;</a></span>GGUFValueType</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum LLMUnity.GGUFValueType</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="LLMGGUF_8cs_source.html#l00008">8</a> of file <a class="el" href="LLMGGUF_8cs_source.html">LLMGGUF.cs</a>.</p>
-
-</div>
-</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

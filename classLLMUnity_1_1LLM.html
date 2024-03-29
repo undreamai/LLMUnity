@@ -8,6 +8,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>LLM for Unity: LLMUnity.LLM Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link rel="shortcut icon" href="logo_tiny.png" type="image/png">
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
 <!-- ... other metadata & script includes ... -->
@@ -31,7 +32,7 @@
 <script type="text/javascript" src="search/search.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
-<link href="doxygen-awesome-custom.css" rel="stylesheet" type="text/css"/>
+<link href="custom.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen-awesome-sidebar-only-darkmode-toggle.css" rel="stylesheet" type="text/css"/>
 </head>
@@ -46,7 +47,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_tiny.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">LLM for Unity
-   &#160;<span id="projectnumber">v1.2.5</span>
+   &#160;<span id="projectnumber">v1.2.6</span>
    </div>
    <div id="projectbrief">Create characters in Unity with LLMs!</div>
   </td>
@@ -113,212 +114,222 @@ $(function(){initNavTree('classLLMUnity_1_1LLM.html',''); initResizable(); });
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
-<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="#properties">Properties</a> &#124;
 <a href="classLLMUnity_1_1LLM-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">LLMUnity.LLM Class Reference</div></div>
+  <div class="headertitle"><div class="title">LLMUnity.LLM Class Reference<div class="ingroups"><a class="el" href="group__llm.html">LLM</a></div></div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Class implementing the LLM server.  
+ <a href="#details">More...</a></p>
 <div class="dynheader">
 Inheritance diagram for LLMUnity.LLM:</div>
 <div class="dyncontent">
 <div class="center"><iframe scrolling="no" frameborder="0" src="classLLMUnity_1_1LLM__inherit__graph.svg" width="135" height="183"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
-<div class="dynheader">
-Collaboration diagram for LLMUnity.LLM:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classLLMUnity_1_1LLM__coll__graph.svg" width="334" height="199"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a62478e57a4851dfed41903bfe776bf3e" id="r_a62478e57a4851dfed41903bfe776bf3e"><td class="memItemLeft" align="right" valign="top"><a id="a62478e57a4851dfed41903bfe776bf3e" name="a62478e57a4851dfed41903bfe776bf3e"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>readonly</b> (string, string)[] modelOptions</td></tr>
-<tr class="separator:a62478e57a4851dfed41903bfe776bf3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3ca6679cc1fd6f5d013bf2ad9173f2c6" id="r_a3ca6679cc1fd6f5d013bf2ad9173f2c6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3ca6679cc1fd6f5d013bf2ad9173f2c6">DownloadModel</a> (int optionIndex)</td></tr>
-<tr class="separator:a3ca6679cc1fd6f5d013bf2ad9173f2c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a330d0bcaf7bd3a60a930d0ed64c8c145" id="r_a330d0bcaf7bd3a60a930d0ed64c8c145"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a330d0bcaf7bd3a60a930d0ed64c8c145">SetModelProgress</a> (float progress)</td></tr>
-<tr class="separator:a330d0bcaf7bd3a60a930d0ed64c8c145"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a244797da23b679c6dc74dc886fe7648b" id="r_a244797da23b679c6dc74dc886fe7648b"><td class="memItemLeft" align="right" valign="top">async Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a244797da23b679c6dc74dc886fe7648b">SetModel</a> (string path)</td></tr>
+<tr class="memdesc:a244797da23b679c6dc74dc886fe7648b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allows to set the model used by the LLM. The model provided is copied to the Assets/StreamingAssets folder that allows it to also work in the build. Models supported are in .gguf format.  <br /></td></tr>
 <tr class="separator:a244797da23b679c6dc74dc886fe7648b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a41e13c8e546fc2d62bc5a34407f89757" id="r_a41e13c8e546fc2d62bc5a34407f89757"><td class="memItemLeft" align="right" valign="top">override void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a41e13c8e546fc2d62bc5a34407f89757">SetTemplate</a> (string templateName)</td></tr>
+<tr class="memdesc:a41e13c8e546fc2d62bc5a34407f89757"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the chat template for the LLM/LLMClient.  <br /></td></tr>
 <tr class="separator:a41e13c8e546fc2d62bc5a34407f89757"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a79b27664f60f6b4e8ad2b9f8adb644d6" id="r_a79b27664f60f6b4e8ad2b9f8adb644d6"><td class="memItemLeft" align="right" valign="top">async Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a79b27664f60f6b4e8ad2b9f8adb644d6">SetLora</a> (string path)</td></tr>
+<tr class="memdesc:a79b27664f60f6b4e8ad2b9f8adb644d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allows to set a LORA model to use in the LLM. The model provided is copied to the Assets/StreamingAssets folder that allows it to also work in the build. Models supported are in .bin format.  <br /></td></tr>
 <tr class="separator:a79b27664f60f6b4e8ad2b9f8adb644d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a00b7e0ab8c78bfe30151adcdbdc750c3" id="r_a00b7e0ab8c78bfe30151adcdbdc750c3"><td class="memItemLeft" align="right" valign="top">List&lt; <a class="el" href="classLLMUnity_1_1LLMClient.html">LLMClient</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a00b7e0ab8c78bfe30151adcdbdc750c3">GetListeningClients</a> ()</td></tr>
-<tr class="separator:a00b7e0ab8c78bfe30151adcdbdc750c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1553a9009ba6cd7b4040fd76d190daaa" id="r_a1553a9009ba6cd7b4040fd76d190daaa"><td class="memItemLeft" align="right" valign="top">new async void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1553a9009ba6cd7b4040fd76d190daaa">Awake</a> ()</td></tr>
+<tr class="memdesc:a1553a9009ba6cd7b4040fd76d190daaa"><td class="mdescLeft">&#160;</td><td class="mdescRight">The Unity Awake function that initializes the state before the application starts. The following actions are executed:  <br /></td></tr>
 <tr class="separator:a1553a9009ba6cd7b4040fd76d190daaa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa36963b3b5a199a9ad3c3adadd7aa3c9" id="r_aa36963b3b5a199a9ad3c3adadd7aa3c9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa36963b3b5a199a9ad3c3adadd7aa3c9">StopProcess</a> ()</td></tr>
+<tr class="memdesc:aa36963b3b5a199a9ad3c3adadd7aa3c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allows to stop the LLM server.  <br /></td></tr>
 <tr class="separator:aa36963b3b5a199a9ad3c3adadd7aa3c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a52ae6076746695d25592f8355a18414e" id="r_a52ae6076746695d25592f8355a18414e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a52ae6076746695d25592f8355a18414e">OnDestroy</a> ()</td></tr>
+<tr class="memdesc:a52ae6076746695d25592f8355a18414e"><td class="mdescLeft">&#160;</td><td class="mdescRight">The Unity OnDestroy function called when the onbject is destroyed. The function StopProcess is called to stop the LLM server.  <br /></td></tr>
 <tr class="separator:a52ae6076746695d25592f8355a18414e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classLLMUnity_1_1LLMClient"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_classLLMUnity_1_1LLMClient')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classLLMUnity_1_1LLMClient.html">LLMUnity.LLMClient</a></td></tr>
 <tr class="memitem:a9cc96f9b98f36be5c1b4b61a6e783f94 inherit pub_methods_classLLMUnity_1_1LLMClient" id="r_a9cc96f9b98f36be5c1b4b61a6e783f94"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html#a9cc96f9b98f36be5c1b4b61a6e783f94">Awake</a> ()</td></tr>
+<tr class="memdesc:a9cc96f9b98f36be5c1b4b61a6e783f94 inherit pub_methods_classLLMUnity_1_1LLMClient"><td class="mdescLeft">&#160;</td><td class="mdescRight">The Unity Awake function that initializes the state before the application starts. The following actions are executed:  <br /></td></tr>
 <tr class="separator:a9cc96f9b98f36be5c1b4b61a6e783f94 inherit pub_methods_classLLMUnity_1_1LLMClient"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab96d935bb1a8e015915e2c9e25591e5e inherit pub_methods_classLLMUnity_1_1LLMClient" id="r_ab96d935bb1a8e015915e2c9e25591e5e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classLLMUnity_1_1LLM.html">LLM</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html#ab96d935bb1a8e015915e2c9e25591e5e">GetServer</a> ()</td></tr>
-<tr class="separator:ab96d935bb1a8e015915e2c9e25591e5e inherit pub_methods_classLLMUnity_1_1LLMClient"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a95257718b63045aa67a7e0250288ca06 inherit pub_methods_classLLMUnity_1_1LLMClient" id="r_a95257718b63045aa67a7e0250288ca06"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html#a95257718b63045aa67a7e0250288ca06">SetPrompt</a> (string newPrompt, bool clearChat=true)</td></tr>
+<tr class="memdesc:a95257718b63045aa67a7e0250288ca06 inherit pub_methods_classLLMUnity_1_1LLMClient"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the system prompt for the LLM/LLMClient.  <br /></td></tr>
 <tr class="separator:a95257718b63045aa67a7e0250288ca06 inherit pub_methods_classLLMUnity_1_1LLMClient"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a44d442f8dd8bcdbbbe272b59f2ee609b inherit pub_methods_classLLMUnity_1_1LLMClient" id="r_a44d442f8dd8bcdbbbe272b59f2ee609b"><td class="memItemLeft" align="right" valign="top">async void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html#a44d442f8dd8bcdbbbe272b59f2ee609b">SetGrammar</a> (string path)</td></tr>
+<tr class="memdesc:a44d442f8dd8bcdbbbe272b59f2ee609b inherit pub_methods_classLLMUnity_1_1LLMClient"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the grammar file of the LLM/LLMClient.  <br /></td></tr>
 <tr class="separator:a44d442f8dd8bcdbbbe272b59f2ee609b inherit pub_methods_classLLMUnity_1_1LLMClient"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9d3f01b58c41a4c40db7cc78387f4b1b inherit pub_methods_classLLMUnity_1_1LLMClient" id="r_a9d3f01b58c41a4c40db7cc78387f4b1b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structLLMUnity_1_1ChatRequest.html">ChatRequest</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html#a9d3f01b58c41a4c40db7cc78387f4b1b">GenerateRequest</a> (string prompt)</td></tr>
-<tr class="separator:a9d3f01b58c41a4c40db7cc78387f4b1b inherit pub_methods_classLLMUnity_1_1LLMClient"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abc3c7bfaf79153d6fcbb907c20d247ec inherit pub_methods_classLLMUnity_1_1LLMClient" id="r_abc3c7bfaf79153d6fcbb907c20d247ec"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html#abc3c7bfaf79153d6fcbb907c20d247ec">ChatContent</a> (<a class="el" href="structLLMUnity_1_1ChatResult.html">ChatResult</a> result)</td></tr>
-<tr class="separator:abc3c7bfaf79153d6fcbb907c20d247ec inherit pub_methods_classLLMUnity_1_1LLMClient"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6132d5b708be83978f7cc99e51752454 inherit pub_methods_classLLMUnity_1_1LLMClient" id="r_a6132d5b708be83978f7cc99e51752454"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html#a6132d5b708be83978f7cc99e51752454">MultiChatContent</a> (<a class="el" href="structLLMUnity_1_1MultiChatResult.html">MultiChatResult</a> result)</td></tr>
-<tr class="separator:a6132d5b708be83978f7cc99e51752454 inherit pub_methods_classLLMUnity_1_1LLMClient"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aceca0dbbba068bcd9be2a931b7cfee67 inherit pub_methods_classLLMUnity_1_1LLMClient" id="r_aceca0dbbba068bcd9be2a931b7cfee67"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html#aceca0dbbba068bcd9be2a931b7cfee67">ChatOpenAIContent</a> (<a class="el" href="structLLMUnity_1_1ChatOpenAIResult.html">ChatOpenAIResult</a> result)</td></tr>
-<tr class="separator:aceca0dbbba068bcd9be2a931b7cfee67 inherit pub_methods_classLLMUnity_1_1LLMClient"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a81ff768d9c55121d2c57f8634814327c inherit pub_methods_classLLMUnity_1_1LLMClient" id="r_a81ff768d9c55121d2c57f8634814327c"><td class="memItemLeft" align="right" valign="top">List&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html#a81ff768d9c55121d2c57f8634814327c">TokenizeContent</a> (<a class="el" href="structLLMUnity_1_1TokenizeResult.html">TokenizeResult</a> result)</td></tr>
-<tr class="separator:a81ff768d9c55121d2c57f8634814327c inherit pub_methods_classLLMUnity_1_1LLMClient"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6b49af9342f066426dbad354d92f3e89 inherit pub_methods_classLLMUnity_1_1LLMClient" id="r_a6b49af9342f066426dbad354d92f3e89"><td class="memItemLeft" align="right" valign="top">async Task&lt; string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html#a6b49af9342f066426dbad354d92f3e89">Chat</a> (string question, Callback&lt; string &gt; callback=null, EmptyCallback completionCallback=null, bool addToHistory=true)</td></tr>
-<tr class="separator:a6b49af9342f066426dbad354d92f3e89 inherit pub_methods_classLLMUnity_1_1LLMClient"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afb93776d4bd9d8bd843896a7c4bf7e65 inherit pub_methods_classLLMUnity_1_1LLMClient" id="r_afb93776d4bd9d8bd843896a7c4bf7e65"><td class="memItemLeft" align="right" valign="top">async Task&lt; string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html#afb93776d4bd9d8bd843896a7c4bf7e65">Complete</a> (string prompt, Callback&lt; string &gt; callback=null, EmptyCallback completionCallback=null)</td></tr>
+<tr class="memitem:adf78bb425d542394156740244dbf0458 inherit pub_methods_classLLMUnity_1_1LLMClient" id="r_adf78bb425d542394156740244dbf0458"><td class="memItemLeft" align="right" valign="top">async Task&lt; string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html#adf78bb425d542394156740244dbf0458">Chat</a> (string query, Callback&lt; string &gt; callback=null, EmptyCallback completionCallback=null, bool addToHistory=true)</td></tr>
+<tr class="memdesc:adf78bb425d542394156740244dbf0458 inherit pub_methods_classLLMUnity_1_1LLMClient"><td class="mdescLeft">&#160;</td><td class="mdescRight">Chat functionality of the LLM. It calls the LLM completion based on the provided query including the previous chat history. The function allows callbacks when the response is partially or fully received. The question is added to the history if specified.  <br /></td></tr>
+<tr class="separator:adf78bb425d542394156740244dbf0458 inherit pub_methods_classLLMUnity_1_1LLMClient"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afb93776d4bd9d8bd843896a7c4bf7e65 inherit pub_methods_classLLMUnity_1_1LLMClient" id="r_afb93776d4bd9d8bd843896a7c4bf7e65"><td class="memItemLeft" align="right" valign="top">async Task&lt; string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html#afb93776d4bd9d8bd843896a7c4bf7e65">Complete</a> (string <a class="el" href="classLLMUnity_1_1LLMClient.html#a0bac4b966e4e6ee344e4ea53d8688b77">prompt</a>, Callback&lt; string &gt; callback=null, EmptyCallback completionCallback=null)</td></tr>
+<tr class="memdesc:afb93776d4bd9d8bd843896a7c4bf7e65 inherit pub_methods_classLLMUnity_1_1LLMClient"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pure completion functionality of the LLM. It calls the LLM completion based solely on the provided prompt (no formatting by the chat template). The function allows callbacks when the response is partially or fully received.  <br /></td></tr>
 <tr class="separator:afb93776d4bd9d8bd843896a7c4bf7e65 inherit pub_methods_classLLMUnity_1_1LLMClient"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3c2e5b4b52b6b4c856be8f63e6bbcf52 inherit pub_methods_classLLMUnity_1_1LLMClient" id="r_a3c2e5b4b52b6b4c856be8f63e6bbcf52"><td class="memItemLeft" align="right" valign="top">async Task&lt; string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html#a3c2e5b4b52b6b4c856be8f63e6bbcf52">Warmup</a> (EmptyCallback completionCallback=null, string question=&quot;hi&quot;)</td></tr>
-<tr class="separator:a3c2e5b4b52b6b4c856be8f63e6bbcf52 inherit pub_methods_classLLMUnity_1_1LLMClient"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab47b993b5375ccbc6dbd499014893537 inherit pub_methods_classLLMUnity_1_1LLMClient" id="r_ab47b993b5375ccbc6dbd499014893537"><td class="memItemLeft" align="right" valign="top">async Task&lt; List&lt; int &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html#ab47b993b5375ccbc6dbd499014893537">Tokenize</a> (string question, Callback&lt; List&lt; int &gt; &gt; callback=null)</td></tr>
-<tr class="separator:ab47b993b5375ccbc6dbd499014893537 inherit pub_methods_classLLMUnity_1_1LLMClient"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad2e736ba43500fa6ae5c3bddcaaa0ad5 inherit pub_methods_classLLMUnity_1_1LLMClient" id="r_ad2e736ba43500fa6ae5c3bddcaaa0ad5"><td class="memItemLeft" align="right" valign="top">Ret&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html#ad2e736ba43500fa6ae5c3bddcaaa0ad5">ConvertContent&lt; Res, Ret &gt;</a> (string response, ContentCallback&lt; Res, Ret &gt; getContent=null)</td></tr>
-<tr class="separator:ad2e736ba43500fa6ae5c3bddcaaa0ad5 inherit pub_methods_classLLMUnity_1_1LLMClient"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aad901f9b54187673f69a75541d932768 inherit pub_methods_classLLMUnity_1_1LLMClient" id="r_aad901f9b54187673f69a75541d932768"><td class="memItemLeft" align="right" valign="top">string[]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html#aad901f9b54187673f69a75541d932768">MultiResponse</a> (string response)</td></tr>
-<tr class="separator:aad901f9b54187673f69a75541d932768 inherit pub_methods_classLLMUnity_1_1LLMClient"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a25549a9833f3a3e4254cd17c7d3ccd4d inherit pub_methods_classLLMUnity_1_1LLMClient" id="r_a25549a9833f3a3e4254cd17c7d3ccd4d"><td class="memItemLeft" align="right" valign="top">async Task&lt; string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html#a25549a9833f3a3e4254cd17c7d3ccd4d">Warmup</a> (EmptyCallback completionCallback=null, string query=&quot;hi&quot;)</td></tr>
+<tr class="memdesc:a25549a9833f3a3e4254cd17c7d3ccd4d inherit pub_methods_classLLMUnity_1_1LLMClient"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allow to warm-up a model by processing the prompt. The prompt processing will be cached (if cachePrompt=true) allowing for faster initialisation. The function allows callback for when the prompt is processed and the response received.  <br /></td></tr>
+<tr class="separator:a25549a9833f3a3e4254cd17c7d3ccd4d inherit pub_methods_classLLMUnity_1_1LLMClient"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aec5056a0891164d790bd64c1f4ee2460 inherit pub_methods_classLLMUnity_1_1LLMClient" id="r_aec5056a0891164d790bd64c1f4ee2460"><td class="memItemLeft" align="right" valign="top">async Task&lt; List&lt; int &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html#aec5056a0891164d790bd64c1f4ee2460">Tokenize</a> (string query, Callback&lt; List&lt; int &gt; &gt; callback=null)</td></tr>
+<tr class="memdesc:aec5056a0891164d790bd64c1f4ee2460 inherit pub_methods_classLLMUnity_1_1LLMClient"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tokenises the provided query.  <br /></td></tr>
+<tr class="separator:aec5056a0891164d790bd64c1f4ee2460 inherit pub_methods_classLLMUnity_1_1LLMClient"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0f67e079bf0e42dbd465a0069b4e2e98 inherit pub_methods_classLLMUnity_1_1LLMClient" id="r_a0f67e079bf0e42dbd465a0069b4e2e98"><td class="memItemLeft" align="right" valign="top">async Task&lt; string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html#a0f67e079bf0e42dbd465a0069b4e2e98">Detokenize</a> (List&lt; int &gt; tokens, Callback&lt; string &gt; callback=null)</td></tr>
+<tr class="memdesc:a0f67e079bf0e42dbd465a0069b4e2e98 inherit pub_methods_classLLMUnity_1_1LLMClient"><td class="mdescLeft">&#160;</td><td class="mdescRight">Detokenises the provided tokens to a string.  <br /></td></tr>
+<tr class="separator:a0f67e079bf0e42dbd465a0069b4e2e98 inherit pub_methods_classLLMUnity_1_1LLMClient"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a50b5235db5f784c7a0b4f8f3d3e7f2fe inherit pub_methods_classLLMUnity_1_1LLMClient" id="r_a50b5235db5f784c7a0b4f8f3d3e7f2fe"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html#a50b5235db5f784c7a0b4f8f3d3e7f2fe">CancelRequests</a> ()</td></tr>
+<tr class="memdesc:a50b5235db5f784c7a0b4f8f3d3e7f2fe inherit pub_methods_classLLMUnity_1_1LLMClient"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cancel the ongoing requests e.g. Chat, Complete.  <br /></td></tr>
 <tr class="separator:a50b5235db5f784c7a0b4f8f3d3e7f2fe inherit pub_methods_classLLMUnity_1_1LLMClient"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9f5a4977095fc88964de9dc0cb90e48c inherit pub_methods_classLLMUnity_1_1LLMClient" id="r_a9f5a4977095fc88964de9dc0cb90e48c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html#a9f5a4977095fc88964de9dc0cb90e48c">IsServerReachable</a> (int timeout=5)</td></tr>
+<tr class="memdesc:a9f5a4977095fc88964de9dc0cb90e48c inherit pub_methods_classLLMUnity_1_1LLMClient"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if the server is reachable by calling a sample request (synchronous implementation).  <br /></td></tr>
 <tr class="separator:a9f5a4977095fc88964de9dc0cb90e48c inherit pub_methods_classLLMUnity_1_1LLMClient"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac65e5eb3e525dd3c874cc67524b604df inherit pub_methods_classLLMUnity_1_1LLMClient" id="r_ac65e5eb3e525dd3c874cc67524b604df"><td class="memItemLeft" align="right" valign="top">async Task&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html#ac65e5eb3e525dd3c874cc67524b604df">IsServerReachableAsync</a> (int timeout=5)</td></tr>
+<tr class="memdesc:ac65e5eb3e525dd3c874cc67524b604df inherit pub_methods_classLLMUnity_1_1LLMClient"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if the server is reachable by calling a sample request (async implementation).  <br /></td></tr>
 <tr class="separator:ac65e5eb3e525dd3c874cc67524b604df inherit pub_methods_classLLMUnity_1_1LLMClient"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9484066d4b9989d21de1b6837fe6c00d inherit pub_methods_classLLMUnity_1_1LLMClient" id="r_a9484066d4b9989d21de1b6837fe6c00d"><td class="memItemLeft" align="right" valign="top">async Task&lt; Ret &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html#a9484066d4b9989d21de1b6837fe6c00d">PostRequest&lt; Res, Ret &gt;</a> (string json, string endpoint, ContentCallback&lt; Res, Ret &gt; getContent, Callback&lt; Ret &gt; callback=null)</td></tr>
-<tr class="separator:a9484066d4b9989d21de1b6837fe6c00d inherit pub_methods_classLLMUnity_1_1LLMClient"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
-Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a91e100b72817beab4ccb1c6348c01d22" id="r_a91e100b72817beab4ccb1c6348c01d22"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a91e100b72817beab4ccb1c6348c01d22">SetBinariesProgress</a> (float progress)</td></tr>
-<tr class="separator:a91e100b72817beab4ccb1c6348c01d22"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a4da128e64337f202585fc1a79d785b36" id="r_a4da128e64337f202585fc1a79d785b36"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4da128e64337f202585fc1a79d785b36">modelHide</a> = true</td></tr>
-<tr class="separator:a4da128e64337f202585fc1a79d785b36"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9afb1e3370f988ac5ae6bc8bb442bc95" id="r_a9afb1e3370f988ac5ae6bc8bb442bc95"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9afb1e3370f988ac5ae6bc8bb442bc95">numThreads</a> = -1</td></tr>
+<tr class="memdesc:a9afb1e3370f988ac5ae6bc8bb442bc95"><td class="mdescLeft">&#160;</td><td class="mdescRight">number of threads to use (-1 = all)  <br /></td></tr>
 <tr class="separator:a9afb1e3370f988ac5ae6bc8bb442bc95"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0cd82e3728d77575d4f453c5ae443cb9" id="r_a0cd82e3728d77575d4f453c5ae443cb9"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0cd82e3728d77575d4f453c5ae443cb9">numGPULayers</a> = 0</td></tr>
+<tr class="memdesc:a0cd82e3728d77575d4f453c5ae443cb9"><td class="mdescLeft">&#160;</td><td class="mdescRight">number of model layers to offload to the GPU (0 = GPU not used). Use a large number i.e. &gt;30 to utilise the GPU as much as possible. If the user's GPU is not supported, the LLM will fall back to the CPU  <br /></td></tr>
 <tr class="separator:a0cd82e3728d77575d4f453c5ae443cb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2a03591ffb964eacb31d2afbe42c4405" id="r_a2a03591ffb964eacb31d2afbe42c4405"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2a03591ffb964eacb31d2afbe42c4405">parallelPrompts</a> = -1</td></tr>
+<tr class="memdesc:a2a03591ffb964eacb31d2afbe42c4405"><td class="mdescLeft">&#160;</td><td class="mdescRight">number of prompts that can happen in parallel (-1 = number of LLM/LLMClient objects)  <br /></td></tr>
 <tr class="separator:a2a03591ffb964eacb31d2afbe42c4405"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a415905d972e2922dd99b289ceaf56a5c" id="r_a415905d972e2922dd99b289ceaf56a5c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a415905d972e2922dd99b289ceaf56a5c">debug</a> = false</td></tr>
+<tr class="memdesc:a415905d972e2922dd99b289ceaf56a5c"><td class="mdescLeft">&#160;</td><td class="mdescRight">select to log the output of the LLM in the Unity Editor.  <br /></td></tr>
 <tr class="separator:a415905d972e2922dd99b289ceaf56a5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae764d8b6b7f0a040c19e1986c227ffaf" id="r_ae764d8b6b7f0a040c19e1986c227ffaf"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae764d8b6b7f0a040c19e1986c227ffaf">asynchronousStartup</a> = false</td></tr>
+<tr class="memdesc:ae764d8b6b7f0a040c19e1986c227ffaf"><td class="mdescLeft">&#160;</td><td class="mdescRight">allows to start the server asynchronously. This is useful to not block Unity while the server is initialised. For example it can be used as follows:  <br /></td></tr>
 <tr class="separator:ae764d8b6b7f0a040c19e1986c227ffaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa26e432f58fe58ff701b26204752f06c" id="r_aa26e432f58fe58ff701b26204752f06c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa26e432f58fe58ff701b26204752f06c">remote</a> = false</td></tr>
+<tr class="memdesc:aa26e432f58fe58ff701b26204752f06c"><td class="mdescLeft">&#160;</td><td class="mdescRight">select to allow remote access to the server.  <br /></td></tr>
 <tr class="separator:aa26e432f58fe58ff701b26204752f06c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab88cef3f544190f865944b0a8b46add9" id="r_ab88cef3f544190f865944b0a8b46add9"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab88cef3f544190f865944b0a8b46add9">killExistingServersOnStart</a> = true</td></tr>
+<tr class="memdesc:ab88cef3f544190f865944b0a8b46add9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Select to kill existing servers created by the package at startup. Useful in case of game crashes where the servers didn't have the chance to terminate.  <br /></td></tr>
 <tr class="separator:ab88cef3f544190f865944b0a8b46add9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab3feb52deeee0c441322c81628c065cd" id="r_ab3feb52deeee0c441322c81628c065cd"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab3feb52deeee0c441322c81628c065cd">model</a> = &quot;&quot;</td></tr>
+<tr class="memdesc:ab3feb52deeee0c441322c81628c065cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">the path of the model being used (relative to the Assets/StreamingAssets folder). Models with .gguf format are allowed.  <br /></td></tr>
 <tr class="separator:ab3feb52deeee0c441322c81628c065cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a80c81993fcc33ee253ffec2f3d1302fd" id="r_a80c81993fcc33ee253ffec2f3d1302fd"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a80c81993fcc33ee253ffec2f3d1302fd">lora</a> = &quot;&quot;</td></tr>
+<tr class="memdesc:a80c81993fcc33ee253ffec2f3d1302fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">the path of the LORA model being used (relative to the Assets/StreamingAssets folder). Models with .bin format are allowed.  <br /></td></tr>
 <tr class="separator:a80c81993fcc33ee253ffec2f3d1302fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8e358f7a834e6ede3cc19aa7142e67e8" id="r_a8e358f7a834e6ede3cc19aa7142e67e8"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8e358f7a834e6ede3cc19aa7142e67e8">contextSize</a> = 512</td></tr>
+<tr class="memdesc:a8e358f7a834e6ede3cc19aa7142e67e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Size of the prompt context (0 = context size of the model). This is the number of tokens the model can take as input when generating responses.  <br /></td></tr>
 <tr class="separator:a8e358f7a834e6ede3cc19aa7142e67e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac1d133a050b4cc2ec567fcb1691f46b3" id="r_ac1d133a050b4cc2ec567fcb1691f46b3"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac1d133a050b4cc2ec567fcb1691f46b3">batchSize</a> = 512</td></tr>
+<tr class="memdesc:ac1d133a050b4cc2ec567fcb1691f46b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Batch size for prompt processing.  <br /></td></tr>
 <tr class="separator:ac1d133a050b4cc2ec567fcb1691f46b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5d21fbca3d86e39066f4ac52d3ea7420" id="r_a5d21fbca3d86e39066f4ac52d3ea7420"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5d21fbca3d86e39066f4ac52d3ea7420">SelectedModel</a> = 0</td></tr>
-<tr class="separator:a5d21fbca3d86e39066f4ac52d3ea7420"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a68ed7cad9848d4feb2ce3e3769bb6d87" id="r_a68ed7cad9848d4feb2ce3e3769bb6d87"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a68ed7cad9848d4feb2ce3e3769bb6d87">modelProgress</a> = 1</td></tr>
-<tr class="separator:a68ed7cad9848d4feb2ce3e3769bb6d87"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a681730992c79238a29c3d852b9b2f9c3" id="r_a681730992c79238a29c3d852b9b2f9c3"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a681730992c79238a29c3d852b9b2f9c3">modelCopyProgress</a> = 1</td></tr>
-<tr class="separator:a681730992c79238a29c3d852b9b2f9c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_attribs_classLLMUnity_1_1LLMClient"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_attribs_classLLMUnity_1_1LLMClient')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="classLLMUnity_1_1LLMClient.html">LLMUnity.LLMClient</a></td></tr>
 <tr class="memitem:aa537432840ec57946208d48c4369236e inherit pub_attribs_classLLMUnity_1_1LLMClient" id="r_aa537432840ec57946208d48c4369236e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html#aa537432840ec57946208d48c4369236e">advancedOptions</a> = false</td></tr>
+<tr class="memdesc:aa537432840ec57946208d48c4369236e inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="mdescLeft">&#160;</td><td class="mdescRight">toggle to show/hide advanced options in the GameObject  <br /></td></tr>
 <tr class="separator:aa537432840ec57946208d48c4369236e inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3e06b682de4ae4b408493876df9e9325 inherit pub_attribs_classLLMUnity_1_1LLMClient" id="r_a3e06b682de4ae4b408493876df9e9325"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html#a3e06b682de4ae4b408493876df9e9325">expertOptions</a> = false</td></tr>
+<tr class="memdesc:a3e06b682de4ae4b408493876df9e9325 inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="mdescLeft">&#160;</td><td class="mdescRight">toggle to show/hide expert options in the GameObject  <br /></td></tr>
 <tr class="separator:a3e06b682de4ae4b408493876df9e9325 inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab7fff1d843ba7e674226dacd31a3f01f inherit pub_attribs_classLLMUnity_1_1LLMClient" id="r_ab7fff1d843ba7e674226dacd31a3f01f"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html#ab7fff1d843ba7e674226dacd31a3f01f">host</a> = &quot;localhost&quot;</td></tr>
+<tr class="memdesc:ab7fff1d843ba7e674226dacd31a3f01f inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="mdescLeft">&#160;</td><td class="mdescRight">host to use for the LLMClient object  <br /></td></tr>
 <tr class="separator:ab7fff1d843ba7e674226dacd31a3f01f inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a23c418fb8386399a9be8e100cdc5e1fd inherit pub_attribs_classLLMUnity_1_1LLMClient" id="r_a23c418fb8386399a9be8e100cdc5e1fd"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html#a23c418fb8386399a9be8e100cdc5e1fd">port</a> = 13333</td></tr>
+<tr class="memdesc:a23c418fb8386399a9be8e100cdc5e1fd inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="mdescLeft">&#160;</td><td class="mdescRight">port to use for the server (LLM) or client (LLMClient)  <br /></td></tr>
 <tr class="separator:a23c418fb8386399a9be8e100cdc5e1fd inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeabe1675461674f91dc254b06b3132fa inherit pub_attribs_classLLMUnity_1_1LLMClient" id="r_aeabe1675461674f91dc254b06b3132fa"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html#aeabe1675461674f91dc254b06b3132fa">stream</a> = true</td></tr>
+<tr class="memdesc:aeabe1675461674f91dc254b06b3132fa inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="mdescLeft">&#160;</td><td class="mdescRight">option to receive the reply from the model as it is produced (recommended!). If it is not selected, the full reply from the model is received in one go  <br /></td></tr>
 <tr class="separator:aeabe1675461674f91dc254b06b3132fa inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8028c567bfea1e66c7107ea3cae43bab inherit pub_attribs_classLLMUnity_1_1LLMClient" id="r_a8028c567bfea1e66c7107ea3cae43bab"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html#a8028c567bfea1e66c7107ea3cae43bab">grammar</a> = null</td></tr>
+<tr class="memdesc:a8028c567bfea1e66c7107ea3cae43bab inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="mdescLeft">&#160;</td><td class="mdescRight">grammar file used for the LLM in .cbnf format (relative to the Assets/StreamingAssets folder)  <br /></td></tr>
 <tr class="separator:a8028c567bfea1e66c7107ea3cae43bab inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abc21df2ac810b27b1c63c187af31d9d1 inherit pub_attribs_classLLMUnity_1_1LLMClient" id="r_abc21df2ac810b27b1c63c187af31d9d1"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html#abc21df2ac810b27b1c63c187af31d9d1">seed</a> = 0</td></tr>
+<tr class="memdesc:abc21df2ac810b27b1c63c187af31d9d1 inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="mdescLeft">&#160;</td><td class="mdescRight">seed for reproducibility. For random results every time set to -1.  <br /></td></tr>
 <tr class="separator:abc21df2ac810b27b1c63c187af31d9d1 inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad3ae5256e204bc037b94e7af91999d81 inherit pub_attribs_classLLMUnity_1_1LLMClient" id="r_ad3ae5256e204bc037b94e7af91999d81"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html#ad3ae5256e204bc037b94e7af91999d81">numPredict</a> = 256</td></tr>
+<tr class="memdesc:ad3ae5256e204bc037b94e7af91999d81 inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="mdescLeft">&#160;</td><td class="mdescRight">number of tokens to predict (-1 = infinity, -2 = until context filled). This is the amount of tokens the model will maximum predict. When N predict is reached the model will stop generating. This means words / sentences might not get finished if this is too low.  <br /></td></tr>
 <tr class="separator:ad3ae5256e204bc037b94e7af91999d81 inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a47f100b274935328f0eb1fb48a24cfc7 inherit pub_attribs_classLLMUnity_1_1LLMClient" id="r_a47f100b274935328f0eb1fb48a24cfc7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html#a47f100b274935328f0eb1fb48a24cfc7">cachePrompt</a> = true</td></tr>
+<tr class="memdesc:a47f100b274935328f0eb1fb48a24cfc7 inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="mdescLeft">&#160;</td><td class="mdescRight">option to cache the prompt as it is being created by the chat to avoid reprocessing the entire prompt every time (default: true)  <br /></td></tr>
 <tr class="separator:a47f100b274935328f0eb1fb48a24cfc7 inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a775ac662624b11500de2e947daf704f3 inherit pub_attribs_classLLMUnity_1_1LLMClient" id="r_a775ac662624b11500de2e947daf704f3"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html#a775ac662624b11500de2e947daf704f3">temperature</a> = 0.2f</td></tr>
+<tr class="memdesc:a775ac662624b11500de2e947daf704f3 inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="mdescLeft">&#160;</td><td class="mdescRight">LLM temperature, lower values give more deterministic answers. The temperature setting adjusts how random the generated responses are. Turning it up makes the generated choices more varied and unpredictable. Turning it down makes the generated responses more predictable and focused on the most likely options.  <br /></td></tr>
 <tr class="separator:a775ac662624b11500de2e947daf704f3 inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acfa4c418e936f6d8336c18401d94d6b1 inherit pub_attribs_classLLMUnity_1_1LLMClient" id="r_acfa4c418e936f6d8336c18401d94d6b1"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html#acfa4c418e936f6d8336c18401d94d6b1">topK</a> = 40</td></tr>
+<tr class="memdesc:acfa4c418e936f6d8336c18401d94d6b1 inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="mdescLeft">&#160;</td><td class="mdescRight">top-k sampling (0 = disabled). The top k value controls the top k most probable tokens at each step of generation. This value can help fine tune the output and make this adhere to specific patterns or constraints.  <br /></td></tr>
 <tr class="separator:acfa4c418e936f6d8336c18401d94d6b1 inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a149eb4d009f7bc6940dfa1847cb9dee5 inherit pub_attribs_classLLMUnity_1_1LLMClient" id="r_a149eb4d009f7bc6940dfa1847cb9dee5"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html#a149eb4d009f7bc6940dfa1847cb9dee5">topP</a> = 0.9f</td></tr>
+<tr class="memdesc:a149eb4d009f7bc6940dfa1847cb9dee5 inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="mdescLeft">&#160;</td><td class="mdescRight">top-p sampling (1.0 = disabled). The top p value controls the cumulative probability of generated tokens. The model will generate tokens until this theshold (p) is reached. By lowering this value you can shorten output &amp; encourage / discourage more diverse output.  <br /></td></tr>
 <tr class="separator:a149eb4d009f7bc6940dfa1847cb9dee5 inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a71c27bc5d6155ff036f8a402388e6a6b inherit pub_attribs_classLLMUnity_1_1LLMClient" id="r_a71c27bc5d6155ff036f8a402388e6a6b"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html#a71c27bc5d6155ff036f8a402388e6a6b">minP</a> = 0.05f</td></tr>
+<tr class="memdesc:a71c27bc5d6155ff036f8a402388e6a6b inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="mdescLeft">&#160;</td><td class="mdescRight">minimum probability for a token to be used. The probability is defined relative to the probability of the most likely token.  <br /></td></tr>
 <tr class="separator:a71c27bc5d6155ff036f8a402388e6a6b inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae24e66104c619ac5bd583cd9f50a69de inherit pub_attribs_classLLMUnity_1_1LLMClient" id="r_ae24e66104c619ac5bd583cd9f50a69de"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html#ae24e66104c619ac5bd583cd9f50a69de">repeatPenalty</a> = 1.1f</td></tr>
+<tr class="memdesc:ae24e66104c619ac5bd583cd9f50a69de inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="mdescLeft">&#160;</td><td class="mdescRight">control the repetition of token sequences in the generated text. The penalty is applied to repeated tokens.  <br /></td></tr>
 <tr class="separator:ae24e66104c619ac5bd583cd9f50a69de inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad344fd53a956d5b561944153b8fb013d inherit pub_attribs_classLLMUnity_1_1LLMClient" id="r_ad344fd53a956d5b561944153b8fb013d"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html#ad344fd53a956d5b561944153b8fb013d">presencePenalty</a> = 0f</td></tr>
+<tr class="memdesc:ad344fd53a956d5b561944153b8fb013d inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="mdescLeft">&#160;</td><td class="mdescRight">repeated token presence penalty (0.0 = disabled). Positive values penalize new tokens based on whether they appear in the text so far, increasing the model's likelihood to talk about new topics.  <br /></td></tr>
 <tr class="separator:ad344fd53a956d5b561944153b8fb013d inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a687c28d3670a8c3d97ef54aff59c4004 inherit pub_attribs_classLLMUnity_1_1LLMClient" id="r_a687c28d3670a8c3d97ef54aff59c4004"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html#a687c28d3670a8c3d97ef54aff59c4004">frequencyPenalty</a> = 0f</td></tr>
+<tr class="memdesc:a687c28d3670a8c3d97ef54aff59c4004 inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="mdescLeft">&#160;</td><td class="mdescRight">repeated token frequency penalty (0.0 = disabled). Positive values penalize new tokens based on their existing frequency in the text so far, decreasing the model's likelihood to repeat the same line verbatim.  <br /></td></tr>
 <tr class="separator:a687c28d3670a8c3d97ef54aff59c4004 inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5839512c7d36bdc28fcd3caac7abb4f4 inherit pub_attribs_classLLMUnity_1_1LLMClient" id="r_a5839512c7d36bdc28fcd3caac7abb4f4"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html#a5839512c7d36bdc28fcd3caac7abb4f4">tfsZ</a> = 1f</td></tr>
+<tr class="memdesc:a5839512c7d36bdc28fcd3caac7abb4f4 inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="mdescLeft">&#160;</td><td class="mdescRight">enable tail free sampling with parameter z (1.0 = disabled).  <br /></td></tr>
 <tr class="separator:a5839512c7d36bdc28fcd3caac7abb4f4 inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ade517a54a2d0b3c0188127643f073c8e inherit pub_attribs_classLLMUnity_1_1LLMClient" id="r_ade517a54a2d0b3c0188127643f073c8e"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html#ade517a54a2d0b3c0188127643f073c8e">typicalP</a> = 1f</td></tr>
+<tr class="memdesc:ade517a54a2d0b3c0188127643f073c8e inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="mdescLeft">&#160;</td><td class="mdescRight">enable locally typical sampling with parameter p (1.0 = disabled).  <br /></td></tr>
 <tr class="separator:ade517a54a2d0b3c0188127643f073c8e inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6541af09605f603c748edbe96b3dbc9d inherit pub_attribs_classLLMUnity_1_1LLMClient" id="r_a6541af09605f603c748edbe96b3dbc9d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html#a6541af09605f603c748edbe96b3dbc9d">repeatLastN</a> = 64</td></tr>
+<tr class="memdesc:a6541af09605f603c748edbe96b3dbc9d inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="mdescLeft">&#160;</td><td class="mdescRight">last n tokens to consider for penalizing repetition (0 = disabled, -1 = ctx-size).  <br /></td></tr>
 <tr class="separator:a6541af09605f603c748edbe96b3dbc9d inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a16670c118f2f5e01748fe5cfbb187b4c inherit pub_attribs_classLLMUnity_1_1LLMClient" id="r_a16670c118f2f5e01748fe5cfbb187b4c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html#a16670c118f2f5e01748fe5cfbb187b4c">penalizeNl</a> = true</td></tr>
+<tr class="memdesc:a16670c118f2f5e01748fe5cfbb187b4c inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="mdescLeft">&#160;</td><td class="mdescRight">penalize newline tokens when applying the repeat penalty.  <br /></td></tr>
 <tr class="separator:a16670c118f2f5e01748fe5cfbb187b4c inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aba5a17dfcaac8ccf6201cb327febd8e5 inherit pub_attribs_classLLMUnity_1_1LLMClient" id="r_aba5a17dfcaac8ccf6201cb327febd8e5"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html#aba5a17dfcaac8ccf6201cb327febd8e5">penaltyPrompt</a></td></tr>
+<tr class="memdesc:aba5a17dfcaac8ccf6201cb327febd8e5 inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="mdescLeft">&#160;</td><td class="mdescRight">prompt for the purpose of the penalty evaluation. Can be either null, a string or an array of numbers representing tokens (null/"" = use original prompt)  <br /></td></tr>
 <tr class="separator:aba5a17dfcaac8ccf6201cb327febd8e5 inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0fb010fe051c69712a0233a3984cb9c9 inherit pub_attribs_classLLMUnity_1_1LLMClient" id="r_a0fb010fe051c69712a0233a3984cb9c9"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html#a0fb010fe051c69712a0233a3984cb9c9">mirostat</a> = 0</td></tr>
+<tr class="memdesc:a0fb010fe051c69712a0233a3984cb9c9 inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="mdescLeft">&#160;</td><td class="mdescRight">enable Mirostat sampling, controlling perplexity during text generation (0 = disabled, 1 = Mirostat, 2 = Mirostat 2.0).  <br /></td></tr>
 <tr class="separator:a0fb010fe051c69712a0233a3984cb9c9 inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeda17f0be352bd72e98700d14d08575f inherit pub_attribs_classLLMUnity_1_1LLMClient" id="r_aeda17f0be352bd72e98700d14d08575f"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html#aeda17f0be352bd72e98700d14d08575f">mirostatTau</a> = 5f</td></tr>
+<tr class="memdesc:aeda17f0be352bd72e98700d14d08575f inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="mdescLeft">&#160;</td><td class="mdescRight">set the Mirostat target entropy, parameter tau.  <br /></td></tr>
 <tr class="separator:aeda17f0be352bd72e98700d14d08575f inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab3c7765428a387b556936ca9965dc6be inherit pub_attribs_classLLMUnity_1_1LLMClient" id="r_ab3c7765428a387b556936ca9965dc6be"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html#ab3c7765428a387b556936ca9965dc6be">mirostatEta</a> = 0.1f</td></tr>
+<tr class="memdesc:ab3c7765428a387b556936ca9965dc6be inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="mdescLeft">&#160;</td><td class="mdescRight">set the Mirostat learning rate, parameter eta.  <br /></td></tr>
 <tr class="separator:ab3c7765428a387b556936ca9965dc6be inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aec1a06c1c4955dbec27382909f868e62 inherit pub_attribs_classLLMUnity_1_1LLMClient" id="r_aec1a06c1c4955dbec27382909f868e62"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html#aec1a06c1c4955dbec27382909f868e62">nProbs</a> = 0</td></tr>
+<tr class="memdesc:aec1a06c1c4955dbec27382909f868e62 inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="mdescLeft">&#160;</td><td class="mdescRight">if greater than 0, the response also contains the probabilities of top N tokens for each generated token.  <br /></td></tr>
 <tr class="separator:aec1a06c1c4955dbec27382909f868e62 inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a17d6f47e0e65d41c8f799bc7dded64a2 inherit pub_attribs_classLLMUnity_1_1LLMClient" id="r_a17d6f47e0e65d41c8f799bc7dded64a2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html#a17d6f47e0e65d41c8f799bc7dded64a2">ignoreEos</a> = false</td></tr>
+<tr class="memdesc:a17d6f47e0e65d41c8f799bc7dded64a2 inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="mdescLeft">&#160;</td><td class="mdescRight">ignore end of stream token and continue generating.  <br /></td></tr>
 <tr class="separator:a17d6f47e0e65d41c8f799bc7dded64a2 inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a02caf1395a91da417b24faef2da8c9e1 inherit pub_attribs_classLLMUnity_1_1LLMClient" id="r_a02caf1395a91da417b24faef2da8c9e1"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html#a02caf1395a91da417b24faef2da8c9e1">nKeep</a> = -1</td></tr>
+<tr class="memdesc:a02caf1395a91da417b24faef2da8c9e1 inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="mdescLeft">&#160;</td><td class="mdescRight">number of tokens to retain from the prompt when the model runs out of context (-1 = LLM/LLMClient prompt tokens if setNKeepToPrompt is set to true).  <br /></td></tr>
 <tr class="separator:a02caf1395a91da417b24faef2da8c9e1 inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a81fcd73c45b7b34042b05c67b1e16b96 inherit pub_attribs_classLLMUnity_1_1LLMClient" id="r_a81fcd73c45b7b34042b05c67b1e16b96"><td class="memItemLeft" align="right" valign="top">List&lt; string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html#a81fcd73c45b7b34042b05c67b1e16b96">stop</a> = new List&lt;string&gt;()</td></tr>
+<tr class="memdesc:a81fcd73c45b7b34042b05c67b1e16b96 inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="mdescLeft">&#160;</td><td class="mdescRight">stopwords to stop the LLM in addition to the default stopwords from the chat template.  <br /></td></tr>
 <tr class="separator:a81fcd73c45b7b34042b05c67b1e16b96 inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a18fcb5ad23e14cd2632a6e64c7274823 inherit pub_attribs_classLLMUnity_1_1LLMClient" id="r_a18fcb5ad23e14cd2632a6e64c7274823"><td class="memItemLeft" align="right" valign="top">Dictionary&lt; int, string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html#a18fcb5ad23e14cd2632a6e64c7274823">logitBias</a> = null</td></tr>
+<tr class="memdesc:a18fcb5ad23e14cd2632a6e64c7274823 inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="mdescLeft">&#160;</td><td class="mdescRight">the logit bias option allows to manually adjust the likelihood of specific tokens appearing in the generated text. By providing a token ID and a positive or negative bias value, you can increase or decrease the probability of that token being generated.  <br /></td></tr>
 <tr class="separator:a18fcb5ad23e14cd2632a6e64c7274823 inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaf2da676df5368565c99af5ceef7ac01 inherit pub_attribs_classLLMUnity_1_1LLMClient" id="r_aaf2da676df5368565c99af5ceef7ac01"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html#aaf2da676df5368565c99af5ceef7ac01">grammarString</a></td></tr>
-<tr class="separator:aaf2da676df5368565c99af5ceef7ac01 inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aca2608efb734232233273bb3b375f353 inherit pub_attribs_classLLMUnity_1_1LLMClient" id="r_aca2608efb734232233273bb3b375f353"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html#aca2608efb734232233273bb3b375f353">playerName</a> = &quot;user&quot;</td></tr>
+<tr class="memdesc:aca2608efb734232233273bb3b375f353 inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="mdescLeft">&#160;</td><td class="mdescRight">the name of the player  <br /></td></tr>
 <tr class="separator:aca2608efb734232233273bb3b375f353 inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad701710d1a5b1a97f4c07f9b7a7729e8 inherit pub_attribs_classLLMUnity_1_1LLMClient" id="r_ad701710d1a5b1a97f4c07f9b7a7729e8"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html#ad701710d1a5b1a97f4c07f9b7a7729e8">AIName</a> = &quot;assistant&quot;</td></tr>
+<tr class="memdesc:ad701710d1a5b1a97f4c07f9b7a7729e8 inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="mdescLeft">&#160;</td><td class="mdescRight">the name of the AI  <br /></td></tr>
 <tr class="separator:ad701710d1a5b1a97f4c07f9b7a7729e8 inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0bac4b966e4e6ee344e4ea53d8688b77 inherit pub_attribs_classLLMUnity_1_1LLMClient" id="r_a0bac4b966e4e6ee344e4ea53d8688b77"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html#a0bac4b966e4e6ee344e4ea53d8688b77">prompt</a> = &quot;A chat between a curious human and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the human's questions.&quot;</td></tr>
+<tr class="memdesc:a0bac4b966e4e6ee344e4ea53d8688b77 inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="mdescLeft">&#160;</td><td class="mdescRight">a description of the AI role. This defines the LLM/LLMClient system prompt  <br /></td></tr>
 <tr class="separator:a0bac4b966e4e6ee344e4ea53d8688b77 inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab5da2f03096c5188977952783cd14cf6 inherit pub_attribs_classLLMUnity_1_1LLMClient" id="r_ab5da2f03096c5188977952783cd14cf6"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html#ab5da2f03096c5188977952783cd14cf6">chatTemplate</a> = ChatTemplate.DefaultTemplate</td></tr>
-<tr class="separator:ab5da2f03096c5188977952783cd14cf6 inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0b3d51cd428de51ce195f7c970be908b inherit pub_attribs_classLLMUnity_1_1LLMClient" id="r_a0b3d51cd428de51ce195f7c970be908b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classLLMUnity_1_1ChatTemplate.html">ChatTemplate</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html#a0b3d51cd428de51ce195f7c970be908b">template</a></td></tr>
-<tr class="separator:a0b3d51cd428de51ce195f7c970be908b inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acb8e5c1a69009cfa20a9da73f8e570b6 inherit pub_attribs_classLLMUnity_1_1LLMClient" id="r_acb8e5c1a69009cfa20a9da73f8e570b6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html#acb8e5c1a69009cfa20a9da73f8e570b6">setNKeepToPrompt</a> = true</td></tr>
+<tr class="memdesc:acb8e5c1a69009cfa20a9da73f8e570b6 inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="mdescLeft">&#160;</td><td class="mdescRight">option to set the number of tokens to retain from the prompt (nKeep) based on the LLM/LLMClient system prompt  <br /></td></tr>
 <tr class="separator:acb8e5c1a69009cfa20a9da73f8e570b6 inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
-Static Public Attributes</h2></td></tr>
-<tr class="memitem:a3c0cf0ea0ce53b26546a5f8ffcaa91ff" id="r_a3c0cf0ea0ce53b26546a5f8ffcaa91ff"><td class="memItemLeft" align="right" valign="top">static float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3c0cf0ea0ce53b26546a5f8ffcaa91ff">binariesProgress</a> = 1</td></tr>
-<tr class="separator:a3c0cf0ea0ce53b26546a5f8ffcaa91ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="properties" name="properties"></a>
 Properties</h2></td></tr>
 <tr class="memitem:afc49b104d5f21e13eb1a9d5259e6a71a" id="r_afc49b104d5f21e13eb1a9d5259e6a71a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afc49b104d5f21e13eb1a9d5259e6a71a">serverListening</a> = false<code> [get]</code></td></tr>
+<tr class="memdesc:afc49b104d5f21e13eb1a9d5259e6a71a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Boolean set to true if the server has started and is ready to receive requests, false otherwise.  <br /></td></tr>
 <tr class="separator:afc49b104d5f21e13eb1a9d5259e6a71a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock">
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00015">15</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<div class="textblock"><p>Class implementing the LLM server. </p>
+
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00021">21</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a1553a9009ba6cd7b4040fd76d190daaa" name="a1553a9009ba6cd7b4040fd76d190daaa"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1553a9009ba6cd7b4040fd76d190daaa">&#9670;&#160;</a></span>Awake()</h2>
@@ -343,61 +354,13 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00176">176</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p>The Unity Awake function that initializes the state before the application starts. The following actions are executed: </p>
+<ul>
+<li>existing servers are killed (if killExistingServersOnStart=true)</li>
+<li>the LLM server is started (async if asynchronousStartup, synchronous otherwise) Additionally the Awake of the LLMClient is called to initialise the client part of the LLM object. </li>
+</ul>
 
-</div>
-</div>
-<a id="a3ca6679cc1fd6f5d013bf2ad9173f2c6" name="a3ca6679cc1fd6f5d013bf2ad9173f2c6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3ca6679cc1fd6f5d013bf2ad9173f2c6">&#9670;&#160;</a></span>DownloadModel()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void LLMUnity.LLM.DownloadModel </td>
-          <td>(</td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>optionIndex</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00105">105</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
-
-</div>
-</div>
-<a id="a00b7e0ab8c78bfe30151adcdbdc750c3" name="a00b7e0ab8c78bfe30151adcdbdc750c3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a00b7e0ab8c78bfe30151adcdbdc750c3">&#9670;&#160;</a></span>GetListeningClients()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">List&lt; <a class="el" href="classLLMUnity_1_1LLMClient.html">LLMClient</a> &gt; LLMUnity.LLM.GetListeningClients </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00153">153</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00241">241</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -424,34 +387,9 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00360">360</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p>The Unity OnDestroy function called when the onbject is destroyed. The function StopProcess is called to stop the LLM server. </p>
 
-</div>
-</div>
-<a id="a91e100b72817beab4ccb1c6348c01d22" name="a91e100b72817beab4ccb1c6348c01d22"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a91e100b72817beab4ccb1c6348c01d22">&#9670;&#160;</a></span>SetBinariesProgress()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static void LLMUnity.LLM.SetBinariesProgress </td>
-          <td>(</td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>progress</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00100">100</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00433">433</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -478,7 +416,15 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00142">142</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p>Allows to set a LORA model to use in the LLM. The model provided is copied to the Assets/StreamingAssets folder that allows it to also work in the build. Models supported are in .bin format. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">path</td><td>path to LORA model to use (.bin format)</td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00200">200</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -505,34 +451,15 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00122">122</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p>Allows to set the model used by the LLM. The model provided is copied to the Assets/StreamingAssets folder that allows it to also work in the build. Models supported are in .gguf format. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">path</td><td>path to model to use (.gguf format)</td></tr>
+  </table>
+  </dd>
+</dl>
 
-</div>
-</div>
-<a id="a330d0bcaf7bd3a60a930d0ed64c8c145" name="a330d0bcaf7bd3a60a930d0ed64c8c145"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a330d0bcaf7bd3a60a930d0ed64c8c145">&#9670;&#160;</a></span>SetModelProgress()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void LLMUnity.LLM.SetModelProgress </td>
-          <td>(</td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>progress</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00117">117</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00175">175</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -559,9 +486,26 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Reimplemented from <a class="el" href="classLLMUnity_1_1LLMClient.html">LLMUnity.LLMClient</a>.</p>
+<p>Set the chat template for the LLM/LLMClient. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">templateName</td><td>the chat template to use. The following templates are available:<ul>
+<li>chatml</li>
+<li>alpaca</li>
+<li>mistral chat</li>
+<li>mistral instruct</li>
+<li>llama chat</li>
+<li>llama</li>
+<li>phi </li>
+</ul>
+</td></tr>
+  </table>
+  </dd>
+</dl>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00132">132</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p>Reimplemented from <a class="el" href="classLLMUnity_1_1LLMClient.html#a307b49f96d9786098797df3475927f3f">LLMUnity.LLMClient</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00185">185</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -588,7 +532,9 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00345">345</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p>Allows to stop the LLM server. </p>
+
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00414">414</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -605,7 +551,23 @@ Properties</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00023">23</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p>allows to start the server asynchronously. This is useful to not block Unity while the server is initialised. For example it can be used as follows: </p>
+<div class="fragment"><div class="line"><span class="keywordtype">void</span> Start(){</div>
+<div class="line">    StartCoroutine(Loading());</div>
+<div class="line">    ...</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line">IEnumerator&lt;string&gt; Loading()</div>
+<div class="line">{</div>
+<div class="line">    <span class="comment">// show loading screen</span></div>
+<div class="line">    <span class="keywordflow">while</span> (!llm.serverListening)</div>
+<div class="line">    {</div>
+<div class="line">        yield <span class="keywordflow">return</span> <span class="keyword">null</span>;</div>
+<div class="line">    }</div>
+<div class="line">    Debug.Log(<span class="stringliteral">&quot;Server is ready&quot;</span>);</div>
+<div class="line">}</div>
+</div><!-- fragment --> 
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00053">53</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -621,31 +583,9 @@ Properties</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00030">30</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p>Batch size for prompt processing. </p>
 
-</div>
-</div>
-<a id="a3c0cf0ea0ce53b26546a5f8ffcaa91ff" name="a3c0cf0ea0ce53b26546a5f8ffcaa91ff"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3c0cf0ea0ce53b26546a5f8ffcaa91ff">&#9670;&#160;</a></span>binariesProgress</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">float LLMUnity.LLM.binariesProgress = 1</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00047">47</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00070">70</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -661,7 +601,9 @@ Properties</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00029">29</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p>Size of the prompt context (0 = context size of the model). This is the number of tokens the model can take as input when generating responses. </p>
+
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00068">68</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -677,7 +619,9 @@ Properties</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00022">22</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p>select to log the output of the LLM in the Unity Editor. </p>
+
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00032">32</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -693,7 +637,9 @@ Properties</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00025">25</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p>Select to kill existing servers created by the package at startup. Useful in case of game crashes where the servers didn't have the chance to terminate. </p>
+
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00058">58</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -709,7 +655,9 @@ Properties</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00028">28</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p>the path of the LORA model being used (relative to the Assets/StreamingAssets folder). Models with .bin format are allowed. </p>
+
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00065">65</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -725,55 +673,9 @@ Properties</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00027">27</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p>the path of the model being used (relative to the Assets/StreamingAssets folder). Models with .gguf format are allowed. </p>
 
-</div>
-</div>
-<a id="a681730992c79238a29c3d852b9b2f9c3" name="a681730992c79238a29c3d852b9b2f9c3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a681730992c79238a29c3d852b9b2f9c3">&#9670;&#160;</a></span>modelCopyProgress</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">float LLMUnity.LLM.modelCopyProgress = 1</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00049">49</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
-
-</div>
-</div>
-<a id="a4da128e64337f202585fc1a79d785b36" name="a4da128e64337f202585fc1a79d785b36"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4da128e64337f202585fc1a79d785b36">&#9670;&#160;</a></span>modelHide</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool LLMUnity.LLM.modelHide = true</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00017">17</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
-
-</div>
-</div>
-<a id="a68ed7cad9848d4feb2ce3e3769bb6d87" name="a68ed7cad9848d4feb2ce3e3769bb6d87"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a68ed7cad9848d4feb2ce3e3769bb6d87">&#9670;&#160;</a></span>modelProgress</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">float LLMUnity.LLM.modelProgress = 1</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00048">48</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00062">62</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -789,7 +691,9 @@ Properties</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00020">20</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p>number of model layers to offload to the GPU (0 = GPU not used). Use a large number i.e. &gt;30 to utilise the GPU as much as possible. If the user's GPU is not supported, the LLM will fall back to the CPU </p>
+
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00028">28</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -805,7 +709,9 @@ Properties</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00019">19</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p>number of threads to use (-1 = all) </p>
+
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00024">24</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -821,7 +727,9 @@ Properties</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00021">21</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p>number of prompts that can happen in parallel (-1 = number of LLM/LLMClient objects) </p>
+
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00030">30</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -837,23 +745,9 @@ Properties</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00024">24</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p>select to allow remote access to the server. </p>
 
-</div>
-</div>
-<a id="a5d21fbca3d86e39066f4ac52d3ea7420" name="a5d21fbca3d86e39066f4ac52d3ea7420"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5d21fbca3d86e39066f4ac52d3ea7420">&#9670;&#160;</a></span>SelectedModel</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int LLMUnity.LLM.SelectedModel = 0</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00039">39</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00055">55</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -878,7 +772,9 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00053">53</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p>Boolean set to true if the server has started and is ready to receive requests, false otherwise. </p>
+
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00072">72</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>

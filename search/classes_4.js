@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['ggufreader_0',['GGUFReader',['../classLLMUnity_1_1GGUFReader.html',1,'LLMUnity']]]
+  ['mistralchattemplate_0',['MistralChatTemplate',['../classLLMUnity_1_1MistralChatTemplate.html',1,'LLMUnity']]],
+  ['mistralinstructtemplate_1',['MistralInstructTemplate',['../classLLMUnity_1_1MistralInstructTemplate.html',1,'LLMUnity']]]
 ];

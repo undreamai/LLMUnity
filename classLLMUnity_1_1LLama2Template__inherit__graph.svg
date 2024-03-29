@@ -11,7 +11,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title=" ">
+<g id="a_Node000001"><a xlink:title="Class implementing the LLama2 template.">
 <polygon fill="#999999" stroke="#666666" points="158.5,-74 11.5,-74 11.5,-55 158.5,-55 158.5,-74"/>
 <text text-anchor="middle" x="85" y="-62" font-family="Helvetica,sans-Serif" font-size="10.00">LLMUnity.LLama2Template</text>
 </a>
@@ -20,8 +20,8 @@
 <!-- Node3 -->
 <g id="Node000003" class="node">
 <title>Node3</title>
-<g id="a_Node000003"><a xlink:href="classLLMUnity_1_1LLama2ChatTemplate.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="170,-19 0,-19 0,0 170,0 170,-19"/>
+<g id="a_Node000003"><a xlink:href="classLLMUnity_1_1LLama2ChatTemplate.html" target="_top" xlink:title="Class implementing a modified version of the LLama2 template for chat.">
+<polygon fill="white" stroke="#666666" points="170,-19 0,-19 0,0 170,0 170,-19"/>
 <text text-anchor="middle" x="85" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">LLMUnity.LLama2ChatTemplate</text>
 </a>
 </g>
@@ -38,8 +38,8 @@
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="classLLMUnity_1_1ChatTemplate.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="127,-129 43,-129 43,-110 127,-110 127,-129"/>
+<g id="a_Node000002"><a xlink:href="classLLMUnity_1_1ChatTemplate.html" target="_top" xlink:title="Class implementing the skeleton of a chat template.">
+<polygon fill="white" stroke="#666666" points="127,-129 43,-129 43,-110 127,-110 127,-129"/>
 <text text-anchor="middle" x="85" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">ChatTemplate</text>
 </a>
 </g>

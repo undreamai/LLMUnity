@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['downloadstatus_0',['DownloadStatus',['../classLLMUnity_1_1LLMUnitySetup_1_1DownloadStatus.html',1,'LLMUnity::LLMUnitySetup']]]
+  ['ggufreader_0',['GGUFReader',['../classLLMUnity_1_1GGUFReader.html',1,'LLMUnity']]]
 ];

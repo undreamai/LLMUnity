@@ -11,7 +11,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title=" ">
+<g id="a_Node000001"><a xlink:title="Class implementing the skeleton of a chat template.">
 <polygon fill="#999999" stroke="#666666" points="131,-120 0,-120 0,-101 131,-101 131,-120"/>
 <text text-anchor="middle" x="65.5" y="-108" font-family="Helvetica,sans-Serif" font-size="10.00">LLMUnity.ChatTemplate</text>
 </a>
@@ -20,8 +20,8 @@
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="classLLMUnity_1_1AlpacaTemplate.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="311.5,-216 169.5,-216 169.5,-197 311.5,-197 311.5,-216"/>
+<g id="a_Node000002"><a xlink:href="classLLMUnity_1_1AlpacaTemplate.html" target="_top" xlink:title="Class implementing the Alpaca template.">
+<polygon fill="white" stroke="#666666" points="311.5,-216 169.5,-216 169.5,-197 311.5,-197 311.5,-216"/>
 <text text-anchor="middle" x="240.5" y="-204" font-family="Helvetica,sans-Serif" font-size="10.00">LLMUnity.AlpacaTemplate</text>
 </a>
 </g>
@@ -38,8 +38,8 @@
 <!-- Node3 -->
 <g id="Node000003" class="node">
 <title>Node3</title>
-<g id="a_Node000003"><a xlink:href="classLLMUnity_1_1ChatMLTemplate.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="313,-179 168,-179 168,-160 313,-160 313,-179"/>
+<g id="a_Node000003"><a xlink:href="classLLMUnity_1_1ChatMLTemplate.html" target="_top" xlink:title="Class implementing the ChatML template.">
+<polygon fill="white" stroke="#666666" points="313,-179 168,-179 168,-160 313,-160 313,-179"/>
 <text text-anchor="middle" x="240.5" y="-167" font-family="Helvetica,sans-Serif" font-size="10.00">LLMUnity.ChatMLTemplate</text>
 </a>
 </g>
@@ -56,8 +56,8 @@
 <!-- Node4 -->
 <g id="Node000004" class="node">
 <title>Node4</title>
-<g id="a_Node000004"><a xlink:href="classLLMUnity_1_1LLama2Template.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="314,-142 167,-142 167,-123 314,-123 314,-142"/>
+<g id="a_Node000004"><a xlink:href="classLLMUnity_1_1LLama2Template.html" target="_top" xlink:title="Class implementing the LLama2 template.">
+<polygon fill="white" stroke="#666666" points="314,-142 167,-142 167,-123 314,-123 314,-142"/>
 <text text-anchor="middle" x="240.5" y="-130" font-family="Helvetica,sans-Serif" font-size="10.00">LLMUnity.LLama2Template</text>
 </a>
 </g>
@@ -74,8 +74,8 @@
 <!-- Node6 -->
 <g id="Node000006" class="node">
 <title>Node6</title>
-<g id="a_Node000006"><a xlink:href="classLLMUnity_1_1MistralInstructTemplate.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="307.5,-104.5 173.5,-104.5 173.5,-74.5 307.5,-74.5 307.5,-104.5"/>
+<g id="a_Node000006"><a xlink:href="classLLMUnity_1_1MistralInstructTemplate.html" target="_top" xlink:title="Class implementing the Mistral Instruct template.">
+<polygon fill="white" stroke="#666666" points="307.5,-104.5 173.5,-104.5 173.5,-74.5 307.5,-74.5 307.5,-104.5"/>
 <text text-anchor="start" x="181.5" y="-92.5" font-family="Helvetica,sans-Serif" font-size="10.00">LLMUnity.MistralInstruct</text>
 <text text-anchor="middle" x="240.5" y="-81.5" font-family="Helvetica,sans-Serif" font-size="10.00">Template</text>
 </a>
@@ -93,8 +93,8 @@
 <!-- Node8 -->
 <g id="Node000008" class="node">
 <title>Node8</title>
-<g id="a_Node000008"><a xlink:href="classLLMUnity_1_1Phi2Template.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="305.5,-56 175.5,-56 175.5,-37 305.5,-37 305.5,-56"/>
+<g id="a_Node000008"><a xlink:href="classLLMUnity_1_1Phi2Template.html" target="_top" xlink:title="Class implementing the Phi&#45;2 template.">
+<polygon fill="white" stroke="#666666" points="305.5,-56 175.5,-56 175.5,-37 305.5,-37 305.5,-56"/>
 <text text-anchor="middle" x="240.5" y="-44" font-family="Helvetica,sans-Serif" font-size="10.00">LLMUnity.Phi2Template</text>
 </a>
 </g>
@@ -111,8 +111,8 @@
 <!-- Node9 -->
 <g id="Node000009" class="node">
 <title>Node9</title>
-<g id="a_Node000009"><a xlink:href="classLLMUnity_1_1ZephyrTemplate.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="312,-19 169,-19 169,0 312,0 312,-19"/>
+<g id="a_Node000009"><a xlink:href="classLLMUnity_1_1ZephyrTemplate.html" target="_top" xlink:title="Class implementing the Zephyr template.">
+<polygon fill="white" stroke="#666666" points="312,-19 169,-19 169,0 312,0 312,-19"/>
 <text text-anchor="middle" x="240.5" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">LLMUnity.ZephyrTemplate</text>
 </a>
 </g>
@@ -129,8 +129,8 @@
 <!-- Node5 -->
 <g id="Node000005" class="node">
 <title>Node5</title>
-<g id="a_Node000005"><a xlink:href="classLLMUnity_1_1LLama2ChatTemplate.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="520,-142 350,-142 350,-123 520,-123 520,-142"/>
+<g id="a_Node000005"><a xlink:href="classLLMUnity_1_1LLama2ChatTemplate.html" target="_top" xlink:title="Class implementing a modified version of the LLama2 template for chat.">
+<polygon fill="white" stroke="#666666" points="520,-142 350,-142 350,-123 520,-123 520,-142"/>
 <text text-anchor="middle" x="435" y="-130" font-family="Helvetica,sans-Serif" font-size="10.00">LLMUnity.LLama2ChatTemplate</text>
 </a>
 </g>
@@ -147,8 +147,8 @@
 <!-- Node7 -->
 <g id="Node000007" class="node">
 <title>Node7</title>
-<g id="a_Node000007"><a xlink:href="classLLMUnity_1_1MistralChatTemplate.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="517.5,-99 352.5,-99 352.5,-80 517.5,-80 517.5,-99"/>
+<g id="a_Node000007"><a xlink:href="classLLMUnity_1_1MistralChatTemplate.html" target="_top" xlink:title="Class implementing a modified version of the Mistral Instruct template for chat.">
+<polygon fill="white" stroke="#666666" points="517.5,-99 352.5,-99 352.5,-80 517.5,-80 517.5,-99"/>
 <text text-anchor="middle" x="435" y="-87" font-family="Helvetica,sans-Serif" font-size="10.00">LLMUnity.MistralChatTemplate</text>
 </a>
 </g>

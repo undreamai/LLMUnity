@@ -1,7 +1,11 @@
 var searchData=
 [
-  ['party_20software_20notices_20and_20information_0',['THIRD-PARTY SOFTWARE NOTICES AND INFORMATION',['../md_Third_01Party_01Notices.html',1,'']]],
-  ['phi_202_1',['microsoft/phi-2',['../md_Third_01Party_01Notices.html#autotoc_md21',1,'']]],
-  ['phi_202_20gguf_2',['modified by: TheBloke/phi-2-GGUF',['../md_Third_01Party_01Notices.html#autotoc_md22',1,'']]],
-  ['phi2template_3',['Phi2Template',['../classLLMUnity_1_1Phi2Template.html',1,'LLMUnity']]]
+  ['ondestroy_0',['OnDestroy',['../classLLMUnity_1_1LLM.html#a52ae6076746695d25592f8355a18414e',1,'LLMUnity::LLM']]],
+  ['openhermes_1',['BEE-spoke-data/smol_llama-220M-openhermes',['../md_Third_01Party_01Notices.html#autotoc_md27',1,'']]],
+  ['openhermes_202_205_20mistral_207b_2',['teknium/OpenHermes-2.5-Mistral-7B',['../md_Third_01Party_01Notices.html#autotoc_md23',1,'']]],
+  ['openhermes_202_205_20mistral_207b_20gguf_3',['modified by: TheBloke/OpenHermes-2.5-Mistral-7B-GGUF',['../md_Third_01Party_01Notices.html#autotoc_md24',1,'']]],
+  ['openhermes_20gguf_4',['modified by: afrideva/smol_llama-220M-openhermes-GGUF',['../md_Third_01Party_01Notices.html#autotoc_md28',1,'']]],
+  ['options_5',['Options',['../index.html#autotoc_md8',1,'']]],
+  ['overview_6',['Overview',['../index.html',1,'']]],
+  ['own_20model_7',['Use your own model',['../index.html#autotoc_md7',1,'']]]
 ];

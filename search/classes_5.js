@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['intattribute_0',['IntAttribute',['../classLLMUnity_1_1IntAttribute.html',1,'LLMUnity']]]
+  ['phi2template_0',['Phi2Template',['../classLLMUnity_1_1Phi2Template.html',1,'LLMUnity']]]
 ];

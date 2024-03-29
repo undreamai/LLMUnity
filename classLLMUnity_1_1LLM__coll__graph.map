@@ -1,9 +1,0 @@
-<map id="LLMUnity.LLM" name="LLMUnity.LLM">
-<area shape="rect" id="Node000001" title=" " alt="" coords="99,168,209,193"/>
-<area shape="rect" id="Node000002" href="$classLLMUnity_1_1LLMClient.html" title=" " alt="" coords="111,93,197,119"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="157,133,157,168,151,168,151,133"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="5,5,129,31"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="90,38,144,91,140,95,87,42"/>
-<area shape="rect" id="Node000004" href="$classLLMUnity_1_1ChatTemplate.html" title=" " alt="" coords="153,5,328,31"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="221,42,168,95,164,91,218,38"/>
-</map>

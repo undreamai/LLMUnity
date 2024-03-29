@@ -8,6 +8,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>LLM for Unity: LLMUnity.ChatTemplate Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link rel="shortcut icon" href="logo_tiny.png" type="image/png">
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
 <!-- ... other metadata & script includes ... -->
@@ -31,7 +32,7 @@
 <script type="text/javascript" src="search/search.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
-<link href="doxygen-awesome-custom.css" rel="stylesheet" type="text/css"/>
+<link href="custom.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen-awesome-sidebar-only-darkmode-toggle.css" rel="stylesheet" type="text/css"/>
 </head>
@@ -46,7 +47,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_tiny.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">LLM for Unity
-   &#160;<span id="projectnumber">v1.2.5</span>
+   &#160;<span id="projectnumber">v1.2.6</span>
    </div>
    <div id="projectbrief">Create characters in Unity with LLMs!</div>
   </td>
@@ -116,9 +117,12 @@ $(function(){initNavTree('classLLMUnity_1_1ChatTemplate.html',''); initResizable
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="classLLMUnity_1_1ChatTemplate-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">LLMUnity.ChatTemplate Class Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div></div>
+  <div class="headertitle"><div class="title">LLMUnity.ChatTemplate Class Reference<span class="mlabels"><span class="mlabel">abstract</span></span><div class="ingroups"><a class="el" href="group__template.html">Chat Templates</a></div></div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Class implementing the skeleton of a chat template.  
+ <a href="#details">More...</a></p>
 <div class="dynheader">
 Inheritance diagram for LLMUnity.ChatTemplate:</div>
 <div class="dyncontent">
@@ -127,81 +131,54 @@ Inheritance diagram for LLMUnity.ChatTemplate:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a499df04c8945230f43b33dae77fd0fdb" id="r_a499df04c8945230f43b33dae77fd0fdb"><td class="memItemLeft" align="right" valign="top"><a id="a499df04c8945230f43b33dae77fd0fdb" name="a499df04c8945230f43b33dae77fd0fdb"></a>
-string&#160;</td><td class="memItemRight" valign="bottom"><b>GetName</b> ()</td></tr>
-<tr class="separator:a499df04c8945230f43b33dae77fd0fdb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7725c38b623e19a590ab2311d13b36a1" id="r_a7725c38b623e19a590ab2311d13b36a1"><td class="memItemLeft" align="right" valign="top"><a id="a7725c38b623e19a590ab2311d13b36a1" name="a7725c38b623e19a590ab2311d13b36a1"></a>
-string&#160;</td><td class="memItemRight" valign="bottom"><b>GetDescription</b> ()</td></tr>
-<tr class="separator:a7725c38b623e19a590ab2311d13b36a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aea386f3fcdd35a4a48aa701a9e31f12c" id="r_aea386f3fcdd35a4a48aa701a9e31f12c"><td class="memItemLeft" align="right" valign="top">virtual string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aea386f3fcdd35a4a48aa701a9e31f12c">GetName</a> ()</td></tr>
+<tr class="memdesc:aea386f3fcdd35a4a48aa701a9e31f12c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the chat template name.  <br /></td></tr>
+<tr class="separator:aea386f3fcdd35a4a48aa701a9e31f12c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af073ef07917d61eefd6f2d861657fd38" id="r_af073ef07917d61eefd6f2d861657fd38"><td class="memItemLeft" align="right" valign="top">virtual string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af073ef07917d61eefd6f2d861657fd38">GetDescription</a> ()</td></tr>
+<tr class="memdesc:af073ef07917d61eefd6f2d861657fd38"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the chat template description.  <br /></td></tr>
+<tr class="separator:af073ef07917d61eefd6f2d861657fd38"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa5bde3b4d2f7d2202647e10d37927010" id="r_aa5bde3b4d2f7d2202647e10d37927010"><td class="memItemLeft" align="right" valign="top">virtual string[]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa5bde3b4d2f7d2202647e10d37927010">GetNameMatches</a> ()</td></tr>
+<tr class="memdesc:aa5bde3b4d2f7d2202647e10d37927010"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns an array of names that can be used to match the chat template.  <br /></td></tr>
 <tr class="separator:aa5bde3b4d2f7d2202647e10d37927010"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a503d59c8232b18f0b9ad139f438d186f" id="r_a503d59c8232b18f0b9ad139f438d186f"><td class="memItemLeft" align="right" valign="top">virtual string[]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a503d59c8232b18f0b9ad139f438d186f">GetChatTemplateMatches</a> ()</td></tr>
+<tr class="memdesc:a503d59c8232b18f0b9ad139f438d186f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns an array of jinja templates that can be used to match the chat template.  <br /></td></tr>
 <tr class="separator:a503d59c8232b18f0b9ad139f438d186f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a345c1af65e91f59bd06152c31a5f01e0" id="r_a345c1af65e91f59bd06152c31a5f01e0"><td class="memItemLeft" align="right" valign="top"><a id="a345c1af65e91f59bd06152c31a5f01e0" name="a345c1af65e91f59bd06152c31a5f01e0"></a>
-string[]&#160;</td><td class="memItemRight" valign="bottom"><b>GetStop</b> (string playerName, string AIName)</td></tr>
-<tr class="separator:a345c1af65e91f59bd06152c31a5f01e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a78929b86a83f20d316e70c514857985c" id="r_a78929b86a83f20d316e70c514857985c"><td class="memItemLeft" align="right" valign="top">virtual string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a78929b86a83f20d316e70c514857985c">ComputePrompt</a> (List&lt; <a class="el" href="structLLMUnity_1_1ChatMessage.html">ChatMessage</a> &gt; messages, string AIName)</td></tr>
+<tr class="memitem:a7d976672375d79fa276a3b7463ba9ae1" id="r_a7d976672375d79fa276a3b7463ba9ae1"><td class="memItemLeft" align="right" valign="top">virtual string[]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7d976672375d79fa276a3b7463ba9ae1">GetStop</a> (string playerName, string AIName)</td></tr>
+<tr class="memdesc:a7d976672375d79fa276a3b7463ba9ae1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns an array of the stopwords used by the template.  <br /></td></tr>
+<tr class="separator:a7d976672375d79fa276a3b7463ba9ae1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a78929b86a83f20d316e70c514857985c" id="r_a78929b86a83f20d316e70c514857985c"><td class="memItemLeft" align="right" valign="top">virtual string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a78929b86a83f20d316e70c514857985c">ComputePrompt</a> (List&lt; ChatMessage &gt; messages, string AIName)</td></tr>
+<tr class="memdesc:a78929b86a83f20d316e70c514857985c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs the prompt using the template based on a list of ChatMessages.  <br /></td></tr>
 <tr class="separator:a78929b86a83f20d316e70c514857985c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abb5add963f2a920d57461f3dd71ce5a5" id="r_abb5add963f2a920d57461f3dd71ce5a5"><td class="memItemLeft" align="right" valign="top">string[]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abb5add963f2a920d57461f3dd71ce5a5">AddStopNewlines</a> (string[] stop)</td></tr>
-<tr class="separator:abb5add963f2a920d57461f3dd71ce5a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a9484e2bfdaf1b0a6b5d2079729358fb0" id="r_a9484e2bfdaf1b0a6b5d2079729358fb0"><td class="memItemLeft" align="right" valign="top">static string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9484e2bfdaf1b0a6b5d2079729358fb0">FromName</a> (string name)</td></tr>
+<tr class="memdesc:a9484e2bfdaf1b0a6b5d2079729358fb0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines the chat template name from a search name. It searches if any of the chat template names is a substring of the provided name.  <br /></td></tr>
 <tr class="separator:a9484e2bfdaf1b0a6b5d2079729358fb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af8b3b960dee10720d443f82aba8850a6" id="r_af8b3b960dee10720d443f82aba8850a6"><td class="memItemLeft" align="right" valign="top">static string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af8b3b960dee10720d443f82aba8850a6">FromTemplate</a> (string template)</td></tr>
+<tr class="memdesc:af8b3b960dee10720d443f82aba8850a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines the chat template name from a Jinja template.  <br /></td></tr>
 <tr class="separator:af8b3b960dee10720d443f82aba8850a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4fa8424a115565f5c9b9b9afc3edd458" id="r_a4fa8424a115565f5c9b9b9afc3edd458"><td class="memItemLeft" align="right" valign="top">static string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4fa8424a115565f5c9b9b9afc3edd458">FromGGUF</a> (string path)</td></tr>
+<tr class="memdesc:a4fa8424a115565f5c9b9b9afc3edd458"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines the chat template name from a GGUF file. It reads the GGUF file and then determines the chat template name based on:  <br /></td></tr>
 <tr class="separator:a4fa8424a115565f5c9b9b9afc3edd458"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abc33937939b4e8ba857a44af187aee19" id="r_abc33937939b4e8ba857a44af187aee19"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classLLMUnity_1_1ChatTemplate.html">ChatTemplate</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abc33937939b4e8ba857a44af187aee19">GetTemplate</a> (string template)</td></tr>
+<tr class="memdesc:abc33937939b4e8ba857a44af187aee19"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates the chat template based on the provided chat template name.  <br /></td></tr>
 <tr class="separator:abc33937939b4e8ba857a44af187aee19"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
 <tr class="memitem:afd8535970354d20efc257916e725dcef" id="r_afd8535970354d20efc257916e725dcef"><td class="memItemLeft" align="right" valign="top">static string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afd8535970354d20efc257916e725dcef">DefaultTemplate</a></td></tr>
+<tr class="memdesc:afd8535970354d20efc257916e725dcef"><td class="mdescLeft">&#160;</td><td class="mdescRight">the default template used when it can't be determined ("chatml")  <br /></td></tr>
 <tr class="separator:afd8535970354d20efc257916e725dcef"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4bad7f1d2fcc5f867ac1e5c8f2c583cd" id="r_a4bad7f1d2fcc5f867ac1e5c8f2c583cd"><td class="memItemLeft" align="right" valign="top">static Type[]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4bad7f1d2fcc5f867ac1e5c8f2c583cd">templateClasses</a></td></tr>
-<tr class="separator:a4bad7f1d2fcc5f867ac1e5c8f2c583cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5e95933d2731c65a4416b3e0f45b6db6" id="r_a5e95933d2731c65a4416b3e0f45b6db6"><td class="memItemLeft" align="right" valign="top">static Dictionary&lt; string, Type &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5e95933d2731c65a4416b3e0f45b6db6">templates</a></td></tr>
-<tr class="separator:a5e95933d2731c65a4416b3e0f45b6db6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5d2b3563e8cb3d52fdddf35a4364dccd" id="r_a5d2b3563e8cb3d52fdddf35a4364dccd"><td class="memItemLeft" align="right" valign="top">static Dictionary&lt; string, string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5d2b3563e8cb3d52fdddf35a4364dccd">templatesDescription</a></td></tr>
-<tr class="separator:a5d2b3563e8cb3d52fdddf35a4364dccd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa44f7f1f3ff88b697b4f94c2e210e31e" id="r_aa44f7f1f3ff88b697b4f94c2e210e31e"><td class="memItemLeft" align="right" valign="top">static Dictionary&lt; string, string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa44f7f1f3ff88b697b4f94c2e210e31e">modelTemplates</a></td></tr>
-<tr class="separator:aa44f7f1f3ff88b697b4f94c2e210e31e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad09b15e5ba2358999e2e4654e3082b49" id="r_ad09b15e5ba2358999e2e4654e3082b49"><td class="memItemLeft" align="right" valign="top">static Dictionary&lt; string, string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad09b15e5ba2358999e2e4654e3082b49">chatTemplates</a></td></tr>
-<tr class="separator:ad09b15e5ba2358999e2e4654e3082b49"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5cb5c2a563af942bbd3101730c2c4e95" id="r_a5cb5c2a563af942bbd3101730c2c4e95"><td class="memItemLeft" align="right" valign="top">static Dictionary&lt; string, <a class="el" href="classLLMUnity_1_1ChatTemplate.html">ChatTemplate</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5cb5c2a563af942bbd3101730c2c4e95">templates</a></td></tr>
+<tr class="memdesc:a5cb5c2a563af942bbd3101730c2c4e95"><td class="mdescLeft">&#160;</td><td class="mdescRight">a dictionary from chat template name to chat template type. It can be used to get the chat template names supported with:  <br /></td></tr>
+<tr class="separator:a5cb5c2a563af942bbd3101730c2c4e95"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock">
-<p class="definition">Definition at line <a class="el" href="LLMChatTemplates_8cs_source.html#l00008">8</a> of file <a class="el" href="LLMChatTemplates_8cs_source.html">LLMChatTemplates.cs</a>.</p>
+<div class="textblock"><p>Class implementing the skeleton of a chat template. </p>
+
+<p class="definition">Definition at line <a class="el" href="LLMChatTemplates_8cs_source.html#l00013">13</a> of file <a class="el" href="LLMChatTemplates_8cs_source.html">LLMChatTemplates.cs</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="abb5add963f2a920d57461f3dd71ce5a5" name="abb5add963f2a920d57461f3dd71ce5a5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abb5add963f2a920d57461f3dd71ce5a5">&#9670;&#160;</a></span>AddStopNewlines()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">string[] LLMUnity.ChatTemplate.AddStopNewlines </td>
-          <td>(</td>
-          <td class="paramtype">string[]</td>          <td class="paramname"><span class="paramname"><em>stop</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="LLMChatTemplates_8cs_source.html#l00147">147</a> of file <a class="el" href="LLMChatTemplates_8cs_source.html">LLMChatTemplates.cs</a>.</p>
-
-</div>
-</div>
 <a id="a78929b86a83f20d316e70c514857985c" name="a78929b86a83f20d316e70c514857985c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a78929b86a83f20d316e70c514857985c">&#9670;&#160;</a></span>ComputePrompt()</h2>
 
@@ -214,7 +191,7 @@ Static Public Attributes</h2></td></tr>
         <tr>
           <td class="memname">virtual string LLMUnity.ChatTemplate.ComputePrompt </td>
           <td>(</td>
-          <td class="paramtype">List&lt; <a class="el" href="structLLMUnity_1_1ChatMessage.html">ChatMessage</a> &gt;</td>          <td class="paramname"><span class="paramname"><em>messages</em>, </span></td>
+          <td class="paramtype">List&lt; ChatMessage &gt;</td>          <td class="paramname"><span class="paramname"><em>messages</em>, </span></td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -229,7 +206,17 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMChatTemplates_8cs_source.html#l00123">123</a> of file <a class="el" href="LLMChatTemplates_8cs_source.html">LLMChatTemplates.cs</a>.</p>
+<p>Constructs the prompt using the template based on a list of ChatMessages. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">messages</td><td>list of ChatMessages e.g. the LLMClient chat </td></tr>
+    <tr><td class="paramname">AIName</td><td>the AI name </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>prompt</dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="LLMChatTemplates_8cs_source.html#l00164">164</a> of file <a class="el" href="LLMChatTemplates_8cs_source.html">LLMChatTemplates.cs</a>.</p>
 
 </div>
 </div>
@@ -256,7 +243,22 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMChatTemplates_8cs_source.html#l00075">75</a> of file <a class="el" href="LLMChatTemplates_8cs_source.html">LLMChatTemplates.cs</a>.</p>
+<p>Determines the chat template name from a GGUF file. It reads the GGUF file and then determines the chat template name based on: </p>
+<ul>
+<li>the jinja template defined in the file (if it exists and matched)</li>
+<li>the model name defined in the file (if it exists and matched)</li>
+<li>the filename defined in the file (if matched)</li>
+<li>otherwises uses the DefaultTemplate</li>
+</ul>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">path</td><td>GGUF file path</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>template name</dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="LLMChatTemplates_8cs_source.html#l00111">111</a> of file <a class="el" href="LLMChatTemplates_8cs_source.html">LLMChatTemplates.cs</a>.</p>
 
 </div>
 </div>
@@ -283,7 +285,16 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMChatTemplates_8cs_source.html#l00057">57</a> of file <a class="el" href="LLMChatTemplates_8cs_source.html">LLMChatTemplates.cs</a>.</p>
+<p>Determines the chat template name from a search name. It searches if any of the chat template names is a substring of the provided name. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>search name</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>chat template name</dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="LLMChatTemplates_8cs_source.html#l00076">76</a> of file <a class="el" href="LLMChatTemplates_8cs_source.html">LLMChatTemplates.cs</a>.</p>
 
 </div>
 </div>
@@ -310,7 +321,16 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMChatTemplates_8cs_source.html#l00067">67</a> of file <a class="el" href="LLMChatTemplates_8cs_source.html">LLMChatTemplates.cs</a>.</p>
+<p>Determines the chat template name from a Jinja template. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">template</td><td>Jinja template</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>chat template name</dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="LLMChatTemplates_8cs_source.html#l00092">92</a> of file <a class="el" href="LLMChatTemplates_8cs_source.html">LLMChatTemplates.cs</a>.</p>
 
 </div>
 </div>
@@ -337,7 +357,73 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMChatTemplates_8cs_source.html#l00110">110</a> of file <a class="el" href="LLMChatTemplates_8cs_source.html">LLMChatTemplates.cs</a>.</p>
+<p>Returns an array of jinja templates that can be used to match the chat template. </p>
+
+<p>Reimplemented in <a class="el" href="classLLMUnity_1_1ChatMLTemplate.html#a4241e51e33bf04e81b83a5dd90a8099f">LLMUnity.ChatMLTemplate</a>, <a class="el" href="classLLMUnity_1_1MistralChatTemplate.html#a1cddf6f82f525215826ff43d1c58cfa1">LLMUnity.MistralChatTemplate</a>, and <a class="el" href="classLLMUnity_1_1ZephyrTemplate.html#a11040e0f56935627127f0df8e44d6826">LLMUnity.ZephyrTemplate</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="LLMChatTemplates_8cs_source.html#l00146">146</a> of file <a class="el" href="LLMChatTemplates_8cs_source.html">LLMChatTemplates.cs</a>.</p>
+
+</div>
+</div>
+<a id="af073ef07917d61eefd6f2d861657fd38" name="af073ef07917d61eefd6f2d861657fd38"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af073ef07917d61eefd6f2d861657fd38">&#9670;&#160;</a></span>GetDescription()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual string LLMUnity.ChatTemplate.GetDescription </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns the chat template description. </p>
+
+<p>Reimplemented in <a class="el" href="classLLMUnity_1_1ChatMLTemplate.html#a26bbe9c4053a08341b0f193046b2addf">LLMUnity.ChatMLTemplate</a>, <a class="el" href="classLLMUnity_1_1LLama2Template.html#a6fa0b931bec1a5e13e1f26d12405348b">LLMUnity.LLama2Template</a>, <a class="el" href="classLLMUnity_1_1LLama2ChatTemplate.html#ad88d400a086767bd2708762d23efd23a">LLMUnity.LLama2ChatTemplate</a>, <a class="el" href="classLLMUnity_1_1MistralInstructTemplate.html#a120da12a660973c9f8e47736ee85ba4b">LLMUnity.MistralInstructTemplate</a>, <a class="el" href="classLLMUnity_1_1MistralChatTemplate.html#a1b8756e434495e19daef02a467b4007e">LLMUnity.MistralChatTemplate</a>, <a class="el" href="classLLMUnity_1_1AlpacaTemplate.html#a52132ef47bbf57bcdf8fe56fa071091d">LLMUnity.AlpacaTemplate</a>, <a class="el" href="classLLMUnity_1_1Phi2Template.html#afa24c2465612d8dd2ac268bd1c09e976">LLMUnity.Phi2Template</a>, and <a class="el" href="classLLMUnity_1_1ZephyrTemplate.html#a13543a1685832fef5c0d7665ca59690e">LLMUnity.ZephyrTemplate</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="LLMChatTemplates_8cs_source.html#l00142">142</a> of file <a class="el" href="LLMChatTemplates_8cs_source.html">LLMChatTemplates.cs</a>.</p>
+
+</div>
+</div>
+<a id="aea386f3fcdd35a4a48aa701a9e31f12c" name="aea386f3fcdd35a4a48aa701a9e31f12c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aea386f3fcdd35a4a48aa701a9e31f12c">&#9670;&#160;</a></span>GetName()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual string LLMUnity.ChatTemplate.GetName </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns the chat template name. </p>
+
+<p>Reimplemented in <a class="el" href="classLLMUnity_1_1ChatMLTemplate.html#a1d9f021ff689903e1c8625a8fbaeb8e7">LLMUnity.ChatMLTemplate</a>, <a class="el" href="classLLMUnity_1_1LLama2Template.html#a66db47761f8977e23a1ed1ccef9700d4">LLMUnity.LLama2Template</a>, <a class="el" href="classLLMUnity_1_1LLama2ChatTemplate.html#ae62b9eba6fadfa738d72d05335e51ca8">LLMUnity.LLama2ChatTemplate</a>, <a class="el" href="classLLMUnity_1_1MistralInstructTemplate.html#abe0ac3c67d65e29ccb1ba197db19e82f">LLMUnity.MistralInstructTemplate</a>, <a class="el" href="classLLMUnity_1_1MistralChatTemplate.html#a6f65a645b359896291729f41d461c042">LLMUnity.MistralChatTemplate</a>, <a class="el" href="classLLMUnity_1_1AlpacaTemplate.html#a6b04ec010e4f61340718f975c97d1398">LLMUnity.AlpacaTemplate</a>, <a class="el" href="classLLMUnity_1_1Phi2Template.html#a4dfcafd21e88413289da6b02f95ea6e3">LLMUnity.Phi2Template</a>, and <a class="el" href="classLLMUnity_1_1ZephyrTemplate.html#a1f545fb682114931644a3ba9e031db21">LLMUnity.ZephyrTemplate</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="LLMChatTemplates_8cs_source.html#l00140">140</a> of file <a class="el" href="LLMChatTemplates_8cs_source.html">LLMChatTemplates.cs</a>.</p>
 
 </div>
 </div>
@@ -364,7 +450,46 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMChatTemplates_8cs_source.html#l00109">109</a> of file <a class="el" href="LLMChatTemplates_8cs_source.html">LLMChatTemplates.cs</a>.</p>
+<p>Returns an array of names that can be used to match the chat template. </p>
+
+<p>Reimplemented in <a class="el" href="classLLMUnity_1_1ChatMLTemplate.html#a9bab79c8657fb0cade386c73c1862c98">LLMUnity.ChatMLTemplate</a>, <a class="el" href="classLLMUnity_1_1LLama2ChatTemplate.html#ae17b29bf5279099252a07bbfc57acd5a">LLMUnity.LLama2ChatTemplate</a>, <a class="el" href="classLLMUnity_1_1MistralChatTemplate.html#a36c069e46c9055fd85990e704a7d9ec2">LLMUnity.MistralChatTemplate</a>, <a class="el" href="classLLMUnity_1_1AlpacaTemplate.html#a85ae94c9000b469251ce2a3573f7faa8">LLMUnity.AlpacaTemplate</a>, <a class="el" href="classLLMUnity_1_1Phi2Template.html#a0508c53ed231fe4e7ef172af2f7f58cf">LLMUnity.Phi2Template</a>, and <a class="el" href="classLLMUnity_1_1ZephyrTemplate.html#ab2f104285e1141a9163b0b0db450aeb2">LLMUnity.ZephyrTemplate</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="LLMChatTemplates_8cs_source.html#l00144">144</a> of file <a class="el" href="LLMChatTemplates_8cs_source.html">LLMChatTemplates.cs</a>.</p>
+
+</div>
+</div>
+<a id="a7d976672375d79fa276a3b7463ba9ae1" name="a7d976672375d79fa276a3b7463ba9ae1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7d976672375d79fa276a3b7463ba9ae1">&#9670;&#160;</a></span>GetStop()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual string[] LLMUnity.ChatTemplate.GetStop </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>playerName</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>AIName</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns an array of the stopwords used by the template. </p>
+
+<p>Reimplemented in <a class="el" href="classLLMUnity_1_1ChatMLTemplate.html#ad51874f3cd66d9566fdef109414ecebc">LLMUnity.ChatMLTemplate</a>, <a class="el" href="classLLMUnity_1_1LLama2Template.html#abf49a5fcb35831daf546ecf0d6c7b821">LLMUnity.LLama2Template</a>, <a class="el" href="classLLMUnity_1_1LLama2ChatTemplate.html#a54a2b3ff92d00ec6fa9cc592efd8716b">LLMUnity.LLama2ChatTemplate</a>, <a class="el" href="classLLMUnity_1_1MistralInstructTemplate.html#ad1c788b6cbfca6b97303a77d8f7bf35a">LLMUnity.MistralInstructTemplate</a>, <a class="el" href="classLLMUnity_1_1MistralChatTemplate.html#a798b015a67969d291ab0a3fa0cea1b77">LLMUnity.MistralChatTemplate</a>, <a class="el" href="classLLMUnity_1_1AlpacaTemplate.html#a0e3cf2b8a9d97fa13a098c89508fdf3c">LLMUnity.AlpacaTemplate</a>, <a class="el" href="classLLMUnity_1_1Phi2Template.html#ac6c6a719728bafded61b57547bc16fa0">LLMUnity.Phi2Template</a>, and <a class="el" href="classLLMUnity_1_1ZephyrTemplate.html#a298cc6658f437ee19b984bcdd6af864c">LLMUnity.ZephyrTemplate</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="LLMChatTemplates_8cs_source.html#l00148">148</a> of file <a class="el" href="LLMChatTemplates_8cs_source.html">LLMChatTemplates.cs</a>.</p>
 
 </div>
 </div>
@@ -391,35 +516,20 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMChatTemplates_8cs_source.html#l00102">102</a> of file <a class="el" href="LLMChatTemplates_8cs_source.html">LLMChatTemplates.cs</a>.</p>
+<p>Creates the chat template based on the provided chat template name. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">template</td><td>chat template name</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>chat template</dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="LLMChatTemplates_8cs_source.html#l00134">134</a> of file <a class="el" href="LLMChatTemplates_8cs_source.html">LLMChatTemplates.cs</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="ad09b15e5ba2358999e2e4654e3082b49" name="ad09b15e5ba2358999e2e4654e3082b49"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad09b15e5ba2358999e2e4654e3082b49">&#9670;&#160;</a></span>chatTemplates</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">Dictionary&lt;string, string&gt; LLMUnity.ChatTemplate.chatTemplates</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="LLMChatTemplates_8cs_source.html#l00015">15</a> of file <a class="el" href="LLMChatTemplates_8cs_source.html">LLMChatTemplates.cs</a>.</p>
-
-</div>
-</div>
 <a id="afd8535970354d20efc257916e725dcef" name="afd8535970354d20efc257916e725dcef"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#afd8535970354d20efc257916e725dcef">&#9670;&#160;</a></span>DefaultTemplate</h2>
 
@@ -440,12 +550,14 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMChatTemplates_8cs_source.html#l00010">10</a> of file <a class="el" href="LLMChatTemplates_8cs_source.html">LLMChatTemplates.cs</a>.</p>
+<p>the default template used when it can't be determined ("chatml") </p>
+
+<p class="definition">Definition at line <a class="el" href="LLMChatTemplates_8cs_source.html#l00016">16</a> of file <a class="el" href="LLMChatTemplates_8cs_source.html">LLMChatTemplates.cs</a>.</p>
 
 </div>
 </div>
-<a id="aa44f7f1f3ff88b697b4f94c2e210e31e" name="aa44f7f1f3ff88b697b4f94c2e210e31e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa44f7f1f3ff88b697b4f94c2e210e31e">&#9670;&#160;</a></span>modelTemplates</h2>
+<a id="a5cb5c2a563af942bbd3101730c2c4e95" name="a5cb5c2a563af942bbd3101730c2c4e95"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5cb5c2a563af942bbd3101730c2c4e95">&#9670;&#160;</a></span>templates</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -454,7 +566,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Dictionary&lt;string, string&gt; LLMUnity.ChatTemplate.modelTemplates</td>
+          <td class="memname">Dictionary&lt;string, <a class="el" href="classLLMUnity_1_1ChatTemplate.html">ChatTemplate</a>&gt; LLMUnity.ChatTemplate.templates</td>
         </tr>
       </table>
   </td>
@@ -464,79 +576,12 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMChatTemplates_8cs_source.html#l00014">14</a> of file <a class="el" href="LLMChatTemplates_8cs_source.html">LLMChatTemplates.cs</a>.</p>
-
-</div>
-</div>
-<a id="a4bad7f1d2fcc5f867ac1e5c8f2c583cd" name="a4bad7f1d2fcc5f867ac1e5c8f2c583cd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4bad7f1d2fcc5f867ac1e5c8f2c583cd">&#9670;&#160;</a></span>templateClasses</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">Type [] LLMUnity.ChatTemplate.templateClasses</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="LLMChatTemplates_8cs_source.html#l00011">11</a> of file <a class="el" href="LLMChatTemplates_8cs_source.html">LLMChatTemplates.cs</a>.</p>
-
-</div>
-</div>
-<a id="a5e95933d2731c65a4416b3e0f45b6db6" name="a5e95933d2731c65a4416b3e0f45b6db6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5e95933d2731c65a4416b3e0f45b6db6">&#9670;&#160;</a></span>templates</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">Dictionary&lt;string, Type&gt; LLMUnity.ChatTemplate.templates</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="LLMChatTemplates_8cs_source.html#l00012">12</a> of file <a class="el" href="LLMChatTemplates_8cs_source.html">LLMChatTemplates.cs</a>.</p>
-
-</div>
-</div>
-<a id="a5d2b3563e8cb3d52fdddf35a4364dccd" name="a5d2b3563e8cb3d52fdddf35a4364dccd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5d2b3563e8cb3d52fdddf35a4364dccd">&#9670;&#160;</a></span>templatesDescription</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">Dictionary&lt;string, string&gt; LLMUnity.ChatTemplate.templatesDescription</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="LLMChatTemplates_8cs_source.html#l00013">13</a> of file <a class="el" href="LLMChatTemplates_8cs_source.html">LLMChatTemplates.cs</a>.</p>
+<p>a dictionary from chat template name to chat template type. It can be used to get the chat template names supported with: </p>
+<div class="fragment"><div class="line"><a class="code hl_class" href="classLLMUnity_1_1ChatTemplate.html">ChatTemplate</a>.<a class="code hl_variable" href="#a5cb5c2a563af942bbd3101730c2c4e95">templates</a>.Keys</div>
+<div class="ttc" id="aclassLLMUnity_1_1ChatTemplate_html"><div class="ttname"><a href="classLLMUnity_1_1ChatTemplate.html">LLMUnity.ChatTemplate</a></div><div class="ttdoc">Class implementing the skeleton of a chat template.</div><div class="ttdef"><b>Definition</b> <a href="LLMChatTemplates_8cs_source.html#l00013">LLMChatTemplates.cs:14</a></div></div>
+<div class="ttc" id="aclassLLMUnity_1_1ChatTemplate_html_a5cb5c2a563af942bbd3101730c2c4e95"><div class="ttname"><a href="#a5cb5c2a563af942bbd3101730c2c4e95">LLMUnity.ChatTemplate.templates</a></div><div class="ttdeci">static Dictionary&lt; string, ChatTemplate &gt; templates</div><div class="ttdoc">a dictionary from chat template name to chat template type. It can be used to get the chat template n...</div><div class="ttdef"><b>Definition</b> <a href="LLMChatTemplates_8cs_source.html#l00023">LLMChatTemplates.cs:23</a></div></div>
+</div><!-- fragment --> 
+<p class="definition">Definition at line <a class="el" href="LLMChatTemplates_8cs_source.html#l00023">23</a> of file <a class="el" href="LLMChatTemplates_8cs_source.html">LLMChatTemplates.cs</a>.</p>
 
 </div>
 </div>

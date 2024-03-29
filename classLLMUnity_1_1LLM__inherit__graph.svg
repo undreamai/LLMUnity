@@ -11,7 +11,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title=" ">
+<g id="a_Node000001"><a xlink:title="Class implementing the LLM server.">
 <polygon fill="#999999" stroke="#666666" points="88,-19 5,-19 5,0 88,0 88,-19"/>
 <text text-anchor="middle" x="46.5" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">LLMUnity.LLM</text>
 </a>
@@ -20,8 +20,8 @@
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="classLLMUnity_1_1LLMClient.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="79,-74 14,-74 14,-55 79,-55 79,-74"/>
+<g id="a_Node000002"><a xlink:href="classLLMUnity_1_1LLMClient.html" target="_top" xlink:title="Class implementing the LLM client.">
+<polygon fill="white" stroke="#666666" points="79,-74 14,-74 14,-55 79,-55 79,-74"/>
 <text text-anchor="middle" x="46.5" y="-62" font-family="Helvetica,sans-Serif" font-size="10.00">LLMClient</text>
 </a>
 </g>

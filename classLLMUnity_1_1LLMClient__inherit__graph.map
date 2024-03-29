@@ -1,6 +1,6 @@
 <map id="LLMUnity.LLMClient" name="LLMUnity.LLMClient">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,79,155,104"/>
-<area shape="rect" id="Node000003" href="$classLLMUnity_1_1LLM.html" title=" " alt="" coords="25,152,135,177"/>
+<area shape="rect" id="Node000001" title="Class implementing the LLM client." alt="" coords="5,79,155,104"/>
+<area shape="rect" id="Node000003" href="$classLLMUnity_1_1LLM.html" title="Class implementing the LLM server." alt="" coords="25,152,135,177"/>
 <area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="83,118,83,152,77,152,77,118"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="18,5,142,31"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="83,44,83,79,77,79,77,44"/>

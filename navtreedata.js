@@ -24,37 +24,16 @@
 */
 var NAVTREE =
 [
-  [ "LLM for Unity", "index.html", [
+  [ "Package", "index.html", [
     [ "Overview", "index.html", "index" ],
-    [ "LICENSE", "md_LICENSE.html", null ],
-    [ "THIRD-PARTY SOFTWARE NOTICES AND INFORMATION", "md_Third_01Party_01Notices.html", [
-      [ "Software", "md_Third_01Party_01Notices.html#autotoc_md14", [
-        [ "llama.cpp", "md_Third_01Party_01Notices.html#autotoc_md15", null ],
-        [ "llamafile", "md_Third_01Party_01Notices.html#autotoc_md16", null ]
-      ] ],
-      [ "Models", "md_Third_01Party_01Notices.html#autotoc_md18", [
-        [ "mistralai/Mistral-7B-Instruct-v0.2", "md_Third_01Party_01Notices.html#autotoc_md19", null ],
-        [ "microsoft/phi-2", "md_Third_01Party_01Notices.html#autotoc_md21", null ],
-        [ "teknium/OpenHermes-2.5-Mistral-7B", "md_Third_01Party_01Notices.html#autotoc_md23", null ]
-      ] ],
-      [ "Testing", "md_Third_01Party_01Notices.html#autotoc_md26", [
-        [ "BEE-spoke-data/smol_llama-220M-openhermes", "md_Third_01Party_01Notices.html#autotoc_md27", null ]
-      ] ]
-    ] ],
-    [ "Classes", "annotated.html", [
-      [ "Class List", "annotated.html", "annotated_dup" ],
-      [ "Class Index", "classes.html", null ],
-      [ "Class Hierarchy", "hierarchy.html", "hierarchy" ]
-    ] ],
-    [ "Files", "files.html", [
-      [ "File List", "files.html", "files_dup" ]
-    ] ]
+    [ "API", "topics.html", "topics" ],
+    [ "Code↗", "^https://github.com/undreamai/LLMUnity", null ]
   ] ]
 ];
 
 var NAVTREEINDEX =
 [
-"LLMChatTemplates_8cs_source.html"
+"classLLMUnity_1_1AlpacaTemplate.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

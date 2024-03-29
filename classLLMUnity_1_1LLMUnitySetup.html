@@ -8,6 +8,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>LLM for Unity: LLMUnity.LLMUnitySetup Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link rel="shortcut icon" href="logo_tiny.png" type="image/png">
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
 <!-- ... other metadata & script includes ... -->
@@ -31,7 +32,7 @@
 <script type="text/javascript" src="search/search.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
-<link href="doxygen-awesome-custom.css" rel="stylesheet" type="text/css"/>
+<link href="custom.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen-awesome-sidebar-only-darkmode-toggle.css" rel="stylesheet" type="text/css"/>
 </head>
@@ -46,7 +47,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_tiny.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">LLM for Unity
-   &#160;<span id="projectnumber">v1.2.5</span>
+   &#160;<span id="projectnumber">v1.2.6</span>
    </div>
    <div id="projectbrief">Create characters in Unity with LLMs!</div>
   </td>
@@ -112,413 +113,31 @@ $(function(){initNavTree('classLLMUnity_1_1LLMUnitySetup.html',''); initResizabl
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
-<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="classLLMUnity_1_1LLMUnitySetup-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">LLMUnity.LLMUnitySetup Class Reference</div></div>
+  <div class="headertitle"><div class="title">LLMUnity.LLMUnitySetup Class Reference<div class="ingroups"><a class="el" href="group__utils.html">Utils</a></div></div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Class implementing helper functions for setup and process management.  
+ <a href="#details">More...</a></p>
 <div class="dynheader">
 Inheritance diagram for LLMUnity.LLMUnitySetup:</div>
 <div class="dyncontent">
 <div class="center"><iframe scrolling="no" frameborder="0" src="classLLMUnity_1_1LLMUnitySetup__inherit__graph.svg" width="194" height="110"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
-<div class="dynheader">
-Collaboration diagram for LLMUnity.LLMUnitySetup:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classLLMUnity_1_1LLMUnitySetup__coll__graph.svg" width="194" height="110"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMUnitySetup_1_1DownloadStatus.html">DownloadStatus</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
-Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a0dd8aecc7b6d258e1f2d46a0f567917b" id="r_a0dd8aecc7b6d258e1f2d46a0f567917b"><td class="memItemLeft" align="right" valign="top">static Process&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0dd8aecc7b6d258e1f2d46a0f567917b">CreateProcess</a> (string command, string commandArgs=&quot;&quot;, Callback&lt; string &gt; outputCallback=null, Callback&lt; string &gt; errorCallback=null, System.EventHandler exitCallback=null, List&lt;(string, string)&gt; environment=null, bool redirectOutput=false, bool redirectError=false)</td></tr>
-<tr class="separator:a0dd8aecc7b6d258e1f2d46a0f567917b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3d31b149ad205703a42b2dfbea2b0c87" id="r_a3d31b149ad205703a42b2dfbea2b0c87"><td class="memItemLeft" align="right" valign="top">static string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3d31b149ad205703a42b2dfbea2b0c87">RunProcess</a> (string command, string commandArgs=&quot;&quot;, Callback&lt; string &gt; outputCallback=null, Callback&lt; string &gt; errorCallback=null)</td></tr>
-<tr class="separator:a3d31b149ad205703a42b2dfbea2b0c87"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a24e319c86c5c5fe2c68303f7704c4d2a" id="r_a24e319c86c5c5fe2c68303f7704c4d2a"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a24e319c86c5c5fe2c68303f7704c4d2a">makeExecutable</a> (string path)</td></tr>
-<tr class="separator:a24e319c86c5c5fe2c68303f7704c4d2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa58844b513b663deb81f40256a940377" id="r_aa58844b513b663deb81f40256a940377"><td class="memItemLeft" align="right" valign="top">static string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa58844b513b663deb81f40256a940377">GetAssetPath</a> (string relPath=&quot;&quot;)</td></tr>
-<tr class="separator:aa58844b513b663deb81f40256a940377"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad3a550aa2e93a7f6bae1b3d9e4dc4d1b" id="r_ad3a550aa2e93a7f6bae1b3d9e4dc4d1b"><td class="memItemLeft" align="right" valign="top">static async Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad3a550aa2e93a7f6bae1b3d9e4dc4d1b">DownloadFile</a> (string fileUrl, string savePath, bool overwrite=false, bool executable=false, TaskCallback&lt; string &gt; callback=null, Callback&lt; float &gt; progresscallback=null, bool async=true)</td></tr>
-<tr class="separator:ad3a550aa2e93a7f6bae1b3d9e4dc4d1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae30ba764cec2c7427988bf2c1fe1b204" id="r_ae30ba764cec2c7427988bf2c1fe1b204"><td class="memItemLeft" align="right" valign="top">static async Task&lt; string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae30ba764cec2c7427988bf2c1fe1b204">AddAsset</a> (string assetPath, string basePath)</td></tr>
-<tr class="separator:ae30ba764cec2c7427988bf2c1fe1b204"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac5ad1d70e2dc8b8a9350f4bf77546c00" id="r_ac5ad1d70e2dc8b8a9350f4bf77546c00"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac5ad1d70e2dc8b8a9350f4bf77546c00">SaveServerPID</a> (int pid)</td></tr>
-<tr class="separator:ac5ad1d70e2dc8b8a9350f4bf77546c00"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa5bfe6c5103daa051830d5cfb350b6e5" id="r_aa5bfe6c5103daa051830d5cfb350b6e5"><td class="memItemLeft" align="right" valign="top">static string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa5bfe6c5103daa051830d5cfb350b6e5">GetCommandLineArguments</a> (Process process)</td></tr>
-<tr class="separator:aa5bfe6c5103daa051830d5cfb350b6e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aac31319f0b3348eebf23ddc377fdfd14" id="r_aac31319f0b3348eebf23ddc377fdfd14"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aac31319f0b3348eebf23ddc377fdfd14">KillServerAfterUnityCrash</a> (string serverBinary)</td></tr>
-<tr class="separator:aac31319f0b3348eebf23ddc377fdfd14"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a64d08ddcb98b6ea92df7d8d9993fe955" id="r_a64d08ddcb98b6ea92df7d8d9993fe955"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a64d08ddcb98b6ea92df7d8d9993fe955">DeleteServerPID</a> (int pid)</td></tr>
-<tr class="separator:a64d08ddcb98b6ea92df7d8d9993fe955"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
-<tr class="memitem:aa9e562edf406d931b3f58b28b28e7c60" id="r_aa9e562edf406d931b3f58b28b28e7c60"><td class="memItemLeft" align="right" valign="top">static string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa9e562edf406d931b3f58b28b28e7c60">Version</a> = &quot;v1.2.5&quot;</td></tr>
+<tr class="memitem:aa9e562edf406d931b3f58b28b28e7c60" id="r_aa9e562edf406d931b3f58b28b28e7c60"><td class="memItemLeft" align="right" valign="top">static string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa9e562edf406d931b3f58b28b28e7c60">Version</a> = &quot;v1.2.6&quot;</td></tr>
+<tr class="memdesc:aa9e562edf406d931b3f58b28b28e7c60"><td class="mdescLeft">&#160;</td><td class="mdescRight">LLM for Unity version.  <br /></td></tr>
 <tr class="separator:aa9e562edf406d931b3f58b28b28e7c60"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock">
-<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00018">18</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
-</div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="ae30ba764cec2c7427988bf2c1fe1b204" name="ae30ba764cec2c7427988bf2c1fe1b204"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae30ba764cec2c7427988bf2c1fe1b204">&#9670;&#160;</a></span>AddAsset()</h2>
+<div class="textblock"><p>Class implementing helper functions for setup and process management. </p>
 
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static async Task&lt; string &gt; LLMUnity.LLMUnitySetup.AddAsset </td>
-          <td>(</td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>assetPath</em>, </span></td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>basePath</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00141">141</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
-
-</div>
-</div>
-<a id="a0dd8aecc7b6d258e1f2d46a0f567917b" name="a0dd8aecc7b6d258e1f2d46a0f567917b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0dd8aecc7b6d258e1f2d46a0f567917b">&#9670;&#160;</a></span>CreateProcess()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static Process LLMUnity.LLMUnitySetup.CreateProcess </td>
-          <td>(</td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>command</em>, </span></td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>commandArgs</em><span class="paramdefsep"> = </span><span class="paramdefval">&quot;&quot;</span>, </span></td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">Callback&lt; string &gt;</td>          <td class="paramname"><span class="paramname"><em>outputCallback</em><span class="paramdefsep"> = </span><span class="paramdefval">null</span>, </span></td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">Callback&lt; string &gt;</td>          <td class="paramname"><span class="paramname"><em>errorCallback</em><span class="paramdefsep"> = </span><span class="paramdefval">null</span>, </span></td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">System::EventHandler</td>          <td class="paramname"><span class="paramname"><em>exitCallback</em><span class="paramdefsep"> = </span><span class="paramdefval">null</span>, </span></td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">List&lt;(string, string)&gt;</td>          <td class="paramname"><span class="paramname"><em>environment</em><span class="paramdefsep"> = </span><span class="paramdefval">null</span>, </span></td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>redirectOutput</em><span class="paramdefsep"> = </span><span class="paramdefval">false</span>, </span></td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>redirectError</em><span class="paramdefsep"> = </span><span class="paramdefval">false</span></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00023">23</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
-
-</div>
-</div>
-<a id="a64d08ddcb98b6ea92df7d8d9993fe955" name="a64d08ddcb98b6ea92df7d8d9993fe955"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a64d08ddcb98b6ea92df7d8d9993fe955">&#9670;&#160;</a></span>DeleteServerPID()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static void LLMUnity.LLMUnitySetup.DeleteServerPID </td>
-          <td>(</td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>pid</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00265">265</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
-
-</div>
-</div>
-<a id="ad3a550aa2e93a7f6bae1b3d9e4dc4d1b" name="ad3a550aa2e93a7f6bae1b3d9e4dc4d1b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad3a550aa2e93a7f6bae1b3d9e4dc4d1b">&#9670;&#160;</a></span>DownloadFile()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static async Task LLMUnity.LLMUnitySetup.DownloadFile </td>
-          <td>(</td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>fileUrl</em>, </span></td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>savePath</em>, </span></td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>overwrite</em><span class="paramdefsep"> = </span><span class="paramdefval">false</span>, </span></td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>executable</em><span class="paramdefsep"> = </span><span class="paramdefval">false</span>, </span></td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">TaskCallback&lt; string &gt;</td>          <td class="paramname"><span class="paramname"><em>callback</em><span class="paramdefsep"> = </span><span class="paramdefval">null</span>, </span></td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">Callback&lt; float &gt;</td>          <td class="paramname"><span class="paramname"><em>progresscallback</em><span class="paramdefsep"> = </span><span class="paramdefval">null</span>, </span></td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>async</em><span class="paramdefsep"> = </span><span class="paramdefval">true</span></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00101">101</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
-
-</div>
-</div>
-<a id="aa58844b513b663deb81f40256a940377" name="aa58844b513b663deb81f40256a940377"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa58844b513b663deb81f40256a940377">&#9670;&#160;</a></span>GetAssetPath()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static string LLMUnity.LLMUnitySetup.GetAssetPath </td>
-          <td>(</td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>relPath</em><span class="paramdefsep"> = </span><span class="paramdefval">&quot;&quot;</span></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00079">79</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
-
-</div>
-</div>
-<a id="aa5bfe6c5103daa051830d5cfb350b6e5" name="aa5bfe6c5103daa051830d5cfb350b6e5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa5bfe6c5103daa051830d5cfb350b6e5">&#9670;&#160;</a></span>GetCommandLineArguments()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static string LLMUnity.LLMUnitySetup.GetCommandLineArguments </td>
-          <td>(</td>
-          <td class="paramtype">Process</td>          <td class="paramname"><span class="paramname"><em>process</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00231">231</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
-
-</div>
-</div>
-<a id="aac31319f0b3348eebf23ddc377fdfd14" name="aac31319f0b3348eebf23ddc377fdfd14"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aac31319f0b3348eebf23ddc377fdfd14">&#9670;&#160;</a></span>KillServerAfterUnityCrash()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static void LLMUnity.LLMUnitySetup.KillServerAfterUnityCrash </td>
-          <td>(</td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>serverBinary</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00243">243</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
-
-</div>
-</div>
-<a id="a24e319c86c5c5fe2c68303f7704c4d2a" name="a24e319c86c5c5fe2c68303f7704c4d2a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a24e319c86c5c5fe2c68303f7704c4d2a">&#9670;&#160;</a></span>makeExecutable()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static void LLMUnity.LLMUnitySetup.makeExecutable </td>
-          <td>(</td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>path</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00070">70</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
-
-</div>
-</div>
-<a id="a3d31b149ad205703a42b2dfbea2b0c87" name="a3d31b149ad205703a42b2dfbea2b0c87"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3d31b149ad205703a42b2dfbea2b0c87">&#9670;&#160;</a></span>RunProcess()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static string LLMUnity.LLMUnitySetup.RunProcess </td>
-          <td>(</td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>command</em>, </span></td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>commandArgs</em><span class="paramdefsep"> = </span><span class="paramdefval">&quot;&quot;</span>, </span></td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">Callback&lt; string &gt;</td>          <td class="paramname"><span class="paramname"><em>outputCallback</em><span class="paramdefsep"> = </span><span class="paramdefval">null</span>, </span></td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">Callback&lt; string &gt;</td>          <td class="paramname"><span class="paramname"><em>errorCallback</em><span class="paramdefsep"> = </span><span class="paramdefval">null</span></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00061">61</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
-
-</div>
-</div>
-<a id="ac5ad1d70e2dc8b8a9350f4bf77546c00" name="ac5ad1d70e2dc8b8a9350f4bf77546c00"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac5ad1d70e2dc8b8a9350f4bf77546c00">&#9670;&#160;</a></span>SaveServerPID()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static void LLMUnity.LLMUnitySetup.SaveServerPID </td>
-          <td>(</td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>pid</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00185">185</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
-
-</div>
-</div>
-<h2 class="groupheader">Member Data Documentation</h2>
+<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00030">30</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
+</div><h2 class="groupheader">Member Data Documentation</h2>
 <a id="aa9e562edf406d931b3f58b28b28e7c60" name="aa9e562edf406d931b3f58b28b28e7c60"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa9e562edf406d931b3f58b28b28e7c60">&#9670;&#160;</a></span>Version</h2>
 
@@ -529,7 +148,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">string LLMUnity.LLMUnitySetup.Version = &quot;v1.2.5&quot;</td>
+          <td class="memname">string LLMUnity.LLMUnitySetup.Version = &quot;v1.2.6&quot;</td>
         </tr>
       </table>
   </td>
@@ -539,7 +158,9 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00021">21</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
+<p>LLM for Unity version. </p>
+
+<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00034">34</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
 
 </div>
 </div>
