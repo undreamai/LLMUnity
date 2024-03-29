@@ -93,7 +93,7 @@ namespace LLMUnity
         [ModelAdvanced, Float(0f, 1f)] public float minP = 0.05f;
         /// <summary> control the repetition of token sequences in the generated text.
         /// The penalty is applied to repeated tokens. </summary>
-        [ModelAdvanced, Float(0f, 1f)] public float repeatPenalty = 1.1f;
+        [ModelAdvanced, Float(0f, 2f)] public float repeatPenalty = 1.1f;
         /// <summary> repeated token presence penalty (0.0 = disabled).
         /// Positive values penalize new tokens based on whether they appear in the text so far, increasing the model's likelihood to talk about new topics. </summary>
         [ModelAdvanced, Float(0f, 1f)] public float presencePenalty = 0f;
