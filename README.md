@@ -285,6 +285,7 @@ A <b>detailed documentation</b> on function level can be found here:
 ## Examples
 The [Samples~](Samples~) folder contains several examples of interaction 🤖:
 - [SimpleInteraction](Samples~/SimpleInteraction): Demonstrates simple interaction between a player and a AI
+- [AsyncStartup](Samples~/AsyncStartup): Demonstrates how to use the async functionality for a loading screen
 - [ServerClient](Samples~/ServerClient): Demonstrates simple interaction between a player and multiple AIs using a `LLM` and a `LLMClient`
 - [ChatBot](Samples~/ChatBot): Demonstrates interaction between a player and a AI with a UI similar to a messaging app (see image below)
   

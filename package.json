@@ -26,19 +26,24 @@
    ],
    "samples": [
     {
-      "displayName": "ChatBot",
-      "description": "ChatBot example.",
-      "path": "Samples~/ChatBot"
-    },
-    {
       "displayName": "SimpleInteraction",
       "description": "Minimal interaction example.",
       "path": "Samples~/SimpleInteraction"
     },
     {
+      "displayName": "AsyncStartup",
+      "description": "Example with loading screen using the async functionality.",
+      "path": "Samples~/AsyncStartup"
+    },
+    {
       "displayName": "ServerClient",
       "description": "Example with two AIs.",
       "path": "Samples~/ServerClient"
+    },
+    {
+      "displayName": "ChatBot",
+      "description": "ChatBot example.",
+      "path": "Samples~/ChatBot"
     }
    ],
    "author": {
