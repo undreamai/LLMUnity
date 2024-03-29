@@ -1,7 +1,10 @@
+/// @file
+/// @brief File implementing the LLM server interfaces.
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// \cond HIDE
 namespace LLMUnity
 {
     [Serializable]
@@ -130,3 +133,4 @@ namespace LLMUnity
         public int port;
     }
 }
+/// \endcond
