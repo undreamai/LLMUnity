@@ -313,8 +313,8 @@ namespace LLMUnity
             int num = 0;
             try
             {
-                string netstatOutput = RunProcess("netstat", "-l -n -p tcp");
-                Regex regex = new Regex(@"^tcp.*?\b(?<LocalAddress>\d+\.\d+\.\d+\.\d+):(?<LocalPort>\d+)\b", RegexOptions.Multiline);
+                string netstatOutput = RunProcess("netstat", "-lan -p tcp");
+                Regex regex = new Regex(@"^tcp.*?\b(?<LocalAddress>\d+\.\d+\.\d+\.\d+):(?<LocalPort>\d+)\b.*\bLISTEN\b", RegexOptions.Multiline);
                 MatchCollection matches = regex.Matches(netstatOutput);
                 foreach (Match match in matches)
                 {
