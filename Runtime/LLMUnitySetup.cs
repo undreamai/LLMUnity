@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Net;
 using System;
 using System.Net.NetworkInformation;
+using System.Text.RegularExpressions;
 
 /// @defgroup llm LLM
 /// @defgroup template Chat Templates
@@ -291,15 +292,43 @@ namespace LLMUnity
             }
         }
 
+        public static int NumServersForPortProperties(int port)
+        {
+            int num = 0;
+            try
+            {
+                IPGlobalProperties ipProperties = IPGlobalProperties.GetIPGlobalProperties();
+                TcpConnectionInformation[] tcpConnections = ipProperties.GetActiveTcpConnections();
+                foreach (TcpConnectionInformation info in tcpConnections)
+                {
+                    if (info.LocalEndPoint.Port == port && info.RemoteEndPoint.Port == 0) num++;
+                }
+            }
+            catch (Exception) {return -1;}
+            return num;
+        }
+
+        public static int NumServersForPortNetstat(int port)
+        {
+            int num = 0;
+            try
+            {
+                string netstatOutput = RunProcess("netstat", "-l -n -p tcp");
+                Regex regex = new Regex(@"^tcp.*?\b(?<LocalAddress>\d+\.\d+\.\d+\.\d+):(?<LocalPort>\d+)\b", RegexOptions.Multiline);
+                MatchCollection matches = regex.Matches(netstatOutput);
+                foreach (Match match in matches)
+                {
+                    if (int.Parse(match.Groups["LocalPort"].Value) == port) num++;
+                }
+            }
+            catch (Exception) {return -1;}
+            return num;
+        }
+
         public static int NumServersForPort(int port)
         {
-            IPGlobalProperties ipProperties = IPGlobalProperties.GetIPGlobalProperties();
-            TcpConnectionInformation[] tcpConnections = ipProperties.GetActiveTcpConnections();
-            int num = 0;
-            foreach (TcpConnectionInformation info in tcpConnections)
-            {
-                if (info.LocalEndPoint.Port == port && info.RemoteEndPoint.Address.ToString() == "0.0.0.0" && info.RemoteEndPoint.Port == 0) num++;
-            }
+            int num = NumServersForPortProperties(port);
+            if (num == -1) num = NumServersForPortNetstat(port);
             return num;
         }
 
