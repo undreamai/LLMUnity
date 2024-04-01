@@ -313,7 +313,7 @@ namespace LLMUnity
             int num = 0;
             try
             {
-                string netstatOutput = RunProcess("netstat", "-lan -p tcp");
+                string netstatOutput = RunProcess("netstat", "-an -p tcp");
                 Regex regex = new Regex(@"^.*(?i:tcp).*?[:.](?<LocalPort>\d+)\b\s.*\bLISTEN[ING]*\b", RegexOptions.Multiline);
                 MatchCollection matches = regex.Matches(netstatOutput);
                 foreach (Match match in matches)
