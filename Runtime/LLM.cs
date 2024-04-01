@@ -82,8 +82,8 @@ namespace LLMUnity
             ("Phi 2 (small, decent)", "https://huggingface.co/TheBloke/phi-2-GGUF/resolve/main/phi-2.Q4_K_M.gguf?download=true"),
         };
         public int SelectedModel = 0;
-        private static readonly string serverZipUrl = "https://github.com/Mozilla-Ocho/llamafile/releases/download/0.6.2/llamafile-0.6.2.zip";
-        private static readonly string server = LLMUnitySetup.GetAssetPath("llamafile-0.6.2.exe");
+        private static readonly string serverZipUrl = "https://github.com/Mozilla-Ocho/llamafile/releases/download/0.7/llamafile-0.7.zip";
+        private static readonly string server = LLMUnitySetup.GetAssetPath("llamafile-0.7.exe");
         private static readonly string apeARMUrl = "https://cosmo.zip/pub/cosmos/bin/ape-arm64.elf";
         private static readonly string apeARM = LLMUnitySetup.GetAssetPath("ape-arm64.elf");
         private static readonly string apeX86_64Url = "https://cosmo.zip/pub/cosmos/bin/ape-x86_64.elf";
@@ -294,7 +294,7 @@ namespace LLMUnity
             try
             {
                 ServerStatus status = JsonUtility.FromJson<ServerStatus>(message);
-                if (status.message == "model loaded")
+                if (status.msg == "HTTP server listening")
                 {
                     Debug.Log("LLM Server started!");
                     serverListening = true;
