@@ -314,7 +314,7 @@ namespace LLMUnity
             try
             {
                 string netstatOutput = RunProcess("netstat", "-lan -p tcp");
-                Regex regex = new Regex(@"^tcp.*?[:.](?<LocalPort>\d+)\b\s.*\bLISTEN\b", RegexOptions.Multiline);
+                Regex regex = new Regex(@"^.*(?i:tcp).*?[:.](?<LocalPort>\d+)\b\s.*\bLISTEN[ING]*\b", RegexOptions.Multiline);
                 MatchCollection matches = regex.Matches(netstatOutput);
                 foreach (Match match in matches)
                 {
