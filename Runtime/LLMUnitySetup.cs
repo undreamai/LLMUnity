@@ -327,8 +327,8 @@ namespace LLMUnity
 
         public static int NumServersForPort(int port)
         {
-            int num = NumServersForPortProperties(port);
-            if (num == -1) num = NumServersForPortNetstat(port);
+            int num = NumServersForPortNetstat(port);
+            if (num == -1) num = NumServersForPortProperties(port);
             return num;
         }
 
