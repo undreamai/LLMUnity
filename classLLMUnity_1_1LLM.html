@@ -325,6 +325,9 @@ Properties</h2></td></tr>
 <tr class="memitem:afc49b104d5f21e13eb1a9d5259e6a71a" id="r_afc49b104d5f21e13eb1a9d5259e6a71a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afc49b104d5f21e13eb1a9d5259e6a71a">serverListening</a> = false<code> [get]</code></td></tr>
 <tr class="memdesc:afc49b104d5f21e13eb1a9d5259e6a71a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Boolean set to true if the server has started and is ready to receive requests, false otherwise.  <br /></td></tr>
 <tr class="separator:afc49b104d5f21e13eb1a9d5259e6a71a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a12bcdbd765c46e5ec003de3f8ed4f4cd" id="r_a12bcdbd765c46e5ec003de3f8ed4f4cd"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a12bcdbd765c46e5ec003de3f8ed4f4cd">serverStarted</a> = false<code> [get]</code></td></tr>
+<tr class="memdesc:a12bcdbd765c46e5ec003de3f8ed4f4cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Boolean set to true if the server as well as the client functionality has fully started, false otherwise.  <br /></td></tr>
+<tr class="separator:a12bcdbd765c46e5ec003de3f8ed4f4cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class implementing the LLM server. </p>
@@ -360,7 +363,7 @@ Properties</h2></td></tr>
 <li>the LLM server is started (async if asynchronousStartup, synchronous otherwise) Additionally the Awake of the LLMClient is called to initialise the client part of the LLM object. </li>
 </ul>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00241">241</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00243">243</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -389,7 +392,7 @@ Properties</h2></td></tr>
 
 <p>The Unity OnDestroy function called when the onbject is destroyed. The function StopProcess is called to stop the LLM server. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00433">433</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00436">436</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -424,7 +427,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00200">200</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00202">202</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -459,7 +462,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00175">175</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00177">177</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -505,7 +508,7 @@ Properties</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="classLLMUnity_1_1LLMClient.html#a307b49f96d9786098797df3475927f3f">LLMUnity.LLMClient</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00185">185</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00187">187</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -534,7 +537,7 @@ Properties</h2></td></tr>
 
 <p>Allows to stop the LLM server. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00414">414</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00417">417</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -775,6 +778,32 @@ Properties</h2></td></tr>
 <p>Boolean set to true if the server has started and is ready to receive requests, false otherwise. </p>
 
 <p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00072">72</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+
+</div>
+</div>
+<a id="a12bcdbd765c46e5ec003de3f8ed4f4cd" name="a12bcdbd765c46e5ec003de3f8ed4f4cd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a12bcdbd765c46e5ec003de3f8ed4f4cd">&#9670;&#160;</a></span>serverStarted</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool LLMUnity.LLM.serverStarted = false</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Boolean set to true if the server as well as the client functionality has fully started, false otherwise. </p>
+
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00074">74</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>

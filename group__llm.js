@@ -18,7 +18,8 @@ var group__llm =
       [ "numThreads", "classLLMUnity_1_1LLM.html#a9afb1e3370f988ac5ae6bc8bb442bc95", null ],
       [ "parallelPrompts", "classLLMUnity_1_1LLM.html#a2a03591ffb964eacb31d2afbe42c4405", null ],
       [ "remote", "classLLMUnity_1_1LLM.html#aa26e432f58fe58ff701b26204752f06c", null ],
-      [ "serverListening", "classLLMUnity_1_1LLM.html#afc49b104d5f21e13eb1a9d5259e6a71a", null ]
+      [ "serverListening", "classLLMUnity_1_1LLM.html#afc49b104d5f21e13eb1a9d5259e6a71a", null ],
+      [ "serverStarted", "classLLMUnity_1_1LLM.html#a12bcdbd765c46e5ec003de3f8ed4f4cd", null ]
     ] ],
     [ "LLMUnity.LLMClient", "classLLMUnity_1_1LLMClient.html", [
       [ "Awake", "classLLMUnity_1_1LLMClient.html#a9cc96f9b98f36be5c1b4b61a6e783f94", null ],
