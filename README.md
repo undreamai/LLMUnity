@@ -304,7 +304,6 @@ Save the scene, run and enjoy!
 LLM for Unity uses the [Mistral 7B Instruct](https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.2), [OpenHermes 2.5](https://huggingface.co/teknium/OpenHermes-2.5-Mistral-7B) or [Microsoft Phi-2](https://huggingface.co/microsoft/phi-2) model by default, quantised with the Q4 method.<br>
 
 Alternative models can be downloaded from [HuggingFace](https://huggingface.co/models).<br>
-The models should be able to use the ChatML prompt format as this is hardcoded at the moment in llama.cpp.<br>
 The required model format is .gguf as defined by the llama.cpp.<br>
 The easiest way is to download gguf models directly by [TheBloke](https://huggingface.co/TheBloke) who has converted an astonishing number of models 🌈!<br>
 Otherwise other model formats can be converted to gguf with the `convert.py` script of the llama.cpp as described [here](https://github.com/ggerganov/llama.cpp/tree/master?tab=readme-ov-file#prepare-data--run).<br>
