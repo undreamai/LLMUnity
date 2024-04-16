@@ -11,6 +11,7 @@ namespace LLMUnity
     public struct ChatRequest
     {
         public string prompt;
+        public int id_slot;
         public float temperature;
         public int top_k;
         public float top_p;
@@ -43,8 +44,6 @@ namespace LLMUnity
     public struct ChatResult
     {
         public string content;
-        public bool multimodal;
-        public int slot_id;
         public bool stop;
         public string generation_settings;
         public string model;
