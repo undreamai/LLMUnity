@@ -42,6 +42,7 @@ namespace LLMUnity
                 new LLama2ChatTemplate(),
                 new LLama2Template(),
                 new Phi3Template(),
+                new LLama3ChatTemplate(),
                 new Phi2Template(),
                 new VicunaTemplate(),
                 new ZephyrTemplate(),
