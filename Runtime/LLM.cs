@@ -65,7 +65,7 @@ namespace LLMUnity
         [ModelAddonAdvanced] public string lora = "";
         /// <summary> Size of the prompt context (0 = context size of the model).
         /// This is the number of tokens the model can take as input when generating responses. </summary>
-        [ModelAdvanced] public int contextSize = 512;
+        [ModelAdvanced] public int contextSize = 0;
         /// <summary> Batch size for prompt processing. </summary>
         [ModelAdvanced] public int batchSize = 512;
         /// <summary> Boolean set to true if the server has started and is ready to receive requests, false otherwise. </summary>
