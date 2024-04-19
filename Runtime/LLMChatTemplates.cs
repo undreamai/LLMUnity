@@ -41,6 +41,7 @@ namespace LLMUnity
                 new LLama2ChatTemplate(),
                 new LLama2Template(),
                 new Phi2Template(),
+                new VicunaTemplate(),
                 new ZephyrTemplate(),
             };
 
@@ -325,6 +326,28 @@ namespace LLMUnity
         public override string[] GetStop(string playerName, string AIName)
         {
             return AddStopNewlines(new string[] { "###" });
+        }
+    }
+
+    /// @ingroup template
+    /// <summary>
+    /// Class implementing the Vicuna template
+    /// </summary>
+    public class VicunaTemplate : ChatTemplate
+    {
+        public override string GetName() { return "vicuna"; }
+        public override string GetDescription() { return "vicuna"; }
+        public override string[] GetNameMatches() { return new string[] {"vicuna"}; }
+        public override string[] GetChatTemplateMatches() { return new string[] {"{% if not add_generation_prompt is defined %}{% set add_generation_prompt = false %}{% endif %}{% for message in messages %}{% if message['role'] == 'system' %}{{message['content'] + ' '}}{% elif message['role'] == 'user' %}{{ 'USER: ' + message['content'] + ' '}}{% elif message['role'] == 'assistant' %}{{ 'ASSISTANT: ' + message['content'] + ' '}}{% endif %}{% endfor %}{% if add_generation_prompt %}{{ 'ASSISTANT: '}}{% endif %}"}; }
+
+        protected override string SystemSuffix() { return "\n"; }
+        protected override string PlayerPrefix(string playerName) { return "\n" + playerName + ":"; }
+        protected override string AIPrefix(string AIName) { return "\n" + AIName + ":"; }
+        protected override string PrefixMessageSeparator() { return " "; }
+
+        public override string[] GetStop(string playerName, string AIName)
+        {
+            return AddStopNewlines(new string[] { playerName + ":", AIName + ":" });
         }
     }
 
