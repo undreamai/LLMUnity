@@ -52,6 +52,7 @@ LLM for Unity is built on top of the awesome [llama.cpp](https://github.com/gger
 ## Games using LLM for Unity
 - [Verbal Verdict](https://store.steampowered.com/app/2778780/Verbal_Verdict/)
 - [I, Chatbot: AISYLUM](https://store.steampowered.com/app/2786750/I_Chatbot_AISYLUM)
+- [Nameless Souls of the Void](https://unicorninteractive.itch.io/nameless-souls-of-the-void)
 
 ## Setup
 _Method 1: Install using the asset store_
