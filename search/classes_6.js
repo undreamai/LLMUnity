@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['zephyrtemplate_0',['ZephyrTemplate',['../classLLMUnity_1_1ZephyrTemplate.html',1,'LLMUnity']]]
+  ['vicunatemplate_0',['VicunaTemplate',['../classLLMUnity_1_1VicunaTemplate.html',1,'LLMUnity']]]
 ];

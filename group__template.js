@@ -26,6 +26,13 @@ var group__template =
       [ "GetNameMatches", "classLLMUnity_1_1LLama2ChatTemplate.html#ae17b29bf5279099252a07bbfc57acd5a", null ],
       [ "GetStop", "classLLMUnity_1_1LLama2ChatTemplate.html#a54a2b3ff92d00ec6fa9cc592efd8716b", null ]
     ] ],
+    [ "LLMUnity.LLama3ChatTemplate", "classLLMUnity_1_1LLama3ChatTemplate.html", [
+      [ "GetChatTemplateMatches", "classLLMUnity_1_1LLama3ChatTemplate.html#abc40223d41f7f2a11bae9e8f8206136f", null ],
+      [ "GetDescription", "classLLMUnity_1_1LLama3ChatTemplate.html#a6a1f43afa78923e50e2c5517c762e805", null ],
+      [ "GetName", "classLLMUnity_1_1LLama3ChatTemplate.html#a4ec4aa699ec2835332b8e82e2f443089", null ],
+      [ "GetNameMatches", "classLLMUnity_1_1LLama3ChatTemplate.html#a429b1f336afb15f4cdc4f7baa1316aa4", null ],
+      [ "GetStop", "classLLMUnity_1_1LLama3ChatTemplate.html#a94c82e2710c05892948dca283a11efc9", null ]
+    ] ],
     [ "LLMUnity.MistralInstructTemplate", "classLLMUnity_1_1MistralInstructTemplate.html", [
       [ "GetDescription", "classLLMUnity_1_1MistralInstructTemplate.html#a120da12a660973c9f8e47736ee85ba4b", null ],
       [ "GetName", "classLLMUnity_1_1MistralInstructTemplate.html#abe0ac3c67d65e29ccb1ba197db19e82f", null ],
@@ -43,6 +50,13 @@ var group__template =
       [ "GetName", "classLLMUnity_1_1AlpacaTemplate.html#a6b04ec010e4f61340718f975c97d1398", null ],
       [ "GetNameMatches", "classLLMUnity_1_1AlpacaTemplate.html#a85ae94c9000b469251ce2a3573f7faa8", null ],
       [ "GetStop", "classLLMUnity_1_1AlpacaTemplate.html#a0e3cf2b8a9d97fa13a098c89508fdf3c", null ]
+    ] ],
+    [ "LLMUnity.VicunaTemplate", "classLLMUnity_1_1VicunaTemplate.html", [
+      [ "GetChatTemplateMatches", "classLLMUnity_1_1VicunaTemplate.html#aba044213ed10215711d113781dd71a3e", null ],
+      [ "GetDescription", "classLLMUnity_1_1VicunaTemplate.html#a166b04bf17cf94205d60522c454fe164", null ],
+      [ "GetName", "classLLMUnity_1_1VicunaTemplate.html#a2560a733c7df712b203fcc9b07c0e500", null ],
+      [ "GetNameMatches", "classLLMUnity_1_1VicunaTemplate.html#a58a37d49ec901860101a3ec3100c1e20", null ],
+      [ "GetStop", "classLLMUnity_1_1VicunaTemplate.html#adfe48f6906ac2793f62f91f07012f7b8", null ]
     ] ],
     [ "LLMUnity.Phi2Template", "classLLMUnity_1_1Phi2Template.html", [
       [ "GetDescription", "classLLMUnity_1_1Phi2Template.html#afa24c2465612d8dd2ac268bd1c09e976", null ],
