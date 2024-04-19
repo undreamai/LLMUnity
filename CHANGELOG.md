@@ -20,10 +20,6 @@
 
 - Use the context size of the model by default for longer history (PR: #147)
 
-#### 📦 General
-
-- use the context size of the model by default for longer history (PR: #147)
-
 
 ## v1.2.6
 #### 🚀 Features
