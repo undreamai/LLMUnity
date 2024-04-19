@@ -32,7 +32,7 @@ namespace LLMUnity
     {
         // DON'T CHANGE! the version is autocompleted with a GitHub action
         /// <summary> LLM for Unity version </summary>
-        public static string Version = "v1.2.6";
+        public static string Version = "v1.2.7";
 
         /// \cond HIDE
         public static Process CreateProcess(
