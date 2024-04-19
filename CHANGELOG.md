@@ -1,3 +1,9 @@
+## v1.2.7
+#### 🚀 Features
+
+- Feature/llama3 vicuna chat templates (PR: #145)
+
+
 ## v1.2.6
 #### 🚀 Features
 
