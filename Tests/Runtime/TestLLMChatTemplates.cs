@@ -63,11 +63,29 @@ namespace LLMUnityTests
         }
 
         [Test]
+        public void TestLLama3Chat()
+        {
+            Assert.AreEqual(
+                new LLama3ChatTemplate().ComputePrompt(messages, "assistant"),
+                "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nyou are a bot<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nHello, how are you?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\nI'm doing great. How can I help you today?<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nI'd like to show off how chat templating works!<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\nchat template is awesome<|eot_id|><|start_header_id|>user<|end_header_id|>\n\ndo you think so?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n"
+            );
+        }
+
+        [Test]
         public void TestAlpaca()
         {
             Assert.AreEqual(
                 new AlpacaTemplate().ComputePrompt(messages, "assistant"),
                 "you are a bot\n\n### user: Hello, how are you?\n### assistant: I'm doing great. How can I help you today?\n### user: I'd like to show off how chat templating works!\n### assistant: chat template is awesome\n### user: do you think so?\n### assistant:"
+            );
+        }
+
+        [Test]
+        public void TestVicuna()
+        {
+            Assert.AreEqual(
+                new VicunaTemplate().ComputePrompt(messages, "assistant"),
+                "you are a bot\n\nuser: Hello, how are you?\nassistant: I'm doing great. How can I help you today?\nuser: I'd like to show off how chat templating works!\nassistant: chat template is awesome\nuser: do you think so?\nassistant:"
             );
         }
 
