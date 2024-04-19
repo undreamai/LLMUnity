@@ -72,6 +72,15 @@ namespace LLMUnityTests
         }
 
         [Test]
+        public void TestVicuna()
+        {
+            Assert.AreEqual(
+                new VicunaTemplate().ComputePrompt(messages, "assistant"),
+                "you are a bot\n\nuser: Hello, how are you?\nassistant: I'm doing great. How can I help you today?\nuser: I'd like to show off how chat templating works!\nassistant: chat template is awesome\nuser: do you think so?\nassistant:"
+            );
+        }
+
+        [Test]
         public void TestPhi2()
         {
             Assert.AreEqual(
