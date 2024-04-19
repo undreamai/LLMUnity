@@ -63,6 +63,15 @@ namespace LLMUnityTests
         }
 
         [Test]
+        public void TestLLama3Chat()
+        {
+            Assert.AreEqual(
+                new LLama3ChatTemplate().ComputePrompt(messages, "assistant"),
+                "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nyou are a bot<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nHello, how are you?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\nI'm doing great. How can I help you today?<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nI'd like to show off how chat templating works!<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\nchat template is awesome<|eot_id|><|start_header_id|>user<|end_header_id|>\n\ndo you think so?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n"
+            );
+        }
+
+        [Test]
         public void TestAlpaca()
         {
             Assert.AreEqual(
