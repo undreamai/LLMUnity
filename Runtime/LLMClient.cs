@@ -8,6 +8,15 @@ namespace LLMUnity
     public class LLMClient : LLMClientBase
     {
         [Model] public LLM llm;
+        int slot_id = 0;
+
+        // <summary>
+        // Cancel the ongoing requests e.g. Chat, Complete.
+        // </summary>
+        public new void CancelRequests()
+        {
+            llm.CancelRequest(slot_id);
+        }
 
         protected override async Task<Ret> PostRequest<Res, Ret>(string json, string endpoint, ContentCallback<Res, Ret> getContent, Callback<Ret> callback = null)
         {
