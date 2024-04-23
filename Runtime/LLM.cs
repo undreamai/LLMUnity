@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace LLMUnity
 {
-    [DefaultExecutionOrder(-2)]
+    [DefaultExecutionOrder(-1)]
     /// @ingroup llm
     /// <summary>
     /// Class implementing the LLM server.
@@ -17,6 +17,7 @@ namespace LLMUnity
     public class LLM : LLMBase
     {
         IntPtr LLMObject;
+        List<LLMClient> clients = new List<LLMClient>();
 
         public async void Awake()
         {
@@ -39,6 +40,17 @@ namespace LLMUnity
             serverStarted = true;
             serverListening = true;
             Debug.Log("server started");
+        }
+
+        public int Register(LLMClient llmClient)
+        {
+            clients.Add(llmClient);
+            return clients.IndexOf(llmClient);
+        }
+
+        protected override int GetNumClients()
+        {
+            return parallelPrompts == -1? clients.Count: base.GetNumClients();
         }
 
         public delegate void LLMReplyCallback(IntPtr LLMObject, string json_data, IntPtr stringWrapper);
