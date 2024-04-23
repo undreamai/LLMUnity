@@ -11,7 +11,7 @@ namespace LLMUnity
     public class LLMClientEditor : Editor
     {
         protected int buttonWidth = 150;
-        Type[] orderedTypes = new Type[] { typeof(LLM), typeof(LLMClient) };
+        Type[] propertyTypes = new Type[] { typeof(LLMClientBase), typeof(LLMClient) };
 
         public void Space()
         {
@@ -41,34 +41,18 @@ namespace LLMUnity
         {
             EditorGUILayout.BeginHorizontal();
             AddOptionsToggle(llmScriptSO, "advancedOptions", "Advanced Options");
-            AddOptionsToggle(llmScriptSO, "expertOptions", "Expert Options");
             EditorGUILayout.EndHorizontal();
             Space();
         }
 
-        public void AddServerSettings(SerializedObject llmScriptSO)
+        public void AddModelLoadersSettings(SerializedObject llmScriptSO, LLMClient llmScript)
         {
-            List<Type> attributeClasses = new List<Type> { typeof(ServerAttribute) };
-            if (llmScriptSO.FindProperty("advancedOptions").boolValue)
-            {
-                if (llmScriptSO.targetObject.GetType() == typeof(LLMClient)) attributeClasses.Add(typeof(ClientAdvancedAttribute));
-                attributeClasses.Add(typeof(ServerAdvancedAttribute));
-            }
-            ShowPropertiesOfClass("Server Settings", llmScriptSO, orderedTypes, attributeClasses, true);
+            EditorGUILayout.LabelField("Model Settings", EditorStyles.boldLabel);
+            AddModelAddonLoaders(llmScriptSO, llmScript);
+            AddModelSettings(llmScriptSO);
         }
 
-        public virtual void AddModelLoaders(SerializedObject llmScriptSO, LLMClient llmScript)
-        {
-            string[] templateOptions = ChatTemplate.templatesDescription.Keys.ToList().ToArray();
-            int index = Array.IndexOf(ChatTemplate.templatesDescription.Values.ToList().ToArray(), llmScript.chatTemplate);
-            int newIndex = EditorGUILayout.Popup("Chat Template", index, templateOptions);
-            if (newIndex != index)
-            {
-                llmScript.SetTemplate(ChatTemplate.templatesDescription[templateOptions[newIndex]]);
-            }
-        }
-
-        public virtual void AddModelAddonLoaders(SerializedObject llmScriptSO, LLMClient llmScript, bool layout = true)
+        public void AddModelAddonLoaders(SerializedObject llmScriptSO, LLMClient llmClientScript, bool layout = true)
         {
             if (llmScriptSO.FindProperty("advancedOptions").boolValue)
             {
@@ -84,7 +68,7 @@ namespace LLMUnity
                         string path = EditorUtility.OpenFilePanelWithFilters("Select a gbnf grammar file", "", new string[] { "Grammar Files", "gbnf" });
                         if (!string.IsNullOrEmpty(path))
                         {
-                            llmScript.SetGrammar(path);
+                            llmClientScript.SetGrammar(path);
                         }
                     };
                 }
@@ -94,31 +78,18 @@ namespace LLMUnity
 
         public void AddModelSettings(SerializedObject llmScriptSO)
         {
-            List<Type> attributeClasses = new List<Type> { typeof(ModelAttribute), typeof(ModelAddonAttribute) };
+            List<Type> attributeClasses = new List<Type> { typeof(ModelAttribute) };
             if (llmScriptSO.FindProperty("advancedOptions").boolValue)
             {
-                attributeClasses.Add(typeof(ModelAddonAdvancedAttribute));
                 attributeClasses.Add(typeof(ModelAdvancedAttribute));
             }
-            if (llmScriptSO.FindProperty("expertOptions").boolValue)
-            {
-                attributeClasses.Add(typeof(ModelExpertAttribute));
-            }
-            ShowPropertiesOfClass("", llmScriptSO, orderedTypes, attributeClasses, false);
+            ShowPropertiesOfClass("", llmScriptSO, propertyTypes, attributeClasses, false);
             Space();
-        }
-
-        public void AddModelLoadersSettings(SerializedObject llmScriptSO, LLMClient llmScript)
-        {
-            EditorGUILayout.LabelField("Model Settings", EditorStyles.boldLabel);
-            AddModelLoaders(llmScriptSO, llmScript);
-            AddModelAddonLoaders(llmScriptSO, llmScript);
-            AddModelSettings(llmScriptSO);
         }
 
         public void AddChatSettings(SerializedObject llmScriptSO)
         {
-            ShowPropertiesOfClass("Chat Settings", llmScriptSO, orderedTypes, new List<Type> { typeof(ChatAttribute) }, false);
+            ShowPropertiesOfClass("Chat Settings", llmScriptSO, propertyTypes, new List<Type> { typeof(ChatAttribute) }, false);
         }
 
         public override void OnInspectorGUI()
@@ -132,7 +103,6 @@ namespace LLMUnity
             GUI.enabled = true;
             EditorGUI.BeginChangeCheck();
             AddOptionsToggles(llmScriptSO);
-            AddServerSettings(llmScriptSO);
             AddModelLoadersSettings(llmScriptSO, llmScript);
             AddChatSettings(llmScriptSO);
 
