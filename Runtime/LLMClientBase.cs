@@ -500,11 +500,6 @@ namespace LLMUnity
             return getContent(JsonUtility.FromJson<Res>(response));
         }
 
-        string[] MultiResponse(string response)
-        {
-            return response.Trim().Replace("\n\n", "").Split("data: ");
-        }
-
         /// <summary>
         /// Cancel the ongoing requests e.g. Chat, Complete.
         /// </summary>
@@ -514,6 +509,7 @@ namespace LLMUnity
 
         protected virtual async Task<Ret> PostRequest<Res, Ret>(string json, string endpoint, ContentCallback<Res, Ret> getContent, Callback<Ret> callback = null)
         {
+            await Task.Run(() => throw new System.Exception("needs implementation by subclasses"));
             return default;
         }
     }
