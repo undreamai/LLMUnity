@@ -38,6 +38,12 @@ namespace LLMUnity
     public class ClientAdvancedAttribute : PropertyAttribute {}
     public class ServerAdvancedAttribute : PropertyAttribute {}
     public class ModelAdvancedAttribute : PropertyAttribute {}
+
+    public class NotImplementedException : System.Exception
+    {
+        public NotImplementedException() : base("The method needs to be implemented by subclasses."){}
+    }
+
     /// \endcond
 
     public class LLMClientBase : MonoBehaviour
@@ -503,13 +509,14 @@ namespace LLMUnity
         /// <summary>
         /// Cancel the ongoing requests e.g. Chat, Complete.
         /// </summary>
-        public void CancelRequests()
+        public virtual void CancelRequests()
         {
+            throw new NotImplementedException();
         }
 
         protected virtual async Task<Ret> PostRequest<Res, Ret>(string json, string endpoint, ContentCallback<Res, Ret> getContent, Callback<Ret> callback = null)
         {
-            await Task.Run(() => throw new System.Exception("needs implementation by subclasses"));
+            await Task.Run(() => throw new NotImplementedException());
             return default;
         }
     }
