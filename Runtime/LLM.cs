@@ -125,9 +125,9 @@ namespace LLMUnity
             return await LLMStreamReply(LLMLib.LLM_Completion, json, streamCallback);
         }
 
-        public void Slot(string json)
+        public void CancelRequest(int id_slot)
         {
-            LLMLib.LLM_Slot(LLMObject, json);
+            LLMLib.LLM_Cancel(LLMObject, id_slot);
         }
 
         /// <summary>
