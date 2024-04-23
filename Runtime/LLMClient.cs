@@ -5,17 +5,23 @@ using UnityEngine;
 
 namespace LLMUnity
 {
+    [DefaultExecutionOrder(-2)]
     public class LLMClient : LLMClientBase
     {
         [Model] public LLM llm;
-        int slot_id = 0;
+
+        public new void Awake()
+        {
+            id_slot = llm.Register(this);
+            base.Awake();
+        }
 
         // <summary>
         // Cancel the ongoing requests e.g. Chat, Complete.
         // </summary>
         public new void CancelRequests()
         {
-            llm.CancelRequest(slot_id);
+            if (id_slot >= 0) llm.CancelRequest(id_slot);
         }
 
         protected override async Task<Ret> PostRequest<Res, Ret>(string json, string endpoint, ContentCallback<Res, Ret> getContent, Callback<Ret> callback = null)
