@@ -43,6 +43,7 @@ namespace LLMUnity
     [Serializable]
     public struct ChatResult
     {
+        public int id_slot;
         public string content;
         public bool stop;
         public string generation_settings;
