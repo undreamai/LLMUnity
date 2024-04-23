@@ -24,7 +24,6 @@ namespace LLMUnity
 
         /// \cond HIDE
         private List<(string, string)> requestHeaders = new List<(string, string)> { ("Content-Type", "application/json") };
-        private string previousEndpoint;
         private List<UnityWebRequest> WIPRequests = new List<UnityWebRequest>();
         /// \endcond
 
@@ -38,49 +37,6 @@ namespace LLMUnity
                 request.Abort();
             }
             WIPRequests.Clear();
-        }
-
-        /// <summary>
-        /// Checks if the server is reachable by calling a sample request (synchronous implementation).
-        /// </summary>
-        /// <param name="timeout">max time to wait for reply</param>
-        /// <returns>if the server is reachable</returns>
-        public bool IsServerReachable(int timeout = 5)
-        {
-            using (UnityWebRequest webRequest = UnityWebRequest.Head($"{host}:{port}/tokenize"))
-            {
-                webRequest.timeout = timeout;
-                webRequest.SendWebRequest();
-                while (!webRequest.isDone) {}
-                if (webRequest.result == UnityWebRequest.Result.ConnectionError)
-                {
-                    return false;
-                }
-                return true;
-            }
-        }
-
-        /// <summary>
-        /// Checks if the server is reachable by calling a sample request (async implementation).
-        /// </summary>
-        /// <param name="timeout">max time to wait for reply</param>
-        /// <returns>if the server is reachable</returns>
-        public async Task<bool> IsServerReachableAsync(int timeout = 5)
-        {
-            using (UnityWebRequest webRequest = UnityWebRequest.Head($"{host}:{port}/tokenize"))
-            {
-                webRequest.timeout = timeout;
-                webRequest.SendWebRequest();
-                while (!webRequest.isDone)
-                {
-                    await Task.Yield();
-                }
-                if (webRequest.result == UnityWebRequest.Result.ConnectionError)
-                {
-                    return false;
-                }
-                return true;
-            }
         }
 
         protected override async Task<Ret> PostRequest<Res, Ret>(string json, string endpoint, ContentCallback<Res, Ret> getContent, Callback<Ret> callback = null)
