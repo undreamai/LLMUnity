@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.Networking;
 
 namespace LLMUnity
 {
@@ -41,7 +40,6 @@ namespace LLMUnity
     public class ModelAdvancedAttribute : PropertyAttribute {}
     /// \endcond
 
-    [DefaultExecutionOrder(-1)]
     public class LLMClientBase : MonoBehaviour
     {
         /// <summary> toggle to show/hide advanced options in the GameObject </summary>
@@ -129,12 +127,12 @@ namespace LLMUnity
 
         /// \cond HIDE
         protected List<ChatMessage> chat;
-        private LLM server;
         static object chatPromptLock = new object();
         static object chatAddLock = new object();
         public string chatTemplate = ChatTemplate.DefaultTemplate;
         private ChatTemplate template;
         public string grammarString;
+        protected int id_slot = -1;
         /// \endcond
 
         /// <summary>
@@ -151,7 +149,6 @@ namespace LLMUnity
             InitGrammar();
             InitPrompt();
             LoadTemplate();
-            // _ = InitNKeep();
         }
 
         private void InitPrompt(bool clearChat = true)
@@ -185,7 +182,6 @@ namespace LLMUnity
             prompt = newPrompt;
             nKeep = -1;
             InitPrompt(clearChat);
-            _ = InitNKeep();
         }
 
         private async Task InitNKeep()
@@ -238,6 +234,7 @@ namespace LLMUnity
             // setup the request struct
             ChatRequest chatRequest = new ChatRequest();
             chatRequest.prompt = prompt;
+            chatRequest.id_slot = id_slot;
             chatRequest.temperature = temperature;
             chatRequest.top_k = topK;
             chatRequest.top_p = topP;
