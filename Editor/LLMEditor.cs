@@ -6,14 +6,24 @@ using UnityEngine;
 
 namespace LLMUnity
 {
-    [CustomEditor(typeof(LLM))]
-    public class LLMEditor : LLMClientEditor
+    [CustomEditor(typeof(LLMBase))]
+    public class LLMBaseEditor : PropertyEditor
     {
-        Type[] propertyTypes = new Type[] { typeof(LLMBase), typeof(LLM) };
-
-        public void AddModelLoaders(SerializedObject llmScriptSO, LLM llmClientScript)
+        protected override Type[] GetPropertyTypes()
         {
-            LLM llmScript = (LLM)llmClientScript;
+            return new Type[] { typeof(LLMBase) };
+        }
+
+        public void AddModelLoadersSettings(SerializedObject llmScriptSO, LLMBase llmScript)
+        {
+            EditorGUILayout.LabelField("Model Settings", EditorStyles.boldLabel);
+            AddModelLoaders(llmScriptSO, llmScript);
+            AddModelAddonLoaders(llmScriptSO, llmScript);
+            AddModelSettings(llmScriptSO);
+        }
+
+        public void AddModelLoaders(SerializedObject llmScriptSO, LLMBase llmScript)
+        {
             EditorGUILayout.BeginHorizontal();
 
             string[] options = new string[llmScript.modelOptions.Length];
@@ -51,7 +61,7 @@ namespace LLMUnity
             }
         }
 
-        public void AddModelAddonLoaders(SerializedObject llmScriptSO, LLM llmScript, bool layout = true)
+        public void AddModelAddonLoaders(SerializedObject llmScriptSO, LLMBase llmScript, bool layout = true)
         {
             if (llmScriptSO.FindProperty("advancedOptions").boolValue)
             {
@@ -83,16 +93,8 @@ namespace LLMUnity
             {
                 attributeClasses.Add(typeof(ModelAdvancedAttribute));
             }
-            ShowPropertiesOfClass("", llmScriptSO, propertyTypes, attributeClasses, false);
+            ShowPropertiesOfClass("", llmScriptSO, attributeClasses, false);
             Space();
-        }
-
-        public void AddModelLoadersSettings(SerializedObject llmScriptSO, LLM llmScript)
-        {
-            EditorGUILayout.LabelField("Model Settings", EditorStyles.boldLabel);
-            AddModelLoaders(llmScriptSO, llmScript);
-            AddModelAddonLoaders(llmScriptSO, llmScript);
-            AddModelSettings(llmScriptSO);
         }
 
         public void AddServerSettings(SerializedObject llmScriptSO)
@@ -102,7 +104,12 @@ namespace LLMUnity
             {
                 attributeClasses.Add(typeof(ServerAdvancedAttribute));
             }
-            ShowPropertiesOfClass("Server Settings", llmScriptSO, propertyTypes, attributeClasses, true);
+            ShowPropertiesOfClass("Server Settings", llmScriptSO, attributeClasses, true);
+        }
+
+        public void AddChatSettings(SerializedObject llmScriptSO)
+        {
+            ShowPropertiesOfClass("Chat Settings", llmScriptSO, new List<Type> { typeof(ChatAttribute) }, false);
         }
 
         void ShowProgress(float progress, string progressText)
@@ -112,7 +119,8 @@ namespace LLMUnity
 
         public override void OnInspectorGUI()
         {
-            LLM llmScript = (LLM)target;
+            LLMBase llmScript = (LLMBase)target;
+            // LLM llmScript = (LLM)target;
             SerializedObject llmScriptSO = new SerializedObject(llmScript);
             llmScriptSO.Update();
 
@@ -133,6 +141,24 @@ namespace LLMUnity
                 Repaint();
 
             llmScriptSO.ApplyModifiedProperties();
+        }
+    }
+
+    [CustomEditor(typeof(LLM))]
+    public class LLMEditor : LLMBaseEditor
+    {
+        protected override Type[] GetPropertyTypes()
+        {
+            return new Type[] { typeof(LLM), typeof(LLMBase) };
+        }
+    }
+
+    [CustomEditor(typeof(LLMRemote))]
+    public class LLMRemoteEditor : LLMBaseEditor
+    {
+        protected override Type[] GetPropertyTypes()
+        {
+            return new Type[] { typeof(LLMRemote), typeof(LLMBase) };
         }
     }
 }

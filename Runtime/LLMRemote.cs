@@ -1,10 +1,7 @@
 /// @file
 /// @brief File implementing the LLM server.
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.IO.Compression;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEditor;
@@ -13,7 +10,6 @@ using Debug = UnityEngine.Debug;
 
 namespace LLMUnity
 {
-    [DefaultExecutionOrder(-2)]
     /// @ingroup llm
     /// <summary>
     /// Class implementing the LLM server.
@@ -23,17 +19,17 @@ namespace LLMUnity
         /// <summary> Select to kill existing servers created by the package at startup.
         /// Useful in case of game crashes where the servers didn't have the chance to terminate</summary>
         [ServerAdvanced] public bool killExistingServersOnStart = true;
-        /// <summary> host to use for the LLMClient object </summary>
-        [ClientAdvanced] public string host = "localhost";
         /// <summary> port to use for the server (LLM) or client (LLMClient) </summary>
-        [ServerAdvanced] public int port = 13333;
+        [Server] public int port = 13333;
 
-        private static readonly string serverZipUrl = "https://github.com/Mozilla-Ocho/llamafile/releases/download/0.6.2/llamafile-0.6.2.zip";
-        private static readonly string server = LLMUnitySetup.GetAssetPath("llamafile-0.6.2.exe");
-        private static readonly string apeARMUrl = "https://cosmo.zip/pub/cosmos/bin/ape-arm64.elf";
-        private static readonly string apeARM = LLMUnitySetup.GetAssetPath("ape-arm64.elf");
-        private static readonly string apeX86_64Url = "https://cosmo.zip/pub/cosmos/bin/ape-x86_64.elf";
-        private static readonly string apeX86_64 = LLMUnitySetup.GetAssetPath("ape-x86_64.elf");
+        // private static readonly string serverZipUrl = "https://github.com/Mozilla-Ocho/llamafile/releases/download/0.6.2/llamafile-0.6.2.zip";
+        // private static readonly string server = LLMUnitySetup.GetAssetPath("llamafile-0.6.2.exe");
+        // private static readonly string apeARMUrl = "https://cosmo.zip/pub/cosmos/bin/ape-arm64.elf";
+        // private static readonly string apeARM = LLMUnitySetup.GetAssetPath("ape-arm64.elf");
+        // private static readonly string apeX86_64Url = "https://cosmo.zip/pub/cosmos/bin/ape-x86_64.elf";
+        // private static readonly string apeX86_64 = LLMUnitySetup.GetAssetPath("ape-x86_64.elf");
+
+        private static readonly string server = LLMUnitySetup.GetAssetPath("server");
 
         [HideInInspector] public static float binariesProgress = 1;
         private static float binariesDone = 0;
@@ -45,6 +41,7 @@ namespace LLMUnity
 
         public async void Awake()
         {
+            if (!gameObject.activeSelf) return;
             if (killExistingServersOnStart) KillServersAfterUnityCrash();
             if (asynchronousStartup) await StartLLMServer();
             else _ = StartLLMServer();
@@ -61,36 +58,36 @@ namespace LLMUnity
 
         private static async Task SetupBinaries()
         {
-            if (binariesProgress < 1) return;
-            binariesProgress = 0;
-            binariesDone = 0;
-            if (!File.Exists(apeARM)) await LLMUnitySetup.DownloadFile(apeARMUrl, apeARM, false, true, null, SetBinariesProgress);
-            binariesDone += 1;
-            if (!File.Exists(apeX86_64)) await LLMUnitySetup.DownloadFile(apeX86_64Url, apeX86_64, false, true, null, SetBinariesProgress);
-            binariesDone += 1;
-            if (!File.Exists(server))
-            {
-                string serverZip = Path.Combine(Application.temporaryCachePath, "llamafile.zip");
-                await LLMUnitySetup.DownloadFile(serverZipUrl, serverZip, true, false, null, SetBinariesProgress);
-                binariesDone += 1;
+            //     if (binariesProgress < 1) return;
+            //     binariesProgress = 0;
+            //     binariesDone = 0;
+            //     if (!File.Exists(apeARM)) await LLMUnitySetup.DownloadFile(apeARMUrl, apeARM, false, true, null, SetBinariesProgress);
+            //     binariesDone += 1;
+            //     if (!File.Exists(apeX86_64)) await LLMUnitySetup.DownloadFile(apeX86_64Url, apeX86_64, false, true, null, SetBinariesProgress);
+            //     binariesDone += 1;
+            //     if (!File.Exists(server))
+            //     {
+            //         string serverZip = Path.Combine(Application.temporaryCachePath, "llamafile.zip");
+            //         await LLMUnitySetup.DownloadFile(serverZipUrl, serverZip, true, false, null, SetBinariesProgress);
+            //         binariesDone += 1;
 
-                using (ZipArchive archive = ZipFile.OpenRead(serverZip))
-                {
-                    foreach (ZipArchiveEntry entry in archive.Entries)
-                    {
-                        if (entry.Name == "llamafile")
-                        {
-                            AssetDatabase.StartAssetEditing();
-                            entry.ExtractToFile(server, true);
-                            AssetDatabase.StopAssetEditing();
-                            break;
-                        }
-                    }
-                }
-                File.Delete(serverZip);
-                binariesDone += 1;
-            }
-            binariesProgress = 1;
+            //         using (ZipArchive archive = ZipFile.OpenRead(serverZip))
+            //         {
+            //             foreach (ZipArchiveEntry entry in archive.Entries)
+            //             {
+            //                 if (entry.Name == "llamafile")
+            //                 {
+            //                     AssetDatabase.StartAssetEditing();
+            //                     entry.ExtractToFile(server, true);
+            //                     AssetDatabase.StopAssetEditing();
+            //                     break;
+            //                 }
+            //             }
+            //         }
+            //         File.Delete(serverZip);
+            //         binariesDone += 1;
+            //     }
+            //     binariesProgress = 1;
         }
 
         static void SetBinariesProgress(float progress)
@@ -108,32 +105,6 @@ namespace LLMUnity
         }
 
 #endif
-        /// <summary>
-        /// The Unity Awake function that initializes the state before the application starts.
-        /// The following actions are executed:
-        /// - existing servers are killed (if killExistingServersOnStart=true)
-        /// - the LLM server is started (async if asynchronousStartup, synchronous otherwise)
-        /// Additionally the Awake of the LLMClient is called to initialise the client part of the LLM object.
-        /// </summary>
-        private string SelectApeBinary()
-        {
-            // select the corresponding APE binary for the system architecture
-            string arch = LLMUnitySetup.RunProcess("uname", "-m");
-            Debug.Log($"architecture: {arch}");
-            string apeExe;
-            if (arch.Contains("arm64") || arch.Contains("aarch64"))
-            {
-                apeExe = apeARM;
-            }
-            else
-            {
-                apeExe = apeX86_64;
-                if (!arch.Contains("x86_64"))
-                    Debug.Log($"Unknown architecture of processor {arch}! Falling back to x86_64");
-            }
-            return apeExe;
-        }
-
         private void DebugLog(string message, bool logError = false)
         {
             // Debug log if debug is enabled
@@ -160,7 +131,7 @@ namespace LLMUnity
             try
             {
                 ServerStatus status = JsonUtility.FromJson<ServerStatus>(message);
-                if (status.message == "model loaded")
+                if (status.msg == "model loaded")
                 {
                     Debug.Log("LLM Server started!");
                     serverListening = true;
@@ -180,18 +151,18 @@ namespace LLMUnity
         {
             string binary = exe;
             string arguments = args;
-            if (Application.platform == RuntimePlatform.LinuxEditor || Application.platform == RuntimePlatform.LinuxPlayer)
-            {
-                // use APE binary directly if on Linux
-                arguments = $"{EscapeSpaces(binary)} {arguments}";
-                binary = SelectApeBinary();
-                LLMUnitySetup.makeExecutable(binary);
-            }
-            else if (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.OSXPlayer)
-            {
-                arguments = $"-c \"{EscapeSpaces(binary)} {arguments}\"";
-                binary = "sh";
-            }
+            //     if (Application.platform == RuntimePlatform.LinuxEditor || Application.platform == RuntimePlatform.LinuxPlayer)
+            //     {
+            //         // use APE binary directly if on Linux
+            //         arguments = $"{EscapeSpaces(binary)} {arguments}";
+            //         binary = SelectApeBinary();
+            //         LLMUnitySetup.makeExecutable(binary);
+            //     }
+            //     else if (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.OSXPlayer)
+            //     {
+            //         arguments = $"-c \"{EscapeSpaces(binary)} {arguments}\"";
+            //         binary = "sh";
+            //     }
             Debug.Log($"Server command: {binary} {arguments}");
             process = LLMUnitySetup.CreateProcess(binary, arguments, CheckIfListening, ProcessError, ProcessExited);
         }
@@ -199,7 +170,7 @@ namespace LLMUnity
         protected override string GetLlamaccpArguments()
         {
             string arguments = base.GetLlamaccpArguments();
-            arguments += $" --host 0.0.0.0 --port {port} --log-disable --nobrowser";
+            arguments += $" --host 0.0.0.0 --port {port} --log-disable";
             return arguments;
         }
 
@@ -213,11 +184,9 @@ namespace LLMUnity
             // }
 
             string arguments = GetLlamaccpArguments();
-            string noGPUArgument = " -ngl 0 --gpu no";
-            string GPUArgument = numGPULayers <= 0 ? noGPUArgument : $" -ngl {numGPULayers}";
             LLMUnitySetup.makeExecutable(server);
 
-            RunServerCommand(server, arguments + GPUArgument);
+            RunServerCommand(server, arguments);
             if (asynchronousStartup) await WaitOneASync(serverBlock, TimeSpan.FromSeconds(60));
             else serverBlock.WaitOne(60000);
 
@@ -227,7 +196,7 @@ namespace LLMUnity
                 serverBlock.Reset();
                 arguments += " --no-mmap";
 
-                RunServerCommand(server, arguments + GPUArgument);
+                RunServerCommand(server, arguments);
                 if (asynchronousStartup) await WaitOneASync(serverBlock, TimeSpan.FromSeconds(60));
                 else serverBlock.WaitOne(60000);
             }
@@ -236,8 +205,9 @@ namespace LLMUnity
             {
                 Debug.Log("GPU failed, fallback to CPU");
                 serverBlock.Reset();
+                //todo check if fails and switch to cpu
 
-                RunServerCommand(server, arguments + noGPUArgument);
+                RunServerCommand(server, arguments);
                 if (asynchronousStartup) await WaitOneASync(serverBlock, TimeSpan.FromSeconds(60));
                 else serverBlock.WaitOne(60000);
             }
