@@ -24,10 +24,10 @@ namespace LLMUnity
         /// Use a large number i.e. >30 to utilise the GPU as much as possible.
         /// If the user's GPU is not supported, the LLM will fall back to the CPU </summary>
         [Server] public int numGPULayers = 0;
-        /// <summary> number of prompts that can happen in parallel (-1 = number of LLM/LLMClient objects) </summary>
-        [ServerAdvanced] public int parallelPrompts = -1;
         /// <summary> select to log the output of the LLM in the Unity Editor. </summary>
         [ServerAdvanced] public bool debug = false;
+        /// <summary> number of prompts that can happen in parallel (-1 = number of LLM/LLMClient objects) </summary>
+        [ServerAdvanced] public int parallelPrompts = -1;
         /// <summary> allows to start the server asynchronously.
         /// This is useful to not block Unity while the server is initialised.
         /// For example it can be used as follows:
@@ -81,6 +81,8 @@ namespace LLMUnity
         public string chatTemplate = ChatTemplate.DefaultTemplate;
         private ChatTemplate template;
         /// \endcond
+
+        public void Update() {}
 
 #if UNITY_EDITOR
         /// \cond HIDE
@@ -189,6 +191,7 @@ namespace LLMUnity
             string arguments = $"-m {EscapeSpaces(modelPath)} -c {contextSize} -b {batchSize} --log-disable -np {slots}";
             if (numThreads > 0) arguments += $" -t {numThreads}";
             if (loraPath != "") arguments += $" --lora {EscapeSpaces(loraPath)}";
+            arguments += $" -ngl {numGPULayers}";
             return arguments;
         }
     }

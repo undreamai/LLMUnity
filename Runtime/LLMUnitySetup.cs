@@ -18,6 +18,41 @@ using System.Text.RegularExpressions;
 namespace LLMUnity
 {
     /// \cond HIDE
+    public sealed class FloatAttribute : PropertyAttribute
+    {
+        public float Min { get; private set; }
+        public float Max { get; private set; }
+
+        public FloatAttribute(float min, float max)
+        {
+            Min = min;
+            Max = max;
+        }
+    }
+    public sealed class IntAttribute : PropertyAttribute
+    {
+        public int Min { get; private set; }
+        public int Max { get; private set; }
+
+        public IntAttribute(int min, int max)
+        {
+            Min = min;
+            Max = max;
+        }
+    }
+
+    public class ServerAttribute : PropertyAttribute {}
+    public class ServerAdvancedAttribute : PropertyAttribute {}
+    public class ClientAttribute : PropertyAttribute {}
+    public class ModelAttribute : PropertyAttribute {}
+    public class ModelAdvancedAttribute : PropertyAttribute {}
+    public class ChatAttribute : PropertyAttribute {}
+
+    public class NotImplementedException : Exception
+    {
+        public NotImplementedException() : base("The method needs to be implemented by subclasses.") {}
+    }
+
     public delegate void EmptyCallback();
     public delegate void Callback<T>(T message);
     public delegate Task TaskCallback<T>(T message);

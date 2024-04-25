@@ -23,6 +23,8 @@ namespace LLMUnity
         public static extern void LLM_Slot(IntPtr LLMObject, string json_data);
         [DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void LLM_Cancel(IntPtr LLMObject, int id_slot);
+        [DllImport(dllName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int LLM_Status(IntPtr LLMObject, IntPtr stringWrapper);
 
         [DllImport(dllName)]
         public static extern IntPtr StringWrapper_Construct();

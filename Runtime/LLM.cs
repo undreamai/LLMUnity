@@ -9,6 +9,16 @@ using UnityEngine;
 
 namespace LLMUnity
 {
+    public class LLMException : Exception
+    {
+        public int ErrorCode { get; private set; }
+
+        public LLMException(string message, int errorCode) : base(message)
+        {
+            ErrorCode = errorCode;
+        }
+    }
+
     [DefaultExecutionOrder(-1)]
     /// @ingroup llm
     /// <summary>
@@ -21,25 +31,41 @@ namespace LLMUnity
 
         public async void Awake()
         {
+            if (!gameObject.activeSelf) return;
             if (asynchronousStartup) await StartLLMServer();
             else _ = StartLLMServer();
         }
 
         private async Task StartLLMServer()
         {
-            string arguments = GetLlamaccpArguments();
-            Debug.Log($"Server command: {arguments}");
-            if (!asynchronousStartup)
+            for (int i = 0; i < 3; i++)
             {
-                LLMObject = LLMLib.LLM_Construct(arguments);
+                string arguments = GetLlamaccpArguments();
+                Debug.Log($"Server command: {arguments}");
+                if (!asynchronousStartup)
+                {
+                    LLMObject = LLMLib.LLM_Construct(arguments);
+                }
+                else
+                {
+                    LLMObject = await Task.Run(() => LLMLib.LLM_Construct(arguments));
+                }
+
+                try
+                {
+                    CheckLLMStatus();
+                    serverStarted = true;
+                    serverListening = true;
+                    Debug.Log("LLM service started");
+                    break;
+                }
+                catch (LLMException e)
+                {
+                    LLMLib.LLM_Delete(LLMObject);
+                    if (i == 0) parallelPrompts = 1;
+                    if (i == 1) numGPULayers = 0;
+                }
             }
-            else
-            {
-                LLMObject = await Task.Run(() => LLMLib.LLM_Construct(arguments));
-            }
-            serverStarted = true;
-            serverListening = true;
-            Debug.Log("server started");
         }
 
         public int Register(LLMClient llmClient)
@@ -50,9 +76,12 @@ namespace LLMUnity
 
         protected override int GetNumClients()
         {
-            return parallelPrompts == -1? clients.Count: base.GetNumClients();
+            // return Math.Max(parallelPrompts == -1 ? clients.Count : parallelPrompts, 1);
+            return parallelPrompts;
+            // return 0;
         }
 
+        public delegate void LLMStatusCallback(IntPtr LLMObject, IntPtr stringWrapper);
         public delegate void LLMReplyCallback(IntPtr LLMObject, string json_data, IntPtr stringWrapper);
         public delegate void StreamingCallback();
         public delegate void LLMReplyStreamingCallback(IntPtr LLMObject, string json_data, IntPtr stringWrapper, IntPtr streamCallbackPointer);
@@ -97,17 +126,43 @@ namespace LLMUnity
             }
         }
 
+        void CheckLLMStatus()
+        {
+            IntPtr stringWrapper = LLMLib.StringWrapper_Construct();
+            int status = LLMLib.LLM_Status(LLMObject, stringWrapper);
+            string result = GetStringWrapperResult(stringWrapper);
+            LLMLib.StringWrapper_Delete(stringWrapper);
+            string message = $"LLM {status}: {result}";
+            if (status != 0)
+            {
+                Debug.LogError(message);
+                throw new LLMException(message, status);
+            }
+            // if (status < 0)
+            // {
+            //     Debug.LogError(message);
+            //     throw new LLMException(message, status);
+            // }
+            // else if (status > 0)
+            // {
+            //     Debug.LogWarning(message);
+            // }
+        }
+
         async Task<string> LLMReply(LLMReplyCallback callback, string json)
         {
+            CheckLLMStatus();
             IntPtr stringWrapper = LLMLib.StringWrapper_Construct();
             await Task.Run(() => callback(LLMObject, json, stringWrapper));
             string result = GetStringWrapperResult(stringWrapper);
             LLMLib.StringWrapper_Delete(stringWrapper);
+            CheckLLMStatus();
             return result;
         }
 
         async Task<string> LLMStreamReply(LLMReplyStreamingCallback callback, string json, Callback<string> streamCallback = null)
         {
+            CheckLLMStatus();
             IntPtr stringWrapper = LLMLib.StringWrapper_Construct();
             IntPtr streamCallbackPointer = IntPtr.Zero;
             if (streamCallback != null)
@@ -119,6 +174,7 @@ namespace LLMUnity
             await Task.Run(() => callback(LLMObject, json, stringWrapper, streamCallbackPointer));
             string result = GetStringWrapperResult(stringWrapper);
             LLMLib.StringWrapper_Delete(stringWrapper);
+            CheckLLMStatus();
             return result;
         }
 
@@ -139,7 +195,9 @@ namespace LLMUnity
 
         public void CancelRequest(int id_slot)
         {
+            CheckLLMStatus();
             LLMLib.LLM_Cancel(LLMObject, id_slot);
+            CheckLLMStatus();
         }
 
         /// <summary>
@@ -148,6 +206,7 @@ namespace LLMUnity
         /// </summary>
         public void OnDestroy()
         {
+            CheckLLMStatus();
             LLMLib.LLM_Delete(LLMObject);
         }
 
@@ -155,7 +214,7 @@ namespace LLMUnity
 // The following is copied from https://github.com/PimDeWitte/UnityMainThreadDispatcher
         private static readonly Queue<Action> _executionQueue = new Queue<Action>();
 
-        public void Update()
+        public new void Update()
         {
             lock (_executionQueue) {
                 while (_executionQueue.Count > 0)

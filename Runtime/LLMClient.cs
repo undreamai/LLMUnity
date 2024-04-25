@@ -8,10 +8,16 @@ namespace LLMUnity
     [DefaultExecutionOrder(-2)]
     public class LLMClient : LLMClientBase
     {
-        [Model] public LLM llm;
+        [Client] public LLM llm;
 
         public new void Awake()
         {
+            // Start the LLM server in a cross-platform way
+            if (llm == null)
+            {
+                Debug.LogError("No llm provided!");
+                return;
+            }
             id_slot = llm.Register(this);
             base.Awake();
         }
