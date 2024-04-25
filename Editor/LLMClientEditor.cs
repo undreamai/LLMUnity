@@ -1,66 +1,32 @@
 using System;
 using UnityEditor;
 using UnityEngine;
-using System.Reflection;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace LLMUnity
 {
-    [CustomEditor(typeof(LLMClient))]
-    public class LLMClientEditor : Editor
+    [CustomEditor(typeof(LLMClientBase))]
+    public class LLMClientBaseEditor : PropertyEditor
     {
-        protected int buttonWidth = 150;
-        Type[] propertyTypes = new Type[] { typeof(LLMClientBase), typeof(LLMClient) };
-
-        public void Space()
+        protected override Type[] GetPropertyTypes()
         {
-            EditorGUILayout.Space((int)EditorGUIUtility.singleLineHeight / 2);
+            return new Type[] { typeof(LLMClientBase) };
         }
 
-        public void AddScript(SerializedObject llmScriptSO)
+        public void AddClientSettings(SerializedObject llmScriptSO)
         {
-            var scriptProp = llmScriptSO.FindProperty("m_Script");
-            EditorGUILayout.PropertyField(scriptProp);
+            ShowPropertiesOfClass("Client Settings", llmScriptSO, new List<Type> { typeof(ClientAttribute) }, true);
         }
 
-        public void AddOptionsToggle(SerializedObject llmScriptSO, string propertyName, string name)
-        {
-            SerializedProperty advancedOptionsProp = llmScriptSO.FindProperty(propertyName);
-            string toggleText = (advancedOptionsProp.boolValue ? "Hide" : "Show") + " " + name;
-            GUIStyle style = new GUIStyle("Button");
-            if (advancedOptionsProp.boolValue)
-                style.normal = new GUIStyleState() { background = Texture2D.grayTexture };
-            if (GUILayout.Button(toggleText, style, GUILayout.Width(buttonWidth)))
-            {
-                advancedOptionsProp.boolValue = !advancedOptionsProp.boolValue;
-            }
-        }
-
-        public void AddOptionsToggles(SerializedObject llmScriptSO)
-        {
-            EditorGUILayout.BeginHorizontal();
-            AddOptionsToggle(llmScriptSO, "advancedOptions", "Advanced Options");
-            EditorGUILayout.EndHorizontal();
-            Space();
-        }
-
-        public void AddModelLoadersSettings(SerializedObject llmScriptSO, LLMClient llmScript)
+        public void AddModelSettings(SerializedObject llmScriptSO, LLMClientBase llmClientScript)
         {
             EditorGUILayout.LabelField("Model Settings", EditorStyles.boldLabel);
-            AddModelAddonLoaders(llmScriptSO, llmScript);
-            AddModelSettings(llmScriptSO);
-        }
+            ShowPropertiesOfClass("", llmScriptSO, new List<Type> { typeof(ModelAttribute) }, false);
 
-        public void AddModelAddonLoaders(SerializedObject llmScriptSO, LLMClient llmClientScript, bool layout = true)
-        {
             if (llmScriptSO.FindProperty("advancedOptions").boolValue)
             {
-                if (layout)
-                {
-                    EditorGUILayout.BeginHorizontal();
-                    GUILayout.Label("Grammar", GUILayout.Width(EditorGUIUtility.labelWidth));
-                }
+                EditorGUILayout.BeginHorizontal();
+                GUILayout.Label("Grammar", GUILayout.Width(EditorGUIUtility.labelWidth));
                 if (GUILayout.Button("Load grammar", GUILayout.Width(buttonWidth)))
                 {
                     EditorApplication.delayCall += () =>
@@ -72,29 +38,21 @@ namespace LLMUnity
                         }
                     };
                 }
-                if (layout) EditorGUILayout.EndHorizontal();
-            }
-        }
+                EditorGUILayout.EndHorizontal();
 
-        public void AddModelSettings(SerializedObject llmScriptSO)
-        {
-            List<Type> attributeClasses = new List<Type> { typeof(ModelAttribute) };
-            if (llmScriptSO.FindProperty("advancedOptions").boolValue)
-            {
-                attributeClasses.Add(typeof(ModelAdvancedAttribute));
+                ShowPropertiesOfClass("", llmScriptSO, new List<Type> { typeof(ModelAdvancedAttribute) }, false);
             }
-            ShowPropertiesOfClass("", llmScriptSO, propertyTypes, attributeClasses, false);
             Space();
         }
 
         public void AddChatSettings(SerializedObject llmScriptSO)
         {
-            ShowPropertiesOfClass("Chat Settings", llmScriptSO, propertyTypes, new List<Type> { typeof(ChatAttribute) }, false);
+            ShowPropertiesOfClass("Chat Settings", llmScriptSO, new List<Type> { typeof(ChatAttribute) }, false);
         }
 
         public override void OnInspectorGUI()
         {
-            LLMClient llmScript = (LLMClient)target;
+            LLMClientBase llmScript = (LLMClientBase)target;
             SerializedObject llmScriptSO = new SerializedObject(llmScript);
             llmScriptSO.Update();
 
@@ -103,7 +61,8 @@ namespace LLMUnity
             GUI.enabled = true;
             EditorGUI.BeginChangeCheck();
             AddOptionsToggles(llmScriptSO);
-            AddModelLoadersSettings(llmScriptSO, llmScript);
+            AddClientSettings(llmScriptSO);
+            AddModelSettings(llmScriptSO, llmScript);
             AddChatSettings(llmScriptSO);
 
             if (EditorGUI.EndChangeCheck())
@@ -111,86 +70,23 @@ namespace LLMUnity
 
             llmScriptSO.ApplyModifiedProperties();
         }
+    }
 
-        public List<SerializedProperty> GetPropertiesOfClass(SerializedObject so, Type[] targetClasses, List<Type> attributeClasses)
+    [CustomEditor(typeof(LLMClient))]
+    public class LLMClientEditor : LLMClientBaseEditor
+    {
+        protected override Type[] GetPropertyTypes()
         {
-            // display a property if it belongs to a certain class and/or has a specific attribute class
-            List<SerializedProperty> properties = new List<SerializedProperty>();
-            foreach (Type attrClass in attributeClasses)
-            {
-                if (attrClass == null) continue;
-                foreach (Type targetClass in targetClasses)
-                {
-                    SerializedProperty prop = so.GetIterator();
-                    if (prop.NextVisible(true))
-                    {
-                        do
-                        {
-                            if (PropertyInClass(prop, targetClass, attrClass))
-                                properties.Add(so.FindProperty(prop.propertyPath));
-                        }
-                        while (prop.NextVisible(false));
-                    }
-                }
-            }
-            return properties;
+            return new Type[] { typeof(LLMClient), typeof(LLMClientBase) };
         }
+    }
 
-        public void ShowPropertiesOfClass(string title, SerializedObject so, Type[] targetClasses, List<Type> attributeClasses, bool addSpace = true)
+    [CustomEditor(typeof(LLMRemoteClient))]
+    public class LLMRemoteClientEditor : LLMClientBaseEditor
+    {
+        protected override Type[] GetPropertyTypes()
         {
-            // display a property if it belongs to a certain class and/or has a specific attribute class
-            List<SerializedProperty> properties = GetPropertiesOfClass(so, targetClasses, attributeClasses);
-            if (properties.Count == 0) return;
-            if (title != "") EditorGUILayout.LabelField(title, EditorStyles.boldLabel);
-            foreach (SerializedProperty prop in properties)
-            {
-                Attribute floatAttr = GetPropertyAttribute(prop, typeof(FloatAttribute));
-                Attribute intAttr = GetPropertyAttribute(prop, typeof(IntAttribute));
-                if (floatAttr != null)
-                {
-                    EditorGUILayout.Slider(prop, ((FloatAttribute)floatAttr).Min, ((FloatAttribute)floatAttr).Max, new GUIContent(prop.displayName));
-                }
-                else if (intAttr != null)
-                {
-                    EditorGUILayout.IntSlider(prop, ((IntAttribute)intAttr).Min, ((IntAttribute)intAttr).Max, new GUIContent(prop.displayName));
-                }
-                else
-                {
-                    EditorGUILayout.PropertyField(prop);
-                }
-            }
-            if (addSpace) Space();
-        }
-
-        public bool PropertyInClass(SerializedProperty prop, Type targetClass, Type attributeClass = null)
-        {
-            // check if a property belongs to a certain class and/or has a specific attribute class
-            FieldInfo field = prop.serializedObject.targetObject.GetType().GetField(prop.name,
-                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-            return field != null && field.DeclaringType == targetClass && (attributeClass == null || GetPropertyAttribute(prop, attributeClass) != null);
-        }
-
-        public Attribute GetPropertyAttribute(SerializedProperty prop, Type attributeClass)
-        {
-            // check if a property has a specific attribute class
-            foreach (var pathSegment in prop.propertyPath.Split('.'))
-            {
-                var targetType = prop.serializedObject.targetObject.GetType();
-                while (targetType != null)
-                {
-                    var fieldInfo = targetType.GetField(pathSegment, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-                    if (fieldInfo != null)
-                    {
-                        foreach (Attribute attr in fieldInfo.GetCustomAttributes(attributeClass, true))
-                        {
-                            if (attr.GetType() == attributeClass)
-                                return attr;
-                        }
-                    }
-                    targetType = targetType.BaseType;
-                }
-            }
-            return null;
+            return new Type[] { typeof(LLMRemoteClient), typeof(LLMClientBase) };
         }
     }
 }

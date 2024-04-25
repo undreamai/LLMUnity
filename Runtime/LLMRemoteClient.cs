@@ -1,7 +1,6 @@
 /// @file
 /// @brief File implementing the LLM client.
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -18,9 +17,9 @@ namespace LLMUnity
     public class LLMRemoteClient : LLMClientBase
     {
         /// <summary> host to use for the LLMClient object </summary>
-        [ClientAdvanced] public string host = "localhost";
+        [Client] public string host = "localhost";
         /// <summary> port to use for the server (LLM) or client (LLMClient) </summary>
-        [ServerAdvanced] public int port = 13333;
+        [Client] public int port = 13333;
 
         /// \cond HIDE
         private List<(string, string)> requestHeaders = new List<(string, string)> { ("Content-Type", "application/json") };

@@ -7,45 +7,6 @@ using UnityEngine;
 
 namespace LLMUnity
 {
-    /// \cond HIDE
-    public sealed class FloatAttribute : PropertyAttribute
-    {
-        public float Min { get; private set; }
-        public float Max { get; private set; }
-
-        public FloatAttribute(float min, float max)
-        {
-            Min = min;
-            Max = max;
-        }
-    }
-    public sealed class IntAttribute : PropertyAttribute
-    {
-        public int Min { get; private set; }
-        public int Max { get; private set; }
-
-        public IntAttribute(int min, int max)
-        {
-            Min = min;
-            Max = max;
-        }
-    }
-
-    public class ClientAttribute : PropertyAttribute {}
-    public class ServerAttribute : PropertyAttribute {}
-    public class ModelAttribute : PropertyAttribute {}
-    public class ChatAttribute : PropertyAttribute {}
-    public class ClientAdvancedAttribute : PropertyAttribute {}
-    public class ServerAdvancedAttribute : PropertyAttribute {}
-    public class ModelAdvancedAttribute : PropertyAttribute {}
-
-    public class NotImplementedException : System.Exception
-    {
-        public NotImplementedException() : base("The method needs to be implemented by subclasses."){}
-    }
-
-    /// \endcond
-
     public class LLMClientBase : MonoBehaviour
     {
         /// <summary> toggle to show/hide advanced options in the GameObject </summary>
@@ -156,6 +117,8 @@ namespace LLMUnity
             InitPrompt();
             LoadTemplate();
         }
+
+        public void Update() {}
 
         private void InitPrompt(bool clearChat = true)
         {
