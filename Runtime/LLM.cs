@@ -38,17 +38,25 @@ namespace LLMUnity
 
         private async Task StartLLMServer()
         {
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < 2; i++)
             {
                 string arguments = GetLlamaccpArguments();
                 Debug.Log($"Server command: {arguments}");
-                if (!asynchronousStartup)
+                try
                 {
-                    LLMObject = LLMLib.LLM_Construct(arguments);
+                    if (!asynchronousStartup)
+                    {
+                        LLMObject = LLMLib.LLM_Construct(arguments);
+                    }
+                    else
+                    {
+                        LLMObject = await Task.Run(() => LLMLib.LLM_Construct(arguments));
+                    }
                 }
-                else
+                catch (Exception e)
                 {
-                    LLMObject = await Task.Run(() => LLMLib.LLM_Construct(arguments));
+                    Debug.LogError(e.Message);
+                    continue;
                 }
 
                 try
@@ -62,8 +70,8 @@ namespace LLMUnity
                 catch (LLMException e)
                 {
                     LLMLib.LLM_Delete(LLMObject);
-                    if (i == 0) parallelPrompts = 1;
-                    if (i == 1) numGPULayers = 0;
+                    if (numGPULayers > 0) numGPULayers = 0;
+                    else break;
                 }
             }
         }
@@ -76,9 +84,7 @@ namespace LLMUnity
 
         protected override int GetNumClients()
         {
-            // return Math.Max(parallelPrompts == -1 ? clients.Count : parallelPrompts, 1);
-            return parallelPrompts;
-            // return 0;
+            return Math.Max(parallelPrompts == -1 ? clients.Count : parallelPrompts, 1);
         }
 
         public delegate void LLMStatusCallback(IntPtr LLMObject, IntPtr stringWrapper);
@@ -133,25 +139,20 @@ namespace LLMUnity
             string result = GetStringWrapperResult(stringWrapper);
             LLMLib.StringWrapper_Delete(stringWrapper);
             string message = $"LLM {status}: {result}";
-            if (status != 0)
+            if (status > 0)
             {
                 Debug.LogError(message);
                 throw new LLMException(message, status);
             }
-            // if (status < 0)
-            // {
-            //     Debug.LogError(message);
-            //     throw new LLMException(message, status);
-            // }
-            // else if (status > 0)
-            // {
-            //     Debug.LogWarning(message);
-            // }
+            else if (status < 0)
+            {
+                Debug.LogWarning(message);
+            }
         }
 
         async Task<string> LLMReply(LLMReplyCallback callback, string json)
         {
-            CheckLLMStatus();
+            // CheckLLMStatus();
             IntPtr stringWrapper = LLMLib.StringWrapper_Construct();
             await Task.Run(() => callback(LLMObject, json, stringWrapper));
             string result = GetStringWrapperResult(stringWrapper);
@@ -162,7 +163,7 @@ namespace LLMUnity
 
         async Task<string> LLMStreamReply(LLMReplyStreamingCallback callback, string json, Callback<string> streamCallback = null)
         {
-            CheckLLMStatus();
+            // CheckLLMStatus();
             IntPtr stringWrapper = LLMLib.StringWrapper_Construct();
             IntPtr streamCallbackPointer = IntPtr.Zero;
             if (streamCallback != null)
@@ -180,22 +181,38 @@ namespace LLMUnity
 
         public async Task<string> Tokenize(string json)
         {
-            return await LLMReply(LLMLib.LLM_Tokenize, json);
+            LLMReplyCallback callback = (IntPtr LLMObject, string jsonData, IntPtr strWrapper) =>
+            {
+                LLMLib.LLM_Tokenize(LLMObject, jsonData, strWrapper);
+            };
+            return await LLMReply(callback, json);
+            // return await LLMReply(LLMLib.LLM_Tokenize, json);
         }
 
         public async Task<string> Detokenize(string json)
         {
-            return await LLMReply(LLMLib.LLM_Detokenize, json);
+            LLMReplyCallback callback = (IntPtr LLMObject, string jsonData, IntPtr strWrapper) =>
+            {
+                LLMLib.LLM_Detokenize(LLMObject, jsonData, strWrapper);
+            };
+            return await LLMReply(callback, json);
+            // return await LLMReply(LLMLib.LLM_Detokenize, json);
         }
 
         public async Task<string> Completion(string json, Callback<string> streamCallback = null)
         {
-            return await LLMStreamReply(LLMLib.LLM_Completion, json, streamCallback);
+            LLMReplyStreamingCallback callback = (IntPtr LLMObject, string json_data, IntPtr stringWrapper, IntPtr streamCallbackPointer) =>
+            {
+                LLMLib.LLM_Completion(LLMObject, json_data, stringWrapper, streamCallbackPointer);
+            };
+            return await LLMStreamReply(callback, json, streamCallback);
+
+            // return await LLMStreamReply(LLMLib.LLM_Completion, json, streamCallback);
         }
 
         public void CancelRequest(int id_slot)
         {
-            CheckLLMStatus();
+            // CheckLLMStatus();
             LLMLib.LLM_Cancel(LLMObject, id_slot);
             CheckLLMStatus();
         }
