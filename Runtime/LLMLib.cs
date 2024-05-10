@@ -7,9 +7,13 @@ namespace LLMUnity
 {
     public class LLMLib
     {
-        static LLMLib()
+        public LLMLib(string arch)
         {
-            string arch = DetermineArchitecture();
+            LoadArchitecture(arch);
+        }
+
+        public void LoadArchitecture(string arch)
+        {
             if (LibraryFunctions.TryGetValue(arch, out var delegates))
             {
                 (
@@ -59,10 +63,58 @@ namespace LLMUnity
             }
         }
 
-        private static string DetermineArchitecture()
+        public static List<string> PossibleArchitectures(bool gpu = false)
         {
-            return "undreamai_linux-avx";
+            List<string> architectures = new List<string>();
+            if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer ||
+                Application.platform == RuntimePlatform.LinuxEditor || Application.platform == RuntimePlatform.LinuxPlayer)
+            {
+                string os = (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer) ? "windows" : "linux";
+                if (gpu)
+                {
+                    architectures.Add($"undreamai_{os}-cuda-cu12.2.0");
+                    architectures.Add($"undreamai_{os}-cuda-cu11.7.1");
+                    architectures.Add($"undreamai_{os}-clblast");
+                }
+                try
+                {
+                    if (has_avx512()) architectures.Add($"undreamai_{os}-avx512");
+                    if (has_avx2()) architectures.Add($"undreamai_{os}-avx2");
+                    if (has_avx()) architectures.Add($"undreamai_{os}-avx");
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError($"{e.GetType()}: {e.Message}");
+                }
+                architectures.Add($"undreamai_{os}-noavx");
+            }
+            else if (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.OSXPlayer)
+            {
+                string arch = LLMUnitySetup.RunProcess("uname", "-m");
+                if (arch.Contains("arm64") || arch.Contains("aarch64"))
+                {
+                    architectures.Add("undreamai_macos-arm64");
+                }
+                else
+                {
+                    if (!arch.Contains("x86_64")) Debug.LogWarning($"Unknown architecture of processor {arch}! Falling back to x86_64");
+                    architectures.Add("undreamai_macos-x64");
+                }
+            }
+            else
+            {
+                Debug.LogError("Unknown OS");
+            }
+            return architectures;
         }
+
+        const string linux_archchecker_dll = "archchecker";
+        [DllImport(linux_archchecker_dll, CallingConvention = CallingConvention.Cdecl)]
+        public static extern bool has_avx();
+        [DllImport(linux_archchecker_dll, CallingConvention = CallingConvention.Cdecl)]
+        public static extern bool has_avx2();
+        [DllImport(linux_archchecker_dll)]
+        public static extern bool has_avx512();
 
         public delegate IntPtr LLM_ConstructDelegate(string command, bool server_mode = false);
         public delegate void LLM_DeleteDelegate(IntPtr LLMObject);
@@ -77,19 +129,18 @@ namespace LLMUnity
         public delegate int StringWrapper_GetStringSizeDelegate(IntPtr instance);
         public delegate void StringWrapper_GetStringDelegate(IntPtr instance, IntPtr buffer, int bufferSize);
 
-        // Function pointer instances for each native function
-        public static LLM_ConstructDelegate LLM_Construct;
-        public static LLM_DeleteDelegate LLM_Delete;
-        public static LLM_TokenizeDelegate LLM_Tokenize;
-        public static LLM_DetokenizeDelegate LLM_Detokenize;
-        public static LLM_CompletionDelegate LLM_Completion;
-        public static LLM_SlotDelegate LLM_Slot;
-        public static LLM_CancelDelegate LLM_Cancel;
-        public static LLM_StatusDelegate LLM_Status;
-        public static StringWrapper_ConstructDelegate StringWrapper_Construct;
-        public static StringWrapper_DeleteDelegate StringWrapper_Delete;
-        public static StringWrapper_GetStringSizeDelegate StringWrapper_GetStringSize;
-        public static StringWrapper_GetStringDelegate StringWrapper_GetString;
+        public LLM_ConstructDelegate LLM_Construct;
+        public LLM_DeleteDelegate LLM_Delete;
+        public LLM_TokenizeDelegate LLM_Tokenize;
+        public LLM_DetokenizeDelegate LLM_Detokenize;
+        public LLM_CompletionDelegate LLM_Completion;
+        public LLM_SlotDelegate LLM_Slot;
+        public LLM_CancelDelegate LLM_Cancel;
+        public LLM_StatusDelegate LLM_Status;
+        public StringWrapper_ConstructDelegate StringWrapper_Construct;
+        public StringWrapper_DeleteDelegate StringWrapper_Delete;
+        public StringWrapper_GetStringSizeDelegate StringWrapper_GetStringSize;
+        public StringWrapper_GetStringDelegate StringWrapper_GetString;
 
         const string linux_avx_dll = "undreamai_linux-avx";
         [DllImport(linux_avx_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Construct")]
