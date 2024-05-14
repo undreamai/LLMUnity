@@ -18,7 +18,7 @@
 [![Documentation](https://img.shields.io/badge/Docs-white.svg?logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwEAYAAAAHkiXEAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEgAACxIB0t1+/AAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAATqSURBVHic7ZtbiE1RGMc349K4M5EwklwjzUhJCMmTJPJAYjQXJJcH8+Blkry4lPJA8aAoJbekDLmUS6E8SHJL5AW5JPf77eHv93C22Wfttc/ee+0zc/4vv+bMXvusvfZa3/q+b33H80oqqaSSSmqrKnPdgXjUvbvYq5f4+7f486eb/rRajRsn7t4tPngg/vol/vkj/vghXr0q7tghzpyZ//79+on79omXLombNondukXrd9GoSxdx8mSxqUm8eVNkgAvl0aPioEFip07i6dP52z15Ig4fbvVY2VVFhbhokXjrlogJiWvAg/jwoXjqVO73+leUny9eiFVV5mfMlLDRBw+KX76ISQ+0LZ8/F00v4uJFsWPHFh83O+rdWzx3TnQ9wCZ+/Sqyl5iux1RmTu3aiYcPi64H1pasALypoOv4/8SJXraEbXc9kLbECxo2TKyuFj9/zt9u+XIvG8LWv3wpuh5QW86f3/JznT+fv93s2S23C1Z72wbhtH692LdvMvdPSgzkhAkiJhT16ZO/PRPOmcr+Rda4aa5nclTeuZP7PDgRpr1g40bPrQYOFF0PYKHEC+raVVy8OFy7R49EArvURU4mrUAqaTY0iB8/2rXD+XCm5mbR9QAWylevorV7/VpkL0ld06eLpkiyWPj9u93179+LpFZwZ1PXtGnitWui64GMStPmG7SH1NSIJBNHjvTSFZvRvHlise0N9JcBtW1/44Y4dqx45IjnU0JxAGLpklPx+9VZFwPp/9v/eZDGjxcZh7dv4+mXtch+up7Rca+MsJvxiRNi6nvBhg25HWprZMaPGeOlqxEjxGKz+XGRTAAmyJnq6sR370TXA2NLW+8HNjZ62dLOnaLrAQ1r2zmqPH482n0mTfJCKmEvCJHUooNZE/369Elct06kqiKsONRfulTEFDsX8QDlIa5nup9374pE8IiZHPY+ly+LZE/37/cM6mC6IB6Vl4urV6fzfUG6d0/csyf37wsXRFInaM4ckTjGdPg+apTYs6dI3RIWwH//1DV1qkiuxNY2FzrTd+2y6y8z2HQU6efZs+KBAyJZ4v+V0h6ArlwROaQP0uPH4ooV4sqV8Xz/4MF211M2wwoOq1mzRAq5Pnywa5+4KDHE9mI7ly0TO3fOvZ6/eZCoKwB32HS0SMFV1DNtImBKHYstBROoQ4fEQk2RaS+qrxejmj5M7NatIhWARS82xUJfAKahzFcdPnq0GLYgy7Rnbd8e6rGKRyzpuNzPBQty709RcNSZf/KkuHCh2GpMDyKbGNcLYE+YMkVks336NFx7XhTZ3szXiBaqtWvFuAOxM2dEZiyH8UErgc8JLNun7E0aFffSI7RP6owZmz9kSO73HjsmXr8ukppYsybSYyQvBp5QfOjQ3M9tRR496pGgLf1JtLlzRZJzlFzGp4SWDnUxFCrdvy+uWiWa3DJe3N69oj8uSEq8CER88uaNOGBAOv2ILGY69TBBJoM8O0t72zaRoztXBzlLlrT8XARW/IQq82JTMv3mKmv0/9CC4mJMYPwrMSETxAyurRUxQVmXP1fEid7mzeK3b+n2Jzb16CFu2SIWmtNJiriVxANsyq0uoCJfTk4G9y4t24/bSQ0rTkP6gVTG3mz//uKMGSK/ucId5Xe9lZUi5eMMLGUgz56J5Hxu3xZ50Xg3RMIltVn9BRja26PYsBHgAAAAAElFTkSuQmCC)](https://undream.ai/LLMUnity)
 
 LLM for Unity enables seamless integration of Large Language Models (LLMs) within the Unity engine.<br>
-It allows to create intelligent characters that your players can interact with for an immersive experience.<br>
+It allows you to create intelligent characters that your players can interact with for an immersive experience.<br>
 LLM for Unity is built on top of the awesome [llama.cpp](https://github.com/ggerganov/llama.cpp) and [llamafile](https://github.com/Mozilla-Ocho/llamafile) libraries.
 
 <sub>
@@ -35,9 +35,9 @@ LLM for Unity is built on top of the awesome [llama.cpp](https://github.com/gger
 
 ## At a glance
 - 💻 Cross-platform! Windows, Linux and macOS
-- 🏠 Runs locally without internet access. No data ever leave the game!
+- 🏠 Runs locally without internet access. No data ever leaves the game!
 - ⚡ Blazing fast inference on CPU and GPU (Nvidia, AMD, Apple Metal)
-- 🤗 Support of the major LLM models
+- 🤗 Supports major LLM models
 - 🔧 Easy to setup, call with a single line of code
 - 💰 Free to use for both personal and commercial purposes
 
@@ -76,7 +76,7 @@ The first step is to create a GameObject for the LLM ♟️:
 - Create an empty GameObject.<br>In the GameObject Inspector click `Add Component` and select the LLM script.
 - Download one of the default models with the `Download Model` button (~GBs).<br>Or load your own .gguf model with the `Load model` button (see [Use your own model](#use-your-own-model)).
 - Define the role of your AI in the `Prompt`. You can also define the name of the AI (`AI Name`) and the player (`Player Name`).
-- (Optional) By default you receive the reply from the model as is it is produced in real-time (recommended).<br>If you want the full reply in one go, deselect the `Stream` option.
+- (Optional) By default you receive the reply from the model while it is still being produced in real-time (recommended).<br>If you want the full reply in one go, disable the `Stream` option.
 - (Optional) Adjust the server or model settings to your preference (see [Options](#options)).
 
 In your script you can then use it as follows 🦄:
@@ -101,7 +101,7 @@ public class MyScript {
 }
 ```
 You can also specify a function to call when the model reply has been completed.<br>
-This is useful if the `Stream` option is selected for continuous output from the model (default behaviour):
+This is useful if the `Stream` option is enabled for continuous output from the model (default behaviour):
 ``` c#
   void ReplyCompleted(){
     // do something when the reply from the model is complete
@@ -117,7 +117,7 @@ This is useful if the `Stream` option is selected for continuous output from the
   }
 ```
 
-To stop the chat without waiting its completion you can use:
+To stop the chat without waiting for its completion you can use:
 ``` c#
     llm.CancelRequests();
 ```
@@ -195,7 +195,7 @@ public class MyScript {
 
 </details>
 <details>
-<summary>Add or not the message to the chat/prompt history</summary>
+<summary>Decide whether or not to add the message to the chat/prompt history</summary>
 
   The last argument of the `Chat` function is a boolean that specifies whether to add the message to the history (default: true):
 ``` c#
@@ -273,7 +273,7 @@ public class MyScript : MonoBehaviour
 <details>
 <summary>Use a remote server</summary>
 
-You can also build a remote server that does the processing and have local clients that interact with it.To do that:
+You can also build a remote server that does the processing and have local clients that interact with it. To do that:
 - Create a server based on the `LLM` script or a standard [llama.cpp server](https://github.com/ggerganov/llama.cpp/blob/master/examples/server).
 - If using the `LLM` script for the server, enable the `Remote` option (Advanced options)
 - Create characters with the `LLMClient` script. The characters can be configured to connect to the remote instance by providing the IP address (starting with "http://") and port of the server in the `host`/`port` properties.
@@ -285,10 +285,10 @@ A <b>detailed documentation</b> on function level can be found here:
 
 ## Examples
 The [Samples~](Samples~) folder contains several examples of interaction 🤖:
-- [SimpleInteraction](Samples~/SimpleInteraction): Demonstrates simple interaction between a player and a AI
+- [SimpleInteraction](Samples~/SimpleInteraction): Demonstrates a simple interaction between a player and an AI
 - [AsyncStartup](Samples~/AsyncStartup): Demonstrates how to use the async functionality for a loading screen
-- [ServerClient](Samples~/ServerClient): Demonstrates simple interaction between a player and multiple AIs using a `LLM` and a `LLMClient`
-- [ChatBot](Samples~/ChatBot): Demonstrates interaction between a player and a AI with a UI similar to a messaging app (see image below)
+- [ServerClient](Samples~/ServerClient): Demonstrates a simple interaction between a player and multiple AIs using a `LLM` and a `LLMClient`
+- [ChatBot](Samples~/ChatBot): Demonstrates interaction between a player and an AI with a UI similar to a messaging app (see image below)
   
 <img width="400" src=".github/demo.gif">
 
@@ -306,8 +306,8 @@ LLM for Unity uses the [Mistral 7B Instruct](https://huggingface.co/mistralai/Mi
 
 Alternative models can be downloaded from [HuggingFace](https://huggingface.co/models).<br>
 The required model format is .gguf as defined by the llama.cpp.<br>
-The easiest way is to download gguf models directly by [TheBloke](https://huggingface.co/TheBloke) who has converted an astonishing number of models 🌈!<br>
-Otherwise other model formats can be converted to gguf with the `convert.py` script of the llama.cpp as described [here](https://github.com/ggerganov/llama.cpp/tree/master?tab=readme-ov-file#prepare-data--run).<br>
+The easiest way is to download .gguf models directly by [TheBloke](https://huggingface.co/TheBloke) who has converted an astonishing number of models 🌈!<br>
+Otherwise other model formats can be converted to .gguf with the `convert.py` script of the llama.cpp as described [here](https://github.com/ggerganov/llama.cpp/tree/master?tab=readme-ov-file#prepare-data--run).<br>
 
 ❕ Before using any model make sure you **check their license** ❕
 
@@ -326,16 +326,16 @@ Otherwise other model formats can be converted to gguf with the `convert.py` scr
 - `Num GPU Layers` number of model layers to offload to the GPU.
 If set to 0 the GPU is not used. Use a large number i.e. >30 to utilise the GPU as much as possible.
 If the user's GPU is not supported, the LLM will fall back to the CPU
-- `Stream` select to receive the reply from the model as it is produced (recommended!).<br>
-If it is not selected, the full reply from the model is received in one go
+- `Stream` enable to receive the reply from the model while it is still being produced (recommended!).<br>
+If it is disabled, the full reply from the model is received in one go
 - <details><summary>Advanced options</summary>
 
   - `Parallel Prompts` number of prompts that can happen in parallel (default: -1 = number of LLM/LLMClient objects)
-  - `Debug` select to log the output of the model in the Unity Editor
-  - `Asynchronous Startup` allows to start the server asynchronously
-  - `Remote` select to allow remote access to the server
-  - `Port` port to run the server
-  - `Kill Existing Servers On Start` kills existing servers by the Unity project on startup to handle Unity crashes
+  - `Debug` enable to log the output of the model in the Unity Editor
+  - `Asynchronous Startup` enable to start the server asynchronously
+  - `Remote` enable to allow remote access to the server
+  - `Port` port on which to run the server
+  - `Kill Existing Servers On Start` enable to kill existing servers used by the Unity project on startup to handle Unity crashes
 
 </details>
 
@@ -346,18 +346,18 @@ If it is not selected, the full reply from the model is received in one go
 - <details><summary><code>Chat Template</code> the chat template to use for constructing the prompts</summary> The chat template is determined automatically by the chat template of the model (if it exists) or the model name. The "chatml" and "alpaca" templates work with most of the models.</details>
 - <details><summary>Advanced options</summary>
 
-  - `Load lora` click to load a LORA model in .bin format
+  - `Load lora` click to load a LoRA model in .bin format
   - `Load grammar` click to load a grammar in .gbnf format
-  - `Lora` the path of the Lora being used (relative to the Assets/StreamingAssets folder)
-  - `Grammar` the path of the Grammar being used (relative to the Assets/StreamingAssets folder)
+  - `Lora` the path of the LoRA being used (relative to the Assets/StreamingAssets folder)
+  - `Grammar` the path of the grammar being used (relative to the Assets/StreamingAssets folder)
   - <details><summary><code>Context Size</code> size of the prompt context (0 = context size of the model)</summary> This is the number of tokens the model can take as input when generating responses.</details>
   - `Batch Size` batch size for prompt processing (default: 512)
-  - `Seed` seed for reproducibility. For random results every time select -1
-  - <details><summary><code>Cache Prompt</code> save the ongoing prompt from the chat (default: true)</summary> Saves the prompt as it is being created by the chat to avoid reprocessing the entire prompt every time</details>
-  - <details><summary><code>Num Predict</code> number of tokens to predict (default: 256, -1 = infinity, -2 = until context filled)</summary>This is the amount of tokens the model will maximum predict. When N predict is reached the model will stop generating. This means words / sentences might not get finished if this is too low. </details>
-  - <details><summary><code>Temperature</code> LLM temperature, lower values give more deterministic answers (default: 0.2)</summary>The temperature setting adjusts how random the generated responses are. Turning it up makes the generated choices more varied and unpredictable. Turning it down  makes the generated responses more predictable and focused on the most likely options.</details>
+  - `Seed` seed for reproducibility. For random results every time use -1
+  - <details><summary><code>Cache Prompt</code> save the ongoing prompt from the chat (default: true)</summary> Saves the prompt while it is being created by the chat to avoid reprocessing the entire prompt every time</details>
+  - <details><summary><code>Num Predict</code> maximum number of tokens to predict (default: 256, -1 = infinity, -2 = until context filled)</summary>This is the maximum amount of tokens the model will predict. When N tokens are reached the model will stop generating. This means words / sentences might not get finished if this is too low. </details>
+  - <details><summary><code>Temperature</code> LLM temperature, lower values give more deterministic answers (default: 0.2)</summary>The temperature setting adjusts how random the generated responses are. Turning it up makes the generated choices more varied and unpredictable. Turning it down makes the generated responses more predictable and focused on the most likely options.</details>
   - <details><summary><code>Top K</code> top-k sampling (default: 40, 0 = disabled)</summary>The top k value controls the top k most probable tokens at each step of generation. This value can help fine tune the output and make this adhere to specific patterns or constraints.</details>
-  - <details><summary><code>Top P</code> top-p sampling (default: 0.9, 1.0 = disabled)</summary>The top p value controls the cumulative probability of generated tokens. The model will generate tokens until this theshold (p) is reached. By lowering this value you can shorten output & encourage / discourage more diverse output.</details>
+  - <details><summary><code>Top P</code> top-p sampling (default: 0.9, 1.0 = disabled)</summary>The top p value controls the cumulative probability of generated tokens. The model will generate tokens until this theshold (p) is reached. By lowering this value you can shorten output & encourage / discourage more diverse outputs.</details>
   - <details><summary><code>Min P</code> minimum probability for a token to be used (default: 0.05)</summary> The probability is defined relative to the probability of the most likely token.</details>
   - <details><summary><code>Repeat Penalty</code> control the repetition of token sequences in the generated text (default: 1.1)</summary>The penalty is applied to repeated tokens.</details>
   - <details><summary><code>Presence Penalty</code> repeated token presence penalty (default: 0.0, 0.0 = disabled)</summary> Positive values penalize new tokens based on whether they appear in the text so far, increasing the model's likelihood to talk about new topics.</details>
@@ -373,7 +373,7 @@ If it is not selected, the full reply from the model is received in one go
   - `Mirostat Tau`: set the Mirostat target entropy, parameter tau (default: 5.0).
   - `Mirostat Eta`: set the Mirostat learning rate, parameter eta (default: 0.1).
   - `N Probs`: if greater than 0, the response also contains the probabilities of top N tokens for each generated token (default: 0)
-  - `Ignore Eos`: ignore end of stream token and continue generating (default: false).
+  - `Ignore Eos`: enable to ignore end of stream tokens and continue generating (default: false).
 
     </details>
 
