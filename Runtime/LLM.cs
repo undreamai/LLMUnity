@@ -1,11 +1,12 @@
 /// @file
 /// @brief File implementing the LLM server.
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using UnityEditor;
 using UnityEngine;
 
 namespace LLMUnity
@@ -25,17 +26,173 @@ namespace LLMUnity
     /// <summary>
     /// Class implementing the LLM server.
     /// </summary>
-    public class LLM : LLMBase
+    public class LLM : UnityMainThreadDispatcher
     {
+        /// <summary> toggle to show/hide advanced options in the GameObject </summary>
+        [HideInInspector] public bool advancedOptions = false;
+        /// <summary> number of threads to use (-1 = all) </summary>
+        [Server] public int numThreads = -1;
+        /// <summary> number of model layers to offload to the GPU (0 = GPU not used).
+        /// Use a large number i.e. >30 to utilise the GPU as much as possible.
+        /// If the user's GPU is not supported, the LLM will fall back to the CPU </summary>
+        [Server] public int numGPULayers = 0;
+        /// <summary> select to log the output of the LLM in the Unity Editor. </summary>
+        [ServerAdvanced] public bool debug = false;
+        /// <summary> number of prompts that can happen in parallel (-1 = number of LLM/LLMClient objects) </summary>
+        [ServerAdvanced] public int parallelPrompts = -1;
+        /// <summary> port to use for the LLM server </summary>
+        [ServerAdvanced] public int port = 13333;
+        /// <summary> the path of the model being used (relative to the Assets/StreamingAssets folder).
+        /// Models with .gguf format are allowed.</summary>
+        [Model] public string model = "";
+        /// <summary> the path of the LORA model being used (relative to the Assets/StreamingAssets folder).
+        /// Models with .bin format are allowed.</summary>
+        [ModelAdvanced] public string lora = "";
+        /// <summary> Size of the prompt context (0 = context size of the model).
+        /// This is the number of tokens the model can take as input when generating responses. </summary>
+        [ModelAdvanced] public int contextSize = 512;
+        /// <summary> Batch size for prompt processing. </summary>
+        [ModelAdvanced] public int batchSize = 512;
+        /// <summary> select to log the output of the LLM in the Unity Editor. </summary>
+        [Server] public bool remote = false;
+        /// <summary> Boolean set to true if the server has started and is ready to receive requests, false otherwise. </summary>
+        public bool started { get; protected set; } = false;
+
+        /// \cond HIDE
+        [HideInInspector] public readonly (string, string)[] modelOptions = new(string, string)[]
+        {
+            ("Download model", null),
+            ("Mistral 7B Instruct v0.2 (medium, best overall)", "https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.2-GGUF/resolve/main/mistral-7b-instruct-v0.2.Q4_K_M.gguf?download=true"),
+            ("OpenHermes 2.5 7B (medium, best for conversation)", "https://huggingface.co/TheBloke/OpenHermes-2.5-Mistral-7B-GGUF/resolve/main/openhermes-2.5-mistral-7b.Q4_K_M.gguf?download=true"),
+            ("Phi 2 (small, decent)", "https://huggingface.co/TheBloke/phi-2-GGUF/resolve/main/phi-2.Q4_K_M.gguf?download=true"),
+        };
+        public int SelectedModel = 0;
+        [HideInInspector] public float modelProgress = 1;
+        [HideInInspector] public float modelCopyProgress = 1;
+        [HideInInspector] public bool modelHide = true;
+
+        public string chatTemplate = ChatTemplate.DefaultTemplate;
+        private ChatTemplate template;
+
         IntPtr LLMObject;
         List<LLMClient> clients = new List<LLMClient>();
         LLMLib llmlib;
         StreamWrapper logStreamWrapper;
         Thread llmThread;
+        /// \endcond
+
+#if UNITY_EDITOR
+        /// \cond HIDE
+        public void DownloadModel(int optionIndex)
+        {
+            // download default model and disable model editor properties until the model is set
+            SelectedModel = optionIndex;
+            string modelUrl = modelOptions[optionIndex].Item2;
+            if (modelUrl == null) return;
+            modelProgress = 0;
+            string modelName = Path.GetFileName(modelUrl).Split("?")[0];
+            string modelPath = LLMUnitySetup.GetAssetPath(modelName);
+            Task downloadTask = LLMUnitySetup.DownloadFile(modelUrl, modelPath, false, false, SetModel, SetModelProgress);
+        }
+
+        /// \endcond
+
+        void SetModelProgress(float progress)
+        {
+            modelProgress = progress;
+        }
+
+        /// <summary>
+        /// Allows to set the model used by the LLM.
+        /// The model provided is copied to the Assets/StreamingAssets folder that allows it to also work in the build.
+        /// Models supported are in .gguf format.
+        /// </summary>
+        /// <param name="path">path to model to use (.gguf format)</param>
+        public async Task SetModel(string path)
+        {
+            // set the model and enable the model editor properties
+            modelCopyProgress = 0;
+            model = await LLMUnitySetup.AddAsset(path, LLMUnitySetup.GetAssetPath());
+            chatTemplate = ChatTemplate.FromGGUF(path);
+            template = ChatTemplate.GetTemplate(chatTemplate);
+            EditorUtility.SetDirty(this);
+            modelCopyProgress = 1;
+        }
+
+        /// <summary>
+        /// Allows to set a LORA model to use in the LLM.
+        /// The model provided is copied to the Assets/StreamingAssets folder that allows it to also work in the build.
+        /// Models supported are in .bin format.
+        /// </summary>
+        /// <param name="path">path to LORA model to use (.bin format)</param>
+        public async Task SetLora(string path)
+        {
+            // set the lora and enable the model editor properties
+            modelCopyProgress = 0;
+            lora = await LLMUnitySetup.AddAsset(path, LLMUnitySetup.GetAssetPath());
+            EditorUtility.SetDirty(this);
+            modelCopyProgress = 1;
+        }
+
+#endif
+        public virtual void SetTemplate(string templateName)
+        {
+            chatTemplate = templateName;
+            LoadTemplate();
+        }
+
+        private void LoadTemplate()
+        {
+            template = ChatTemplate.GetTemplate(chatTemplate);
+        }
+
+        protected string EscapeSpaces(string input)
+        {
+            if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer)
+                return input.Replace(" ", "\" \"");
+            if (input.Contains(" "))
+                return $"'{input}'";
+            return input;
+        }
+
+        protected virtual string GetLlamaccpArguments()
+        {
+            // Start the LLM server in a cross-platform way
+            if (model == "")
+            {
+                Debug.LogError("No model file provided!");
+                return null;
+            }
+            string modelPath = LLMUnitySetup.GetAssetPath(model);
+            if (!File.Exists(modelPath))
+            {
+                Debug.LogError($"File {modelPath} not found!");
+                return null;
+            }
+            string loraPath = "";
+            if (lora != "")
+            {
+                loraPath = LLMUnitySetup.GetAssetPath(lora);
+                if (!File.Exists(loraPath))
+                {
+                    Debug.LogError($"File {loraPath} not found!");
+                    return null;
+                }
+            }
+
+            int slots = GetNumClients();
+            string arguments = $"-m {EscapeSpaces(modelPath)} -c {contextSize} -b {batchSize} --log-disable -np {slots}";
+            if (remote) arguments += $" --port {port} --host 0.0.0.0";
+            if (numThreads > 0) arguments += $" -t {numThreads}";
+            if (loraPath != "") arguments += $" --lora {EscapeSpaces(loraPath)}";
+            arguments += $" -ngl {numGPULayers}";
+            return arguments;
+        }
 
         public void Awake()
         {
             if (!gameObject.activeSelf) return;
+            LoadTemplate();
             llmThread = new Thread(StartLLMServer);
             llmThread.Start();
         }
@@ -71,7 +228,7 @@ namespace LLMUnity
                 try
                 {
                     SetupLogging();
-                    LLMObject = llmlib.LLM_Construct(arguments);
+                    LLMObject = llmlib.LLM_Construct(arguments, remote);
                     CheckLLMStatus(false);
                     Debug.Log($"Using architecture: {arch}");
                     break;
@@ -93,8 +250,7 @@ namespace LLMUnity
                 return;
             }
             Debug.Log("LLM service created");
-            serverStarted = true;
-            serverListening = true;
+            started = true;
             llmlib.LLM_Start(LLMObject);
         }
 
@@ -104,7 +260,7 @@ namespace LLMUnity
             return clients.IndexOf(llmClient);
         }
 
-        protected override int GetNumClients()
+        protected int GetNumClients()
         {
             return Math.Max(parallelPrompts == -1 ? clients.Count : parallelPrompts, 1);
         }
@@ -125,7 +281,7 @@ namespace LLMUnity
                 this.llm = llm;
                 this.streamCallback = streamCallback;
                 if (llm.llmlib == null) Debug.LogError("LLM service not started");
-                else stringWrapper = llm.llmlib.StringWrapper_Construct();
+                else  stringWrapper = llm.llmlib.StringWrapper_Construct();
             }
 
             public void Call()
@@ -254,74 +410,5 @@ namespace LLMUnity
         {
             Destroy();
         }
-
-//================================ UnityMainThreadDispatcher ================================//
-// The following is copied from https://github.com/PimDeWitte/UnityMainThreadDispatcher
-        private static readonly Queue<Action> _executionQueue = new Queue<Action>();
-
-        public new void Update()
-        {
-            lock (_executionQueue) {
-                while (_executionQueue.Count > 0)
-                {
-                    _executionQueue.Dequeue().Invoke();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Locks the queue and adds the IEnumerator to the queue
-        /// </summary>
-        /// <param name="action">IEnumerator function that will be executed from the main thread.</param>
-        public void Enqueue(IEnumerator action)
-        {
-            lock (_executionQueue) {
-                _executionQueue.Enqueue(() => {
-                    StartCoroutine(action);
-                });
-            }
-        }
-
-        /// <summary>
-        /// Locks the queue and adds the Action to the queue
-        /// </summary>
-        /// <param name="action">function that will be executed from the main thread.</param>
-        public void Enqueue(Action action)
-        {
-            Enqueue(ActionWrapper(action));
-        }
-
-        /// <summary>
-        /// Locks the queue and adds the Action to the queue, returning a Task which is completed when the action completes
-        /// </summary>
-        /// <param name="action">function that will be executed from the main thread.</param>
-        /// <returns>A Task that can be awaited until the action completes</returns>
-        public Task EnqueueAsync(Action action)
-        {
-            var tcs = new TaskCompletionSource<bool>();
-
-            void WrappedAction()
-            {
-                try
-                {
-                    action();
-                    tcs.TrySetResult(true);
-                }
-                catch (Exception ex)
-                {
-                    tcs.TrySetException(ex);
-                }
-            }
-
-            Enqueue(ActionWrapper(WrappedAction));
-            return tcs.Task;
-        }
-
-        IEnumerator ActionWrapper(Action a)
-        {
-            a();
-            yield return null;
-        }
     }
-//================================ UnityMainThreadDispatcher ================================//
 }
