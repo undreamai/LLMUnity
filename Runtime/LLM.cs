@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -29,14 +30,14 @@ namespace LLMUnity
         IntPtr LLMObject;
         List<LLMClient> clients = new List<LLMClient>();
         LLMLib llmlib;
-        IntPtr logStringWrapper;
         StreamWrapper logStreamWrapper;
+        Thread llmThread;
 
-        public async void Awake()
+        public void Awake()
         {
             if (!gameObject.activeSelf) return;
-            if (asynchronousStartup) await StartLLMServer();
-            else _ = StartLLMServer();
+            llmThread = new Thread(StartLLMServer);
+            llmThread.Start();
         }
 
         private void LLMLibLog(string log)
@@ -47,14 +48,18 @@ namespace LLMUnity
 
         private void SetupLogging()
         {
-            logStringWrapper = llmlib.StringWrapper_Construct();
-            logStreamWrapper = new StreamWrapper(this, logStringWrapper, LLMLibLog);
-            llmlib.Logging(logStringWrapper, Marshal.GetFunctionPointerForDelegate((StreamingCallback)logStreamWrapper.Call));
+            logStreamWrapper = new StreamWrapper(this, LLMLibLog);
+            llmlib?.Logging(logStreamWrapper.GetStringWrapper(), logStreamWrapper.GetCallPointer());
         }
 
-        private async Task StartLLMServer()
+        private void StopLogging()
         {
-            float startTime = Time.realtimeSinceStartup;
+            llmlib?.StopLogging();
+            logStreamWrapper.Destroy();
+        }
+
+        private void StartLLMServer()
+        {
             string arguments = GetLlamaccpArguments();
             bool useGPU = numGPULayers > 0;
             Debug.Log($"Server command: {arguments}");
@@ -66,25 +71,15 @@ namespace LLMUnity
                 try
                 {
                     SetupLogging();
-                    if (!asynchronousStartup)
-                    {
-                        LLMObject = llmlib.LLM_Construct(arguments);
-                    }
-                    else
-                    {
-                        LLMObject = await Task.Run(() => llmlib.LLM_Construct(arguments));
-                    }
-
+                    LLMObject = llmlib.LLM_Construct(arguments);
                     CheckLLMStatus(false);
-                    serverStarted = true;
-                    serverListening = true;
                     Debug.Log($"Using architecture: {arch}");
                     break;
                 }
                 catch (LLMException e)
                 {
                     error = e.Message;
-                    ClearVars();
+                    Destroy();
                 }
                 catch (Exception e)
                 {
@@ -92,11 +87,15 @@ namespace LLMUnity
                 }
                 Debug.Log($"Tried architecture: {arch}, " + error);
             }
-            if (!serverStarted) Debug.LogError("LLM service couldn't be started");
-            else Debug.Log("LLM service started");
-
-            float elapsedTime = Time.realtimeSinceStartup - startTime;
-            Debug.Log("Elapsed Time: " + elapsedTime.ToString("F2") + " seconds");
+            if (llmlib == null)
+            {
+                Debug.LogError("LLM service couldn't be created");
+                return;
+            }
+            Debug.Log("LLM service created");
+            serverStarted = true;
+            serverListening = true;
+            llmlib.LLM_Start(LLMObject);
         }
 
         public int Register(LLMClient llmClient)
@@ -117,21 +116,37 @@ namespace LLMUnity
 
         class StreamWrapper
         {
-            IntPtr stringWrapper;
-            Callback<string> streamCallback;
             LLM llm;
+            IntPtr stringWrapper = IntPtr.Zero;
+            Callback<string> streamCallback;
 
-            public StreamWrapper(LLM llm, IntPtr stringWrapper, Callback<string> streamCallback)
+            public StreamWrapper(LLM llm, Callback<string> streamCallback)
             {
-                this.stringWrapper = stringWrapper;
-                this.streamCallback = streamCallback;
                 this.llm = llm;
+                this.streamCallback = streamCallback;
+                if (llm.llmlib == null) Debug.LogError("LLM service not started");
+                else stringWrapper = llm.llmlib.StringWrapper_Construct();
             }
 
             public void Call()
             {
-                string result = llm.llmlib.GetStringWrapperResult(stringWrapper);
+                string result = llm.llmlib?.GetStringWrapperResult(stringWrapper);
                 if (result != null) llm.EnqueueAsync(() => {streamCallback(result);});
+            }
+
+            public IntPtr GetStringWrapper()
+            {
+                return stringWrapper;
+            }
+
+            public IntPtr GetCallPointer()
+            {
+                return Marshal.GetFunctionPointerForDelegate((StreamingCallback)Call);
+            }
+
+            public void Destroy()
+            {
+                if (stringWrapper != IntPtr.Zero) llm.llmlib?.StringWrapper_Delete(stringWrapper);
             }
         }
 
@@ -171,25 +186,24 @@ namespace LLMUnity
         {
             if (llmlib == null) {Debug.LogError("LLM service not started"); return null;}
 
-            IntPtr stringWrapper = llmlib.StringWrapper_Construct();
+            IntPtr stringWrapper = IntPtr.Zero;
             IntPtr streamCallbackPointer = IntPtr.Zero;
-            StreamWrapper streamWrapper;
+            StreamWrapper streamWrapper = null;
             if (streamCallback != null)
             {
-                streamWrapper = new StreamWrapper(this, stringWrapper, streamCallback);
-                streamCallbackPointer = Marshal.GetFunctionPointerForDelegate((StreamingCallback)logStreamWrapper.Call);
+                streamWrapper = new StreamWrapper(this, streamCallback);
+                streamCallbackPointer = streamWrapper.GetCallPointer();
+                stringWrapper = streamWrapper.GetStringWrapper();
             }
             await Task.Run(() => callback(LLMObject, json, stringWrapper, streamCallbackPointer));
             string result = llmlib.GetStringWrapperResult(stringWrapper);
-            llmlib.StringWrapper_Delete(stringWrapper);
+            if (streamWrapper != null) streamWrapper.Destroy();
             CheckLLMStatus();
             return result;
         }
 
         public async Task<string> Tokenize(string json)
         {
-            if (llmlib == null) {Debug.LogError("LLM service not started"); return null;}
-
             LLMReplyCallback callback = (IntPtr LLMObject, string jsonData, IntPtr strWrapper) =>
             {
                 llmlib.LLM_Tokenize(LLMObject, jsonData, strWrapper);
@@ -199,8 +213,6 @@ namespace LLMUnity
 
         public async Task<string> Detokenize(string json)
         {
-            if (llmlib == null) {Debug.LogError("LLM service not started"); return null;}
-
             LLMReplyCallback callback = (IntPtr LLMObject, string jsonData, IntPtr strWrapper) =>
             {
                 llmlib.LLM_Detokenize(LLMObject, jsonData, strWrapper);
@@ -210,8 +222,6 @@ namespace LLMUnity
 
         public async Task<string> Completion(string json, Callback<string> streamCallback = null)
         {
-            if (llmlib == null) {Debug.LogError("LLM service not started"); return null;}
-
             LLMReplyStreamingCallback callback = (IntPtr LLMObject, string json_data, IntPtr stringWrapper, IntPtr streamCallbackPointer) =>
             {
                 llmlib.LLM_Completion(LLMObject, json_data, stringWrapper, streamCallbackPointer);
@@ -221,18 +231,16 @@ namespace LLMUnity
 
         public void CancelRequest(int id_slot)
         {
-            if (llmlib == null) {Debug.LogError("LLM service not started"); return;}
-
-            llmlib.LLM_Cancel(LLMObject, id_slot);
+            llmlib?.LLM_Cancel(LLMObject, id_slot);
             CheckLLMStatus();
         }
 
-        private void ClearVars()
+        private void Destroy()
         {
             if (llmlib != null)
             {
-                llmlib.StopLogging();
-                llmlib.StringWrapper_Delete(logStringWrapper);
+                StopLogging();
+                llmlib.LLM_Stop(LLMObject);
                 llmlib.LLM_Delete(LLMObject);
             }
             llmlib = null;
@@ -244,7 +252,7 @@ namespace LLMUnity
         /// </summary>
         public void OnDestroy()
         {
-            ClearVars();
+            Destroy();
         }
 
 //================================ UnityMainThreadDispatcher ================================//
