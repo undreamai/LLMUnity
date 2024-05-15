@@ -24,6 +24,7 @@ namespace LLMUnity
                     LLM_SetupServerDelegate LLM_SetupServer_fn,
                     LLM_StartDelegate LLM_Start_fn,
                     LLM_StopDelegate LLM_Stop_fn,
+                    LLM_SetTemplateDelegate LLM_SetTemplate_fn,
                     LLM_TokenizeDelegate LLM_Tokenize_fn,
                     LLM_DetokenizeDelegate LLM_Detokenize_fn,
                     LLM_CompletionDelegate LLM_Completion_fn,
@@ -42,16 +43,17 @@ namespace LLMUnity
                     delegates[4] as LLM_SetupServerDelegate,
                     delegates[5] as LLM_StartDelegate,
                     delegates[6] as LLM_StopDelegate,
-                    delegates[7] as LLM_TokenizeDelegate,
-                    delegates[8] as LLM_DetokenizeDelegate,
-                    delegates[9] as LLM_CompletionDelegate,
-                    delegates[10] as LLM_SlotDelegate,
-                    delegates[11] as LLM_CancelDelegate,
-                    delegates[12] as LLM_StatusDelegate,
-                    delegates[13] as StringWrapper_ConstructDelegate,
-                    delegates[14] as StringWrapper_DeleteDelegate,
-                    delegates[15] as StringWrapper_GetStringSizeDelegate,
-                    delegates[16] as StringWrapper_GetStringDelegate
+                    delegates[7] as LLM_SetTemplateDelegate,
+                    delegates[8] as LLM_TokenizeDelegate,
+                    delegates[9] as LLM_DetokenizeDelegate,
+                    delegates[10] as LLM_CompletionDelegate,
+                    delegates[11] as LLM_SlotDelegate,
+                    delegates[12] as LLM_CancelDelegate,
+                    delegates[13] as LLM_StatusDelegate,
+                    delegates[14] as StringWrapper_ConstructDelegate,
+                    delegates[15] as StringWrapper_DeleteDelegate,
+                    delegates[16] as StringWrapper_GetStringSizeDelegate,
+                    delegates[17] as StringWrapper_GetStringDelegate
                 );
 
                 Logging = Logging_fn;
@@ -61,6 +63,7 @@ namespace LLMUnity
                 LLM_SetupServer = LLM_SetupServer_fn;
                 LLM_Start = LLM_Start_fn;
                 LLM_Stop = LLM_Stop_fn;
+                LLM_SetTemplate = LLM_SetTemplate_fn;
                 LLM_Tokenize = LLM_Tokenize_fn;
                 LLM_Detokenize = LLM_Detokenize_fn;
                 LLM_Completion = LLM_Completion_fn;
@@ -156,6 +159,7 @@ namespace LLMUnity
         public delegate void LLM_SetupServerDelegate(IntPtr LLMObject);
         public delegate void LLM_StartDelegate(IntPtr LLMObject);
         public delegate void LLM_StopDelegate(IntPtr LLMObject);
+        public delegate void LLM_SetTemplateDelegate(IntPtr LLMObject, string chatTemplate);
         public delegate void LLM_TokenizeDelegate(IntPtr LLMObject, string jsonData, IntPtr stringWrapper);
         public delegate void LLM_DetokenizeDelegate(IntPtr LLMObject, string jsonData, IntPtr stringWrapper);
         public delegate void LLM_CompletionDelegate(IntPtr LLMObject, string jsonData, IntPtr stringWrapper, IntPtr streamCallbackPointer);
@@ -174,6 +178,7 @@ namespace LLMUnity
         public LLM_SetupServerDelegate LLM_SetupServer;
         public LLM_StartDelegate LLM_Start;
         public LLM_StopDelegate LLM_Stop;
+        public LLM_SetTemplateDelegate LLM_SetTemplate;
         public LLM_TokenizeDelegate LLM_Tokenize;
         public LLM_DetokenizeDelegate LLM_Detokenize;
         public LLM_CompletionDelegate LLM_Completion;
@@ -197,6 +202,8 @@ namespace LLMUnity
         public static extern void LINUX_AVX_LLM_Start(IntPtr LLMObject);
         [DllImport(linux_avx_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Stop")]
         public static extern void LINUX_AVX_LLM_Stop(IntPtr LLMObject);
+        [DllImport(linux_avx_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_SetTemplate")]
+        public static extern void LINUX_AVX_LLM_SetTemplate(IntPtr LLMObject, string chatTemplate);
         [DllImport(linux_avx_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Tokenize")]
         public static extern void LINUX_AVX_LLM_Tokenize(IntPtr LLMObject, string json_data, IntPtr stringWrapper);
         [DllImport(linux_avx_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Detokenize")]
@@ -233,6 +240,8 @@ namespace LLMUnity
         public static extern void LINUX_AVX2_LLM_Start(IntPtr LLMObject);
         [DllImport(linux_avx2_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Stop")]
         public static extern void LINUX_AVX2_LLM_Stop(IntPtr LLMObject);
+        [DllImport(linux_avx2_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_SetTemplate")]
+        public static extern void LINUX_AVX2_LLM_SetTemplate(IntPtr LLMObject, string chatTemplate);
         [DllImport(linux_avx2_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Tokenize")]
         public static extern void LINUX_AVX2_LLM_Tokenize(IntPtr LLMObject, string json_data, IntPtr stringWrapper);
         [DllImport(linux_avx2_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Detokenize")]
@@ -269,6 +278,8 @@ namespace LLMUnity
         public static extern void LINUX_AVX512_LLM_Start(IntPtr LLMObject);
         [DllImport(linux_avx512_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Stop")]
         public static extern void LINUX_AVX512_LLM_Stop(IntPtr LLMObject);
+        [DllImport(linux_avx512_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_SetTemplate")]
+        public static extern void LINUX_AVX512_LLM_SetTemplate(IntPtr LLMObject, string chatTemplate);
         [DllImport(linux_avx512_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Tokenize")]
         public static extern void LINUX_AVX512_LLM_Tokenize(IntPtr LLMObject, string json_data, IntPtr stringWrapper);
         [DllImport(linux_avx512_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Detokenize")]
@@ -305,6 +316,8 @@ namespace LLMUnity
         public static extern void LINUX_CLBLAST_LLM_Start(IntPtr LLMObject);
         [DllImport(linux_clblast_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Stop")]
         public static extern void LINUX_CLBLAST_LLM_Stop(IntPtr LLMObject);
+        [DllImport(linux_clblast_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_SetTemplate")]
+        public static extern void LINUX_CLBLAST_LLM_SetTemplate(IntPtr LLMObject, string chatTemplate);
         [DllImport(linux_clblast_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Tokenize")]
         public static extern void LINUX_CLBLAST_LLM_Tokenize(IntPtr LLMObject, string json_data, IntPtr stringWrapper);
         [DllImport(linux_clblast_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Detokenize")]
@@ -341,6 +354,8 @@ namespace LLMUnity
         public static extern void LINUX_CUDA_CU11_7_1_LLM_Start(IntPtr LLMObject);
         [DllImport(linux_cuda_cu11_7_1_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Stop")]
         public static extern void LINUX_CUDA_CU11_7_1_LLM_Stop(IntPtr LLMObject);
+        [DllImport(linux_cuda_cu11_7_1_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_SetTemplate")]
+        public static extern void LINUX_CUDA_CU11_7_1_LLM_SetTemplate(IntPtr LLMObject, string chatTemplate);
         [DllImport(linux_cuda_cu11_7_1_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Tokenize")]
         public static extern void LINUX_CUDA_CU11_7_1_LLM_Tokenize(IntPtr LLMObject, string json_data, IntPtr stringWrapper);
         [DllImport(linux_cuda_cu11_7_1_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Detokenize")]
@@ -377,6 +392,8 @@ namespace LLMUnity
         public static extern void LINUX_CUDA_CU12_2_0_LLM_Start(IntPtr LLMObject);
         [DllImport(linux_cuda_cu12_2_0_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Stop")]
         public static extern void LINUX_CUDA_CU12_2_0_LLM_Stop(IntPtr LLMObject);
+        [DllImport(linux_cuda_cu12_2_0_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_SetTemplate")]
+        public static extern void LINUX_CUDA_CU12_2_0_LLM_SetTemplate(IntPtr LLMObject, string chatTemplate);
         [DllImport(linux_cuda_cu12_2_0_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Tokenize")]
         public static extern void LINUX_CUDA_CU12_2_0_LLM_Tokenize(IntPtr LLMObject, string json_data, IntPtr stringWrapper);
         [DllImport(linux_cuda_cu12_2_0_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Detokenize")]
@@ -413,6 +430,8 @@ namespace LLMUnity
         public static extern void LINUX_NOAVX_LLM_Start(IntPtr LLMObject);
         [DllImport(linux_noavx_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Stop")]
         public static extern void LINUX_NOAVX_LLM_Stop(IntPtr LLMObject);
+        [DllImport(linux_noavx_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_SetTemplate")]
+        public static extern void LINUX_NOAVX_LLM_SetTemplate(IntPtr LLMObject, string chatTemplate);
         [DllImport(linux_noavx_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Tokenize")]
         public static extern void LINUX_NOAVX_LLM_Tokenize(IntPtr LLMObject, string json_data, IntPtr stringWrapper);
         [DllImport(linux_noavx_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Detokenize")]
@@ -449,6 +468,8 @@ namespace LLMUnity
         public static extern void MACOS_ARM64_LLM_Start(IntPtr LLMObject);
         [DllImport(macos_arm64_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Stop")]
         public static extern void MACOS_ARM64_LLM_Stop(IntPtr LLMObject);
+        [DllImport(macos_arm64_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_SetTemplate")]
+        public static extern void MACOS_ARM64_LLM_SetTemplate(IntPtr LLMObject, string chatTemplate);
         [DllImport(macos_arm64_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Tokenize")]
         public static extern void MACOS_ARM64_LLM_Tokenize(IntPtr LLMObject, string json_data, IntPtr stringWrapper);
         [DllImport(macos_arm64_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Detokenize")]
@@ -485,6 +506,8 @@ namespace LLMUnity
         public static extern void MACOS_X64_LLM_Start(IntPtr LLMObject);
         [DllImport(macos_x64_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Stop")]
         public static extern void MACOS_X64_LLM_Stop(IntPtr LLMObject);
+        [DllImport(macos_x64_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_SetTemplate")]
+        public static extern void MACOS_X64_LLM_SetTemplate(IntPtr LLMObject, string chatTemplate);
         [DllImport(macos_x64_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Tokenize")]
         public static extern void MACOS_X64_LLM_Tokenize(IntPtr LLMObject, string json_data, IntPtr stringWrapper);
         [DllImport(macos_x64_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Detokenize")]
@@ -521,6 +544,8 @@ namespace LLMUnity
         public static extern void WINDOWS_ARM64_LLM_Start(IntPtr LLMObject);
         [DllImport(windows_arm64_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Stop")]
         public static extern void WINDOWS_ARM64_LLM_Stop(IntPtr LLMObject);
+        [DllImport(windows_arm64_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_SetTemplate")]
+        public static extern void WINDOWS_ARM64_LLM_SetTemplate(IntPtr LLMObject, string chatTemplate);
         [DllImport(windows_arm64_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Tokenize")]
         public static extern void WINDOWS_ARM64_LLM_Tokenize(IntPtr LLMObject, string json_data, IntPtr stringWrapper);
         [DllImport(windows_arm64_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Detokenize")]
@@ -557,6 +582,8 @@ namespace LLMUnity
         public static extern void WINDOWS_AVX_LLM_Start(IntPtr LLMObject);
         [DllImport(windows_avx_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Stop")]
         public static extern void WINDOWS_AVX_LLM_Stop(IntPtr LLMObject);
+        [DllImport(windows_avx_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_SetTemplate")]
+        public static extern void WINDOWS_AVX_LLM_SetTemplate(IntPtr LLMObject, string chatTemplate);
         [DllImport(windows_avx_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Tokenize")]
         public static extern void WINDOWS_AVX_LLM_Tokenize(IntPtr LLMObject, string json_data, IntPtr stringWrapper);
         [DllImport(windows_avx_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Detokenize")]
@@ -593,6 +620,8 @@ namespace LLMUnity
         public static extern void WINDOWS_AVX2_LLM_Start(IntPtr LLMObject);
         [DllImport(windows_avx2_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Stop")]
         public static extern void WINDOWS_AVX2_LLM_Stop(IntPtr LLMObject);
+        [DllImport(windows_avx2_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_SetTemplate")]
+        public static extern void WINDOWS_AVX2_LLM_SetTemplate(IntPtr LLMObject, string chatTemplate);
         [DllImport(windows_avx2_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Tokenize")]
         public static extern void WINDOWS_AVX2_LLM_Tokenize(IntPtr LLMObject, string json_data, IntPtr stringWrapper);
         [DllImport(windows_avx2_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Detokenize")]
@@ -629,6 +658,8 @@ namespace LLMUnity
         public static extern void WINDOWS_AVX512_LLM_Start(IntPtr LLMObject);
         [DllImport(windows_avx512_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Stop")]
         public static extern void WINDOWS_AVX512_LLM_Stop(IntPtr LLMObject);
+        [DllImport(windows_avx512_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_SetTemplate")]
+        public static extern void WINDOWS_AVX512_LLM_SetTemplate(IntPtr LLMObject, string chatTemplate);
         [DllImport(windows_avx512_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Tokenize")]
         public static extern void WINDOWS_AVX512_LLM_Tokenize(IntPtr LLMObject, string json_data, IntPtr stringWrapper);
         [DllImport(windows_avx512_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Detokenize")]
@@ -665,6 +696,8 @@ namespace LLMUnity
         public static extern void WINDOWS_CLBLAST_LLM_Start(IntPtr LLMObject);
         [DllImport(windows_clblast_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Stop")]
         public static extern void WINDOWS_CLBLAST_LLM_Stop(IntPtr LLMObject);
+        [DllImport(windows_clblast_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_SetTemplate")]
+        public static extern void WINDOWS_CLBLAST_LLM_SetTemplate(IntPtr LLMObject, string chatTemplate);
         [DllImport(windows_clblast_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Tokenize")]
         public static extern void WINDOWS_CLBLAST_LLM_Tokenize(IntPtr LLMObject, string json_data, IntPtr stringWrapper);
         [DllImport(windows_clblast_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Detokenize")]
@@ -701,6 +734,8 @@ namespace LLMUnity
         public static extern void WINDOWS_CUDA_CU11_7_1_LLM_Start(IntPtr LLMObject);
         [DllImport(windows_cuda_cu11_7_1_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Stop")]
         public static extern void WINDOWS_CUDA_CU11_7_1_LLM_Stop(IntPtr LLMObject);
+        [DllImport(windows_cuda_cu11_7_1_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_SetTemplate")]
+        public static extern void WINDOWS_CUDA_CU11_7_1_LLM_SetTemplate(IntPtr LLMObject, string chatTemplate);
         [DllImport(windows_cuda_cu11_7_1_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Tokenize")]
         public static extern void WINDOWS_CUDA_CU11_7_1_LLM_Tokenize(IntPtr LLMObject, string json_data, IntPtr stringWrapper);
         [DllImport(windows_cuda_cu11_7_1_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Detokenize")]
@@ -737,6 +772,8 @@ namespace LLMUnity
         public static extern void WINDOWS_CUDA_CU12_2_0_LLM_Start(IntPtr LLMObject);
         [DllImport(windows_cuda_cu12_2_0_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Stop")]
         public static extern void WINDOWS_CUDA_CU12_2_0_LLM_Stop(IntPtr LLMObject);
+        [DllImport(windows_cuda_cu12_2_0_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_SetTemplate")]
+        public static extern void WINDOWS_CUDA_CU12_2_0_LLM_SetTemplate(IntPtr LLMObject, string chatTemplate);
         [DllImport(windows_cuda_cu12_2_0_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Tokenize")]
         public static extern void WINDOWS_CUDA_CU12_2_0_LLM_Tokenize(IntPtr LLMObject, string json_data, IntPtr stringWrapper);
         [DllImport(windows_cuda_cu12_2_0_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Detokenize")]
@@ -773,6 +810,8 @@ namespace LLMUnity
         public static extern void WINDOWS_NOAVX_LLM_Start(IntPtr LLMObject);
         [DllImport(windows_noavx_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Stop")]
         public static extern void WINDOWS_NOAVX_LLM_Stop(IntPtr LLMObject);
+        [DllImport(windows_noavx_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_SetTemplate")]
+        public static extern void WINDOWS_NOAVX_LLM_SetTemplate(IntPtr LLMObject, string chatTemplate);
         [DllImport(windows_noavx_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Tokenize")]
         public static extern void WINDOWS_NOAVX_LLM_Tokenize(IntPtr LLMObject, string json_data, IntPtr stringWrapper);
         [DllImport(windows_noavx_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Detokenize")]
@@ -801,346 +840,346 @@ namespace LLMUnity
 
         static Dictionary<string, List<Delegate>> LibraryFunctions = new Dictionary<string, List<Delegate>>
         {
-            { "undreamai_linux-avx", new List<Delegate>()
-              {
-                  (LoggingDelegate)LINUX_AVX_Logging,
-                  (StopLoggingDelegate)LINUX_AVX_StopLogging,
-                  (LLM_ConstructDelegate)LINUX_AVX_LLM_Construct,
-                  (LLM_DeleteDelegate)LINUX_AVX_LLM_Delete,
-                  (LLM_SetupServerDelegate)LINUX_AVX_LLM_SetupServer,
-                  (LLM_StartDelegate)LINUX_AVX_LLM_Start,
-                  (LLM_StopDelegate)LINUX_AVX_LLM_Stop,
-                  (LLM_TokenizeDelegate)LINUX_AVX_LLM_Tokenize,
-                  (LLM_DetokenizeDelegate)LINUX_AVX_LLM_Detokenize,
-                  (LLM_CompletionDelegate)LINUX_AVX_LLM_Completion,
-                  (LLM_SlotDelegate)LINUX_AVX_LLM_Slot,
-                  (LLM_CancelDelegate)LINUX_AVX_LLM_Cancel,
-                  (LLM_StatusDelegate)LINUX_AVX_LLM_Status,
-                  (StringWrapper_ConstructDelegate)LINUX_AVX_StringWrapper_Construct,
-                  (StringWrapper_DeleteDelegate)LINUX_AVX_StringWrapper_Delete,
-                  (StringWrapper_GetStringSizeDelegate)LINUX_AVX_StringWrapper_GetStringSize,
-                  (StringWrapper_GetStringDelegate)LINUX_AVX_StringWrapper_GetString,
-              }},
-            { "undreamai_linux-avx2", new List<Delegate>()
-              {
-                  (LoggingDelegate)LINUX_AVX2_Logging,
-                  (StopLoggingDelegate)LINUX_AVX2_StopLogging,
-                  (LLM_ConstructDelegate)LINUX_AVX2_LLM_Construct,
-                  (LLM_DeleteDelegate)LINUX_AVX2_LLM_Delete,
-                  (LLM_SetupServerDelegate)LINUX_AVX2_LLM_SetupServer,
-                  (LLM_StartDelegate)LINUX_AVX2_LLM_Start,
-                  (LLM_StopDelegate)LINUX_AVX2_LLM_Stop,
-                  (LLM_TokenizeDelegate)LINUX_AVX2_LLM_Tokenize,
-                  (LLM_DetokenizeDelegate)LINUX_AVX2_LLM_Detokenize,
-                  (LLM_CompletionDelegate)LINUX_AVX2_LLM_Completion,
-                  (LLM_SlotDelegate)LINUX_AVX2_LLM_Slot,
-                  (LLM_CancelDelegate)LINUX_AVX2_LLM_Cancel,
-                  (LLM_StatusDelegate)LINUX_AVX2_LLM_Status,
-                  (StringWrapper_ConstructDelegate)LINUX_AVX2_StringWrapper_Construct,
-                  (StringWrapper_DeleteDelegate)LINUX_AVX2_StringWrapper_Delete,
-                  (StringWrapper_GetStringSizeDelegate)LINUX_AVX2_StringWrapper_GetStringSize,
-                  (StringWrapper_GetStringDelegate)LINUX_AVX2_StringWrapper_GetString,
-              }},
-            { "undreamai_linux-avx512", new List<Delegate>()
-              {
-                  (LoggingDelegate)LINUX_AVX512_Logging,
-                  (StopLoggingDelegate)LINUX_AVX512_StopLogging,
-                  (LLM_ConstructDelegate)LINUX_AVX512_LLM_Construct,
-                  (LLM_DeleteDelegate)LINUX_AVX512_LLM_Delete,
-                  (LLM_SetupServerDelegate)LINUX_AVX512_LLM_SetupServer,
-                  (LLM_StartDelegate)LINUX_AVX512_LLM_Start,
-                  (LLM_StopDelegate)LINUX_AVX512_LLM_Stop,
-                  (LLM_TokenizeDelegate)LINUX_AVX512_LLM_Tokenize,
-                  (LLM_DetokenizeDelegate)LINUX_AVX512_LLM_Detokenize,
-                  (LLM_CompletionDelegate)LINUX_AVX512_LLM_Completion,
-                  (LLM_SlotDelegate)LINUX_AVX512_LLM_Slot,
-                  (LLM_CancelDelegate)LINUX_AVX512_LLM_Cancel,
-                  (LLM_StatusDelegate)LINUX_AVX512_LLM_Status,
-                  (StringWrapper_ConstructDelegate)LINUX_AVX512_StringWrapper_Construct,
-                  (StringWrapper_DeleteDelegate)LINUX_AVX512_StringWrapper_Delete,
-                  (StringWrapper_GetStringSizeDelegate)LINUX_AVX512_StringWrapper_GetStringSize,
-                  (StringWrapper_GetStringDelegate)LINUX_AVX512_StringWrapper_GetString,
-              }},
-            { "undreamai_linux-clblast", new List<Delegate>()
-              {
-                  (LoggingDelegate)LINUX_CLBLAST_Logging,
-                  (StopLoggingDelegate)LINUX_CLBLAST_StopLogging,
-                  (LLM_ConstructDelegate)LINUX_CLBLAST_LLM_Construct,
-                  (LLM_DeleteDelegate)LINUX_CLBLAST_LLM_Delete,
-                  (LLM_SetupServerDelegate)LINUX_CLBLAST_LLM_SetupServer,
-                  (LLM_StartDelegate)LINUX_CLBLAST_LLM_Start,
-                  (LLM_StopDelegate)LINUX_CLBLAST_LLM_Stop,
-                  (LLM_TokenizeDelegate)LINUX_CLBLAST_LLM_Tokenize,
-                  (LLM_DetokenizeDelegate)LINUX_CLBLAST_LLM_Detokenize,
-                  (LLM_CompletionDelegate)LINUX_CLBLAST_LLM_Completion,
-                  (LLM_SlotDelegate)LINUX_CLBLAST_LLM_Slot,
-                  (LLM_CancelDelegate)LINUX_CLBLAST_LLM_Cancel,
-                  (LLM_StatusDelegate)LINUX_CLBLAST_LLM_Status,
-                  (StringWrapper_ConstructDelegate)LINUX_CLBLAST_StringWrapper_Construct,
-                  (StringWrapper_DeleteDelegate)LINUX_CLBLAST_StringWrapper_Delete,
-                  (StringWrapper_GetStringSizeDelegate)LINUX_CLBLAST_StringWrapper_GetStringSize,
-                  (StringWrapper_GetStringDelegate)LINUX_CLBLAST_StringWrapper_GetString,
-              }},
-            { "undreamai_linux-cuda-cu11.7.1", new List<Delegate>()
-              {
-                  (LoggingDelegate)LINUX_CUDA_CU11_7_1_Logging,
-                  (StopLoggingDelegate)LINUX_CUDA_CU11_7_1_StopLogging,
-                  (LLM_ConstructDelegate)LINUX_CUDA_CU11_7_1_LLM_Construct,
-                  (LLM_DeleteDelegate)LINUX_CUDA_CU11_7_1_LLM_Delete,
-                  (LLM_SetupServerDelegate)LINUX_CUDA_CU11_7_1_LLM_SetupServer,
-                  (LLM_StartDelegate)LINUX_CUDA_CU11_7_1_LLM_Start,
-                  (LLM_StopDelegate)LINUX_CUDA_CU11_7_1_LLM_Stop,
-                  (LLM_TokenizeDelegate)LINUX_CUDA_CU11_7_1_LLM_Tokenize,
-                  (LLM_DetokenizeDelegate)LINUX_CUDA_CU11_7_1_LLM_Detokenize,
-                  (LLM_CompletionDelegate)LINUX_CUDA_CU11_7_1_LLM_Completion,
-                  (LLM_SlotDelegate)LINUX_CUDA_CU11_7_1_LLM_Slot,
-                  (LLM_CancelDelegate)LINUX_CUDA_CU11_7_1_LLM_Cancel,
-                  (LLM_StatusDelegate)LINUX_CUDA_CU11_7_1_LLM_Status,
-                  (StringWrapper_ConstructDelegate)LINUX_CUDA_CU11_7_1_StringWrapper_Construct,
-                  (StringWrapper_DeleteDelegate)LINUX_CUDA_CU11_7_1_StringWrapper_Delete,
-                  (StringWrapper_GetStringSizeDelegate)LINUX_CUDA_CU11_7_1_StringWrapper_GetStringSize,
-                  (StringWrapper_GetStringDelegate)LINUX_CUDA_CU11_7_1_StringWrapper_GetString,
-              }},
-            { "undreamai_linux-cuda-cu12.2.0", new List<Delegate>()
-              {
-                  (LoggingDelegate)LINUX_CUDA_CU12_2_0_Logging,
-                  (StopLoggingDelegate)LINUX_CUDA_CU12_2_0_StopLogging,
-                  (LLM_ConstructDelegate)LINUX_CUDA_CU12_2_0_LLM_Construct,
-                  (LLM_DeleteDelegate)LINUX_CUDA_CU12_2_0_LLM_Delete,
-                  (LLM_SetupServerDelegate)LINUX_CUDA_CU12_2_0_LLM_SetupServer,
-                  (LLM_StartDelegate)LINUX_CUDA_CU12_2_0_LLM_Start,
-                  (LLM_StopDelegate)LINUX_CUDA_CU12_2_0_LLM_Stop,
-                  (LLM_TokenizeDelegate)LINUX_CUDA_CU12_2_0_LLM_Tokenize,
-                  (LLM_DetokenizeDelegate)LINUX_CUDA_CU12_2_0_LLM_Detokenize,
-                  (LLM_CompletionDelegate)LINUX_CUDA_CU12_2_0_LLM_Completion,
-                  (LLM_SlotDelegate)LINUX_CUDA_CU12_2_0_LLM_Slot,
-                  (LLM_CancelDelegate)LINUX_CUDA_CU12_2_0_LLM_Cancel,
-                  (LLM_StatusDelegate)LINUX_CUDA_CU12_2_0_LLM_Status,
-                  (StringWrapper_ConstructDelegate)LINUX_CUDA_CU12_2_0_StringWrapper_Construct,
-                  (StringWrapper_DeleteDelegate)LINUX_CUDA_CU12_2_0_StringWrapper_Delete,
-                  (StringWrapper_GetStringSizeDelegate)LINUX_CUDA_CU12_2_0_StringWrapper_GetStringSize,
-                  (StringWrapper_GetStringDelegate)LINUX_CUDA_CU12_2_0_StringWrapper_GetString,
-              }},
-            { "undreamai_linux-noavx", new List<Delegate>()
-              {
-                  (LoggingDelegate)LINUX_NOAVX_Logging,
-                  (StopLoggingDelegate)LINUX_NOAVX_StopLogging,
-                  (LLM_ConstructDelegate)LINUX_NOAVX_LLM_Construct,
-                  (LLM_DeleteDelegate)LINUX_NOAVX_LLM_Delete,
-                  (LLM_SetupServerDelegate)LINUX_NOAVX_LLM_SetupServer,
-                  (LLM_StartDelegate)LINUX_NOAVX_LLM_Start,
-                  (LLM_StopDelegate)LINUX_NOAVX_LLM_Stop,
-                  (LLM_TokenizeDelegate)LINUX_NOAVX_LLM_Tokenize,
-                  (LLM_DetokenizeDelegate)LINUX_NOAVX_LLM_Detokenize,
-                  (LLM_CompletionDelegate)LINUX_NOAVX_LLM_Completion,
-                  (LLM_SlotDelegate)LINUX_NOAVX_LLM_Slot,
-                  (LLM_CancelDelegate)LINUX_NOAVX_LLM_Cancel,
-                  (LLM_StatusDelegate)LINUX_NOAVX_LLM_Status,
-                  (StringWrapper_ConstructDelegate)LINUX_NOAVX_StringWrapper_Construct,
-                  (StringWrapper_DeleteDelegate)LINUX_NOAVX_StringWrapper_Delete,
-                  (StringWrapper_GetStringSizeDelegate)LINUX_NOAVX_StringWrapper_GetStringSize,
-                  (StringWrapper_GetStringDelegate)LINUX_NOAVX_StringWrapper_GetString,
-              }},
-            { "undreamai_macos-arm64", new List<Delegate>()
-              {
-                  (LoggingDelegate)MACOS_ARM64_Logging,
-                  (StopLoggingDelegate)MACOS_ARM64_StopLogging,
-                  (LLM_ConstructDelegate)MACOS_ARM64_LLM_Construct,
-                  (LLM_DeleteDelegate)MACOS_ARM64_LLM_Delete,
-                  (LLM_SetupServerDelegate)MACOS_ARM64_LLM_SetupServer,
-                  (LLM_StartDelegate)MACOS_ARM64_LLM_Start,
-                  (LLM_StopDelegate)MACOS_ARM64_LLM_Stop,
-                  (LLM_TokenizeDelegate)MACOS_ARM64_LLM_Tokenize,
-                  (LLM_DetokenizeDelegate)MACOS_ARM64_LLM_Detokenize,
-                  (LLM_CompletionDelegate)MACOS_ARM64_LLM_Completion,
-                  (LLM_SlotDelegate)MACOS_ARM64_LLM_Slot,
-                  (LLM_CancelDelegate)MACOS_ARM64_LLM_Cancel,
-                  (LLM_StatusDelegate)MACOS_ARM64_LLM_Status,
-                  (StringWrapper_ConstructDelegate)MACOS_ARM64_StringWrapper_Construct,
-                  (StringWrapper_DeleteDelegate)MACOS_ARM64_StringWrapper_Delete,
-                  (StringWrapper_GetStringSizeDelegate)MACOS_ARM64_StringWrapper_GetStringSize,
-                  (StringWrapper_GetStringDelegate)MACOS_ARM64_StringWrapper_GetString,
-              }},
-            { "undreamai_macos-x64", new List<Delegate>()
-              {
-                  (LoggingDelegate)MACOS_X64_Logging,
-                  (StopLoggingDelegate)MACOS_X64_StopLogging,
-                  (LLM_ConstructDelegate)MACOS_X64_LLM_Construct,
-                  (LLM_DeleteDelegate)MACOS_X64_LLM_Delete,
-                  (LLM_SetupServerDelegate)MACOS_X64_LLM_SetupServer,
-                  (LLM_StartDelegate)MACOS_X64_LLM_Start,
-                  (LLM_StopDelegate)MACOS_X64_LLM_Stop,
-                  (LLM_TokenizeDelegate)MACOS_X64_LLM_Tokenize,
-                  (LLM_DetokenizeDelegate)MACOS_X64_LLM_Detokenize,
-                  (LLM_CompletionDelegate)MACOS_X64_LLM_Completion,
-                  (LLM_SlotDelegate)MACOS_X64_LLM_Slot,
-                  (LLM_CancelDelegate)MACOS_X64_LLM_Cancel,
-                  (LLM_StatusDelegate)MACOS_X64_LLM_Status,
-                  (StringWrapper_ConstructDelegate)MACOS_X64_StringWrapper_Construct,
-                  (StringWrapper_DeleteDelegate)MACOS_X64_StringWrapper_Delete,
-                  (StringWrapper_GetStringSizeDelegate)MACOS_X64_StringWrapper_GetStringSize,
-                  (StringWrapper_GetStringDelegate)MACOS_X64_StringWrapper_GetString,
-              }},
-            { "undreamai_windows-arm64", new List<Delegate>()
-              {
-                  (LoggingDelegate)WINDOWS_ARM64_Logging,
-                  (StopLoggingDelegate)WINDOWS_ARM64_StopLogging,
-                  (LLM_ConstructDelegate)WINDOWS_ARM64_LLM_Construct,
-                  (LLM_DeleteDelegate)WINDOWS_ARM64_LLM_Delete,
-                  (LLM_SetupServerDelegate)WINDOWS_ARM64_LLM_SetupServer,
-                  (LLM_StartDelegate)WINDOWS_ARM64_LLM_Start,
-                  (LLM_StopDelegate)WINDOWS_ARM64_LLM_Stop,
-                  (LLM_TokenizeDelegate)WINDOWS_ARM64_LLM_Tokenize,
-                  (LLM_DetokenizeDelegate)WINDOWS_ARM64_LLM_Detokenize,
-                  (LLM_CompletionDelegate)WINDOWS_ARM64_LLM_Completion,
-                  (LLM_SlotDelegate)WINDOWS_ARM64_LLM_Slot,
-                  (LLM_CancelDelegate)WINDOWS_ARM64_LLM_Cancel,
-                  (LLM_StatusDelegate)WINDOWS_ARM64_LLM_Status,
-                  (StringWrapper_ConstructDelegate)WINDOWS_ARM64_StringWrapper_Construct,
-                  (StringWrapper_DeleteDelegate)WINDOWS_ARM64_StringWrapper_Delete,
-                  (StringWrapper_GetStringSizeDelegate)WINDOWS_ARM64_StringWrapper_GetStringSize,
-                  (StringWrapper_GetStringDelegate)WINDOWS_ARM64_StringWrapper_GetString,
-              }},
-            { "undreamai_windows-avx", new List<Delegate>()
-              {
-                  (LoggingDelegate)WINDOWS_AVX_Logging,
-                  (StopLoggingDelegate)WINDOWS_AVX_StopLogging,
-                  (LLM_ConstructDelegate)WINDOWS_AVX_LLM_Construct,
-                  (LLM_DeleteDelegate)WINDOWS_AVX_LLM_Delete,
-                  (LLM_SetupServerDelegate)WINDOWS_AVX_LLM_SetupServer,
-                  (LLM_StartDelegate)WINDOWS_AVX_LLM_Start,
-                  (LLM_StopDelegate)WINDOWS_AVX_LLM_Stop,
-                  (LLM_TokenizeDelegate)WINDOWS_AVX_LLM_Tokenize,
-                  (LLM_DetokenizeDelegate)WINDOWS_AVX_LLM_Detokenize,
-                  (LLM_CompletionDelegate)WINDOWS_AVX_LLM_Completion,
-                  (LLM_SlotDelegate)WINDOWS_AVX_LLM_Slot,
-                  (LLM_CancelDelegate)WINDOWS_AVX_LLM_Cancel,
-                  (LLM_StatusDelegate)WINDOWS_AVX_LLM_Status,
-                  (StringWrapper_ConstructDelegate)WINDOWS_AVX_StringWrapper_Construct,
-                  (StringWrapper_DeleteDelegate)WINDOWS_AVX_StringWrapper_Delete,
-                  (StringWrapper_GetStringSizeDelegate)WINDOWS_AVX_StringWrapper_GetStringSize,
-                  (StringWrapper_GetStringDelegate)WINDOWS_AVX_StringWrapper_GetString,
-              }},
-            { "undreamai_windows-avx2", new List<Delegate>()
-              {
-                  (LoggingDelegate)WINDOWS_AVX2_Logging,
-                  (StopLoggingDelegate)WINDOWS_AVX2_StopLogging,
-                  (LLM_ConstructDelegate)WINDOWS_AVX2_LLM_Construct,
-                  (LLM_DeleteDelegate)WINDOWS_AVX2_LLM_Delete,
-                  (LLM_SetupServerDelegate)WINDOWS_AVX2_LLM_SetupServer,
-                  (LLM_StartDelegate)WINDOWS_AVX2_LLM_Start,
-                  (LLM_StopDelegate)WINDOWS_AVX2_LLM_Stop,
-                  (LLM_TokenizeDelegate)WINDOWS_AVX2_LLM_Tokenize,
-                  (LLM_DetokenizeDelegate)WINDOWS_AVX2_LLM_Detokenize,
-                  (LLM_CompletionDelegate)WINDOWS_AVX2_LLM_Completion,
-                  (LLM_SlotDelegate)WINDOWS_AVX2_LLM_Slot,
-                  (LLM_CancelDelegate)WINDOWS_AVX2_LLM_Cancel,
-                  (LLM_StatusDelegate)WINDOWS_AVX2_LLM_Status,
-                  (StringWrapper_ConstructDelegate)WINDOWS_AVX2_StringWrapper_Construct,
-                  (StringWrapper_DeleteDelegate)WINDOWS_AVX2_StringWrapper_Delete,
-                  (StringWrapper_GetStringSizeDelegate)WINDOWS_AVX2_StringWrapper_GetStringSize,
-                  (StringWrapper_GetStringDelegate)WINDOWS_AVX2_StringWrapper_GetString,
-              }},
-            { "undreamai_windows-avx512", new List<Delegate>()
-              {
-                  (LoggingDelegate)WINDOWS_AVX512_Logging,
-                  (StopLoggingDelegate)WINDOWS_AVX512_StopLogging,
-                  (LLM_ConstructDelegate)WINDOWS_AVX512_LLM_Construct,
-                  (LLM_DeleteDelegate)WINDOWS_AVX512_LLM_Delete,
-                  (LLM_SetupServerDelegate)WINDOWS_AVX512_LLM_SetupServer,
-                  (LLM_StartDelegate)WINDOWS_AVX512_LLM_Start,
-                  (LLM_StopDelegate)WINDOWS_AVX512_LLM_Stop,
-                  (LLM_TokenizeDelegate)WINDOWS_AVX512_LLM_Tokenize,
-                  (LLM_DetokenizeDelegate)WINDOWS_AVX512_LLM_Detokenize,
-                  (LLM_CompletionDelegate)WINDOWS_AVX512_LLM_Completion,
-                  (LLM_SlotDelegate)WINDOWS_AVX512_LLM_Slot,
-                  (LLM_CancelDelegate)WINDOWS_AVX512_LLM_Cancel,
-                  (LLM_StatusDelegate)WINDOWS_AVX512_LLM_Status,
-                  (StringWrapper_ConstructDelegate)WINDOWS_AVX512_StringWrapper_Construct,
-                  (StringWrapper_DeleteDelegate)WINDOWS_AVX512_StringWrapper_Delete,
-                  (StringWrapper_GetStringSizeDelegate)WINDOWS_AVX512_StringWrapper_GetStringSize,
-                  (StringWrapper_GetStringDelegate)WINDOWS_AVX512_StringWrapper_GetString,
-              }},
-            { "undreamai_windows-clblast", new List<Delegate>()
-              {
-                  (LoggingDelegate)WINDOWS_CLBLAST_Logging,
-                  (StopLoggingDelegate)WINDOWS_CLBLAST_StopLogging,
-                  (LLM_ConstructDelegate)WINDOWS_CLBLAST_LLM_Construct,
-                  (LLM_DeleteDelegate)WINDOWS_CLBLAST_LLM_Delete,
-                  (LLM_SetupServerDelegate)WINDOWS_CLBLAST_LLM_SetupServer,
-                  (LLM_StartDelegate)WINDOWS_CLBLAST_LLM_Start,
-                  (LLM_StopDelegate)WINDOWS_CLBLAST_LLM_Stop,
-                  (LLM_TokenizeDelegate)WINDOWS_CLBLAST_LLM_Tokenize,
-                  (LLM_DetokenizeDelegate)WINDOWS_CLBLAST_LLM_Detokenize,
-                  (LLM_CompletionDelegate)WINDOWS_CLBLAST_LLM_Completion,
-                  (LLM_SlotDelegate)WINDOWS_CLBLAST_LLM_Slot,
-                  (LLM_CancelDelegate)WINDOWS_CLBLAST_LLM_Cancel,
-                  (LLM_StatusDelegate)WINDOWS_CLBLAST_LLM_Status,
-                  (StringWrapper_ConstructDelegate)WINDOWS_CLBLAST_StringWrapper_Construct,
-                  (StringWrapper_DeleteDelegate)WINDOWS_CLBLAST_StringWrapper_Delete,
-                  (StringWrapper_GetStringSizeDelegate)WINDOWS_CLBLAST_StringWrapper_GetStringSize,
-                  (StringWrapper_GetStringDelegate)WINDOWS_CLBLAST_StringWrapper_GetString,
-              }},
-            { "undreamai_windows-cuda-cu11.7.1", new List<Delegate>()
-              {
-                  (LoggingDelegate)WINDOWS_CUDA_CU11_7_1_Logging,
-                  (StopLoggingDelegate)WINDOWS_CUDA_CU11_7_1_StopLogging,
-                  (LLM_ConstructDelegate)WINDOWS_CUDA_CU11_7_1_LLM_Construct,
-                  (LLM_DeleteDelegate)WINDOWS_CUDA_CU11_7_1_LLM_Delete,
-                  (LLM_SetupServerDelegate)WINDOWS_CUDA_CU11_7_1_LLM_SetupServer,
-                  (LLM_StartDelegate)WINDOWS_CUDA_CU11_7_1_LLM_Start,
-                  (LLM_StopDelegate)WINDOWS_CUDA_CU11_7_1_LLM_Stop,
-                  (LLM_TokenizeDelegate)WINDOWS_CUDA_CU11_7_1_LLM_Tokenize,
-                  (LLM_DetokenizeDelegate)WINDOWS_CUDA_CU11_7_1_LLM_Detokenize,
-                  (LLM_CompletionDelegate)WINDOWS_CUDA_CU11_7_1_LLM_Completion,
-                  (LLM_SlotDelegate)WINDOWS_CUDA_CU11_7_1_LLM_Slot,
-                  (LLM_CancelDelegate)WINDOWS_CUDA_CU11_7_1_LLM_Cancel,
-                  (LLM_StatusDelegate)WINDOWS_CUDA_CU11_7_1_LLM_Status,
-                  (StringWrapper_ConstructDelegate)WINDOWS_CUDA_CU11_7_1_StringWrapper_Construct,
-                  (StringWrapper_DeleteDelegate)WINDOWS_CUDA_CU11_7_1_StringWrapper_Delete,
-                  (StringWrapper_GetStringSizeDelegate)WINDOWS_CUDA_CU11_7_1_StringWrapper_GetStringSize,
-                  (StringWrapper_GetStringDelegate)WINDOWS_CUDA_CU11_7_1_StringWrapper_GetString,
-              }},
-            { "undreamai_windows-cuda-cu12.2.0", new List<Delegate>()
-              {
-                  (LoggingDelegate)WINDOWS_CUDA_CU12_2_0_Logging,
-                  (StopLoggingDelegate)WINDOWS_CUDA_CU12_2_0_StopLogging,
-                  (LLM_ConstructDelegate)WINDOWS_CUDA_CU12_2_0_LLM_Construct,
-                  (LLM_DeleteDelegate)WINDOWS_CUDA_CU12_2_0_LLM_Delete,
-                  (LLM_SetupServerDelegate)WINDOWS_CUDA_CU12_2_0_LLM_SetupServer,
-                  (LLM_StartDelegate)WINDOWS_CUDA_CU12_2_0_LLM_Start,
-                  (LLM_StopDelegate)WINDOWS_CUDA_CU12_2_0_LLM_Stop,
-                  (LLM_TokenizeDelegate)WINDOWS_CUDA_CU12_2_0_LLM_Tokenize,
-                  (LLM_DetokenizeDelegate)WINDOWS_CUDA_CU12_2_0_LLM_Detokenize,
-                  (LLM_CompletionDelegate)WINDOWS_CUDA_CU12_2_0_LLM_Completion,
-                  (LLM_SlotDelegate)WINDOWS_CUDA_CU12_2_0_LLM_Slot,
-                  (LLM_CancelDelegate)WINDOWS_CUDA_CU12_2_0_LLM_Cancel,
-                  (LLM_StatusDelegate)WINDOWS_CUDA_CU12_2_0_LLM_Status,
-                  (StringWrapper_ConstructDelegate)WINDOWS_CUDA_CU12_2_0_StringWrapper_Construct,
-                  (StringWrapper_DeleteDelegate)WINDOWS_CUDA_CU12_2_0_StringWrapper_Delete,
-                  (StringWrapper_GetStringSizeDelegate)WINDOWS_CUDA_CU12_2_0_StringWrapper_GetStringSize,
-                  (StringWrapper_GetStringDelegate)WINDOWS_CUDA_CU12_2_0_StringWrapper_GetString,
-              }},
-            { "undreamai_windows-noavx", new List<Delegate>()
-              {
-                  (LoggingDelegate)WINDOWS_NOAVX_Logging,
-                  (StopLoggingDelegate)WINDOWS_NOAVX_StopLogging,
-                  (LLM_ConstructDelegate)WINDOWS_NOAVX_LLM_Construct,
-                  (LLM_DeleteDelegate)WINDOWS_NOAVX_LLM_Delete,
-                  (LLM_SetupServerDelegate)WINDOWS_NOAVX_LLM_SetupServer,
-                  (LLM_StartDelegate)WINDOWS_NOAVX_LLM_Start,
-                  (LLM_StopDelegate)WINDOWS_NOAVX_LLM_Stop,
-                  (LLM_TokenizeDelegate)WINDOWS_NOAVX_LLM_Tokenize,
-                  (LLM_DetokenizeDelegate)WINDOWS_NOAVX_LLM_Detokenize,
-                  (LLM_CompletionDelegate)WINDOWS_NOAVX_LLM_Completion,
-                  (LLM_SlotDelegate)WINDOWS_NOAVX_LLM_Slot,
-                  (LLM_CancelDelegate)WINDOWS_NOAVX_LLM_Cancel,
-                  (LLM_StatusDelegate)WINDOWS_NOAVX_LLM_Status,
-                  (StringWrapper_ConstructDelegate)WINDOWS_NOAVX_StringWrapper_Construct,
-                  (StringWrapper_DeleteDelegate)WINDOWS_NOAVX_StringWrapper_Delete,
-                  (StringWrapper_GetStringSizeDelegate)WINDOWS_NOAVX_StringWrapper_GetStringSize,
-                  (StringWrapper_GetStringDelegate)WINDOWS_NOAVX_StringWrapper_GetString,
-              }}
+            { "undreamai_linux-avx", new List<Delegate>(){
+                (LoggingDelegate) LINUX_AVX_Logging,
+                (StopLoggingDelegate) LINUX_AVX_StopLogging,
+                (LLM_ConstructDelegate) LINUX_AVX_LLM_Construct,
+                (LLM_DeleteDelegate) LINUX_AVX_LLM_Delete,
+                (LLM_SetupServerDelegate) LINUX_AVX_LLM_SetupServer,
+                (LLM_StartDelegate) LINUX_AVX_LLM_Start,
+                (LLM_StopDelegate) LINUX_AVX_LLM_Stop,
+                (LLM_SetTemplateDelegate) LINUX_AVX_LLM_SetTemplate,
+                (LLM_TokenizeDelegate) LINUX_AVX_LLM_Tokenize,
+                (LLM_DetokenizeDelegate) LINUX_AVX_LLM_Detokenize,
+                (LLM_CompletionDelegate) LINUX_AVX_LLM_Completion,
+                (LLM_SlotDelegate) LINUX_AVX_LLM_Slot,
+                (LLM_CancelDelegate) LINUX_AVX_LLM_Cancel,
+                (LLM_StatusDelegate) LINUX_AVX_LLM_Status,
+                (StringWrapper_ConstructDelegate) LINUX_AVX_StringWrapper_Construct,
+                (StringWrapper_DeleteDelegate) LINUX_AVX_StringWrapper_Delete,
+                (StringWrapper_GetStringSizeDelegate) LINUX_AVX_StringWrapper_GetStringSize,
+                (StringWrapper_GetStringDelegate) LINUX_AVX_StringWrapper_GetString,
+             }},
+            { "undreamai_linux-avx2", new List<Delegate>(){
+                (LoggingDelegate) LINUX_AVX2_Logging,
+                (StopLoggingDelegate) LINUX_AVX2_StopLogging,
+                (LLM_ConstructDelegate) LINUX_AVX2_LLM_Construct,
+                (LLM_DeleteDelegate) LINUX_AVX2_LLM_Delete,
+                (LLM_SetupServerDelegate) LINUX_AVX2_LLM_SetupServer,
+                (LLM_StartDelegate) LINUX_AVX2_LLM_Start,
+                (LLM_StopDelegate) LINUX_AVX2_LLM_Stop,
+                (LLM_SetTemplateDelegate) LINUX_AVX2_LLM_SetTemplate,
+                (LLM_TokenizeDelegate) LINUX_AVX2_LLM_Tokenize,
+                (LLM_DetokenizeDelegate) LINUX_AVX2_LLM_Detokenize,
+                (LLM_CompletionDelegate) LINUX_AVX2_LLM_Completion,
+                (LLM_SlotDelegate) LINUX_AVX2_LLM_Slot,
+                (LLM_CancelDelegate) LINUX_AVX2_LLM_Cancel,
+                (LLM_StatusDelegate) LINUX_AVX2_LLM_Status,
+                (StringWrapper_ConstructDelegate) LINUX_AVX2_StringWrapper_Construct,
+                (StringWrapper_DeleteDelegate) LINUX_AVX2_StringWrapper_Delete,
+                (StringWrapper_GetStringSizeDelegate) LINUX_AVX2_StringWrapper_GetStringSize,
+                (StringWrapper_GetStringDelegate) LINUX_AVX2_StringWrapper_GetString,
+             }},
+            { "undreamai_linux-avx512", new List<Delegate>(){
+                (LoggingDelegate) LINUX_AVX512_Logging,
+                (StopLoggingDelegate) LINUX_AVX512_StopLogging,
+                (LLM_ConstructDelegate) LINUX_AVX512_LLM_Construct,
+                (LLM_DeleteDelegate) LINUX_AVX512_LLM_Delete,
+                (LLM_SetupServerDelegate) LINUX_AVX512_LLM_SetupServer,
+                (LLM_StartDelegate) LINUX_AVX512_LLM_Start,
+                (LLM_StopDelegate) LINUX_AVX512_LLM_Stop,
+                (LLM_SetTemplateDelegate) LINUX_AVX512_LLM_SetTemplate,
+                (LLM_TokenizeDelegate) LINUX_AVX512_LLM_Tokenize,
+                (LLM_DetokenizeDelegate) LINUX_AVX512_LLM_Detokenize,
+                (LLM_CompletionDelegate) LINUX_AVX512_LLM_Completion,
+                (LLM_SlotDelegate) LINUX_AVX512_LLM_Slot,
+                (LLM_CancelDelegate) LINUX_AVX512_LLM_Cancel,
+                (LLM_StatusDelegate) LINUX_AVX512_LLM_Status,
+                (StringWrapper_ConstructDelegate) LINUX_AVX512_StringWrapper_Construct,
+                (StringWrapper_DeleteDelegate) LINUX_AVX512_StringWrapper_Delete,
+                (StringWrapper_GetStringSizeDelegate) LINUX_AVX512_StringWrapper_GetStringSize,
+                (StringWrapper_GetStringDelegate) LINUX_AVX512_StringWrapper_GetString,
+             }},
+            { "undreamai_linux-clblast", new List<Delegate>(){
+                (LoggingDelegate) LINUX_CLBLAST_Logging,
+                (StopLoggingDelegate) LINUX_CLBLAST_StopLogging,
+                (LLM_ConstructDelegate) LINUX_CLBLAST_LLM_Construct,
+                (LLM_DeleteDelegate) LINUX_CLBLAST_LLM_Delete,
+                (LLM_SetupServerDelegate) LINUX_CLBLAST_LLM_SetupServer,
+                (LLM_StartDelegate) LINUX_CLBLAST_LLM_Start,
+                (LLM_StopDelegate) LINUX_CLBLAST_LLM_Stop,
+                (LLM_SetTemplateDelegate) LINUX_CLBLAST_LLM_SetTemplate,
+                (LLM_TokenizeDelegate) LINUX_CLBLAST_LLM_Tokenize,
+                (LLM_DetokenizeDelegate) LINUX_CLBLAST_LLM_Detokenize,
+                (LLM_CompletionDelegate) LINUX_CLBLAST_LLM_Completion,
+                (LLM_SlotDelegate) LINUX_CLBLAST_LLM_Slot,
+                (LLM_CancelDelegate) LINUX_CLBLAST_LLM_Cancel,
+                (LLM_StatusDelegate) LINUX_CLBLAST_LLM_Status,
+                (StringWrapper_ConstructDelegate) LINUX_CLBLAST_StringWrapper_Construct,
+                (StringWrapper_DeleteDelegate) LINUX_CLBLAST_StringWrapper_Delete,
+                (StringWrapper_GetStringSizeDelegate) LINUX_CLBLAST_StringWrapper_GetStringSize,
+                (StringWrapper_GetStringDelegate) LINUX_CLBLAST_StringWrapper_GetString,
+             }},
+            { "undreamai_linux-cuda-cu11.7.1", new List<Delegate>(){
+                (LoggingDelegate) LINUX_CUDA_CU11_7_1_Logging,
+                (StopLoggingDelegate) LINUX_CUDA_CU11_7_1_StopLogging,
+                (LLM_ConstructDelegate) LINUX_CUDA_CU11_7_1_LLM_Construct,
+                (LLM_DeleteDelegate) LINUX_CUDA_CU11_7_1_LLM_Delete,
+                (LLM_SetupServerDelegate) LINUX_CUDA_CU11_7_1_LLM_SetupServer,
+                (LLM_StartDelegate) LINUX_CUDA_CU11_7_1_LLM_Start,
+                (LLM_StopDelegate) LINUX_CUDA_CU11_7_1_LLM_Stop,
+                (LLM_SetTemplateDelegate) LINUX_CUDA_CU11_7_1_LLM_SetTemplate,
+                (LLM_TokenizeDelegate) LINUX_CUDA_CU11_7_1_LLM_Tokenize,
+                (LLM_DetokenizeDelegate) LINUX_CUDA_CU11_7_1_LLM_Detokenize,
+                (LLM_CompletionDelegate) LINUX_CUDA_CU11_7_1_LLM_Completion,
+                (LLM_SlotDelegate) LINUX_CUDA_CU11_7_1_LLM_Slot,
+                (LLM_CancelDelegate) LINUX_CUDA_CU11_7_1_LLM_Cancel,
+                (LLM_StatusDelegate) LINUX_CUDA_CU11_7_1_LLM_Status,
+                (StringWrapper_ConstructDelegate) LINUX_CUDA_CU11_7_1_StringWrapper_Construct,
+                (StringWrapper_DeleteDelegate) LINUX_CUDA_CU11_7_1_StringWrapper_Delete,
+                (StringWrapper_GetStringSizeDelegate) LINUX_CUDA_CU11_7_1_StringWrapper_GetStringSize,
+                (StringWrapper_GetStringDelegate) LINUX_CUDA_CU11_7_1_StringWrapper_GetString,
+             }},
+            { "undreamai_linux-cuda-cu12.2.0", new List<Delegate>(){
+                (LoggingDelegate) LINUX_CUDA_CU12_2_0_Logging,
+                (StopLoggingDelegate) LINUX_CUDA_CU12_2_0_StopLogging,
+                (LLM_ConstructDelegate) LINUX_CUDA_CU12_2_0_LLM_Construct,
+                (LLM_DeleteDelegate) LINUX_CUDA_CU12_2_0_LLM_Delete,
+                (LLM_SetupServerDelegate) LINUX_CUDA_CU12_2_0_LLM_SetupServer,
+                (LLM_StartDelegate) LINUX_CUDA_CU12_2_0_LLM_Start,
+                (LLM_StopDelegate) LINUX_CUDA_CU12_2_0_LLM_Stop,
+                (LLM_SetTemplateDelegate) LINUX_CUDA_CU12_2_0_LLM_SetTemplate,
+                (LLM_TokenizeDelegate) LINUX_CUDA_CU12_2_0_LLM_Tokenize,
+                (LLM_DetokenizeDelegate) LINUX_CUDA_CU12_2_0_LLM_Detokenize,
+                (LLM_CompletionDelegate) LINUX_CUDA_CU12_2_0_LLM_Completion,
+                (LLM_SlotDelegate) LINUX_CUDA_CU12_2_0_LLM_Slot,
+                (LLM_CancelDelegate) LINUX_CUDA_CU12_2_0_LLM_Cancel,
+                (LLM_StatusDelegate) LINUX_CUDA_CU12_2_0_LLM_Status,
+                (StringWrapper_ConstructDelegate) LINUX_CUDA_CU12_2_0_StringWrapper_Construct,
+                (StringWrapper_DeleteDelegate) LINUX_CUDA_CU12_2_0_StringWrapper_Delete,
+                (StringWrapper_GetStringSizeDelegate) LINUX_CUDA_CU12_2_0_StringWrapper_GetStringSize,
+                (StringWrapper_GetStringDelegate) LINUX_CUDA_CU12_2_0_StringWrapper_GetString,
+             }},
+            { "undreamai_linux-noavx", new List<Delegate>(){
+                (LoggingDelegate) LINUX_NOAVX_Logging,
+                (StopLoggingDelegate) LINUX_NOAVX_StopLogging,
+                (LLM_ConstructDelegate) LINUX_NOAVX_LLM_Construct,
+                (LLM_DeleteDelegate) LINUX_NOAVX_LLM_Delete,
+                (LLM_SetupServerDelegate) LINUX_NOAVX_LLM_SetupServer,
+                (LLM_StartDelegate) LINUX_NOAVX_LLM_Start,
+                (LLM_StopDelegate) LINUX_NOAVX_LLM_Stop,
+                (LLM_SetTemplateDelegate) LINUX_NOAVX_LLM_SetTemplate,
+                (LLM_TokenizeDelegate) LINUX_NOAVX_LLM_Tokenize,
+                (LLM_DetokenizeDelegate) LINUX_NOAVX_LLM_Detokenize,
+                (LLM_CompletionDelegate) LINUX_NOAVX_LLM_Completion,
+                (LLM_SlotDelegate) LINUX_NOAVX_LLM_Slot,
+                (LLM_CancelDelegate) LINUX_NOAVX_LLM_Cancel,
+                (LLM_StatusDelegate) LINUX_NOAVX_LLM_Status,
+                (StringWrapper_ConstructDelegate) LINUX_NOAVX_StringWrapper_Construct,
+                (StringWrapper_DeleteDelegate) LINUX_NOAVX_StringWrapper_Delete,
+                (StringWrapper_GetStringSizeDelegate) LINUX_NOAVX_StringWrapper_GetStringSize,
+                (StringWrapper_GetStringDelegate) LINUX_NOAVX_StringWrapper_GetString,
+             }},
+            { "undreamai_macos-arm64", new List<Delegate>(){
+                (LoggingDelegate) MACOS_ARM64_Logging,
+                (StopLoggingDelegate) MACOS_ARM64_StopLogging,
+                (LLM_ConstructDelegate) MACOS_ARM64_LLM_Construct,
+                (LLM_DeleteDelegate) MACOS_ARM64_LLM_Delete,
+                (LLM_SetupServerDelegate) MACOS_ARM64_LLM_SetupServer,
+                (LLM_StartDelegate) MACOS_ARM64_LLM_Start,
+                (LLM_StopDelegate) MACOS_ARM64_LLM_Stop,
+                (LLM_SetTemplateDelegate) MACOS_ARM64_LLM_SetTemplate,
+                (LLM_TokenizeDelegate) MACOS_ARM64_LLM_Tokenize,
+                (LLM_DetokenizeDelegate) MACOS_ARM64_LLM_Detokenize,
+                (LLM_CompletionDelegate) MACOS_ARM64_LLM_Completion,
+                (LLM_SlotDelegate) MACOS_ARM64_LLM_Slot,
+                (LLM_CancelDelegate) MACOS_ARM64_LLM_Cancel,
+                (LLM_StatusDelegate) MACOS_ARM64_LLM_Status,
+                (StringWrapper_ConstructDelegate) MACOS_ARM64_StringWrapper_Construct,
+                (StringWrapper_DeleteDelegate) MACOS_ARM64_StringWrapper_Delete,
+                (StringWrapper_GetStringSizeDelegate) MACOS_ARM64_StringWrapper_GetStringSize,
+                (StringWrapper_GetStringDelegate) MACOS_ARM64_StringWrapper_GetString,
+             }},
+            { "undreamai_macos-x64", new List<Delegate>(){
+                (LoggingDelegate) MACOS_X64_Logging,
+                (StopLoggingDelegate) MACOS_X64_StopLogging,
+                (LLM_ConstructDelegate) MACOS_X64_LLM_Construct,
+                (LLM_DeleteDelegate) MACOS_X64_LLM_Delete,
+                (LLM_SetupServerDelegate) MACOS_X64_LLM_SetupServer,
+                (LLM_StartDelegate) MACOS_X64_LLM_Start,
+                (LLM_StopDelegate) MACOS_X64_LLM_Stop,
+                (LLM_SetTemplateDelegate) MACOS_X64_LLM_SetTemplate,
+                (LLM_TokenizeDelegate) MACOS_X64_LLM_Tokenize,
+                (LLM_DetokenizeDelegate) MACOS_X64_LLM_Detokenize,
+                (LLM_CompletionDelegate) MACOS_X64_LLM_Completion,
+                (LLM_SlotDelegate) MACOS_X64_LLM_Slot,
+                (LLM_CancelDelegate) MACOS_X64_LLM_Cancel,
+                (LLM_StatusDelegate) MACOS_X64_LLM_Status,
+                (StringWrapper_ConstructDelegate) MACOS_X64_StringWrapper_Construct,
+                (StringWrapper_DeleteDelegate) MACOS_X64_StringWrapper_Delete,
+                (StringWrapper_GetStringSizeDelegate) MACOS_X64_StringWrapper_GetStringSize,
+                (StringWrapper_GetStringDelegate) MACOS_X64_StringWrapper_GetString,
+             }},
+            { "undreamai_windows-arm64", new List<Delegate>(){
+                (LoggingDelegate) WINDOWS_ARM64_Logging,
+                (StopLoggingDelegate) WINDOWS_ARM64_StopLogging,
+                (LLM_ConstructDelegate) WINDOWS_ARM64_LLM_Construct,
+                (LLM_DeleteDelegate) WINDOWS_ARM64_LLM_Delete,
+                (LLM_SetupServerDelegate) WINDOWS_ARM64_LLM_SetupServer,
+                (LLM_StartDelegate) WINDOWS_ARM64_LLM_Start,
+                (LLM_StopDelegate) WINDOWS_ARM64_LLM_Stop,
+                (LLM_SetTemplateDelegate) WINDOWS_ARM64_LLM_SetTemplate,
+                (LLM_TokenizeDelegate) WINDOWS_ARM64_LLM_Tokenize,
+                (LLM_DetokenizeDelegate) WINDOWS_ARM64_LLM_Detokenize,
+                (LLM_CompletionDelegate) WINDOWS_ARM64_LLM_Completion,
+                (LLM_SlotDelegate) WINDOWS_ARM64_LLM_Slot,
+                (LLM_CancelDelegate) WINDOWS_ARM64_LLM_Cancel,
+                (LLM_StatusDelegate) WINDOWS_ARM64_LLM_Status,
+                (StringWrapper_ConstructDelegate) WINDOWS_ARM64_StringWrapper_Construct,
+                (StringWrapper_DeleteDelegate) WINDOWS_ARM64_StringWrapper_Delete,
+                (StringWrapper_GetStringSizeDelegate) WINDOWS_ARM64_StringWrapper_GetStringSize,
+                (StringWrapper_GetStringDelegate) WINDOWS_ARM64_StringWrapper_GetString,
+             }},
+            { "undreamai_windows-avx", new List<Delegate>(){
+                (LoggingDelegate) WINDOWS_AVX_Logging,
+                (StopLoggingDelegate) WINDOWS_AVX_StopLogging,
+                (LLM_ConstructDelegate) WINDOWS_AVX_LLM_Construct,
+                (LLM_DeleteDelegate) WINDOWS_AVX_LLM_Delete,
+                (LLM_SetupServerDelegate) WINDOWS_AVX_LLM_SetupServer,
+                (LLM_StartDelegate) WINDOWS_AVX_LLM_Start,
+                (LLM_StopDelegate) WINDOWS_AVX_LLM_Stop,
+                (LLM_SetTemplateDelegate) WINDOWS_AVX_LLM_SetTemplate,
+                (LLM_TokenizeDelegate) WINDOWS_AVX_LLM_Tokenize,
+                (LLM_DetokenizeDelegate) WINDOWS_AVX_LLM_Detokenize,
+                (LLM_CompletionDelegate) WINDOWS_AVX_LLM_Completion,
+                (LLM_SlotDelegate) WINDOWS_AVX_LLM_Slot,
+                (LLM_CancelDelegate) WINDOWS_AVX_LLM_Cancel,
+                (LLM_StatusDelegate) WINDOWS_AVX_LLM_Status,
+                (StringWrapper_ConstructDelegate) WINDOWS_AVX_StringWrapper_Construct,
+                (StringWrapper_DeleteDelegate) WINDOWS_AVX_StringWrapper_Delete,
+                (StringWrapper_GetStringSizeDelegate) WINDOWS_AVX_StringWrapper_GetStringSize,
+                (StringWrapper_GetStringDelegate) WINDOWS_AVX_StringWrapper_GetString,
+             }},
+            { "undreamai_windows-avx2", new List<Delegate>(){
+                (LoggingDelegate) WINDOWS_AVX2_Logging,
+                (StopLoggingDelegate) WINDOWS_AVX2_StopLogging,
+                (LLM_ConstructDelegate) WINDOWS_AVX2_LLM_Construct,
+                (LLM_DeleteDelegate) WINDOWS_AVX2_LLM_Delete,
+                (LLM_SetupServerDelegate) WINDOWS_AVX2_LLM_SetupServer,
+                (LLM_StartDelegate) WINDOWS_AVX2_LLM_Start,
+                (LLM_StopDelegate) WINDOWS_AVX2_LLM_Stop,
+                (LLM_SetTemplateDelegate) WINDOWS_AVX2_LLM_SetTemplate,
+                (LLM_TokenizeDelegate) WINDOWS_AVX2_LLM_Tokenize,
+                (LLM_DetokenizeDelegate) WINDOWS_AVX2_LLM_Detokenize,
+                (LLM_CompletionDelegate) WINDOWS_AVX2_LLM_Completion,
+                (LLM_SlotDelegate) WINDOWS_AVX2_LLM_Slot,
+                (LLM_CancelDelegate) WINDOWS_AVX2_LLM_Cancel,
+                (LLM_StatusDelegate) WINDOWS_AVX2_LLM_Status,
+                (StringWrapper_ConstructDelegate) WINDOWS_AVX2_StringWrapper_Construct,
+                (StringWrapper_DeleteDelegate) WINDOWS_AVX2_StringWrapper_Delete,
+                (StringWrapper_GetStringSizeDelegate) WINDOWS_AVX2_StringWrapper_GetStringSize,
+                (StringWrapper_GetStringDelegate) WINDOWS_AVX2_StringWrapper_GetString,
+             }},
+            { "undreamai_windows-avx512", new List<Delegate>(){
+                (LoggingDelegate) WINDOWS_AVX512_Logging,
+                (StopLoggingDelegate) WINDOWS_AVX512_StopLogging,
+                (LLM_ConstructDelegate) WINDOWS_AVX512_LLM_Construct,
+                (LLM_DeleteDelegate) WINDOWS_AVX512_LLM_Delete,
+                (LLM_SetupServerDelegate) WINDOWS_AVX512_LLM_SetupServer,
+                (LLM_StartDelegate) WINDOWS_AVX512_LLM_Start,
+                (LLM_StopDelegate) WINDOWS_AVX512_LLM_Stop,
+                (LLM_SetTemplateDelegate) WINDOWS_AVX512_LLM_SetTemplate,
+                (LLM_TokenizeDelegate) WINDOWS_AVX512_LLM_Tokenize,
+                (LLM_DetokenizeDelegate) WINDOWS_AVX512_LLM_Detokenize,
+                (LLM_CompletionDelegate) WINDOWS_AVX512_LLM_Completion,
+                (LLM_SlotDelegate) WINDOWS_AVX512_LLM_Slot,
+                (LLM_CancelDelegate) WINDOWS_AVX512_LLM_Cancel,
+                (LLM_StatusDelegate) WINDOWS_AVX512_LLM_Status,
+                (StringWrapper_ConstructDelegate) WINDOWS_AVX512_StringWrapper_Construct,
+                (StringWrapper_DeleteDelegate) WINDOWS_AVX512_StringWrapper_Delete,
+                (StringWrapper_GetStringSizeDelegate) WINDOWS_AVX512_StringWrapper_GetStringSize,
+                (StringWrapper_GetStringDelegate) WINDOWS_AVX512_StringWrapper_GetString,
+             }},
+            { "undreamai_windows-clblast", new List<Delegate>(){
+                (LoggingDelegate) WINDOWS_CLBLAST_Logging,
+                (StopLoggingDelegate) WINDOWS_CLBLAST_StopLogging,
+                (LLM_ConstructDelegate) WINDOWS_CLBLAST_LLM_Construct,
+                (LLM_DeleteDelegate) WINDOWS_CLBLAST_LLM_Delete,
+                (LLM_SetupServerDelegate) WINDOWS_CLBLAST_LLM_SetupServer,
+                (LLM_StartDelegate) WINDOWS_CLBLAST_LLM_Start,
+                (LLM_StopDelegate) WINDOWS_CLBLAST_LLM_Stop,
+                (LLM_SetTemplateDelegate) WINDOWS_CLBLAST_LLM_SetTemplate,
+                (LLM_TokenizeDelegate) WINDOWS_CLBLAST_LLM_Tokenize,
+                (LLM_DetokenizeDelegate) WINDOWS_CLBLAST_LLM_Detokenize,
+                (LLM_CompletionDelegate) WINDOWS_CLBLAST_LLM_Completion,
+                (LLM_SlotDelegate) WINDOWS_CLBLAST_LLM_Slot,
+                (LLM_CancelDelegate) WINDOWS_CLBLAST_LLM_Cancel,
+                (LLM_StatusDelegate) WINDOWS_CLBLAST_LLM_Status,
+                (StringWrapper_ConstructDelegate) WINDOWS_CLBLAST_StringWrapper_Construct,
+                (StringWrapper_DeleteDelegate) WINDOWS_CLBLAST_StringWrapper_Delete,
+                (StringWrapper_GetStringSizeDelegate) WINDOWS_CLBLAST_StringWrapper_GetStringSize,
+                (StringWrapper_GetStringDelegate) WINDOWS_CLBLAST_StringWrapper_GetString,
+             }},
+            { "undreamai_windows-cuda-cu11.7.1", new List<Delegate>(){
+                (LoggingDelegate) WINDOWS_CUDA_CU11_7_1_Logging,
+                (StopLoggingDelegate) WINDOWS_CUDA_CU11_7_1_StopLogging,
+                (LLM_ConstructDelegate) WINDOWS_CUDA_CU11_7_1_LLM_Construct,
+                (LLM_DeleteDelegate) WINDOWS_CUDA_CU11_7_1_LLM_Delete,
+                (LLM_SetupServerDelegate) WINDOWS_CUDA_CU11_7_1_LLM_SetupServer,
+                (LLM_StartDelegate) WINDOWS_CUDA_CU11_7_1_LLM_Start,
+                (LLM_StopDelegate) WINDOWS_CUDA_CU11_7_1_LLM_Stop,
+                (LLM_SetTemplateDelegate) WINDOWS_CUDA_CU11_7_1_LLM_SetTemplate,
+                (LLM_TokenizeDelegate) WINDOWS_CUDA_CU11_7_1_LLM_Tokenize,
+                (LLM_DetokenizeDelegate) WINDOWS_CUDA_CU11_7_1_LLM_Detokenize,
+                (LLM_CompletionDelegate) WINDOWS_CUDA_CU11_7_1_LLM_Completion,
+                (LLM_SlotDelegate) WINDOWS_CUDA_CU11_7_1_LLM_Slot,
+                (LLM_CancelDelegate) WINDOWS_CUDA_CU11_7_1_LLM_Cancel,
+                (LLM_StatusDelegate) WINDOWS_CUDA_CU11_7_1_LLM_Status,
+                (StringWrapper_ConstructDelegate) WINDOWS_CUDA_CU11_7_1_StringWrapper_Construct,
+                (StringWrapper_DeleteDelegate) WINDOWS_CUDA_CU11_7_1_StringWrapper_Delete,
+                (StringWrapper_GetStringSizeDelegate) WINDOWS_CUDA_CU11_7_1_StringWrapper_GetStringSize,
+                (StringWrapper_GetStringDelegate) WINDOWS_CUDA_CU11_7_1_StringWrapper_GetString,
+             }},
+            { "undreamai_windows-cuda-cu12.2.0", new List<Delegate>(){
+                (LoggingDelegate) WINDOWS_CUDA_CU12_2_0_Logging,
+                (StopLoggingDelegate) WINDOWS_CUDA_CU12_2_0_StopLogging,
+                (LLM_ConstructDelegate) WINDOWS_CUDA_CU12_2_0_LLM_Construct,
+                (LLM_DeleteDelegate) WINDOWS_CUDA_CU12_2_0_LLM_Delete,
+                (LLM_SetupServerDelegate) WINDOWS_CUDA_CU12_2_0_LLM_SetupServer,
+                (LLM_StartDelegate) WINDOWS_CUDA_CU12_2_0_LLM_Start,
+                (LLM_StopDelegate) WINDOWS_CUDA_CU12_2_0_LLM_Stop,
+                (LLM_SetTemplateDelegate) WINDOWS_CUDA_CU12_2_0_LLM_SetTemplate,
+                (LLM_TokenizeDelegate) WINDOWS_CUDA_CU12_2_0_LLM_Tokenize,
+                (LLM_DetokenizeDelegate) WINDOWS_CUDA_CU12_2_0_LLM_Detokenize,
+                (LLM_CompletionDelegate) WINDOWS_CUDA_CU12_2_0_LLM_Completion,
+                (LLM_SlotDelegate) WINDOWS_CUDA_CU12_2_0_LLM_Slot,
+                (LLM_CancelDelegate) WINDOWS_CUDA_CU12_2_0_LLM_Cancel,
+                (LLM_StatusDelegate) WINDOWS_CUDA_CU12_2_0_LLM_Status,
+                (StringWrapper_ConstructDelegate) WINDOWS_CUDA_CU12_2_0_StringWrapper_Construct,
+                (StringWrapper_DeleteDelegate) WINDOWS_CUDA_CU12_2_0_StringWrapper_Delete,
+                (StringWrapper_GetStringSizeDelegate) WINDOWS_CUDA_CU12_2_0_StringWrapper_GetStringSize,
+                (StringWrapper_GetStringDelegate) WINDOWS_CUDA_CU12_2_0_StringWrapper_GetString,
+             }},
+            { "undreamai_windows-noavx", new List<Delegate>(){
+                (LoggingDelegate) WINDOWS_NOAVX_Logging,
+                (StopLoggingDelegate) WINDOWS_NOAVX_StopLogging,
+                (LLM_ConstructDelegate) WINDOWS_NOAVX_LLM_Construct,
+                (LLM_DeleteDelegate) WINDOWS_NOAVX_LLM_Delete,
+                (LLM_SetupServerDelegate) WINDOWS_NOAVX_LLM_SetupServer,
+                (LLM_StartDelegate) WINDOWS_NOAVX_LLM_Start,
+                (LLM_StopDelegate) WINDOWS_NOAVX_LLM_Stop,
+                (LLM_SetTemplateDelegate) WINDOWS_NOAVX_LLM_SetTemplate,
+                (LLM_TokenizeDelegate) WINDOWS_NOAVX_LLM_Tokenize,
+                (LLM_DetokenizeDelegate) WINDOWS_NOAVX_LLM_Detokenize,
+                (LLM_CompletionDelegate) WINDOWS_NOAVX_LLM_Completion,
+                (LLM_SlotDelegate) WINDOWS_NOAVX_LLM_Slot,
+                (LLM_CancelDelegate) WINDOWS_NOAVX_LLM_Cancel,
+                (LLM_StatusDelegate) WINDOWS_NOAVX_LLM_Status,
+                (StringWrapper_ConstructDelegate) WINDOWS_NOAVX_StringWrapper_Construct,
+                (StringWrapper_DeleteDelegate) WINDOWS_NOAVX_StringWrapper_Delete,
+                (StringWrapper_GetStringSizeDelegate) WINDOWS_NOAVX_StringWrapper_GetStringSize,
+                (StringWrapper_GetStringDelegate) WINDOWS_NOAVX_StringWrapper_GetString,
+             }}
         };
     }
 }

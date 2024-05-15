@@ -106,7 +106,7 @@ namespace LLMUnity
         protected List<ChatMessage> chat;
         static object chatPromptLock = new object();
         static object chatAddLock = new object();
-        public string chatTemplate = ChatTemplate.DefaultTemplate;
+        private string chatTemplate;
         private ChatTemplate template;
         public string grammarString;
         protected int id_slot = -1;
@@ -138,10 +138,7 @@ namespace LLMUnity
 
             InitGrammar();
             InitPrompt();
-            LoadTemplate();
         }
-
-        public void Update() {}
 
         private void InitPrompt(bool clearChat = true)
         {
@@ -198,9 +195,22 @@ namespace LLMUnity
             nKeep = tokens.Count;
         }
 
-        private void LoadTemplate()
+        public async Task LoadTemplate()
         {
-            template = ChatTemplate.GetTemplate(chatTemplate);
+            string llmTemplate;
+            if (remote)
+            {
+                llmTemplate = await AskTemplate();
+            }
+            else
+            {
+                llmTemplate = llm.GetTemplate();
+            }
+            if (llmTemplate != chatTemplate)
+            {
+                chatTemplate = llmTemplate;
+                template = ChatTemplate.GetTemplate(chatTemplate);
+            }
         }
 
 #if UNITY_EDITOR
@@ -309,6 +319,12 @@ namespace LLMUnity
             return result.choices[0].message.content;
         }
 
+        protected string TemplateContent(TemplateResult result)
+        {
+            // get content from a char result received from the endpoint in open AI format
+            return result.template;
+        }
+
         protected List<int> TokenizeContent(TokenizeResult result)
         {
             // get the tokens from a tokenize result received from the endpoint
@@ -362,6 +378,7 @@ namespace LLMUnity
             // call the callback function while the answer is received
             // call the completionCallback function when the answer is fully received
             await InitNKeep();
+            await LoadTemplate();
 
             string json;
             lock (chatPromptLock) {
@@ -443,6 +460,11 @@ namespace LLMUnity
         public async Task<string> Warmup(EmptyCallback completionCallback = null, string query = "hi")
         {
             return await Chat(query, null, completionCallback, false);
+        }
+
+        public async Task<string> AskTemplate()
+        {
+            return await PostRequest<TemplateResult, string>("{}", "template", TemplateContent);
         }
 
         /// <summary>
