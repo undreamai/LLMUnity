@@ -72,7 +72,6 @@ namespace LLMUnity
         [HideInInspector] public bool modelHide = true;
 
         public string chatTemplate = ChatTemplate.DefaultTemplate;
-        private ChatTemplate template;
 
         IntPtr LLMObject;
         List<LLMClient> clients = new List<LLMClient>();
@@ -113,8 +112,7 @@ namespace LLMUnity
             // set the model and enable the model editor properties
             modelCopyProgress = 0;
             model = await LLMUnitySetup.AddAsset(path, LLMUnitySetup.GetAssetPath());
-            chatTemplate = ChatTemplate.FromGGUF(path);
-            template = ChatTemplate.GetTemplate(chatTemplate);
+            SetTemplate(ChatTemplate.FromGGUF(path));
             EditorUtility.SetDirty(this);
             modelCopyProgress = 1;
         }
@@ -135,15 +133,16 @@ namespace LLMUnity
         }
 
 #endif
-        public virtual void SetTemplate(string templateName)
+
+        public void SetTemplate(string templateName)
         {
             chatTemplate = templateName;
-            LoadTemplate();
+            llmlib?.LLM_SetTemplate(LLMObject, chatTemplate);
         }
 
-        private void LoadTemplate()
+        public string GetTemplate()
         {
-            template = ChatTemplate.GetTemplate(chatTemplate);
+            return chatTemplate;
         }
 
         protected string EscapeSpaces(string input)
@@ -192,7 +191,6 @@ namespace LLMUnity
         public void Awake()
         {
             if (!gameObject.activeSelf) return;
-            LoadTemplate();
             llmThread = new Thread(StartLLMServer);
             llmThread.Start();
         }
@@ -229,7 +227,8 @@ namespace LLMUnity
                 {
                     SetupLogging();
                     LLMObject = llmlib.LLM_Construct(arguments);
-                    if(remote) llmlib.LLM_SetupServer(LLMObject);
+                    if (remote) llmlib.LLM_SetupServer(LLMObject);
+                    SetTemplate(chatTemplate);
                     CheckLLMStatus(false);
                     Debug.Log($"Using architecture: {arch}");
                     break;
