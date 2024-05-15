@@ -228,7 +228,8 @@ namespace LLMUnity
                 try
                 {
                     SetupLogging();
-                    LLMObject = llmlib.LLM_Construct(arguments, remote);
+                    LLMObject = llmlib.LLM_Construct(arguments);
+                    if(remote) llmlib.LLM_SetupServer(LLMObject);
                     CheckLLMStatus(false);
                     Debug.Log($"Using architecture: {arch}");
                     break;
