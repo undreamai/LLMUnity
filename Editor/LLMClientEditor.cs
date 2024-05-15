@@ -5,12 +5,12 @@ using System.Collections.Generic;
 
 namespace LLMUnity
 {
-    [CustomEditor(typeof(LLMClientBase))]
-    public class LLMClientBaseEditor : PropertyEditor
+    [CustomEditor(typeof(LLMClient))]
+    public class LLMClientEditor : PropertyEditor
     {
         protected override Type[] GetPropertyTypes()
         {
-            return new Type[] { typeof(LLMClientBase) };
+            return new Type[] { typeof(LLMClient) };
         }
 
         public void AddClientSettings(SerializedObject llmScriptSO)
@@ -18,7 +18,7 @@ namespace LLMUnity
             ShowPropertiesOfClass("Client Settings", llmScriptSO, new List<Type> { typeof(ClientAttribute) }, true);
         }
 
-        public void AddModelSettings(SerializedObject llmScriptSO, LLMClientBase llmClientScript)
+        public void AddModelSettings(SerializedObject llmScriptSO, LLMClient llmClientScript)
         {
             EditorGUILayout.LabelField("Model Settings", EditorStyles.boldLabel);
             ShowPropertiesOfClass("", llmScriptSO, new List<Type> { typeof(ModelAttribute) }, false);
@@ -52,7 +52,7 @@ namespace LLMUnity
 
         public override void OnInspectorGUI()
         {
-            LLMClientBase llmScript = (LLMClientBase)target;
+            LLMClient llmScript = (LLMClient)target;
             SerializedObject llmScriptSO = new SerializedObject(llmScript);
             llmScriptSO.Update();
 
@@ -69,24 +69,6 @@ namespace LLMUnity
                 Repaint();
 
             llmScriptSO.ApplyModifiedProperties();
-        }
-    }
-
-    [CustomEditor(typeof(LLMClient))]
-    public class LLMClientEditor : LLMClientBaseEditor
-    {
-        protected override Type[] GetPropertyTypes()
-        {
-            return new Type[] { typeof(LLMClient), typeof(LLMClientBase) };
-        }
-    }
-
-    [CustomEditor(typeof(LLMRemoteClient))]
-    public class LLMRemoteClientEditor : LLMClientBaseEditor
-    {
-        protected override Type[] GetPropertyTypes()
-        {
-            return new Type[] { typeof(LLMRemoteClient), typeof(LLMClientBase) };
         }
     }
 }
