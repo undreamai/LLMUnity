@@ -202,6 +202,7 @@ namespace LLMUnity
         {
             // setup the request struct
             ChatRequest chatRequest = new ChatRequest();
+            Debug.Log(prompt);
             chatRequest.prompt = prompt;
             chatRequest.id_slot = id_slot;
             chatRequest.temperature = temperature;
