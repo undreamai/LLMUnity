@@ -76,7 +76,7 @@ The first step is to create a GameObject for the LLM ♟️:
 - Create an empty GameObject.<br>In the GameObject Inspector click `Add Component` and select the LLM script.
 - Download one of the default models with the `Download Model` button (~GBs).<br>Or load your own .gguf model with the `Load model` button (see [Use your own model](#use-your-own-model)).
 - Define the role of your AI in the `Prompt`. You can also define the name of the AI (`AI Name`) and the player (`Player Name`).
-- (Optional) By default you receive the reply from the model while it is still being produced in real-time (recommended).<br>If you want the full reply in one go, disable the `Stream` option.
+- (Optional) By default you receive the reply from the model while it is still being generated in real-time (recommended).<br>If you want the full reply in one go, disable the `Stream` option.
 - (Optional) Adjust the server or model settings to your preference (see [Options](#options)).
 
 In your script you can then use it as follows 🦄:
@@ -132,7 +132,7 @@ You can also:
 <details>
 <summary>Build multiple characters</summary>
 
-LLM for Unity allows to build multiple AI characters efficiently, where each character has it own prompt.<br>
+LLM for Unity allows you to build multiple AI characters efficiently, where each character has it own prompt.<br>
 See the [ServerClient](Samples~/ServerClient) sample for a server-client example.
 
 To use multiple characters:
@@ -326,7 +326,7 @@ Otherwise other model formats can be converted to .gguf with the `convert.py` sc
 - `Num GPU Layers` number of model layers to offload to the GPU.
 If set to 0 the GPU is not used. Use a large number i.e. >30 to utilise the GPU as much as possible.
 If the user's GPU is not supported, the LLM will fall back to the CPU
-- `Stream` enable to receive the reply from the model while it is still being produced (recommended!).<br>
+- `Stream` enable to receive the reply from the model while it is still being generated (recommended!).<br>
 If it is disabled, the full reply from the model is received in one go
 - <details><summary>Advanced options</summary>
 
@@ -335,7 +335,7 @@ If it is disabled, the full reply from the model is received in one go
   - `Asynchronous Startup` enable to start the server asynchronously
   - `Remote` enable to allow remote access to the server
   - `Port` port on which to run the server
-  - `Kill Existing Servers On Start` enable to kill existing servers used by the Unity project on startup to handle Unity crashes
+  - `Kill Existing Servers On Start` enable to kill existing LLM servers used by the Unity project on startup to handle Unity crashes
 
 </details>
 
@@ -348,7 +348,7 @@ If it is disabled, the full reply from the model is received in one go
 
   - `Load lora` click to load a LoRA model in .bin format
   - `Load grammar` click to load a grammar in .gbnf format
-  - `Lora` the path of the LoRA being used (relative to the Assets/StreamingAssets folder)
+  - `Lora` the path of the LoRA model being used (relative to the Assets/StreamingAssets folder)
   - `Grammar` the path of the grammar being used (relative to the Assets/StreamingAssets folder)
   - <details><summary><code>Context Size</code> size of the prompt context (0 = context size of the model)</summary> This is the number of tokens the model can take as input when generating responses.</details>
   - `Batch Size` batch size for prompt processing (default: 512)
@@ -366,7 +366,7 @@ If it is disabled, the full reply from the model is received in one go
 
   - `Tfs_z`: enable tail free sampling with parameter z (default: 1.0, 1.0 = disabled).
   - `Typical P`: enable locally typical sampling with parameter p (default: 1.0, 1.0 = disabled).
-  - `Repeat Last N`: last n tokens to consider for penalizing repetition (default: 64, 0 = disabled, -1 = ctx-size).
+  - `Repeat Last N`: last N tokens to consider for penalizing repetition (default: 64, 0 = disabled, -1 = ctx-size).
   - `Penalize Nl`: penalize newline tokens when applying the repeat penalty (default: true).
   - `Penalty Prompt`: prompt for the purpose of the penalty evaluation. Can be either `null`, a string or an array of numbers representing tokens (default: `null` = use original `prompt`).
   - `Mirostat`: enable Mirostat sampling, controlling perplexity during text generation (default: 0, 0 = disabled, 1 = Mirostat, 2 = Mirostat 2.0).
