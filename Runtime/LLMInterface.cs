@@ -122,6 +122,12 @@ namespace LLMUnity
     }
 
     [Serializable]
+    public struct TemplateResult
+    {
+        public string template;
+    }
+
+    [Serializable]
     public struct ServerStatus
     {
         public DateTime timestamp;
