@@ -177,7 +177,8 @@ namespace LLMUnity
         {
             if (setNKeepToPrompt && nKeep == -1)
             {
-                await Tokenize(prompt, SetNKeep);
+                string systemPrompt = template.ComputePrompt(new List<ChatMessage>(){chat[0]}, "", false);
+                await Tokenize(systemPrompt, SetNKeep);
             }
         }
 
@@ -377,8 +378,8 @@ namespace LLMUnity
             // handle a chat message by the user
             // call the callback function while the answer is received
             // call the completionCallback function when the answer is fully received
-            await InitNKeep();
             await LoadTemplate();
+            await InitNKeep();
 
             string json;
             lock (chatPromptLock) {
