@@ -6,15 +6,15 @@ using UnityEngine;
 
 namespace LLMUnity
 {
-    [CustomEditor(typeof(LLMBase))]
-    public class LLMBaseEditor : PropertyEditor
+    [CustomEditor(typeof(LLM))]
+    public class LLMEditor : PropertyEditor
     {
         protected override Type[] GetPropertyTypes()
         {
-            return new Type[] { typeof(LLMBase) };
+            return new Type[] { typeof(LLM) };
         }
 
-        public void AddModelLoadersSettings(SerializedObject llmScriptSO, LLMBase llmScript)
+        public void AddModelLoadersSettings(SerializedObject llmScriptSO, LLM llmScript)
         {
             EditorGUILayout.LabelField("Model Settings", EditorStyles.boldLabel);
             AddModelLoaders(llmScriptSO, llmScript);
@@ -22,7 +22,7 @@ namespace LLMUnity
             AddModelSettings(llmScriptSO);
         }
 
-        public void AddModelLoaders(SerializedObject llmScriptSO, LLMBase llmScript)
+        public void AddModelLoaders(SerializedObject llmScriptSO, LLM llmScript)
         {
             EditorGUILayout.BeginHorizontal();
 
@@ -61,7 +61,7 @@ namespace LLMUnity
             }
         }
 
-        public void AddModelAddonLoaders(SerializedObject llmScriptSO, LLMBase llmScript, bool layout = true)
+        public void AddModelAddonLoaders(SerializedObject llmScriptSO, LLM llmScript, bool layout = true)
         {
             if (llmScriptSO.FindProperty("advancedOptions").boolValue)
             {
@@ -119,7 +119,7 @@ namespace LLMUnity
 
         public override void OnInspectorGUI()
         {
-            LLMBase llmScript = (LLMBase)target;
+            LLM llmScript = (LLM)target;
             // LLM llmScript = (LLM)target;
             SerializedObject llmScriptSO = new SerializedObject(llmScript);
             llmScriptSO.Update();
@@ -141,24 +141,6 @@ namespace LLMUnity
                 Repaint();
 
             llmScriptSO.ApplyModifiedProperties();
-        }
-    }
-
-    [CustomEditor(typeof(LLM))]
-    public class LLMEditor : LLMBaseEditor
-    {
-        protected override Type[] GetPropertyTypes()
-        {
-            return new Type[] { typeof(LLM), typeof(LLMBase) };
-        }
-    }
-
-    [CustomEditor(typeof(LLMRemote))]
-    public class LLMRemoteEditor : LLMBaseEditor
-    {
-        protected override Type[] GetPropertyTypes()
-        {
-            return new Type[] { typeof(LLMRemote), typeof(LLMBase) };
         }
     }
 }
