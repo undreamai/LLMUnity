@@ -501,6 +501,7 @@ namespace LLMUnity
         protected Ret ConvertContent<Res, Ret>(string response, ContentCallback<Res, Ret> getContent = null)
         {
             // template function to convert the json received and get the content
+            if (response == null) return default;
             response = response.Trim();
             if (response.StartsWith("data: "))
             {
@@ -520,12 +521,12 @@ namespace LLMUnity
         /// Cancel the ongoing requests e.g. Chat, Complete.
         /// </summary>
         // <summary>
-        public void CancelRequestsLocal()
+        protected void CancelRequestsLocal()
         {
             if (id_slot >= 0) llm.CancelRequest(id_slot);
         }
 
-        public void CancelRequestsRemote()
+        protected void CancelRequestsRemote()
         {
             foreach (UnityWebRequest request in WIPRequests)
             {
