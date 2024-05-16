@@ -228,7 +228,7 @@ namespace LLMUnity
                 {
                     SetupLogging();
                     LLMObject = llmlib.LLM_Construct(arguments);
-                    if (remote) llmlib.LLM_SetupServer(LLMObject);
+                    if (remote) llmlib.LLM_StartServer(LLMObject);
                     SetTemplate(chatTemplate);
                     CheckLLMStatus(false);
                     Debug.Log($"Using architecture: {arch}");
@@ -413,6 +413,7 @@ namespace LLMUnity
                     if (LLMObject != IntPtr.Zero)
                     {
                         llmlib.LLM_Stop(LLMObject);
+                        if (remote) llmlib.LLM_StopServer(LLMObject);
                         StopLogging();
                         LLMObject = IntPtr.Zero;
                     }
