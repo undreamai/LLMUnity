@@ -210,11 +210,12 @@ namespace LLMUnity
         private void StopLogging()
         {
             llmlib?.StopLogging();
-            logStreamWrapper.Destroy();
+            logStreamWrapper?.Destroy();
         }
 
         private void StartLLMServer()
         {
+            started = false;
             string arguments = GetLlamaccpArguments();
             bool useGPU = numGPULayers > 0;
             Debug.Log($"Server command: {arguments}");
@@ -306,9 +307,19 @@ namespace LLMUnity
             }
         }
 
+        void AssertStarted()
+        {
+            if (!started)
+            {
+                string error = "LLM service not started";
+                Debug.LogError(error);
+                throw new Exception(error);
+            }
+        }
+
         void CheckLLMStatus(bool log = true)
         {
-            if (llmlib == null) {Debug.LogError("LLM service not started"); return;}
+            if (llmlib == null) {return;}
 
             IntPtr stringWrapper = llmlib.StringWrapper_Construct();
             int status = llmlib.LLM_Status(LLMObject, stringWrapper);
@@ -328,20 +339,18 @@ namespace LLMUnity
 
         async Task<string> LLMReply(LLMReplyCallback callback, string json)
         {
-            if (llmlib == null) {Debug.LogError("LLM service not started"); return null;}
-
+            AssertStarted();
             IntPtr stringWrapper = llmlib.StringWrapper_Construct();
             await Task.Run(() => callback(LLMObject, json, stringWrapper));
-            string result = llmlib.GetStringWrapperResult(stringWrapper);
-            llmlib.StringWrapper_Delete(stringWrapper);
+            string result = llmlib?.GetStringWrapperResult(stringWrapper);
+            llmlib?.StringWrapper_Delete(stringWrapper);
             CheckLLMStatus();
             return result;
         }
 
         async Task<string> LLMStreamReply(LLMReplyStreamingCallback callback, string json, Callback<string> streamCallback = null)
         {
-            if (llmlib == null) {Debug.LogError("LLM service not started"); return null;}
-
+            AssertStarted();
             IntPtr stringWrapper = IntPtr.Zero;
             IntPtr streamCallbackPointer = IntPtr.Zero;
             StreamWrapper streamWrapper = null;
@@ -352,14 +361,15 @@ namespace LLMUnity
                 stringWrapper = streamWrapper.GetStringWrapper();
             }
             await Task.Run(() => callback(LLMObject, json, stringWrapper, streamCallbackPointer));
-            string result = llmlib.GetStringWrapperResult(stringWrapper);
-            if (streamWrapper != null) streamWrapper.Destroy();
+            string result = llmlib?.GetStringWrapperResult(stringWrapper);
+            streamWrapper?.Destroy();
             CheckLLMStatus();
             return result;
         }
 
         public async Task<string> Tokenize(string json)
         {
+            AssertStarted();
             LLMReplyCallback callback = (IntPtr LLMObject, string jsonData, IntPtr strWrapper) =>
             {
                 llmlib.LLM_Tokenize(LLMObject, jsonData, strWrapper);
@@ -369,6 +379,7 @@ namespace LLMUnity
 
         public async Task<string> Detokenize(string json)
         {
+            AssertStarted();
             LLMReplyCallback callback = (IntPtr LLMObject, string jsonData, IntPtr strWrapper) =>
             {
                 llmlib.LLM_Detokenize(LLMObject, jsonData, strWrapper);
@@ -378,6 +389,7 @@ namespace LLMUnity
 
         public async Task<string> Completion(string json, Callback<string> streamCallback = null)
         {
+            AssertStarted();
             LLMReplyStreamingCallback callback = (IntPtr LLMObject, string json_data, IntPtr stringWrapper, IntPtr streamCallbackPointer) =>
             {
                 llmlib.LLM_Completion(LLMObject, json_data, stringWrapper, streamCallbackPointer);
@@ -387,19 +399,31 @@ namespace LLMUnity
 
         public void CancelRequest(int id_slot)
         {
+            AssertStarted();
             llmlib?.LLM_Cancel(LLMObject, id_slot);
             CheckLLMStatus();
         }
 
         private void Destroy()
         {
-            if (llmlib != null)
+            try
             {
-                StopLogging();
-                llmlib.LLM_Stop(LLMObject);
-                llmlib.LLM_Delete(LLMObject);
+                if (llmlib != null)
+                {
+                    if (LLMObject != IntPtr.Zero)
+                    {
+                        llmlib.LLM_Stop(LLMObject);
+                        StopLogging();
+                        LLMObject = IntPtr.Zero;
+                    }
+                }
+                started = false;
+                llmlib = null;
             }
-            llmlib = null;
+            catch (Exception e)
+            {
+                Debug.LogError(e.Message);
+            }
         }
 
         /// <summary>
