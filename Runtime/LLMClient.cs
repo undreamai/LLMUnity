@@ -572,7 +572,6 @@ namespace LLMUnity
                         }
                     }
                     callResult = await llm.Completion(json, callbackString);
-                    Debug.Log(callResult);
                     break;
                 default:
                     Debug.LogError($"Unknown endpoint {endpoint}");
