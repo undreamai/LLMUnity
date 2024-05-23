@@ -134,25 +134,27 @@ namespace LLMUnity
         [DllImport(linux_archchecker_dll)]
         public static extern bool has_avx512();
 
-
         public string GetStringWrapperResult(IntPtr stringWrapper)
         {
-            string result;
+            string result = "";
             int bufferSize = StringWrapper_GetStringSize(stringWrapper);
-            IntPtr buffer = Marshal.AllocHGlobal(bufferSize);
-            try
+            if (bufferSize > 1)
             {
-                StringWrapper_GetString(stringWrapper, buffer, bufferSize);
-                result = Marshal.PtrToStringAnsi(buffer);
-            }
-            finally
-            {
-                Marshal.FreeHGlobal(buffer);
+                IntPtr buffer = Marshal.AllocHGlobal(bufferSize);
+                try
+                {
+                    StringWrapper_GetString(stringWrapper, buffer, bufferSize);
+                    result = Marshal.PtrToStringAnsi(buffer);
+                }
+                finally
+                {
+                    Marshal.FreeHGlobal(buffer);
+                }
             }
             return result;
         }
 
-        public delegate void LoggingDelegate(IntPtr stringWrapper, IntPtr streamCallbackPointer);
+        public delegate void LoggingDelegate(IntPtr stringWrapper);
         public delegate void StopLoggingDelegate();
         public delegate IntPtr LLM_ConstructDelegate(string command);
         public delegate void LLM_StartServerDelegate(IntPtr LLMObject);
@@ -162,14 +164,14 @@ namespace LLMUnity
         public delegate void LLM_SetTemplateDelegate(IntPtr LLMObject, string chatTemplate);
         public delegate void LLM_TokenizeDelegate(IntPtr LLMObject, string jsonData, IntPtr stringWrapper);
         public delegate void LLM_DetokenizeDelegate(IntPtr LLMObject, string jsonData, IntPtr stringWrapper);
-        public delegate void LLM_CompletionDelegate(IntPtr LLMObject, string jsonData, IntPtr stringWrapper, IntPtr streamCallbackPointer);
+        public delegate void LLM_CompletionDelegate(IntPtr LLMObject, string jsonData, IntPtr stringWrapper);
         public delegate void LLM_SlotDelegate(IntPtr LLMObject, string jsonData);
         public delegate void LLM_CancelDelegate(IntPtr LLMObject, int idSlot);
         public delegate int LLM_StatusDelegate(IntPtr LLMObject, IntPtr stringWrapper);
         public delegate IntPtr StringWrapper_ConstructDelegate();
         public delegate void StringWrapper_DeleteDelegate(IntPtr instance);
         public delegate int StringWrapper_GetStringSizeDelegate(IntPtr instance);
-        public delegate void StringWrapper_GetStringDelegate(IntPtr instance, IntPtr buffer, int bufferSize);
+        public delegate void StringWrapper_GetStringDelegate(IntPtr instance, IntPtr buffer, int bufferSize, bool clear=false);
 
         public LoggingDelegate Logging;
         public StopLoggingDelegate StopLogging;
@@ -208,7 +210,7 @@ namespace LLMUnity
         [DllImport(linux_avx_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Detokenize")]
         public static extern void LINUX_AVX_LLM_Detokenize(IntPtr LLMObject, string json_data, IntPtr stringWrapper);
         [DllImport(linux_avx_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Completion")]
-        public static extern void LINUX_AVX_LLM_Completion(IntPtr LLMObject, string json_data, IntPtr stringWrapper, IntPtr streamCallbackPointer);
+        public static extern void LINUX_AVX_LLM_Completion(IntPtr LLMObject, string json_data, IntPtr stringWrapper);
         [DllImport(linux_avx_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Slot")]
         public static extern void LINUX_AVX_LLM_Slot(IntPtr LLMObject, string json_data);
         [DllImport(linux_avx_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Cancel")]
@@ -222,9 +224,9 @@ namespace LLMUnity
         [DllImport(linux_avx_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "StringWrapper_GetStringSize")]
         public static extern int LINUX_AVX_StringWrapper_GetStringSize(IntPtr instance);
         [DllImport(linux_avx_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "StringWrapper_GetString")]
-        public static extern void LINUX_AVX_StringWrapper_GetString(IntPtr instance, IntPtr buffer, int bufferSize);
+        public static extern void LINUX_AVX_StringWrapper_GetString(IntPtr instance, IntPtr buffer, int bufferSize, bool clear=false);
         [DllImport(linux_avx_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "Logging")]
-        public static extern void LINUX_AVX_Logging(IntPtr stringWrapper, IntPtr streamCallbackPointer);
+        public static extern void LINUX_AVX_Logging(IntPtr stringWrapper);
         [DllImport(linux_avx_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "StopLogging")]
         public static extern void LINUX_AVX_StopLogging();
 
@@ -246,7 +248,7 @@ namespace LLMUnity
         [DllImport(linux_avx2_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Detokenize")]
         public static extern void LINUX_AVX2_LLM_Detokenize(IntPtr LLMObject, string json_data, IntPtr stringWrapper);
         [DllImport(linux_avx2_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Completion")]
-        public static extern void LINUX_AVX2_LLM_Completion(IntPtr LLMObject, string json_data, IntPtr stringWrapper, IntPtr streamCallbackPointer);
+        public static extern void LINUX_AVX2_LLM_Completion(IntPtr LLMObject, string json_data, IntPtr stringWrapper);
         [DllImport(linux_avx2_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Slot")]
         public static extern void LINUX_AVX2_LLM_Slot(IntPtr LLMObject, string json_data);
         [DllImport(linux_avx2_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Cancel")]
@@ -260,9 +262,9 @@ namespace LLMUnity
         [DllImport(linux_avx2_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "StringWrapper_GetStringSize")]
         public static extern int LINUX_AVX2_StringWrapper_GetStringSize(IntPtr instance);
         [DllImport(linux_avx2_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "StringWrapper_GetString")]
-        public static extern void LINUX_AVX2_StringWrapper_GetString(IntPtr instance, IntPtr buffer, int bufferSize);
+        public static extern void LINUX_AVX2_StringWrapper_GetString(IntPtr instance, IntPtr buffer, int bufferSize, bool clear=false);
         [DllImport(linux_avx2_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "Logging")]
-        public static extern void LINUX_AVX2_Logging(IntPtr stringWrapper, IntPtr streamCallbackPointer);
+        public static extern void LINUX_AVX2_Logging(IntPtr stringWrapper);
         [DllImport(linux_avx2_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "StopLogging")]
         public static extern void LINUX_AVX2_StopLogging();
 
@@ -284,7 +286,7 @@ namespace LLMUnity
         [DllImport(linux_avx512_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Detokenize")]
         public static extern void LINUX_AVX512_LLM_Detokenize(IntPtr LLMObject, string json_data, IntPtr stringWrapper);
         [DllImport(linux_avx512_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Completion")]
-        public static extern void LINUX_AVX512_LLM_Completion(IntPtr LLMObject, string json_data, IntPtr stringWrapper, IntPtr streamCallbackPointer);
+        public static extern void LINUX_AVX512_LLM_Completion(IntPtr LLMObject, string json_data, IntPtr stringWrapper);
         [DllImport(linux_avx512_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Slot")]
         public static extern void LINUX_AVX512_LLM_Slot(IntPtr LLMObject, string json_data);
         [DllImport(linux_avx512_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Cancel")]
@@ -298,9 +300,9 @@ namespace LLMUnity
         [DllImport(linux_avx512_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "StringWrapper_GetStringSize")]
         public static extern int LINUX_AVX512_StringWrapper_GetStringSize(IntPtr instance);
         [DllImport(linux_avx512_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "StringWrapper_GetString")]
-        public static extern void LINUX_AVX512_StringWrapper_GetString(IntPtr instance, IntPtr buffer, int bufferSize);
+        public static extern void LINUX_AVX512_StringWrapper_GetString(IntPtr instance, IntPtr buffer, int bufferSize, bool clear=false);
         [DllImport(linux_avx512_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "Logging")]
-        public static extern void LINUX_AVX512_Logging(IntPtr stringWrapper, IntPtr streamCallbackPointer);
+        public static extern void LINUX_AVX512_Logging(IntPtr stringWrapper);
         [DllImport(linux_avx512_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "StopLogging")]
         public static extern void LINUX_AVX512_StopLogging();
 
@@ -322,7 +324,7 @@ namespace LLMUnity
         [DllImport(linux_clblast_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Detokenize")]
         public static extern void LINUX_CLBLAST_LLM_Detokenize(IntPtr LLMObject, string json_data, IntPtr stringWrapper);
         [DllImport(linux_clblast_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Completion")]
-        public static extern void LINUX_CLBLAST_LLM_Completion(IntPtr LLMObject, string json_data, IntPtr stringWrapper, IntPtr streamCallbackPointer);
+        public static extern void LINUX_CLBLAST_LLM_Completion(IntPtr LLMObject, string json_data, IntPtr stringWrapper);
         [DllImport(linux_clblast_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Slot")]
         public static extern void LINUX_CLBLAST_LLM_Slot(IntPtr LLMObject, string json_data);
         [DllImport(linux_clblast_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Cancel")]
@@ -336,9 +338,9 @@ namespace LLMUnity
         [DllImport(linux_clblast_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "StringWrapper_GetStringSize")]
         public static extern int LINUX_CLBLAST_StringWrapper_GetStringSize(IntPtr instance);
         [DllImport(linux_clblast_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "StringWrapper_GetString")]
-        public static extern void LINUX_CLBLAST_StringWrapper_GetString(IntPtr instance, IntPtr buffer, int bufferSize);
+        public static extern void LINUX_CLBLAST_StringWrapper_GetString(IntPtr instance, IntPtr buffer, int bufferSize, bool clear=false);
         [DllImport(linux_clblast_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "Logging")]
-        public static extern void LINUX_CLBLAST_Logging(IntPtr stringWrapper, IntPtr streamCallbackPointer);
+        public static extern void LINUX_CLBLAST_Logging(IntPtr stringWrapper);
         [DllImport(linux_clblast_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "StopLogging")]
         public static extern void LINUX_CLBLAST_StopLogging();
 
@@ -360,7 +362,7 @@ namespace LLMUnity
         [DllImport(linux_cuda_cu11_7_1_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Detokenize")]
         public static extern void LINUX_CUDA_CU11_7_1_LLM_Detokenize(IntPtr LLMObject, string json_data, IntPtr stringWrapper);
         [DllImport(linux_cuda_cu11_7_1_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Completion")]
-        public static extern void LINUX_CUDA_CU11_7_1_LLM_Completion(IntPtr LLMObject, string json_data, IntPtr stringWrapper, IntPtr streamCallbackPointer);
+        public static extern void LINUX_CUDA_CU11_7_1_LLM_Completion(IntPtr LLMObject, string json_data, IntPtr stringWrapper);
         [DllImport(linux_cuda_cu11_7_1_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Slot")]
         public static extern void LINUX_CUDA_CU11_7_1_LLM_Slot(IntPtr LLMObject, string json_data);
         [DllImport(linux_cuda_cu11_7_1_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Cancel")]
@@ -374,9 +376,9 @@ namespace LLMUnity
         [DllImport(linux_cuda_cu11_7_1_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "StringWrapper_GetStringSize")]
         public static extern int LINUX_CUDA_CU11_7_1_StringWrapper_GetStringSize(IntPtr instance);
         [DllImport(linux_cuda_cu11_7_1_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "StringWrapper_GetString")]
-        public static extern void LINUX_CUDA_CU11_7_1_StringWrapper_GetString(IntPtr instance, IntPtr buffer, int bufferSize);
+        public static extern void LINUX_CUDA_CU11_7_1_StringWrapper_GetString(IntPtr instance, IntPtr buffer, int bufferSize, bool clear=false);
         [DllImport(linux_cuda_cu11_7_1_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "Logging")]
-        public static extern void LINUX_CUDA_CU11_7_1_Logging(IntPtr stringWrapper, IntPtr streamCallbackPointer);
+        public static extern void LINUX_CUDA_CU11_7_1_Logging(IntPtr stringWrapper);
         [DllImport(linux_cuda_cu11_7_1_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "StopLogging")]
         public static extern void LINUX_CUDA_CU11_7_1_StopLogging();
 
@@ -398,7 +400,7 @@ namespace LLMUnity
         [DllImport(linux_cuda_cu12_2_0_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Detokenize")]
         public static extern void LINUX_CUDA_CU12_2_0_LLM_Detokenize(IntPtr LLMObject, string json_data, IntPtr stringWrapper);
         [DllImport(linux_cuda_cu12_2_0_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Completion")]
-        public static extern void LINUX_CUDA_CU12_2_0_LLM_Completion(IntPtr LLMObject, string json_data, IntPtr stringWrapper, IntPtr streamCallbackPointer);
+        public static extern void LINUX_CUDA_CU12_2_0_LLM_Completion(IntPtr LLMObject, string json_data, IntPtr stringWrapper);
         [DllImport(linux_cuda_cu12_2_0_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Slot")]
         public static extern void LINUX_CUDA_CU12_2_0_LLM_Slot(IntPtr LLMObject, string json_data);
         [DllImport(linux_cuda_cu12_2_0_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Cancel")]
@@ -412,9 +414,9 @@ namespace LLMUnity
         [DllImport(linux_cuda_cu12_2_0_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "StringWrapper_GetStringSize")]
         public static extern int LINUX_CUDA_CU12_2_0_StringWrapper_GetStringSize(IntPtr instance);
         [DllImport(linux_cuda_cu12_2_0_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "StringWrapper_GetString")]
-        public static extern void LINUX_CUDA_CU12_2_0_StringWrapper_GetString(IntPtr instance, IntPtr buffer, int bufferSize);
+        public static extern void LINUX_CUDA_CU12_2_0_StringWrapper_GetString(IntPtr instance, IntPtr buffer, int bufferSize, bool clear=false);
         [DllImport(linux_cuda_cu12_2_0_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "Logging")]
-        public static extern void LINUX_CUDA_CU12_2_0_Logging(IntPtr stringWrapper, IntPtr streamCallbackPointer);
+        public static extern void LINUX_CUDA_CU12_2_0_Logging(IntPtr stringWrapper);
         [DllImport(linux_cuda_cu12_2_0_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "StopLogging")]
         public static extern void LINUX_CUDA_CU12_2_0_StopLogging();
 
@@ -436,7 +438,7 @@ namespace LLMUnity
         [DllImport(linux_noavx_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Detokenize")]
         public static extern void LINUX_NOAVX_LLM_Detokenize(IntPtr LLMObject, string json_data, IntPtr stringWrapper);
         [DllImport(linux_noavx_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Completion")]
-        public static extern void LINUX_NOAVX_LLM_Completion(IntPtr LLMObject, string json_data, IntPtr stringWrapper, IntPtr streamCallbackPointer);
+        public static extern void LINUX_NOAVX_LLM_Completion(IntPtr LLMObject, string json_data, IntPtr stringWrapper);
         [DllImport(linux_noavx_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Slot")]
         public static extern void LINUX_NOAVX_LLM_Slot(IntPtr LLMObject, string json_data);
         [DllImport(linux_noavx_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Cancel")]
@@ -450,9 +452,9 @@ namespace LLMUnity
         [DllImport(linux_noavx_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "StringWrapper_GetStringSize")]
         public static extern int LINUX_NOAVX_StringWrapper_GetStringSize(IntPtr instance);
         [DllImport(linux_noavx_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "StringWrapper_GetString")]
-        public static extern void LINUX_NOAVX_StringWrapper_GetString(IntPtr instance, IntPtr buffer, int bufferSize);
+        public static extern void LINUX_NOAVX_StringWrapper_GetString(IntPtr instance, IntPtr buffer, int bufferSize, bool clear=false);
         [DllImport(linux_noavx_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "Logging")]
-        public static extern void LINUX_NOAVX_Logging(IntPtr stringWrapper, IntPtr streamCallbackPointer);
+        public static extern void LINUX_NOAVX_Logging(IntPtr stringWrapper);
         [DllImport(linux_noavx_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "StopLogging")]
         public static extern void LINUX_NOAVX_StopLogging();
 
@@ -474,7 +476,7 @@ namespace LLMUnity
         [DllImport(macos_arm64_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Detokenize")]
         public static extern void MACOS_ARM64_LLM_Detokenize(IntPtr LLMObject, string json_data, IntPtr stringWrapper);
         [DllImport(macos_arm64_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Completion")]
-        public static extern void MACOS_ARM64_LLM_Completion(IntPtr LLMObject, string json_data, IntPtr stringWrapper, IntPtr streamCallbackPointer);
+        public static extern void MACOS_ARM64_LLM_Completion(IntPtr LLMObject, string json_data, IntPtr stringWrapper);
         [DllImport(macos_arm64_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Slot")]
         public static extern void MACOS_ARM64_LLM_Slot(IntPtr LLMObject, string json_data);
         [DllImport(macos_arm64_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Cancel")]
@@ -488,9 +490,9 @@ namespace LLMUnity
         [DllImport(macos_arm64_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "StringWrapper_GetStringSize")]
         public static extern int MACOS_ARM64_StringWrapper_GetStringSize(IntPtr instance);
         [DllImport(macos_arm64_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "StringWrapper_GetString")]
-        public static extern void MACOS_ARM64_StringWrapper_GetString(IntPtr instance, IntPtr buffer, int bufferSize);
+        public static extern void MACOS_ARM64_StringWrapper_GetString(IntPtr instance, IntPtr buffer, int bufferSize, bool clear=false);
         [DllImport(macos_arm64_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "Logging")]
-        public static extern void MACOS_ARM64_Logging(IntPtr stringWrapper, IntPtr streamCallbackPointer);
+        public static extern void MACOS_ARM64_Logging(IntPtr stringWrapper);
         [DllImport(macos_arm64_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "StopLogging")]
         public static extern void MACOS_ARM64_StopLogging();
 
@@ -512,7 +514,7 @@ namespace LLMUnity
         [DllImport(macos_x64_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Detokenize")]
         public static extern void MACOS_X64_LLM_Detokenize(IntPtr LLMObject, string json_data, IntPtr stringWrapper);
         [DllImport(macos_x64_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Completion")]
-        public static extern void MACOS_X64_LLM_Completion(IntPtr LLMObject, string json_data, IntPtr stringWrapper, IntPtr streamCallbackPointer);
+        public static extern void MACOS_X64_LLM_Completion(IntPtr LLMObject, string json_data, IntPtr stringWrapper);
         [DllImport(macos_x64_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Slot")]
         public static extern void MACOS_X64_LLM_Slot(IntPtr LLMObject, string json_data);
         [DllImport(macos_x64_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Cancel")]
@@ -526,9 +528,9 @@ namespace LLMUnity
         [DllImport(macos_x64_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "StringWrapper_GetStringSize")]
         public static extern int MACOS_X64_StringWrapper_GetStringSize(IntPtr instance);
         [DllImport(macos_x64_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "StringWrapper_GetString")]
-        public static extern void MACOS_X64_StringWrapper_GetString(IntPtr instance, IntPtr buffer, int bufferSize);
+        public static extern void MACOS_X64_StringWrapper_GetString(IntPtr instance, IntPtr buffer, int bufferSize, bool clear=false);
         [DllImport(macos_x64_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "Logging")]
-        public static extern void MACOS_X64_Logging(IntPtr stringWrapper, IntPtr streamCallbackPointer);
+        public static extern void MACOS_X64_Logging(IntPtr stringWrapper);
         [DllImport(macos_x64_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "StopLogging")]
         public static extern void MACOS_X64_StopLogging();
 
@@ -550,7 +552,7 @@ namespace LLMUnity
         [DllImport(windows_arm64_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Detokenize")]
         public static extern void WINDOWS_ARM64_LLM_Detokenize(IntPtr LLMObject, string json_data, IntPtr stringWrapper);
         [DllImport(windows_arm64_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Completion")]
-        public static extern void WINDOWS_ARM64_LLM_Completion(IntPtr LLMObject, string json_data, IntPtr stringWrapper, IntPtr streamCallbackPointer);
+        public static extern void WINDOWS_ARM64_LLM_Completion(IntPtr LLMObject, string json_data, IntPtr stringWrapper);
         [DllImport(windows_arm64_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Slot")]
         public static extern void WINDOWS_ARM64_LLM_Slot(IntPtr LLMObject, string json_data);
         [DllImport(windows_arm64_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Cancel")]
@@ -564,9 +566,9 @@ namespace LLMUnity
         [DllImport(windows_arm64_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "StringWrapper_GetStringSize")]
         public static extern int WINDOWS_ARM64_StringWrapper_GetStringSize(IntPtr instance);
         [DllImport(windows_arm64_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "StringWrapper_GetString")]
-        public static extern void WINDOWS_ARM64_StringWrapper_GetString(IntPtr instance, IntPtr buffer, int bufferSize);
+        public static extern void WINDOWS_ARM64_StringWrapper_GetString(IntPtr instance, IntPtr buffer, int bufferSize, bool clear=false);
         [DllImport(windows_arm64_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "Logging")]
-        public static extern void WINDOWS_ARM64_Logging(IntPtr stringWrapper, IntPtr streamCallbackPointer);
+        public static extern void WINDOWS_ARM64_Logging(IntPtr stringWrapper);
         [DllImport(windows_arm64_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "StopLogging")]
         public static extern void WINDOWS_ARM64_StopLogging();
 
@@ -588,7 +590,7 @@ namespace LLMUnity
         [DllImport(windows_avx_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Detokenize")]
         public static extern void WINDOWS_AVX_LLM_Detokenize(IntPtr LLMObject, string json_data, IntPtr stringWrapper);
         [DllImport(windows_avx_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Completion")]
-        public static extern void WINDOWS_AVX_LLM_Completion(IntPtr LLMObject, string json_data, IntPtr stringWrapper, IntPtr streamCallbackPointer);
+        public static extern void WINDOWS_AVX_LLM_Completion(IntPtr LLMObject, string json_data, IntPtr stringWrapper);
         [DllImport(windows_avx_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Slot")]
         public static extern void WINDOWS_AVX_LLM_Slot(IntPtr LLMObject, string json_data);
         [DllImport(windows_avx_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Cancel")]
@@ -602,9 +604,9 @@ namespace LLMUnity
         [DllImport(windows_avx_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "StringWrapper_GetStringSize")]
         public static extern int WINDOWS_AVX_StringWrapper_GetStringSize(IntPtr instance);
         [DllImport(windows_avx_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "StringWrapper_GetString")]
-        public static extern void WINDOWS_AVX_StringWrapper_GetString(IntPtr instance, IntPtr buffer, int bufferSize);
+        public static extern void WINDOWS_AVX_StringWrapper_GetString(IntPtr instance, IntPtr buffer, int bufferSize, bool clear=false);
         [DllImport(windows_avx_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "Logging")]
-        public static extern void WINDOWS_AVX_Logging(IntPtr stringWrapper, IntPtr streamCallbackPointer);
+        public static extern void WINDOWS_AVX_Logging(IntPtr stringWrapper);
         [DllImport(windows_avx_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "StopLogging")]
         public static extern void WINDOWS_AVX_StopLogging();
 
@@ -626,7 +628,7 @@ namespace LLMUnity
         [DllImport(windows_avx2_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Detokenize")]
         public static extern void WINDOWS_AVX2_LLM_Detokenize(IntPtr LLMObject, string json_data, IntPtr stringWrapper);
         [DllImport(windows_avx2_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Completion")]
-        public static extern void WINDOWS_AVX2_LLM_Completion(IntPtr LLMObject, string json_data, IntPtr stringWrapper, IntPtr streamCallbackPointer);
+        public static extern void WINDOWS_AVX2_LLM_Completion(IntPtr LLMObject, string json_data, IntPtr stringWrapper);
         [DllImport(windows_avx2_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Slot")]
         public static extern void WINDOWS_AVX2_LLM_Slot(IntPtr LLMObject, string json_data);
         [DllImport(windows_avx2_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Cancel")]
@@ -640,9 +642,9 @@ namespace LLMUnity
         [DllImport(windows_avx2_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "StringWrapper_GetStringSize")]
         public static extern int WINDOWS_AVX2_StringWrapper_GetStringSize(IntPtr instance);
         [DllImport(windows_avx2_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "StringWrapper_GetString")]
-        public static extern void WINDOWS_AVX2_StringWrapper_GetString(IntPtr instance, IntPtr buffer, int bufferSize);
+        public static extern void WINDOWS_AVX2_StringWrapper_GetString(IntPtr instance, IntPtr buffer, int bufferSize, bool clear=false);
         [DllImport(windows_avx2_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "Logging")]
-        public static extern void WINDOWS_AVX2_Logging(IntPtr stringWrapper, IntPtr streamCallbackPointer);
+        public static extern void WINDOWS_AVX2_Logging(IntPtr stringWrapper);
         [DllImport(windows_avx2_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "StopLogging")]
         public static extern void WINDOWS_AVX2_StopLogging();
 
@@ -664,7 +666,7 @@ namespace LLMUnity
         [DllImport(windows_avx512_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Detokenize")]
         public static extern void WINDOWS_AVX512_LLM_Detokenize(IntPtr LLMObject, string json_data, IntPtr stringWrapper);
         [DllImport(windows_avx512_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Completion")]
-        public static extern void WINDOWS_AVX512_LLM_Completion(IntPtr LLMObject, string json_data, IntPtr stringWrapper, IntPtr streamCallbackPointer);
+        public static extern void WINDOWS_AVX512_LLM_Completion(IntPtr LLMObject, string json_data, IntPtr stringWrapper);
         [DllImport(windows_avx512_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Slot")]
         public static extern void WINDOWS_AVX512_LLM_Slot(IntPtr LLMObject, string json_data);
         [DllImport(windows_avx512_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Cancel")]
@@ -678,9 +680,9 @@ namespace LLMUnity
         [DllImport(windows_avx512_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "StringWrapper_GetStringSize")]
         public static extern int WINDOWS_AVX512_StringWrapper_GetStringSize(IntPtr instance);
         [DllImport(windows_avx512_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "StringWrapper_GetString")]
-        public static extern void WINDOWS_AVX512_StringWrapper_GetString(IntPtr instance, IntPtr buffer, int bufferSize);
+        public static extern void WINDOWS_AVX512_StringWrapper_GetString(IntPtr instance, IntPtr buffer, int bufferSize, bool clear=false);
         [DllImport(windows_avx512_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "Logging")]
-        public static extern void WINDOWS_AVX512_Logging(IntPtr stringWrapper, IntPtr streamCallbackPointer);
+        public static extern void WINDOWS_AVX512_Logging(IntPtr stringWrapper);
         [DllImport(windows_avx512_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "StopLogging")]
         public static extern void WINDOWS_AVX512_StopLogging();
 
@@ -702,7 +704,7 @@ namespace LLMUnity
         [DllImport(windows_clblast_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Detokenize")]
         public static extern void WINDOWS_CLBLAST_LLM_Detokenize(IntPtr LLMObject, string json_data, IntPtr stringWrapper);
         [DllImport(windows_clblast_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Completion")]
-        public static extern void WINDOWS_CLBLAST_LLM_Completion(IntPtr LLMObject, string json_data, IntPtr stringWrapper, IntPtr streamCallbackPointer);
+        public static extern void WINDOWS_CLBLAST_LLM_Completion(IntPtr LLMObject, string json_data, IntPtr stringWrapper);
         [DllImport(windows_clblast_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Slot")]
         public static extern void WINDOWS_CLBLAST_LLM_Slot(IntPtr LLMObject, string json_data);
         [DllImport(windows_clblast_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Cancel")]
@@ -716,9 +718,9 @@ namespace LLMUnity
         [DllImport(windows_clblast_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "StringWrapper_GetStringSize")]
         public static extern int WINDOWS_CLBLAST_StringWrapper_GetStringSize(IntPtr instance);
         [DllImport(windows_clblast_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "StringWrapper_GetString")]
-        public static extern void WINDOWS_CLBLAST_StringWrapper_GetString(IntPtr instance, IntPtr buffer, int bufferSize);
+        public static extern void WINDOWS_CLBLAST_StringWrapper_GetString(IntPtr instance, IntPtr buffer, int bufferSize, bool clear=false);
         [DllImport(windows_clblast_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "Logging")]
-        public static extern void WINDOWS_CLBLAST_Logging(IntPtr stringWrapper, IntPtr streamCallbackPointer);
+        public static extern void WINDOWS_CLBLAST_Logging(IntPtr stringWrapper);
         [DllImport(windows_clblast_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "StopLogging")]
         public static extern void WINDOWS_CLBLAST_StopLogging();
 
@@ -740,7 +742,7 @@ namespace LLMUnity
         [DllImport(windows_cuda_cu11_7_1_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Detokenize")]
         public static extern void WINDOWS_CUDA_CU11_7_1_LLM_Detokenize(IntPtr LLMObject, string json_data, IntPtr stringWrapper);
         [DllImport(windows_cuda_cu11_7_1_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Completion")]
-        public static extern void WINDOWS_CUDA_CU11_7_1_LLM_Completion(IntPtr LLMObject, string json_data, IntPtr stringWrapper, IntPtr streamCallbackPointer);
+        public static extern void WINDOWS_CUDA_CU11_7_1_LLM_Completion(IntPtr LLMObject, string json_data, IntPtr stringWrapper);
         [DllImport(windows_cuda_cu11_7_1_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Slot")]
         public static extern void WINDOWS_CUDA_CU11_7_1_LLM_Slot(IntPtr LLMObject, string json_data);
         [DllImport(windows_cuda_cu11_7_1_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Cancel")]
@@ -754,9 +756,9 @@ namespace LLMUnity
         [DllImport(windows_cuda_cu11_7_1_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "StringWrapper_GetStringSize")]
         public static extern int WINDOWS_CUDA_CU11_7_1_StringWrapper_GetStringSize(IntPtr instance);
         [DllImport(windows_cuda_cu11_7_1_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "StringWrapper_GetString")]
-        public static extern void WINDOWS_CUDA_CU11_7_1_StringWrapper_GetString(IntPtr instance, IntPtr buffer, int bufferSize);
+        public static extern void WINDOWS_CUDA_CU11_7_1_StringWrapper_GetString(IntPtr instance, IntPtr buffer, int bufferSize, bool clear=false);
         [DllImport(windows_cuda_cu11_7_1_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "Logging")]
-        public static extern void WINDOWS_CUDA_CU11_7_1_Logging(IntPtr stringWrapper, IntPtr streamCallbackPointer);
+        public static extern void WINDOWS_CUDA_CU11_7_1_Logging(IntPtr stringWrapper);
         [DllImport(windows_cuda_cu11_7_1_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "StopLogging")]
         public static extern void WINDOWS_CUDA_CU11_7_1_StopLogging();
 
@@ -778,7 +780,7 @@ namespace LLMUnity
         [DllImport(windows_cuda_cu12_2_0_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Detokenize")]
         public static extern void WINDOWS_CUDA_CU12_2_0_LLM_Detokenize(IntPtr LLMObject, string json_data, IntPtr stringWrapper);
         [DllImport(windows_cuda_cu12_2_0_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Completion")]
-        public static extern void WINDOWS_CUDA_CU12_2_0_LLM_Completion(IntPtr LLMObject, string json_data, IntPtr stringWrapper, IntPtr streamCallbackPointer);
+        public static extern void WINDOWS_CUDA_CU12_2_0_LLM_Completion(IntPtr LLMObject, string json_data, IntPtr stringWrapper);
         [DllImport(windows_cuda_cu12_2_0_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Slot")]
         public static extern void WINDOWS_CUDA_CU12_2_0_LLM_Slot(IntPtr LLMObject, string json_data);
         [DllImport(windows_cuda_cu12_2_0_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Cancel")]
@@ -792,9 +794,9 @@ namespace LLMUnity
         [DllImport(windows_cuda_cu12_2_0_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "StringWrapper_GetStringSize")]
         public static extern int WINDOWS_CUDA_CU12_2_0_StringWrapper_GetStringSize(IntPtr instance);
         [DllImport(windows_cuda_cu12_2_0_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "StringWrapper_GetString")]
-        public static extern void WINDOWS_CUDA_CU12_2_0_StringWrapper_GetString(IntPtr instance, IntPtr buffer, int bufferSize);
+        public static extern void WINDOWS_CUDA_CU12_2_0_StringWrapper_GetString(IntPtr instance, IntPtr buffer, int bufferSize, bool clear=false);
         [DllImport(windows_cuda_cu12_2_0_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "Logging")]
-        public static extern void WINDOWS_CUDA_CU12_2_0_Logging(IntPtr stringWrapper, IntPtr streamCallbackPointer);
+        public static extern void WINDOWS_CUDA_CU12_2_0_Logging(IntPtr stringWrapper);
         [DllImport(windows_cuda_cu12_2_0_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "StopLogging")]
         public static extern void WINDOWS_CUDA_CU12_2_0_StopLogging();
 
@@ -816,7 +818,7 @@ namespace LLMUnity
         [DllImport(windows_noavx_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Detokenize")]
         public static extern void WINDOWS_NOAVX_LLM_Detokenize(IntPtr LLMObject, string json_data, IntPtr stringWrapper);
         [DllImport(windows_noavx_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Completion")]
-        public static extern void WINDOWS_NOAVX_LLM_Completion(IntPtr LLMObject, string json_data, IntPtr stringWrapper, IntPtr streamCallbackPointer);
+        public static extern void WINDOWS_NOAVX_LLM_Completion(IntPtr LLMObject, string json_data, IntPtr stringWrapper);
         [DllImport(windows_noavx_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Slot")]
         public static extern void WINDOWS_NOAVX_LLM_Slot(IntPtr LLMObject, string json_data);
         [DllImport(windows_noavx_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Cancel")]
@@ -830,9 +832,9 @@ namespace LLMUnity
         [DllImport(windows_noavx_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "StringWrapper_GetStringSize")]
         public static extern int WINDOWS_NOAVX_StringWrapper_GetStringSize(IntPtr instance);
         [DllImport(windows_noavx_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "StringWrapper_GetString")]
-        public static extern void WINDOWS_NOAVX_StringWrapper_GetString(IntPtr instance, IntPtr buffer, int bufferSize);
+        public static extern void WINDOWS_NOAVX_StringWrapper_GetString(IntPtr instance, IntPtr buffer, int bufferSize, bool clear=false);
         [DllImport(windows_noavx_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "Logging")]
-        public static extern void WINDOWS_NOAVX_Logging(IntPtr stringWrapper, IntPtr streamCallbackPointer);
+        public static extern void WINDOWS_NOAVX_Logging(IntPtr stringWrapper);
         [DllImport(windows_noavx_dll, CallingConvention = CallingConvention.Cdecl, EntryPoint = "StopLogging")]
         public static extern void WINDOWS_NOAVX_StopLogging();
 
