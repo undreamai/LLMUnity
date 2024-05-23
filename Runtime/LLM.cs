@@ -256,6 +256,7 @@ namespace LLMUnity
             Debug.Log("LLM service created");
             started = true;
             llmlib.LLM_Start(LLMObject);
+            Debug.Log("LLM service destroyed");
         }
 
         public int Register(LLMClient llmClient)
@@ -355,7 +356,6 @@ namespace LLMUnity
             AssertStarted();
             StreamWrapper streamWrapper = ConstructStreamWrapper(streamCallback);
             await Task.Run(() => llmlib.LLM_Completion(LLMObject, json, streamWrapper.GetStringWrapper()));
-            CheckLLMStatus();
             string result = streamWrapper.GetString();
             DestroyStreamWrapper(streamWrapper);
             CheckLLMStatus();
@@ -380,6 +380,8 @@ namespace LLMUnity
                         llmlib.LLM_Stop(LLMObject);
                         if (remote) llmlib.LLM_StopServer(LLMObject);
                         StopLogging();
+                        llmThread.Join();
+                        llmlib.LLM_Delete(LLMObject);
                         LLMObject = IntPtr.Zero;
                     }
                 }
