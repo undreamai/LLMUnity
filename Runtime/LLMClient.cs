@@ -1,5 +1,6 @@
 /// @file
 /// @brief File implementing the LLM client.
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -571,6 +572,7 @@ namespace LLMUnity
                         }
                     }
                     callResult = await llm.Completion(json, callbackString);
+                    Debug.Log(callResult);
                     break;
                 default:
                     Debug.LogError($"Unknown endpoint {endpoint}");
