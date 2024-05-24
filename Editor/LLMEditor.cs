@@ -99,12 +99,13 @@ namespace LLMUnity
 
         public void AddServerSettings(SerializedObject llmScriptSO)
         {
-            List<Type> attributeClasses = new List<Type> { typeof(ServerAttribute) };
+            List<Type> attributeClasses = new List<Type> { typeof(LLMAttribute) };
             if (llmScriptSO.FindProperty("advancedOptions").boolValue)
             {
-                attributeClasses.Add(typeof(ServerAdvancedAttribute));
+                attributeClasses.Add(typeof(LLMAdvancedAttribute));
             }
-            ShowPropertiesOfClass("Server Settings", llmScriptSO, attributeClasses, true);
+            attributeClasses.Add(llmScriptSO.FindProperty("remote").boolValue ? typeof(RemoteAttribute) : typeof(LocalAttribute));
+            ShowPropertiesOfClass("LLM Settings", llmScriptSO, attributeClasses, true);
         }
 
         public void AddChatSettings(SerializedObject llmScriptSO)
