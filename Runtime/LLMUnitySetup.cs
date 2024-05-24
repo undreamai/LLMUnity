@@ -41,9 +41,10 @@ namespace LLMUnity
         }
     }
 
-    public class ServerAttribute : PropertyAttribute {}
-    public class ServerAdvancedAttribute : PropertyAttribute {}
-    public class ClientAttribute : PropertyAttribute {}
+    public class LLMAttribute : PropertyAttribute {}
+    public class LLMAdvancedAttribute : PropertyAttribute {}
+    public class RemoteAttribute : PropertyAttribute {}
+    public class LocalAttribute : PropertyAttribute {}
     public class ModelAttribute : PropertyAttribute {}
     public class ModelAdvancedAttribute : PropertyAttribute {}
     public class ChatAttribute : PropertyAttribute {}

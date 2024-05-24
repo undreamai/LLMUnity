@@ -14,13 +14,13 @@ namespace LLMUnity
         /// <summary> toggle to show/hide advanced options in the GameObject </summary>
         [HideInInspector] public bool advancedOptions = false;
 
-        [Client] public bool remote = false;
+        [LLM] public bool remote = false;
 
-        [Client] public LLM llm;
+        [Local] public LLM llm;
         /// <summary> host to use for the LLMClient object </summary>
-        [Client] public string host = "localhost";
+        [Remote] public string host = "localhost";
         /// <summary> port to use for the server (LLM) or client (LLMClient) </summary>
-        [Client] public int port = 13333;
+        [Remote] public int port = 13333;
 
 
         /// <summary> option to receive the reply from the model as it is produced (recommended!).
