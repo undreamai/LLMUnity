@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -67,6 +68,7 @@ namespace LLMUnity
             ("Phi 2 (small, decent)", "https://huggingface.co/TheBloke/phi-2-GGUF/resolve/main/phi-2.Q4_K_M.gguf?download=true"),
         };
         public int SelectedModel = 0;
+        [HideInInspector] public static float libraryProgress = 1;
         [HideInInspector] public float modelProgress = 1;
         [HideInInspector] public float modelCopyProgress = 1;
         [HideInInspector] public bool modelHide = true;
@@ -81,7 +83,34 @@ namespace LLMUnity
         List<StreamWrapper> streamWrappers = new List<StreamWrapper>();
         /// \endcond
 
+
 #if UNITY_EDITOR
+        [InitializeOnLoadMethod]
+        private static async Task InitializeOnLoad()
+        {
+            // Perform download when the build is finished
+            await DownloadLibrary();
+        }
+
+        private static async Task DownloadLibrary()
+        {
+            if (libraryProgress < 1) return;
+            libraryProgress = 0;
+            string libZipFilename = Path.GetFileName(LLMLib.URL);
+            string libZip = Path.Combine(Application.temporaryCachePath, libZipFilename);
+            string libPath = Path.Combine(Application.dataPath, "Plugins", libZipFilename.Replace(".zip", ""));
+            if (!Directory.Exists(libPath))
+            {
+                await LLMUnitySetup.DownloadFile(LLMLib.URL, libZip, false, false, null, SetLibraryProgress);
+                ZipFile.ExtractToDirectory(libZip, libPath);
+            }
+        }
+
+        private static void SetLibraryProgress(float progress)
+        {
+            libraryProgress = progress;
+        }
+
         /// \cond HIDE
         public void DownloadModel(int optionIndex)
         {
