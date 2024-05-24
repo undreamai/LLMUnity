@@ -101,8 +101,9 @@ namespace LLMUnity
             string libPath = Path.Combine(Application.dataPath, "Plugins", libZipFilename.Replace(".zip", ""));
             if (!Directory.Exists(libPath))
             {
-                await LLMUnitySetup.DownloadFile(LLMLib.URL, libZip, false, false, null, SetLibraryProgress);
+                await LLMUnitySetup.DownloadFile(LLMLib.URL, libZip, true, false, null, SetLibraryProgress);
                 ZipFile.ExtractToDirectory(libZip, libPath);
+                File.Delete(libZip);
             }
             libraryProgress = 1;
         }
