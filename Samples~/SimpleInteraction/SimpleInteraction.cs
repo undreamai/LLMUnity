@@ -6,7 +6,7 @@ namespace LLMUnitySamples
 {
     public class SimpleInteraction : MonoBehaviour
     {
-        public LLM llm;
+        public LLMClient llm;
         public InputField playerText;
         public Text AIText;
 
@@ -25,7 +25,9 @@ namespace LLMUnitySamples
 
         public void SetAIText(string text)
         {
+            // Debug.Log(text);
             AIText.text = text;
+            // Debug.Log("SetAIText done");
         }
 
         public void AIReplyComplete()
