@@ -81,7 +81,7 @@ namespace LLMUnity
                 }
                 EditorGUILayout.EndHorizontal();
             }
-            // ShowProgress(LLM.binariesProgress, "Setup Binaries");
+            ShowProgress(LLM.libraryProgress, "Setup Library");
             ShowProgress(llmScript.modelProgress, "Model Downloading");
             ShowProgress(llmScript.modelCopyProgress, "Model Copying");
         }
@@ -130,9 +130,9 @@ namespace LLMUnity
 
             EditorGUI.BeginChangeCheck();
             AddOptionsToggles(llmScriptSO);
-            // GUI.enabled = LLM.binariesProgress == 1;
+            GUI.enabled = LLM.libraryProgress == 1;
             AddServerSettings(llmScriptSO);
-            // GUI.enabled = LLM.binariesProgress == 1 && llmScript.modelProgress == 1 && llmScript.modelCopyProgress == 1;
+            GUI.enabled = LLM.libraryProgress == 1 && llmScript.modelProgress == 1 && llmScript.modelCopyProgress == 1;
             AddModelLoadersSettings(llmScriptSO, llmScript);
             GUI.enabled = true;
             AddChatSettings(llmScriptSO);
