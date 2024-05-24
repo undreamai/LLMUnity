@@ -152,7 +152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9898ca92690864a28e9d37d7ba07036, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  llm: {fileID: 1047848254}
+  llm: {fileID: 1047848256}
   playerText: {fileID: 1966107897}
   AIText: {fileID: 887085510}
 --- !u!4 &107963746
@@ -934,6 +934,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1047848255}
   - component: {fileID: 1047848254}
+  - component: {fileID: 1047848256}
   m_Layer: 0
   m_Name: LLM
   m_TagString: Untagged
@@ -954,7 +955,51 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   advancedOptions: 0
-  expertOptions: 0
+  numThreads: -1
+  numGPULayers: 0
+  debug: 1
+  parallelPrompts: -1
+  port: 13333
+  model: phi-2.Q4_K_M.gguf
+  lora: 
+  contextSize: 512
+  batchSize: 512
+  remote: 0
+  SelectedModel: 3
+  modelProgress: 1
+  modelCopyProgress: 1
+  modelHide: 1
+  chatTemplate: phi
+--- !u!4 &1047848255
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1047848253}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1047848256
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1047848253}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e95e88cdd1b0a159692667660a065473, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  advancedOptions: 0
+  remote: 0
+  llm: {fileID: 1047848254}
   host: localhost
   port: 13333
   stream: 1
@@ -981,43 +1026,12 @@ MonoBehaviour:
   ignoreEos: 0
   nKeep: -1
   stop: []
-  grammarString: 
   playerName: user
   AIName: assistant
   prompt: A chat between a curious human and an artificial intelligence assistant.
     The assistant gives helpful, detailed, and polite answers to the human's questions.
-  chatTemplate: chatml
   setNKeepToPrompt: 1
-  modelHide: 1
-  numThreads: -1
-  numGPULayers: 0
-  parallelPrompts: -1
-  debug: 0
-  asynchronousStartup: 0
-  remote: 0
-  killExistingServersOnStart: 1
-  model: 
-  lora: 
-  contextSize: 512
-  batchSize: 512
-  SelectedModel: 0
-  modelProgress: 1
-  modelCopyProgress: 1
---- !u!4 &1047848255
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1047848253}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  grammarString: 
 --- !u!1 &1059033619
 GameObject:
   m_ObjectHideFlags: 0
