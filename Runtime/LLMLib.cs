@@ -77,7 +77,7 @@ namespace LLMUnity
 
     public class LLMLib
     {
-        public static string Version = "1.1.0";
+        public static string Version = "1.1.1";
         public static string URL = $"https://github.com/undreamai/LlamaLib/releases/download/release/undreamai-{Version}-llamacpp.zip";
 
         public LLMLib(string arch)
