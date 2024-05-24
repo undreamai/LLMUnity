@@ -32,17 +32,17 @@ namespace LLMUnity
         /// <summary> toggle to show/hide advanced options in the GameObject </summary>
         [HideInInspector] public bool advancedOptions = false;
         /// <summary> number of threads to use (-1 = all) </summary>
-        [Server] public int numThreads = -1;
+        [LLM] public int numThreads = -1;
         /// <summary> number of model layers to offload to the GPU (0 = GPU not used).
         /// Use a large number i.e. >30 to utilise the GPU as much as possible.
         /// If the user's GPU is not supported, the LLM will fall back to the CPU </summary>
-        [Server] public int numGPULayers = 0;
+        [LLM] public int numGPULayers = 0;
         /// <summary> select to log the output of the LLM in the Unity Editor. </summary>
-        [ServerAdvanced] public bool debug = false;
+        [LLMAdvanced] public bool debug = false;
         /// <summary> number of prompts that can happen in parallel (-1 = number of LLM/LLMClient objects) </summary>
-        [ServerAdvanced] public int parallelPrompts = -1;
+        [LLMAdvanced] public int parallelPrompts = -1;
         /// <summary> port to use for the LLM server </summary>
-        [ServerAdvanced] public int port = 13333;
+        [Remote] public int port = 13333;
         /// <summary> the path of the model being used (relative to the Assets/StreamingAssets folder).
         /// Models with .gguf format are allowed.</summary>
         [Model] public string model = "";
@@ -55,7 +55,7 @@ namespace LLMUnity
         /// <summary> Batch size for prompt processing. </summary>
         [ModelAdvanced] public int batchSize = 512;
         /// <summary> select to log the output of the LLM in the Unity Editor. </summary>
-        [Server] public bool remote = false;
+        [LLM] public bool remote = false;
         /// <summary> Boolean set to true if the server has started and is ready to receive requests, false otherwise. </summary>
         public bool started { get; protected set; } = false;
 
@@ -104,6 +104,7 @@ namespace LLMUnity
                 await LLMUnitySetup.DownloadFile(LLMLib.URL, libZip, false, false, null, SetLibraryProgress);
                 ZipFile.ExtractToDirectory(libZip, libPath);
             }
+            libraryProgress = 1;
         }
 
         private static void SetLibraryProgress(float progress)

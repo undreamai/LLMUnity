@@ -15,7 +15,13 @@ namespace LLMUnity
 
         public void AddClientSettings(SerializedObject llmScriptSO)
         {
-            ShowPropertiesOfClass("Client Settings", llmScriptSO, new List<Type> { typeof(ClientAttribute) }, true);
+            List<Type> attributeClasses = new List<Type> { typeof(LLMAttribute) };
+            if (llmScriptSO.FindProperty("advancedOptions").boolValue)
+            {
+                attributeClasses.Add(typeof(LLMAdvancedAttribute));
+            }
+            attributeClasses.Add(llmScriptSO.FindProperty("remote").boolValue ? typeof(RemoteAttribute) : typeof(LocalAttribute));
+            ShowPropertiesOfClass("LLM Settings", llmScriptSO, attributeClasses, true);
         }
 
         public void AddModelSettings(SerializedObject llmScriptSO, LLMClient llmClientScript)
