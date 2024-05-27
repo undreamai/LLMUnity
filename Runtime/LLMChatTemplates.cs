@@ -38,9 +38,10 @@ namespace LLMUnity
                 new AlpacaTemplate(),
                 new MistralChatTemplate(),
                 new MistralInstructTemplate(),
+                new LLama3ChatTemplate(),
                 new LLama2ChatTemplate(),
                 new LLama2Template(),
-                new LLama3ChatTemplate(),
+                new Phi3Template(),
                 new Phi2Template(),
                 new VicunaTemplate(),
                 new ZephyrTemplate(),
@@ -386,8 +387,8 @@ namespace LLMUnity
     public class Phi2Template : ChatTemplate
     {
         public override string GetName() { return "phi"; }
-        public override string GetDescription() { return "phi"; }
-        public override string[] GetNameMatches() { return new string[] {"phi"}; }
+        public override string GetDescription() { return "phi-2"; }
+        public override string[] GetNameMatches() { return new string[] {"phi-2"}; }
 
         protected override string SystemSuffix() { return "\n\n"; }
         protected override string RequestSuffix() { return "\n"; }
@@ -399,6 +400,48 @@ namespace LLMUnity
         public override string[] GetStop(string playerName, string AIName)
         {
             return AddStopNewlines(new string[] { playerName + ":", AIName + ":" });
+        }
+    }
+
+    /// @ingroup template
+    /// <summary>
+    /// Class implementing the Zephyr template
+    /// </summary>
+    public class Phi3Template : ChatTemplate
+    {
+        public override string GetName() { return "phi-3"; }
+        public override string GetDescription() { return "phi-3"; }
+        public override string[] GetNameMatches() { return new string[] {"phi-3"}; }
+        public override string[] GetChatTemplateMatches() { return new string[] {"{{ bos_token }}{% for message in messages %}{% if (message['role'] == 'user') %}{{'<|user|>' + '\n' + message['content'] + '<|end|>' + '\n' + '<|assistant|>' + '\n'}}{% elif (message['role'] == 'assistant') %}{{message['content'] + '<|end|>' + '\n'}}{% endif %}{% endfor %}"}; }
+
+        protected override string PromptPrefix() { return "<s>"; }
+        protected override string PlayerPrefix(string playerName) { return $"<|user|>\n"; }
+        protected override string AIPrefix(string AIName) { return $"<|assistant|>\n"; }
+        protected override string RequestSuffix() { return "<|end|>\n"; }
+        protected override string PairSuffix() { return "<|end|>\n"; }
+
+
+        public override string ComputePrompt(List<ChatMessage> messages, string AIName)
+        {
+            List<ChatMessage> messagesSystemPrompt = messages;
+            if (messages[0].role == "system")
+            {
+                string firstUserMessage = messages[0].content;
+                int start = 1;
+                if (messages.Count > 1)
+                {
+                    firstUserMessage += "\n\n" + messages[1].content;
+                    start = 2;
+                }
+                messagesSystemPrompt = new List<ChatMessage>(){new ChatMessage { role = "user", content = firstUserMessage }};
+                messagesSystemPrompt.AddRange(messages.GetRange(start, messages.Count - start));
+            }
+            return base.ComputePrompt(messagesSystemPrompt, AIName);
+        }
+
+        public override string[] GetStop(string playerName, string AIName)
+        {
+            return AddStopNewlines(new string[] { "<|end|>", "<|user|>", "<|assistant|>" });
         }
     }
 
