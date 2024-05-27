@@ -79,11 +79,11 @@ namespace LLMUnity
             ("Download model", null),
             ("Mistral 7B Instruct v0.2 (medium, best overall)", "https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.2-GGUF/resolve/main/mistral-7b-instruct-v0.2.Q4_K_M.gguf?download=true"),
             ("OpenHermes 2.5 7B (medium, best for conversation)", "https://huggingface.co/TheBloke/OpenHermes-2.5-Mistral-7B-GGUF/resolve/main/openhermes-2.5-mistral-7b.Q4_K_M.gguf?download=true"),
-            ("Phi 2 (small, decent)", "https://huggingface.co/TheBloke/phi-2-GGUF/resolve/main/phi-2.Q4_K_M.gguf?download=true"),
+            ("Phi 3 (small, good)", "https://huggingface.co/microsoft/Phi-3-mini-4k-instruct-gguf/resolve/main/Phi-3-mini-4k-instruct-q4.gguf?download=true"),
         };
         public int SelectedModel = 0;
-        private static readonly string serverZipUrl = "https://github.com/Mozilla-Ocho/llamafile/releases/download/0.6.2/llamafile-0.6.2.zip";
-        private static readonly string server = LLMUnitySetup.GetAssetPath("llamafile-0.6.2.exe");
+        private static readonly string serverUrl = "https://github.com/Mozilla-Ocho/llamafile/releases/download/0.8.6/llamafile-0.8.6";
+        private static readonly string server = LLMUnitySetup.GetAssetPath("llamafile-0.8.6.exe");
         private static readonly string apeARMUrl = "https://cosmo.zip/pub/cosmos/bin/ape-arm64.elf";
         private static readonly string apeARM = LLMUnitySetup.GetAssetPath("ape-arm64.elf");
         private static readonly string apeX86_64Url = "https://cosmo.zip/pub/cosmos/bin/ape-x86_64.elf";
@@ -118,28 +118,8 @@ namespace LLMUnity
             binariesDone += 1;
             if (!File.Exists(apeX86_64)) await LLMUnitySetup.DownloadFile(apeX86_64Url, apeX86_64, false, true, null, SetBinariesProgress);
             binariesDone += 1;
-            if (!File.Exists(server))
-            {
-                string serverZip = Path.Combine(Application.temporaryCachePath, "llamafile.zip");
-                await LLMUnitySetup.DownloadFile(serverZipUrl, serverZip, true, false, null, SetBinariesProgress);
-                binariesDone += 1;
-
-                using (ZipArchive archive = ZipFile.OpenRead(serverZip))
-                {
-                    foreach (ZipArchiveEntry entry in archive.Entries)
-                    {
-                        if (entry.Name == "llamafile")
-                        {
-                            AssetDatabase.StartAssetEditing();
-                            entry.ExtractToFile(server, true);
-                            AssetDatabase.StopAssetEditing();
-                            break;
-                        }
-                    }
-                }
-                File.Delete(serverZip);
-                binariesDone += 1;
-            }
+            if (!File.Exists(server)) await LLMUnitySetup.DownloadFile(serverUrl, server, false, true, null, SetBinariesProgress);
+            binariesDone += 1;
             binariesProgress = 1;
         }
 
@@ -294,7 +274,7 @@ namespace LLMUnity
             try
             {
                 ServerStatus status = JsonUtility.FromJson<ServerStatus>(message);
-                if (status.message == "model loaded")
+                if (status.msg == "HTTP server listening")
                 {
                     Debug.Log("LLM Server started!");
                     serverListening = true;
@@ -378,7 +358,7 @@ namespace LLMUnity
             if (numThreads > 0) arguments += $" -t {numThreads}";
             if (loraPath != "") arguments += $" --lora {EscapeSpaces(loraPath)}";
 
-            string noGPUArgument = " -ngl 0 --gpu no";
+            string noGPUArgument = " -ngl 0";
             string GPUArgument = numGPULayers <= 0 ? noGPUArgument : $" -ngl {numGPULayers}";
             LLMUnitySetup.makeExecutable(server);
 
