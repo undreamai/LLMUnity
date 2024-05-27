@@ -310,7 +310,7 @@ namespace LLMUnity
 
         public override string[] GetStop(string playerName, string AIName)
         {
-            return AddStopNewlines(new string[] { "[INST]", "[/INST]" });
+            return AddStopNewlines(new string[] { "</s>", "[INST]", "[/INST]" });
         }
     }
 
@@ -331,7 +331,7 @@ namespace LLMUnity
 
         public override string[] GetStop(string playerName, string AIName)
         {
-            return AddStopNewlines(new string[] { "[INST]", "[/INST]", "###" });
+            return AddStopNewlines(new string[] { "</s>", "[INST]", "[/INST]", "###" });
         }
     }
 
