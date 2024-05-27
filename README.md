@@ -303,7 +303,7 @@ You can also load your own model in .gguf format with the `Load model` button (s
 Save the scene, run and enjoy!
 
 ## Use your own model
-LLM for Unity uses the [Mistral 7B Instruct](https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.2), [OpenHermes 2.5](https://huggingface.co/teknium/OpenHermes-2.5-Mistral-7B) or [Microsoft Phi-2](https://huggingface.co/microsoft/phi-2) model by default, quantised with the Q4 method.<br>
+LLM for Unity uses the [Mistral 7B Instruct](https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.2), [OpenHermes 2.5](https://huggingface.co/teknium/OpenHermes-2.5-Mistral-7B) or [Microsoft Phi-3](https://huggingface.co/microsoft/Phi-3-mini-4k-instruct-gguf) model by default, quantised with the Q4 method.<br>
 
 Alternative models can be downloaded from [HuggingFace](https://huggingface.co/models?library=gguf&sort=downloads).<br>
 The required model format is .gguf as defined by the llama.cpp.<br>
