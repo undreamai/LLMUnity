@@ -1,3 +1,9 @@
+## v1.2.8
+#### 🚀 Features
+
+- Switch to llamafile v0.8.6 (PR: #155)
+
+
 ## v1.2.7
 #### 🚀 Features
 
