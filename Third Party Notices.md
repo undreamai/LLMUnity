@@ -42,19 +42,12 @@ License: [link](https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.2-GGUF)
 
 <br>
 
-### microsoft/phi-2
+### microsoft/Phi-3-mini-4k-instruct-gguf
 
 Developer: Microsoft<br>
-Origin: [link](https://huggingface.co/microsoft/phi-2)<br>
+Origin: [link](https://huggingface.co/microsoft/Phi-3-mini-4k-instruct-gguf)<br>
 License Type: "MIT"<br>
-License: [link](https://huggingface.co/microsoft/phi-2#license)
-
-##### modified by: TheBloke/phi-2-GGUF
-
-Developer: TheBloke<br>
-Origin: [link](https://huggingface.co/TheBloke/phi-2-GGUF)<br>
-License Type: "MIT"<br>
-License: [link](https://huggingface.co/TheBloke/phi-2-GGUF#license)
+License: [link](https://huggingface.co/microsoft/Phi-3-mini-4k-instruct-gguf/blob/main/LICENSE)
 
 <br>
 
