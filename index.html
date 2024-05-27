@@ -47,7 +47,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_tiny.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">LLM for Unity
-   &#160;<span id="projectnumber">v1.2.7</span>
+   &#160;<span id="projectnumber">v1.2.8</span>
    </div>
    <div id="projectbrief">Create characters in Unity with LLMs!</div>
   </td>
@@ -147,6 +147,7 @@ Games using LLM for Unity</h1>
 <li><a href="https://store.steampowered.com/app/2778780/Verbal_Verdict/">Verbal Verdict</a></li>
 <li><a href="https://store.steampowered.com/app/2786750/I_Chatbot_AISYLUM">I, Chatbot: AISYLUM</a></li>
 <li><a href="https://unicorninteractive.itch.io/nameless-souls-of-the-void">Nameless Souls of the Void</a></li>
+<li><a href="https://roadedlich.itch.io/murder-in-aisle-4">Murder in Aisle 4</a></li>
 </ul>
 <h1><a class="anchor" id="autotoc_md4"></a>
 Setup</h1>
@@ -351,7 +352,7 @@ Add a LLM / LLMClient component dynamically</summary>
 <div class="line">        gameObject.SetActive(<span class="keyword">true</span>);</div>
 <div class="line">    }</div>
 <div class="line">}</div>
-<div class="ttc" id="aclassLLMUnity_1_1LLM_html_a244797da23b679c6dc74dc886fe7648b"><div class="ttname"><a href="classLLMUnity_1_1LLM.html#a244797da23b679c6dc74dc886fe7648b">LLMUnity.LLM.SetModel</a></div><div class="ttdeci">async Task SetModel(string path)</div><div class="ttdoc">Allows to set the model used by the LLM. The model provided is copied to the Assets/StreamingAssets f...</div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00177">LLM.cs:177</a></div></div>
+<div class="ttc" id="aclassLLMUnity_1_1LLM_html_a244797da23b679c6dc74dc886fe7648b"><div class="ttname"><a href="classLLMUnity_1_1LLM.html#a244797da23b679c6dc74dc886fe7648b">LLMUnity.LLM.SetModel</a></div><div class="ttdeci">async Task SetModel(string path)</div><div class="ttdoc">Allows to set the model used by the LLM. The model provided is copied to the Assets/StreamingAssets f...</div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00157">LLM.cs:157</a></div></div>
 </div><!-- fragment --><p></p>
 </details>
 <details >
@@ -385,12 +386,11 @@ Examples</h1>
  Save the scene, run and enjoy!</p>
 <h1><a class="anchor" id="autotoc_md7"></a>
 Use your own model</h1>
-<p>LLM for Unity uses the <a href="https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.2">Mistral 7B Instruct</a>, <a href="https://huggingface.co/teknium/OpenHermes-2.5-Mistral-7B">OpenHermes 2.5</a> or <a href="https://huggingface.co/microsoft/phi-2">Microsoft Phi-2</a> model by default, quantised with the Q4 method.<br  />
+<p>LLM for Unity uses the <a href="https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.2">Mistral 7B Instruct</a>, <a href="https://huggingface.co/teknium/OpenHermes-2.5-Mistral-7B">OpenHermes 2.5</a> or <a href="https://huggingface.co/microsoft/Phi-3-mini-4k-instruct-gguf">Microsoft Phi-3</a> model by default, quantised with the Q4 method.<br  />
 </p>
-<p>Alternative models can be downloaded from <a href="https://huggingface.co/models">HuggingFace</a>.<br  />
+<p>Alternative models can be downloaded from <a href="https://huggingface.co/models?library=gguf&amp;sort=downloads">HuggingFace</a>.<br  />
  The required model format is .gguf as defined by the llama.cpp.<br  />
- The easiest way is to download gguf models directly by <a href="https://huggingface.co/TheBloke">TheBloke</a> who has converted an astonishing number of models 🌈!<br  />
- Otherwise other model formats can be converted to gguf with the <code>convert.py</code> script of the llama.cpp as described <a href="https://github.com/ggerganov/llama.cpp/tree/master?tab=readme-ov-file#prepare-data--run">here</a>.<br  />
+ Other model formats can be converted to gguf with the <code>convert.py</code> script of the llama.cpp as described <a href="https://github.com/ggerganov/llama.cpp/tree/master?tab=readme-ov-file#prepare-data--run">here</a>.<br  />
 </p>
 <p>❕ Before using any model make sure you <b>check their license</b> ❕</p>
 <h1><a class="anchor" id="autotoc_md8"></a>

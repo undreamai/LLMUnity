@@ -1,9 +1,7 @@
 var searchData=
 [
-  ['fields_0',['fields',['../classLLMUnity_1_1GGUFReader.html#aed747865098917e6a8d26c44a2ac82bc',1,'LLMUnity::GGUFReader']]],
-  ['for_20unity_1',['Games using LLM for Unity',['../index.html#autotoc_md3',1,'']]],
-  ['frequencypenalty_2',['frequencyPenalty',['../classLLMUnity_1_1LLMClient.html#a687c28d3670a8c3d97ef54aff59c4004',1,'LLMUnity::LLMClient']]],
-  ['fromgguf_3',['FromGGUF',['../classLLMUnity_1_1ChatTemplate.html#a4fa8424a115565f5c9b9b9afc3edd458',1,'LLMUnity::ChatTemplate']]],
-  ['fromname_4',['FromName',['../classLLMUnity_1_1ChatTemplate.html#a9484e2bfdaf1b0a6b5d2079729358fb0',1,'LLMUnity::ChatTemplate']]],
-  ['fromtemplate_5',['FromTemplate',['../classLLMUnity_1_1ChatTemplate.html#af8b3b960dee10720d443f82aba8850a6',1,'LLMUnity::ChatTemplate']]]
+  ['data_20smol_5fllama_20220m_20openhermes_0',['BEE-spoke-data/smol_llama-220M-openhermes',['../md_Third_01Party_01Notices.html#autotoc_md26',1,'']]],
+  ['debug_1',['debug',['../classLLMUnity_1_1LLM.html#a415905d972e2922dd99b289ceaf56a5c',1,'LLMUnity::LLM']]],
+  ['defaulttemplate_2',['DefaultTemplate',['../classLLMUnity_1_1ChatTemplate.html#afd8535970354d20efc257916e725dcef',1,'LLMUnity::ChatTemplate']]],
+  ['detokenize_3',['Detokenize',['../classLLMUnity_1_1LLMClient.html#a0f67e079bf0e42dbd465a0069b4e2e98',1,'LLMUnity::LLMClient']]]
 ];

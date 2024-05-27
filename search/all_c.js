@@ -1,4 +1,7 @@
 var searchData=
 [
-  ['killexistingserversonstart_0',['killExistingServersOnStart',['../classLLMUnity_1_1LLM.html#ab88cef3f544190f865944b0a8b46add9',1,'LLMUnity::LLM']]]
+  ['help_0',['How to help',['../index.html#autotoc_md2',1,'']]],
+  ['host_1',['host',['../classLLMUnity_1_1LLMClient.html#ab7fff1d843ba7e674226dacd31a3f01f',1,'LLMUnity::LLMClient']]],
+  ['how_20to_20help_2',['How to help',['../index.html#autotoc_md2',1,'']]],
+  ['how_20to_20use_3',['How to use',['../index.html#autotoc_md5',1,'']]]
 ];

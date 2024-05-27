@@ -1,7 +1,8 @@
 var searchData=
 [
-  ['data_20smol_5fllama_20220m_20openhermes_0',['BEE-spoke-data/smol_llama-220M-openhermes',['../md_Third_01Party_01Notices.html#autotoc_md27',1,'']]],
-  ['debug_1',['debug',['../classLLMUnity_1_1LLM.html#a415905d972e2922dd99b289ceaf56a5c',1,'LLMUnity::LLM']]],
-  ['defaulttemplate_2',['DefaultTemplate',['../classLLMUnity_1_1ChatTemplate.html#afd8535970354d20efc257916e725dcef',1,'LLMUnity::ChatTemplate']]],
-  ['detokenize_3',['Detokenize',['../classLLMUnity_1_1LLMClient.html#a0f67e079bf0e42dbd465a0069b4e2e98',1,'LLMUnity::LLMClient']]]
+  ['batchsize_0',['batchSize',['../classLLMUnity_1_1LLM.html#ac1d133a050b4cc2ec567fcb1691f46b3',1,'LLMUnity::LLM']]],
+  ['bee_20spoke_20data_20smol_5fllama_20220m_20openhermes_1',['BEE-spoke-data/smol_llama-220M-openhermes',['../md_Third_01Party_01Notices.html#autotoc_md26',1,'']]],
+  ['by_3a_20afrideva_20smol_5fllama_20220m_20openhermes_20gguf_2',['modified by: afrideva/smol_llama-220M-openhermes-GGUF',['../md_Third_01Party_01Notices.html#autotoc_md27',1,'']]],
+  ['by_3a_20thebloke_20mistral_207b_20instruct_20v0_202_20gguf_3',['modified by: TheBloke/Mistral-7B-Instruct-v0.2-GGUF',['../md_Third_01Party_01Notices.html#autotoc_md20',1,'']]],
+  ['by_3a_20thebloke_20openhermes_202_205_20mistral_207b_20gguf_4',['modified by: TheBloke/OpenHermes-2.5-Mistral-7B-GGUF',['../md_Third_01Party_01Notices.html#autotoc_md23',1,'']]]
 ];

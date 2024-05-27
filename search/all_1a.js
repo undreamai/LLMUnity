@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['💻_20server_20settings_0',['💻 Server Settings',['../index.html#autotoc_md9',1,'']]]
+  ['your_20own_20model_0',['Use your own model',['../index.html#autotoc_md7',1,'']]]
 ];

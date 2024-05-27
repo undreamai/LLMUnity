@@ -1,14 +1,12 @@
 var searchData=
 [
-  ['cacheprompt_0',['cachePrompt',['../classLLMUnity_1_1LLMClient.html#a47f100b274935328f0eb1fb48a24cfc7',1,'LLMUnity::LLMClient']]],
-  ['cancelrequests_1',['CancelRequests',['../classLLMUnity_1_1LLMClient.html#a50b5235db5f784c7a0b4f8f3d3e7f2fe',1,'LLMUnity::LLMClient']]],
-  ['chat_2',['Chat',['../classLLMUnity_1_1LLMClient.html#adf78bb425d542394156740244dbf0458',1,'LLMUnity::LLMClient']]],
-  ['chat_20settings_3',['🗨️ Chat Settings',['../index.html#autotoc_md11',1,'']]],
-  ['chat_20templates_4',['Chat Templates',['../group__template.html',1,'']]],
-  ['chatmltemplate_5',['ChatMLTemplate',['../classLLMUnity_1_1ChatMLTemplate.html',1,'LLMUnity']]],
-  ['chattemplate_6',['ChatTemplate',['../classLLMUnity_1_1ChatTemplate.html',1,'LLMUnity']]],
-  ['complete_7',['Complete',['../classLLMUnity_1_1LLMClient.html#afb93776d4bd9d8bd843896a7c4bf7e65',1,'LLMUnity::LLMClient']]],
-  ['computeprompt_8',['ComputePrompt',['../classLLMUnity_1_1ChatTemplate.html#a78929b86a83f20d316e70c514857985c',1,'LLMUnity::ChatTemplate']]],
-  ['contextsize_9',['contextSize',['../classLLMUnity_1_1LLM.html#a8e358f7a834e6ede3cc19aa7142e67e8',1,'LLMUnity::LLM']]],
-  ['cpp_10',['llama.cpp',['../md_Third_01Party_01Notices.html#autotoc_md15',1,'']]]
+  ['a_20glance_0',['At a glance',['../index.html#autotoc_md1',1,'']]],
+  ['advancedoptions_1',['advancedOptions',['../classLLMUnity_1_1LLMClient.html#aa537432840ec57946208d48c4369236e',1,'LLMUnity::LLMClient']]],
+  ['afrideva_20smol_5fllama_20220m_20openhermes_20gguf_2',['modified by: afrideva/smol_llama-220M-openhermes-GGUF',['../md_Third_01Party_01Notices.html#autotoc_md27',1,'']]],
+  ['ainame_3',['AIName',['../classLLMUnity_1_1LLMClient.html#ad701710d1a5b1a97f4c07f9b7a7729e8',1,'LLMUnity::LLMClient']]],
+  ['alpacatemplate_4',['AlpacaTemplate',['../classLLMUnity_1_1AlpacaTemplate.html',1,'LLMUnity']]],
+  ['and_20information_5',['THIRD-PARTY SOFTWARE NOTICES AND INFORMATION',['../md_Third_01Party_01Notices.html',1,'']]],
+  ['asynchronousstartup_6',['asynchronousStartup',['../classLLMUnity_1_1LLM.html#ae764d8b6b7f0a040c19e1986c227ffaf',1,'LLMUnity::LLM']]],
+  ['at_20a_20glance_7',['At a glance',['../index.html#autotoc_md1',1,'']]],
+  ['awake_8',['Awake',['../classLLMUnity_1_1LLM.html#a1553a9009ba6cd7b4040fd76d190daaa',1,'LLMUnity.LLM.Awake()'],['../classLLMUnity_1_1LLMClient.html#a9cc96f9b98f36be5c1b4b61a6e783f94',1,'LLMUnity.LLMClient.Awake()']]]
 ];
