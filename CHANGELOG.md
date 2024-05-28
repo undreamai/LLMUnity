@@ -1,3 +1,9 @@
+## v1.2.9
+#### 🐛 Fixes
+
+- disable GPU compilation when running on CPU (PR: #159)
+
+
 ## v1.2.8
 #### 🚀 Features
 
