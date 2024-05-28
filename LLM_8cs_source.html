@@ -47,7 +47,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_tiny.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">LLM for Unity
-   &#160;<span id="projectnumber">v1.2.8</span>
+   &#160;<span id="projectnumber">v1.2.9</span>
    </div>
    <div id="projectbrief">Create characters in Unity with LLMs!</div>
   </td>
@@ -424,7 +424,7 @@ $(function(){initNavTree('LLM_8cs_source.html',''); initResizable(); });
 <div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span>            <span class="keywordflow">if</span> (<a class="code hl_variable" href="classLLMUnity_1_1LLM.html#a9afb1e3370f988ac5ae6bc8bb442bc95">numThreads</a> &gt; 0) arguments += $<span class="stringliteral">&quot; -t {numThreads}&quot;</span>;</div>
 <div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span>            <span class="keywordflow">if</span> (loraPath != <span class="stringliteral">&quot;&quot;</span>) arguments += $<span class="stringliteral">&quot; --lora {EscapeSpaces(loraPath)}&quot;</span>;</div>
 <div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span> </div>
-<div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span>            <span class="keywordtype">string</span> noGPUArgument = <span class="stringliteral">&quot; -ngl 0&quot;</span>;</div>
+<div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span>            <span class="keywordtype">string</span> noGPUArgument = <span class="stringliteral">&quot; --nocompile --gpu disable&quot;</span>;</div>
 <div class="line"><a id="l00362" name="l00362"></a><span class="lineno">  362</span>            <span class="keywordtype">string</span> GPUArgument = <a class="code hl_variable" href="classLLMUnity_1_1LLM.html#a0cd82e3728d77575d4f453c5ae443cb9">numGPULayers</a> &lt;= 0 ? noGPUArgument : $<span class="stringliteral">&quot; -ngl {numGPULayers}&quot;</span>;</div>
 <div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span>            LLMUnitySetup.makeExecutable(server);</div>
 <div class="line"><a id="l00364" name="l00364"></a><span class="lineno">  364</span> </div>
