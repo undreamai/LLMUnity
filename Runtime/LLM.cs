@@ -358,7 +358,7 @@ namespace LLMUnity
             if (numThreads > 0) arguments += $" -t {numThreads}";
             if (loraPath != "") arguments += $" --lora {EscapeSpaces(loraPath)}";
 
-            string noGPUArgument = " -ngl 0";
+            string noGPUArgument = " --nocompile --gpu disable";
             string GPUArgument = numGPULayers <= 0 ? noGPUArgument : $" -ngl {numGPULayers}";
             LLMUnitySetup.makeExecutable(server);
 
