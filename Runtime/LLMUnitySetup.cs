@@ -1,16 +1,12 @@
 /// @file
 /// @brief File implementing helper functions for setup and process management.
 using UnityEditor;
-using System.Diagnostics;
 using System.IO;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 using System.Net;
 using System;
-using System.Net.NetworkInformation;
-using System.Text.RegularExpressions;
 
 /// @defgroup llm LLM
 /// @defgroup template Chat Templates
@@ -70,63 +66,6 @@ namespace LLMUnity
         /// <summary> LLM for Unity version </summary>
         public static string Version = "v1.2.9";
 
-        /// \cond HIDE
-        public static Process CreateProcess(
-            string command, string commandArgs = "",
-            Callback<string> outputCallback = null, Callback<string> errorCallback = null, System.EventHandler exitCallback = null,
-            List<(string, string)> environment = null,
-            bool redirectOutput = false, bool redirectError = false
-        )
-        {
-            // create and start a process with output/error callbacks
-            ProcessStartInfo startInfo = new ProcessStartInfo
-            {
-                FileName = command,
-                Arguments = commandArgs,
-                RedirectStandardOutput = redirectOutput || outputCallback != null,
-                RedirectStandardError = redirectError || errorCallback != null,
-                UseShellExecute = false,
-                CreateNoWindow = true
-            };
-            if (environment != null)
-            {
-                foreach ((string name, string value) in environment)
-                {
-                    startInfo.EnvironmentVariables[name] = value;
-                }
-            }
-            Process process = new Process { StartInfo = startInfo };
-            if (outputCallback != null) process.OutputDataReceived += (sender, e) => outputCallback(e.Data);
-            if (errorCallback != null) process.ErrorDataReceived += (sender, e) => errorCallback(e.Data);
-            if (exitCallback != null)
-            {
-                process.EnableRaisingEvents = true;
-                process.Exited += exitCallback;
-            }
-            process.Start();
-            if (outputCallback != null) process.BeginOutputReadLine();
-            if (errorCallback != null) process.BeginErrorReadLine();
-            return process;
-        }
-
-        public static string RunProcess(string command, string commandArgs = "", Callback<string> outputCallback = null, Callback<string> errorCallback = null)
-        {
-            // run a process and re#turn the output
-            Process process = CreateProcess(command, commandArgs, null, null, null, null, true);
-            string output = process.StandardOutput.ReadToEnd();
-            process.WaitForExit();
-            return output;
-        }
-
-        public static void makeExecutable(string path)
-        {
-            if (Application.platform != RuntimePlatform.WindowsEditor && Application.platform != RuntimePlatform.WindowsPlayer)
-            {
-                // macOS/Linux: Set executable permissions using chmod
-                RunProcess("chmod", $"+x {path.Replace(" ", "' '")}");
-            }
-        }
-
         public static string GetAssetPath(string relPath = "")
         {
             // Path to store llm server binaries and models
@@ -150,7 +89,7 @@ namespace LLMUnity
         }
 
         public static async Task DownloadFile(
-            string fileUrl, string savePath, bool overwrite = false, bool executable = false,
+            string fileUrl, string savePath, bool overwrite = false,
             TaskCallback<string> callback = null, Callback<float> progresscallback = null,
             bool async = true
         )
@@ -176,7 +115,6 @@ namespace LLMUnity
                 {
                     client.DownloadFile(fileUrl, tmpPath);
                 }
-                if (executable) makeExecutable(tmpPath);
 
                 AssetDatabase.StartAssetEditing();
                 Directory.CreateDirectory(Path.GetDirectoryName(savePath));
@@ -222,152 +160,6 @@ namespace LLMUnity
         }
 
 #endif
-
-        static string GetPIDFile()
-        {
-            string persistDir = Path.Combine(Application.persistentDataPath, "LLMUnity");
-            if (!Directory.Exists(persistDir))
-            {
-                Directory.CreateDirectory(persistDir);
-            }
-            return Path.Combine(persistDir, "server_process.txt");
-        }
-
-        public static void SaveServerPID(int pid)
-        {
-            try
-            {
-                using (StreamWriter writer = new StreamWriter(GetPIDFile(), true))
-                {
-                    writer.WriteLine(pid);
-                }
-            }
-            catch (Exception e)
-            {
-                Debug.LogError("Error saving PID to file: " + e.Message);
-            }
-        }
-
-        static List<int> ReadServerPIDs()
-        {
-            List<int> pids = new List<int>();
-            string pidfile = GetPIDFile();
-            if (!File.Exists(pidfile)) return pids;
-
-            try
-            {
-                using (StreamReader reader = new StreamReader(pidfile))
-                {
-                    string line;
-                    while ((line = reader.ReadLine()) != null)
-                    {
-                        if (int.TryParse(line, out int pid))
-                        {
-                            pids.Add(pid);
-                        }
-                        else
-                        {
-                            Debug.LogError("Invalid file entry: " + line);
-                        }
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                Debug.LogError("Error reading from file: " + e.Message);
-            }
-            return pids;
-        }
-
-        public static string GetCommandLineArguments(Process process)
-        {
-            if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer)
-            {
-                return process.MainModule.FileName.Replace('\\', '/');
-            }
-            else
-            {
-                return RunProcess("ps", $"-o command -p {process.Id}").Replace("COMMAND\n", "");
-            }
-        }
-
-        public static void KillServerAfterUnityCrash(string serverBinary)
-        {
-            foreach (int pid in ReadServerPIDs())
-            {
-                try
-                {
-                    Process process = Process.GetProcessById(pid);
-                    string command = GetCommandLineArguments(process);
-                    if (command.Contains(serverBinary))
-                    {
-                        Debug.Log($"killing existing server with {pid}: {command}");
-                        process.Kill();
-                        process.WaitForExit();
-                    }
-                }
-                catch (Exception) {}
-            }
-
-            string pidfile = GetPIDFile();
-            if (File.Exists(pidfile)) File.Delete(pidfile);
-        }
-
-        public static void DeleteServerPID(int pid)
-        {
-            string pidfile = GetPIDFile();
-            if (!File.Exists(pidfile)) return;
-
-            List<int> pidEntries = ReadServerPIDs();
-            pidEntries.Remove(pid);
-
-            File.Delete(pidfile);
-            foreach (int pidEntry in pidEntries)
-            {
-                SaveServerPID(pidEntry);
-            }
-        }
-
-        public static int NumServersForPortProperties(int port)
-        {
-            int num = 0;
-            try
-            {
-                IPGlobalProperties ipProperties = IPGlobalProperties.GetIPGlobalProperties();
-                TcpConnectionInformation[] tcpConnections = ipProperties.GetActiveTcpConnections();
-                foreach (TcpConnectionInformation info in tcpConnections)
-                {
-                    if (info.LocalEndPoint.Port == port && info.RemoteEndPoint.Port == 0) num++;
-                }
-            }
-            catch (Exception) {return -1;}
-            return num;
-        }
-
-        public static int NumServersForPortNetstat(int port)
-        {
-            int num = 0;
-            try
-            {
-                string netstatOutput = RunProcess("netstat", "-an -p tcp");
-                Regex regex = new Regex(@"^.*(?i:tcp).*?[:.](?<LocalPort>\d+)\b\s.*\bLISTEN[ING]*\b", RegexOptions.Multiline);
-                MatchCollection matches = regex.Matches(netstatOutput);
-                foreach (Match match in matches)
-                {
-                    if (int.Parse(match.Groups["LocalPort"].Value) == port) num++;
-                }
-            }
-            catch (Exception) {return -1;}
-            return num;
-        }
-
-        public static int NumServersForPort(int port)
-        {
-            int num = NumServersForPortNetstat(port);
-            if (num == -1) num = NumServersForPortProperties(port);
-            return num;
-        }
-
         /// \endcond
     }
 }
