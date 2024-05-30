@@ -101,7 +101,7 @@ namespace LLMUnity
             string libPath = Path.Combine(Application.dataPath, "Plugins", libZipFilename.Replace(".zip", ""));
             if (!Directory.Exists(libPath))
             {
-                await LLMUnitySetup.DownloadFile(LLMLib.URL, libZip, true, false, null, SetLibraryProgress);
+                await LLMUnitySetup.DownloadFile(LLMLib.URL, libZip, true, null, SetLibraryProgress);
                 ZipFile.ExtractToDirectory(libZip, libPath);
                 File.Delete(libZip);
             }
@@ -123,7 +123,7 @@ namespace LLMUnity
             modelProgress = 0;
             string modelName = Path.GetFileName(modelUrl).Split("?")[0];
             string modelPath = LLMUnitySetup.GetAssetPath(modelName);
-            Task downloadTask = LLMUnitySetup.DownloadFile(modelUrl, modelPath, false, false, SetModel, SetModelProgress);
+            Task downloadTask = LLMUnitySetup.DownloadFile(modelUrl, modelPath, false, SetModel, SetModelProgress);
         }
 
         /// \endcond
