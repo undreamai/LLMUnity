@@ -184,14 +184,14 @@ namespace LLMUnity
             }
             else if (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.OSXPlayer)
             {
-                string arch = LLMUnitySetup.RunProcess("uname", "-m");
-                if (arch.Contains("arm64") || arch.Contains("aarch64"))
+                string arch = RuntimeInformation.ProcessArchitecture.ToString().ToLower();
+                if (arch.Contains("arm"))
                 {
                     architectures.Add("undreamai_macos-arm64");
                 }
                 else
                 {
-                    if (!arch.Contains("x86_64")) Debug.LogWarning($"Unknown architecture of processor {arch}! Falling back to x86_64");
+                    if (arch!="x86" && arch!="x64") Debug.LogWarning($"Unknown architecture of processor {arch}! Falling back to x86_64");
                     architectures.Add("undreamai_macos-x64");
                 }
             }
