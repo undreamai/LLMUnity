@@ -124,7 +124,7 @@ namespace LLMUnity
             }
 
             progresscallback?.Invoke(1f);
-            callback?.Invoke(savePath);
+            await callback?.Invoke(savePath);
         }
 
         public static async Task<string> AddAsset(string assetPath, string basePath)
