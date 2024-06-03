@@ -88,12 +88,6 @@ namespace LLMUnity
             ("CUDA 12 (Windows and Linux)", new string[] {CUDA12WindowsURL, CUDA12LinuxURL}),
         };
 
-        private static int selectedCUDA = -1;
-        public static float CUDAbinariesWIP = 0;
-        public static float CUDAbinariesDone = 0;
-        [HideInInspector] public static float libraryProgress = 1;
-        [HideInInspector] public static float CUDAProgress = 1;
-
         public static string GetAssetPath(string relPath = "")
         {
             // Path to store llm server binaries and models
@@ -101,6 +95,12 @@ namespace LLMUnity
         }
 
 #if UNITY_EDITOR
+        private static int selectedCUDA = -1;
+        public static float CUDAbinariesWIP = 0;
+        public static float CUDAbinariesDone = 0;
+        [HideInInspector] public static float libraryProgress = 1;
+        [HideInInspector] public static float CUDAProgress = 1;
+
         [InitializeOnLoadMethod]
         private static async Task InitializeOnLoad()
         {
