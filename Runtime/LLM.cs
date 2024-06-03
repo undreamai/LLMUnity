@@ -197,6 +197,7 @@ namespace LLMUnity
         {
             started = false;
             string arguments = GetLlamaccpArguments();
+            if (arguments == null) return;
             bool useGPU = numGPULayers > 0;
             Debug.Log($"Server command: {arguments}");
 
