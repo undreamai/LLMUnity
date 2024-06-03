@@ -14,12 +14,34 @@ namespace LLMUnity
             return new Type[] { typeof(LLM) };
         }
 
+        public void AddServerLoadersSettings(SerializedObject llmScriptSO, LLM llmScript)
+        {
+            EditorGUILayout.LabelField("Server Settings", EditorStyles.boldLabel);
+            AddCUDALoaders(llmScriptSO, llmScript);
+            AddServerSettings(llmScriptSO);
+        }
+
         public void AddModelLoadersSettings(SerializedObject llmScriptSO, LLM llmScript)
         {
             EditorGUILayout.LabelField("Model Settings", EditorStyles.boldLabel);
             AddModelLoaders(llmScriptSO, llmScript);
             AddModelAddonLoaders(llmScriptSO, llmScript);
             AddModelSettings(llmScriptSO);
+        }
+
+        public void AddCUDALoaders(SerializedObject llmScriptSO, LLM llmScript)
+        {
+            string[] options = new string[LLM.CUDAOptions.Length];
+            for (int i = 0; i < LLM.CUDAOptions.Length; i++)
+            {
+                options[i] = LLM.CUDAOptions[i].Item1;
+            }
+
+            int newIndex = EditorGUILayout.Popup("CUDA", LLM.SelectedCUDA, options);
+            if (newIndex != LLM.SelectedCUDA)
+            {
+                LLM.DownloadCUDA(newIndex);
+            }
         }
 
         public void AddModelLoaders(SerializedObject llmScriptSO, LLM llmScript)
@@ -81,9 +103,6 @@ namespace LLMUnity
                 }
                 EditorGUILayout.EndHorizontal();
             }
-            ShowProgress(LLM.libraryProgress, "Setup Library");
-            ShowProgress(llmScript.modelProgress, "Model Downloading");
-            ShowProgress(llmScript.modelCopyProgress, "Model Copying");
         }
 
         public void AddModelSettings(SerializedObject llmScriptSO)
@@ -105,7 +124,8 @@ namespace LLMUnity
                 attributeClasses.Add(typeof(LLMAdvancedAttribute));
             }
             attributeClasses.Add(llmScriptSO.FindProperty("remote").boolValue ? typeof(RemoteAttribute) : typeof(LocalAttribute));
-            ShowPropertiesOfClass("LLM Settings", llmScriptSO, attributeClasses, true);
+            ShowPropertiesOfClass("", llmScriptSO, attributeClasses, true);
+            Space();
         }
 
         public void AddChatSettings(SerializedObject llmScriptSO)
@@ -130,10 +150,15 @@ namespace LLMUnity
             GUI.enabled = true;
 
             EditorGUI.BeginChangeCheck();
+
+            ShowProgress(LLM.libraryProgress, "Setup Library");
+            ShowProgress(LLM.CUDAProgress, "CUDA Downloading");
+            ShowProgress(llmScript.modelProgress, "Model Downloading");
+            ShowProgress(llmScript.modelCopyProgress, "Model Copying");
+
+            GUI.enabled = LLM.libraryProgress == 1 && LLM.CUDAProgress == 1f && llmScript.modelProgress == 1 && llmScript.modelCopyProgress == 1;
             AddOptionsToggles(llmScriptSO);
-            GUI.enabled = LLM.libraryProgress == 1;
-            AddServerSettings(llmScriptSO);
-            GUI.enabled = LLM.libraryProgress == 1 && llmScript.modelProgress == 1 && llmScript.modelCopyProgress == 1;
+            AddServerLoadersSettings(llmScriptSO, llmScript);
             AddModelLoadersSettings(llmScriptSO, llmScript);
             GUI.enabled = true;
             AddChatSettings(llmScriptSO);
