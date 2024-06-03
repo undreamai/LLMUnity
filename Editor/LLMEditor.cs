@@ -31,16 +31,16 @@ namespace LLMUnity
 
         public void AddCUDALoaders(SerializedObject llmScriptSO, LLM llmScript)
         {
-            string[] options = new string[LLM.CUDAOptions.Length];
-            for (int i = 0; i < LLM.CUDAOptions.Length; i++)
+            string[] options = new string[LLMUnitySetup.CUDAOptions.Length];
+            for (int i = 0; i < LLMUnitySetup.CUDAOptions.Length; i++)
             {
-                options[i] = LLM.CUDAOptions[i].Item1;
+                options[i] = LLMUnitySetup.CUDAOptions[i].Item1;
             }
 
-            int newIndex = EditorGUILayout.Popup("CUDA", LLM.SelectedCUDA, options);
-            if (newIndex != LLM.SelectedCUDA)
+            int newIndex = EditorGUILayout.Popup("CUDA", LLMUnitySetup.SelectedCUDA, options);
+            if (newIndex != LLMUnitySetup.SelectedCUDA)
             {
-                LLM.DownloadCUDA(newIndex);
+                LLMUnitySetup.DownloadCUDA(newIndex);
             }
         }
 
@@ -48,16 +48,16 @@ namespace LLMUnity
         {
             EditorGUILayout.BeginHorizontal();
 
-            string[] options = new string[llmScript.modelOptions.Length];
-            for (int i = 0; i < llmScript.modelOptions.Length; i++)
+            string[] options = new string[LLMUnitySetup.modelOptions.Length];
+            for (int i = 0; i < LLMUnitySetup.modelOptions.Length; i++)
             {
-                options[i] = llmScript.modelOptions[i].Item1;
+                options[i] = LLMUnitySetup.modelOptions[i].Item1;
             }
 
             int newIndex = EditorGUILayout.Popup("Model", llmScript.SelectedModel, options);
             if (newIndex != llmScript.SelectedModel)
             {
-                llmScript.DownloadModel(newIndex);
+                LLMUnitySetup.DownloadModel(llmScript, newIndex);
             }
 
             if (GUILayout.Button("Load model", GUILayout.Width(buttonWidth)))
@@ -151,12 +151,12 @@ namespace LLMUnity
 
             EditorGUI.BeginChangeCheck();
 
-            ShowProgress(LLM.libraryProgress, "Setup Library");
-            ShowProgress(LLM.CUDAProgress, "CUDA Downloading");
+            ShowProgress(LLMUnitySetup.libraryProgress, "Setup Library");
+            ShowProgress(LLMUnitySetup.CUDAProgress, "CUDA Downloading");
             ShowProgress(llmScript.modelProgress, "Model Downloading");
             ShowProgress(llmScript.modelCopyProgress, "Model Copying");
 
-            GUI.enabled = LLM.libraryProgress == 1 && LLM.CUDAProgress == 1f && llmScript.modelProgress == 1 && llmScript.modelCopyProgress == 1;
+            GUI.enabled = LLMUnitySetup.libraryProgress == 1 && LLMUnitySetup.CUDAProgress == 1f && llmScript.modelProgress == 1 && llmScript.modelCopyProgress == 1;
             AddOptionsToggles(llmScriptSO);
             AddServerLoadersSettings(llmScriptSO, llmScript);
             AddModelLoadersSettings(llmScriptSO, llmScript);
