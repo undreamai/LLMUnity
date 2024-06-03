@@ -244,6 +244,7 @@ namespace LLMUnity
 
         public static async Task DownloadCUDA(int optionIndex)
         {
+            if (CUDAProgress < 1) return;
             List<string> CUDAUrls = new List<string>();
             CUDAUrls.AddRange(CUDAOptions[optionIndex].Item2);
             if (SelectedCUDA > 0)
