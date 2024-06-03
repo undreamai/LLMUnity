@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Runtime.InteropServices;
 using UnityEngine;
 
@@ -79,6 +80,9 @@ namespace LLMUnity
     {
         public static string Version = "v1.1.1";
         public static string URL = $"https://github.com/undreamai/LlamaLib/releases/download/{Version}/undreamai-{Version}-llamacpp.zip";
+        public static string CUDA12WindowsURL = $"https://github.com/undreamai/LlamaLib/releases/download/{Version}/cuda-12.2.0-windows.zip";
+        public static string CUDA12LinuxURL = $"https://github.com/undreamai/LlamaLib/releases/download/{Version}/cuda-12.2.0-linux.zip";
+        public static string libraryPath = Path.Combine(Application.dataPath, "Plugins", Path.GetFileName(LLMLib.URL).Replace(".zip", ""));
 
         public LLMLib(string arch)
         {
@@ -191,7 +195,7 @@ namespace LLMUnity
                 }
                 else
                 {
-                    if (arch!="x86" && arch!="x64") Debug.LogWarning($"Unknown architecture of processor {arch}! Falling back to x86_64");
+                    if (arch != "x86" && arch != "x64") Debug.LogWarning($"Unknown architecture of processor {arch}! Falling back to x86_64");
                     architectures.Add("undreamai_macos-x64");
                 }
             }

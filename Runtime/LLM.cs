@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using System.Runtime.InteropServices;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEditor;
@@ -67,8 +67,19 @@ namespace LLMUnity
             ("OpenHermes 2.5 7B (medium, best for conversation)", "https://huggingface.co/TheBloke/OpenHermes-2.5-Mistral-7B-GGUF/resolve/main/openhermes-2.5-mistral-7b.Q4_K_M.gguf?download=true"),
             ("Phi 2 (small, decent)", "https://huggingface.co/TheBloke/phi-2-GGUF/resolve/main/phi-2.Q4_K_M.gguf?download=true"),
         };
+        [HideInInspector] public static readonly (string, string[])[] CUDAOptions = new(string, string[])[]
+        {
+            ("Download CUDA", new string[] {}),
+            ("CUDA 12 (Windows)", new string[] {LLMLib.CUDA12WindowsURL}),
+            ("CUDA 12 (Linux)", new string[] {LLMLib.CUDA12LinuxURL}),
+            ("CUDA 12 (Windows and Linux)", new string[] {LLMLib.CUDA12WindowsURL, LLMLib.CUDA12LinuxURL}),
+        };
         public int SelectedModel = 0;
+        private static int selectedCUDA = -1;
+        public static float CUDAbinariesWIP = 0;
+        public static float CUDAbinariesDone = 0;
         [HideInInspector] public static float libraryProgress = 1;
+        [HideInInspector] public static float CUDAProgress = 1;
         [HideInInspector] public float modelProgress = 1;
         [HideInInspector] public float modelCopyProgress = 1;
         [HideInInspector] public bool modelHide = true;
@@ -83,26 +94,24 @@ namespace LLMUnity
         List<StreamWrapper> streamWrappers = new List<StreamWrapper>();
         /// \endcond
 
-
 #if UNITY_EDITOR
         [InitializeOnLoadMethod]
         private static async Task InitializeOnLoad()
         {
             // Perform download when the build is finished
             await DownloadLibrary();
+            if (SelectedCUDA > 0) await DownloadCUDA(SelectedCUDA);
         }
 
         private static async Task DownloadLibrary()
         {
             if (libraryProgress < 1) return;
             libraryProgress = 0;
-            string libZipFilename = Path.GetFileName(LLMLib.URL);
-            string libZip = Path.Combine(Application.temporaryCachePath, libZipFilename);
-            string libPath = Path.Combine(Application.dataPath, "Plugins", libZipFilename.Replace(".zip", ""));
-            if (!Directory.Exists(libPath))
+            string libZip = Path.Combine(Application.temporaryCachePath, Path.GetFileName(LLMLib.URL));
+            if (!Directory.Exists(LLMLib.libraryPath))
             {
                 await LLMUnitySetup.DownloadFile(LLMLib.URL, libZip, true, null, SetLibraryProgress);
-                ZipFile.ExtractToDirectory(libZip, libPath);
+                ZipFile.ExtractToDirectory(libZip, LLMLib.libraryPath);
                 File.Delete(libZip);
             }
             libraryProgress = 1;
@@ -114,6 +123,102 @@ namespace LLMUnity
         }
 
         /// \cond HIDE
+        public static int SelectedCUDA
+        {
+            get
+            {
+                if (selectedCUDA == -1)
+                {
+                    selectedCUDA = EditorPrefs.GetInt("selectedCUDA", 0);
+                }
+                return selectedCUDA;
+            }
+            set
+            {
+                selectedCUDA = value;
+                EditorPrefs.SetInt("selectedCUDA", value);
+            }
+        }
+
+        public static string GetCUDAPath(string CUDAUrl)
+        {
+            return Path.Combine(Application.persistentDataPath, Path.GetFileName(CUDAUrl)).Replace('\\', '/');
+        }
+
+        public static string GetCUDAFilePath(string path)
+        {
+            return Path.Combine(LLMLib.libraryPath, path);
+        }
+
+        public static async Task DownloadCUDA(int optionIndex)
+        {
+            string[] CUDAUrls = CUDAOptions[optionIndex].Item2;
+            if (SelectedCUDA > 0)
+            {
+                string[] currentCUDAUrls = CUDAOptions[SelectedCUDA].Item2;
+                foreach (string CUDAUrl in currentCUDAUrls)
+                {
+                    if (!CUDAUrls.Contains(CUDAUrl)) RemoveCUDA(GetCUDAPath(CUDAUrl));
+                }
+            }
+
+            SelectedCUDA = optionIndex;
+            if (CUDAUrls == null) return;
+            CUDAProgress = 0;
+            CUDAbinariesWIP = CUDAUrls.Length * 1.2f; // 0.2 for extraction
+            CUDAbinariesDone = 0;
+            foreach (string CUDAUrl in CUDAUrls)
+            {
+                string CUDAPath = GetCUDAPath(CUDAUrl);
+                if (!File.Exists(CUDAPath)) await LLMUnitySetup.DownloadFile(CUDAUrl, CUDAPath, false, null, SetCUDAProgress);
+                CUDAbinariesDone += 1f;
+                await SetupCUDA(CUDAPath);
+                CUDAbinariesDone += 0.2f;
+            }
+            CUDAProgress = 1f;
+        }
+
+        public static Task SetupCUDA(string path)
+        {
+            using (ZipArchive archive = ZipFile.OpenRead(path))
+            {
+                float progress = 0f;
+                foreach (ZipArchiveEntry entry in archive.Entries)
+                {
+                    string destination = GetCUDAFilePath(entry.FullName);
+                    if (!File.Exists(destination))
+                    {
+                        AssetDatabase.StartAssetEditing();
+                        Directory.CreateDirectory(Path.GetDirectoryName(destination));
+                        entry.ExtractToFile(destination);
+                        AssetDatabase.StopAssetEditing();
+                    }
+                    progress += 0.2f / archive.Entries.Count;
+                    SetCUDAProgress(progress);
+                }
+            }
+            return Task.CompletedTask;
+        }
+
+        public static void RemoveCUDA(string path)
+        {
+            if (!File.Exists(path)) return;
+            using (ZipArchive archive = ZipFile.OpenRead(path))
+            {
+                foreach (ZipArchiveEntry entry in archive.Entries)
+                {
+                    string destination = GetCUDAFilePath(entry.FullName);
+                    if (File.Exists(destination + ".meta")) File.Delete(destination + ".meta");
+                    if (File.Exists(destination)) File.Delete(destination);
+                }
+            }
+        }
+
+        static void SetCUDAProgress(float progress)
+        {
+            CUDAProgress = (CUDAbinariesDone + progress) / CUDAbinariesWIP;
+        }
+
         public void DownloadModel(int optionIndex)
         {
             // download default model and disable model editor properties until the model is set
