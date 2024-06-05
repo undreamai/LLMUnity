@@ -104,7 +104,6 @@ namespace LLMUnity
         [InitializeOnLoadMethod]
         private static async Task InitializeOnLoad()
         {
-            // Perform download when the build is finished
             await DownloadLibrary();
             if (SelectedCUDA > 0) await DownloadCUDA(SelectedCUDA);
         }
@@ -160,7 +159,7 @@ namespace LLMUnity
             }
 
             progresscallback?.Invoke(1f);
-            await callback?.Invoke(savePath);
+            if (callback != null) await callback.Invoke(savePath);
         }
 
         public static async Task<string> AddAsset(string assetPath, string basePath)
