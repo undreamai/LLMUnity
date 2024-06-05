@@ -123,15 +123,6 @@ namespace LLMUnity
             return chatTemplate;
         }
 
-        protected string EscapeSpaces(string input)
-        {
-            if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer)
-                return input.Replace(" ", "\" \"");
-            if (input.Contains(" "))
-                return $"'{input}'";
-            return input;
-        }
-
         protected virtual string GetLlamaccpArguments()
         {
             // Start the LLM server in a cross-platform way
@@ -158,10 +149,10 @@ namespace LLMUnity
             }
 
             int slots = GetNumClients();
-            string arguments = $"-m {EscapeSpaces(modelPath)} -c {contextSize} -b {batchSize} --log-disable -np {slots}";
+            string arguments = $"-m \"{modelPath}\" -c {contextSize} -b {batchSize} --log-disable -np {slots}";
             if (remote) arguments += $" --port {port} --host 0.0.0.0";
             if (numThreads > 0) arguments += $" -t {numThreads}";
-            if (loraPath != "") arguments += $" --lora {EscapeSpaces(loraPath)}";
+            if (loraPath != "") arguments += $" --lora \"{loraPath}\"";
             arguments += $" -ngl {numGPULayers}";
             return arguments;
         }
