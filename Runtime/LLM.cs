@@ -159,9 +159,9 @@ namespace LLMUnity
 
         public void Awake()
         {
+            if (!enabled) return;
             try
             {
-                if (!gameObject.activeSelf) return;
                 llmThread = new Thread(StartLLMServer);
                 llmThread.Start();
             }
