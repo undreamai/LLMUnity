@@ -127,6 +127,7 @@ namespace LLMUnity
         public void Awake()
         {
             // Start the LLM server in a cross-platform way
+            if (!enabled) return;
             if (!remote)
             {
                 if (llm == null)
