@@ -957,19 +957,19 @@ MonoBehaviour:
   advancedOptions: 0
   numThreads: -1
   numGPULayers: 0
-  debug: 1
+  debug: 0
   parallelPrompts: -1
   port: 13333
-  model: phi-2.Q4_K_M.gguf
+  model: 
   lora: 
   contextSize: 512
   batchSize: 512
   remote: 0
-  SelectedModel: 3
+  SelectedModel: 0
   modelProgress: 1
   modelCopyProgress: 1
   modelHide: 1
-  chatTemplate: phi
+  chatTemplate: chatml
 --- !u!4 &1047848255
 Transform:
   m_ObjectHideFlags: 0
@@ -1031,6 +1031,7 @@ MonoBehaviour:
   prompt: A chat between a curious human and an artificial intelligence assistant.
     The assistant gives helpful, detailed, and polite answers to the human's questions.
   setNKeepToPrompt: 1
+  chat: []
   grammarString: 
 --- !u!1 &1059033619
 GameObject:
