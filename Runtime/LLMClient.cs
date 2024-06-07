@@ -104,7 +104,7 @@ namespace LLMUnity
         public bool setNKeepToPrompt = true;
 
         /// \cond HIDE
-        protected List<ChatMessage> chat;
+        public List<ChatMessage> chat;
         static object chatPromptLock = new object();
         static object chatAddLock = new object();
         private string chatTemplate;
