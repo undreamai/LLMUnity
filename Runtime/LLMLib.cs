@@ -60,7 +60,7 @@ namespace LLMUnity
             string result = GetString(clearOnUpdate);
             if (result != "" && previousCalledString != result)
             {
-                callback(result);
+                callback?.Invoke(result);
                 previousCalledString = result;
             }
         }
