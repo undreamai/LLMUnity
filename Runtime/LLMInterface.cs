@@ -128,7 +128,7 @@ namespace LLMUnity
         public string level;
         public string function;
         public int line;
-        public string message;
+        public string msg;
         public string hostname;
         public int port;
     }

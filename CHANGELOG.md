@@ -1,3 +1,16 @@
+## v1.2.9
+#### 🐛 Fixes
+
+- disable GPU compilation when running on CPU (PR: #159)
+
+
+## v1.2.8
+#### 🚀 Features
+
+- Switch to llamafile v0.8.6 (PR: #155)
+- Add phi-3 support (PR: #156)
+
+
 ## v1.2.7
 #### 🚀 Features
 
