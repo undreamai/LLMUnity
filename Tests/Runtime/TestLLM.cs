@@ -17,7 +17,7 @@ namespace LLMUnityTests
         public async Task CallAwake()
         {
             base.Awake();
-            while (!serverListening)
+            while (!started)
             {
                 await Task.Delay(100);
             }
@@ -27,11 +27,6 @@ namespace LLMUnityTests
         {
             base.OnDestroy();
         }
-
-        public List<ChatMessage> GetChat()
-        {
-            return chat;
-        }
     }
 
 
@@ -39,7 +34,7 @@ namespace LLMUnityTests
     {
         GameObject gameObject;
         LLMNoAwake llm;
-        int port = 15555;
+        LLMClient llmClient;
         Exception error = null;
         string prompt = "Below is an instruction that describes a task, paired with an input that provides further context. Write a response that appropriately completes the request.";
 
@@ -58,21 +53,21 @@ namespace LLMUnityTests
             string modelUrl = "https://huggingface.co/afrideva/smol_llama-220M-openhermes-GGUF/resolve/main/smol_llama-220m-openhermes.q4_k_m.gguf?download=true";
             string modelPath = "LLMUnityTests/smol_llama-220m-openhermes.q4_k_m.gguf";
             string fullModelPath = LLMUnitySetup.GetAssetPath(modelPath);
-            _ = LLMUnitySetup.DownloadFile(modelUrl, fullModelPath, false, false, null, null, false);
+            _ = LLMUnitySetup.DownloadFile(modelUrl, fullModelPath, false, null, null, false);
             await llm.SetModel(fullModelPath);
             Assert.AreEqual(llm.model, modelPath);
-
-            llm.port = port;
-            llm.playerName = "Instruction";
-            llm.AIName = "Response";
-            llm.port = port;
-            llm.prompt = prompt;
-            llm.temperature = 0;
-            llm.seed = 0;
-            llm.stream = false;
-            llm.numPredict = 20;
             llm.parallelPrompts = 1;
             llm.SetTemplate("alpaca");
+
+            llmClient = gameObject.AddComponent<LLMClient>();
+            llmClient.llm = llm;
+            llmClient.playerName = "Instruction";
+            llmClient.AIName = "Response";
+            llmClient.prompt = prompt;
+            llmClient.temperature = 0;
+            llmClient.seed = 0;
+            llmClient.stream = false;
+            llmClient.numPredict = 20;
 
             gameObject.SetActive(true);
         }
@@ -83,23 +78,24 @@ namespace LLMUnityTests
             try
             {
                 await llm.CallAwake();
+                llmClient.Awake();
                 TestAlive();
-                await llm.Tokenize("I", TestTokens);
-                await llm.Warmup();
-                TestInitParameters((await llm.Tokenize(prompt)).Count, 1);
+                await llmClient.Tokenize("I", TestTokens);
+                await llmClient.Warmup();
+                TestInitParameters((await llmClient.Tokenize(prompt)).Count + 2, 1);
                 TestWarmup();
-                await llm.Chat("How can I increase my meme production/output? Currently, I only create them in ancient babylonian which is time consuming.", TestChat);
+                await llmClient.Chat("How can I increase my meme production/output? Currently, I only create them in ancient babylonian which is time consuming.", TestChat);
                 TestPostChat(3);
-                llm.SetPrompt(llm.prompt);
-                llm.AIName = "False response";
-                await llm.Chat("How can I increase my meme production/output? Currently, I only create them in ancient babylonian which is time consuming.", TestChat2);
+                llmClient.SetPrompt(llmClient.prompt);
+                llmClient.AIName = "False response";
+                await llmClient.Chat("How can I increase my meme production/output? Currently, I only create them in ancient babylonian which is time consuming.", TestChat2);
                 TestPostChat(3);
-                await llm.Chat("bye!");
+                await llmClient.Chat("bye!");
                 TestPostChat(5);
                 prompt = "How are you?";
-                llm.SetPrompt(prompt);
-                await llm.Chat("hi");
-                TestInitParameters((await llm.Tokenize(prompt)).Count, 3);
+                llmClient.SetPrompt(prompt);
+                await llmClient.Chat("hi");
+                TestInitParameters((await llmClient.Tokenize(prompt)).Count + 2, 3);
             }
             catch  (Exception e)
             {
@@ -122,14 +118,14 @@ namespace LLMUnityTests
 
         public void TestAlive()
         {
-            Assert.That(llm.serverListening);
+            Assert.That(llm.started);
         }
 
         public void TestInitParameters(int nkeep, int chats)
         {
-            Assert.That(llm.nKeep == nkeep);
-            Assert.That(ChatTemplate.GetTemplate(llm.chatTemplate).GetStop(llm.playerName, llm.AIName).Length > 0);
-            Assert.That(llm.GetChat().Count == chats);
+            Assert.That(llmClient.nKeep == nkeep);
+            Assert.That(ChatTemplate.GetTemplate(llm.chatTemplate).GetStop(llmClient.playerName, llmClient.AIName).Length > 0);
+            Assert.That(llmClient.chat.Count == chats);
         }
 
         public void TestTokens(List<int> tokens)
@@ -139,7 +135,7 @@ namespace LLMUnityTests
 
         public void TestWarmup()
         {
-            Assert.That(llm.GetChat().Count == 1);
+            Assert.That(llmClient.chat.Count == 1);
         }
 
         public void TestChat(string reply)
@@ -156,7 +152,7 @@ namespace LLMUnityTests
 
         public void TestPostChat(int num)
         {
-            Assert.That(llm.GetChat().Count == num);
+            Assert.That(llmClient.chat.Count == num);
         }
     }
 }
