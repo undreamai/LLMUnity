@@ -25,9 +25,7 @@ namespace LLMUnitySamples
 
         public void SetAIText(string text)
         {
-            // Debug.Log(text);
             AIText.text = text;
-            // Debug.Log("SetAIText done");
         }
 
         public void AIReplyComplete()
