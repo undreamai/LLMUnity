@@ -69,8 +69,6 @@ namespace LLMUnity
         public static string Version = "v1.2.9";
         public static string LlamaLibVersion = "v1.1.1";
         public static string LlamaLibURL = $"https://github.com/undreamai/LlamaLib/releases/download/{LlamaLibVersion}/undreamai-{LlamaLibVersion}-llamacpp.zip";
-        public static string CUDA12WindowsURL = $"https://github.com/undreamai/LlamaLib/releases/download/{LlamaLibVersion}/cuda-12.2.0-windows.zip";
-        public static string CUDA12LinuxURL = $"https://github.com/undreamai/LlamaLib/releases/download/{LlamaLibVersion}/cuda-12.2.0-linux.zip";
         public static string libraryPath = Path.Combine(Application.dataPath, "Plugins", Path.GetFileName(LlamaLibURL).Replace(".zip", ""));
 
         [HideInInspector] public static readonly (string, string)[] modelOptions = new(string, string)[]
@@ -80,13 +78,6 @@ namespace LLMUnity
             ("OpenHermes 2.5 7B (medium, best for conversation)", "https://huggingface.co/TheBloke/OpenHermes-2.5-Mistral-7B-GGUF/resolve/main/openhermes-2.5-mistral-7b.Q4_K_M.gguf?download=true"),
             ("Phi 2 (small, decent)", "https://huggingface.co/TheBloke/phi-2-GGUF/resolve/main/phi-2.Q4_K_M.gguf?download=true"),
         };
-        [HideInInspector] public static readonly (string, string[])[] CUDAOptions = new(string, string[])[]
-        {
-            ("Download CUDA", new string[] {}),
-            ("CUDA 12 (Windows)", new string[] {CUDA12WindowsURL}),
-            ("CUDA 12 (Linux)", new string[] {CUDA12LinuxURL}),
-            ("CUDA 12 (Windows and Linux)", new string[] {CUDA12WindowsURL, CUDA12LinuxURL}),
-        };
 
         public static string GetAssetPath(string relPath = "")
         {
@@ -95,17 +86,12 @@ namespace LLMUnity
         }
 
 #if UNITY_EDITOR
-        private static int selectedCUDA = -1;
-        public static float CUDAbinariesWIP = 0;
-        public static float CUDAbinariesDone = 0;
         [HideInInspector] public static float libraryProgress = 1;
-        [HideInInspector] public static float CUDAProgress = 1;
 
         [InitializeOnLoadMethod]
         private static async Task InitializeOnLoad()
         {
             await DownloadLibrary();
-            if (SelectedCUDA > 0) await DownloadCUDA(SelectedCUDA);
         }
 
         public class DownloadStatus
@@ -214,104 +200,6 @@ namespace LLMUnity
         }
 
         /// \cond HIDE
-        public static int SelectedCUDA
-        {
-            get
-            {
-                if (selectedCUDA == -1)
-                {
-                    selectedCUDA = EditorPrefs.GetInt("selectedCUDA", 0);
-                }
-                return selectedCUDA;
-            }
-            set
-            {
-                selectedCUDA = value;
-                EditorPrefs.SetInt("selectedCUDA", value);
-            }
-        }
-
-        public static string GetCUDAPath(string CUDAUrl)
-        {
-            return Path.Combine(Application.persistentDataPath, Path.GetFileName(CUDAUrl)).Replace('\\', '/');
-        }
-
-        public static string GetCUDAFilePath(string path)
-        {
-            return Path.Combine(libraryPath, path);
-        }
-
-        public static async Task DownloadCUDA(int optionIndex)
-        {
-            if (CUDAProgress < 1) return;
-            List<string> CUDAUrls = new List<string>();
-            CUDAUrls.AddRange(CUDAOptions[optionIndex].Item2);
-            if (SelectedCUDA > 0)
-            {
-                string[] currentCUDAUrls = CUDAOptions[SelectedCUDA].Item2;
-                foreach (string CUDAUrl in currentCUDAUrls)
-                {
-                    if (!CUDAUrls.Contains(CUDAUrl)) RemoveCUDA(GetCUDAPath(CUDAUrl));
-                }
-            }
-
-            SelectedCUDA = optionIndex;
-            if (CUDAUrls == null) return;
-            CUDAProgress = 0;
-            CUDAbinariesWIP = CUDAUrls.Count * 1.2f; // 0.2 for extraction
-            CUDAbinariesDone = 0;
-            foreach (string CUDAUrl in CUDAUrls)
-            {
-                string CUDAPath = GetCUDAPath(CUDAUrl);
-                if (!File.Exists(CUDAPath)) await DownloadFile(CUDAUrl, CUDAPath, false, null, SetCUDAProgress);
-                CUDAbinariesDone += 1f;
-                await SetupCUDA(CUDAPath);
-                CUDAbinariesDone += 0.2f;
-            }
-            CUDAProgress = 1f;
-        }
-
-        public static Task SetupCUDA(string path)
-        {
-            using (ZipArchive archive = ZipFile.OpenRead(path))
-            {
-                float progress = 0f;
-                foreach (ZipArchiveEntry entry in archive.Entries)
-                {
-                    string destination = GetCUDAFilePath(entry.FullName);
-                    if (!File.Exists(destination))
-                    {
-                        AssetDatabase.StartAssetEditing();
-                        Directory.CreateDirectory(Path.GetDirectoryName(destination));
-                        entry.ExtractToFile(destination);
-                        AssetDatabase.StopAssetEditing();
-                    }
-                    progress += 0.2f / archive.Entries.Count;
-                    SetCUDAProgress(progress);
-                }
-            }
-            return Task.CompletedTask;
-        }
-
-        public static void RemoveCUDA(string path)
-        {
-            if (!File.Exists(path)) return;
-            using (ZipArchive archive = ZipFile.OpenRead(path))
-            {
-                foreach (ZipArchiveEntry entry in archive.Entries)
-                {
-                    string destination = GetCUDAFilePath(entry.FullName);
-                    if (File.Exists(destination + ".meta")) File.Delete(destination + ".meta");
-                    if (File.Exists(destination)) File.Delete(destination);
-                }
-            }
-        }
-
-        static void SetCUDAProgress(float progress)
-        {
-            CUDAProgress = (CUDAbinariesDone + progress) / CUDAbinariesWIP;
-        }
-
         public static void DownloadModel(LLM llm, int optionIndex)
         {
             // download default model and disable model editor properties until the model is set
