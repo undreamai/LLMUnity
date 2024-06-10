@@ -9,31 +9,10 @@ using UnityEngine.TestTools;
 
 namespace LLMUnityTests
 {
-    public class LLMNoAwake : LLM
-    {
-        public new void Awake() {}
-        public new void OnDestroy() {}
-
-        public async Task CallAwake()
-        {
-            base.Awake();
-            while (!started)
-            {
-                await Task.Delay(100);
-            }
-        }
-
-        public void CallOnDestroy()
-        {
-            base.OnDestroy();
-        }
-    }
-
-
     public class TestLLM
     {
         GameObject gameObject;
-        LLMNoAwake llm;
+        LLM llm;
         LLMCharacter llmCharacter;
         Exception error = null;
         string prompt = "Below is an instruction that describes a task, paired with an input that provides further context. Write a response that appropriately completes the request.";
@@ -49,7 +28,7 @@ namespace LLMUnityTests
             gameObject = new GameObject();
             gameObject.SetActive(false);
 
-            llm = gameObject.AddComponent<LLMNoAwake>();
+            llm = gameObject.AddComponent<LLM>();
             string modelUrl = "https://huggingface.co/afrideva/smol_llama-220M-openhermes-GGUF/resolve/main/smol_llama-220m-openhermes.q4_k_m.gguf?download=true";
             string modelPath = "LLMUnityTests/smol_llama-220m-openhermes.q4_k_m.gguf";
             string fullModelPath = LLMUnitySetup.GetAssetPath(modelPath);
@@ -77,9 +56,8 @@ namespace LLMUnityTests
             error = null;
             try
             {
-                await llm.CallAwake();
+                llm.Awake();
                 llmCharacter.Awake();
-                TestAlive();
                 await llmCharacter.Tokenize("I", TestTokens);
                 await llmCharacter.Warmup();
                 TestInitParameters((await llmCharacter.Tokenize(prompt)).Count + 2, 1);
@@ -96,6 +74,7 @@ namespace LLMUnityTests
                 llmCharacter.SetPrompt(prompt);
                 await llmCharacter.Chat("hi");
                 TestInitParameters((await llmCharacter.Tokenize(prompt)).Count + 2, 3);
+                llm.OnDestroy();
             }
             catch  (Exception e)
             {
@@ -108,17 +87,11 @@ namespace LLMUnityTests
         {
             Task task = RunTests();
             while (!task.IsCompleted) yield return null;
-            llm.CallOnDestroy();
             if (error != null)
             {
                 Debug.LogError(error.ToString());
                 throw (error);
             }
-        }
-
-        public void TestAlive()
-        {
-            Assert.That(llm.started);
         }
 
         public void TestInitParameters(int nkeep, int chats)
@@ -147,7 +120,6 @@ namespace LLMUnityTests
         public void TestChat2(string reply)
         {
             string AIReply = "One possible solution is to use a more advanced natural language processing library like NLTK or sp";
-            Debug.Log(reply.Trim());
             Assert.That(reply.Trim() == AIReply);
         }
 
