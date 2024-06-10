@@ -9,13 +9,13 @@ namespace LLMUnitySamples
     {
         InputField playerText;
         Text AIText;
-        LLMClient llm;
+        LLMCharacter llmCharacter;
 
-        public ServerClientInteraction(InputField playerText, Text AIText, LLMClient llm)
+        public ServerClientInteraction(InputField playerText, Text AIText, LLMCharacter llmCharacter)
         {
             this.playerText = playerText;
             this.AIText = AIText;
-            this.llm = llm;
+            this.llmCharacter = llmCharacter;
         }
 
         public void Start()
@@ -28,7 +28,7 @@ namespace LLMUnitySamples
         {
             playerText.interactable = false;
             AIText.text = "...";
-            _ = llm.Chat(message, SetAIText, AIReplyComplete);
+            _ = llmCharacter.Chat(message, SetAIText, AIReplyComplete);
         }
 
         public void SetAIText(string text)
@@ -46,30 +46,30 @@ namespace LLMUnitySamples
 
     public class ServerClient : MonoBehaviour
     {
-        public LLM llm;
+        public LLM llmCharacter;
 
-        public LLMClient llmClient1;
+        public LLMCharacter llmCharacter1;
         public InputField playerText1;
         public Text AIText1;
         ServerClientInteraction interaction1;
 
-        public LLMClient llmClient2;
+        public LLMCharacter llmCharacter2;
         public InputField playerText2;
         public Text AIText2;
         ServerClientInteraction interaction2;
 
         void Start()
         {
-            interaction1 = new ServerClientInteraction(playerText1, AIText1, llmClient1);
-            interaction2 = new ServerClientInteraction(playerText2, AIText2, llmClient2);
+            interaction1 = new ServerClientInteraction(playerText1, AIText1, llmCharacter1);
+            interaction2 = new ServerClientInteraction(playerText2, AIText2, llmCharacter2);
             interaction1.Start();
             interaction2.Start();
         }
 
         public void CancelRequests()
         {
-            llmClient1.CancelRequests();
-            llmClient2.CancelRequests();
+            llmCharacter1.CancelRequests();
+            llmCharacter2.CancelRequests();
             interaction1.AIReplyComplete();
             interaction2.AIReplyComplete();
         }

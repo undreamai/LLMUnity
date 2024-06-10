@@ -37,7 +37,7 @@ namespace LLMUnity
         [LLM] public int numGPULayers = 0;
         /// <summary> select to log the output of the LLM in the Unity Editor. </summary>
         [LLMAdvanced] public bool debug = false;
-        /// <summary> number of prompts that can happen in parallel (-1 = number of LLM/LLMClient objects) </summary>
+        /// <summary> number of prompts that can happen in parallel (-1 = number of LLMCharacter objects) </summary>
         [LLMAdvanced] public int parallelPrompts = -1;
         /// <summary> port to use for the LLM server </summary>
         [Remote] public int port = 13333;
@@ -66,7 +66,7 @@ namespace LLMUnity
         public string chatTemplate = ChatTemplate.DefaultTemplate;
 
         IntPtr LLMObject;
-        List<LLMClient> clients = new List<LLMClient>();
+        List<LLMCharacter> clients = new List<LLMCharacter>();
         LLMLib llmlib;
         StreamWrapper logStreamWrapper = null;
         Thread llmThread;
@@ -228,10 +228,10 @@ namespace LLMUnity
             Debug.Log("LLM service destroyed");
         }
 
-        public int Register(LLMClient llmClient)
+        public int Register(LLMCharacter llmCharacter)
         {
-            clients.Add(llmClient);
-            return clients.IndexOf(llmClient);
+            clients.Add(llmCharacter);
+            return clients.IndexOf(llmCharacter);
         }
 
         protected int GetNumClients()
