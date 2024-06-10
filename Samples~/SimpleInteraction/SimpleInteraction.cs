@@ -6,7 +6,7 @@ namespace LLMUnitySamples
 {
     public class SimpleInteraction : MonoBehaviour
     {
-        public LLMClient llm;
+        public LLMCharacter llm;
         public InputField playerText;
         public Text AIText;
 

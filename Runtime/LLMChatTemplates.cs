@@ -161,7 +161,7 @@ namespace LLMUnity
         protected virtual string PairSuffix() { return ""; }
 
         /// <summary> Constructs the prompt using the template based on a list of ChatMessages </summary>
-        /// <param name="messages"> list of ChatMessages e.g. the LLMClient chat </param>
+        /// <param name="messages"> list of ChatMessages e.g. the LLMCharacter chat </param>
         /// <param name="AIName"> the AI name </param>
         /// <returns>prompt</returns>
         public virtual string ComputePrompt(List<ChatMessage> messages, string AIName, bool endWithPrefix = true)

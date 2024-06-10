@@ -8,7 +8,7 @@ namespace LLMUnitySamples
     public class AsyncStartup : MonoBehaviour
     {
         public LLM llm;
-        public LLMClient llmClient;
+        public LLMCharacter llmCharacter;
         public InputField playerText;
         public Text AIText;
         public GameObject LoadingScreen;
@@ -32,7 +32,7 @@ namespace LLMUnitySamples
             }
             //warm-up the model
             LoadingText.text = "Warming-up the model...";
-            _ = llmClient.Warmup(LoadingComplete);
+            _ = llmCharacter.Warmup(LoadingComplete);
         }
 
         void LoadingComplete()
@@ -46,7 +46,7 @@ namespace LLMUnitySamples
         {
             playerText.interactable = false;
             AIText.text = "...";
-            _ = llmClient.Chat(message, SetAIText, AIReplyComplete);
+            _ = llmCharacter.Chat(message, SetAIText, AIReplyComplete);
         }
 
         public void SetAIText(string text)
@@ -63,7 +63,7 @@ namespace LLMUnitySamples
 
         public void CancelRequests()
         {
-            llmClient.CancelRequests();
+            llmCharacter.CancelRequests();
             AIReplyComplete();
         }
 

@@ -5,12 +5,12 @@ using System.Collections.Generic;
 
 namespace LLMUnity
 {
-    [CustomEditor(typeof(LLMClient))]
-    public class LLMClientEditor : PropertyEditor
+    [CustomEditor(typeof(LLMCharacter))]
+    public class LLMCharacterEditor : PropertyEditor
     {
         protected override Type[] GetPropertyTypes()
         {
-            return new Type[] { typeof(LLMClient) };
+            return new Type[] { typeof(LLMCharacter) };
         }
 
         public void AddClientSettings(SerializedObject llmScriptSO)
@@ -24,7 +24,7 @@ namespace LLMUnity
             ShowPropertiesOfClass("LLM Settings", llmScriptSO, attributeClasses, true);
         }
 
-        public void AddModelSettings(SerializedObject llmScriptSO, LLMClient llmClientScript)
+        public void AddModelSettings(SerializedObject llmScriptSO, LLMCharacter llmCharacterScript)
         {
             EditorGUILayout.LabelField("Model Settings", EditorStyles.boldLabel);
             ShowPropertiesOfClass("", llmScriptSO, new List<Type> { typeof(ModelAttribute) }, false);
@@ -40,7 +40,7 @@ namespace LLMUnity
                         string path = EditorUtility.OpenFilePanelWithFilters("Select a gbnf grammar file", "", new string[] { "Grammar Files", "gbnf" });
                         if (!string.IsNullOrEmpty(path))
                         {
-                            llmClientScript.SetGrammar(path);
+                            llmCharacterScript.SetGrammar(path);
                         }
                     };
                 }
@@ -58,7 +58,7 @@ namespace LLMUnity
 
         public override void OnInspectorGUI()
         {
-            LLMClient llmScript = (LLMClient)target;
+            LLMCharacter llmScript = (LLMCharacter)target;
             SerializedObject llmScriptSO = new SerializedObject(llmScript);
             llmScriptSO.Update();
 
@@ -77,4 +77,7 @@ namespace LLMUnity
             llmScriptSO.ApplyModifiedProperties();
         }
     }
+
+    [CustomEditor(typeof(LLMClient))]
+    public class LLMClientEditor : LLMCharacterEditor {}
 }
