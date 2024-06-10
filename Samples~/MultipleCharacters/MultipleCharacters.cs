@@ -5,13 +5,13 @@ using UnityEngine.UI;
 
 namespace LLMUnitySamples
 {
-    public class ServerClientInteraction
+    public class MultipleCharactersInteraction
     {
         InputField playerText;
         Text AIText;
         LLMCharacter llmCharacter;
 
-        public ServerClientInteraction(InputField playerText, Text AIText, LLMCharacter llmCharacter)
+        public MultipleCharactersInteraction(InputField playerText, Text AIText, LLMCharacter llmCharacter)
         {
             this.playerText = playerText;
             this.AIText = AIText;
@@ -44,24 +44,24 @@ namespace LLMUnitySamples
         }
     }
 
-    public class ServerClient : MonoBehaviour
+    public class MultipleCharacters : MonoBehaviour
     {
         public LLM llmCharacter;
 
         public LLMCharacter llmCharacter1;
         public InputField playerText1;
         public Text AIText1;
-        ServerClientInteraction interaction1;
+        MultipleCharactersInteraction interaction1;
 
         public LLMCharacter llmCharacter2;
         public InputField playerText2;
         public Text AIText2;
-        ServerClientInteraction interaction2;
+        MultipleCharactersInteraction interaction2;
 
         void Start()
         {
-            interaction1 = new ServerClientInteraction(playerText1, AIText1, llmCharacter1);
-            interaction2 = new ServerClientInteraction(playerText2, AIText2, llmCharacter2);
+            interaction1 = new MultipleCharactersInteraction(playerText1, AIText1, llmCharacter1);
+            interaction2 = new MultipleCharactersInteraction(playerText2, AIText2, llmCharacter2);
             interaction1.Start();
             interaction2.Start();
         }
