@@ -31,14 +31,9 @@
       "path": "Samples~/SimpleInteraction"
     },
     {
-      "displayName": "AsyncStartup",
-      "description": "Example with loading screen using the async functionality.",
-      "path": "Samples~/AsyncStartup"
-    },
-    {
-      "displayName": "ServerClient",
+      "displayName": "MultipleCharacters",
       "description": "Example with two AIs.",
-      "path": "Samples~/ServerClient"
+      "path": "Samples~/MultipleCharacters"
     },
     {
       "displayName": "ChatBot",
