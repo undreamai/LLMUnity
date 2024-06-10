@@ -17,7 +17,6 @@ namespace LLMUnity
         public void AddServerLoadersSettings(SerializedObject llmScriptSO, LLM llmScript)
         {
             EditorGUILayout.LabelField("Server Settings", EditorStyles.boldLabel);
-            AddCUDALoaders(llmScriptSO, llmScript);
             AddServerSettings(llmScriptSO);
         }
 
@@ -27,21 +26,6 @@ namespace LLMUnity
             AddModelLoaders(llmScriptSO, llmScript);
             AddModelAddonLoaders(llmScriptSO, llmScript);
             AddModelSettings(llmScriptSO);
-        }
-
-        public void AddCUDALoaders(SerializedObject llmScriptSO, LLM llmScript)
-        {
-            string[] options = new string[LLMUnitySetup.CUDAOptions.Length];
-            for (int i = 0; i < LLMUnitySetup.CUDAOptions.Length; i++)
-            {
-                options[i] = LLMUnitySetup.CUDAOptions[i].Item1;
-            }
-
-            int newIndex = EditorGUILayout.Popup("CUDA", LLMUnitySetup.SelectedCUDA, options);
-            if (newIndex != LLMUnitySetup.SelectedCUDA)
-            {
-                LLMUnitySetup.DownloadCUDA(newIndex);
-            }
         }
 
         public void AddModelLoaders(SerializedObject llmScriptSO, LLM llmScript)
@@ -152,11 +136,10 @@ namespace LLMUnity
             EditorGUI.BeginChangeCheck();
 
             ShowProgress(LLMUnitySetup.libraryProgress, "Setup Library");
-            ShowProgress(LLMUnitySetup.CUDAProgress, "CUDA Downloading");
             ShowProgress(llmScript.modelProgress, "Model Downloading");
             ShowProgress(llmScript.modelCopyProgress, "Model Copying");
 
-            GUI.enabled = LLMUnitySetup.libraryProgress == 1 && LLMUnitySetup.CUDAProgress == 1f && llmScript.modelProgress == 1 && llmScript.modelCopyProgress == 1;
+            GUI.enabled = LLMUnitySetup.libraryProgress == 1 && llmScript.modelProgress == 1 && llmScript.modelCopyProgress == 1;
             AddOptionsToggles(llmScriptSO);
             AddServerLoadersSettings(llmScriptSO, llmScript);
             AddModelLoadersSettings(llmScriptSO, llmScript);
