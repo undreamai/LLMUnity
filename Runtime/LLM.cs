@@ -5,8 +5,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using Codice.Client.Commands;
-using PlasticGui.WorkspaceWindow.BranchExplorer;
 using UnityEditor;
 using UnityEngine;
 
