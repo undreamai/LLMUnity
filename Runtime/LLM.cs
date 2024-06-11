@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Codice.Client.Commands;
+using PlasticGui.WorkspaceWindow.BranchExplorer;
 using UnityEditor;
 using UnityEngine;
 
@@ -65,11 +67,11 @@ namespace LLMUnity
 
         public string chatTemplate = ChatTemplate.DefaultTemplate;
 
-        IntPtr LLMObject;
+        IntPtr LLMObject = IntPtr.Zero;
         List<LLMCharacter> clients = new List<LLMCharacter>();
         LLMLib llmlib;
         StreamWrapper logStreamWrapper = null;
-        Thread llmThread;
+        Thread llmThread = null;
         List<StreamWrapper> streamWrappers = new List<StreamWrapper>();
         /// \endcond
 
@@ -160,15 +162,7 @@ namespace LLMUnity
         public void Awake()
         {
             if (!enabled) return;
-            try
-            {
-                llmThread = new Thread(StartLLMServer);
-                llmThread.Start();
-            }
-            catch (Exception e)
-            {
-                Debug.LogError(e.Message);
-            }
+            StartLLMServer();
         }
 
         private void SetupLogging()
@@ -194,15 +188,11 @@ namespace LLMUnity
 
             foreach (string arch in LLMLib.PossibleArchitectures(useGPU))
             {
-                llmlib = new LLMLib(arch);
                 string error;
                 try
                 {
-                    if (debug) SetupLogging();
-                    LLMObject = llmlib.LLM_Construct(arguments);
-                    if (remote) llmlib.LLM_StartServer(LLMObject);
-                    SetTemplate(chatTemplate);
-                    CheckLLMStatus(false);
+                    InitLib(arch);
+                    InitServer(arguments);
                     Debug.Log($"Using architecture: {arch}");
                     break;
                 }
@@ -222,10 +212,31 @@ namespace LLMUnity
                 Debug.LogError("LLM service couldn't be created");
                 return;
             }
+            StartService();
             Debug.Log("LLM service created");
+        }
+
+        private void InitLib(string arch)
+        {
+            llmlib = new LLMLib(arch);
+            CheckLLMStatus(false);
+        }
+
+        private void InitServer(string arguments)
+        {
+            if (debug) SetupLogging();
+            LLMObject = llmlib.LLM_Construct(arguments);
+            if (remote) llmlib.LLM_StartServer(LLMObject);
+            SetTemplate(chatTemplate);
+            CheckLLMStatus(false);
+        }
+
+        private void StartService()
+        {
+            llmThread = new Thread(() => llmlib.LLM_Start(LLMObject));
+            llmThread.Start();
+            while (!llmlib.LLM_Started(LLMObject)) {}
             started = true;
-            llmlib.LLM_Start(LLMObject);
-            Debug.Log("LLM service destroyed");
         }
 
         public int Register(LLMCharacter llmCharacter)
@@ -325,6 +336,7 @@ namespace LLMUnity
             AssertStarted();
             StreamWrapper streamWrapper = ConstructStreamWrapper(streamCallback);
             await Task.Run(() => llmlib.LLM_Completion(LLMObject, json, streamWrapper.GetStringWrapper()));
+            if (!started) return null;
             string result = streamWrapper.GetString();
             DestroyStreamWrapper(streamWrapper);
             CheckLLMStatus();
@@ -338,7 +350,7 @@ namespace LLMUnity
             CheckLLMStatus();
         }
 
-        private void Destroy()
+        public void Destroy()
         {
             try
             {
@@ -349,10 +361,11 @@ namespace LLMUnity
                         llmlib.LLM_Stop(LLMObject);
                         if (remote) llmlib.LLM_StopServer(LLMObject);
                         StopLogging();
-                        llmThread.Join();
+                        llmThread?.Join();
                         llmlib.LLM_Delete(LLMObject);
                         LLMObject = IntPtr.Zero;
                     }
+                    llmlib.Destroy();
                 }
                 started = false;
                 llmlib = null;
