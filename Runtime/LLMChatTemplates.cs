@@ -420,7 +420,7 @@ namespace LLMUnity
         protected override string PairSuffix() { return "<|end|>\n"; }
 
 
-        public override string ComputePrompt(List<ChatMessage> messages, string AIName)
+        public override string ComputePrompt(List<ChatMessage> messages, string AIName, bool endWithPrefix = true)
         {
             List<ChatMessage> messagesSystemPrompt = messages;
             if (messages[0].role == "system")
@@ -435,7 +435,7 @@ namespace LLMUnity
                 messagesSystemPrompt = new List<ChatMessage>(){new ChatMessage { role = "user", content = firstUserMessage }};
                 messagesSystemPrompt.AddRange(messages.GetRange(start, messages.Count - start));
             }
-            return base.ComputePrompt(messagesSystemPrompt, AIName);
+            return base.ComputePrompt(messagesSystemPrompt, AIName, endWithPrefix);
         }
 
         public override string[] GetStop(string playerName, string AIName)
