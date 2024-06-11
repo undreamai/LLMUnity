@@ -46,8 +46,6 @@ namespace LLMUnitySamples
 
     public class MultipleCharacters : MonoBehaviour
     {
-        public LLM llmCharacter;
-
         public LLMCharacter llmCharacter1;
         public InputField playerText1;
         public Text AIText1;
