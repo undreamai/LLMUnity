@@ -315,12 +315,6 @@ namespace LLMUnity
             return result;
         }
 
-        protected string ChatOpenAIContent(ChatOpenAIResult result)
-        {
-            // get content from a char result received from the endpoint in open AI format
-            return result.choices[0].message.content;
-        }
-
         protected string TemplateContent(TemplateResult result)
         {
             // get content from a char result received from the endpoint in open AI format
