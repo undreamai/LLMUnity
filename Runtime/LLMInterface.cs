@@ -2,7 +2,6 @@
 /// @brief File implementing the LLM server interfaces.
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 /// \cond HIDE
 namespace LLMUnity
@@ -75,41 +74,6 @@ namespace LLMUnity
     }
 
     [Serializable]
-    public struct ChatOpenAIRequest
-    {
-        public List<ChatMessage> messages;
-    }
-
-    [Serializable]
-    public struct ChatOpenAIResultChoice
-    {
-        public string finish_reason;
-        public int index;
-        public ChatMessage message;
-        public ChatMessage delta;
-    }
-
-    [Serializable]
-    public struct ChatOpenAIResultNumTokens
-    {
-        public int completion_tokens;
-        public int prompt_tokens;
-        public int total_tokens;
-    }
-
-    [Serializable]
-    public struct ChatOpenAIResult
-    {
-        public string id;
-        public ChatOpenAIResultNumTokens usage;
-        // [JsonProperty("object")]
-        // public string MyObject { get; set; }
-        public string model;
-        public Time created;
-        public List<ChatOpenAIResultChoice> choices;
-    }
-
-    [Serializable]
     public struct TokenizeRequest
     {
         public string content;
@@ -125,18 +89,6 @@ namespace LLMUnity
     public struct TemplateResult
     {
         public string template;
-    }
-
-    [Serializable]
-    public struct ServerStatus
-    {
-        public DateTime timestamp;
-        public string level;
-        public string function;
-        public int line;
-        public string msg;
-        public string hostname;
-        public int port;
     }
 }
 /// \endcond
