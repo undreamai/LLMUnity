@@ -29,11 +29,12 @@ namespace LLMUnity
         /// <summary> option to receive the reply from the model as it is produced (recommended!).
         /// If it is not selected, the full reply from the model is received in one go </summary>
         [Model] public bool stream = true;
-
         /// <summary> select to log the constructed prompt the Unity Editor. </summary>
         [LLMAdvanced] public bool debugPrompt = false;
         /// <summary> grammar file used for the LLM in .cbnf format (relative to the Assets/StreamingAssets folder) </summary>
         [ModelAdvanced] public string grammar = null;
+        /// <summary> option to cache the prompt as it is being created by the chat to avoid reprocessing the entire prompt every time (default: true) </summary>
+        [ModelAdvanced] public bool cachePrompt = true;
         /// <summary> seed for reproducibility. For random results every time set to -1. </summary>
         [ModelAdvanced] public int seed = 0;
         /// <summary> number of tokens to predict (-1 = infinity, -2 = until context filled).
@@ -41,8 +42,6 @@ namespace LLMUnity
         /// When N predict is reached the model will stop generating.
         /// This means words / sentences might not get finished if this is too low. </summary>
         [ModelAdvanced] public int numPredict = 256;
-        /// <summary> option to cache the prompt as it is being created by the chat to avoid reprocessing the entire prompt every time (default: true) </summary>
-        [ModelAdvanced] public bool cachePrompt = true;
         /// <summary> LLM temperature, lower values give more deterministic answers.
         /// The temperature setting adjusts how random the generated responses are.
         /// Turning it up makes the generated choices more varied and unpredictable.
