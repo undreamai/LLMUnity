@@ -318,20 +318,34 @@ namespace LLMUnity
             return architectures;
         }
 
+        public static string FindPlugin(string rootPath, string pluginName)
+        {
+            foreach (string filename in Directory.GetFiles(rootPath))
+            {
+                if (Path.GetFileName(filename).Equals(pluginName)) return filename;
+            }
+            foreach (string dir in Directory.GetDirectories(rootPath))
+            {
+                string foundPath = FindPlugin(dir, pluginName);
+                if (foundPath != null)  return foundPath;
+            }
+            return null;
+        }
+
         public static string GetArchitecturePath(string arch)
         {
-            string path;
+            string filename;
             if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer)
             {
-                path = $"windows-{arch}/undreamai_windows-{arch}.dll";
+                filename = $"undreamai_windows-{arch}.dll";
             }
             else if (Application.platform == RuntimePlatform.LinuxEditor || Application.platform == RuntimePlatform.LinuxPlayer)
             {
-                path = $"linux-{arch}/libundreamai_linux-{arch}.so";
+                filename = $"libundreamai_linux-{arch}.so";
             }
             else if (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.OSXPlayer)
             {
-                path = $"macos-{arch}/libundreamai_macos-{arch}.dylib";
+                filename = $"libundreamai_macos-{arch}.dylib";
             }
             else
             {
@@ -340,7 +354,7 @@ namespace LLMUnity
                 throw new Exception(error);
             }
 
-            return Path.Combine(LLMUnitySetup.libraryPath, path);
+            return FindPlugin(Path.Combine(Application.dataPath, "Plugins"), filename);
         }
 
         const string linux_archchecker_dll = "archchecker";
