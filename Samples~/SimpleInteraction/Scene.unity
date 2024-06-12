@@ -483,6 +483,7 @@ MonoBehaviour:
   llm: {fileID: 1047848254}
   host: localhost
   port: 13333
+  save: 
   stream: 1
   grammar: 
   seed: 0
@@ -1041,7 +1042,7 @@ MonoBehaviour:
   port: 13333
   model: 
   lora: 
-  contextSize: 512
+  contextSize: 0
   batchSize: 512
   remote: 0
   SelectedModel: 0
