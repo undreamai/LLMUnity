@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -23,6 +22,10 @@ namespace LLMUnity
         /// <summary> port to use for the LLM server </summary>
         [Remote] public int port = 13333;
 
+        /// <summary> file to save the chat history.
+        /// The file is saved only for Chat calls with addToHistory set to true.
+        /// The file will be saved within the persistentDataPath directory (see https://docs.unity3d.com/ScriptReference/Application-persistentDataPath.html). </summary>
+        [Local] public string save = "";
         /// <summary> option to receive the reply from the model as it is produced (recommended!).
         /// If it is not selected, the full reply from the model is received in one go </summary>
         [Model] public bool stream = true;
@@ -113,6 +116,7 @@ namespace LLMUnity
         protected int id_slot = -1;
         private List<(string, string)> requestHeaders = new List<(string, string)> { ("Content-Type", "application/json") };
         private List<UnityWebRequest> WIPRequests = new List<UnityWebRequest>();
+        private bool historyLoading = false;
         /// \endcond
 
         /// <summary>
@@ -139,7 +143,26 @@ namespace LLMUnity
             }
 
             InitGrammar();
-            InitPrompt();
+            InitHistory();
+        }
+
+        protected void InitHistory()
+        {
+            string savePath = GetSavePath(save);
+            if (save != "" && File.Exists(savePath)) _ = LoadHistory();
+            else InitPrompt();
+        }
+
+        protected async Task LoadHistory()
+        {
+            historyLoading = true;
+            await Load(GetSavePath(save));
+            historyLoading = false;
+        }
+
+        public string GetSavePath(string filename)
+        {
+            return Path.Combine(Application.persistentDataPath, filename);
         }
 
         private void InitPrompt(bool clearChat = true)
@@ -399,6 +422,7 @@ namespace LLMUnity
                     AddPlayerMessage(query);
                     AddAIMessage(result);
                 }
+                if (save != "") _ = Save(save);
             }
 
             completionCallback?.Invoke();
@@ -517,22 +541,10 @@ namespace LLMUnity
                 Debug.LogError($"File {filename} already exists");
                 return null;
             }
-
-            string llmFilename = filename + ".bin";
-            string result = await Slot(llmFilename, "save");
-
             string json = JsonUtility.ToJson(new ChatListWrapper { chat = chat });
-            using (FileStream zipToOpen = new FileStream(filename, FileMode.Create))
-            {
-                using (ZipArchive archive = new ZipArchive(zipToOpen, ZipArchiveMode.Create))
-                {
-                    archive.CreateEntryFromFile(llmFilename, "llm_cache.bin");
-                    ZipArchiveEntry entry = archive.CreateEntry("chat.json");
-                    using (StreamWriter writer = new StreamWriter(entry.Open())) { writer.Write(json); }
-                }
-            }
-
-            File.Delete(llmFilename);
+            File.WriteAllText(GetSavePath(filename + ".json"), json);
+            // this is saved already in the Application.persistentDataPath folder
+            string result = await Slot(filename, "save");
             return result;
         }
 
@@ -543,36 +555,10 @@ namespace LLMUnity
                 Debug.LogError($"File {filename} does not exist.");
                 return null;
             }
-
-            string llmFilename = filename + ".bin";
-            using (FileStream zipToOpen = new FileStream(filename, FileMode.Open))
-            {
-                using (ZipArchive archive = new ZipArchive(zipToOpen, ZipArchiveMode.Read))
-                {
-                    ZipArchiveEntry entry = archive.GetEntry("chat.json");
-                    if (entry == null)
-                    {
-                        Debug.LogError("File chat.json does not exist.");
-                        return null;
-                    }
-                    using (StreamReader reader = new StreamReader(entry.Open()))
-                    {
-                        string json = reader.ReadToEnd();
-                        chat = JsonUtility.FromJson<ChatListWrapper>(json).chat;
-                    }
-
-                    entry = archive.GetEntry("llm_cache.bin");
-                    if (entry == null)
-                    {
-                        Debug.LogError("File llm_cache.bin does not exist.");
-                        return null;
-                    }
-                    entry.ExtractToFile(llmFilename);
-                }
-            }
-
-            string result = await Slot(llmFilename, "restore");
-            File.Delete(llmFilename);
+            string json = File.ReadAllText(GetSavePath(filename + ".json"));
+            chat = JsonUtility.FromJson<ChatListWrapper>(json).chat;
+            // this is saved already in the Application.persistentDataPath folder
+            string result = await Slot(filename, "restore");
             return result;
         }
 
@@ -623,6 +609,7 @@ namespace LLMUnity
         {
             // send a post request to the server and call the relevant callbacks to convert the received content and handle it
             // this function has streaming functionality i.e. handles the answer while it is being received
+            while (historyLoading) await Task.Yield();
             while (!llm.started) await Task.Yield();
             string callResult = null;
             switch (endpoint)
