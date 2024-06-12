@@ -16,7 +16,7 @@ namespace LLMUnity
 
         public void AddServerLoadersSettings(SerializedObject llmScriptSO, LLM llmScript)
         {
-            EditorGUILayout.LabelField("Server Settings", EditorStyles.boldLabel);
+            EditorGUILayout.LabelField("Setup Settings", EditorStyles.boldLabel);
             AddServerSettings(llmScriptSO);
         }
 
@@ -72,7 +72,7 @@ namespace LLMUnity
             if (llmScriptSO.FindProperty("advancedOptions").boolValue)
             {
                 EditorGUILayout.BeginHorizontal();
-                GUILayout.Label("Lora / Grammar", GUILayout.Width(EditorGUIUtility.labelWidth));
+                GUILayout.Label("Lora", GUILayout.Width(EditorGUIUtility.labelWidth));
 
                 if (GUILayout.Button("Load lora", GUILayout.Width(buttonWidth)))
                 {
