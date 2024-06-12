@@ -1134,6 +1134,7 @@ MonoBehaviour:
   port: 13333
   save: 
   stream: 1
+  debugPrompt: 0
   grammar: 
   seed: 0
   numPredict: 256
