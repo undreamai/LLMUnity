@@ -153,7 +153,7 @@ namespace LLMUnity
             if (remote) arguments += $" --port {port} --host 0.0.0.0";
             if (numThreads > 0) arguments += $" -t {numThreads}";
             if (loraPath != "") arguments += $" --lora \"{loraPath}\"";
-            arguments += $" --slot-save-path \"{Application.temporaryCachePath}\"";
+            arguments += $" --slot-save-path \"{Application.persistentDataPath}\"";
             arguments += $" -ngl {numGPULayers}";
             return arguments;
         }
