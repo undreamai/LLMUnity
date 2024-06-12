@@ -21,7 +21,7 @@ namespace LLMUnity
                 attributeClasses.Add(typeof(LLMAdvancedAttribute));
             }
             attributeClasses.Add(llmScriptSO.FindProperty("remote").boolValue ? typeof(RemoteAttribute) : typeof(LocalAttribute));
-            ShowPropertiesOfClass("LLM Settings", llmScriptSO, attributeClasses, true);
+            ShowPropertiesOfClass("Setup Settings", llmScriptSO, attributeClasses, true);
         }
 
         public void AddModelSettings(SerializedObject llmScriptSO, LLMCharacter llmCharacterScript)
