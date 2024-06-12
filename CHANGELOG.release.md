@@ -1,4 +1,4 @@
-### 🐛 Fixes
+### 🚀 Features
 
-- disable GPU compilation when running on CPU (PR: #159)
+- Feature/use llamacpp (PR: #163)
 

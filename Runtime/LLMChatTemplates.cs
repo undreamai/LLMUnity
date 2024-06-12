@@ -161,30 +161,28 @@ namespace LLMUnity
         protected virtual string PairSuffix() { return ""; }
 
         /// <summary> Constructs the prompt using the template based on a list of ChatMessages </summary>
-        /// <param name="messages"> list of ChatMessages e.g. the LLMClient chat </param>
+        /// <param name="messages"> list of ChatMessages e.g. the LLMCharacter chat </param>
         /// <param name="AIName"> the AI name </param>
         /// <returns>prompt</returns>
-        public virtual string ComputePrompt(List<ChatMessage> messages, string AIName)
+        public virtual string ComputePrompt(List<ChatMessage> messages, string AIName, bool endWithPrefix = true)
         {
             string chatPrompt = PromptPrefix();
-            string systemPrompt = "";
             int start = 0;
             if (messages[0].role == "system")
             {
-                systemPrompt = SystemPrefix() + messages[0].content + SystemSuffix();
+                chatPrompt += RequestPrefix() + SystemPrefix() + messages[0].content + SystemSuffix();
                 start = 1;
             }
             for (int i = start; i < messages.Count; i += 2)
             {
-                chatPrompt += RequestPrefix();
-                if (i == 1 && systemPrompt != "") chatPrompt += systemPrompt;
+                if (i > start || start == 0) chatPrompt += RequestPrefix();
                 chatPrompt += PlayerPrefix(messages[i].role) + PrefixMessageSeparator() + messages[i].content + RequestSuffix();
                 if (i < messages.Count - 1)
                 {
                     chatPrompt += AIPrefix(messages[i + 1].role) + PrefixMessageSeparator() + messages[i + 1].content + PairSuffix();
                 }
             }
-            chatPrompt += AIPrefix(AIName);
+            if (endWithPrefix) chatPrompt += AIPrefix(AIName);
             return chatPrompt;
         }
 
@@ -421,7 +419,7 @@ namespace LLMUnity
         protected override string PairSuffix() { return "<|end|>\n"; }
 
 
-        public override string ComputePrompt(List<ChatMessage> messages, string AIName)
+        public override string ComputePrompt(List<ChatMessage> messages, string AIName, bool endWithPrefix = true)
         {
             List<ChatMessage> messagesSystemPrompt = messages;
             if (messages[0].role == "system")
@@ -436,7 +434,7 @@ namespace LLMUnity
                 messagesSystemPrompt = new List<ChatMessage>(){new ChatMessage { role = "user", content = firstUserMessage }};
                 messagesSystemPrompt.AddRange(messages.GetRange(start, messages.Count - start));
             }
-            return base.ComputePrompt(messagesSystemPrompt, AIName);
+            return base.ComputePrompt(messagesSystemPrompt, AIName, endWithPrefix);
         }
 
         public override string[] GetStop(string playerName, string AIName)
