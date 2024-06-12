@@ -384,7 +384,7 @@ namespace LLMUnity
         public delegate void LLM_TokenizeDelegate(IntPtr LLMObject, string jsonData, IntPtr stringWrapper);
         public delegate void LLM_DetokenizeDelegate(IntPtr LLMObject, string jsonData, IntPtr stringWrapper);
         public delegate void LLM_CompletionDelegate(IntPtr LLMObject, string jsonData, IntPtr stringWrapper);
-        public delegate void LLM_SlotDelegate(IntPtr LLMObject, string jsonData);
+        public delegate void LLM_SlotDelegate(IntPtr LLMObject, string jsonData, IntPtr stringWrapper);
         public delegate void LLM_CancelDelegate(IntPtr LLMObject, int idSlot);
         public delegate int LLM_StatusDelegate(IntPtr LLMObject, IntPtr stringWrapper);
         public delegate IntPtr StringWrapper_ConstructDelegate();
