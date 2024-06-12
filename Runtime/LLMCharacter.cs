@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -109,15 +110,13 @@ namespace LLMUnity
 
         /// \cond HIDE
         public List<ChatMessage> chat;
-        static object chatPromptLock = new object();
-        static object chatAddLock = new object();
+        private SemaphoreSlim chatLock = new SemaphoreSlim(1, 1);
         private string chatTemplate;
         private ChatTemplate template;
         public string grammarString;
         protected int id_slot = -1;
         private List<(string, string)> requestHeaders = new List<(string, string)> { ("Content-Type", "application/json") };
         private List<UnityWebRequest> WIPRequests = new List<UnityWebRequest>();
-        private bool historyLoading = false;
         /// \endcond
 
         /// <summary>
@@ -156,9 +155,12 @@ namespace LLMUnity
 
         protected async Task LoadHistory()
         {
-            historyLoading = true;
-            await Load(GetSavePath(save));
-            historyLoading = false;
+            await chatLock.WaitAsync(); // Acquire the lock
+            try {
+                await Load(GetSavePath(save));
+            } finally {
+                chatLock.Release(); // Release the lock
+            }
         }
 
         public string GetSavePath(string filename)
@@ -408,20 +410,26 @@ namespace LLMUnity
             await InitNKeep();
 
             string json;
-            lock (chatPromptLock) {
+            await chatLock.WaitAsync();
+            try {
                 AddPlayerMessage(query);
                 string prompt = template.ComputePrompt(chat, AIName);
                 json = JsonUtility.ToJson(GenerateRequest(prompt));
                 chat.RemoveAt(chat.Count - 1);
+            } finally {
+                chatLock.Release();
             }
 
             string result = await CompletionRequest(json, callback);
 
             if (addToHistory && result != null)
             {
-                lock (chatAddLock) {
+                await chatLock.WaitAsync();
+                try {
                     AddPlayerMessage(query);
                     AddAIMessage(result);
+                } finally {
+                    chatLock.Release();
                 }
                 if (save != "") _ = Save(save);
             }
@@ -610,7 +618,6 @@ namespace LLMUnity
         {
             // send a post request to the server and call the relevant callbacks to convert the received content and handle it
             // this function has streaming functionality i.e. handles the answer while it is being received
-            while (historyLoading) await Task.Yield();
             while (!llm.started) await Task.Yield();
             string callResult = null;
             switch (endpoint)
