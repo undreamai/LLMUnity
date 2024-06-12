@@ -18,13 +18,13 @@
 [![Documentation](https://img.shields.io/badge/Docs-white.svg?logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwEAYAAAAHkiXEAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEgAACxIB0t1+/AAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAATqSURBVHic7ZtbiE1RGMc349K4M5EwklwjzUhJCMmTJPJAYjQXJJcH8+Blkry4lPJA8aAoJbekDLmUS6E8SHJL5AW5JPf77eHv93C22Wfttc/ee+0zc/4vv+bMXvusvfZa3/q+b33H80oqqaSSSmqrKnPdgXjUvbvYq5f4+7f486eb/rRajRsn7t4tPngg/vol/vkj/vghXr0q7tghzpyZ//79+on79omXLombNondukXrd9GoSxdx8mSxqUm8eVNkgAvl0aPioEFip07i6dP52z15Ig4fbvVY2VVFhbhokXjrlogJiWvAg/jwoXjqVO73+leUny9eiFVV5mfMlLDRBw+KX76ISQ+0LZ8/F00v4uJFsWPHFh83O+rdWzx3TnQ9wCZ+/Sqyl5iux1RmTu3aiYcPi64H1pasALypoOv4/8SJXraEbXc9kLbECxo2TKyuFj9/zt9u+XIvG8LWv3wpuh5QW86f3/JznT+fv93s2S23C1Z72wbhtH692LdvMvdPSgzkhAkiJhT16ZO/PRPOmcr+Rda4aa5nclTeuZP7PDgRpr1g40bPrQYOFF0PYKHEC+raVVy8OFy7R49EArvURU4mrUAqaTY0iB8/2rXD+XCm5mbR9QAWylevorV7/VpkL0ld06eLpkiyWPj9u93179+LpFZwZ1PXtGnitWui64GMStPmG7SH1NSIJBNHjvTSFZvRvHlise0N9JcBtW1/44Y4dqx45IjnU0JxAGLpklPx+9VZFwPp/9v/eZDGjxcZh7dv4+mXtch+up7Rca+MsJvxiRNi6nvBhg25HWprZMaPGeOlqxEjxGKz+XGRTAAmyJnq6sR370TXA2NLW+8HNjZ62dLOnaLrAQ1r2zmqPH482n0mTfJCKmEvCJHUooNZE/369Elct06kqiKsONRfulTEFDsX8QDlIa5nup9374pE8IiZHPY+ly+LZE/37/cM6mC6IB6Vl4urV6fzfUG6d0/csyf37wsXRFInaM4ckTjGdPg+apTYs6dI3RIWwH//1DV1qkiuxNY2FzrTd+2y6y8z2HQU6efZs+KBAyJZ4v+V0h6ArlwROaQP0uPH4ooV4sqV8Xz/4MF211M2wwoOq1mzRAq5Pnywa5+4KDHE9mI7ly0TO3fOvZ6/eZCoKwB32HS0SMFV1DNtImBKHYstBROoQ4fEQk2RaS+qrxejmj5M7NatIhWARS82xUJfAKahzFcdPnq0GLYgy7Rnbd8e6rGKRyzpuNzPBQty709RcNSZf/KkuHCh2GpMDyKbGNcLYE+YMkVks336NFx7XhTZ3szXiBaqtWvFuAOxM2dEZiyH8UErgc8JLNun7E0aFffSI7RP6owZmz9kSO73HjsmXr8ukppYsybSYyQvBp5QfOjQ3M9tRR496pGgLf1JtLlzRZJzlFzGp4SWDnUxFCrdvy+uWiWa3DJe3N69oj8uSEq8CER88uaNOGBAOv2ILGY69TBBJoM8O0t72zaRoztXBzlLlrT8XARW/IQq82JTMv3mKmv0/9CC4mJMYPwrMSETxAyurRUxQVmXP1fEid7mzeK3b+n2Jzb16CFu2SIWmtNJiriVxANsyq0uoCJfTk4G9y4t24/bSQ0rTkP6gVTG3mz//uKMGSK/ucId5Xe9lZUi5eMMLGUgz56J5Hxu3xZ50Xg3RMIltVn9BRja26PYsBHgAAAAAElFTkSuQmCC)](https://undream.ai/LLMUnity)
 
 LLM for Unity enables seamless integration of Large Language Models (LLMs) within the Unity engine.<br>
-It allows you to create intelligent characters that your players can interact with for an immersive experience.<br>
+It allows to create intelligent characters that your players can interact with for an immersive experience.<br>
 LLM for Unity is built on top of the awesome [llama.cpp](https://github.com/ggerganov/llama.cpp) and [llamafile](https://github.com/Mozilla-Ocho/llamafile) libraries.
 
 <sub>
 <a href="#at-a-glance" style="color: black">At a glance</a>&nbsp;&nbsp;•&nbsp;
 <a href="#how-to-help" style=color: black>How to help</a>&nbsp;&nbsp;•&nbsp;
-<a href="#games-using-llm-for-unity" style=color: black>Games using LLM for Unity</a>&nbsp;&nbsp;•&nbsp;
+<a href="#games-using-llmCharacter-for-unity" style=color: black>Games using LLM for Unity</a>&nbsp;&nbsp;•&nbsp;
 <a href="#setup" style=color: black>Setup</a>&nbsp;&nbsp;•&nbsp;
 <a href="#how-to-use" style=color: black>How to use</a>&nbsp;&nbsp;•&nbsp;
 <a href="#examples" style=color: black>Examples</a>&nbsp;&nbsp;•&nbsp;
@@ -37,7 +37,7 @@ LLM for Unity is built on top of the awesome [llama.cpp](https://github.com/gger
 - 💻 Cross-platform! Windows, Linux and macOS
 - 🏠 Runs locally without internet access. No data ever leaves the game!
 - ⚡ Blazing fast inference on CPU and GPU (Nvidia, AMD, Apple Metal)
-- 🤗 Supports major LLM models
+- 🤗 Supports all major LLM models
 - 🔧 Easy to setup, call with a single line of code
 - 💰 Free to use for both personal and commercial purposes
 
@@ -45,7 +45,7 @@ LLM for Unity is built on top of the awesome [llama.cpp](https://github.com/gger
 🚦 [Upcoming Releases](https://github.com/orgs/undreamai/projects/2/views/10)
 
 ## How to help
-- [⭐ Star the repo](https://github.com/undreamai/LLMUnity) and spread the word about the project!
+- [⭐ Star](https://github.com/undreamai/LLMUnity) the repo, leave us a [review](https://assetstore.unity.com/packages/slug/273604) and spread the word about the project!
 - Join us at [Discord](https://discord.gg/RwXKQb6zdv) and say hi!
 - Submit feature requests or bugs as issues or even submit a PR and become a collaborator
 
@@ -54,6 +54,7 @@ LLM for Unity is built on top of the awesome [llama.cpp](https://github.com/gger
 - [I, Chatbot: AISYLUM](https://store.steampowered.com/app/2786750/I_Chatbot_AISYLUM)
 - [Nameless Souls of the Void](https://unicorninteractive.itch.io/nameless-souls-of-the-void)
 - [Murder in Aisle 4](https://roadedlich.itch.io/murder-in-aisle-4)
+- [Finicky Food Delivery AI](https://helixngc7293.itch.io/finicky-food-delivery-ai)
 
 ## Setup
 _Method 1: Install using the asset store_
@@ -67,25 +68,26 @@ _Method 2: Install using the GitHub repo:_
 - Click the `+` button and select `Add package from git URL`
 - Use the repository URL `https://github.com/undreamai/LLMUnity.git` and click `Add`
 
-On _macOS_ you need the Xcode Command Line Tools:
-- From inside a terminal run `xcode-select --install`
-
 ## How to use
 <img height="300" src=".github/character.png"/>
 
-The first step is to create a GameObject for the LLM ♟️:
+First you will setup the LLM for your game 🏎:
 - Create an empty GameObject.<br>In the GameObject Inspector click `Add Component` and select the LLM script.
 - Download one of the default models with the `Download Model` button (~GBs).<br>Or load your own .gguf model with the `Load model` button (see [Use your own model](#use-your-own-model)).
+
+Then you can setup each of your characters as follows 🙋‍♀️:
+- Create an empty GameObject for the character.<br>In the GameObject Inspector click `Add Component` and select the LLMCharacter script.
+- Select the LLM constructed above in the `LLM` field.
 - Define the role of your AI in the `Prompt`. You can also define the name of the AI (`AI Name`) and the player (`Player Name`).
-- (Optional) By default you receive the reply from the model while it is still being generated in real-time (recommended).<br>If you want the full reply in one go, disable the `Stream` option.
-- (Optional) Adjust the server or model settings to your preference (see [Options](#options)).
+
+You can also adjust the LLM and character settings according to your preference (see [Options](#options)).
 
 In your script you can then use it as follows 🦄:
 ``` c#
 using LLMUnity;
 
 public class MyScript {
-  public LLM llm;
+  public LLMCharacter llmCharacter;
   
   void HandleReply(string reply){
     // do something with the reply from the model
@@ -96,7 +98,7 @@ public class MyScript {
     // your game function
     ...
     string message = "Hello bot!";
-    _ = llm.Chat(message, HandleReply);
+    _ = llmCharacter.Chat(message, HandleReply);
     ...
   }
 }
@@ -113,17 +115,17 @@ This is useful if the `Stream` option is enabled for continuous output from the 
     // your game function
     ...
     string message = "Hello bot!";
-    _ = llm.Chat(message, HandleReply, ReplyCompleted);
+    _ = llmCharacter.Chat(message, HandleReply, ReplyCompleted);
     ...
   }
 ```
 
 To stop the chat without waiting for its completion you can use:
 ``` c#
-    llm.CancelRequests();
+    llmCharacter.CancelRequests();
 ```
 
-- Finally, in the Inspector of the GameObject of your script, select the LLM GameObject created above as the llm property.
+- Finally, in the Inspector of the GameObject of your script, select the LLMCharacter GameObject created above as the llmCharacter property.
 
 That's all ✨!
 <br><br>
@@ -131,50 +133,21 @@ You can also:
 
 
 <details>
-<summary>Build multiple characters</summary>
+<summary>Save / Load your chat history</summary>
 
-LLM for Unity allows you to build multiple AI characters efficiently, where each character has it own prompt.<br>
-See the [ServerClient](Samples~/ServerClient) sample for a server-client example.
+To automatically save / load your chat history, you can specify the `Save` parameter of the LLMCharacter to the filename (or relative path) of your choice.
+The file is saved in the [persistentDataPath folder of Unity](https://docs.unity3d.com/ScriptReference/Application-persistentDataPath.html).
+This also saves the state of the LLM which means that the previously cached prompt does not need to be recomputed.
 
-To use multiple characters:
-- create a single GameObject for the LLM as above for the first character.
-- for every additional character create a GameObject using the LLMClient script instead of the LLM script.<br>
-Define the prompt (and other parameters) of the LLMClient for the character
-
-Then in your script:
+To manually save your chat history, you can use:
 ``` c#
-using LLMUnity;
-
-public class MyScript {
-  public LLM cat;
-  public LLMClient dog;
-  public LLMClient bird;
-  
-  void HandleCatReply(string reply){
-    // do something with the reply from the cat character
-    Debug.Log(reply);
-  }
-
-  void HandleDogReply(string reply){
-    // do something with the reply from the dog character
-    Debug.Log(reply);
-  }
-
-  void HandleBirdReply(string reply){
-    // do something with the reply from the bird character
-    Debug.Log(reply);
-  }
-  
-  void Game(){
-    // your game function
-    ...
-    _ = cat.Chat("Hi cat!", HandleCatReply);
-    _ = dog.Chat("Hello dog!", HandleDogReply);
-    _ = bird.Chat("Hiya bird!", HandleBirdReply);
-    ...
-  }
-}
+    llmCharacter.Save("filename");
 ```
+and to load the history:
+``` c#
+    llmCharacter.Load("filename");
+```
+where filename the filename or relative path of your choice.
 
 </details>
 <details>
@@ -189,7 +162,7 @@ public class MyScript {
   void Game(){
     // your game function
     ...
-    _ = llm.Warmup(WarmupCompleted);
+    _ = llmCharacter.Warmup(WarmupCompleted);
     ...
   }
 ```
@@ -204,7 +177,7 @@ public class MyScript {
     // your game function
     ...
     string message = "Hello bot!";
-    _ = llm.Chat(message, HandleReply, ReplyCompleted, false);
+    _ = llmCharacter.Chat(message, HandleReply, ReplyCompleted, false);
     ...
   }
 ```
@@ -218,7 +191,7 @@ public class MyScript {
     // your game function
     ...
     string message = "The cat is away";
-    _ = llm.Complete(message, HandleReply, ReplyCompleted);
+    _ = llmCharacter.Complete(message, HandleReply, ReplyCompleted);
     ...
   }
 ```
@@ -233,7 +206,7 @@ public class MyScript {
     // your game function
     ...
     string message = "Hello bot!";
-    string reply = await llm.Chat(message, HandleReply, ReplyCompleted);
+    string reply = await llmCharacter.Chat(message, HandleReply, ReplyCompleted);
     Debug.Log(reply);
     ...
   }
@@ -241,7 +214,7 @@ public class MyScript {
 
 </details>
 <details>
-<summary>Add a LLM / LLMClient component dynamically</summary>
+<summary>Add a LLM / LLMCharacter component dynamically</summary>
 
 ``` c#
 using UnityEngine;
@@ -250,7 +223,7 @@ using LLMUnity;
 public class MyScript : MonoBehaviour
 {
     LLM llm;
-    LLMClient llmclient;
+    LLMCharacter llmCharacter;
 
     async void Start()
     {
@@ -258,13 +231,13 @@ public class MyScript : MonoBehaviour
         gameObject.SetActive(false);
         llm = gameObject.AddComponent<LLM>();
         await llm.SetModel("mistral-7b-instruct-v0.2.Q4_K_M.gguf");
-        llm.prompt = "A chat between a curious human and an artificial intelligence assistant.";
         gameObject.SetActive(true);
 
         // or a LLMClient object
         gameObject.SetActive(false);
-        llmclient = gameObject.AddComponent<LLMClient>();
-        llmclient.prompt = "A chat between a curious human and an artificial intelligence assistant.";
+        llmCharacter = gameObject.AddComponent<LLMCharacter>();
+        llmCharacter.llm = llm;
+        llmCharacter.SetPrompt("A chat between a curious human and an artificial intelligence assistant.");
         gameObject.SetActive(true);
     }
 }
@@ -274,10 +247,10 @@ public class MyScript : MonoBehaviour
 <details>
 <summary>Use a remote server</summary>
 
-You can also build a remote server that does the processing and have local clients that interact with it. To do that:
-- Create a server based on the `LLM` script or a standard [llama.cpp server](https://github.com/ggerganov/llama.cpp/blob/master/examples/server).
-- If using the `LLM` script for the server, enable the `Remote` option (Advanced options)
-- Create characters with the `LLMClient` script. The characters can be configured to connect to the remote instance by providing the IP address (starting with "http://") and port of the server in the `host`/`port` properties.
+You can also use a remote server that does the processing and implement Characters that interact with it. To do that:
+- Create a project with a GameObject using the `LLM` script as described above. Enable the `Remote` option and optionally configure the port.
+- Create a second project with the game characters using the `LLMCharacter` script as described above.
+  Enable the `Remote` option and configure the host and port with the IP address (starting with "http://") and port of the server.
 
 </details>
 
@@ -286,10 +259,9 @@ A <b>detailed documentation</b> on function level can be found here:
 
 ## Examples
 The [Samples~](Samples~) folder contains several examples of interaction 🤖:
-- [SimpleInteraction](Samples~/SimpleInteraction): Demonstrates a simple interaction between a player and an AI
-- [AsyncStartup](Samples~/AsyncStartup): Demonstrates how to use the async functionality for a loading screen
-- [ServerClient](Samples~/ServerClient): Demonstrates a simple interaction between a player and multiple AIs using a `LLM` and a `LLMClient`
-- [ChatBot](Samples~/ChatBot): Demonstrates interaction between a player and an AI with a UI similar to a messaging app (see image below)
+- [SimpleInteraction](Samples~/SimpleInteraction): Demonstrates a simple interaction with an AI character
+- [MultipleCharacters](Samples~/MultipleCharacters): Demonstrates a simple interaction using multiple AI characters
+- [ChatBot](Samples~/ChatBot): Demonstrates interaction between a player and a AI with a UI similar to a messaging app (see image below)
   
 <img width="400" src=".github/demo.gif">
 
@@ -307,35 +279,32 @@ LLM for Unity uses the [Mistral 7B Instruct](https://huggingface.co/mistralai/Mi
 
 Alternative models can be downloaded from [HuggingFace](https://huggingface.co/models?library=gguf&sort=downloads).<br>
 The required model format is .gguf as defined by the llama.cpp.<br>
-Other model formats can be converted to gguf with the `convert.py` script of the llama.cpp as described [here](https://github.com/ggerganov/llama.cpp/tree/master?tab=readme-ov-file#prepare-data--run).<br>
+HuggingFace models can be converted to gguf with this [online converter](https://huggingface.co/spaces/ggml-org/gguf-my-repo).<br>
 
 ❕ Before using any model make sure you **check their license** ❕
 
 ## Options
 
-- `Show/Hide Advanced Options` Toggle to show/hide advanced options from below
-- `Show/Hide Expert Options` Toggle to show/hide expert options from below
+### LLM Settings
 
-#### 💻 Server Settings
+- `Show/Hide Advanced Options` Toggle to show/hide advanced options from below
+
+#### 💻 Setup Settings
 
 <div>
-<img width="300" src=".github/GameObject.png" align="right"/>
+<img width="300" src=".github/LLM_GameObject.png" align="right"/>
 </div>
 
 - `Num Threads` number of threads to use (default: -1 = all)
 - `Num GPU Layers` number of model layers to offload to the GPU.
 If set to 0 the GPU is not used. Use a large number i.e. >30 to utilise the GPU as much as possible.
 If the user's GPU is not supported, the LLM will fall back to the CPU
-- `Stream` enable to receive the reply from the model while it is still being generated (recommended!).<br>
-If it is disabled, the full reply from the model is received in one go
+- `Remote` select to provide remote access to the LLM
+- `Port` port to run the LLM server (if `Remote` is set)
 - <details><summary>Advanced options</summary>
 
+  - `Debug` select to log the output of the model in the Unity Editor
   - `Parallel Prompts` number of prompts that can happen in parallel (default: -1 = number of LLM/LLMClient objects)
-  - `Debug` enable to log the output of the model in the Unity Editor
-  - `Asynchronous Startup` enable to start the server asynchronously
-  - `Remote` enable to allow remote access to the server
-  - `Port` port on which to run the server
-  - `Kill Existing Servers On Start` enable to kill existing LLM servers used by the Unity project on startup to handle Unity crashes
 
 </details>
 
@@ -343,18 +312,48 @@ If it is disabled, the full reply from the model is received in one go
 - `Download model` click to download one of the default models
 - `Load model` click to load your own model in .gguf format
 - `Model` the path of the model being used (relative to the Assets/StreamingAssets folder)
-- <details><summary><code>Chat Template</code> the chat template to use for constructing the prompts</summary> The chat template is determined automatically by the chat template of the model (if it exists) or the model name. The "chatml" and "alpaca" templates work with most of the models.</details>
+- <details><summary><code>Chat Template</code> the chat template to use for constructing the prompts</summary> The chat template is determined automatically by the chat template of the model (if it exists) or the model name. <br> The "chatml" template works with most of the models.</details>
 - <details><summary>Advanced options</summary>
 
   - `Load lora` click to load a LoRA model in .bin format
-  - `Load grammar` click to load a grammar in .gbnf format
-  - `Lora` the path of the LoRA model being used (relative to the Assets/StreamingAssets folder)
-  - `Grammar` the path of the grammar being used (relative to the Assets/StreamingAssets folder)
+  - `Lora` the path of the LoRA being used (relative to the Assets/StreamingAssets folder)
   - <details><summary><code>Context Size</code> size of the prompt context (0 = context size of the model)</summary> This is the number of tokens the model can take as input when generating responses.</details>
   - `Batch Size` batch size for prompt processing (default: 512)
-  - `Seed` seed for reproducibility. For random results every time use -1
+
+</details>
+
+
+### LLMCharacter Settings
+
+- `Show/Hide Advanced Options` Toggle to show/hide advanced options from below
+
+#### 💻 Setup Settings
+<div>
+<img width="300" src=".github/LLMCharacter_GameObject.png" align="right"/>
+</div>
+
+- `Remote` whether the LLM used is remote or local
+- `LLM` the LLM GameObject (if `Remote` is not set)
+- `Hort` ip of the LLM (if `Remote` is set)
+- `Port` port of the LLM (if `Remote` is set)
+- <details><summary><code>Save</code> the save filename or relative path</summary> If set, the chat history and LLM state is automatically saved to file specified. <br> The LLM state is saved to the specified filename and the chat history with an added json suffix. <br> Both files are saved in the [persistentDataPath folder of Unity](https://docs.unity3d.com/ScriptReference/Application-persistentDataPath.html).</details>
+- <details><summary>Advanced options</summary>
+
+  - `Debug Prompt` select to log the constructed prompts in the Unity Editor
+
+</details>
+
+#### 🤗 Model Settings
+- `Stream` select to receive the reply from the model as it is produced (recommended!).<br>
+If it is not selected, the full reply from the model is received in one go
+
+- <details><summary>Advanced options</summary>
+
+  - `Load grammar` click to load a grammar in .gbnf format
+  - `Grammar` the path of the grammar being used (relative to the Assets/StreamingAssets folder)
   - <details><summary><code>Cache Prompt</code> save the ongoing prompt from the chat (default: true)</summary> Saves the prompt while it is being created by the chat to avoid reprocessing the entire prompt every time</details>
-  - <details><summary><code>Num Predict</code> maximum number of tokens to predict (default: 256, -1 = infinity, -2 = until context filled)</summary>This is the maximum amount of tokens the model will predict. When N tokens are reached the model will stop generating. This means words / sentences might not get finished if this is too low. </details>
+  - `Seed` seed for reproducibility. For random results every time use -1
+  - <details><summary><code>Num Predict</code> maximum number of tokens to predict (default: 256, -1 = infinity, -2 = until context filled)</summary>This is the maximum amount of tokens the model will maximum predict. When N tokens are reached the model will stop generating. This means words / sentences might not get finished if this is too low. </details>
   - <details><summary><code>Temperature</code> LLM temperature, lower values give more deterministic answers (default: 0.2)</summary>The temperature setting adjusts how random the generated responses are. Turning it up makes the generated choices more varied and unpredictable. Turning it down makes the generated responses more predictable and focused on the most likely options.</details>
   - <details><summary><code>Top K</code> top-k sampling (default: 40, 0 = disabled)</summary>The top k value controls the top k most probable tokens at each step of generation. This value can help fine tune the output and make this adhere to specific patterns or constraints.</details>
   - <details><summary><code>Top P</code> top-p sampling (default: 0.9, 1.0 = disabled)</summary>The top p value controls the cumulative probability of generated tokens. The model will generate tokens until this theshold (p) is reached. By lowering this value you can shorten output & encourage / discourage more diverse outputs.</details>
@@ -362,8 +361,6 @@ If it is disabled, the full reply from the model is received in one go
   - <details><summary><code>Repeat Penalty</code> control the repetition of token sequences in the generated text (default: 1.1)</summary>The penalty is applied to repeated tokens.</details>
   - <details><summary><code>Presence Penalty</code> repeated token presence penalty (default: 0.0, 0.0 = disabled)</summary> Positive values penalize new tokens based on whether they appear in the text so far, increasing the model's likelihood to talk about new topics.</details>
   - <details><summary><code>Frequency Penalty</code> repeated token frequency penalty (default: 0.0, 0.0 = disabled)</summary> Positive values penalize new tokens based on their existing frequency in the text so far, decreasing the model's likelihood to repeat the same line verbatim.</details>
-- <details><summary>Expert options</summary>
-
   - `Tfs_z`: enable tail free sampling with parameter z (default: 1.0, 1.0 = disabled).
   - `Typical P`: enable locally typical sampling with parameter p (default: 1.0, 1.0 = disabled).
   - `Repeat Last N`: last N tokens to consider for penalizing repetition (default: 64, 0 = disabled, -1 = ctx-size).
@@ -374,8 +371,6 @@ If it is disabled, the full reply from the model is received in one go
   - `Mirostat Eta`: set the Mirostat learning rate, parameter eta (default: 0.1).
   - `N Probs`: if greater than 0, the response also contains the probabilities of top N tokens for each generated token (default: 0)
   - `Ignore Eos`: enable to ignore end of stream tokens and continue generating (default: false).
-
-    </details>
 
 </details>
 
