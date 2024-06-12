@@ -30,6 +30,8 @@ namespace LLMUnity
         /// If it is not selected, the full reply from the model is received in one go </summary>
         [Model] public bool stream = true;
 
+        /// <summary> select to log the constructed prompt the Unity Editor. </summary>
+        [LLMAdvanced] public bool debugPrompt = false;
         /// <summary> grammar file used for the LLM in .cbnf format (relative to the Assets/StreamingAssets folder) </summary>
         [ModelAdvanced] public string grammar = null;
         /// <summary> seed for reproducibility. For random results every time set to -1. </summary>
@@ -261,7 +263,7 @@ namespace LLMUnity
         {
             // setup the request struct
             ChatRequest chatRequest = new ChatRequest();
-            Debug.Log(prompt);
+            if (debugPrompt) Debug.Log(prompt);
             chatRequest.prompt = prompt;
             chatRequest.id_slot = id_slot;
             chatRequest.temperature = temperature;
