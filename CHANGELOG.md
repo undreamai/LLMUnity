@@ -1,3 +1,9 @@
+## v2.0.0
+#### 🚀 Features
+
+- Feature/use llamacpp (PR: #163)
+
+
 ## v1.2.9
 #### 🐛 Fixes
 
