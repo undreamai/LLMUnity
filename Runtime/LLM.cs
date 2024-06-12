@@ -249,6 +249,7 @@ namespace LLMUnity
         }
 
         public delegate void LLMStatusCallback(IntPtr LLMObject, IntPtr stringWrapper);
+        public delegate void LLMSimpleCallback(IntPtr LLMObject, string json_data);
         public delegate void LLMReplyCallback(IntPtr LLMObject, string json_data, IntPtr stringWrapper);
 
         StreamWrapper ConstructStreamWrapper(Callback<string> streamCallback = null, bool clearOnUpdate = false)
@@ -325,6 +326,16 @@ namespace LLMUnity
             LLMReplyCallback callback = (IntPtr LLMObject, string jsonData, IntPtr strWrapper) =>
             {
                 llmlib.LLM_Detokenize(LLMObject, jsonData, strWrapper);
+            };
+            return await LLMReply(callback, json);
+        }
+
+        public async Task<string> Slot(string json)
+        {
+            AssertStarted();
+            LLMReplyCallback callback = (IntPtr LLMObject, string jsonData, IntPtr strWrapper) =>
+            {
+                llmlib.LLM_Slot(LLMObject, jsonData, strWrapper);
             };
             return await LLMReply(callback, json);
         }
