@@ -90,5 +90,20 @@ namespace LLMUnity
     {
         public string template;
     }
+
+    [Serializable]
+    public struct SlotRequest
+    {
+        public int id_slot;
+        public string action;
+        public string filename;
+    }
+
+    [Serializable]
+    public struct SlotResult
+    {
+        public int id_slot;
+        public string filename;
+    }
 }
 /// \endcond
