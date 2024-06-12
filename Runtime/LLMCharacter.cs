@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -327,6 +328,12 @@ namespace LLMUnity
             return result.tokens;
         }
 
+        protected string SlotContent(SlotResult result)
+        {
+            // get the tokens from a tokenize result received from the endpoint
+            return result.filename;
+        }
+
         protected string DetokenizeContent(TokenizeRequest result)
         {
             // get content from a chat result received from the endpoint
@@ -493,6 +500,82 @@ namespace LLMUnity
             return await PostRequest<TokenizeRequest, string>(json, "detokenize", DetokenizeContent, callback);
         }
 
+        private async Task<string> Slot(string filename, string action)
+        {
+            SlotRequest slotRequest = new SlotRequest();
+            slotRequest.id_slot = id_slot;
+            slotRequest.filename = filename;
+            slotRequest.action = action;
+            string json = JsonUtility.ToJson(slotRequest);
+            return await PostRequest<SlotResult, string>(json, "slots", SlotContent);
+        }
+
+        public async Task<string> Save(string filename, bool overwrite = true)
+        {
+            if (!overwrite && File.Exists(filename))
+            {
+                Debug.LogError($"File {filename} already exists");
+                return null;
+            }
+
+            string llmFilename = filename + ".bin";
+            string result = await Slot(llmFilename, "save");
+
+            string json = JsonUtility.ToJson(new ChatListWrapper { chat = chat });
+            using (FileStream zipToOpen = new FileStream(filename, FileMode.Create))
+            {
+                using (ZipArchive archive = new ZipArchive(zipToOpen, ZipArchiveMode.Create))
+                {
+                    archive.CreateEntryFromFile(llmFilename, "llm_cache.bin");
+                    ZipArchiveEntry entry = archive.CreateEntry("chat.json");
+                    using (StreamWriter writer = new StreamWriter(entry.Open())) { writer.Write(json); }
+                }
+            }
+
+            File.Delete(llmFilename);
+            return result;
+        }
+
+        public async Task<string> Load(string filename)
+        {
+            if (!File.Exists(filename))
+            {
+                Debug.LogError($"File {filename} does not exist.");
+                return null;
+            }
+
+            string llmFilename = filename + ".bin";
+            using (FileStream zipToOpen = new FileStream(filename, FileMode.Open))
+            {
+                using (ZipArchive archive = new ZipArchive(zipToOpen, ZipArchiveMode.Read))
+                {
+                    ZipArchiveEntry entry = archive.GetEntry("chat.json");
+                    if (entry == null)
+                    {
+                        Debug.LogError("File chat.json does not exist.");
+                        return null;
+                    }
+                    using (StreamReader reader = new StreamReader(entry.Open()))
+                    {
+                        string json = reader.ReadToEnd();
+                        chat = JsonUtility.FromJson<ChatListWrapper>(json).chat;
+                    }
+
+                    entry = archive.GetEntry("llm_cache.bin");
+                    if (entry == null)
+                    {
+                        Debug.LogError("File llm_cache.bin does not exist.");
+                        return null;
+                    }
+                    entry.ExtractToFile(llmFilename);
+                }
+            }
+
+            string result = await Slot(llmFilename, "restore");
+            File.Delete(llmFilename);
+            return result;
+        }
+
         protected Ret ConvertContent<Res, Ret>(string response, ContentCallback<Res, Ret> getContent = null)
         {
             // template function to convert the json received and get the content
@@ -550,6 +633,9 @@ namespace LLMUnity
                 case "detokenize":
                     callResult = await llm.Detokenize(json);
                     break;
+                case "slots":
+                    callResult = await llm.Slot(json);
+                    break;
                 case "completion":
                     Callback<string> callbackString = null;
                     if (callback != null)
@@ -582,6 +668,12 @@ namespace LLMUnity
         {
             // send a post request to the server and call the relevant callbacks to convert the received content and handle it
             // this function has streaming functionality i.e. handles the answer while it is being received
+            if (endpoint == "slots")
+            {
+                Debug.LogError("Saving and loading is not currently supported in remote setting");
+                return default;
+            }
+
             Ret result = default;
             byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(json);
             using (var request = UnityWebRequest.Put($"{host}:{port}/{endpoint}", jsonToSend))
@@ -624,5 +716,11 @@ namespace LLMUnity
             if (remote) return await PostRequestRemote(json, endpoint, getContent, callback);
             return await PostRequestLocal(json, endpoint, getContent, callback);
         }
+    }
+
+    [Serializable]
+    public class ChatListWrapper
+    {
+        public List<ChatMessage> chat;
     }
 }
