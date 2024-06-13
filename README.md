@@ -298,6 +298,7 @@ HuggingFace models can be converted to gguf with this [online converter](https:/
 - `Num Threads` number of threads to use (default: -1 = all)
 - `Num GPU Layers` number of model layers to offload to the GPU.
 If set to 0 the GPU is not used. Use a large number i.e. >30 to utilise the GPU as much as possible.
+Note that higher values of context size will use more VRAM.
 If the user's GPU is not supported, the LLM will fall back to the CPU
 - `Remote` select to provide remote access to the LLM
 - `Port` port to run the LLM server (if `Remote` is set)
@@ -318,7 +319,7 @@ If the user's GPU is not supported, the LLM will fall back to the CPU
 
   - `Load lora` click to load a LoRA model in .bin format
   - `Lora` the path of the LoRA being used (relative to the Assets/StreamingAssets folder)
-  - <details><summary><code>Context Size</code> size of the prompt context (0 = context size of the model)</summary> This is the number of tokens the model can take as input when generating responses.</details>
+  - <details><summary><code>Context Size</code> size of the prompt context (0 = context size of the model)</summary> This is the number of tokens the model can take as input when generating responses. Higher values use more RAM or VRAM (if using GPU). </details>
   - `Batch Size` batch size for prompt processing (default: 512)
 
 </details>
