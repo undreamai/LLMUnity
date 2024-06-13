@@ -35,9 +35,9 @@ LLM for Unity is built on top of the awesome [llama.cpp](https://github.com/gger
 
 ## At a glance
 - 💻 Cross-platform! Windows, Linux and macOS
-- 🏠 Runs locally without internet access. No data ever leave the game!
+- 🏠 Runs locally without internet access. No data ever leaves the game!
 - ⚡ Blazing fast inference on CPU and GPU (Nvidia, AMD, Apple Metal)
-- 🤗 Support of the major LLM models
+- 🤗 Supports all major LLM models
 - 🔧 Easy to setup, call with a single line of code
 - 💰 Free to use for both personal and commercial purposes
 
@@ -104,7 +104,7 @@ public class MyScript {
 }
 ```
 You can also specify a function to call when the model reply has been completed.<br>
-This is useful if the `Stream` option is selected for continuous output from the model (default behaviour):
+This is useful if the `Stream` option is enabled for continuous output from the model (default behaviour):
 ``` c#
   void ReplyCompleted(){
     // do something when the reply from the model is complete
@@ -120,7 +120,7 @@ This is useful if the `Stream` option is selected for continuous output from the
   }
 ```
 
-To stop the chat without waiting its completion you can use:
+To stop the chat without waiting for its completion you can use:
 ``` c#
     llmCharacter.CancelRequests();
 ```
@@ -169,7 +169,7 @@ where filename the filename or relative path of your choice.
 
 </details>
 <details>
-<summary>Add or not the message to the chat/prompt history</summary>
+<summary>Decide whether or not to add the message to the chat/prompt history</summary>
 
   The last argument of the `Chat` function is a boolean that specifies whether to add the message to the history (default: true):
 ``` c#
@@ -247,7 +247,7 @@ public class MyScript : MonoBehaviour
 <details>
 <summary>Use a remote server</summary>
 
-You can also use a remote server that does the processing and have Characters that interact with it.To do that:
+You can also use a remote server that does the processing and implement Characters that interact with it. To do that:
 - Create a project with a GameObject using the `LLM` script as described above. Enable the `Remote` option and optionally configure the port.
 - Create a second project with the game characters using the `LLMCharacter` script as described above.
   Enable the `Remote` option and configure the host and port with the IP address (starting with "http://") and port of the server.
@@ -259,8 +259,8 @@ A <b>detailed documentation</b> on function level can be found here:
 
 ## Examples
 The [Samples~](Samples~) folder contains several examples of interaction 🤖:
-- [SimpleInteraction](Samples~/SimpleInteraction): Demonstrates simple interaction with an AI character
-- [MultipleCharacters](Samples~/MultipleCharacters): Demonstrates simple interaction using multiple AI characters
+- [SimpleInteraction](Samples~/SimpleInteraction): Demonstrates a simple interaction with an AI character
+- [MultipleCharacters](Samples~/MultipleCharacters): Demonstrates a simple interaction using multiple AI characters
 - [ChatBot](Samples~/ChatBot): Demonstrates interaction between a player and a AI with a UI similar to a messaging app (see image below)
   
 <img width="400" src=".github/demo.gif">
@@ -315,8 +315,8 @@ If the user's GPU is not supported, the LLM will fall back to the CPU
 - <details><summary><code>Chat Template</code> the chat template to use for constructing the prompts</summary> The chat template is determined automatically by the chat template of the model (if it exists) or the model name. <br> The "chatml" template works with most of the models.</details>
 - <details><summary>Advanced options</summary>
 
-  - `Load lora` click to load a LORA model in .bin format
-  - `Lora` the path of the Lora being used (relative to the Assets/StreamingAssets folder)
+  - `Load lora` click to load a LoRA model in .bin format
+  - `Lora` the path of the LoRA being used (relative to the Assets/StreamingAssets folder)
   - <details><summary><code>Context Size</code> size of the prompt context (0 = context size of the model)</summary> This is the number of tokens the model can take as input when generating responses.</details>
   - `Batch Size` batch size for prompt processing (default: 512)
 
@@ -350,27 +350,27 @@ If it is not selected, the full reply from the model is received in one go
 - <details><summary>Advanced options</summary>
 
   - `Load grammar` click to load a grammar in .gbnf format
-  - `Grammar` the path of the Grammar being used (relative to the Assets/StreamingAssets folder)
-  - <details><summary><code>Cache Prompt</code> save the ongoing prompt from the chat (default: true)</summary> Saves the prompt as it is being created by the chat to avoid reprocessing the entire prompt every time</details>
-  - `Seed` seed for reproducibility. For random results every time select -1
-  - <details><summary><code>Num Predict</code> number of tokens to predict (default: 256, -1 = infinity, -2 = until context filled)</summary>This is the amount of tokens the model will maximum predict. When N predict is reached the model will stop generating. This means words / sentences might not get finished if this is too low. </details>
-  - <details><summary><code>Temperature</code> LLM temperature, lower values give more deterministic answers (default: 0.2)</summary>The temperature setting adjusts how random the generated responses are. Turning it up makes the generated choices more varied and unpredictable. Turning it down  makes the generated responses more predictable and focused on the most likely options.</details>
+  - `Grammar` the path of the grammar being used (relative to the Assets/StreamingAssets folder)
+  - <details><summary><code>Cache Prompt</code> save the ongoing prompt from the chat (default: true)</summary> Saves the prompt while it is being created by the chat to avoid reprocessing the entire prompt every time</details>
+  - `Seed` seed for reproducibility. For random results every time use -1
+  - <details><summary><code>Num Predict</code> maximum number of tokens to predict (default: 256, -1 = infinity, -2 = until context filled)</summary>This is the maximum amount of tokens the model will maximum predict. When N tokens are reached the model will stop generating. This means words / sentences might not get finished if this is too low. </details>
+  - <details><summary><code>Temperature</code> LLM temperature, lower values give more deterministic answers (default: 0.2)</summary>The temperature setting adjusts how random the generated responses are. Turning it up makes the generated choices more varied and unpredictable. Turning it down makes the generated responses more predictable and focused on the most likely options.</details>
   - <details><summary><code>Top K</code> top-k sampling (default: 40, 0 = disabled)</summary>The top k value controls the top k most probable tokens at each step of generation. This value can help fine tune the output and make this adhere to specific patterns or constraints.</details>
-  - <details><summary><code>Top P</code> top-p sampling (default: 0.9, 1.0 = disabled)</summary>The top p value controls the cumulative probability of generated tokens. The model will generate tokens until this theshold (p) is reached. By lowering this value you can shorten output & encourage / discourage more diverse output.</details>
+  - <details><summary><code>Top P</code> top-p sampling (default: 0.9, 1.0 = disabled)</summary>The top p value controls the cumulative probability of generated tokens. The model will generate tokens until this theshold (p) is reached. By lowering this value you can shorten output & encourage / discourage more diverse outputs.</details>
   - <details><summary><code>Min P</code> minimum probability for a token to be used (default: 0.05)</summary> The probability is defined relative to the probability of the most likely token.</details>
   - <details><summary><code>Repeat Penalty</code> control the repetition of token sequences in the generated text (default: 1.1)</summary>The penalty is applied to repeated tokens.</details>
   - <details><summary><code>Presence Penalty</code> repeated token presence penalty (default: 0.0, 0.0 = disabled)</summary> Positive values penalize new tokens based on whether they appear in the text so far, increasing the model's likelihood to talk about new topics.</details>
   - <details><summary><code>Frequency Penalty</code> repeated token frequency penalty (default: 0.0, 0.0 = disabled)</summary> Positive values penalize new tokens based on their existing frequency in the text so far, decreasing the model's likelihood to repeat the same line verbatim.</details>
   - `Tfs_z`: enable tail free sampling with parameter z (default: 1.0, 1.0 = disabled).
   - `Typical P`: enable locally typical sampling with parameter p (default: 1.0, 1.0 = disabled).
-  - `Repeat Last N`: last n tokens to consider for penalizing repetition (default: 64, 0 = disabled, -1 = ctx-size).
+  - `Repeat Last N`: last N tokens to consider for penalizing repetition (default: 64, 0 = disabled, -1 = ctx-size).
   - `Penalize Nl`: penalize newline tokens when applying the repeat penalty (default: true).
   - `Penalty Prompt`: prompt for the purpose of the penalty evaluation. Can be either `null`, a string or an array of numbers representing tokens (default: `null` = use original `prompt`).
   - `Mirostat`: enable Mirostat sampling, controlling perplexity during text generation (default: 0, 0 = disabled, 1 = Mirostat, 2 = Mirostat 2.0).
   - `Mirostat Tau`: set the Mirostat target entropy, parameter tau (default: 5.0).
   - `Mirostat Eta`: set the Mirostat learning rate, parameter eta (default: 0.1).
   - `N Probs`: if greater than 0, the response also contains the probabilities of top N tokens for each generated token (default: 0)
-  - `Ignore Eos`: ignore end of stream token and continue generating (default: false).
+  - `Ignore Eos`: enable to ignore end of stream tokens and continue generating (default: false).
 
 </details>
 
