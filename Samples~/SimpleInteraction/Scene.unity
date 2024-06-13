@@ -487,9 +487,9 @@ MonoBehaviour:
   stream: 1
   debugPrompt: 0
   grammar: 
+  cachePrompt: 1
   seed: 0
   numPredict: 256
-  cachePrompt: 1
   temperature: 0.2
   topK: 40
   topP: 0.9
@@ -1040,6 +1040,7 @@ MonoBehaviour:
   numGPULayers: 0
   debug: 0
   parallelPrompts: -1
+  dontDestroyOnLoad: 1
   port: 13333
   model: 
   lora: 

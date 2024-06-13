@@ -305,6 +305,7 @@ If the user's GPU is not supported, the LLM will fall back to the CPU
 
   - `Debug` select to log the output of the model in the Unity Editor
   - `Parallel Prompts` number of prompts that can happen in parallel (default: -1 = number of LLM/LLMClient objects)
+  - `Dont Destroy On Load` select to not destroy the LLM GameObject when loading a new Scene
 
 </details>
 
