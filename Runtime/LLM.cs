@@ -39,6 +39,8 @@ namespace LLMUnity
         [LLMAdvanced] public bool debug = false;
         /// <summary> number of prompts that can happen in parallel (-1 = number of LLMCharacter objects) </summary>
         [LLMAdvanced] public int parallelPrompts = -1;
+        /// <summary> select to not destroy the LLM GameObject when loading a new Scene. </summary>
+        [LLMAdvanced] public bool dontDestroyOnLoad = true;
         /// <summary> port to use for the LLM server </summary>
         [Remote] public int port = 13333;
         /// <summary> the path of the model being used (relative to the Assets/StreamingAssets folder).
@@ -162,6 +164,7 @@ namespace LLMUnity
         {
             if (!enabled) return;
             StartLLMServer();
+            if (dontDestroyOnLoad) DontDestroyOnLoad(gameObject);
         }
 
         private void SetupLogging()
