@@ -428,7 +428,8 @@ namespace LLMUnity
                 int start = 1;
                 if (messages.Count > 1)
                 {
-                    firstUserMessage += "\n\n" + messages[1].content;
+                    if (firstUserMessage != "") firstUserMessage += "\n\n";
+                    firstUserMessage += messages[1].content;
                     start = 2;
                 }
                 messagesSystemPrompt = new List<ChatMessage>(){new ChatMessage { role = "user", content = firstUserMessage }};
