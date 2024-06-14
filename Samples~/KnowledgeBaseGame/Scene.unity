@@ -6049,7 +6049,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a329c2b464600fb51a49b46dde889482, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SelectedOption: 2
+  SelectedOption: 0
   downloadProgress: 1
 --- !u!4 &1772403372
 Transform:
@@ -7239,21 +7239,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   advancedOptions: 0
   numThreads: -1
-  numGPULayers: 30
+  numGPULayers: 0
   debug: 0
   parallelPrompts: -1
   dontDestroyOnLoad: 1
   port: 13333
-  model: Phi-3-mini-4k-instruct-q4.gguf
+  model: 
   lora: 
   contextSize: 0
   batchSize: 512
   remote: 0
-  SelectedModel: 3
+  SelectedModel: 0
   modelProgress: 1
   modelCopyProgress: 1
   modelHide: 1
-  chatTemplate: phi-3
+  chatTemplate: chatml
 --- !u!4 &2142407557
 Transform:
   m_ObjectHideFlags: 0
