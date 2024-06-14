@@ -4,6 +4,7 @@ using System.IO;
 using System.Diagnostics;
 using Debug = UnityEngine.Debug;
 using UnityEngine.UI;
+using System.Collections;
 using RAGSearchUnity;
 using LLMUnity;
 
@@ -76,6 +77,7 @@ namespace LLMUnitySamples
     public class KnowledgeBaseGame : KnowledgeBaseGameUI
     {
         public LLMCharacter llmCharacter;
+        public Embedding embedding;
 
         Dictionary<string, Bot> bots = new Dictionary<string, Bot>();
         Dictionary<string, RawImage> botImages = new Dictionary<string, RawImage>();
@@ -84,7 +86,7 @@ namespace LLMUnitySamples
         RawImage currentImage;
         List<(string botName, TextAsset asset, RawImage image)> botInfo;
 
-        protected new void Start()
+        new void Start()
         {
             base.Start();
             botInfo = new List<(string botName, TextAsset asset, RawImage image)>()
@@ -96,16 +98,16 @@ namespace LLMUnitySamples
             StartCoroutine(InitModels());
         }
 
-        IEnumerator<string> InitModels()
+        IEnumerator InitModels()
         {
             PlayerText.interactable = false;
             yield return null;
-            string outputDir = Path.Combine(Application.streamingAssetsPath, "MysteryOfTheThreeBots");
+            string outputDir = Path.Combine(Application.streamingAssetsPath, "KnowledgeBaseGame");
             if (!Directory.Exists(outputDir)) Directory.CreateDirectory(outputDir);
 
             // init the bots with the embeddings
             EmbeddingModel model = embedding.GetModel();
-            if (model == null) throw new System.Exception("Please select an Embedding model in the HamletSearch GameObject!");
+            if (model == null) throw new System.Exception("Please select a model in the Embedding GameObject!");
             foreach ((string botName, TextAsset asset, RawImage image) in botInfo)
             {
                 string embeddingsPath = Path.Combine(outputDir, botName + ".zip");
@@ -163,6 +165,12 @@ namespace LLMUnitySamples
             llmCharacter.CancelRequests();
             AIReplyComplete();
         }
+
+        public void OnValidate()
+        {
+            if(embedding.SelectedOption == 0) Debug.LogWarning("Please select a model in the Embedding GameObject!");
+            if(llmCharacter.llm.model == "") Debug.LogWarning("Please select a model in the LLM GameObject!");
+        }
     }
 
     public class KnowledgeBaseGameUI : MonoBehaviour
@@ -177,7 +185,6 @@ namespace LLMUnitySamples
         public RawImage ButlerImage;
         public RawImage MaidImage;
         public RawImage ChefImage;
-        public Embedding embedding;
 
         public Button NotesButton;
         public Button MapButton;
