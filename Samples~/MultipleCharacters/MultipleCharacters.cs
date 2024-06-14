@@ -78,9 +78,14 @@ namespace LLMUnitySamples
             Application.Quit();
         }
 
-        public void OnValidate()
+        bool onValidateWarning = true;
+        void OnValidate()
         {
-            if (llmCharacter1.llm.model == "") Debug.LogWarning($"Please select a model in the {llmCharacter1.llm.gameObject.name} GameObject!");
+            if (onValidateWarning && llmCharacter1.llm.model == "")
+            {
+                Debug.LogWarning($"Please select a model in the {llmCharacter1.llm.gameObject.name} GameObject!");
+                onValidateWarning = false;
+            }
         }
     }
 }
