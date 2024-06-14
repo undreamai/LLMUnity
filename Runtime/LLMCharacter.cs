@@ -156,9 +156,12 @@ namespace LLMUnity
         protected async Task LoadHistory()
         {
             await chatLock.WaitAsync(); // Acquire the lock
-            try {
+            try
+            {
                 await Load(GetSavePath(save));
-            } finally {
+            }
+            finally
+            {
                 chatLock.Release(); // Release the lock
             }
         }
@@ -411,12 +414,15 @@ namespace LLMUnity
 
             string json;
             await chatLock.WaitAsync();
-            try {
+            try
+            {
                 AddPlayerMessage(query);
                 string prompt = template.ComputePrompt(chat, AIName);
                 json = JsonUtility.ToJson(GenerateRequest(prompt));
                 chat.RemoveAt(chat.Count - 1);
-            } finally {
+            }
+            finally
+            {
                 chatLock.Release();
             }
 
@@ -425,10 +431,13 @@ namespace LLMUnity
             if (addToHistory && result != null)
             {
                 await chatLock.WaitAsync();
-                try {
+                try
+                {
                     AddPlayerMessage(query);
                     AddAIMessage(result);
-                } finally {
+                }
+                finally
+                {
                     chatLock.Release();
                 }
                 if (save != "") _ = Save(save);

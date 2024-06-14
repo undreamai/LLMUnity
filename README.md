@@ -261,6 +261,7 @@ A <b>detailed documentation</b> on function level can be found here:
 The [Samples~](Samples~) folder contains several examples of interaction 🤖:
 - [SimpleInteraction](Samples~/SimpleInteraction): Demonstrates a simple interaction with an AI character
 - [MultipleCharacters](Samples~/MultipleCharacters): Demonstrates a simple interaction using multiple AI characters
+- [KnowledgeBaseGame](Samples~/KnowledgeBaseGame): Simple detective game using a knowledge base to provide information to the LLM based on [google/mysteryofthreebots](https://github.com/google/mysteryofthreebots)
 - [ChatBot](Samples~/ChatBot): Demonstrates interaction between a player and a AI with a UI similar to a messaging app (see image below)
   
 <img width="400" src=".github/demo.gif">
