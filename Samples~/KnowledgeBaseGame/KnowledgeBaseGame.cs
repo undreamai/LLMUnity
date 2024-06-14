@@ -168,8 +168,8 @@ namespace LLMUnitySamples
 
         public void OnValidate()
         {
-            if(embedding.SelectedOption == 0) Debug.LogWarning("Please select a model in the Embedding GameObject!");
-            if(llmCharacter.llm.model == "") Debug.LogWarning("Please select a model in the LLM GameObject!");
+            if (embedding.SelectedOption == 0) Debug.LogWarning($"Please select a model in the {embedding.gameObject.name} GameObject!");
+            if (llmCharacter.llm.model == "") Debug.LogWarning($"Please select a model in the {llmCharacter.llm.gameObject.name} GameObject!");
         }
     }
 

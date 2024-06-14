@@ -152,7 +152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9898ca92690864a28e9d37d7ba07036, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  llm: {fileID: 498662973}
+  llmCharacter: {fileID: 498662973}
   playerText: {fileID: 1966107897}
   AIText: {fileID: 887085510}
 --- !u!4 &107963746

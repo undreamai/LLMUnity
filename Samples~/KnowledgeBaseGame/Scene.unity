@@ -1032,7 +1032,6 @@ MonoBehaviour:
   ButlerImage: {fileID: 574317512}
   MaidImage: {fileID: 961591108}
   ChefImage: {fileID: 718663248}
-  embedding: {fileID: 1772403371}
   NotesButton: {fileID: 1568690080}
   MapButton: {fileID: 692572909}
   SolveButton: {fileID: 1023571710}
@@ -1049,6 +1048,7 @@ MonoBehaviour:
   Answer2: {fileID: 504847329}
   Answer3: {fileID: 1278063795}
   llmCharacter: {fileID: 1275496423}
+  embedding: {fileID: 1772403371}
 --- !u!1 &504847327
 GameObject:
   m_ObjectHideFlags: 0
@@ -6049,7 +6049,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a329c2b464600fb51a49b46dde889482, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SelectedOption: 2
+  SelectedOption: 0
   downloadProgress: 1
 --- !u!4 &1772403372
 Transform:
