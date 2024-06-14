@@ -1,0 +1,5 @@
+Query|Response|States|NewState
+{{any}}|<looks annoyed> Don't bother me, I'm cooking.|initial|state2
+{{any}}|<looks angry> I never leave the kitchen. Why do you keep asking me questions?|state2|state3
+{{any}}|<looks furious> I don't know anything! Must you disturb me while I'm creating my art? My food is my art! My...Bzzzzzzt...<maintenance voice> emotional overheat. Now shutting down. Apologies. Chef bot will be back online in no less than 36 hours.|state3|state4
+{{any}}|Bzzzzzzt|state4|
