@@ -1,6 +1,7 @@
 ### 🚀 Features
 
 - Feature/use llamacpp (PR: #163)
+- Sample with RAG and LLM integration (PR: #170)
 
 ### 🐛 Fixes
 
