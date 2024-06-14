@@ -159,5 +159,10 @@ namespace LLMUnitySamples
             Debug.Log("Exit button clicked");
             Application.Quit();
         }
+
+        public void OnValidate()
+        {
+            if (llmCharacter.llm.model == "") Debug.LogWarning($"Please select a model in the {llmCharacter.llm.gameObject.name} GameObject!");
+        }
     }
 }
