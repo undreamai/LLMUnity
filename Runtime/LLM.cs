@@ -39,6 +39,27 @@ namespace LLMUnity
         [LLMAdvanced] public bool debug = false;
         /// <summary> number of prompts that can happen in parallel (-1 = number of LLMCharacter objects) </summary>
         [LLMAdvanced] public int parallelPrompts = -1;
+        /// <summary> allows to start the server asynchronously.
+        /// This is useful to not block Unity while the server is initialised.
+        /// For example it can be used as follows:
+        /// \code
+        /// void Start(){
+        ///     StartCoroutine(Loading());
+        ///     ...
+        /// }
+        ///
+        /// IEnumerator<string> Loading()
+        /// {
+        ///     // show loading screen
+        ///     while (!llm.started)
+        ///     {
+        ///         yield return null;
+        ///     }
+        ///     Debug.Log("Server is ready");
+        /// }
+        /// \endcode
+        /// </summary>
+        [LLMAdvanced] public bool asynchronousStartup = false;
         /// <summary> select to not destroy the LLM GameObject when loading a new Scene. </summary>
         [LLMAdvanced] public bool dontDestroyOnLoad = true;
         /// <summary> port to use for the LLM server </summary>
@@ -58,6 +79,7 @@ namespace LLMUnity
         [LLM] public bool remote = false;
         /// <summary> Boolean set to true if the server has started and is ready to receive requests, false otherwise. </summary>
         public bool started { get; protected set; } = false;
+        public string slotSaveDir;
 
         /// \cond HIDE
         public int SelectedModel = 0;
@@ -155,15 +177,17 @@ namespace LLMUnity
             if (remote) arguments += $" --port {port} --host 0.0.0.0";
             if (numThreads > 0) arguments += $" -t {numThreads}";
             if (loraPath != "") arguments += $" --lora \"{loraPath}\"";
-            arguments += $" --slot-save-path \"{Application.persistentDataPath}\"";
+            arguments += $" --slot-save-path \"{slotSaveDir}\"";
             arguments += $" -ngl {numGPULayers}";
             return arguments;
         }
 
-        public void Awake()
+        public async void Awake()
         {
             if (!enabled) return;
-            StartLLMServer();
+            slotSaveDir = Application.persistentDataPath;
+            if (asynchronousStartup) await Task.Run(() => StartLLMServer());
+            else StartLLMServer();
             if (dontDestroyOnLoad) DontDestroyOnLoad(gameObject);
         }
 
