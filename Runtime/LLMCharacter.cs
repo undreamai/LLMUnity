@@ -148,17 +148,17 @@ namespace LLMUnity
 
         protected void InitHistory()
         {
-            string savePath = GetSavePath(save);
-            if (save != "" && File.Exists(savePath)) _ = LoadHistory();
-            else InitPrompt();
+            InitPrompt();
+            _ = LoadHistory();
         }
 
         protected async Task LoadHistory()
         {
+            if (save == "" || !File.Exists(GetSavePath(save))) return;
             await chatLock.WaitAsync(); // Acquire the lock
             try
             {
-                await Load(GetSavePath(save));
+                await Load(save);
             }
             finally
             {
@@ -554,13 +554,14 @@ namespace LLMUnity
 
         public async Task<string> Save(string filename, bool overwrite = true)
         {
-            if (!overwrite && File.Exists(filename))
+            string filepath = GetSavePath(filename);
+            if (!overwrite && File.Exists(filepath))
             {
-                Debug.LogError($"File {filename} already exists");
+                Debug.LogError($"File {filepath} already exists");
                 return null;
             }
             string json = JsonUtility.ToJson(new ChatListWrapper { chat = chat });
-            File.WriteAllText(GetSavePath(filename + ".json"), json);
+            File.WriteAllText(filepath + ".json", json);
             // this is saved already in the Application.persistentDataPath folder
             string result = await Slot(filename, "save");
             return result;
@@ -568,12 +569,13 @@ namespace LLMUnity
 
         public async Task<string> Load(string filename)
         {
-            if (!File.Exists(filename))
+            string filepath = GetSavePath(filename);
+            if (!File.Exists(filepath))
             {
-                Debug.LogError($"File {filename} does not exist.");
+                Debug.LogError($"File {filepath} does not exist.");
                 return null;
             }
-            string json = File.ReadAllText(GetSavePath(filename + ".json"));
+            string json = File.ReadAllText(filepath + ".json");
             chat = JsonUtility.FromJson<ChatListWrapper>(json).chat;
             // this is saved already in the Application.persistentDataPath folder
             string result = await Slot(filename, "restore");
