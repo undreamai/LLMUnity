@@ -79,6 +79,8 @@ namespace LLMUnity
         [LLM] public bool remote = false;
         /// <summary> Boolean set to true if the server has started and is ready to receive requests, false otherwise. </summary>
         public bool started { get; protected set; } = false;
+        /// <summary> Boolean set to true if the server has failed to start. </summary>
+        public bool failed { get; protected set; } = false;
         public string slotSaveDir;
 
         /// \cond HIDE
@@ -207,6 +209,7 @@ namespace LLMUnity
         private void StartLLMServer()
         {
             started = false;
+            failed = false;
             string arguments = GetLlamaccpArguments();
             if (arguments == null) return;
             bool useGPU = numGPULayers > 0;
@@ -236,6 +239,7 @@ namespace LLMUnity
             if (llmlib == null)
             {
                 Debug.LogError("LLM service couldn't be created");
+                failed = true;
                 return;
             }
             StartService();
@@ -300,9 +304,11 @@ namespace LLMUnity
 
         void AssertStarted()
         {
-            if (!started)
+            string error = null;
+            if (failed) error = "LLM service couldn't be created";
+            else if (!started) error = "LLM service not started";
+            if (error != null)
             {
-                string error = "LLM service not started";
                 Debug.LogError(error);
                 throw new Exception(error);
             }
@@ -405,6 +411,7 @@ namespace LLMUnity
                     llmlib.Destroy();
                 }
                 started = false;
+                failed = false;
                 llmlib = null;
             }
             catch (Exception e)
