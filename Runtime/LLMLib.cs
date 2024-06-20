@@ -232,7 +232,27 @@ namespace LLMUnity
 
     public class LLMLib
     {
+        static IntPtr archCheckerHandle = IntPtr.Zero;
         IntPtr libraryHandle = IntPtr.Zero;
+
+        static LLMLib()
+        {
+            string archCheckerPath = GetArchitectureCheckerPath();
+            if (archCheckerPath != null)
+            {
+                archCheckerHandle = LibraryLoader.LoadLibrary(archCheckerPath);
+                if (archCheckerHandle == IntPtr.Zero)
+                {
+                    Debug.LogError($"Failed to load library {archCheckerPath}.");
+                }
+                else
+                {
+                    has_avx = LibraryLoader.GetSymbolDelegate<HasArchDelegate>(archCheckerHandle, "has_avx");
+                    has_avx2 = LibraryLoader.GetSymbolDelegate<HasArchDelegate>(archCheckerHandle, "has_avx2");
+                    has_avx512 = LibraryLoader.GetSymbolDelegate<HasArchDelegate>(archCheckerHandle, "has_avx512");
+                }
+            }
+        }
 
         public LLMLib(string arch)
         {
@@ -267,6 +287,7 @@ namespace LLMUnity
 
         public void Destroy()
         {
+            if (archCheckerHandle != IntPtr.Zero) LibraryLoader.FreeLibrary(libraryHandle);
             if (libraryHandle != IntPtr.Zero) LibraryLoader.FreeLibrary(libraryHandle);
         }
 
@@ -318,18 +339,22 @@ namespace LLMUnity
             return architectures;
         }
 
-        public static string FindPlugin(string rootPath, string pluginName)
+        public static string GetArchitectureCheckerPath()
         {
-            foreach (string filename in Directory.GetFiles(rootPath))
+            string filename;
+            if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer)
             {
-                if (Path.GetFileName(filename).Equals(pluginName)) return filename;
+                filename = $"windows-archchecker/archchecker.dll";
             }
-            foreach (string dir in Directory.GetDirectories(rootPath))
+            else if (Application.platform == RuntimePlatform.LinuxEditor || Application.platform == RuntimePlatform.LinuxPlayer)
             {
-                string foundPath = FindPlugin(dir, pluginName);
-                if (foundPath != null)  return foundPath;
+                filename = $"linux-archchecker/libarchchecker.so";
             }
-            return null;
+            else
+            {
+                return null;
+            }
+            return Path.Combine(LLMUnitySetup.libraryPath, filename);
         }
 
         public static string GetArchitecturePath(string arch)
@@ -337,15 +362,15 @@ namespace LLMUnity
             string filename;
             if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer)
             {
-                filename = $"undreamai_windows-{arch}.dll";
+                filename = $"windows-{arch}/undreamai_windows-{arch}.dll";
             }
             else if (Application.platform == RuntimePlatform.LinuxEditor || Application.platform == RuntimePlatform.LinuxPlayer)
             {
-                filename = $"libundreamai_linux-{arch}.so";
+                filename = $"linux-{arch}/libundreamai_linux-{arch}.so";
             }
             else if (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.OSXPlayer)
             {
-                filename = $"libundreamai_macos-{arch}.dylib";
+                filename = $"macos-{arch}/libundreamai_macos-{arch}.dylib";
             }
             else
             {
@@ -353,17 +378,13 @@ namespace LLMUnity
                 Debug.LogError(error);
                 throw new Exception(error);
             }
-
-            return FindPlugin(Path.Combine(Application.dataPath, "Plugins"), filename);
+            return Path.Combine(LLMUnitySetup.libraryPath, filename);
         }
 
-        const string linux_archchecker_dll = "archchecker";
-        [DllImport(linux_archchecker_dll, CallingConvention = CallingConvention.Cdecl)]
-        public static extern bool has_avx();
-        [DllImport(linux_archchecker_dll, CallingConvention = CallingConvention.Cdecl)]
-        public static extern bool has_avx2();
-        [DllImport(linux_archchecker_dll)]
-        public static extern bool has_avx512();
+        public delegate bool HasArchDelegate();
+        public static HasArchDelegate has_avx;
+        public static HasArchDelegate has_avx2;
+        public static HasArchDelegate has_avx512;
 
         public string GetStringWrapperResult(IntPtr stringWrapper)
         {
