@@ -61,7 +61,7 @@ namespace LLMUnity
     /// <summary>
     /// Class implementing helper functions for setup and process management.
     /// </summary>
-    public class LLMUnitySetup : MonoBehaviour
+    public class LLMUnitySetup
     {
         // DON'T CHANGE! the version is autocompleted with a GitHub action
         /// <summary> LLM for Unity version </summary>
