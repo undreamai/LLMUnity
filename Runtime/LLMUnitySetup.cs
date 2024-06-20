@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using System.Net;
 using System;
 using System.IO.Compression;
-using System.Collections.Generic;
 
 /// @defgroup llm LLM
 /// @defgroup template Chat Templates
@@ -69,7 +68,7 @@ namespace LLMUnity
         public static string Version = "v2.0.0";
         public static string LlamaLibVersion = "v1.1.4";
         public static string LlamaLibURL = $"https://github.com/undreamai/LlamaLib/releases/download/{LlamaLibVersion}/undreamai-{LlamaLibVersion}-llamacpp.zip";
-        public static string libraryPath = Path.Combine(Application.dataPath, "Plugins", Path.GetFileName(LlamaLibURL).Replace(".zip", ""));
+        public static string libraryPath = GetAssetPath(Path.GetFileName(LlamaLibURL).Replace(".zip", ""));
 
         [HideInInspector] public static readonly (string, string)[] modelOptions = new(string, string)[]
         {
