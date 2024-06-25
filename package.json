@@ -1,6 +1,6 @@
 {
   "name": "ai.undream.llm",
-  "version": "1.2.9",
+  "version": "2.0.0",
   "displayName": "LLM for Unity",
   "description": "LLM for Unity allows to run and distribute Large Language Models (LLMs) in the Unity engine.",
   "unity": "2022.3",
@@ -27,22 +27,22 @@
    "samples": [
     {
       "displayName": "SimpleInteraction",
-      "description": "Minimal interaction example.",
+      "description": "Simple interaction with an AI character",
       "path": "Samples~/SimpleInteraction"
     },
     {
-      "displayName": "AsyncStartup",
-      "description": "Example with loading screen using the async functionality.",
-      "path": "Samples~/AsyncStartup"
+      "displayName": "MultipleCharacters",
+      "description": "Simple interaction using multiple AI characters",
+      "path": "Samples~/MultipleCharacters"
     },
     {
-      "displayName": "ServerClient",
-      "description": "Example with two AIs.",
-      "path": "Samples~/ServerClient"
+      "displayName": "KnowledgeBaseGame",
+      "description": "Simple detective game using a knowledge base to provide information to the LLM.",
+      "path": "Samples~/KnowledgeBaseGame"
     },
     {
       "displayName": "ChatBot",
-      "description": "ChatBot example.",
+      "description": "Interaction between a player and a AI with a UI similar to a messaging app",
       "path": "Samples~/ChatBot"
     }
    ],

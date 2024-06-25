@@ -1,4 +1,9 @@
+### 🚀 Features
+
+- Feature/use llamacpp (PR: #163)
+- Sample with RAG and LLM integration (PR: #170)
+
 ### 🐛 Fixes
 
-- disable GPU compilation when running on CPU (PR: #159)
+- Remove spacing if prompt is empty in phi3 (PR: #166)
 

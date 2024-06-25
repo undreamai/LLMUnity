@@ -5,17 +5,17 @@ using UnityEngine.UI;
 
 namespace LLMUnitySamples
 {
-    public class ServerClientInteraction
+    public class MultipleCharactersInteraction
     {
         InputField playerText;
         Text AIText;
-        LLMClient llm;
+        LLMCharacter llmCharacter;
 
-        public ServerClientInteraction(InputField playerText, Text AIText, LLMClient llm)
+        public MultipleCharactersInteraction(InputField playerText, Text AIText, LLMCharacter llmCharacter)
         {
             this.playerText = playerText;
             this.AIText = AIText;
-            this.llm = llm;
+            this.llmCharacter = llmCharacter;
         }
 
         public void Start()
@@ -28,7 +28,7 @@ namespace LLMUnitySamples
         {
             playerText.interactable = false;
             AIText.text = "...";
-            _ = llm.Chat(message, SetAIText, AIReplyComplete);
+            _ = llmCharacter.Chat(message, SetAIText, AIReplyComplete);
         }
 
         public void SetAIText(string text)
@@ -44,30 +44,30 @@ namespace LLMUnitySamples
         }
     }
 
-    public class ServerClient : MonoBehaviour
+    public class MultipleCharacters : MonoBehaviour
     {
-        public LLM llm;
+        public LLMCharacter llmCharacter1;
         public InputField playerText1;
         public Text AIText1;
-        ServerClientInteraction interaction1;
+        MultipleCharactersInteraction interaction1;
 
-        public LLMClient llmClient;
+        public LLMCharacter llmCharacter2;
         public InputField playerText2;
         public Text AIText2;
-        ServerClientInteraction interaction2;
+        MultipleCharactersInteraction interaction2;
 
         void Start()
         {
-            interaction1 = new ServerClientInteraction(playerText1, AIText1, llm);
-            interaction2 = new ServerClientInteraction(playerText2, AIText2, llmClient);
+            interaction1 = new MultipleCharactersInteraction(playerText1, AIText1, llmCharacter1);
+            interaction2 = new MultipleCharactersInteraction(playerText2, AIText2, llmCharacter2);
             interaction1.Start();
             interaction2.Start();
         }
 
         public void CancelRequests()
         {
-            llm.CancelRequests();
-            llmClient.CancelRequests();
+            llmCharacter1.CancelRequests();
+            llmCharacter2.CancelRequests();
             interaction1.AIReplyComplete();
             interaction2.AIReplyComplete();
         }
@@ -76,6 +76,16 @@ namespace LLMUnitySamples
         {
             Debug.Log("Exit button clicked");
             Application.Quit();
+        }
+
+        bool onValidateWarning = true;
+        void OnValidate()
+        {
+            if (onValidateWarning && llmCharacter1.llm.model == "")
+            {
+                Debug.LogWarning($"Please select a model in the {llmCharacter1.llm.gameObject.name} GameObject!");
+                onValidateWarning = false;
+            }
         }
     }
 }

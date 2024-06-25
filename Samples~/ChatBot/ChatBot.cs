@@ -14,7 +14,7 @@ namespace LLMUnitySamples
         public Font font;
         public int fontSize = 16;
         public int bubbleWidth = 600;
-        public LLMClient llm;
+        public LLMCharacter llmCharacter;
         public float textPadding = 10f;
         public float bubbleSpacing = 10f;
         public Sprite sprite;
@@ -51,7 +51,7 @@ namespace LLMUnitySamples
             inputBubble.AddSubmitListener(onInputFieldSubmit);
             inputBubble.AddValueChangedListener(onValueChanged);
             inputBubble.setInteractable(false);
-            _ = llm.Warmup(WarmUpCallback);
+            _ = llmCharacter.Warmup(WarmUpCallback);
         }
 
         void onInputFieldSubmit(string newText)
@@ -73,7 +73,7 @@ namespace LLMUnitySamples
             playerBubble.OnResize(UpdateBubblePositions);
             aiBubble.OnResize(UpdateBubblePositions);
 
-            Task chatTask = llm.Chat(message, aiBubble.SetText, AllowInput);
+            Task chatTask = llmCharacter.Chat(message, aiBubble.SetText, AllowInput);
             inputBubble.SetText("");
         }
 
@@ -92,7 +92,7 @@ namespace LLMUnitySamples
 
         public void CancelRequests()
         {
-            llm.CancelRequests();
+            llmCharacter.CancelRequests();
             AllowInput();
         }
 
@@ -158,6 +158,16 @@ namespace LLMUnitySamples
         {
             Debug.Log("Exit button clicked");
             Application.Quit();
+        }
+
+        bool onValidateWarning = true;
+        void OnValidate()
+        {
+            if (onValidateWarning && llmCharacter.llm.model == "")
+            {
+                Debug.LogWarning($"Please select a model in the {llmCharacter.llm.gameObject.name} GameObject!");
+                onValidateWarning = false;
+            }
         }
     }
 }

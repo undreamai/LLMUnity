@@ -1,26 +1,47 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
 namespace LLMUnity
 {
     [CustomEditor(typeof(LLM))]
-    public class LLMEditor : LLMClientEditor
+    public class LLMEditor : PropertyEditor
     {
-        public override void AddModelLoaders(SerializedObject llmScriptSO, LLMClient llmClientScript)
+        protected override Type[] GetPropertyTypes()
         {
-            LLM llmScript = (LLM)llmClientScript;
+            return new Type[] { typeof(LLM) };
+        }
+
+        public void AddServerLoadersSettings(SerializedObject llmScriptSO, LLM llmScript)
+        {
+            EditorGUILayout.LabelField("Setup Settings", EditorStyles.boldLabel);
+            AddServerSettings(llmScriptSO);
+        }
+
+        public void AddModelLoadersSettings(SerializedObject llmScriptSO, LLM llmScript)
+        {
+            EditorGUILayout.LabelField("Model Settings", EditorStyles.boldLabel);
+            AddModelLoaders(llmScriptSO, llmScript);
+            AddModelAddonLoaders(llmScriptSO, llmScript);
+            AddModelSettings(llmScriptSO);
+        }
+
+        public void AddModelLoaders(SerializedObject llmScriptSO, LLM llmScript)
+        {
             EditorGUILayout.BeginHorizontal();
 
-            string[] options = new string[llmScript.modelOptions.Length];
-            for (int i = 0; i < llmScript.modelOptions.Length; i++)
+            string[] options = new string[LLMUnitySetup.modelOptions.Length];
+            for (int i = 0; i < LLMUnitySetup.modelOptions.Length; i++)
             {
-                options[i] = llmScript.modelOptions[i].Item1;
+                options[i] = LLMUnitySetup.modelOptions[i].Item1;
             }
 
             int newIndex = EditorGUILayout.Popup("Model", llmScript.SelectedModel, options);
             if (newIndex != llmScript.SelectedModel)
             {
-                llmScript.DownloadModel(newIndex);
+                LLMUnitySetup.DownloadModel(llmScript, newIndex);
             }
 
             if (GUILayout.Button("Load model", GUILayout.Width(buttonWidth)))
@@ -36,16 +57,22 @@ namespace LLMUnity
                 };
             }
             EditorGUILayout.EndHorizontal();
-            base.AddModelLoaders(llmScriptSO, llmScript);
+
+            string[] templateOptions = ChatTemplate.templatesDescription.Keys.ToList().ToArray();
+            int index = Array.IndexOf(ChatTemplate.templatesDescription.Values.ToList().ToArray(), llmScript.chatTemplate);
+            newIndex = EditorGUILayout.Popup("Chat Template", index, templateOptions);
+            if (newIndex != index)
+            {
+                llmScript.SetTemplate(ChatTemplate.templatesDescription[templateOptions[newIndex]]);
+            }
         }
 
-        public override void AddModelAddonLoaders(SerializedObject llmScriptSO, LLMClient llmClientScript, bool layout)
+        public void AddModelAddonLoaders(SerializedObject llmScriptSO, LLM llmScript, bool layout = true)
         {
-            LLM llmScript = (LLM)llmClientScript;
             if (llmScriptSO.FindProperty("advancedOptions").boolValue)
             {
                 EditorGUILayout.BeginHorizontal();
-                GUILayout.Label("Lora / Grammar", GUILayout.Width(EditorGUIUtility.labelWidth));
+                GUILayout.Label("Lora", GUILayout.Width(EditorGUIUtility.labelWidth));
 
                 if (GUILayout.Button("Load lora", GUILayout.Width(buttonWidth)))
                 {
@@ -58,12 +85,37 @@ namespace LLMUnity
                         }
                     };
                 }
-                base.AddModelAddonLoaders(llmScriptSO, llmScript, false);
                 EditorGUILayout.EndHorizontal();
             }
-            ShowProgress(LLM.binariesProgress, "Setup Binaries");
-            ShowProgress(llmScript.modelProgress, "Model Downloading");
-            ShowProgress(llmScript.modelCopyProgress, "Model Copying");
+        }
+
+        public void AddModelSettings(SerializedObject llmScriptSO)
+        {
+            List<Type> attributeClasses = new List<Type> { typeof(ModelAttribute) };
+            if (llmScriptSO.FindProperty("advancedOptions").boolValue)
+            {
+                attributeClasses.Add(typeof(ModelAdvancedAttribute));
+            }
+            ShowPropertiesOfClass("", llmScriptSO, attributeClasses, false);
+            Space();
+        }
+
+        public void AddServerSettings(SerializedObject llmScriptSO)
+        {
+            List<Type> attributeClasses = new List<Type>(){typeof(LocalRemoteAttribute)};
+            attributeClasses.Add(llmScriptSO.FindProperty("remote").boolValue ? typeof(RemoteAttribute) : typeof(LocalAttribute));
+            attributeClasses.Add(typeof(LLMAttribute));
+            if (llmScriptSO.FindProperty("advancedOptions").boolValue)
+            {
+                attributeClasses.Add(typeof(LLMAdvancedAttribute));
+            }
+            ShowPropertiesOfClass("", llmScriptSO, attributeClasses, true);
+            Space();
+        }
+
+        public void AddChatSettings(SerializedObject llmScriptSO)
+        {
+            ShowPropertiesOfClass("Chat Settings", llmScriptSO, new List<Type> { typeof(ChatAttribute) }, false);
         }
 
         void ShowProgress(float progress, string progressText)
@@ -74,6 +126,7 @@ namespace LLMUnity
         public override void OnInspectorGUI()
         {
             LLM llmScript = (LLM)target;
+            // LLM llmScript = (LLM)target;
             SerializedObject llmScriptSO = new SerializedObject(llmScript);
             llmScriptSO.Update();
 
@@ -82,14 +135,18 @@ namespace LLMUnity
             GUI.enabled = true;
 
             EditorGUI.BeginChangeCheck();
+
+            ShowProgress(LLMUnitySetup.libraryProgress, "Setup Library");
+            ShowProgress(llmScript.modelProgress, "Model Downloading");
+            ShowProgress(llmScript.modelCopyProgress, "Model Copying");
+
+            GUI.enabled = LLMUnitySetup.libraryProgress == 1 && llmScript.modelProgress == 1 && llmScript.modelCopyProgress == 1;
             AddOptionsToggles(llmScriptSO);
-            GUI.enabled = LLM.binariesProgress == 1;
-            AddServerSettings(llmScriptSO);
-            GUI.enabled = LLM.binariesProgress == 1 && llmScript.modelProgress == 1 && llmScript.modelCopyProgress == 1;
+            AddServerLoadersSettings(llmScriptSO, llmScript);
             AddModelLoadersSettings(llmScriptSO, llmScript);
             GUI.enabled = true;
             AddChatSettings(llmScriptSO);
-            
+
             if (EditorGUI.EndChangeCheck())
                 Repaint();
 

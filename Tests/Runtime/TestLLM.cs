@@ -9,37 +9,11 @@ using UnityEngine.TestTools;
 
 namespace LLMUnityTests
 {
-    public class LLMNoAwake : LLM
-    {
-        public new void Awake() {}
-        public new void OnDestroy() {}
-
-        public async Task CallAwake()
-        {
-            base.Awake();
-            while (!serverListening)
-            {
-                await Task.Delay(100);
-            }
-        }
-
-        public void CallOnDestroy()
-        {
-            base.OnDestroy();
-        }
-
-        public List<ChatMessage> GetChat()
-        {
-            return chat;
-        }
-    }
-
-
     public class TestLLM
     {
         GameObject gameObject;
-        LLMNoAwake llm;
-        int port = 15555;
+        LLM llm;
+        LLMCharacter llmCharacter;
         Exception error = null;
         string prompt = "Below is an instruction that describes a task, paired with an input that provides further context. Write a response that appropriately completes the request.";
 
@@ -54,25 +28,25 @@ namespace LLMUnityTests
             gameObject = new GameObject();
             gameObject.SetActive(false);
 
-            llm = gameObject.AddComponent<LLMNoAwake>();
+            llm = gameObject.AddComponent<LLM>();
             string modelUrl = "https://huggingface.co/afrideva/smol_llama-220M-openhermes-GGUF/resolve/main/smol_llama-220m-openhermes.q4_k_m.gguf?download=true";
             string modelPath = "LLMUnityTests/smol_llama-220m-openhermes.q4_k_m.gguf";
             string fullModelPath = LLMUnitySetup.GetAssetPath(modelPath);
-            _ = LLMUnitySetup.DownloadFile(modelUrl, fullModelPath, false, false, null, null, false);
+            _ = LLMUnitySetup.DownloadFile(modelUrl, fullModelPath, false, null, null, false);
             await llm.SetModel(fullModelPath);
             Assert.AreEqual(llm.model, modelPath);
-
-            llm.port = port;
-            llm.playerName = "Instruction";
-            llm.AIName = "Response";
-            llm.port = port;
-            llm.prompt = prompt;
-            llm.temperature = 0;
-            llm.seed = 0;
-            llm.stream = false;
-            llm.numPredict = 20;
             llm.parallelPrompts = 1;
             llm.SetTemplate("alpaca");
+
+            llmCharacter = gameObject.AddComponent<LLMCharacter>();
+            llmCharacter.llm = llm;
+            llmCharacter.playerName = "Instruction";
+            llmCharacter.AIName = "Response";
+            llmCharacter.prompt = prompt;
+            llmCharacter.temperature = 0;
+            llmCharacter.seed = 0;
+            llmCharacter.stream = false;
+            llmCharacter.numPredict = 20;
 
             gameObject.SetActive(true);
         }
@@ -82,24 +56,25 @@ namespace LLMUnityTests
             error = null;
             try
             {
-                await llm.CallAwake();
-                TestAlive();
-                await llm.Tokenize("I", TestTokens);
-                await llm.Warmup();
-                TestInitParameters((await llm.Tokenize(prompt)).Count, 1);
+                llm.Awake();
+                llmCharacter.Awake();
+                await llmCharacter.Tokenize("I", TestTokens);
+                await llmCharacter.Warmup();
+                TestInitParameters((await llmCharacter.Tokenize(prompt)).Count + 2, 1);
                 TestWarmup();
-                await llm.Chat("How can I increase my meme production/output? Currently, I only create them in ancient babylonian which is time consuming.", TestChat);
+                await llmCharacter.Chat("How can I increase my meme production/output? Currently, I only create them in ancient babylonian which is time consuming.", TestChat);
                 TestPostChat(3);
-                llm.SetPrompt(llm.prompt);
-                llm.AIName = "False response";
-                await llm.Chat("How can I increase my meme production/output? Currently, I only create them in ancient babylonian which is time consuming.", TestChat2);
+                llmCharacter.SetPrompt(llmCharacter.prompt);
+                llmCharacter.AIName = "False response";
+                await llmCharacter.Chat("How can I increase my meme production/output? Currently, I only create them in ancient babylonian which is time consuming.", TestChat2);
                 TestPostChat(3);
-                await llm.Chat("bye!");
+                await llmCharacter.Chat("bye!");
                 TestPostChat(5);
                 prompt = "How are you?";
-                llm.SetPrompt(prompt);
-                await llm.Chat("hi");
-                TestInitParameters((await llm.Tokenize(prompt)).Count, 3);
+                llmCharacter.SetPrompt(prompt);
+                await llmCharacter.Chat("hi");
+                TestInitParameters((await llmCharacter.Tokenize(prompt)).Count + 2, 3);
+                llm.OnDestroy();
             }
             catch  (Exception e)
             {
@@ -112,7 +87,6 @@ namespace LLMUnityTests
         {
             Task task = RunTests();
             while (!task.IsCompleted) yield return null;
-            llm.CallOnDestroy();
             if (error != null)
             {
                 Debug.LogError(error.ToString());
@@ -120,16 +94,11 @@ namespace LLMUnityTests
             }
         }
 
-        public void TestAlive()
-        {
-            Assert.That(llm.serverListening);
-        }
-
         public void TestInitParameters(int nkeep, int chats)
         {
-            Assert.That(llm.nKeep == nkeep);
-            Assert.That(ChatTemplate.GetTemplate(llm.chatTemplate).GetStop(llm.playerName, llm.AIName).Length > 0);
-            Assert.That(llm.GetChat().Count == chats);
+            Assert.That(llmCharacter.nKeep == nkeep);
+            Assert.That(ChatTemplate.GetTemplate(llm.chatTemplate).GetStop(llmCharacter.playerName, llmCharacter.AIName).Length > 0);
+            Assert.That(llmCharacter.chat.Count == chats);
         }
 
         public void TestTokens(List<int> tokens)
@@ -139,12 +108,12 @@ namespace LLMUnityTests
 
         public void TestWarmup()
         {
-            Assert.That(llm.GetChat().Count == 1);
+            Assert.That(llmCharacter.chat.Count == 1);
         }
 
         public void TestChat(string reply)
         {
-            string AIReply = "One way to increase your meme production/output is by creating a more complex and customized";
+            string AIReply = "To increase your meme production/output, you can consider the following:\n1. Use";
             Assert.That(reply.Trim() == AIReply);
         }
 
@@ -156,7 +125,7 @@ namespace LLMUnityTests
 
         public void TestPostChat(int num)
         {
-            Assert.That(llm.GetChat().Count == num);
+            Assert.That(llmCharacter.chat.Count == num);
         }
     }
 }
