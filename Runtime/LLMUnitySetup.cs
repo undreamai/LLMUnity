@@ -40,6 +40,7 @@ namespace LLMUnity
 
     public class LLMAttribute : PropertyAttribute {}
     public class LLMAdvancedAttribute : PropertyAttribute {}
+    public class LocalRemoteAttribute : PropertyAttribute {}
     public class RemoteAttribute : PropertyAttribute {}
     public class LocalAttribute : PropertyAttribute {}
     public class ModelAttribute : PropertyAttribute {}
