@@ -214,7 +214,7 @@ where filename the filename or relative path of your choice.
 
 </details>
 <details>
-<summary>Add a LLM / LLMCharacter component dynamically</summary>
+<summary>Add a LLM / LLMCharacter component programmatically</summary>
 
 ``` c#
 using UnityEngine;
@@ -230,14 +230,19 @@ public class MyScript : MonoBehaviour
         // Add and setup a LLM object
         gameObject.SetActive(false);
         llm = gameObject.AddComponent<LLM>();
+        // location inside StreamingAssets folder
         await llm.SetModel("mistral-7b-instruct-v0.2.Q4_K_M.gguf");
+        // location inside StreamingAssets folder
+        await llm.SetLora("my-lora.bin");
         gameObject.SetActive(true);
 
-        // or a LLMClient object
+        // or a LLMCharacter object
         gameObject.SetActive(false);
         llmCharacter = gameObject.AddComponent<LLMCharacter>();
         llmCharacter.llm = llm;
         llmCharacter.SetPrompt("A chat between a curious human and an artificial intelligence assistant.");
+        // location inside StreamingAssets folder
+        await llmCharacter.SetGrammar("json.gbnf");
         gameObject.SetActive(true);
     }
 }
@@ -306,7 +311,7 @@ If the user's GPU is not supported, the LLM will fall back to the CPU
 - `Debug` select to log the output of the model in the Unity Editor
 - <details><summary>Advanced options</summary>
 
-  - `Parallel Prompts` number of prompts that can happen in parallel (default: -1 = number of LLM/LLMClient objects)
+  - `Parallel Prompts` number of prompts that can happen in parallel (default: -1 = number of LLMCharacter objects)
   - `Dont Destroy On Load` select to not destroy the LLM GameObject when loading a new Scene
 
 </details>
@@ -342,10 +347,11 @@ If the user's GPU is not supported, the LLM will fall back to the CPU
 - <details><summary><code>Save</code> save filename or relative path</summary> If set, the chat history and LLM state (if save cache is enabled) is automatically saved to file specified. <br> The chat history is saved with a json suffix and the LLM state with a cache suffix. <br> Both files are saved in the [persistentDataPath folder of Unity](https://docs.unity3d.com/ScriptReference/Application-persistentDataPath.html).</details>
 - `Save Cache` select to save the LLM state along with the chat history. The LLM state is typically around 100MB+.
 - `Debug Prompt` select to log the constructed prompts in the Unity Editor
-- <details><summary>Advanced options</summary>
 
-
-</details>
+#### 🗨️ Chat Settings
+- `Player Name` the name of the player
+- `AI Name` the name of the AI
+- `Prompt` description of the AI role
 
 #### 🤗 Model Settings
 - `Stream` select to receive the reply from the model as it is produced (recommended!).<br>
@@ -377,11 +383,6 @@ If it is not selected, the full reply from the model is received in one go
   - `Ignore Eos`: enable to ignore end of stream tokens and continue generating (default: false).
 
 </details>
-
-#### 🗨️ Chat Settings
-- `Player Name` the name of the player
-- `AI Name` the name of the AI
-- `Prompt` description of the AI role
 
 ## License
 The license of LLM for Unity is MIT ([LICENSE.md](LICENSE.md)) and uses third-party software with MIT and Apache licenses ([Third Party Notices.md](<Third Party Notices.md>)).
