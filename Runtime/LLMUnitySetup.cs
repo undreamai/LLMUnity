@@ -66,7 +66,7 @@ namespace LLMUnity
         // DON'T CHANGE! the version is autocompleted with a GitHub action
         /// <summary> LLM for Unity version </summary>
         public static string Version = "v2.0.0";
-        public static string LlamaLibVersion = "v1.1.4";
+        public static string LlamaLibVersion = "v1.1.5";
         public static string LlamaLibURL = $"https://github.com/undreamai/LlamaLib/releases/download/{LlamaLibVersion}/undreamai-{LlamaLibVersion}-llamacpp.zip";
         public static string libraryPath = GetAssetPath(Path.GetFileName(LlamaLibURL).Replace(".zip", ""));
 
