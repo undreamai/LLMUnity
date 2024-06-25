@@ -19,7 +19,7 @@ namespace LLMUnity
         /// <summary> toggle to show/hide advanced options in the GameObject </summary>
         [HideInInspector] public bool advancedOptions = false;
         /// <summary> toggle to use remote LLM server or local LLM </summary>
-        [LLM] public bool remote = false;
+        [LocalRemote] public bool remote = false;
         /// <summary> the LLM object to use </summary>
         [Local] public LLM llm;
         /// <summary> host to use for the LLM server </summary>
@@ -29,12 +29,14 @@ namespace LLMUnity
         /// <summary> file to save the chat history.
         /// The file is saved only for Chat calls with addToHistory set to true.
         /// The file will be saved within the persistentDataPath directory (see https://docs.unity3d.com/ScriptReference/Application-persistentDataPath.html). </summary>
-        [Local] public string save = "";
+        [LLM] public string save = "";
+        /// <summary> toggle to save the LLM cache. This speeds up the prompt calculation but also requires ~100MB of space per character. </summary>
+        [LLM] public bool saveCache = false;
+        /// <summary> select to log the constructed prompt the Unity Editor. </summary>
+        [LLM] public bool debugPrompt = false;
         /// <summary> option to receive the reply from the model as it is produced (recommended!).
         /// If it is not selected, the full reply from the model is received in one go </summary>
         [Model] public bool stream = true;
-        /// <summary> select to log the constructed prompt the Unity Editor. </summary>
-        [LLM] public bool debugPrompt = false;
         /// <summary> grammar file used for the LLM in .cbnf format (relative to the Assets/StreamingAssets folder) </summary>
         [ModelAdvanced] public string grammar = null;
         /// <summary> option to cache the prompt as it is being created by the chat to avoid reprocessing the entire prompt every time (default: true) </summary>
@@ -157,7 +159,7 @@ namespace LLMUnity
 
         protected async Task LoadHistory()
         {
-            if (save == "" || !File.Exists(GetSavePath(save))) return;
+            if (save == "" || !File.Exists(GetJsonSavePath(save))) return;
             await chatLock.WaitAsync(); // Acquire the lock
             try
             {
@@ -172,6 +174,17 @@ namespace LLMUnity
         string GetSavePath(string filename)
         {
             return Path.Combine(Application.persistentDataPath, filename);
+        }
+
+        string GetJsonSavePath(string filename)
+        {
+            return GetSavePath(filename + ".json");
+        }
+
+        string GetCacheName(string filename)
+        {
+            // this is saved already in the Application.persistentDataPath folder
+            return filename + ".cache";
         }
 
         private void InitPrompt(bool clearChat = true)
@@ -519,20 +532,16 @@ namespace LLMUnity
         /// Saves the chat history and cache to the provided filename / relative path.
         /// </summary>
         /// <param name="filename">filename / relative path to save the chat history</param>
-        /// <param name="overwrite">whether to overwrite the file if it exists</param>
         /// <returns></returns>
-        public async Task<string> Save(string filename, bool overwrite = true)
+        public async Task<string> Save(string filename)
         {
-            string filepath = GetSavePath(filename);
-            if (!overwrite && File.Exists(filepath))
-            {
-                Debug.LogError($"File {filepath} already exists");
-                return null;
-            }
+            string filepath = GetJsonSavePath(filename);
             string json = JsonUtility.ToJson(new ChatListWrapper { chat = chat });
-            File.WriteAllText(filepath + ".json", json);
-            // this is saved already in the Application.persistentDataPath folder
-            string result = await Slot(filename, "save");
+            File.WriteAllText(filepath, json);
+
+            string cachename = GetCacheName(filename);
+            if (remote || !saveCache) return null;
+            string result = await Slot(cachename, "save");
             return result;
         }
 
@@ -543,16 +552,19 @@ namespace LLMUnity
         /// <returns></returns>
         public async Task<string> Load(string filename)
         {
-            string filepath = GetSavePath(filename);
+            string filepath = GetJsonSavePath(filename);
             if (!File.Exists(filepath))
             {
                 Debug.LogError($"File {filepath} does not exist.");
                 return null;
             }
-            string json = File.ReadAllText(filepath + ".json");
+            string json = File.ReadAllText(filepath);
             chat = JsonUtility.FromJson<ChatListWrapper>(json).chat;
-            // this is saved already in the Application.persistentDataPath folder
-            string result = await Slot(filename, "restore");
+            Debug.Log($"Loaded {filepath}");
+
+            string cachename = GetCacheName(filename);
+            if (remote || !saveCache || !File.Exists(GetSavePath(cachename))) return null;
+            string result = await Slot(cachename, "restore");
             return result;
         }
 
