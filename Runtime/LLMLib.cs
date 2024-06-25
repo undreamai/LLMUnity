@@ -301,6 +301,7 @@ namespace LLMUnity
                 {
                     architectures.Add("cuda-cu12.2.0");
                     architectures.Add("cuda-cu11.7.1");
+                    architectures.Add("hip");
                     architectures.Add("vulkan");
                 }
                 try
