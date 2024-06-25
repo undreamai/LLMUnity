@@ -163,6 +163,7 @@ namespace LLMUnity
         /// <summary> Constructs the prompt using the template based on a list of ChatMessages </summary>
         /// <param name="messages"> list of ChatMessages e.g. the LLMCharacter chat </param>
         /// <param name="AIName"> the AI name </param>
+        /// <param name="endWithPrefix"> whether to end the prompt with the AI prefix </param>
         /// <returns>prompt</returns>
         public virtual string ComputePrompt(List<ChatMessage> messages, string AIName, bool endWithPrefix = true)
         {

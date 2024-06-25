@@ -66,10 +66,14 @@ namespace LLMUnity
         // DON'T CHANGE! the version is autocompleted with a GitHub action
         /// <summary> LLM for Unity version </summary>
         public static string Version = "v2.0.0";
+        /// <summary> LlamaLib version </summary>
         public static string LlamaLibVersion = "v1.1.5";
+        /// <summary> LlamaLib url </summary>
         public static string LlamaLibURL = $"https://github.com/undreamai/LlamaLib/releases/download/{LlamaLibVersion}/undreamai-{LlamaLibVersion}-llamacpp.zip";
+        /// <summary> LlamaLib path </summary>
         public static string libraryPath = GetAssetPath(Path.GetFileName(LlamaLibURL).Replace(".zip", ""));
 
+        /// <summary> Default models for download </summary>
         [HideInInspector] public static readonly (string, string)[] modelOptions = new(string, string)[]
         {
             ("Download model", null),
@@ -78,6 +82,7 @@ namespace LLMUnity
             ("Phi 3 (small, great)", "https://huggingface.co/microsoft/Phi-3-mini-4k-instruct-gguf/resolve/main/Phi-3-mini-4k-instruct-q4.gguf?download=true"),
         };
 
+        /// \cond HIDE
         public static string GetAssetPath(string relPath = "")
         {
             // Path to store llm server binaries and models
@@ -198,7 +203,6 @@ namespace LLMUnity
             libraryProgress = progress;
         }
 
-        /// \cond HIDE
         public static void DownloadModel(LLM llm, int optionIndex)
         {
             // download default model and disable model editor properties until the model is set

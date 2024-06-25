@@ -1,5 +1,5 @@
 /// @file
-/// @brief File implementing the LLM client.
+/// @brief File implementing the LLMCharacter.
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,19 +10,22 @@ using UnityEngine.Networking;
 
 namespace LLMUnity
 {
+    /// @ingroup llm
+    /// <summary>
+    /// Class implementing the LLM characters.
+    /// </summary>
     public class LLMCharacter : MonoBehaviour
     {
         /// <summary> toggle to show/hide advanced options in the GameObject </summary>
         [HideInInspector] public bool advancedOptions = false;
-
+        /// <summary> toggle to use remote LLM server or local LLM </summary>
         [LLM] public bool remote = false;
-
+        /// <summary> the LLM object to use </summary>
         [Local] public LLM llm;
         /// <summary> host to use for the LLM server </summary>
         [Remote] public string host = "localhost";
         /// <summary> port to use for the LLM server </summary>
         [Remote] public int port = 13333;
-
         /// <summary> file to save the chat history.
         /// The file is saved only for Chat calls with addToHistory set to true.
         /// The file will be saved within the persistentDataPath directory (see https://docs.unity3d.com/ScriptReference/Application-persistentDataPath.html). </summary>
@@ -31,7 +34,7 @@ namespace LLMUnity
         /// If it is not selected, the full reply from the model is received in one go </summary>
         [Model] public bool stream = true;
         /// <summary> select to log the constructed prompt the Unity Editor. </summary>
-        [LLMAdvanced] public bool debugPrompt = false;
+        [LLM] public bool debugPrompt = false;
         /// <summary> grammar file used for the LLM in .cbnf format (relative to the Assets/StreamingAssets folder) </summary>
         [ModelAdvanced] public string grammar = null;
         /// <summary> option to cache the prompt as it is being created by the chat to avoid reprocessing the entire prompt every time (default: true) </summary>
@@ -166,7 +169,7 @@ namespace LLMUnity
             }
         }
 
-        public string GetSavePath(string filename)
+        string GetSavePath(string filename)
         {
             return Path.Combine(Application.persistentDataPath, filename);
         }
@@ -227,6 +230,10 @@ namespace LLMUnity
             nKeep = tokens.Count;
         }
 
+        /// <summary>
+        /// Load the chat template of the LLMCharacter.
+        /// </summary>
+        /// <returns></returns>
         public async Task LoadTemplate()
         {
             string llmTemplate;
@@ -374,30 +381,6 @@ namespace LLMUnity
         /// It calls the LLM completion based on the provided query including the previous chat history.
         /// The function allows callbacks when the response is partially or fully received.
         /// The question is added to the history if specified.
-        ///
-        /// It can be used as follows:
-        /// \code
-        /// public class MyScript {
-        ///     public LLM llm;
-        ///     void HandleReply(string reply){
-        ///         // do something with the reply from the model
-        ///         Debug.Log(reply);
-        ///     }
-        ///
-        ///     void ReplyCompleted(){
-        ///         // do something when the reply from the model is complete
-        ///         Debug.Log("The AI replied");
-        ///     }
-        ///
-        ///     void Game(){
-        ///         // your game function
-        ///         ...
-        ///         string message = "Hello bot!";
-        ///         _ = llm.Chat(message, HandleReply);
-        ///         ...
-        ///     }
-        /// }
-        /// \endcode
         /// </summary>
         /// <param name="query">user query</param>
         /// <param name="callback">callback function that receives the response as string</param>
@@ -451,30 +434,6 @@ namespace LLMUnity
         /// Pure completion functionality of the LLM.
         /// It calls the LLM completion based solely on the provided prompt (no formatting by the chat template).
         /// The function allows callbacks when the response is partially or fully received.
-        ///
-        /// It can be used as follows:
-        /// \code
-        /// public class MyScript {
-        ///     public LLM llm;
-        ///     void HandleReply(string reply){
-        ///         // do something with the reply from the model
-        ///         Debug.Log(reply);
-        ///     }
-        ///
-        ///     void ReplyCompleted(){
-        ///         // do something when the reply from the model is complete
-        ///         Debug.Log("The AI replied");
-        ///     }
-        ///
-        ///     void Game(){
-        ///         // your game function
-        ///         ...
-        ///         string message = "Hello bot!";
-        ///         _ = llm.Complete(message, HandleReply);
-        ///         ...
-        ///     }
-        /// }
-        /// \endcode
         /// </summary>
         /// <param name="prompt">user query</param>
         /// <param name="callback">callback function that receives the response as string</param>
@@ -507,6 +466,10 @@ namespace LLMUnity
             return await Chat(query, null, completionCallback, false);
         }
 
+        /// <summary>
+        /// Asks the LLM for the chat template to use.
+        /// </summary>
+        /// <returns>the chat template of the LLM</returns>
         public async Task<string> AskTemplate()
         {
             return await PostRequest<TemplateResult, string>("{}", "template", TemplateContent);
@@ -552,6 +515,12 @@ namespace LLMUnity
             return await PostRequest<SlotResult, string>(json, "slots", SlotContent);
         }
 
+        /// <summary>
+        /// Saves the chat history and cache to the provided filename / relative path.
+        /// </summary>
+        /// <param name="filename">filename / relative path to save the chat history</param>
+        /// <param name="overwrite">whether to overwrite the file if it exists</param>
+        /// <returns></returns>
         public async Task<string> Save(string filename, bool overwrite = true)
         {
             string filepath = GetSavePath(filename);
@@ -567,6 +536,11 @@ namespace LLMUnity
             return result;
         }
 
+        /// <summary>
+        /// Load the chat history and cache from the provided filename / relative path.
+        /// </summary>
+        /// <param name="filename">filename / relative path to load the chat history from</param>
+        /// <returns></returns>
         public async Task<string> Load(string filename)
         {
             string filepath = GetSavePath(filename);
@@ -601,10 +575,6 @@ namespace LLMUnity
             return getContent(JsonUtility.FromJson<Res>(response));
         }
 
-        /// <summary>
-        /// Cancel the ongoing requests e.g. Chat, Complete.
-        /// </summary>
-        // <summary>
         protected void CancelRequestsLocal()
         {
             if (id_slot >= 0) llm.CancelRequest(id_slot);
@@ -619,6 +589,10 @@ namespace LLMUnity
             WIPRequests.Clear();
         }
 
+        /// <summary>
+        /// Cancel the ongoing requests e.g. Chat, Complete.
+        /// </summary>
+        // <summary>
         public void CancelRequests()
         {
             if (remote) CancelRequestsRemote();
@@ -724,9 +698,11 @@ namespace LLMUnity
         }
     }
 
+    /// \cond HIDE
     [Serializable]
     public class ChatListWrapper
     {
         public List<ChatMessage> chat;
     }
+    /// \endcond
 }

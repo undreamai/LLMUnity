@@ -1,5 +1,5 @@
 /// @file
-/// @brief File implementing the LLM server.
+/// @brief File implementing the LLM.
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,6 +10,7 @@ using UnityEngine;
 
 namespace LLMUnity
 {
+    /// \cond HIDE
     public class LLMException : Exception
     {
         public int ErrorCode { get; private set; }
@@ -19,6 +20,7 @@ namespace LLMUnity
             ErrorCode = errorCode;
         }
     }
+    /// \endcond
 
     [DefaultExecutionOrder(-1)]
     /// @ingroup llm
@@ -36,7 +38,7 @@ namespace LLMUnity
         /// If the user's GPU is not supported, the LLM will fall back to the CPU </summary>
         [LLM] public int numGPULayers = 0;
         /// <summary> select to log the output of the LLM in the Unity Editor. </summary>
-        [LLMAdvanced] public bool debug = false;
+        [LLM] public bool debug = false;
         /// <summary> number of prompts that can happen in parallel (-1 = number of LLMCharacter objects) </summary>
         [LLMAdvanced] public int parallelPrompts = -1;
         /// <summary> allows to start the server asynchronously.
@@ -75,15 +77,15 @@ namespace LLMUnity
         [ModelAdvanced] public int contextSize = 0;
         /// <summary> Batch size for prompt processing. </summary>
         [ModelAdvanced] public int batchSize = 512;
-        /// <summary> select to log the output of the LLM in the Unity Editor. </summary>
+        /// <summary> toggle to enable remote server functionality </summary>
         [LLM] public bool remote = false;
         /// <summary> Boolean set to true if the server has started and is ready to receive requests, false otherwise. </summary>
         public bool started { get; protected set; } = false;
         /// <summary> Boolean set to true if the server has failed to start. </summary>
         public bool failed { get; protected set; } = false;
-        public string slotSaveDir;
 
         /// \cond HIDE
+        public string slotSaveDir;
         public int SelectedModel = 0;
         [HideInInspector] public float modelProgress = 1;
         [HideInInspector] public float modelCopyProgress = 1;
@@ -100,10 +102,13 @@ namespace LLMUnity
         /// \endcond
 
 #if UNITY_EDITOR
+        /// \cond HIDE
         public void SetModelProgress(float progress)
         {
             modelProgress = progress;
         }
+
+        /// \endcond
 
         /// <summary>
         /// Allows to set the model used by the LLM.
@@ -137,13 +142,20 @@ namespace LLMUnity
         }
 
 #endif
-
+        /// <summary>
+        /// Set the chat template for the LLM.
+        /// </summary>
+        /// <param name="templateName">the chat template to use. The available templates can be found in the ChatTemplate.templates.Keys array </param>
         public void SetTemplate(string templateName)
         {
             chatTemplate = templateName;
             llmlib?.LLM_SetTemplate(LLMObject, chatTemplate);
         }
 
+        /// <summary>
+        /// Returns the chat template of the LLM.
+        /// </summary>
+        /// <returns>chat template of the LLM</returns>
         public string GetTemplate()
         {
             return chatTemplate;
@@ -184,6 +196,10 @@ namespace LLMUnity
             return arguments;
         }
 
+        /// <summary>
+        /// The Unity Awake function that starts the LLM server.
+        /// The server can be started asynchronously if the asynchronousStartup option is set.
+        /// </summary>
         public async void Awake()
         {
             if (!enabled) return;
@@ -269,6 +285,12 @@ namespace LLMUnity
             started = true;
         }
 
+        /// <summary>
+        /// Registers a local LLMCharacter object.
+        /// This allows to bind the LLMCharacter "client" to a specific slot of the LLM.
+        /// </summary>
+        /// <param name="llmCharacter"></param>
+        /// <returns></returns>
         public int Register(LLMCharacter llmCharacter)
         {
             clients.Add(llmCharacter);
@@ -280,9 +302,11 @@ namespace LLMUnity
             return Math.Max(parallelPrompts == -1 ? clients.Count : parallelPrompts, 1);
         }
 
+        /// \cond HIDE
         public delegate void LLMStatusCallback(IntPtr LLMObject, IntPtr stringWrapper);
         public delegate void LLMSimpleCallback(IntPtr LLMObject, string json_data);
         public delegate void LLMReplyCallback(IntPtr LLMObject, string json_data, IntPtr stringWrapper);
+        /// \endcond
 
         StreamWrapper ConstructStreamWrapper(Callback<string> streamCallback = null, bool clearOnUpdate = false)
         {
@@ -297,6 +321,8 @@ namespace LLMUnity
             streamWrapper.Destroy();
         }
 
+        /// <summary>
+        /// The Unity Update function. It is used to retrieve the LLM replies.
         public void Update()
         {
             foreach (StreamWrapper streamWrapper in streamWrappers) streamWrapper.Update();
@@ -344,6 +370,11 @@ namespace LLMUnity
             return result;
         }
 
+        /// <summary>
+        /// Tokenises the provided query.
+        /// </summary>
+        /// <param name="json">json request containing the query</param>
+        /// <returns>tokenisation result</returns>
         public async Task<string> Tokenize(string json)
         {
             AssertStarted();
@@ -354,6 +385,11 @@ namespace LLMUnity
             return await LLMReply(callback, json);
         }
 
+        /// <summary>
+        /// Detokenises the provided query.
+        /// </summary>
+        /// <param name="json">json request containing the query</param>
+        /// <returns>detokenisation result</returns>
         public async Task<string> Detokenize(string json)
         {
             AssertStarted();
@@ -364,6 +400,11 @@ namespace LLMUnity
             return await LLMReply(callback, json);
         }
 
+        /// <summary>
+        /// Allows to save / restore the state of a slot
+        /// </summary>
+        /// <param name="json">json request containing the query</param>
+        /// <returns>slot result</returns>
         public async Task<string> Slot(string json)
         {
             AssertStarted();
@@ -374,6 +415,12 @@ namespace LLMUnity
             return await LLMReply(callback, json);
         }
 
+        /// <summary>
+        /// Allows to use the chat and completion functionality of the LLM.
+        /// </summary>
+        /// <param name="json">json request containing the query</param>
+        /// <param name="streamCallback">callback function to call with intermediate responses</param>
+        /// <returns>completion result</returns>
         public async Task<string> Completion(string json, Callback<string> streamCallback = null)
         {
             AssertStarted();
@@ -386,6 +433,10 @@ namespace LLMUnity
             return result;
         }
 
+        /// <summary>
+        /// Allows to cancel the requests in a specific slot of the LLM
+        /// </summary>
+        /// <param name="id_slot">slot of the LLM</param>
         public void CancelRequest(int id_slot)
         {
             AssertStarted();
@@ -393,6 +444,9 @@ namespace LLMUnity
             CheckLLMStatus();
         }
 
+        /// <summary>
+        /// Stops and destroys the LLM
+        /// </summary>
         public void Destroy()
         {
             try
