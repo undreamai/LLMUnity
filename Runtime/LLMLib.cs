@@ -1,3 +1,6 @@
+/// @file
+/// @brief File implementing the LLM library calls.
+/// \cond HIDE
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -450,3 +453,4 @@ namespace LLMUnity
         public StringWrapper_GetStringDelegate StringWrapper_GetString;
     }
 }
+/// \endcond
