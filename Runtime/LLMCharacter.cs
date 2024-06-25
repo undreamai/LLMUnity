@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -265,17 +266,19 @@ namespace LLMUnity
             }
         }
 
-#if UNITY_EDITOR
         /// <summary>
         /// Set the grammar file of the LLMCharacter
         /// </summary>
         /// <param name="path">path to the grammar file</param>
         public async void SetGrammar(string path)
         {
-            grammar = await LLMUnitySetup.AddAsset(path, LLMUnitySetup.GetAssetPath());
+#if UNITY_EDITOR
+            if (!EditorApplication.isPlaying) path = await LLMUnitySetup.AddAsset(path, LLMUnitySetup.GetAssetPath());
+#endif
+            grammar = path;
+            InitGrammar();
         }
 
-#endif
         List<string> GetStopwords()
         {
             List<string> stopAll = new List<string>(template.GetStop(playerName, AIName));

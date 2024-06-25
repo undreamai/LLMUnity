@@ -99,16 +99,26 @@ namespace LLMUnity
         StreamWrapper logStreamWrapper = null;
         Thread llmThread = null;
         List<StreamWrapper> streamWrappers = new List<StreamWrapper>();
-        /// \endcond
 
-#if UNITY_EDITOR
-        /// \cond HIDE
         public void SetModelProgress(float progress)
         {
             modelProgress = progress;
         }
 
         /// \endcond
+
+        async Task<string> CopyAsset(string path)
+        {
+#if UNITY_EDITOR
+            if (!EditorApplication.isPlaying)
+            {
+                modelCopyProgress = 0;
+                path = await LLMUnitySetup.AddAsset(path, LLMUnitySetup.GetAssetPath());
+                modelCopyProgress = 1;
+            }
+#endif
+            return path;
+        }
 
         /// <summary>
         /// Allows to set the model used by the LLM.
@@ -119,11 +129,11 @@ namespace LLMUnity
         public async Task SetModel(string path)
         {
             // set the model and enable the model editor properties
-            modelCopyProgress = 0;
-            model = await LLMUnitySetup.AddAsset(path, LLMUnitySetup.GetAssetPath());
-            SetTemplate(ChatTemplate.FromGGUF(path));
-            EditorUtility.SetDirty(this);
-            modelCopyProgress = 1;
+            model = await CopyAsset(path);
+            SetTemplate(ChatTemplate.FromGGUF(LLMUnitySetup.GetAssetPath(model)));
+#if UNITY_EDITOR
+            if (!EditorApplication.isPlaying) EditorUtility.SetDirty(this);
+#endif
         }
 
         /// <summary>
@@ -134,14 +144,12 @@ namespace LLMUnity
         /// <param name="path">path to LORA model to use (.bin format)</param>
         public async Task SetLora(string path)
         {
-            // set the lora and enable the model editor properties
-            modelCopyProgress = 0;
-            lora = await LLMUnitySetup.AddAsset(path, LLMUnitySetup.GetAssetPath());
-            EditorUtility.SetDirty(this);
-            modelCopyProgress = 1;
+            lora = await CopyAsset(path);
+#if UNITY_EDITOR
+            if (!EditorApplication.isPlaying) EditorUtility.SetDirty(this);
+#endif
         }
 
-#endif
         /// <summary>
         /// Set the chat template for the LLM.
         /// </summary>
