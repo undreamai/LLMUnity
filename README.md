@@ -296,16 +296,16 @@ HuggingFace models can be converted to gguf with this [online converter](https:/
 <img width="300" src=".github/LLM_GameObject.png" align="right"/>
 </div>
 
+- `Remote` select to provide remote access to the LLM
+- `Port` port to run the LLM server (if `Remote` is set)
 - `Num Threads` number of threads to use (default: -1 = all)
 - `Num GPU Layers` number of model layers to offload to the GPU.
 If set to 0 the GPU is not used. Use a large number i.e. >30 to utilise the GPU as much as possible.
 Note that higher values of context size will use more VRAM.
 If the user's GPU is not supported, the LLM will fall back to the CPU
-- `Remote` select to provide remote access to the LLM
-- `Port` port to run the LLM server (if `Remote` is set)
+- `Debug` select to log the output of the model in the Unity Editor
 - <details><summary>Advanced options</summary>
 
-  - `Debug` select to log the output of the model in the Unity Editor
   - `Parallel Prompts` number of prompts that can happen in parallel (default: -1 = number of LLM/LLMClient objects)
   - `Dont Destroy On Load` select to not destroy the LLM GameObject when loading a new Scene
 
@@ -339,10 +339,11 @@ If the user's GPU is not supported, the LLM will fall back to the CPU
 - `LLM` the LLM GameObject (if `Remote` is not set)
 - `Hort` ip of the LLM (if `Remote` is set)
 - `Port` port of the LLM (if `Remote` is set)
-- <details><summary><code>Save</code> the save filename or relative path</summary> If set, the chat history and LLM state is automatically saved to file specified. <br> The LLM state is saved to the specified filename and the chat history with an added json suffix. <br> Both files are saved in the [persistentDataPath folder of Unity](https://docs.unity3d.com/ScriptReference/Application-persistentDataPath.html).</details>
+- <details><summary><code>Save</code> save filename or relative path</summary> If set, the chat history and LLM state (if save cache is enabled) is automatically saved to file specified. <br> The chat history is saved with a json suffix and the LLM state with a cache suffix. <br> Both files are saved in the [persistentDataPath folder of Unity](https://docs.unity3d.com/ScriptReference/Application-persistentDataPath.html).</details>
+- `Save Cache` select to save the LLM state along with the chat history. The LLM state is typically around 100MB+.
+- `Debug Prompt` select to log the constructed prompts in the Unity Editor
 - <details><summary>Advanced options</summary>
 
-  - `Debug Prompt` select to log the constructed prompts in the Unity Editor
 
 </details>
 

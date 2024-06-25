@@ -31,6 +31,10 @@ namespace LLMUnity
     {
         /// <summary> toggle to show/hide advanced options in the GameObject </summary>
         [HideInInspector] public bool advancedOptions = false;
+        /// <summary> toggle to enable remote server functionality </summary>
+        [LocalRemote] public bool remote = false;
+        /// <summary> port to use for the LLM server </summary>
+        [Remote] public int port = 13333;
         /// <summary> number of threads to use (-1 = all) </summary>
         [LLM] public int numThreads = -1;
         /// <summary> number of model layers to offload to the GPU (0 = GPU not used).
@@ -64,8 +68,6 @@ namespace LLMUnity
         [LLMAdvanced] public bool asynchronousStartup = false;
         /// <summary> select to not destroy the LLM GameObject when loading a new Scene. </summary>
         [LLMAdvanced] public bool dontDestroyOnLoad = true;
-        /// <summary> port to use for the LLM server </summary>
-        [Remote] public int port = 13333;
         /// <summary> the path of the model being used (relative to the Assets/StreamingAssets folder).
         /// Models with .gguf format are allowed.</summary>
         [Model] public string model = "";
@@ -77,8 +79,6 @@ namespace LLMUnity
         [ModelAdvanced] public int contextSize = 0;
         /// <summary> Batch size for prompt processing. </summary>
         [ModelAdvanced] public int batchSize = 512;
-        /// <summary> toggle to enable remote server functionality </summary>
-        [LLM] public bool remote = false;
         /// <summary> Boolean set to true if the server has started and is ready to receive requests, false otherwise. </summary>
         public bool started { get; protected set; } = false;
         /// <summary> Boolean set to true if the server has failed to start. </summary>

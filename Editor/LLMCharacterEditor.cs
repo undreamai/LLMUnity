@@ -15,12 +15,13 @@ namespace LLMUnity
 
         public void AddClientSettings(SerializedObject llmScriptSO)
         {
-            List<Type> attributeClasses = new List<Type> { typeof(LLMAttribute) };
+            List<Type> attributeClasses = new List<Type>(){typeof(LocalRemoteAttribute)};
+            attributeClasses.Add(llmScriptSO.FindProperty("remote").boolValue ? typeof(RemoteAttribute) : typeof(LocalAttribute));
+            attributeClasses.Add(typeof(LLMAttribute));
             if (llmScriptSO.FindProperty("advancedOptions").boolValue)
             {
                 attributeClasses.Add(typeof(LLMAdvancedAttribute));
             }
-            attributeClasses.Add(llmScriptSO.FindProperty("remote").boolValue ? typeof(RemoteAttribute) : typeof(LocalAttribute));
             ShowPropertiesOfClass("Setup Settings", llmScriptSO, attributeClasses, true);
         }
 
@@ -48,12 +49,11 @@ namespace LLMUnity
 
                 ShowPropertiesOfClass("", llmScriptSO, new List<Type> { typeof(ModelAdvancedAttribute) }, false);
             }
-            Space();
         }
 
         public void AddChatSettings(SerializedObject llmScriptSO)
         {
-            ShowPropertiesOfClass("Chat Settings", llmScriptSO, new List<Type> { typeof(ChatAttribute) }, false);
+            ShowPropertiesOfClass("Chat Settings", llmScriptSO, new List<Type> { typeof(ChatAttribute) }, true);
         }
 
         public override void OnInspectorGUI()
@@ -68,8 +68,8 @@ namespace LLMUnity
             EditorGUI.BeginChangeCheck();
             AddOptionsToggles(llmScriptSO);
             AddClientSettings(llmScriptSO);
-            AddModelSettings(llmScriptSO, llmScript);
             AddChatSettings(llmScriptSO);
+            AddModelSettings(llmScriptSO, llmScript);
 
             if (EditorGUI.EndChangeCheck())
                 Repaint();
