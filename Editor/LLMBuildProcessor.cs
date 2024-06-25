@@ -17,7 +17,6 @@ namespace LLMUnity
         [InitializeOnLoadMethod]
         private static void InitializeOnLoad()
         {
-            Debug.Log(tempDir);
             if (!Directory.Exists(tempDir)) Directory.CreateDirectory(tempDir);
             else ResetLibraryPlatforms();
         }
@@ -85,7 +84,7 @@ namespace LLMUnity
                 Directory.Move(source, target);
                 moved = true;
             }
-            if (moved && foldersMoved != null) foldersMoved.Add(new FoldersMovedPair{source=source, target = target});
+            if (moved && foldersMoved != null) foldersMoved.Add(new FoldersMovedPair {source = source, target = target});
             return moved;
         }
 
