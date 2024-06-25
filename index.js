@@ -7,6 +7,16 @@ var index =
     [ "How to use", "index.html#autotoc_md5", null ],
     [ "Examples", "index.html#autotoc_md6", null ],
     [ "Use your own model", "index.html#autotoc_md7", null ],
-    [ "Options", "index.html#autotoc_md8", null ],
-    [ "License", "index.html#autotoc_md12", null ]
+    [ "Options", "index.html#autotoc_md8", [
+      [ "LLM Settings", "index.html#autotoc_md9", [
+        [ "💻 Setup Settings", "index.html#autotoc_md10", null ],
+        [ "🤗 Model Settings", "index.html#autotoc_md11", null ]
+      ] ],
+      [ "LLMCharacter Settings", "index.html#autotoc_md12", [
+        [ "💻 Setup Settings", "index.html#autotoc_md13", null ],
+        [ "🗨️ Chat Settings", "index.html#autotoc_md14", null ],
+        [ "🤗 Model Settings", "index.html#autotoc_md15", null ]
+      ] ]
+    ] ],
+    [ "License", "index.html#autotoc_md16", null ]
 ];

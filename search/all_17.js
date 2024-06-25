@@ -1,8 +1,7 @@
 var searchData=
 [
-  ['unity_0',['Games using LLM for Unity',['../index.html#autotoc_md3',1,'']]],
-  ['use_1',['How to use',['../index.html#autotoc_md5',1,'']]],
-  ['use_20your_20own_20model_2',['Use your own model',['../index.html#autotoc_md7',1,'']]],
-  ['using_20llm_20for_20unity_3',['Games using LLM for Unity',['../index.html#autotoc_md3',1,'']]],
-  ['utils_4',['Utils',['../group__utils.html',1,'']]]
+  ['v0_202_0',['mistralai/Mistral-7B-Instruct-v0.2',['../md_Third_01Party_01Notices.html#autotoc_md23',1,'']]],
+  ['v0_202_20gguf_1',['modified by: TheBloke/Mistral-7B-Instruct-v0.2-GGUF',['../md_Third_01Party_01Notices.html#autotoc_md24',1,'']]],
+  ['version_2',['Version',['../classLLMUnity_1_1LLMUnitySetup.html#aa9e562edf406d931b3f58b28b28e7c60',1,'LLMUnity::LLMUnitySetup']]],
+  ['vicunatemplate_3',['VicunaTemplate',['../classLLMUnity_1_1VicunaTemplate.html',1,'LLMUnity']]]
 ];

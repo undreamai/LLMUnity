@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['grammar_0',['grammar',['../classLLMUnity_1_1LLMClient.html#a8028c567bfea1e66c7107ea3cae43bab',1,'LLMUnity::LLMClient']]]
+  ['host_0',['host',['../classLLMUnity_1_1LLMCharacter.html#ab00a2c1ff06fc3b2c0c383fe9f1d1a0b',1,'LLMUnity::LLMCharacter']]]
 ];

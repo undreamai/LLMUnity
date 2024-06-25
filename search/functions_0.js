@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['awake_0',['Awake',['../classLLMUnity_1_1LLM.html#a1553a9009ba6cd7b4040fd76d190daaa',1,'LLMUnity.LLM.Awake()'],['../classLLMUnity_1_1LLMClient.html#a9cc96f9b98f36be5c1b4b61a6e783f94',1,'LLMUnity.LLMClient.Awake()']]]
+  ['asktemplate_0',['AskTemplate',['../classLLMUnity_1_1LLMCharacter.html#a49b2dc59a64d69ece5aea9c602d28f95',1,'LLMUnity::LLMCharacter']]],
+  ['awake_1',['Awake',['../classLLMUnity_1_1LLM.html#a4ab4bbfb8a83cbe4a19e7aef153c980e',1,'LLMUnity.LLM.Awake()'],['../classLLMUnity_1_1LLMCharacter.html#a1b2b5787e2695697962f520b0813aa3b',1,'LLMUnity.LLMCharacter.Awake()']]]
 ];

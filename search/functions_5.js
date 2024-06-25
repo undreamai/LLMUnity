@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['isserverreachable_0',['IsServerReachable',['../classLLMUnity_1_1LLMClient.html#a9f5a4977095fc88964de9dc0cb90e48c',1,'LLMUnity::LLMClient']]],
-  ['isserverreachableasync_1',['IsServerReachableAsync',['../classLLMUnity_1_1LLMClient.html#ac65e5eb3e525dd3c874cc67524b604df',1,'LLMUnity::LLMClient']]]
+  ['load_0',['Load',['../classLLMUnity_1_1LLMCharacter.html#af038296bb6679a042b05e073eb3a961a',1,'LLMUnity::LLMCharacter']]],
+  ['loadtemplate_1',['LoadTemplate',['../classLLMUnity_1_1LLMCharacter.html#a5a7c6d91daa9ab15f97c9c8324312828',1,'LLMUnity::LLMCharacter']]]
 ];

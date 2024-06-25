@@ -47,7 +47,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_tiny.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">LLM for Unity
-   &#160;<span id="projectnumber">v1.2.9</span>
+   &#160;<span id="projectnumber">v2.0.1</span>
    </div>
    <div id="projectbrief">Create characters in Unity with LLMs!</div>
   </td>
@@ -141,9 +141,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:acce2995beebab19eb00fe973ab21c49f" id="r_acce2995beebab19eb00fe973ab21c49f"><td class="memItemLeft" align="right" valign="top">override string[]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acce2995beebab19eb00fe973ab21c49f">GetChatTemplateMatches</a> ()</td></tr>
 <tr class="memdesc:acce2995beebab19eb00fe973ab21c49f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns an array of jinja templates that can be used to match the chat template.  <br /></td></tr>
 <tr class="separator:acce2995beebab19eb00fe973ab21c49f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a031095720903300a9966c3d987b9b458" id="r_a031095720903300a9966c3d987b9b458"><td class="memItemLeft" align="right" valign="top">override string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a031095720903300a9966c3d987b9b458">ComputePrompt</a> (List&lt; ChatMessage &gt; messages, string AIName)</td></tr>
-<tr class="memdesc:a031095720903300a9966c3d987b9b458"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs the prompt using the template based on a list of ChatMessages.  <br /></td></tr>
-<tr class="separator:a031095720903300a9966c3d987b9b458"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adda6f14e44264196bff147351f839cc4" id="r_adda6f14e44264196bff147351f839cc4"><td class="memItemLeft" align="right" valign="top">override string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adda6f14e44264196bff147351f839cc4">ComputePrompt</a> (List&lt; ChatMessage &gt; messages, string AIName, bool endWithPrefix=true)</td></tr>
+<tr class="memdesc:adda6f14e44264196bff147351f839cc4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs the prompt using the template based on a list of ChatMessages.  <br /></td></tr>
+<tr class="separator:adda6f14e44264196bff147351f839cc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5b75acbabc2f84aa1fe3ee51bd391f0c" id="r_a5b75acbabc2f84aa1fe3ee51bd391f0c"><td class="memItemLeft" align="right" valign="top">override string[]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5b75acbabc2f84aa1fe3ee51bd391f0c">GetStop</a> (string playerName, string AIName)</td></tr>
 <tr class="memdesc:a5b75acbabc2f84aa1fe3ee51bd391f0c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns an array of the stopwords used by the template.  <br /></td></tr>
 <tr class="separator:a5b75acbabc2f84aa1fe3ee51bd391f0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -174,10 +174,10 @@ Additional Inherited Members</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class implementing the Zephyr template. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMChatTemplates_8cs_source.html#l00410">410</a> of file <a class="el" href="LLMChatTemplates_8cs_source.html">LLMChatTemplates.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMChatTemplates_8cs_source.html#l00409">409</a> of file <a class="el" href="LLMChatTemplates_8cs_source.html">LLMChatTemplates.cs</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a031095720903300a9966c3d987b9b458" name="a031095720903300a9966c3d987b9b458"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a031095720903300a9966c3d987b9b458">&#9670;&#160;</a></span>ComputePrompt()</h2>
+<a id="adda6f14e44264196bff147351f839cc4" name="adda6f14e44264196bff147351f839cc4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adda6f14e44264196bff147351f839cc4">&#9670;&#160;</a></span>ComputePrompt()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -193,7 +193,12 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>AIName</em></span>&#160;)</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>AIName</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>endWithPrefix</em><span class="paramdefsep"> = </span><span class="paramdefval">true</span></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -206,16 +211,17 @@ Additional Inherited Members</h2></td></tr>
 <p>Constructs the prompt using the template based on a list of ChatMessages. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">messages</td><td>list of ChatMessages e.g. the LLMClient chat </td></tr>
+    <tr><td class="paramname">messages</td><td>list of ChatMessages e.g. the LLMCharacter chat </td></tr>
     <tr><td class="paramname">AIName</td><td>the AI name </td></tr>
+    <tr><td class="paramname">endWithPrefix</td><td>whether to end the prompt with the AI prefix </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>prompt</dd></dl>
 
-<p>Reimplemented from <a class="el" href="classLLMUnity_1_1ChatTemplate.html#a78929b86a83f20d316e70c514857985c">LLMUnity.ChatTemplate</a>.</p>
+<p>Reimplemented from <a class="el" href="classLLMUnity_1_1ChatTemplate.html#a470480717841821742c57c931ae6307c">LLMUnity.ChatTemplate</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="LLMChatTemplates_8cs_source.html#l00424">424</a> of file <a class="el" href="LLMChatTemplates_8cs_source.html">LLMChatTemplates.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMChatTemplates_8cs_source.html#l00423">423</a> of file <a class="el" href="LLMChatTemplates_8cs_source.html">LLMChatTemplates.cs</a>.</p>
 
 </div>
 </div>
@@ -246,7 +252,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="classLLMUnity_1_1ChatTemplate.html#a503d59c8232b18f0b9ad139f438d186f">LLMUnity.ChatTemplate</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="LLMChatTemplates_8cs_source.html#l00415">415</a> of file <a class="el" href="LLMChatTemplates_8cs_source.html">LLMChatTemplates.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMChatTemplates_8cs_source.html#l00414">414</a> of file <a class="el" href="LLMChatTemplates_8cs_source.html">LLMChatTemplates.cs</a>.</p>
 
 </div>
 </div>
@@ -277,7 +283,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="classLLMUnity_1_1ChatTemplate.html#af073ef07917d61eefd6f2d861657fd38">LLMUnity.ChatTemplate</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="LLMChatTemplates_8cs_source.html#l00413">413</a> of file <a class="el" href="LLMChatTemplates_8cs_source.html">LLMChatTemplates.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMChatTemplates_8cs_source.html#l00412">412</a> of file <a class="el" href="LLMChatTemplates_8cs_source.html">LLMChatTemplates.cs</a>.</p>
 
 </div>
 </div>
@@ -308,7 +314,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="classLLMUnity_1_1ChatTemplate.html#aea386f3fcdd35a4a48aa701a9e31f12c">LLMUnity.ChatTemplate</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="LLMChatTemplates_8cs_source.html#l00412">412</a> of file <a class="el" href="LLMChatTemplates_8cs_source.html">LLMChatTemplates.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMChatTemplates_8cs_source.html#l00411">411</a> of file <a class="el" href="LLMChatTemplates_8cs_source.html">LLMChatTemplates.cs</a>.</p>
 
 </div>
 </div>
@@ -339,7 +345,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="classLLMUnity_1_1ChatTemplate.html#aa5bde3b4d2f7d2202647e10d37927010">LLMUnity.ChatTemplate</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="LLMChatTemplates_8cs_source.html#l00414">414</a> of file <a class="el" href="LLMChatTemplates_8cs_source.html">LLMChatTemplates.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMChatTemplates_8cs_source.html#l00413">413</a> of file <a class="el" href="LLMChatTemplates_8cs_source.html">LLMChatTemplates.cs</a>.</p>
 
 </div>
 </div>

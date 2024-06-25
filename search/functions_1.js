@@ -1,7 +1,9 @@
 var searchData=
 [
-  ['cancelrequests_0',['CancelRequests',['../classLLMUnity_1_1LLMClient.html#a50b5235db5f784c7a0b4f8f3d3e7f2fe',1,'LLMUnity::LLMClient']]],
-  ['chat_1',['Chat',['../classLLMUnity_1_1LLMClient.html#adf78bb425d542394156740244dbf0458',1,'LLMUnity::LLMClient']]],
-  ['complete_2',['Complete',['../classLLMUnity_1_1LLMClient.html#afb93776d4bd9d8bd843896a7c4bf7e65',1,'LLMUnity::LLMClient']]],
-  ['computeprompt_3',['ComputePrompt',['../classLLMUnity_1_1ChatTemplate.html#a78929b86a83f20d316e70c514857985c',1,'LLMUnity.ChatTemplate.ComputePrompt()'],['../classLLMUnity_1_1Phi3Template.html#a031095720903300a9966c3d987b9b458',1,'LLMUnity.Phi3Template.ComputePrompt()']]]
+  ['cancelrequest_0',['CancelRequest',['../classLLMUnity_1_1LLM.html#a281d49a8f23fbf506d178a875b43c688',1,'LLMUnity::LLM']]],
+  ['cancelrequests_1',['CancelRequests',['../classLLMUnity_1_1LLMCharacter.html#a1c8c35f4e0c2d3d381561fd42e1e25d7',1,'LLMUnity::LLMCharacter']]],
+  ['chat_2',['Chat',['../classLLMUnity_1_1LLMCharacter.html#a92800650189059a2eaf572659a8ca1a0',1,'LLMUnity::LLMCharacter']]],
+  ['complete_3',['Complete',['../classLLMUnity_1_1LLMCharacter.html#af0ab230552052b379b89f4c13c7c80f4',1,'LLMUnity::LLMCharacter']]],
+  ['completion_4',['Completion',['../classLLMUnity_1_1LLM.html#ac50c648dc8594b31b7d3bbd54e5c3ab9',1,'LLMUnity::LLM']]],
+  ['computeprompt_5',['ComputePrompt',['../classLLMUnity_1_1ChatTemplate.html#a470480717841821742c57c931ae6307c',1,'LLMUnity.ChatTemplate.ComputePrompt()'],['../classLLMUnity_1_1Phi3Template.html#adda6f14e44264196bff147351f839cc4',1,'LLMUnity.Phi3Template.ComputePrompt()']]]
 ];

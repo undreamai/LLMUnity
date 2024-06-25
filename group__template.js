@@ -1,7 +1,7 @@
 var group__template =
 [
     [ "LLMUnity.ChatTemplate", "classLLMUnity_1_1ChatTemplate.html", [
-      [ "ComputePrompt", "classLLMUnity_1_1ChatTemplate.html#a78929b86a83f20d316e70c514857985c", null ],
+      [ "ComputePrompt", "classLLMUnity_1_1ChatTemplate.html#a470480717841821742c57c931ae6307c", null ],
       [ "GetChatTemplateMatches", "classLLMUnity_1_1ChatTemplate.html#a503d59c8232b18f0b9ad139f438d186f", null ],
       [ "GetDescription", "classLLMUnity_1_1ChatTemplate.html#af073ef07917d61eefd6f2d861657fd38", null ],
       [ "GetName", "classLLMUnity_1_1ChatTemplate.html#aea386f3fcdd35a4a48aa701a9e31f12c", null ],
@@ -65,7 +65,7 @@ var group__template =
       [ "GetStop", "classLLMUnity_1_1Phi2Template.html#ac6c6a719728bafded61b57547bc16fa0", null ]
     ] ],
     [ "LLMUnity.Phi3Template", "classLLMUnity_1_1Phi3Template.html", [
-      [ "ComputePrompt", "classLLMUnity_1_1Phi3Template.html#a031095720903300a9966c3d987b9b458", null ],
+      [ "ComputePrompt", "classLLMUnity_1_1Phi3Template.html#adda6f14e44264196bff147351f839cc4", null ],
       [ "GetChatTemplateMatches", "classLLMUnity_1_1Phi3Template.html#acce2995beebab19eb00fe973ab21c49f", null ],
       [ "GetDescription", "classLLMUnity_1_1Phi3Template.html#a034efcf3a452e4f5f2fa1155b215a034", null ],
       [ "GetName", "classLLMUnity_1_1Phi3Template.html#ab5b68651d20623e0650a0e5282aefc27", null ],

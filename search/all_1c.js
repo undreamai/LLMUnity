@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['💻_20server_20settings_0',['💻 Server Settings',['../index.html#autotoc_md9',1,'']]]
+  ['🗨️_20chat_20settings_0',['🗨️ Chat Settings',['../index.html#autotoc_md14',1,'']]]
 ];

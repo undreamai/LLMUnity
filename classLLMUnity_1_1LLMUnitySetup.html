@@ -47,7 +47,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_tiny.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">LLM for Unity
-   &#160;<span id="projectnumber">v1.2.9</span>
+   &#160;<span id="projectnumber">v2.0.1</span>
    </div>
    <div id="projectbrief">Create characters in Unity with LLMs!</div>
   </td>
@@ -113,6 +113,7 @@ $(function(){initNavTree('classLLMUnity_1_1LLMUnitySetup.html',''); initResizabl
 
 <div class="header">
   <div class="summary">
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="classLLMUnity_1_1LLMUnitySetup-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">LLMUnity.LLMUnitySetup Class Reference<div class="ingroups"><a class="el" href="group__utils.html">Utils</a></div></div></div>
@@ -121,23 +122,112 @@ $(function(){initNavTree('classLLMUnity_1_1LLMUnitySetup.html',''); initResizabl
 
 <p>Class implementing helper functions for setup and process management.  
  <a href="#details">More...</a></p>
-<div class="dynheader">
-Inheritance diagram for LLMUnity.LLMUnitySetup:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classLLMUnity_1_1LLMUnitySetup__inherit__graph.svg" width="194" height="110"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:ad1f9ea3019b6f94c6a60bb285059c54f" id="r_ad1f9ea3019b6f94c6a60bb285059c54f"><td class="memItemLeft" align="right" valign="top"><a id="ad1f9ea3019b6f94c6a60bb285059c54f" name="ad1f9ea3019b6f94c6a60bb285059c54f"></a>
+static&#160;</td><td class="memItemRight" valign="bottom"><b>readonly</b> (string, string)[] modelOptions</td></tr>
+<tr class="memdesc:ad1f9ea3019b6f94c6a60bb285059c54f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default models for download. <br /></td></tr>
+<tr class="separator:ad1f9ea3019b6f94c6a60bb285059c54f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
-<tr class="memitem:aa9e562edf406d931b3f58b28b28e7c60" id="r_aa9e562edf406d931b3f58b28b28e7c60"><td class="memItemLeft" align="right" valign="top">static string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa9e562edf406d931b3f58b28b28e7c60">Version</a> = &quot;v1.2.9&quot;</td></tr>
+<tr class="memitem:aa9e562edf406d931b3f58b28b28e7c60" id="r_aa9e562edf406d931b3f58b28b28e7c60"><td class="memItemLeft" align="right" valign="top">static string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa9e562edf406d931b3f58b28b28e7c60">Version</a> = &quot;v2.0.1&quot;</td></tr>
 <tr class="memdesc:aa9e562edf406d931b3f58b28b28e7c60"><td class="mdescLeft">&#160;</td><td class="mdescRight">LLM for Unity version.  <br /></td></tr>
 <tr class="separator:aa9e562edf406d931b3f58b28b28e7c60"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8c890a623cf474c4515ae64698c3f236" id="r_a8c890a623cf474c4515ae64698c3f236"><td class="memItemLeft" align="right" valign="top">static string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8c890a623cf474c4515ae64698c3f236">LlamaLibVersion</a> = &quot;v1.1.5&quot;</td></tr>
+<tr class="memdesc:a8c890a623cf474c4515ae64698c3f236"><td class="mdescLeft">&#160;</td><td class="mdescRight">LlamaLib version.  <br /></td></tr>
+<tr class="separator:a8c890a623cf474c4515ae64698c3f236"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae298a065eafff77f499f05f5f4447427" id="r_ae298a065eafff77f499f05f5f4447427"><td class="memItemLeft" align="right" valign="top">static string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae298a065eafff77f499f05f5f4447427">LlamaLibURL</a> = $&quot;https://github.com/undreamai/LlamaLib/releases/download/{<a class="el" href="#a8c890a623cf474c4515ae64698c3f236">LlamaLibVersion</a>}/undreamai-{<a class="el" href="#a8c890a623cf474c4515ae64698c3f236">LlamaLibVersion</a>}-llamacpp.zip&quot;</td></tr>
+<tr class="memdesc:ae298a065eafff77f499f05f5f4447427"><td class="mdescLeft">&#160;</td><td class="mdescRight">LlamaLib url.  <br /></td></tr>
+<tr class="separator:ae298a065eafff77f499f05f5f4447427"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4fbf1bc2995c0267c45395e6532002a8" id="r_a4fbf1bc2995c0267c45395e6532002a8"><td class="memItemLeft" align="right" valign="top">static string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4fbf1bc2995c0267c45395e6532002a8">libraryPath</a> = GetAssetPath(Path.GetFileName(<a class="el" href="#ae298a065eafff77f499f05f5f4447427">LlamaLibURL</a>).Replace(&quot;.zip&quot;, &quot;&quot;))</td></tr>
+<tr class="memdesc:a4fbf1bc2995c0267c45395e6532002a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">LlamaLib path.  <br /></td></tr>
+<tr class="separator:a4fbf1bc2995c0267c45395e6532002a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class implementing helper functions for setup and process management. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00031">31</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00065">65</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
 </div><h2 class="groupheader">Member Data Documentation</h2>
+<a id="a4fbf1bc2995c0267c45395e6532002a8" name="a4fbf1bc2995c0267c45395e6532002a8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4fbf1bc2995c0267c45395e6532002a8">&#9670;&#160;</a></span>libraryPath</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">string LLMUnity.LLMUnitySetup.libraryPath = GetAssetPath(Path.GetFileName(<a class="el" href="#ae298a065eafff77f499f05f5f4447427">LlamaLibURL</a>).Replace(&quot;.zip&quot;, &quot;&quot;))</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>LlamaLib path. </p>
+
+<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00075">75</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
+
+</div>
+</div>
+<a id="ae298a065eafff77f499f05f5f4447427" name="ae298a065eafff77f499f05f5f4447427"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae298a065eafff77f499f05f5f4447427">&#9670;&#160;</a></span>LlamaLibURL</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">string LLMUnity.LLMUnitySetup.LlamaLibURL = $&quot;https://github.com/undreamai/LlamaLib/releases/download/{<a class="el" href="#a8c890a623cf474c4515ae64698c3f236">LlamaLibVersion</a>}/undreamai-{<a class="el" href="#a8c890a623cf474c4515ae64698c3f236">LlamaLibVersion</a>}-llamacpp.zip&quot;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>LlamaLib url. </p>
+
+<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00073">73</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
+
+</div>
+</div>
+<a id="a8c890a623cf474c4515ae64698c3f236" name="a8c890a623cf474c4515ae64698c3f236"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8c890a623cf474c4515ae64698c3f236">&#9670;&#160;</a></span>LlamaLibVersion</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">string LLMUnity.LLMUnitySetup.LlamaLibVersion = &quot;v1.1.5&quot;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>LlamaLib version. </p>
+
+<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00071">71</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
+
+</div>
+</div>
 <a id="aa9e562edf406d931b3f58b28b28e7c60" name="aa9e562edf406d931b3f58b28b28e7c60"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa9e562edf406d931b3f58b28b28e7c60">&#9670;&#160;</a></span>Version</h2>
 
@@ -148,7 +238,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">string LLMUnity.LLMUnitySetup.Version = &quot;v1.2.9&quot;</td>
+          <td class="memname">string LLMUnity.LLMUnitySetup.Version = &quot;v2.0.1&quot;</td>
         </tr>
       </table>
   </td>
@@ -160,7 +250,7 @@ Static Public Attributes</h2></td></tr>
 
 <p>LLM for Unity version. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00035">35</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00069">69</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
 
 </div>
 </div>

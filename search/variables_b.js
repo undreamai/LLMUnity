@@ -1,8 +1,10 @@
 var searchData=
 [
-  ['minp_0',['minP',['../classLLMUnity_1_1LLMClient.html#a71c27bc5d6155ff036f8a402388e6a6b',1,'LLMUnity::LLMClient']]],
-  ['mirostat_1',['mirostat',['../classLLMUnity_1_1LLMClient.html#a0fb010fe051c69712a0233a3984cb9c9',1,'LLMUnity::LLMClient']]],
-  ['mirostateta_2',['mirostatEta',['../classLLMUnity_1_1LLMClient.html#ab3c7765428a387b556936ca9965dc6be',1,'LLMUnity::LLMClient']]],
-  ['mirostattau_3',['mirostatTau',['../classLLMUnity_1_1LLMClient.html#aeda17f0be352bd72e98700d14d08575f',1,'LLMUnity::LLMClient']]],
-  ['model_4',['model',['../classLLMUnity_1_1LLM.html#ab3feb52deeee0c441322c81628c065cd',1,'LLMUnity::LLM']]]
+  ['parallelprompts_0',['parallelPrompts',['../classLLMUnity_1_1LLM.html#a2a03591ffb964eacb31d2afbe42c4405',1,'LLMUnity::LLM']]],
+  ['penalizenl_1',['penalizeNl',['../classLLMUnity_1_1LLMCharacter.html#a66dab9317701bf41960afc2c178f352e',1,'LLMUnity::LLMCharacter']]],
+  ['penaltyprompt_2',['penaltyPrompt',['../classLLMUnity_1_1LLMCharacter.html#a8ee90b5dd4dd6162cc7efd00d305b6ff',1,'LLMUnity::LLMCharacter']]],
+  ['playername_3',['playerName',['../classLLMUnity_1_1LLMCharacter.html#a52ce8f5c32c14e9459c40e3863111baa',1,'LLMUnity::LLMCharacter']]],
+  ['port_4',['port',['../classLLMUnity_1_1LLM.html#aa241f4ea23654739149369cca3fbd712',1,'LLMUnity.LLM.port'],['../classLLMUnity_1_1LLMCharacter.html#ab1f57c929f3b6d690076bc59b0bbb785',1,'LLMUnity.LLMCharacter.port']]],
+  ['presencepenalty_5',['presencePenalty',['../classLLMUnity_1_1LLMCharacter.html#a4ab9da27106e734a240315936899df8d',1,'LLMUnity::LLMCharacter']]],
+  ['prompt_6',['prompt',['../classLLMUnity_1_1LLMCharacter.html#a477f554a7d31a52f26a717b74037ef5a',1,'LLMUnity::LLMCharacter']]]
 ];

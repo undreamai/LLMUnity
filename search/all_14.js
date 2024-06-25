@@ -1,6 +1,25 @@
 var searchData=
 [
-  ['remote_0',['remote',['../classLLMUnity_1_1LLM.html#aa26e432f58fe58ff701b26204752f06c',1,'LLMUnity::LLM']]],
-  ['repeatlastn_1',['repeatLastN',['../classLLMUnity_1_1LLMClient.html#a6541af09605f603c748edbe96b3dbc9d',1,'LLMUnity::LLMClient']]],
-  ['repeatpenalty_2',['repeatPenalty',['../classLLMUnity_1_1LLMClient.html#ae24e66104c619ac5bd583cd9f50a69de',1,'LLMUnity::LLMClient']]]
+  ['save_0',['save',['../classLLMUnity_1_1LLMCharacter.html#af5d8f07cad7066700b19689a0b493d38',1,'LLMUnity::LLMCharacter']]],
+  ['save_1',['Save',['../classLLMUnity_1_1LLMCharacter.html#a78a2e9a3a6b95a86f6eac824fc302858',1,'LLMUnity::LLMCharacter']]],
+  ['savecache_2',['saveCache',['../classLLMUnity_1_1LLMCharacter.html#a796c05dab6ed5c3cebb6f67353535164',1,'LLMUnity::LLMCharacter']]],
+  ['seed_3',['seed',['../classLLMUnity_1_1LLMCharacter.html#ac49b82eed69f8cfb62ef837743b0cdc4',1,'LLMUnity::LLMCharacter']]],
+  ['setgrammar_4',['SetGrammar',['../classLLMUnity_1_1LLMCharacter.html#aee4abf630820cbd00ef4aca0f04807b9',1,'LLMUnity::LLMCharacter']]],
+  ['setlora_5',['SetLora',['../classLLMUnity_1_1LLM.html#a79b27664f60f6b4e8ad2b9f8adb644d6',1,'LLMUnity::LLM']]],
+  ['setmodel_6',['SetModel',['../classLLMUnity_1_1LLM.html#a244797da23b679c6dc74dc886fe7648b',1,'LLMUnity::LLM']]],
+  ['setnkeeptoprompt_7',['setNKeepToPrompt',['../classLLMUnity_1_1LLMCharacter.html#aba1febf8ee339fd76351655b05d07a69',1,'LLMUnity::LLMCharacter']]],
+  ['setprompt_8',['SetPrompt',['../classLLMUnity_1_1LLMCharacter.html#ac0f8bab15daa6ec99724c7ef24814939',1,'LLMUnity::LLMCharacter']]],
+  ['settemplate_9',['SetTemplate',['../classLLMUnity_1_1LLM.html#ad1d75fd9f35c73f3e2a9f4778dd20a5b',1,'LLMUnity::LLM']]],
+  ['settings_10',['Settings',['../index.html#autotoc_md10',1,'💻 Setup Settings'],['../index.html#autotoc_md13',1,'💻 Setup Settings'],['../index.html#autotoc_md14',1,'🗨️ Chat Settings'],['../index.html#autotoc_md11',1,'🤗 Model Settings'],['../index.html#autotoc_md15',1,'🤗 Model Settings'],['../index.html#autotoc_md9',1,'LLM Settings'],['../index.html#autotoc_md12',1,'LLMCharacter Settings']]],
+  ['setup_11',['Setup',['../index.html#autotoc_md4',1,'']]],
+  ['setup_20settings_12',['Setup Settings',['../index.html#autotoc_md10',1,'💻 Setup Settings'],['../index.html#autotoc_md13',1,'💻 Setup Settings']]],
+  ['slot_13',['Slot',['../classLLMUnity_1_1LLM.html#a16381a5907592831a0ea35137b9921ff',1,'LLMUnity::LLM']]],
+  ['smol_5fllama_20220m_20openhermes_14',['BEE-spoke-data/smol_llama-220M-openhermes',['../md_Third_01Party_01Notices.html#autotoc_md30',1,'']]],
+  ['smol_5fllama_20220m_20openhermes_20gguf_15',['modified by: afrideva/smol_llama-220M-openhermes-GGUF',['../md_Third_01Party_01Notices.html#autotoc_md31',1,'']]],
+  ['software_16',['Software',['../md_Third_01Party_01Notices.html#autotoc_md18',1,'']]],
+  ['software_20notices_20and_20information_17',['THIRD-PARTY SOFTWARE NOTICES AND INFORMATION',['../md_Third_01Party_01Notices.html',1,'']]],
+  ['spoke_20data_20smol_5fllama_20220m_20openhermes_18',['BEE-spoke-data/smol_llama-220M-openhermes',['../md_Third_01Party_01Notices.html#autotoc_md30',1,'']]],
+  ['started_19',['started',['../classLLMUnity_1_1LLM.html#a9bf3f3bd1e5ac32e5790415e448762e7',1,'LLMUnity::LLM']]],
+  ['stop_20',['stop',['../classLLMUnity_1_1LLMCharacter.html#a1f52b3ca2ac0bee954bf5171742c9a5e',1,'LLMUnity::LLMCharacter']]],
+  ['stream_21',['stream',['../classLLMUnity_1_1LLMCharacter.html#a99a58a6ef8c6bc48036403df0fe7c139',1,'LLMUnity::LLMCharacter']]]
 ];

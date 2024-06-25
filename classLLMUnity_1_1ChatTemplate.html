@@ -47,7 +47,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_tiny.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">LLM for Unity
-   &#160;<span id="projectnumber">v1.2.9</span>
+   &#160;<span id="projectnumber">v2.0.1</span>
    </div>
    <div id="projectbrief">Create characters in Unity with LLMs!</div>
   </td>
@@ -146,9 +146,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a7d976672375d79fa276a3b7463ba9ae1" id="r_a7d976672375d79fa276a3b7463ba9ae1"><td class="memItemLeft" align="right" valign="top">virtual string[]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7d976672375d79fa276a3b7463ba9ae1">GetStop</a> (string playerName, string AIName)</td></tr>
 <tr class="memdesc:a7d976672375d79fa276a3b7463ba9ae1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns an array of the stopwords used by the template.  <br /></td></tr>
 <tr class="separator:a7d976672375d79fa276a3b7463ba9ae1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a78929b86a83f20d316e70c514857985c" id="r_a78929b86a83f20d316e70c514857985c"><td class="memItemLeft" align="right" valign="top">virtual string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a78929b86a83f20d316e70c514857985c">ComputePrompt</a> (List&lt; ChatMessage &gt; messages, string AIName)</td></tr>
-<tr class="memdesc:a78929b86a83f20d316e70c514857985c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs the prompt using the template based on a list of ChatMessages.  <br /></td></tr>
-<tr class="separator:a78929b86a83f20d316e70c514857985c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a470480717841821742c57c931ae6307c" id="r_a470480717841821742c57c931ae6307c"><td class="memItemLeft" align="right" valign="top">virtual string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a470480717841821742c57c931ae6307c">ComputePrompt</a> (List&lt; ChatMessage &gt; messages, string AIName, bool endWithPrefix=true)</td></tr>
+<tr class="memdesc:a470480717841821742c57c931ae6307c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs the prompt using the template based on a list of ChatMessages.  <br /></td></tr>
+<tr class="separator:a470480717841821742c57c931ae6307c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -179,8 +179,8 @@ Static Public Attributes</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="LLMChatTemplates_8cs_source.html#l00013">13</a> of file <a class="el" href="LLMChatTemplates_8cs_source.html">LLMChatTemplates.cs</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a78929b86a83f20d316e70c514857985c" name="a78929b86a83f20d316e70c514857985c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a78929b86a83f20d316e70c514857985c">&#9670;&#160;</a></span>ComputePrompt()</h2>
+<a id="a470480717841821742c57c931ae6307c" name="a470480717841821742c57c931ae6307c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a470480717841821742c57c931ae6307c">&#9670;&#160;</a></span>ComputePrompt()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -196,7 +196,12 @@ Static Public Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>AIName</em></span>&#160;)</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>AIName</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>endWithPrefix</em><span class="paramdefsep"> = </span><span class="paramdefval">true</span></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -209,16 +214,17 @@ Static Public Attributes</h2></td></tr>
 <p>Constructs the prompt using the template based on a list of ChatMessages. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">messages</td><td>list of ChatMessages e.g. the LLMClient chat </td></tr>
+    <tr><td class="paramname">messages</td><td>list of ChatMessages e.g. the LLMCharacter chat </td></tr>
     <tr><td class="paramname">AIName</td><td>the AI name </td></tr>
+    <tr><td class="paramname">endWithPrefix</td><td>whether to end the prompt with the AI prefix </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>prompt</dd></dl>
 
-<p>Reimplemented in <a class="el" href="classLLMUnity_1_1Phi3Template.html#a031095720903300a9966c3d987b9b458">LLMUnity.Phi3Template</a>.</p>
+<p>Reimplemented in <a class="el" href="classLLMUnity_1_1Phi3Template.html#adda6f14e44264196bff147351f839cc4">LLMUnity.Phi3Template</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="LLMChatTemplates_8cs_source.html#l00167">167</a> of file <a class="el" href="LLMChatTemplates_8cs_source.html">LLMChatTemplates.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMChatTemplates_8cs_source.html#l00168">168</a> of file <a class="el" href="LLMChatTemplates_8cs_source.html">LLMChatTemplates.cs</a>.</p>
 
 </div>
 </div>
