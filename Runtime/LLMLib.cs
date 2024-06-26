@@ -324,14 +324,14 @@ namespace LLMUnity
                 string arch = RuntimeInformation.ProcessArchitecture.ToString().ToLower();
                 if (arch.Contains("arm"))
                 {
-                    architectures.Add("arm64-no_acc");
                     architectures.Add("arm64-acc");
+                    architectures.Add("arm64-no_acc");
                 }
                 else
                 {
                     if (arch != "x86" && arch != "x64") Debug.LogWarning($"Unknown architecture of processor {arch}! Falling back to x86_64");
-                    architectures.Add("x64-no_acc");
                     architectures.Add("x64-acc");
+                    architectures.Add("x64-no_acc");
                 }
             }
             else
