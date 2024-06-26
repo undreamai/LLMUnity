@@ -460,6 +460,7 @@ namespace LLMUnity
             // handle a completion request by the user
             // call the callback function while the answer is received
             // call the completionCallback function when the answer is fully received
+            await LoadTemplate();
 
             string json = JsonUtility.ToJson(GenerateRequest(prompt));
             string result = await CompletionRequest(json, callback);
