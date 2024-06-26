@@ -22,7 +22,7 @@ namespace LLMUnity
         /// <summary> toggle to use remote LLM server or local LLM </summary>
         [LocalRemote] public bool remote = false;
         /// <summary> the LLM object to use </summary>
-        [Local] public LLM llm;
+        public LLM llm;
         /// <summary> host to use for the LLM server </summary>
         [Remote] public string host = "localhost";
         /// <summary> port to use for the LLM server </summary>
