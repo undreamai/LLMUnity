@@ -214,7 +214,7 @@ namespace LLMUnity
             slotSaveDir = Application.persistentDataPath;
             if (asynchronousStartup) await Task.Run(() => StartLLMServer());
             else StartLLMServer();
-            if (dontDestroyOnLoad) DontDestroyOnLoad(gameObject);
+            if (dontDestroyOnLoad) DontDestroyOnLoad(transform.root.gameObject);
         }
 
         private void SetupLogging()
