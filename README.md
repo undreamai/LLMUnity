@@ -227,22 +227,37 @@ public class MyScript : MonoBehaviour
 
     async void Start()
     {
-        // Add and setup a LLM object
+        // disable gameObject so that Awake is not called immediately
         gameObject.SetActive(false);
-        llm = gameObject.AddComponent<LLM>();
-        // location inside StreamingAssets folder
-        await llm.SetModel("mistral-7b-instruct-v0.2.Q4_K_M.gguf");
-        // location inside StreamingAssets folder
-        await llm.SetLora("my-lora.bin");
-        gameObject.SetActive(true);
 
-        // or a LLMCharacter object
-        gameObject.SetActive(false);
+        // Add an LLM object
+        llm = gameObject.AddComponent<LLM>();
+        // set the model with a path relative to StreamingAssets folder
+        await llm.SetModel("Phi-3-mini-4k-instruct-q4.gguf");
+        // you can also set a lora in a similar fashion
+        // await llm.SetLora("my-lora.bin");
+        // optional: set number of threads
+        llm.numThreads = -1;
+        // optional: enable GPU by setting the number of model layers to offload to it
+        llm.numGPULayers = 10;
+
+        // Add an LLMCharacter object
         llmCharacter = gameObject.AddComponent<LLMCharacter>();
+        // set the LLM object that handles the model
         llmCharacter.llm = llm;
+        // set the character prompt
         llmCharacter.SetPrompt("A chat between a curious human and an artificial intelligence assistant.");
-        // location inside StreamingAssets folder
-        await llmCharacter.SetGrammar("json.gbnf");
+        // set the AI and player name
+        llmCharacter.AIName = "AI";
+        llmCharacter.playerName = "Human";
+        //  optional: set streaming to false to get the complete result in one go
+        // llmCharacter.stream = true;
+        //  optional: set a save path
+        // llmCharacter.save = "AICharacter1";
+        //  optional: set a grammar
+        // llmCharacter.SetGrammar("json.gbnf");
+
+        // re-enable gameObject
         gameObject.SetActive(true);
     }
 }
