@@ -1,3 +1,9 @@
+## v2.0.3
+#### 🐛 Fixes
+
+- set higher priority for mac build with Accelerate than without (PR: #180)
+
+
 ## v2.0.2
 #### 🐛 Fixes
 
