@@ -47,7 +47,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_tiny.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">LLM for Unity
-   &#160;<span id="projectnumber">v2.0.1</span>
+   &#160;<span id="projectnumber">v2.0.2</span>
    </div>
    <div id="projectbrief">Create characters in Unity with LLMs!</div>
   </td>
@@ -214,7 +214,7 @@ In the GameObject Inspector click <code>Add Component</code> and select the LLMC
 <div class="line">  ...</div>
 <div class="line">}</div>
 </div><!-- fragment --><p>To stop the chat without waiting for its completion you can use: </p><div class="fragment"><div class="line">llmCharacter.<a class="code hl_function" href="classLLMUnity_1_1LLMCharacter.html#a1c8c35f4e0c2d3d381561fd42e1e25d7">CancelRequests</a>();</div>
-<div class="ttc" id="aclassLLMUnity_1_1LLMCharacter_html_a1c8c35f4e0c2d3d381561fd42e1e25d7"><div class="ttname"><a href="classLLMUnity_1_1LLMCharacter.html#a1c8c35f4e0c2d3d381561fd42e1e25d7">LLMUnity.LLMCharacter.CancelRequests</a></div><div class="ttdeci">void CancelRequests()</div><div class="ttdoc">Cancel the ongoing requests e.g. Chat, Complete.</div><div class="ttdef"><b>Definition</b> <a href="LLMCharacter_8cs_source.html#l00611">LLMCharacter.cs:611</a></div></div>
+<div class="ttc" id="aclassLLMUnity_1_1LLMCharacter_html_a1c8c35f4e0c2d3d381561fd42e1e25d7"><div class="ttname"><a href="classLLMUnity_1_1LLMCharacter.html#a1c8c35f4e0c2d3d381561fd42e1e25d7">LLMUnity.LLMCharacter.CancelRequests</a></div><div class="ttdeci">void CancelRequests()</div><div class="ttdoc">Cancel the ongoing requests e.g. Chat, Complete.</div><div class="ttdef"><b>Definition</b> <a href="LLMCharacter_8cs_source.html#l00612">LLMCharacter.cs:612</a></div></div>
 </div><!-- fragment --><ul>
 <li>Finally, in the Inspector of the GameObject of your script, select the LLMCharacter GameObject created above as the llmCharacter property.</li>
 </ul>
@@ -227,9 +227,9 @@ Save / Load your chat history</summary>
 <p></p>
 <p>To automatically save / load your chat history, you can specify the <code>Save</code> parameter of the LLMCharacter to the filename (or relative path) of your choice. The file is saved in the <a href="https://docs.unity3d.com/ScriptReference/Application-persistentDataPath.html">persistentDataPath folder of Unity</a>. This also saves the state of the LLM which means that the previously cached prompt does not need to be recomputed.</p>
 <p>To manually save your chat history, you can use: </p><div class="fragment"><div class="line">llmCharacter.<a class="code hl_function" href="classLLMUnity_1_1LLMCharacter.html#a78a2e9a3a6b95a86f6eac824fc302858">Save</a>(<span class="stringliteral">&quot;filename&quot;</span>);</div>
-<div class="ttc" id="aclassLLMUnity_1_1LLMCharacter_html_a78a2e9a3a6b95a86f6eac824fc302858"><div class="ttname"><a href="classLLMUnity_1_1LLMCharacter.html#a78a2e9a3a6b95a86f6eac824fc302858">LLMUnity.LLMCharacter.Save</a></div><div class="ttdeci">async Task&lt; string &gt; Save(string filename)</div><div class="ttdoc">Saves the chat history and cache to the provided filename / relative path.</div><div class="ttdef"><b>Definition</b> <a href="LLMCharacter_8cs_source.html#l00539">LLMCharacter.cs:539</a></div></div>
+<div class="ttc" id="aclassLLMUnity_1_1LLMCharacter_html_a78a2e9a3a6b95a86f6eac824fc302858"><div class="ttname"><a href="classLLMUnity_1_1LLMCharacter.html#a78a2e9a3a6b95a86f6eac824fc302858">LLMUnity.LLMCharacter.Save</a></div><div class="ttdeci">async Task&lt; string &gt; Save(string filename)</div><div class="ttdoc">Saves the chat history and cache to the provided filename / relative path.</div><div class="ttdef"><b>Definition</b> <a href="LLMCharacter_8cs_source.html#l00540">LLMCharacter.cs:540</a></div></div>
 </div><!-- fragment --><p> and to load the history: </p><div class="fragment"><div class="line">llmCharacter.<a class="code hl_function" href="classLLMUnity_1_1LLMCharacter.html#af038296bb6679a042b05e073eb3a961a">Load</a>(<span class="stringliteral">&quot;filename&quot;</span>);</div>
-<div class="ttc" id="aclassLLMUnity_1_1LLMCharacter_html_af038296bb6679a042b05e073eb3a961a"><div class="ttname"><a href="classLLMUnity_1_1LLMCharacter.html#af038296bb6679a042b05e073eb3a961a">LLMUnity.LLMCharacter.Load</a></div><div class="ttdeci">async Task&lt; string &gt; Load(string filename)</div><div class="ttdoc">Load the chat history and cache from the provided filename / relative path.</div><div class="ttdef"><b>Definition</b> <a href="LLMCharacter_8cs_source.html#l00556">LLMCharacter.cs:556</a></div></div>
+<div class="ttc" id="aclassLLMUnity_1_1LLMCharacter_html_af038296bb6679a042b05e073eb3a961a"><div class="ttname"><a href="classLLMUnity_1_1LLMCharacter.html#af038296bb6679a042b05e073eb3a961a">LLMUnity.LLMCharacter.Load</a></div><div class="ttdeci">async Task&lt; string &gt; Load(string filename)</div><div class="ttdoc">Load the chat history and cache from the provided filename / relative path.</div><div class="ttdef"><b>Definition</b> <a href="LLMCharacter_8cs_source.html#l00557">LLMCharacter.cs:557</a></div></div>
 </div><!-- fragment --><p> where filename the filename or relative path of your choice.</p>
 <p></p>
 </details>
@@ -248,7 +248,7 @@ Process the prompt at the beginning of your app for faster initial processing ti
 <div class="line">  _ = llmCharacter.<a class="code hl_function" href="classLLMUnity_1_1LLMCharacter.html#a2d763521d5e34ba2e2604a12b533d3df">Warmup</a>(WarmupCompleted);</div>
 <div class="line">  ...</div>
 <div class="line">}</div>
-<div class="ttc" id="aclassLLMUnity_1_1LLMCharacter_html_a2d763521d5e34ba2e2604a12b533d3df"><div class="ttname"><a href="classLLMUnity_1_1LLMCharacter.html#a2d763521d5e34ba2e2604a12b533d3df">LLMUnity.LLMCharacter.Warmup</a></div><div class="ttdeci">async Task&lt; string &gt; Warmup(EmptyCallback completionCallback=null, string query=&quot;hi&quot;)</div><div class="ttdoc">Allow to warm-up a model by processing the prompt. The prompt processing will be cached (if cacheProm...</div><div class="ttdef"><b>Definition</b> <a href="LLMCharacter_8cs_source.html#l00480">LLMCharacter.cs:480</a></div></div>
+<div class="ttc" id="aclassLLMUnity_1_1LLMCharacter_html_a2d763521d5e34ba2e2604a12b533d3df"><div class="ttname"><a href="classLLMUnity_1_1LLMCharacter.html#a2d763521d5e34ba2e2604a12b533d3df">LLMUnity.LLMCharacter.Warmup</a></div><div class="ttdeci">async Task&lt; string &gt; Warmup(EmptyCallback completionCallback=null, string query=&quot;hi&quot;)</div><div class="ttdoc">Allow to warm-up a model by processing the prompt. The prompt processing will be cached (if cacheProm...</div><div class="ttdef"><b>Definition</b> <a href="LLMCharacter_8cs_source.html#l00481">LLMCharacter.cs:481</a></div></div>
 </div><!-- fragment --><p></p>
 </details>
 <details >
@@ -306,30 +306,43 @@ Add a LLM / LLMCharacter component programmatically</summary>
 <div class="line"> </div>
 <div class="line">    async <span class="keywordtype">void</span> Start()</div>
 <div class="line">    {</div>
-<div class="line">        <span class="comment">// Add and setup a LLM object</span></div>
+<div class="line">        <span class="comment">// disable gameObject so that Awake is not called immediately</span></div>
 <div class="line">        gameObject.SetActive(<span class="keyword">false</span>);</div>
-<div class="line">        llm = gameObject.AddComponent&lt;<a class="code hl_class" href="classLLMUnity_1_1LLM.html">LLM</a>&gt;();</div>
-<div class="line">        <span class="comment">// location inside StreamingAssets folder</span></div>
-<div class="line">        await llm.<a class="code hl_function" href="classLLMUnity_1_1LLM.html#a244797da23b679c6dc74dc886fe7648b">SetModel</a>(<span class="stringliteral">&quot;mistral-7b-instruct-v0.2.Q4_K_M.gguf&quot;</span>);</div>
-<div class="line">        <span class="comment">// location inside StreamingAssets folder</span></div>
-<div class="line">        await llm.<a class="code hl_function" href="classLLMUnity_1_1LLM.html#a79b27664f60f6b4e8ad2b9f8adb644d6">SetLora</a>(<span class="stringliteral">&quot;my-lora.bin&quot;</span>);</div>
-<div class="line">        gameObject.SetActive(<span class="keyword">true</span>);</div>
 <div class="line"> </div>
-<div class="line">        <span class="comment">// or a LLMCharacter object</span></div>
-<div class="line">        gameObject.SetActive(<span class="keyword">false</span>);</div>
+<div class="line">        <span class="comment">// Add an LLM object</span></div>
+<div class="line">        llm = gameObject.AddComponent&lt;<a class="code hl_class" href="classLLMUnity_1_1LLM.html">LLM</a>&gt;();</div>
+<div class="line">        <span class="comment">// set the model with a path relative to StreamingAssets folder</span></div>
+<div class="line">        await llm.<a class="code hl_function" href="classLLMUnity_1_1LLM.html#a244797da23b679c6dc74dc886fe7648b">SetModel</a>(<span class="stringliteral">&quot;Phi-3-mini-4k-instruct-q4.gguf&quot;</span>);</div>
+<div class="line">        <span class="comment">// you can also set a lora in a similar fashion</span></div>
+<div class="line">        <span class="comment">// await llm.SetLora(&quot;my-lora.bin&quot;);</span></div>
+<div class="line">        <span class="comment">// optional: set number of threads</span></div>
+<div class="line">        llm.numThreads = -1;</div>
+<div class="line">        <span class="comment">// optional: enable GPU by setting the number of model layers to offload to it</span></div>
+<div class="line">        llm.numGPULayers = 10;</div>
+<div class="line"> </div>
+<div class="line">        <span class="comment">// Add an LLMCharacter object</span></div>
 <div class="line">        llmCharacter = gameObject.AddComponent&lt;<a class="code hl_class" href="classLLMUnity_1_1LLMCharacter.html">LLMCharacter</a>&gt;();</div>
+<div class="line">        <span class="comment">// set the LLM object that handles the model</span></div>
 <div class="line">        llmCharacter.llm = llm;</div>
+<div class="line">        <span class="comment">// set the character prompt</span></div>
 <div class="line">        llmCharacter.<a class="code hl_function" href="classLLMUnity_1_1LLMCharacter.html#ac0f8bab15daa6ec99724c7ef24814939">SetPrompt</a>(<span class="stringliteral">&quot;A chat between a curious human and an artificial intelligence assistant.&quot;</span>);</div>
-<div class="line">        <span class="comment">// location inside StreamingAssets folder</span></div>
-<div class="line">        await llmCharacter.<a class="code hl_function" href="classLLMUnity_1_1LLMCharacter.html#aee4abf630820cbd00ef4aca0f04807b9">SetGrammar</a>(<span class="stringliteral">&quot;json.gbnf&quot;</span>);</div>
+<div class="line">        <span class="comment">// set the AI and player name</span></div>
+<div class="line">        llmCharacter.AIName = <span class="stringliteral">&quot;AI&quot;</span>;</div>
+<div class="line">        llmCharacter.playerName = <span class="stringliteral">&quot;Human&quot;</span>;</div>
+<div class="line">        <span class="comment">//  optional: set streaming to false to get the complete result in one go</span></div>
+<div class="line">        <span class="comment">// llmCharacter.stream = true;</span></div>
+<div class="line">        <span class="comment">//  optional: set a save path</span></div>
+<div class="line">        <span class="comment">// llmCharacter.save = &quot;AICharacter1&quot;;</span></div>
+<div class="line">        <span class="comment">//  optional: set a grammar</span></div>
+<div class="line">        <span class="comment">// llmCharacter.SetGrammar(&quot;json.gbnf&quot;);</span></div>
+<div class="line"> </div>
+<div class="line">        <span class="comment">// re-enable gameObject</span></div>
 <div class="line">        gameObject.SetActive(<span class="keyword">true</span>);</div>
 <div class="line">    }</div>
 <div class="line">}</div>
 <div class="ttc" id="aclassLLMUnity_1_1LLMCharacter_html_ac0f8bab15daa6ec99724c7ef24814939"><div class="ttname"><a href="classLLMUnity_1_1LLMCharacter.html#ac0f8bab15daa6ec99724c7ef24814939">LLMUnity.LLMCharacter.SetPrompt</a></div><div class="ttdeci">void SetPrompt(string newPrompt, bool clearChat=true)</div><div class="ttdoc">Set the system prompt for the LLMCharacter.</div><div class="ttdef"><b>Definition</b> <a href="LLMCharacter_8cs_source.html#l00217">LLMCharacter.cs:217</a></div></div>
-<div class="ttc" id="aclassLLMUnity_1_1LLMCharacter_html_aee4abf630820cbd00ef4aca0f04807b9"><div class="ttname"><a href="classLLMUnity_1_1LLMCharacter.html#aee4abf630820cbd00ef4aca0f04807b9">LLMUnity.LLMCharacter.SetGrammar</a></div><div class="ttdeci">async void SetGrammar(string path)</div><div class="ttdoc">Set the grammar file of the LLMCharacter.</div><div class="ttdef"><b>Definition</b> <a href="LLMCharacter_8cs_source.html#l00273">LLMCharacter.cs:273</a></div></div>
 <div class="ttc" id="aclassLLMUnity_1_1LLM_html"><div class="ttname"><a href="classLLMUnity_1_1LLM.html">LLMUnity.LLM</a></div><div class="ttdoc">Class implementing the LLM server.</div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00030">LLM.cs:31</a></div></div>
 <div class="ttc" id="aclassLLMUnity_1_1LLM_html_a244797da23b679c6dc74dc886fe7648b"><div class="ttname"><a href="classLLMUnity_1_1LLM.html#a244797da23b679c6dc74dc886fe7648b">LLMUnity.LLM.SetModel</a></div><div class="ttdeci">async Task SetModel(string path)</div><div class="ttdoc">Allows to set the model used by the LLM. The model provided is copied to the Assets/StreamingAssets f...</div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00129">LLM.cs:129</a></div></div>
-<div class="ttc" id="aclassLLMUnity_1_1LLM_html_a79b27664f60f6b4e8ad2b9f8adb644d6"><div class="ttname"><a href="classLLMUnity_1_1LLM.html#a79b27664f60f6b4e8ad2b9f8adb644d6">LLMUnity.LLM.SetLora</a></div><div class="ttdeci">async Task SetLora(string path)</div><div class="ttdoc">Allows to set a LORA model to use in the LLM. The model provided is copied to the Assets/StreamingAss...</div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00145">LLM.cs:145</a></div></div>
 </div><!-- fragment --><p></p>
 </details>
 <details >
