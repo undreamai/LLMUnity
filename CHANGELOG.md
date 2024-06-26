@@ -1,3 +1,9 @@
+## v2.0.2
+#### 🐛 Fixes
+
+- Fix bugs in chat completion (PR: #176)
+
+
 ## v2.0.1
 #### 🚀 Features
 
