@@ -435,6 +435,7 @@ namespace LLMUnity
             StreamWrapper streamWrapper = ConstructStreamWrapper(streamCallback);
             await Task.Run(() => llmlib.LLM_Completion(LLMObject, json, streamWrapper.GetStringWrapper()));
             if (!started) return null;
+            streamWrapper.Update();
             string result = streamWrapper.GetString();
             DestroyStreamWrapper(streamWrapper);
             CheckLLMStatus();

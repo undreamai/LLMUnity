@@ -620,6 +620,7 @@ namespace LLMUnity
             // send a post request to the server and call the relevant callbacks to convert the received content and handle it
             // this function has streaming functionality i.e. handles the answer while it is being received
             string callResult = null;
+            bool callbackCalled = false;
             while (!llm.failed && !llm.started) await Task.Yield();
             switch (endpoint)
             {
@@ -634,7 +635,7 @@ namespace LLMUnity
                     break;
                 case "completion":
                     Callback<string> callbackString = null;
-                    if (callback != null)
+                    if (stream && callback != null)
                     {
                         if (typeof(Ret) == typeof(string))
                         {
@@ -647,6 +648,7 @@ namespace LLMUnity
                         {
                             Debug.LogError($"wrong callback type, should be string");
                         }
+                        callbackCalled = true;
                     }
                     callResult = await llm.Completion(json, callbackString);
                     break;
@@ -656,7 +658,7 @@ namespace LLMUnity
             }
 
             Ret result = ConvertContent(callResult, getContent);
-            callback?.Invoke(result);
+            if (!callbackCalled) callback?.Invoke(result);
             return result;
         }
 
