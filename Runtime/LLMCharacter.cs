@@ -174,7 +174,7 @@ namespace LLMUnity
 
         string GetSavePath(string filename)
         {
-            return Path.Combine(Application.persistentDataPath, filename);
+            return Path.Combine(Application.persistentDataPath, filename).Replace('\\', '/');
         }
 
         string GetJsonSavePath(string filename)
@@ -182,10 +182,10 @@ namespace LLMUnity
             return GetSavePath(filename + ".json");
         }
 
-        string GetCacheName(string filename)
+        string GetCacheSavePath(string filename)
         {
             // this is saved already in the Application.persistentDataPath folder
-            return filename + ".cache";
+            return GetSavePath(filename + ".cache");
         }
 
         private void InitPrompt(bool clearChat = true)
@@ -522,11 +522,11 @@ namespace LLMUnity
             return await PostRequest<TokenizeRequest, string>(json, "detokenize", DetokenizeContent, callback);
         }
 
-        private async Task<string> Slot(string filename, string action)
+        private async Task<string> Slot(string filepath, string action)
         {
             SlotRequest slotRequest = new SlotRequest();
             slotRequest.id_slot = id_slot;
-            slotRequest.filename = filename;
+            slotRequest.filepath = filepath;
             slotRequest.action = action;
             string json = JsonUtility.ToJson(slotRequest);
             return await PostRequest<SlotResult, string>(json, "slots", SlotContent);
@@ -540,12 +540,14 @@ namespace LLMUnity
         public async Task<string> Save(string filename)
         {
             string filepath = GetJsonSavePath(filename);
+            string dirname = Path.GetDirectoryName(filepath);
+            if (!Directory.Exists(dirname)) Directory.CreateDirectory(dirname);
             string json = JsonUtility.ToJson(new ChatListWrapper { chat = chat });
             File.WriteAllText(filepath, json);
 
-            string cachename = GetCacheName(filename);
+            string cachepath = GetCacheSavePath(filename);
             if (remote || !saveCache) return null;
-            string result = await Slot(cachename, "save");
+            string result = await Slot(cachepath, "save");
             return result;
         }
 
@@ -566,9 +568,9 @@ namespace LLMUnity
             chat = JsonUtility.FromJson<ChatListWrapper>(json).chat;
             Debug.Log($"Loaded {filepath}");
 
-            string cachename = GetCacheName(filename);
-            if (remote || !saveCache || !File.Exists(GetSavePath(cachename))) return null;
-            string result = await Slot(cachename, "restore");
+            string cachepath = GetCacheSavePath(filename);
+            if (remote || !saveCache || !File.Exists(GetSavePath(cachepath))) return null;
+            string result = await Slot(cachepath, "restore");
             return result;
         }
 
