@@ -1,6 +1,7 @@
 ### 🚀 Features
 
 - Add LLM selector in Inspector mode (PR: #182)
+- Allow to save chat history at custom path (PR: #179)
 
 ### 🐛 Fixes
 
