@@ -54,7 +54,7 @@ namespace LLMUnity
 
         static List<string> GetLibraryPlatformsToHide(BuildTarget platform)
         {
-            List<string> platforms = new List<string>(){ "windows", "macos", "linux" };
+            List<string> platforms = new List<string>(){ "windows", "macos", "linux", "android" };
             switch (platform)
             {
                 case BuildTarget.StandaloneWindows:
@@ -66,6 +66,9 @@ namespace LLMUnity
                     break;
                 case BuildTarget.StandaloneOSX:
                     platforms.Remove("macos");
+                    break;
+                case BuildTarget.Android:
+                    platforms.Remove("android");
                     break;
             }
             return platforms;
