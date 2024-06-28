@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Net;
 using System;
 using System.IO.Compression;
+using UnityEngine.Networking;
 
 /// @defgroup llm LLM
 /// @defgroup template Chat Templates
@@ -218,5 +219,43 @@ namespace LLMUnity
 
 #endif
         /// \endcond
+
+        public static async Task ExtractFile(string source, string target, bool overwrite = false, int chunkSize = 1024*1024)
+        {
+            if (!overwrite && File.Exists(target)) return;
+            Debug.Log($"Extracting {source} to {target}");
+
+            // UnityWebRequest to read the file from StreamingAssets
+            UnityWebRequest www = UnityWebRequest.Get(source);
+
+            // Send the request and await its completion
+            var operation = www.SendWebRequest();
+
+            while (!operation.isDone)
+            {
+                // Optionally, you can add a delay here to avoid locking up the main thread too much
+                await Task.Delay(1);
+            }
+
+            if (www.result != UnityWebRequest.Result.Success)
+            {
+                Debug.LogError("Failed to load file from StreamingAssets: " + www.error);
+            }
+            else
+            {
+                // Get the data stream from the UnityWebRequest
+                byte[] buffer = new byte[chunkSize];
+                // Write the data to the persistent path in chunks
+                using (Stream responseStream = new MemoryStream(www.downloadHandler.data))
+                using (FileStream fileStream = new FileStream(target, FileMode.Create, FileAccess.Write))
+                {
+                    int bytesRead;
+                    while ((bytesRead = await responseStream.ReadAsync(buffer, 0, buffer.Length)) > 0)
+                    {
+                        await fileStream.WriteAsync(buffer, 0, bytesRead);
+                    }
+                }
+            }
+        }
     }
 }
