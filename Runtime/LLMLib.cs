@@ -104,6 +104,8 @@ namespace LLMUnity
                 handle = Linux.dlopen(libraryName);
             else if (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.OSXPlayer)
                 handle = Mac.dlopen(libraryName);
+            else if (Application.platform == RuntimePlatform.Android)
+                handle = Android.dlopen(libraryName);
             else
                 throw new PlatformNotSupportedException($"Current platform is unknown, unable to load library '{libraryName}'.");
 
@@ -122,6 +124,8 @@ namespace LLMUnity
                 handle = Linux.dlsym(library, symbolName);
             else if (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.OSXPlayer)
                 handle = Mac.dlsym(library, symbolName);
+            else if (Application.platform == RuntimePlatform.Android)
+                handle = Android.dlsym(library, symbolName);
             else
                 throw new PlatformNotSupportedException($"Current platform is unknown, unable to load symbol '{symbolName}' from library {library}.");
 
@@ -139,6 +143,8 @@ namespace LLMUnity
                 Linux.dlclose(library);
             else if (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.OSXPlayer)
                 Mac.dlclose(library);
+            else if (Application.platform == RuntimePlatform.Android)
+                Android.dlclose(library);
             else
                 throw new PlatformNotSupportedException($"Current platform is unknown, unable to close library '{library}'.");
         }
@@ -230,6 +236,22 @@ namespace LLMUnity
 
             [DllImport(SystemLibrary, SetLastError = true, CharSet = CharSet.Ansi)]
             public static extern void FreeLibrary(IntPtr hModule);
+        }
+
+        private static class Android
+        {
+            public static IntPtr dlopen(string path) => dlopen(path, 1);
+            // LoadLibrary for Android
+            [DllImport("__Internal")]
+            public static extern IntPtr dlopen(string filename, int flags);
+
+            // GetSymbol for Android
+            [DllImport("__Internal")]
+            public static extern IntPtr dlsym(IntPtr handle, string symbol);
+
+            // FreeLibrary for Android
+            [DllImport("__Internal")]
+            public static extern int dlclose(IntPtr handle);
         }
     }
 
@@ -334,6 +356,10 @@ namespace LLMUnity
                     architectures.Add("x64-no_acc");
                 }
             }
+            else if (Application.platform == RuntimePlatform.Android)
+            {
+                architectures.Add("android");
+            }
             else
             {
                 string error = "Unknown OS";
@@ -375,6 +401,10 @@ namespace LLMUnity
             else if (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.OSXPlayer)
             {
                 filename = $"macos-{arch}/libundreamai_macos-{arch}.dylib";
+            }
+            else if (Application.platform == RuntimePlatform.Android)
+            {
+                return "libundreamai_android_plugin.so";
             }
             else
             {
