@@ -96,7 +96,7 @@ namespace LLMUnity
     {
         public int id_slot;
         public string action;
-        public string filename;
+        public string filepath;
     }
 
     [Serializable]

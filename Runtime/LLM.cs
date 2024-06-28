@@ -85,7 +85,6 @@ namespace LLMUnity
         public bool failed { get; protected set; } = false;
 
         /// \cond HIDE
-        public string slotSaveDir;
         public int SelectedModel = 0;
         [HideInInspector] public float modelProgress = 1;
         [HideInInspector] public float modelCopyProgress = 1;
@@ -199,7 +198,6 @@ namespace LLMUnity
             if (remote) arguments += $" --port {port} --host 0.0.0.0";
             if (numThreads > 0) arguments += $" -t {numThreads}";
             if (loraPath != "") arguments += $" --lora \"{loraPath}\"";
-            arguments += $" --slot-save-path \"{slotSaveDir}\"";
             arguments += $" -ngl {numGPULayers}";
             return arguments;
         }
@@ -211,7 +209,6 @@ namespace LLMUnity
         public async void Awake()
         {
             if (!enabled) return;
-            slotSaveDir = Application.persistentDataPath;
             if (asynchronousStartup) await Task.Run(() => StartLLMServer());
             else StartLLMServer();
             if (dontDestroyOnLoad) DontDestroyOnLoad(transform.root.gameObject);
