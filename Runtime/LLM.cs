@@ -177,7 +177,8 @@ namespace LLMUnity
                 Debug.LogError("No model file provided!");
                 return null;
             }
-            string modelPath = LLMUnitySetup.GetAssetPath(model);
+            string modelPath = Path.Combine(Application.platform == RuntimePlatform.Android ? Application.persistentDataPath : Application.streamingAssetsPath, model);
+
             if (!File.Exists(modelPath))
             {
                 Debug.LogError($"File {modelPath} not found!");
@@ -211,6 +212,12 @@ namespace LLMUnity
         public async void Awake()
         {
             if (!enabled) return;
+            if (Application.platform == RuntimePlatform.Android)
+            {
+                string source = "jar:file://" + Application.dataPath + "!/assets/" + model;
+                string target = Path.Combine(Application.persistentDataPath, model);
+                await LLMUnitySetup.ExtractFile(source, target);
+            }
             slotSaveDir = Application.persistentDataPath;
             if (asynchronousStartup) await Task.Run(() => StartLLMServer());
             else StartLLMServer();
