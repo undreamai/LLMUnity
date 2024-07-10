@@ -4203,8 +4203,9 @@ MonoBehaviour:
   host: localhost
   port: 13333
   save: 
-  stream: 1
+  saveCache: 0
   debugPrompt: 0
+  stream: 1
   grammar: 
   cachePrompt: 1
   seed: 0
@@ -7238,17 +7239,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   advancedOptions: 0
+  remote: 0
+  port: 13333
   numThreads: -1
   numGPULayers: 0
   debug: 0
   parallelPrompts: -1
+  asynchronousStartup: 1
   dontDestroyOnLoad: 1
-  port: 13333
   model: 
   lora: 
   contextSize: 0
   batchSize: 512
-  remote: 0
   SelectedModel: 0
   modelProgress: 1
   modelCopyProgress: 1
