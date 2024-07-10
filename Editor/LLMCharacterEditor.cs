@@ -13,40 +13,16 @@ namespace LLMUnity
             return new Type[] { typeof(LLMCharacter) };
         }
 
-        public void AddClientSettings(SerializedObject llmScriptSO, LLMCharacter llmCharacterScript)
+        public void AddClientSettings(SerializedObject llmScriptSO)
         {
-            ShowPropertiesOfClass("Setup Settings", llmScriptSO, new List<Type>(){typeof(LocalRemoteAttribute)}, false);
-
-            List<Type> attributeClasses = new List<Type>();
-            if (llmScriptSO.FindProperty("remote").boolValue)
-            {
-                attributeClasses.Add(typeof(RemoteAttribute));
-            }
-            else
-            {
-                List<LLM> llms = new List<LLM>();
-                List<string> options = new List<string>();
-                int selected = -1;
-                foreach (LLM llm in FindObjectsOfType<LLM>())
-                {
-                    // select the first LLM if not set
-                    if (llmCharacterScript.llm == null) llmCharacterScript.llm = llm;
-                    llms.Add(llm);
-                    options.Add(llm.gameObject.name);
-                    if (llmCharacterScript.llm == llm) selected = options.Count - 1;
-                }
-                int newIndex = EditorGUILayout.Popup("LLM", selected, options.ToArray());
-                if (newIndex != selected) llmCharacterScript.llm = llms[newIndex];
-
-                attributeClasses.Add(typeof(LocalAttribute));
-            }
+            List<Type> attributeClasses = new List<Type>(){typeof(LocalRemoteAttribute)};
+            attributeClasses.Add(llmScriptSO.FindProperty("remote").boolValue ? typeof(RemoteAttribute) : typeof(LocalAttribute));
             attributeClasses.Add(typeof(LLMAttribute));
-
             if (llmScriptSO.FindProperty("advancedOptions").boolValue)
             {
                 attributeClasses.Add(typeof(LLMAdvancedAttribute));
             }
-            ShowPropertiesOfClass("", llmScriptSO, attributeClasses, true);
+            ShowPropertiesOfClass("Setup Settings", llmScriptSO, attributeClasses, true);
         }
 
         public void AddModelSettings(SerializedObject llmScriptSO, LLMCharacter llmCharacterScript)
@@ -91,7 +67,7 @@ namespace LLMUnity
             GUI.enabled = true;
             EditorGUI.BeginChangeCheck();
             AddOptionsToggles(llmScriptSO);
-            AddClientSettings(llmScriptSO, llmScript);
+            AddClientSettings(llmScriptSO);
             AddChatSettings(llmScriptSO);
             AddModelSettings(llmScriptSO, llmScript);
 
