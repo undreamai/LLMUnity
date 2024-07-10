@@ -140,9 +140,10 @@ namespace LLMUnity
             if (!enabled) return;
             if (!remote)
             {
+                AssignLLM();
                 if (llm == null)
                 {
-                    Debug.LogError("No llm provided!");
+                    Debug.LogError($"No LLM assigned or detected for LLMCharacter {name}!");
                     return;
                 }
                 id_slot = llm.Register(this);
@@ -150,6 +151,54 @@ namespace LLMUnity
 
             InitGrammar();
             InitHistory();
+        }
+
+        void OnValidate()
+        {
+            AssignLLM();
+        }
+
+        void Reset()
+        {
+            AssignLLM();
+        }
+
+        void AssignLLM()
+        {
+            if (remote || llm != null) return;
+
+            LLM[] existingLLMs = FindObjectsOfType<LLM>();
+            if (existingLLMs.Length == 0) return;
+
+            SortBySceneAndHierarchy(existingLLMs);
+            llm = existingLLMs[0];
+            string msg = $"Assigning LLM {llm.name} to LLMCharacter {name}";
+            if (llm.gameObject.scene != gameObject.scene) msg += $" from scene {llm.gameObject.scene}";
+            Debug.Log(msg);
+        }
+
+        void SortBySceneAndHierarchy(LLM[] array)
+        {
+            for (int i = 0; i < array.Length - 1; i++)
+            {
+                bool swapped = false;
+                for (int j = 0; j < array.Length - i - 1; j++)
+                {
+                    bool sameScene = array[j].gameObject.scene == array[j + 1].gameObject.scene;
+                    bool swap = (
+                        (!sameScene && array[j + 1].gameObject.scene == gameObject.scene) ||
+                        (sameScene && array[j].transform.GetSiblingIndex() > array[j + 1].transform.GetSiblingIndex())
+                    );
+                    if (swap)
+                    {
+                        LLM temp = array[j];
+                        array[j] = array[j + 1];
+                        array[j + 1] = temp;
+                        swapped = true;
+                    }
+                }
+                if (!swapped) break;
+            }
         }
 
         protected void InitHistory()
