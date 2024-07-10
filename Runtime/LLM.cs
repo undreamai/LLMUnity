@@ -65,7 +65,7 @@ namespace LLMUnity
         /// }
         /// \endcode
         /// </summary>
-        [LLMAdvanced] public bool asynchronousStartup = false;
+        [LLMAdvanced] public bool asynchronousStartup = true;
         /// <summary> select to not destroy the LLM GameObject when loading a new Scene. </summary>
         [LLMAdvanced] public bool dontDestroyOnLoad = true;
         /// <summary> the path of the model being used (relative to the Assets/StreamingAssets folder).
@@ -177,6 +177,7 @@ namespace LLMUnity
                 return null;
             }
             string modelPath = LLMUnitySetup.GetAssetPath(model);
+            Debug.Log(modelPath);
             if (!File.Exists(modelPath))
             {
                 Debug.LogError($"File {modelPath} not found!");
