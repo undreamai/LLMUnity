@@ -177,7 +177,6 @@ namespace LLMUnity
                 return null;
             }
             string modelPath = LLMUnitySetup.GetAssetPath(model);
-            Debug.Log(modelPath);
             if (!File.Exists(modelPath))
             {
                 Debug.LogError($"File {modelPath} not found!");
