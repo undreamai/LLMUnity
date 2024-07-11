@@ -299,7 +299,6 @@ namespace LLMUnity
         public override string GetName() { return "mistral instruct"; }
         public override string GetDescription() { return "mistral instruct"; }
 
-        protected override string PromptPrefix() { return "<s>"; }
         protected override string SystemPrefix() { return ""; }
         protected override string SystemSuffix() { return "\n\n"; }
         protected override string RequestPrefix() { return "[INST] "; }
@@ -412,7 +411,6 @@ namespace LLMUnity
         public override string[] GetNameMatches() { return new string[] {"phi-3"}; }
         public override string[] GetChatTemplateMatches() { return new string[] {"{{ bos_token }}{% for message in messages %}{% if (message['role'] == 'user') %}{{'<|user|>' + '\n' + message['content'] + '<|end|>' + '\n' + '<|assistant|>' + '\n'}}{% elif (message['role'] == 'assistant') %}{{message['content'] + '<|end|>' + '\n'}}{% endif %}{% endfor %}"}; }
 
-        protected override string PromptPrefix() { return "<s>"; }
         protected override string PlayerPrefix(string playerName) { return $"<|user|>\n"; }
         protected override string AIPrefix(string AIName) { return $"<|assistant|>\n"; }
         protected override string RequestSuffix() { return "<|end|>\n"; }
