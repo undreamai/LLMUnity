@@ -14,12 +14,6 @@ namespace LLMUnity
             return new Type[] { typeof(LLM) };
         }
 
-        public void AddServerLoadersSettings(SerializedObject llmScriptSO, LLM llmScript)
-        {
-            EditorGUILayout.LabelField("Setup Settings", EditorStyles.boldLabel);
-            AddServerSettings(llmScriptSO);
-        }
-
         public void AddModelLoadersSettings(SerializedObject llmScriptSO, LLM llmScript)
         {
             EditorGUILayout.LabelField("Model Settings", EditorStyles.boldLabel);
@@ -100,24 +94,6 @@ namespace LLMUnity
             Space();
         }
 
-        public void AddServerSettings(SerializedObject llmScriptSO)
-        {
-            List<Type> attributeClasses = new List<Type>(){typeof(LocalRemoteAttribute)};
-            attributeClasses.Add(llmScriptSO.FindProperty("remote").boolValue ? typeof(RemoteAttribute) : typeof(LocalAttribute));
-            attributeClasses.Add(typeof(LLMAttribute));
-            if (llmScriptSO.FindProperty("advancedOptions").boolValue)
-            {
-                attributeClasses.Add(typeof(LLMAdvancedAttribute));
-            }
-            ShowPropertiesOfClass("", llmScriptSO, attributeClasses, true);
-            Space();
-        }
-
-        public void AddChatSettings(SerializedObject llmScriptSO)
-        {
-            ShowPropertiesOfClass("Chat Settings", llmScriptSO, new List<Type> { typeof(ChatAttribute) }, false);
-        }
-
         void ShowProgress(float progress, string progressText)
         {
             if (progress != 1) EditorGUI.ProgressBar(EditorGUILayout.GetControlRect(), progress, progressText);
@@ -136,7 +112,7 @@ namespace LLMUnity
 
             GUI.enabled = LLMUnitySetup.libraryProgress == 1 && llmScript.modelProgress == 1 && llmScript.modelCopyProgress == 1;
             AddOptionsToggles(llmScriptSO);
-            AddServerLoadersSettings(llmScriptSO, llmScript);
+            AddSetupSettings(llmScriptSO);
             AddModelLoadersSettings(llmScriptSO, llmScript);
             GUI.enabled = true;
             AddChatSettings(llmScriptSO);
