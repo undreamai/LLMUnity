@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Net;
 using System;
 using System.IO.Compression;
+using System.Collections.Generic;
 
 /// @defgroup llm LLM
 /// @defgroup template Chat Templates
@@ -83,6 +84,24 @@ namespace LLMUnity
             ("Phi 3 (small, great)", "https://huggingface.co/microsoft/Phi-3-mini-4k-instruct-gguf/resolve/main/Phi-3-mini-4k-instruct-q4.gguf?download=true"),
         };
 
+        /// <summary> Add callback function to call for error logs </summary>
+        public static void AddErrorCallBack(Callback<string> callback)
+        {
+            errorCallbacks.Add(callback);
+        }
+
+        /// <summary> Remove callback function added for error logs </summary>
+        public static void RemoveErrorCallBack(Callback<string> callback)
+        {
+            errorCallbacks.Remove(callback);
+        }
+
+        /// <summary> Remove all callback function added for error logs </summary>
+        public static void ClearErrorCallBacks()
+        {
+            errorCallbacks.Clear();
+        }
+
         /// \cond HIDE
         public enum DebugModeType
         {
@@ -91,8 +110,8 @@ namespace LLMUnity
             Error,
             None
         }
-
         [LLMUnity] public static DebugModeType DebugMode = DebugModeType.All;
+        static List<Callback<string>> errorCallbacks = new List<Callback<string>>();
 
         public static void Log(string message)
         {
@@ -110,6 +129,7 @@ namespace LLMUnity
         {
             if ((int)DebugMode > (int)DebugModeType.Error) return;
             Debug.LogError(message);
+            foreach (Callback<string> errorCallback in errorCallbacks) errorCallback(message);
         }
 
         static string DebugModeKey = "DebugMode";
