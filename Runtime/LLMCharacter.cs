@@ -143,7 +143,7 @@ namespace LLMUnity
                 AssignLLM();
                 if (llm == null)
                 {
-                    Debug.LogError($"No LLM assigned or detected for LLMCharacter {name}!");
+                    LLMUnitySetup.LogError($"No LLM assigned or detected for LLMCharacter {name}!");
                     return;
                 }
                 id_slot = llm.Register(this);
@@ -174,7 +174,7 @@ namespace LLMUnity
             llm = existingLLMs[0];
             string msg = $"Assigning LLM {llm.name} to LLMCharacter {name}";
             if (llm.gameObject.scene != gameObject.scene) msg += $" from scene {llm.gameObject.scene}";
-            Debug.Log(msg);
+            LLMUnitySetup.Log(msg);
         }
 
         void SortBySceneAndHierarchy(LLM[] array)
@@ -339,7 +339,7 @@ namespace LLMUnity
         {
             // setup the request struct
             ChatRequest chatRequest = new ChatRequest();
-            if (debugPrompt) Debug.Log(prompt);
+            if (debugPrompt) LLMUnitySetup.Log(prompt);
             chatRequest.prompt = prompt;
             chatRequest.id_slot = id_slot;
             chatRequest.temperature = temperature;
@@ -610,12 +610,12 @@ namespace LLMUnity
             string filepath = GetJsonSavePath(filename);
             if (!File.Exists(filepath))
             {
-                Debug.LogError($"File {filepath} does not exist.");
+                LLMUnitySetup.LogError($"File {filepath} does not exist.");
                 return null;
             }
             string json = File.ReadAllText(filepath);
             chat = JsonUtility.FromJson<ChatListWrapper>(json).chat;
-            Debug.Log($"Loaded {filepath}");
+            LLMUnitySetup.Log($"Loaded {filepath}");
 
             string cachepath = GetCacheSavePath(filename);
             if (remote || !saveCache || !File.Exists(GetSavePath(cachepath))) return null;
@@ -697,14 +697,14 @@ namespace LLMUnity
                         }
                         else
                         {
-                            Debug.LogError($"wrong callback type, should be string");
+                            LLMUnitySetup.LogError($"wrong callback type, should be string");
                         }
                         callbackCalled = true;
                     }
                     callResult = await llm.Completion(json, callbackString);
                     break;
                 default:
-                    Debug.LogError($"Unknown endpoint {endpoint}");
+                    LLMUnitySetup.LogError($"Unknown endpoint {endpoint}");
                     break;
             }
 
@@ -719,7 +719,7 @@ namespace LLMUnity
             // this function has streaming functionality i.e. handles the answer while it is being received
             if (endpoint == "slots")
             {
-                Debug.LogError("Saving and loading is not currently supported in remote setting");
+                LLMUnitySetup.LogError("Saving and loading is not currently supported in remote setting");
                 return default;
             }
 
@@ -753,7 +753,7 @@ namespace LLMUnity
                     await Task.Yield();
                 }
                 WIPRequests.Remove(request);
-                if (request.result != UnityWebRequest.Result.Success) Debug.LogError(request.error);
+                if (request.result != UnityWebRequest.Result.Success) LLMUnitySetup.LogError(request.error);
                 else result = ConvertContent(request.downloadHandler.text, getContent);
                 callback?.Invoke(result);
             }

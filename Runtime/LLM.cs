@@ -173,13 +173,13 @@ namespace LLMUnity
             // Start the LLM server in a cross-platform way
             if (model == "")
             {
-                Debug.LogError("No model file provided!");
+                LLMUnitySetup.LogError("No model file provided!");
                 return null;
             }
             string modelPath = LLMUnitySetup.GetAssetPath(model);
             if (!File.Exists(modelPath))
             {
-                Debug.LogError($"File {modelPath} not found!");
+                LLMUnitySetup.LogError($"File {modelPath} not found!");
                 return null;
             }
             string loraPath = "";
@@ -188,7 +188,7 @@ namespace LLMUnity
                 loraPath = LLMUnitySetup.GetAssetPath(lora);
                 if (!File.Exists(loraPath))
                 {
-                    Debug.LogError($"File {loraPath} not found!");
+                    LLMUnitySetup.LogError($"File {loraPath} not found!");
                     return null;
                 }
             }
@@ -216,7 +216,7 @@ namespace LLMUnity
 
         private void SetupLogging()
         {
-            logStreamWrapper = ConstructStreamWrapper(Debug.LogWarning, true);
+            logStreamWrapper = ConstructStreamWrapper(LLMUnitySetup.LogWarning, true);
             llmlib?.Logging(logStreamWrapper.GetStringWrapper());
         }
 
@@ -234,7 +234,7 @@ namespace LLMUnity
             string arguments = GetLlamaccpArguments();
             if (arguments == null) return;
             bool useGPU = numGPULayers > 0;
-            Debug.Log($"Server command: {arguments}");
+            LLMUnitySetup.Log($"Server command: {arguments}");
 
             foreach (string arch in LLMLib.PossibleArchitectures(useGPU))
             {
@@ -243,7 +243,7 @@ namespace LLMUnity
                 {
                     InitLib(arch);
                     InitServer(arguments);
-                    Debug.Log($"Using architecture: {arch}");
+                    LLMUnitySetup.Log($"Using architecture: {arch}");
                     break;
                 }
                 catch (LLMException e)
@@ -255,16 +255,16 @@ namespace LLMUnity
                 {
                     error = $"{e.GetType()}: {e.Message}";
                 }
-                Debug.Log($"Tried architecture: {arch}, " + error);
+                LLMUnitySetup.Log($"Tried architecture: {arch}, " + error);
             }
             if (llmlib == null)
             {
-                Debug.LogError("LLM service couldn't be created");
+                LLMUnitySetup.LogError("LLM service couldn't be created");
                 failed = true;
                 return;
             }
             StartService();
-            Debug.Log("LLM service created");
+            LLMUnitySetup.Log("LLM service created");
         }
 
         private void InitLib(string arch)
@@ -340,7 +340,7 @@ namespace LLMUnity
             else if (!started) error = "LLM service not started";
             if (error != null)
             {
-                Debug.LogError(error);
+                LLMUnitySetup.LogError(error);
                 throw new Exception(error);
             }
         }
@@ -355,12 +355,12 @@ namespace LLMUnity
             string message = $"LLM {status}: {result}";
             if (status > 0)
             {
-                if (log) Debug.LogError(message);
+                if (log) LLMUnitySetup.LogError(message);
                 throw new LLMException(message, status);
             }
             else if (status < 0)
             {
-                if (log) Debug.LogWarning(message);
+                if (log) LLMUnitySetup.LogWarning(message);
             }
         }
 
@@ -476,7 +476,7 @@ namespace LLMUnity
             }
             catch (Exception e)
             {
-                Debug.LogError(e.Message);
+                LLMUnitySetup.LogError(e.Message);
             }
         }
 
