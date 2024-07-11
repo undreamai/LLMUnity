@@ -53,18 +53,18 @@ namespace LLMUnity
             chatTemplates = new Dictionary<string, string>();
             foreach (ChatTemplate template in templateClasses)
             {
-                if (templates.ContainsKey(template.GetName())) Debug.LogError($"{template.GetName()} already in templates");
+                if (templates.ContainsKey(template.GetName())) LLMUnitySetup.LogError($"{template.GetName()} already in templates");
                 templates[template.GetName()] = template;
-                if (templatesDescription.ContainsKey(template.GetDescription())) Debug.LogError($"{template.GetDescription()} already in templatesDescription");
+                if (templatesDescription.ContainsKey(template.GetDescription())) LLMUnitySetup.LogError($"{template.GetDescription()} already in templatesDescription");
                 templatesDescription[template.GetDescription()] = template.GetName();
                 foreach (string match in template.GetNameMatches())
                 {
-                    if (modelTemplates.ContainsKey(match)) Debug.LogError($"{match} already in modelTemplates");
+                    if (modelTemplates.ContainsKey(match)) LLMUnitySetup.LogError($"{match} already in modelTemplates");
                     modelTemplates[match] = template.GetName();
                 }
                 foreach (string match in template.GetChatTemplateMatches())
                 {
-                    if (chatTemplates.ContainsKey(match)) Debug.LogError($"{match} already in chatTemplates");
+                    if (chatTemplates.ContainsKey(match)) LLMUnitySetup.LogError($"{match} already in chatTemplates");
                     chatTemplates[match] = template.GetName();
                 }
             }
@@ -125,7 +125,7 @@ namespace LLMUnity
             name = FromName(Path.GetFileNameWithoutExtension(path));
             if (name != null) return name;
 
-            Debug.Log("No chat template could be matched, fallback to ChatML");
+            LLMUnitySetup.Log("No chat template could be matched, fallback to ChatML");
             return DefaultTemplate;
         }
 
