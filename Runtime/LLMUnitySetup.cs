@@ -46,6 +46,7 @@ namespace LLMUnity
     public class ModelAttribute : PropertyAttribute {}
     public class ModelAdvancedAttribute : PropertyAttribute {}
     public class ChatAttribute : PropertyAttribute {}
+    public class ChatAdvancedAttribute : PropertyAttribute {}
     public class LLMUnityAttribute : PropertyAttribute {}
 
     public class NotImplementedException : Exception
