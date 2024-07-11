@@ -5,6 +5,7 @@
 - Allow to save chat history at custom path (PR: #179)
 - Use asynchronous startup by default (PR: #186)
 - Assign LLM if not set according to the scene and hierarchy (PR: #187)
+- Allow to set log level (PR: #189)
 
 #### 🐛 Fixes
 
