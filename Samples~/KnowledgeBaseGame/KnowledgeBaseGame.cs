@@ -166,6 +166,12 @@ namespace LLMUnitySamples
             AIReplyComplete();
         }
 
+        public void ExitGame()
+        {
+            Debug.Log("Exit button clicked");
+            Application.Quit();
+        }
+
         bool onValidateWarning = true;
         void OnValidate()
         {
