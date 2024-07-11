@@ -24,7 +24,7 @@ LLM for Unity is built on top of the awesome [llama.cpp](https://github.com/gger
 <sub>
 <a href="#at-a-glance" style="color: black">At a glance</a>&nbsp;&nbsp;•&nbsp;
 <a href="#how-to-help" style=color: black>How to help</a>&nbsp;&nbsp;•&nbsp;
-<a href="#games-using-llmCharacter-for-unity" style=color: black>Games using LLM for Unity</a>&nbsp;&nbsp;•&nbsp;
+<a href="#games-using-llm-for-unity" style=color: black>Games using LLM for Unity</a>&nbsp;&nbsp;•&nbsp;
 <a href="#setup" style=color: black>Setup</a>&nbsp;&nbsp;•&nbsp;
 <a href="#how-to-use" style=color: black>How to use</a>&nbsp;&nbsp;•&nbsp;
 <a href="#examples" style=color: black>Examples</a>&nbsp;&nbsp;•&nbsp;
@@ -309,6 +309,7 @@ HuggingFace models can be converted to gguf with this [online converter](https:/
 ### LLM Settings
 
 - `Show/Hide Advanced Options` Toggle to show/hide advanced options from below
+- `Log Level` select how verbose the log messages are
 
 #### 💻 Setup Settings
 
@@ -345,10 +346,17 @@ If the user's GPU is not supported, the LLM will fall back to the CPU
 
 </details>
 
+#### 🗨️ Chat Settings
+- <details><summary>Advanced options</summary>
+
+- `Base Prompt` a common base prompt to use across all LLMCharacter objects using the LLM
+
+</details>
 
 ### LLMCharacter Settings
 
 - `Show/Hide Advanced Options` Toggle to show/hide advanced options from below
+- `Log Level` select how verbose the log messages are
 
 #### 💻 Setup Settings
 <div>

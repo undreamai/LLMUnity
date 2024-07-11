@@ -140,9 +140,10 @@ namespace LLMUnity
             if (!enabled) return;
             if (!remote)
             {
+                AssignLLM();
                 if (llm == null)
                 {
-                    Debug.LogError("No llm provided!");
+                    LLMUnitySetup.LogError($"No LLM assigned or detected for LLMCharacter {name}!");
                     return;
                 }
                 id_slot = llm.Register(this);
@@ -150,6 +151,54 @@ namespace LLMUnity
 
             InitGrammar();
             InitHistory();
+        }
+
+        void OnValidate()
+        {
+            AssignLLM();
+        }
+
+        void Reset()
+        {
+            AssignLLM();
+        }
+
+        void AssignLLM()
+        {
+            if (remote || llm != null) return;
+
+            LLM[] existingLLMs = FindObjectsOfType<LLM>();
+            if (existingLLMs.Length == 0) return;
+
+            SortBySceneAndHierarchy(existingLLMs);
+            llm = existingLLMs[0];
+            string msg = $"Assigning LLM {llm.name} to LLMCharacter {name}";
+            if (llm.gameObject.scene != gameObject.scene) msg += $" from scene {llm.gameObject.scene}";
+            LLMUnitySetup.Log(msg);
+        }
+
+        void SortBySceneAndHierarchy(LLM[] array)
+        {
+            for (int i = 0; i < array.Length - 1; i++)
+            {
+                bool swapped = false;
+                for (int j = 0; j < array.Length - i - 1; j++)
+                {
+                    bool sameScene = array[j].gameObject.scene == array[j + 1].gameObject.scene;
+                    bool swap = (
+                        (!sameScene && array[j + 1].gameObject.scene == gameObject.scene) ||
+                        (sameScene && array[j].transform.GetSiblingIndex() > array[j + 1].transform.GetSiblingIndex())
+                    );
+                    if (swap)
+                    {
+                        LLM temp = array[j];
+                        array[j] = array[j + 1];
+                        array[j + 1] = temp;
+                        swapped = true;
+                    }
+                }
+                if (!swapped) break;
+            }
         }
 
         protected void InitHistory()
@@ -174,7 +223,7 @@ namespace LLMUnity
 
         string GetSavePath(string filename)
         {
-            return Path.Combine(Application.persistentDataPath, filename);
+            return Path.Combine(Application.persistentDataPath, filename).Replace('\\', '/');
         }
 
         string GetJsonSavePath(string filename)
@@ -182,10 +231,10 @@ namespace LLMUnity
             return GetSavePath(filename + ".json");
         }
 
-        string GetCacheName(string filename)
+        string GetCacheSavePath(string filename)
         {
             // this is saved already in the Application.persistentDataPath folder
-            return filename + ".cache";
+            return GetSavePath(filename + ".cache");
         }
 
         private void InitPrompt(bool clearChat = true)
@@ -290,7 +339,7 @@ namespace LLMUnity
         {
             // setup the request struct
             ChatRequest chatRequest = new ChatRequest();
-            if (debugPrompt) Debug.Log(prompt);
+            if (debugPrompt) LLMUnitySetup.Log(prompt);
             chatRequest.prompt = prompt;
             chatRequest.id_slot = id_slot;
             chatRequest.temperature = temperature;
@@ -321,18 +370,18 @@ namespace LLMUnity
             return chatRequest;
         }
 
-        private void AddMessage(string role, string content)
+        public void AddMessage(string role, string content)
         {
             // add the question / answer to the chat list, update prompt
             chat.Add(new ChatMessage { role = role, content = content });
         }
 
-        private void AddPlayerMessage(string content)
+        public void AddPlayerMessage(string content)
         {
             AddMessage(playerName, content);
         }
 
-        private void AddAIMessage(string content)
+        public void AddAIMessage(string content)
         {
             AddMessage(AIName, content);
         }
@@ -522,11 +571,11 @@ namespace LLMUnity
             return await PostRequest<TokenizeRequest, string>(json, "detokenize", DetokenizeContent, callback);
         }
 
-        private async Task<string> Slot(string filename, string action)
+        private async Task<string> Slot(string filepath, string action)
         {
             SlotRequest slotRequest = new SlotRequest();
             slotRequest.id_slot = id_slot;
-            slotRequest.filename = filename;
+            slotRequest.filepath = filepath;
             slotRequest.action = action;
             string json = JsonUtility.ToJson(slotRequest);
             return await PostRequest<SlotResult, string>(json, "slots", SlotContent);
@@ -540,12 +589,14 @@ namespace LLMUnity
         public async Task<string> Save(string filename)
         {
             string filepath = GetJsonSavePath(filename);
+            string dirname = Path.GetDirectoryName(filepath);
+            if (!Directory.Exists(dirname)) Directory.CreateDirectory(dirname);
             string json = JsonUtility.ToJson(new ChatListWrapper { chat = chat });
             File.WriteAllText(filepath, json);
 
-            string cachename = GetCacheName(filename);
+            string cachepath = GetCacheSavePath(filename);
             if (remote || !saveCache) return null;
-            string result = await Slot(cachename, "save");
+            string result = await Slot(cachepath, "save");
             return result;
         }
 
@@ -559,16 +610,16 @@ namespace LLMUnity
             string filepath = GetJsonSavePath(filename);
             if (!File.Exists(filepath))
             {
-                Debug.LogError($"File {filepath} does not exist.");
+                LLMUnitySetup.LogError($"File {filepath} does not exist.");
                 return null;
             }
             string json = File.ReadAllText(filepath);
             chat = JsonUtility.FromJson<ChatListWrapper>(json).chat;
-            Debug.Log($"Loaded {filepath}");
+            LLMUnitySetup.Log($"Loaded {filepath}");
 
-            string cachename = GetCacheName(filename);
-            if (remote || !saveCache || !File.Exists(GetSavePath(cachename))) return null;
-            string result = await Slot(cachename, "restore");
+            string cachepath = GetCacheSavePath(filename);
+            if (remote || !saveCache || !File.Exists(GetSavePath(cachepath))) return null;
+            string result = await Slot(cachepath, "restore");
             return result;
         }
 
@@ -646,14 +697,14 @@ namespace LLMUnity
                         }
                         else
                         {
-                            Debug.LogError($"wrong callback type, should be string");
+                            LLMUnitySetup.LogError($"wrong callback type, should be string");
                         }
                         callbackCalled = true;
                     }
                     callResult = await llm.Completion(json, callbackString);
                     break;
                 default:
-                    Debug.LogError($"Unknown endpoint {endpoint}");
+                    LLMUnitySetup.LogError($"Unknown endpoint {endpoint}");
                     break;
             }
 
@@ -668,7 +719,7 @@ namespace LLMUnity
             // this function has streaming functionality i.e. handles the answer while it is being received
             if (endpoint == "slots")
             {
-                Debug.LogError("Saving and loading is not currently supported in remote setting");
+                LLMUnitySetup.LogError("Saving and loading is not currently supported in remote setting");
                 return default;
             }
 
@@ -702,7 +753,7 @@ namespace LLMUnity
                     await Task.Yield();
                 }
                 WIPRequests.Remove(request);
-                if (request.result != UnityWebRequest.Result.Success) Debug.LogError(request.error);
+                if (request.result != UnityWebRequest.Result.Success) LLMUnitySetup.LogError(request.error);
                 else result = ConvertContent(request.downloadHandler.text, getContent);
                 callback?.Invoke(result);
             }

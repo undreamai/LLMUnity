@@ -53,18 +53,18 @@ namespace LLMUnity
             chatTemplates = new Dictionary<string, string>();
             foreach (ChatTemplate template in templateClasses)
             {
-                if (templates.ContainsKey(template.GetName())) Debug.LogError($"{template.GetName()} already in templates");
+                if (templates.ContainsKey(template.GetName())) LLMUnitySetup.LogError($"{template.GetName()} already in templates");
                 templates[template.GetName()] = template;
-                if (templatesDescription.ContainsKey(template.GetDescription())) Debug.LogError($"{template.GetDescription()} already in templatesDescription");
+                if (templatesDescription.ContainsKey(template.GetDescription())) LLMUnitySetup.LogError($"{template.GetDescription()} already in templatesDescription");
                 templatesDescription[template.GetDescription()] = template.GetName();
                 foreach (string match in template.GetNameMatches())
                 {
-                    if (modelTemplates.ContainsKey(match)) Debug.LogError($"{match} already in modelTemplates");
+                    if (modelTemplates.ContainsKey(match)) LLMUnitySetup.LogError($"{match} already in modelTemplates");
                     modelTemplates[match] = template.GetName();
                 }
                 foreach (string match in template.GetChatTemplateMatches())
                 {
-                    if (chatTemplates.ContainsKey(match)) Debug.LogError($"{match} already in chatTemplates");
+                    if (chatTemplates.ContainsKey(match)) LLMUnitySetup.LogError($"{match} already in chatTemplates");
                     chatTemplates[match] = template.GetName();
                 }
             }
@@ -125,7 +125,7 @@ namespace LLMUnity
             name = FromName(Path.GetFileNameWithoutExtension(path));
             if (name != null) return name;
 
-            Debug.Log("No chat template could be matched, fallback to ChatML");
+            LLMUnitySetup.Log("No chat template could be matched, fallback to ChatML");
             return DefaultTemplate;
         }
 
@@ -251,7 +251,7 @@ namespace LLMUnity
     public class LLama2ChatTemplate : LLama2Template
     {
         public override string GetName() { return "llama chat"; }
-        public override string GetDescription() { return "llama 2 (modified for chat)"; }
+        public override string GetDescription() { return "llama 2 (chat)"; }
         public override string[] GetNameMatches() { return new string[] {"llama-2", "llama v2"}; }
 
         protected override string PlayerPrefix(string playerName) { return "### " + playerName + ":"; }
@@ -275,7 +275,6 @@ namespace LLMUnity
         public override string[] GetNameMatches() { return new string[] {"llama-3", "llama v3"}; }
         public override string[] GetChatTemplateMatches() { return new string[] {"{% set loop_messages = messages %}{% for message in loop_messages %}{% set content = '<|start_header_id|>' + message['role'] + '<|end_header_id|>\n\n'+ message['content'] | trim + '<|eot_id|>' %}{% if loop.index0 == 0 %}{% set content = bos_token + content %}{% endif %}{{ content }}{% endfor %}{{ '<|start_header_id|>assistant<|end_header_id|>\n\n' }}"};}
 
-        protected override string PromptPrefix() { return "<|begin_of_text|>"; }
         protected override string SystemPrefix() { return "<|start_header_id|>system<|end_header_id|>\n\n"; }
         protected override string SystemSuffix() { return "<|eot_id|>"; }
 
@@ -300,7 +299,6 @@ namespace LLMUnity
         public override string GetName() { return "mistral instruct"; }
         public override string GetDescription() { return "mistral instruct"; }
 
-        protected override string PromptPrefix() { return "<s>"; }
         protected override string SystemPrefix() { return ""; }
         protected override string SystemSuffix() { return "\n\n"; }
         protected override string RequestPrefix() { return "[INST] "; }
@@ -320,7 +318,7 @@ namespace LLMUnity
     public class MistralChatTemplate : MistralInstructTemplate
     {
         public override string GetName() { return "mistral chat"; }
-        public override string GetDescription() { return "mistral (modified for chat)"; }
+        public override string GetDescription() { return "mistral (chat)"; }
         public override string[] GetNameMatches() { return new string[] {"mistral"}; }
         public override string[] GetChatTemplateMatches() { return new string[] {"{{ bos_token }}{% for message in messages %}{% if (message['role'] == 'user') != (loop.index0 % 2 == 0) %}{{ raise_exception('Conversation roles must alternate user/assistant/user/assistant/...') }}{% endif %}{% if message['role'] == 'user' %}{{ '[INST] ' + message['content'] + ' [/INST]' }}{% elif message['role'] == 'assistant' %}{{ message['content'] + eos_token}}{% else %}{{ raise_exception('Only user and assistant roles are supported!') }}{% endif %}{% endfor %}"}; }
 
@@ -413,7 +411,6 @@ namespace LLMUnity
         public override string[] GetNameMatches() { return new string[] {"phi-3"}; }
         public override string[] GetChatTemplateMatches() { return new string[] {"{{ bos_token }}{% for message in messages %}{% if (message['role'] == 'user') %}{{'<|user|>' + '\n' + message['content'] + '<|end|>' + '\n' + '<|assistant|>' + '\n'}}{% elif (message['role'] == 'assistant') %}{{message['content'] + '<|end|>' + '\n'}}{% endif %}{% endfor %}"}; }
 
-        protected override string PromptPrefix() { return "<s>"; }
         protected override string PlayerPrefix(string playerName) { return $"<|user|>\n"; }
         protected override string AIPrefix(string AIName) { return $"<|assistant|>\n"; }
         protected override string RequestSuffix() { return "<|end|>\n"; }

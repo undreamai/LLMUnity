@@ -3,11 +3,11 @@
 using UnityEditor;
 using System.IO;
 using UnityEngine;
-using Debug = UnityEngine.Debug;
 using System.Threading.Tasks;
 using System.Net;
 using System;
 using System.IO.Compression;
+using System.Collections.Generic;
 
 /// @defgroup llm LLM
 /// @defgroup template Chat Templates
@@ -46,6 +46,8 @@ namespace LLMUnity
     public class ModelAttribute : PropertyAttribute {}
     public class ModelAdvancedAttribute : PropertyAttribute {}
     public class ChatAttribute : PropertyAttribute {}
+    public class ChatAdvancedAttribute : PropertyAttribute {}
+    public class LLMUnityAttribute : PropertyAttribute {}
 
     public class NotImplementedException : Exception
     {
@@ -83,7 +85,68 @@ namespace LLMUnity
             ("Phi 3 (small, great)", "https://huggingface.co/microsoft/Phi-3-mini-4k-instruct-gguf/resolve/main/Phi-3-mini-4k-instruct-q4.gguf?download=true"),
         };
 
+        /// <summary> Add callback function to call for error logs </summary>
+        public static void AddErrorCallBack(Callback<string> callback)
+        {
+            errorCallbacks.Add(callback);
+        }
+
+        /// <summary> Remove callback function added for error logs </summary>
+        public static void RemoveErrorCallBack(Callback<string> callback)
+        {
+            errorCallbacks.Remove(callback);
+        }
+
+        /// <summary> Remove all callback function added for error logs </summary>
+        public static void ClearErrorCallBacks()
+        {
+            errorCallbacks.Clear();
+        }
+
         /// \cond HIDE
+        public enum DebugModeType
+        {
+            All,
+            Warning,
+            Error,
+            None
+        }
+        [LLMUnity] public static DebugModeType DebugMode = DebugModeType.All;
+        static List<Callback<string>> errorCallbacks = new List<Callback<string>>();
+
+        public static void Log(string message)
+        {
+            if ((int)DebugMode > (int)DebugModeType.All) return;
+            Debug.Log(message);
+        }
+
+        public static void LogWarning(string message)
+        {
+            if ((int)DebugMode > (int)DebugModeType.Warning) return;
+            Debug.LogWarning(message);
+        }
+
+        public static void LogError(string message)
+        {
+            if ((int)DebugMode > (int)DebugModeType.Error) return;
+            Debug.LogError(message);
+            foreach (Callback<string> errorCallback in errorCallbacks) errorCallback(message);
+        }
+
+        static string DebugModeKey = "DebugMode";
+        static void LoadDebugMode()
+        {
+            DebugMode = (DebugModeType)PlayerPrefs.GetInt(DebugModeKey, (int)DebugModeType.All);
+        }
+
+        public static void SetDebugMode(DebugModeType newDebugMode)
+        {
+            if (DebugMode == newDebugMode) return;
+            DebugMode = newDebugMode;
+            PlayerPrefs.SetInt(DebugModeKey, (int)DebugMode);
+            PlayerPrefs.Save();
+        }
+
         public static string GetAssetPath(string relPath = "")
         {
             // Path to store llm server binaries and models
@@ -91,13 +154,22 @@ namespace LLMUnity
         }
 
 #if UNITY_EDITOR
-        [HideInInspector] public static float libraryProgress = 1;
-
         [InitializeOnLoadMethod]
-        private static async Task InitializeOnLoad()
+        static async Task InitializeOnLoad()
         {
             await DownloadLibrary();
+            LoadDebugMode();
         }
+#else
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        void InitializeOnLoad()
+        {
+            LoadDebugMode();
+        }
+#endif
+
+#if UNITY_EDITOR
+        [HideInInspector] public static float libraryProgress = 1;
 
         public class DownloadStatus
         {
@@ -123,11 +195,11 @@ namespace LLMUnity
             // download a file to the specified path
             if (File.Exists(savePath) && !overwrite)
             {
-                Debug.Log($"File already exists at: {savePath}");
+                Log($"File already exists at: {savePath}");
             }
             else
             {
-                Debug.Log($"Downloading {fileUrl}...");
+                Log($"Downloading {fileUrl}...");
                 string tmpPath = Path.Combine(Application.temporaryCachePath, Path.GetFileName(savePath));
 
                 WebClient client = new WebClient();
@@ -146,7 +218,7 @@ namespace LLMUnity
                 Directory.CreateDirectory(Path.GetDirectoryName(savePath));
                 File.Move(tmpPath, savePath);
                 AssetDatabase.StopAssetEditing();
-                Debug.Log($"Download complete!");
+                Log($"Download complete!");
             }
 
             progresscallback?.Invoke(1f);
@@ -157,7 +229,7 @@ namespace LLMUnity
         {
             if (!File.Exists(assetPath))
             {
-                Debug.LogError($"{assetPath} does not exist!");
+                LogError($"{assetPath} does not exist!");
                 return null;
             }
             // add an asset to the basePath directory if it is not already there and return the relative path
@@ -168,7 +240,7 @@ namespace LLMUnity
             {
                 // if the asset is not in the assets dir copy it over
                 fullPath = Path.Combine(basePathSlash, Path.GetFileName(assetPath));
-                Debug.Log($"copying {assetPath} to {fullPath}");
+                Log($"copying {assetPath} to {fullPath}");
                 AssetDatabase.StartAssetEditing();
                 await Task.Run(() =>
                 {
@@ -180,7 +252,7 @@ namespace LLMUnity
                     File.Copy(assetPath, fullPath);
                 });
                 AssetDatabase.StopAssetEditing();
-                Debug.Log("copying complete!");
+                Log("copying complete!");
             }
             return fullPath.Substring(basePathSlash.Length + 1);
         }

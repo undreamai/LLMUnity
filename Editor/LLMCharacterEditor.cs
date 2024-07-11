@@ -13,18 +13,6 @@ namespace LLMUnity
             return new Type[] { typeof(LLMCharacter) };
         }
 
-        public void AddClientSettings(SerializedObject llmScriptSO)
-        {
-            List<Type> attributeClasses = new List<Type>(){typeof(LocalRemoteAttribute)};
-            attributeClasses.Add(llmScriptSO.FindProperty("remote").boolValue ? typeof(RemoteAttribute) : typeof(LocalAttribute));
-            attributeClasses.Add(typeof(LLMAttribute));
-            if (llmScriptSO.FindProperty("advancedOptions").boolValue)
-            {
-                attributeClasses.Add(typeof(LLMAdvancedAttribute));
-            }
-            ShowPropertiesOfClass("Setup Settings", llmScriptSO, attributeClasses, true);
-        }
-
         public void AddModelSettings(SerializedObject llmScriptSO, LLMCharacter llmCharacterScript)
         {
             EditorGUILayout.LabelField("Model Settings", EditorStyles.boldLabel);
@@ -51,30 +39,20 @@ namespace LLMUnity
             }
         }
 
-        public void AddChatSettings(SerializedObject llmScriptSO)
-        {
-            ShowPropertiesOfClass("Chat Settings", llmScriptSO, new List<Type> { typeof(ChatAttribute) }, true);
-        }
-
         public override void OnInspectorGUI()
         {
             LLMCharacter llmScript = (LLMCharacter)target;
             SerializedObject llmScriptSO = new SerializedObject(llmScript);
-            llmScriptSO.Update();
 
-            GUI.enabled = false;
-            AddScript(llmScriptSO);
-            GUI.enabled = true;
-            EditorGUI.BeginChangeCheck();
+            OnInspectorGUIStart(llmScriptSO);
             AddOptionsToggles(llmScriptSO);
-            AddClientSettings(llmScriptSO);
+
+            AddSetupSettings(llmScriptSO);
             AddChatSettings(llmScriptSO);
+            Space();
             AddModelSettings(llmScriptSO, llmScript);
 
-            if (EditorGUI.EndChangeCheck())
-                Repaint();
-
-            llmScriptSO.ApplyModifiedProperties();
+            OnInspectorGUIEnd(llmScriptSO);
         }
     }
 

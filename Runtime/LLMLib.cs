@@ -246,7 +246,7 @@ namespace LLMUnity
                 archCheckerHandle = LibraryLoader.LoadLibrary(archCheckerPath);
                 if (archCheckerHandle == IntPtr.Zero)
                 {
-                    Debug.LogError($"Failed to load library {archCheckerPath}.");
+                    LLMUnitySetup.LogError($"Failed to load library {archCheckerPath}.");
                 }
                 else
                 {
@@ -259,7 +259,7 @@ namespace LLMUnity
 
         public LLMLib(string arch)
         {
-            Debug.Log(GetArchitecturePath(arch));
+            LLMUnitySetup.Log(GetArchitecturePath(arch));
             libraryHandle = LibraryLoader.LoadLibrary(GetArchitecturePath(arch));
             if (libraryHandle == IntPtr.Zero)
             {
@@ -315,7 +315,7 @@ namespace LLMUnity
                 }
                 catch (Exception e)
                 {
-                    Debug.LogError($"{e.GetType()}: {e.Message}");
+                    LLMUnitySetup.LogError($"{e.GetType()}: {e.Message}");
                 }
                 architectures.Add("noavx");
             }
@@ -324,20 +324,20 @@ namespace LLMUnity
                 string arch = RuntimeInformation.ProcessArchitecture.ToString().ToLower();
                 if (arch.Contains("arm"))
                 {
-                    architectures.Add("arm64-no_acc");
                     architectures.Add("arm64-acc");
+                    architectures.Add("arm64-no_acc");
                 }
                 else
                 {
-                    if (arch != "x86" && arch != "x64") Debug.LogWarning($"Unknown architecture of processor {arch}! Falling back to x86_64");
-                    architectures.Add("x64-no_acc");
+                    if (arch != "x86" && arch != "x64") LLMUnitySetup.LogWarning($"Unknown architecture of processor {arch}! Falling back to x86_64");
                     architectures.Add("x64-acc");
+                    architectures.Add("x64-no_acc");
                 }
             }
             else
             {
                 string error = "Unknown OS";
-                Debug.LogError(error);
+                LLMUnitySetup.LogError(error);
                 throw new Exception(error);
             }
             return architectures;
@@ -379,7 +379,7 @@ namespace LLMUnity
             else
             {
                 string error = "Unknown OS";
-                Debug.LogError(error);
+                LLMUnitySetup.LogError(error);
                 throw new Exception(error);
             }
             return Path.Combine(LLMUnitySetup.libraryPath, filename);

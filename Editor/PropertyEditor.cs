@@ -29,8 +29,31 @@ namespace LLMUnity
             }
         }
 
+        public void AddSetupSettings(SerializedObject llmScriptSO)
+        {
+            List<Type> attributeClasses = new List<Type>(){typeof(LocalRemoteAttribute)};
+            attributeClasses.Add(llmScriptSO.FindProperty("remote").boolValue ? typeof(RemoteAttribute) : typeof(LocalAttribute));
+            attributeClasses.Add(typeof(LLMAttribute));
+            if (llmScriptSO.FindProperty("advancedOptions").boolValue)
+            {
+                attributeClasses.Add(typeof(LLMAdvancedAttribute));
+            }
+            ShowPropertiesOfClass("Setup Settings", llmScriptSO, attributeClasses, true);
+        }
+
+        public void AddChatSettings(SerializedObject llmScriptSO)
+        {
+            List<Type> attributeClasses = new List<Type>(){typeof(ChatAttribute)};
+            if (llmScriptSO.FindProperty("advancedOptions").boolValue)
+            {
+                attributeClasses.Add(typeof(ChatAdvancedAttribute));
+            }
+            ShowPropertiesOfClass("Chat Settings", llmScriptSO, attributeClasses, false);
+        }
+
         public void AddOptionsToggles(SerializedObject llmScriptSO)
         {
+            LLMUnitySetup.SetDebugMode((LLMUnitySetup.DebugModeType)EditorGUILayout.EnumPopup("Log Level", LLMUnitySetup.DebugMode));
             EditorGUILayout.BeginHorizontal();
             AddOptionsToggle(llmScriptSO, "advancedOptions", "Advanced Options");
             EditorGUILayout.EndHorizontal();
@@ -126,6 +149,23 @@ namespace LLMUnity
                 }
             }
             return null;
+        }
+
+        public void OnInspectorGUIStart(SerializedObject scriptSO)
+        {
+            scriptSO.Update();
+            GUI.enabled = false;
+            AddScript(scriptSO);
+            GUI.enabled = true;
+            EditorGUI.BeginChangeCheck();
+        }
+
+        public void OnInspectorGUIEnd(SerializedObject scriptSO)
+        {
+            if (EditorGUI.EndChangeCheck())
+                Repaint();
+
+            scriptSO.ApplyModifiedProperties();
         }
     }
 }
