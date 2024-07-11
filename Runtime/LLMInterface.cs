@@ -40,6 +40,14 @@ namespace LLMUnity
     }
 
     [Serializable]
+    public struct SystemPromptRequest
+    {
+        public string prompt;
+        public string system_prompt;
+        public int n_predict;
+    }
+
+    [Serializable]
     public struct ChatResult
     {
         public int id_slot;
