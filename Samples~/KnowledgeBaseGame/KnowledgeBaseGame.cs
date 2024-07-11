@@ -172,7 +172,7 @@ namespace LLMUnitySamples
             if (onValidateWarning)
             {
                 if (embedding.SelectedOption == 0) Debug.LogWarning($"Please select a model in the {embedding.gameObject.name} GameObject!");
-                if (llmCharacter.llm.model == "") Debug.LogWarning($"Please select a model in the {llmCharacter.llm.gameObject.name} GameObject!");
+                if (!llmCharacter.remote && llmCharacter.llm != null && llmCharacter.llm.model == "") Debug.LogWarning($"Please select a model in the {llmCharacter.llm.gameObject.name} GameObject!");
                 onValidateWarning = false;
             }
         }
