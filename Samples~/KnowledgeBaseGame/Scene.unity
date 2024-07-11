@@ -2762,6 +2762,7 @@ RectTransform:
   m_Children:
   - {fileID: 1614562620}
   - {fileID: 964853999}
+  - {fileID: 39745287}
   - {fileID: 1821864874}
   - {fileID: 283994678}
   - {fileID: 1171575133}
@@ -2775,7 +2776,6 @@ RectTransform:
   - {fileID: 828313582}
   - {fileID: 964460962}
   - {fileID: 1723006217}
-  - {fileID: 39745287}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -7251,6 +7251,7 @@ MonoBehaviour:
   lora: 
   contextSize: 0
   batchSize: 512
+  basePrompt: 
   SelectedModel: 0
   modelProgress: 1
   modelCopyProgress: 1
