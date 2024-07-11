@@ -79,6 +79,9 @@ namespace LLMUnity
         [ModelAdvanced] public int contextSize = 0;
         /// <summary> Batch size for prompt processing. </summary>
         [ModelAdvanced] public int batchSize = 512;
+        /// <summary> a base prompt to use as a base for all LLMCharacter objects </summary>
+        [TextArea(5, 10), ChatAdvanced] public string basePrompt = "";
+
         /// <summary> Boolean set to true if the server has started and is ready to receive requests, false otherwise. </summary>
         public bool started { get; protected set; } = false;
         /// <summary> Boolean set to true if the server has failed to start. </summary>
@@ -212,6 +215,7 @@ namespace LLMUnity
             if (asynchronousStartup) await Task.Run(() => StartLLMServer());
             else StartLLMServer();
             if (dontDestroyOnLoad) DontDestroyOnLoad(transform.root.gameObject);
+            if (basePrompt != "") await SetBasePrompt(basePrompt);
         }
 
         private void SetupLogging()
@@ -429,6 +433,7 @@ namespace LLMUnity
         public async Task<string> Completion(string json, Callback<string> streamCallback = null)
         {
             AssertStarted();
+            if (streamCallback == null) streamCallback = (string s) => {};
             StreamWrapper streamWrapper = ConstructStreamWrapper(streamCallback);
             await Task.Run(() => llmlib.LLM_Completion(LLMObject, json, streamWrapper.GetStringWrapper()));
             if (!started) return null;
@@ -437,6 +442,13 @@ namespace LLMUnity
             DestroyStreamWrapper(streamWrapper);
             CheckLLMStatus();
             return result;
+        }
+
+        public async Task SetBasePrompt(string base_prompt)
+        {
+            AssertStarted();
+            SystemPromptRequest request = new SystemPromptRequest(){system_prompt = base_prompt, prompt = " ", n_predict = 0};
+            await Completion(JsonUtility.ToJson(request));
         }
 
         /// <summary>
