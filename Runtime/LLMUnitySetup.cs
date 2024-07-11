@@ -134,7 +134,6 @@ namespace LLMUnity
         }
 
         static string DebugModeKey = "DebugMode";
-        [InitializeOnLoadMethod]
         static void LoadDebugMode()
         {
             DebugMode = (DebugModeType)PlayerPrefs.GetInt(DebugModeKey, (int)DebugModeType.All);
@@ -155,13 +154,22 @@ namespace LLMUnity
         }
 
 #if UNITY_EDITOR
-        [HideInInspector] public static float libraryProgress = 1;
-
         [InitializeOnLoadMethod]
-        private static async Task InitializeOnLoad()
+        static async Task InitializeOnLoad()
         {
             await DownloadLibrary();
+            LoadDebugMode();
         }
+#else
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        void InitializeOnLoad()
+        {
+            LoadDebugMode();
+        }
+#endif
+
+#if UNITY_EDITOR
+        [HideInInspector] public static float libraryProgress = 1;
 
         public class DownloadStatus
         {
