@@ -81,7 +81,7 @@ namespace LLMUnitySamples
         bool onValidateWarning = true;
         void OnValidate()
         {
-            if (onValidateWarning && llmCharacter1.llm.model == "")
+            if (onValidateWarning && !llmCharacter1.remote && llmCharacter1.llm != null && llmCharacter1.llm.model == "")
             {
                 Debug.LogWarning($"Please select a model in the {llmCharacter1.llm.gameObject.name} GameObject!");
                 onValidateWarning = false;
