@@ -309,6 +309,7 @@ HuggingFace models can be converted to gguf with this [online converter](https:/
 ### LLM Settings
 
 - `Show/Hide Advanced Options` Toggle to show/hide advanced options from below
+- `Log Level` select how verbose the log messages are
 
 #### 💻 Setup Settings
 
@@ -345,10 +346,17 @@ If the user's GPU is not supported, the LLM will fall back to the CPU
 
 </details>
 
+#### 🗨️ Chat Settings
+- <details><summary>Advanced options</summary>
+
+- `Base Prompt` a common base prompt to use across all LLMCharacter objects using the LLM
+
+</details>
 
 ### LLMCharacter Settings
 
 - `Show/Hide Advanced Options` Toggle to show/hide advanced options from below
+- `Log Level` select how verbose the log messages are
 
 #### 💻 Setup Settings
 <div>
