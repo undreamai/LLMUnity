@@ -8,4 +8,5 @@
 ### 🐛 Fixes
 
 - set higher priority for mac build with Accelerate than without (PR: #180)
+- Fix duplicate bos warning in llama3 (PR: #188)
 
