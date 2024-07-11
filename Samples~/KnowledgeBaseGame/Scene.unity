@@ -285,7 +285,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 489627714}
         m_TargetAssemblyTypeName: LLMUnitySamples.KnowledgeBaseGame, Assembly-CSharp
         m_MethodName: CancelRequests
         m_Mode: 1
