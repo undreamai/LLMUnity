@@ -60,21 +60,15 @@ namespace LLMUnity
         {
             LLMCharacter llmScript = (LLMCharacter)target;
             SerializedObject llmScriptSO = new SerializedObject(llmScript);
-            llmScriptSO.Update();
 
-            GUI.enabled = false;
-            AddScript(llmScriptSO);
-            GUI.enabled = true;
-            EditorGUI.BeginChangeCheck();
+            OnInspectorGUIStart(llmScriptSO);
             AddOptionsToggles(llmScriptSO);
+
             AddClientSettings(llmScriptSO);
             AddChatSettings(llmScriptSO);
             AddModelSettings(llmScriptSO, llmScript);
 
-            if (EditorGUI.EndChangeCheck())
-                Repaint();
-
-            llmScriptSO.ApplyModifiedProperties();
+            OnInspectorGUIEnd(llmScriptSO);
         }
     }
 

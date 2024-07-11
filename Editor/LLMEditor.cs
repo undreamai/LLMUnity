@@ -126,15 +126,9 @@ namespace LLMUnity
         public override void OnInspectorGUI()
         {
             LLM llmScript = (LLM)target;
-            // LLM llmScript = (LLM)target;
             SerializedObject llmScriptSO = new SerializedObject(llmScript);
-            llmScriptSO.Update();
 
-            GUI.enabled = false;
-            AddScript(llmScriptSO);
-            GUI.enabled = true;
-
-            EditorGUI.BeginChangeCheck();
+            OnInspectorGUIStart(llmScriptSO);
 
             ShowProgress(LLMUnitySetup.libraryProgress, "Setup Library");
             ShowProgress(llmScript.modelProgress, "Model Downloading");
@@ -147,10 +141,7 @@ namespace LLMUnity
             GUI.enabled = true;
             AddChatSettings(llmScriptSO);
 
-            if (EditorGUI.EndChangeCheck())
-                Repaint();
-
-            llmScriptSO.ApplyModifiedProperties();
+            OnInspectorGUIEnd(llmScriptSO);
         }
     }
 }
