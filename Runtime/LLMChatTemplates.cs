@@ -251,7 +251,7 @@ namespace LLMUnity
     public class LLama2ChatTemplate : LLama2Template
     {
         public override string GetName() { return "llama chat"; }
-        public override string GetDescription() { return "llama 2 (modified for chat)"; }
+        public override string GetDescription() { return "llama 2 (chat)"; }
         public override string[] GetNameMatches() { return new string[] {"llama-2", "llama v2"}; }
 
         protected override string PlayerPrefix(string playerName) { return "### " + playerName + ":"; }
@@ -275,7 +275,6 @@ namespace LLMUnity
         public override string[] GetNameMatches() { return new string[] {"llama-3", "llama v3"}; }
         public override string[] GetChatTemplateMatches() { return new string[] {"{% set loop_messages = messages %}{% for message in loop_messages %}{% set content = '<|start_header_id|>' + message['role'] + '<|end_header_id|>\n\n'+ message['content'] | trim + '<|eot_id|>' %}{% if loop.index0 == 0 %}{% set content = bos_token + content %}{% endif %}{{ content }}{% endfor %}{{ '<|start_header_id|>assistant<|end_header_id|>\n\n' }}"};}
 
-        protected override string PromptPrefix() { return "<|begin_of_text|>"; }
         protected override string SystemPrefix() { return "<|start_header_id|>system<|end_header_id|>\n\n"; }
         protected override string SystemSuffix() { return "<|eot_id|>"; }
 
@@ -320,7 +319,7 @@ namespace LLMUnity
     public class MistralChatTemplate : MistralInstructTemplate
     {
         public override string GetName() { return "mistral chat"; }
-        public override string GetDescription() { return "mistral (modified for chat)"; }
+        public override string GetDescription() { return "mistral (chat)"; }
         public override string[] GetNameMatches() { return new string[] {"mistral"}; }
         public override string[] GetChatTemplateMatches() { return new string[] {"{{ bos_token }}{% for message in messages %}{% if (message['role'] == 'user') != (loop.index0 % 2 == 0) %}{{ raise_exception('Conversation roles must alternate user/assistant/user/assistant/...') }}{% endif %}{% if message['role'] == 'user' %}{{ '[INST] ' + message['content'] + ' [/INST]' }}{% elif message['role'] == 'assistant' %}{{ message['content'] + eos_token}}{% else %}{{ raise_exception('Only user and assistant roles are supported!') }}{% endif %}{% endfor %}"}; }
 
