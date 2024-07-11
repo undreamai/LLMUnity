@@ -3,7 +3,6 @@
 using UnityEditor;
 using System.IO;
 using UnityEngine;
-using Debug = UnityEngine.Debug;
 using System.Threading.Tasks;
 using System.Net;
 using System;
@@ -46,6 +45,7 @@ namespace LLMUnity
     public class ModelAttribute : PropertyAttribute {}
     public class ModelAdvancedAttribute : PropertyAttribute {}
     public class ChatAttribute : PropertyAttribute {}
+    public class LLMUnityAttribute : PropertyAttribute {}
 
     public class NotImplementedException : Exception
     {
@@ -84,6 +84,49 @@ namespace LLMUnity
         };
 
         /// \cond HIDE
+        public enum DebugModeType
+        {
+            All,
+            Warning,
+            Error,
+            None
+        }
+
+        [LLMUnity] public static DebugModeType DebugMode = DebugModeType.All;
+
+        public static void Log(string message)
+        {
+            if ((int)DebugMode > (int)DebugModeType.All) return;
+            Debug.Log(message);
+        }
+
+        public static void LogWarning(string message)
+        {
+            if ((int)DebugMode > (int)DebugModeType.Warning) return;
+            Debug.LogWarning(message);
+        }
+
+        public static void LogError(string message)
+        {
+            if ((int)DebugMode > (int)DebugModeType.Error) return;
+            Debug.LogError(message);
+        }
+
+        static string DebugModeKey = "DebugMode";
+        [InitializeOnLoadMethod]
+        static void LoadDebugMode()
+        {
+            DebugMode = (DebugModeType)PlayerPrefs.GetInt(DebugModeKey, (int)DebugModeType.All);
+        }
+
+        public static void SetDebugMode(DebugModeType newDebugMode)
+        {
+            if (DebugMode == newDebugMode) return;
+            DebugMode = newDebugMode;
+            PlayerPrefs.SetInt(DebugModeKey, (int)DebugMode);
+            PlayerPrefs.Save();
+        }
+
         public static string GetAssetPath(string relPath = "")
         {
             // Path to store llm server binaries and models
@@ -123,11 +166,11 @@ namespace LLMUnity
             // download a file to the specified path
             if (File.Exists(savePath) && !overwrite)
             {
-                Debug.Log($"File already exists at: {savePath}");
+                Log($"File already exists at: {savePath}");
             }
             else
             {
-                Debug.Log($"Downloading {fileUrl}...");
+                Log($"Downloading {fileUrl}...");
                 string tmpPath = Path.Combine(Application.temporaryCachePath, Path.GetFileName(savePath));
 
                 WebClient client = new WebClient();
@@ -146,7 +189,7 @@ namespace LLMUnity
                 Directory.CreateDirectory(Path.GetDirectoryName(savePath));
                 File.Move(tmpPath, savePath);
                 AssetDatabase.StopAssetEditing();
-                Debug.Log($"Download complete!");
+                Log($"Download complete!");
             }
 
             progresscallback?.Invoke(1f);
@@ -157,7 +200,7 @@ namespace LLMUnity
         {
             if (!File.Exists(assetPath))
             {
-                Debug.LogError($"{assetPath} does not exist!");
+                LogError($"{assetPath} does not exist!");
                 return null;
             }
             // add an asset to the basePath directory if it is not already there and return the relative path
@@ -168,7 +211,7 @@ namespace LLMUnity
             {
                 // if the asset is not in the assets dir copy it over
                 fullPath = Path.Combine(basePathSlash, Path.GetFileName(assetPath));
-                Debug.Log($"copying {assetPath} to {fullPath}");
+                Log($"copying {assetPath} to {fullPath}");
                 AssetDatabase.StartAssetEditing();
                 await Task.Run(() =>
                 {
@@ -180,7 +223,7 @@ namespace LLMUnity
                     File.Copy(assetPath, fullPath);
                 });
                 AssetDatabase.StopAssetEditing();
-                Debug.Log("copying complete!");
+                Log("copying complete!");
             }
             return fullPath.Substring(basePathSlash.Length + 1);
         }
