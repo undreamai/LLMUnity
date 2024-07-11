@@ -370,18 +370,18 @@ namespace LLMUnity
             return chatRequest;
         }
 
-        private void AddMessage(string role, string content)
+        public void AddMessage(string role, string content)
         {
             // add the question / answer to the chat list, update prompt
             chat.Add(new ChatMessage { role = role, content = content });
         }
 
-        private void AddPlayerMessage(string content)
+        public void AddPlayerMessage(string content)
         {
             AddMessage(playerName, content);
         }
 
-        private void AddAIMessage(string content)
+        public void AddAIMessage(string content)
         {
             AddMessage(AIName, content);
         }
