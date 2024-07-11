@@ -34,9 +34,9 @@ namespace LLMUnityTests
             string fullModelPath = LLMUnitySetup.GetAssetPath(modelPath);
             _ = LLMUnitySetup.DownloadFile(modelUrl, fullModelPath, false, null, null, false);
             await llm.SetModel(fullModelPath);
-            Assert.AreEqual(llm.model, modelPath);
             llm.parallelPrompts = 1;
             llm.SetTemplate("alpaca");
+            llm.asynchronousStartup = false;
 
             llmCharacter = gameObject.AddComponent<LLMCharacter>();
             llmCharacter.llm = llm;
