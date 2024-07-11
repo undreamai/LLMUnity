@@ -37,7 +37,7 @@
     },
     {
       "displayName": "KnowledgeBaseGame",
-      "description": "Simple detective game using a knowledge base to provide information to the LLM.",
+      "description": "Simple detective game using a knowledge base to provide information to the LLM.\n**Requires installation of the RAGSearchUnity package (from UndreamAI)**",
       "path": "Samples~/KnowledgeBaseGame"
     },
     {
