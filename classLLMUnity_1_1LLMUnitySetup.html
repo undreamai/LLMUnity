@@ -47,7 +47,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_tiny.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">LLM for Unity
-   &#160;<span id="projectnumber">v2.0.2</span>
+   &#160;<span id="projectnumber">v2.0.3</span>
    </div>
    <div id="projectbrief">Create characters in Unity with LLMs!</div>
   </td>
@@ -129,10 +129,19 @@ Static Public Member Functions</h2></td></tr>
 static&#160;</td><td class="memItemRight" valign="bottom"><b>readonly</b> (string, string)[] modelOptions</td></tr>
 <tr class="memdesc:ad1f9ea3019b6f94c6a60bb285059c54f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default models for download. <br /></td></tr>
 <tr class="separator:ad1f9ea3019b6f94c6a60bb285059c54f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeaa7ccc72452c140af55987d8e5efa64" id="r_aeaa7ccc72452c140af55987d8e5efa64"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aeaa7ccc72452c140af55987d8e5efa64">AddErrorCallBack</a> (Callback&lt; string &gt; callback)</td></tr>
+<tr class="memdesc:aeaa7ccc72452c140af55987d8e5efa64"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add callback function to call for error logs.  <br /></td></tr>
+<tr class="separator:aeaa7ccc72452c140af55987d8e5efa64"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a37d52c5ff93d59862ccf45642a4f0e2a" id="r_a37d52c5ff93d59862ccf45642a4f0e2a"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a37d52c5ff93d59862ccf45642a4f0e2a">RemoveErrorCallBack</a> (Callback&lt; string &gt; callback)</td></tr>
+<tr class="memdesc:a37d52c5ff93d59862ccf45642a4f0e2a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove callback function added for error logs.  <br /></td></tr>
+<tr class="separator:a37d52c5ff93d59862ccf45642a4f0e2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d41394dd57b4a3d89c1a2d8628f7d28" id="r_a7d41394dd57b4a3d89c1a2d8628f7d28"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7d41394dd57b4a3d89c1a2d8628f7d28">ClearErrorCallBacks</a> ()</td></tr>
+<tr class="memdesc:a7d41394dd57b4a3d89c1a2d8628f7d28"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove all callback function added for error logs.  <br /></td></tr>
+<tr class="separator:a7d41394dd57b4a3d89c1a2d8628f7d28"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
-<tr class="memitem:aa9e562edf406d931b3f58b28b28e7c60" id="r_aa9e562edf406d931b3f58b28b28e7c60"><td class="memItemLeft" align="right" valign="top">static string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa9e562edf406d931b3f58b28b28e7c60">Version</a> = &quot;v2.0.2&quot;</td></tr>
+<tr class="memitem:aa9e562edf406d931b3f58b28b28e7c60" id="r_aa9e562edf406d931b3f58b28b28e7c60"><td class="memItemLeft" align="right" valign="top">static string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa9e562edf406d931b3f58b28b28e7c60">Version</a> = &quot;v2.0.3&quot;</td></tr>
 <tr class="memdesc:aa9e562edf406d931b3f58b28b28e7c60"><td class="mdescLeft">&#160;</td><td class="mdescRight">LLM for Unity version.  <br /></td></tr>
 <tr class="separator:aa9e562edf406d931b3f58b28b28e7c60"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8c890a623cf474c4515ae64698c3f236" id="r_a8c890a623cf474c4515ae64698c3f236"><td class="memItemLeft" align="right" valign="top">static string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8c890a623cf474c4515ae64698c3f236">LlamaLibVersion</a> = &quot;v1.1.5&quot;</td></tr>
@@ -148,8 +157,96 @@ Static Public Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class implementing helper functions for setup and process management. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00065">65</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
-</div><h2 class="groupheader">Member Data Documentation</h2>
+<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00067">67</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="aeaa7ccc72452c140af55987d8e5efa64" name="aeaa7ccc72452c140af55987d8e5efa64"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeaa7ccc72452c140af55987d8e5efa64">&#9670;&#160;</a></span>AddErrorCallBack()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void LLMUnity.LLMUnitySetup.AddErrorCallBack </td>
+          <td>(</td>
+          <td class="paramtype">Callback&lt; string &gt;</td>          <td class="paramname"><span class="paramname"><em>callback</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Add callback function to call for error logs. </p>
+
+<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00089">89</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
+
+</div>
+</div>
+<a id="a7d41394dd57b4a3d89c1a2d8628f7d28" name="a7d41394dd57b4a3d89c1a2d8628f7d28"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7d41394dd57b4a3d89c1a2d8628f7d28">&#9670;&#160;</a></span>ClearErrorCallBacks()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void LLMUnity.LLMUnitySetup.ClearErrorCallBacks </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Remove all callback function added for error logs. </p>
+
+<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00101">101</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
+
+</div>
+</div>
+<a id="a37d52c5ff93d59862ccf45642a4f0e2a" name="a37d52c5ff93d59862ccf45642a4f0e2a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a37d52c5ff93d59862ccf45642a4f0e2a">&#9670;&#160;</a></span>RemoveErrorCallBack()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void LLMUnity.LLMUnitySetup.RemoveErrorCallBack </td>
+          <td>(</td>
+          <td class="paramtype">Callback&lt; string &gt;</td>          <td class="paramname"><span class="paramname"><em>callback</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Remove callback function added for error logs. </p>
+
+<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00095">95</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
 <a id="a4fbf1bc2995c0267c45395e6532002a8" name="a4fbf1bc2995c0267c45395e6532002a8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4fbf1bc2995c0267c45395e6532002a8">&#9670;&#160;</a></span>libraryPath</h2>
 
@@ -172,7 +269,7 @@ Static Public Attributes</h2></td></tr>
 
 <p>LlamaLib path. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00075">75</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00077">77</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
 
 </div>
 </div>
@@ -198,7 +295,7 @@ Static Public Attributes</h2></td></tr>
 
 <p>LlamaLib url. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00073">73</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00075">75</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
 
 </div>
 </div>
@@ -224,7 +321,7 @@ Static Public Attributes</h2></td></tr>
 
 <p>LlamaLib version. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00071">71</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00073">73</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
 
 </div>
 </div>
@@ -238,7 +335,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">string LLMUnity.LLMUnitySetup.Version = &quot;v2.0.2&quot;</td>
+          <td class="memname">string LLMUnity.LLMUnitySetup.Version = &quot;v2.0.3&quot;</td>
         </tr>
       </table>
   </td>
@@ -250,7 +347,7 @@ Static Public Attributes</h2></td></tr>
 
 <p>LLM for Unity version. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00069">69</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00071">71</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
 
 </div>
 </div>

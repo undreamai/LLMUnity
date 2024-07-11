@@ -17,6 +17,7 @@ var group__llm =
       [ "Update", "classLLMUnity_1_1LLM.html#adadd6997f4df7412db71a7218eb3917b", null ],
       [ "advancedOptions", "classLLMUnity_1_1LLM.html#a6f40f3b1281cce08d0c0327943b32cd7", null ],
       [ "asynchronousStartup", "classLLMUnity_1_1LLM.html#ae764d8b6b7f0a040c19e1986c227ffaf", null ],
+      [ "basePrompt", "classLLMUnity_1_1LLM.html#a4541fffb47e71d6853e567e424278326", null ],
       [ "batchSize", "classLLMUnity_1_1LLM.html#ac1d133a050b4cc2ec567fcb1691f46b3", null ],
       [ "contextSize", "classLLMUnity_1_1LLM.html#a8e358f7a834e6ede3cc19aa7142e67e8", null ],
       [ "debug", "classLLMUnity_1_1LLM.html#a415905d972e2922dd99b289ceaf56a5c", null ],

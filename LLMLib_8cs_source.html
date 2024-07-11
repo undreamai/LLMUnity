@@ -47,7 +47,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_tiny.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">LLM for Unity
-   &#160;<span id="projectnumber">v2.0.2</span>
+   &#160;<span id="projectnumber">v2.0.3</span>
    </div>
    <div id="projectbrief">Create characters in Unity with LLMs!</div>
   </td>
@@ -366,7 +366,7 @@ $(function(){initNavTree('LLMLib_8cs_source.html',''); initResizable(); });
 <div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>                archCheckerHandle = LibraryLoader.LoadLibrary(archCheckerPath);</div>
 <div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>                <span class="keywordflow">if</span> (archCheckerHandle == IntPtr.Zero)</div>
 <div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>                {</div>
-<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>                    Debug.LogError($<span class="stringliteral">&quot;Failed to load library {archCheckerPath}.&quot;</span>);</div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>                    LLMUnitySetup.LogError($<span class="stringliteral">&quot;Failed to load library {archCheckerPath}.&quot;</span>);</div>
 <div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>                }</div>
 <div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>                <span class="keywordflow">else</span></div>
 <div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>                {</div>
@@ -379,7 +379,7 @@ $(function(){initNavTree('LLMLib_8cs_source.html',''); initResizable(); });
 <div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span> </div>
 <div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>        <span class="keyword">public</span> LLMLib(<span class="keywordtype">string</span> arch)</div>
 <div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>        {</div>
-<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>            Debug.Log(GetArchitecturePath(arch));</div>
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>            LLMUnitySetup.Log(GetArchitecturePath(arch));</div>
 <div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>            libraryHandle = LibraryLoader.LoadLibrary(GetArchitecturePath(arch));</div>
 <div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>            <span class="keywordflow">if</span> (libraryHandle == IntPtr.Zero)</div>
 <div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>            {</div>
@@ -435,7 +435,7 @@ $(function(){initNavTree('LLMLib_8cs_source.html',''); initResizable(); });
 <div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>                }</div>
 <div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span>                <span class="keywordflow">catch</span> (Exception e)</div>
 <div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span>                {</div>
-<div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span>                    Debug.LogError($<span class="stringliteral">&quot;{e.GetType()}: {e.Message}&quot;</span>);</div>
+<div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span>                    LLMUnitySetup.LogError($<span class="stringliteral">&quot;{e.GetType()}: {e.Message}&quot;</span>);</div>
 <div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span>                }</div>
 <div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span>                architectures.Add(<span class="stringliteral">&quot;noavx&quot;</span>);</div>
 <div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span>            }</div>
@@ -444,20 +444,20 @@ $(function(){initNavTree('LLMLib_8cs_source.html',''); initResizable(); });
 <div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span>                <span class="keywordtype">string</span> arch = RuntimeInformation.ProcessArchitecture.ToString().ToLower();</div>
 <div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span>                <span class="keywordflow">if</span> (arch.Contains(<span class="stringliteral">&quot;arm&quot;</span>))</div>
 <div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>                {</div>
-<div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span>                    architectures.Add(<span class="stringliteral">&quot;arm64-no_acc&quot;</span>);</div>
-<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>                    architectures.Add(<span class="stringliteral">&quot;arm64-acc&quot;</span>);</div>
+<div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span>                    architectures.Add(<span class="stringliteral">&quot;arm64-acc&quot;</span>);</div>
+<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>                    architectures.Add(<span class="stringliteral">&quot;arm64-no_acc&quot;</span>);</div>
 <div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>                }</div>
 <div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>                <span class="keywordflow">else</span></div>
 <div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>                {</div>
-<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>                    <span class="keywordflow">if</span> (arch != <span class="stringliteral">&quot;x86&quot;</span> &amp;&amp; arch != <span class="stringliteral">&quot;x64&quot;</span>) Debug.LogWarning($<span class="stringliteral">&quot;Unknown architecture of processor {arch}! Falling back to x86_64&quot;</span>);</div>
-<div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span>                    architectures.Add(<span class="stringliteral">&quot;x64-no_acc&quot;</span>);</div>
-<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span>                    architectures.Add(<span class="stringliteral">&quot;x64-acc&quot;</span>);</div>
+<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>                    <span class="keywordflow">if</span> (arch != <span class="stringliteral">&quot;x86&quot;</span> &amp;&amp; arch != <span class="stringliteral">&quot;x64&quot;</span>) LLMUnitySetup.LogWarning($<span class="stringliteral">&quot;Unknown architecture of processor {arch}! Falling back to x86_64&quot;</span>);</div>
+<div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span>                    architectures.Add(<span class="stringliteral">&quot;x64-acc&quot;</span>);</div>
+<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span>                    architectures.Add(<span class="stringliteral">&quot;x64-no_acc&quot;</span>);</div>
 <div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span>                }</div>
 <div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span>            }</div>
 <div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span>            <span class="keywordflow">else</span></div>
 <div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>            {</div>
 <div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>                <span class="keywordtype">string</span> error = <span class="stringliteral">&quot;Unknown OS&quot;</span>;</div>
-<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>                Debug.LogError(error);</div>
+<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>                LLMUnitySetup.LogError(error);</div>
 <div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>                <span class="keywordflow">throw</span> <span class="keyword">new</span> Exception(error);</div>
 <div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span>            }</div>
 <div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span>            <span class="keywordflow">return</span> architectures;</div>
@@ -499,7 +499,7 @@ $(function(){initNavTree('LLMLib_8cs_source.html',''); initResizable(); });
 <div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span>            <span class="keywordflow">else</span></div>
 <div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span>            {</div>
 <div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span>                <span class="keywordtype">string</span> error = <span class="stringliteral">&quot;Unknown OS&quot;</span>;</div>
-<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span>                Debug.LogError(error);</div>
+<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span>                LLMUnitySetup.LogError(error);</div>
 <div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span>                <span class="keywordflow">throw</span> <span class="keyword">new</span> Exception(error);</div>
 <div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>            }</div>
 <div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span>            <span class="keywordflow">return</span> Path.Combine(LLMUnitySetup.libraryPath, filename);</div>

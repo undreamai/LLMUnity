@@ -47,7 +47,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_tiny.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">LLM for Unity
-   &#160;<span id="projectnumber">v2.0.2</span>
+   &#160;<span id="projectnumber">v2.0.3</span>
    </div>
    <div id="projectbrief">Create characters in Unity with LLMs!</div>
   </td>
@@ -164,6 +164,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ac50c648dc8594b31b7d3bbd54e5c3ab9" id="r_ac50c648dc8594b31b7d3bbd54e5c3ab9"><td class="memItemLeft" align="right" valign="top">async Task&lt; string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac50c648dc8594b31b7d3bbd54e5c3ab9">Completion</a> (string json, Callback&lt; string &gt; streamCallback=null)</td></tr>
 <tr class="memdesc:ac50c648dc8594b31b7d3bbd54e5c3ab9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allows to use the chat and completion functionality of the LLM.  <br /></td></tr>
 <tr class="separator:ac50c648dc8594b31b7d3bbd54e5c3ab9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a631fcfd687d926545d42a1c2926a9502" id="r_a631fcfd687d926545d42a1c2926a9502"><td class="memItemLeft" align="right" valign="top">async Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a631fcfd687d926545d42a1c2926a9502">SetBasePrompt</a> (string base_prompt)</td></tr>
+<tr class="separator:a631fcfd687d926545d42a1c2926a9502"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a281d49a8f23fbf506d178a875b43c688" id="r_a281d49a8f23fbf506d178a875b43c688"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a281d49a8f23fbf506d178a875b43c688">CancelRequest</a> (int id_slot)</td></tr>
 <tr class="memdesc:a281d49a8f23fbf506d178a875b43c688"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allows to cancel the requests in a specific slot of the LLM.  <br /></td></tr>
 <tr class="separator:a281d49a8f23fbf506d178a875b43c688"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -197,7 +199,7 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a2a03591ffb964eacb31d2afbe42c4405" id="r_a2a03591ffb964eacb31d2afbe42c4405"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2a03591ffb964eacb31d2afbe42c4405">parallelPrompts</a> = -1</td></tr>
 <tr class="memdesc:a2a03591ffb964eacb31d2afbe42c4405"><td class="mdescLeft">&#160;</td><td class="mdescRight">number of prompts that can happen in parallel (-1 = number of LLMCharacter objects)  <br /></td></tr>
 <tr class="separator:a2a03591ffb964eacb31d2afbe42c4405"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae764d8b6b7f0a040c19e1986c227ffaf" id="r_ae764d8b6b7f0a040c19e1986c227ffaf"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae764d8b6b7f0a040c19e1986c227ffaf">asynchronousStartup</a> = false</td></tr>
+<tr class="memitem:ae764d8b6b7f0a040c19e1986c227ffaf" id="r_ae764d8b6b7f0a040c19e1986c227ffaf"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae764d8b6b7f0a040c19e1986c227ffaf">asynchronousStartup</a> = true</td></tr>
 <tr class="memdesc:ae764d8b6b7f0a040c19e1986c227ffaf"><td class="mdescLeft">&#160;</td><td class="mdescRight">allows to start the server asynchronously. This is useful to not block Unity while the server is initialised. For example it can be used as follows:  <br /></td></tr>
 <tr class="separator:ae764d8b6b7f0a040c19e1986c227ffaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab1cd3fa19215c0ccc3c9cea09fe4b669" id="r_ab1cd3fa19215c0ccc3c9cea09fe4b669"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab1cd3fa19215c0ccc3c9cea09fe4b669">dontDestroyOnLoad</a> = true</td></tr>
@@ -215,6 +217,9 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:ac1d133a050b4cc2ec567fcb1691f46b3" id="r_ac1d133a050b4cc2ec567fcb1691f46b3"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac1d133a050b4cc2ec567fcb1691f46b3">batchSize</a> = 512</td></tr>
 <tr class="memdesc:ac1d133a050b4cc2ec567fcb1691f46b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Batch size for prompt processing.  <br /></td></tr>
 <tr class="separator:ac1d133a050b4cc2ec567fcb1691f46b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4541fffb47e71d6853e567e424278326" id="r_a4541fffb47e71d6853e567e424278326"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4541fffb47e71d6853e567e424278326">basePrompt</a> = &quot;&quot;</td></tr>
+<tr class="memdesc:a4541fffb47e71d6853e567e424278326"><td class="mdescLeft">&#160;</td><td class="mdescRight">a base prompt to use as a base for all LLMCharacter objects  <br /></td></tr>
+<tr class="separator:a4541fffb47e71d6853e567e424278326"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="properties" name="properties"></a>
 Properties</h2></td></tr>
@@ -255,7 +260,7 @@ Properties</h2></td></tr>
 
 <p>The Unity Awake function that starts the LLM server. The server can be started asynchronously if the asynchronousStartup option is set. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00211">211</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00212">212</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -290,7 +295,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00449">449</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00458">458</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -331,7 +336,7 @@ Properties</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>completion result</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00432">432</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00433">433</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -360,7 +365,7 @@ Properties</h2></td></tr>
 
 <p>Stops and destroys the LLM. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00459">459</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00468">468</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -396,7 +401,7 @@ Properties</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>detokenisation result</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00401">401</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00402">402</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -426,7 +431,7 @@ Properties</h2></td></tr>
 <p>Returns the chat template of the LLM. </p>
 <dl class="section return"><dt>Returns</dt><dd>chat template of the LLM</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00167">167</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00169">169</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -455,7 +460,7 @@ Properties</h2></td></tr>
 
 <p>The Unity OnDestroy function called when the onbject is destroyed. The function StopProcess is called to stop the LLM server. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00490">490</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00499">499</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -491,7 +496,34 @@ Properties</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00302">302</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00303">303</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+
+</div>
+</div>
+<a id="a631fcfd687d926545d42a1c2926a9502" name="a631fcfd687d926545d42a1c2926a9502"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a631fcfd687d926545d42a1c2926a9502">&#9670;&#160;</a></span>SetBasePrompt()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">async Task LLMUnity.LLM.SetBasePrompt </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>base_prompt</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00447">447</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -526,7 +558,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00145">145</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00147">147</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -561,7 +593,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00129">129</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00131">131</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -596,7 +628,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00157">157</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00159">159</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -632,7 +664,7 @@ Properties</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>slot result</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00416">416</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00417">417</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -668,7 +700,7 @@ Properties</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>tokenisation result</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00386">386</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00387">387</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -697,7 +729,7 @@ Properties</h2></td></tr>
 
 <p>The Unity Update function. It is used to retrieve the LLM replies. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00334">334</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00335">335</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -727,7 +759,7 @@ Properties</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool LLMUnity.LLM.asynchronousStartup = false</td>
+          <td class="memname">bool LLMUnity.LLM.asynchronousStartup = true</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -749,6 +781,24 @@ Properties</h2></td></tr>
 <div class="line">}</div>
 </div><!-- fragment --> 
 <p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00068">68</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+
+</div>
+</div>
+<a id="a4541fffb47e71d6853e567e424278326" name="a4541fffb47e71d6853e567e424278326"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4541fffb47e71d6853e567e424278326">&#9670;&#160;</a></span>basePrompt</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string LLMUnity.LLM.basePrompt = &quot;&quot;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>a base prompt to use as a base for all LLMCharacter objects </p>
+
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00083">83</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -973,7 +1023,7 @@ Properties</h2></td></tr>
 
 <p>Boolean set to true if the server has failed to start. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00085">85</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00088">88</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -999,7 +1049,7 @@ Properties</h2></td></tr>
 
 <p>Boolean set to true if the server has started and is ready to receive requests, false otherwise. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00083">83</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00086">86</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>

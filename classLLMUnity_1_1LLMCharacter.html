@@ -47,7 +47,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_tiny.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">LLM for Unity
-   &#160;<span id="projectnumber">v2.0.2</span>
+   &#160;<span id="projectnumber">v2.0.3</span>
    </div>
    <div id="projectbrief">Create characters in Unity with LLMs!</div>
   </td>
@@ -142,6 +142,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aee4abf630820cbd00ef4aca0f04807b9" id="r_aee4abf630820cbd00ef4aca0f04807b9"><td class="memItemLeft" align="right" valign="top">async void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aee4abf630820cbd00ef4aca0f04807b9">SetGrammar</a> (string path)</td></tr>
 <tr class="memdesc:aee4abf630820cbd00ef4aca0f04807b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the grammar file of the LLMCharacter.  <br /></td></tr>
 <tr class="separator:aee4abf630820cbd00ef4aca0f04807b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2c6b68c5bb4e47d3b9b65531f7721b77" id="r_a2c6b68c5bb4e47d3b9b65531f7721b77"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2c6b68c5bb4e47d3b9b65531f7721b77">AddMessage</a> (string role, string content)</td></tr>
+<tr class="separator:a2c6b68c5bb4e47d3b9b65531f7721b77"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4a3c73189f76e51b1e95bb989c8c6872" id="r_a4a3c73189f76e51b1e95bb989c8c6872"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4a3c73189f76e51b1e95bb989c8c6872">AddPlayerMessage</a> (string content)</td></tr>
+<tr class="separator:a4a3c73189f76e51b1e95bb989c8c6872"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c06922c888b5b1431dbdad99f9bef3d" id="r_a1c06922c888b5b1431dbdad99f9bef3d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1c06922c888b5b1431dbdad99f9bef3d">AddAIMessage</a> (string content)</td></tr>
+<tr class="separator:a1c06922c888b5b1431dbdad99f9bef3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a92800650189059a2eaf572659a8ca1a0" id="r_a92800650189059a2eaf572659a8ca1a0"><td class="memItemLeft" align="right" valign="top">async Task&lt; string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a92800650189059a2eaf572659a8ca1a0">Chat</a> (string query, Callback&lt; string &gt; callback=null, EmptyCallback completionCallback=null, bool addToHistory=true)</td></tr>
 <tr class="memdesc:a92800650189059a2eaf572659a8ca1a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Chat functionality of the LLM. It calls the LLM completion based on the provided query including the previous chat history. The function allows callbacks when the response is partially or fully received. The question is added to the history if specified.  <br /></td></tr>
 <tr class="separator:a92800650189059a2eaf572659a8ca1a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -289,6 +295,91 @@ Public Attributes</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00018">18</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="a1c06922c888b5b1431dbdad99f9bef3d" name="a1c06922c888b5b1431dbdad99f9bef3d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1c06922c888b5b1431dbdad99f9bef3d">&#9670;&#160;</a></span>AddAIMessage()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void LLMUnity.LLMCharacter.AddAIMessage </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>content</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00384">384</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+
+</div>
+</div>
+<a id="a2c6b68c5bb4e47d3b9b65531f7721b77" name="a2c6b68c5bb4e47d3b9b65531f7721b77"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2c6b68c5bb4e47d3b9b65531f7721b77">&#9670;&#160;</a></span>AddMessage()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void LLMUnity.LLMCharacter.AddMessage </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>role</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>content</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00373">373</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+
+</div>
+</div>
+<a id="a4a3c73189f76e51b1e95bb989c8c6872" name="a4a3c73189f76e51b1e95bb989c8c6872"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4a3c73189f76e51b1e95bb989c8c6872">&#9670;&#160;</a></span>AddPlayerMessage()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void LLMUnity.LLMCharacter.AddPlayerMessage </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>content</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00379">379</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+
+</div>
+</div>
 <a id="a49b2dc59a64d69ece5aea9c602d28f95" name="a49b2dc59a64d69ece5aea9c602d28f95"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a49b2dc59a64d69ece5aea9c602d28f95">&#9670;&#160;</a></span>AskTemplate()</h2>
 
@@ -315,7 +406,7 @@ Public Attributes</h2></td></tr>
 <p>Asks the LLM for the chat template to use. </p>
 <dl class="section return"><dt>Returns</dt><dd>the chat template of the LLM</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00490">490</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00539">539</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -380,7 +471,7 @@ Public Attributes</h2></td></tr>
 
 <p>Cancel the ongoing requests e.g. Chat, Complete. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00612">612</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00663">663</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -433,7 +524,7 @@ Public Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the LLM response</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00406">406</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00455">455</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -480,7 +571,7 @@ Public Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the LLM response</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00458">458</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00507">507</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -521,7 +612,7 @@ Public Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the detokenised string</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00516">516</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00565">565</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -557,7 +648,7 @@ Public Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00557">557</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00608">608</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -587,7 +678,7 @@ Public Attributes</h2></td></tr>
 <p>Load the chat template of the LLMCharacter. </p>
 <dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00251">251</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00300">300</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -623,7 +714,7 @@ Public Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00540">540</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00589">589</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -658,7 +749,7 @@ Public Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00273">273</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00322">322</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -698,7 +789,7 @@ Public Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00217">217</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00266">266</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -739,7 +830,7 @@ Public Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>list of the tokens</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00501">501</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00550">550</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -781,7 +872,7 @@ Public Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the LLM response</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00481">481</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00530">530</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
