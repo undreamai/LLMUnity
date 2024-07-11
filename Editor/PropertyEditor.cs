@@ -31,6 +31,7 @@ namespace LLMUnity
 
         public void AddOptionsToggles(SerializedObject llmScriptSO)
         {
+            LLMUnitySetup.SetDebugMode((LLMUnitySetup.DebugModeType)EditorGUILayout.EnumPopup("Log Level", LLMUnitySetup.DebugMode));
             EditorGUILayout.BeginHorizontal();
             AddOptionsToggle(llmScriptSO, "advancedOptions", "Advanced Options");
             EditorGUILayout.EndHorizontal();
@@ -126,6 +127,23 @@ namespace LLMUnity
                 }
             }
             return null;
+        }
+
+        public void OnInspectorGUIStart(SerializedObject scriptSO)
+        {
+            scriptSO.Update();
+            GUI.enabled = false;
+            AddScript(scriptSO);
+            GUI.enabled = true;
+            EditorGUI.BeginChangeCheck();
+        }
+
+        public void OnInspectorGUIEnd(SerializedObject scriptSO)
+        {
+            if (EditorGUI.EndChangeCheck())
+                Repaint();
+
+            scriptSO.ApplyModifiedProperties();
         }
     }
 }
