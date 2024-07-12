@@ -8,6 +8,11 @@ using System.Net;
 using System;
 using System.IO.Compression;
 using System.Collections.Generic;
+<<<<<<< HEAD
+=======
+using UnityEngine.Networking;
+using System.Collections.Generic;
+>>>>>>> d9fdc86 (function to determine the number of big cores in Android)
 
 /// @defgroup llm LLM
 /// @defgroup template Chat Templates
@@ -290,5 +295,49 @@ namespace LLMUnity
 
 #endif
         /// \endcond
+
+        /// <summary>
+        /// Calculates the number of big cores in Android based on https://docs.unity3d.com/2022.3/Documentation/Manual/android-thread-configuration.html
+        /// </summary>
+        /// <returns></returns>
+        public static int AndroidGetNumBigCores()
+        {
+            List<int> capacities = new List<int>();
+            int minCapacity = int.MaxValue;
+            try
+            {
+                string cpuPath = "/sys/devices/system/cpu/";
+                int coreIndex;
+                if (Directory.Exists(cpuPath))
+                {
+                    foreach (string cpuDir in Directory.GetDirectories(cpuPath))
+                    {
+                        string dirName = Path.GetFileName(cpuDir);
+                        if (!dirName.StartsWith("cpu")) continue;
+                        if (!int.TryParse(dirName.Substring(3), out coreIndex)) continue;
+
+                        string capacityPath = Path.Combine(cpuDir, "cpu_capacity");
+                        if (!File.Exists(capacityPath)) break;
+
+                        int capacity = int.Parse(File.ReadAllText(capacityPath).Trim());
+                        capacities.Add(capacity);
+                        if (minCapacity > capacity) minCapacity = capacity;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e.Message);
+            }
+
+            int numBigCores = 0;
+            foreach (int capacity in capacities)
+            {
+                if (capacity >= 2 * minCapacity) numBigCores++;
+            }
+
+            if (numBigCores == 0) numBigCores = SystemInfo.processorCount;
+            return numBigCores;
+        }
     }
 }
