@@ -196,10 +196,13 @@ namespace LLMUnity
                 }
             }
 
+            int numThreadsToUse = numThreads;
+            if (Application.platform == RuntimePlatform.Android && numThreads <= 0) numThreadsToUse = LLMUnitySetup.AndroidGetNumBigCores();
+
             int slots = GetNumClients();
             string arguments = $"-m \"{modelPath}\" -c {contextSize} -b {batchSize} --log-disable -np {slots}";
             if (remote) arguments += $" --port {port} --host 0.0.0.0";
-            if (numThreads > 0) arguments += $" -t {numThreads}";
+            if (numThreadsToUse > 0) arguments += $" -t {numThreadsToUse}";
             if (loraPath != "") arguments += $" --lora \"{loraPath}\"";
             arguments += $" -ngl {numGPULayers}";
             return arguments;
