@@ -336,7 +336,7 @@ namespace LLMUnity
                 if (capacity >= 2 * minCapacity) numBigCores++;
             }
 
-            if (numBigCores == 0) numBigCores = SystemInfo.processorCount;
+            if (numBigCores == 0 || numBigCores > SystemInfo.processorCount) numBigCores = SystemInfo.processorCount;
             return numBigCores;
         }
     }
