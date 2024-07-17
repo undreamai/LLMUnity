@@ -221,9 +221,9 @@ MonoBehaviour:
   m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 1280, y: 720}
+  m_ReferenceResolution: {x: 720, y: 720}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
+  m_MatchWidthOrHeight: 0.5
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
@@ -1041,7 +1041,7 @@ MonoBehaviour:
   port: 13333
   numThreads: -1
   numGPULayers: 0
-  debug: 0
+  debug: 1
   parallelPrompts: -1
   asynchronousStartup: 1
   dontDestroyOnLoad: 1
@@ -1053,7 +1053,7 @@ MonoBehaviour:
   modelProgress: 1
   modelCopyProgress: 1
   modelHide: 1
-  chatTemplate: chatml
+  chatTemplate: alpaca
 --- !u!4 &1047848255
 Transform:
   m_ObjectHideFlags: 0
