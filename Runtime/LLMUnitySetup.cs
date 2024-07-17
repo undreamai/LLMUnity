@@ -295,12 +295,125 @@ namespace LLMUnity
 
 #endif
         /// \endcond
+        public static int GetMaxFreqKHz(int cpuId)
+        {
+            string[] paths = new string[]
+            {
+                $"/sys/devices/system/cpu/cpufreq/stats/cpu{cpuId}/time_in_state",
+                $"/sys/devices/system/cpu/cpu{cpuId}/cpufreq/stats/time_in_state",
+                $"/sys/devices/system/cpu/cpu{cpuId}/cpufreq/cpuinfo_max_freq"
+            };
+
+            foreach (var path in paths)
+            {
+                if (!File.Exists(path)) continue;
+
+                int maxFreqKHz = 0;
+                using (StreamReader sr = new StreamReader(path))
+                {
+                    string line;
+                    while ((line = sr.ReadLine()) != null)
+                    {
+                        string[] parts = line.Split(' ');
+                        if (parts.Length > 0 && int.TryParse(parts[0], out int freqKHz))
+                        {
+                            if (freqKHz > maxFreqKHz)
+                            {
+                                maxFreqKHz = freqKHz;
+                            }
+                        }
+                    }
+                }
+                if (maxFreqKHz != 0) return maxFreqKHz;
+            }
+            return -1;
+        }
+
+        public static bool IsSmtCpu(int cpuId)
+        {
+            string[] paths = new string[]
+            {
+                $"/sys/devices/system/cpu/cpu{cpuId}/topology/core_cpus_list",
+                $"/sys/devices/system/cpu/cpu{cpuId}/topology/thread_siblings_list"
+            };
+
+            foreach (var path in paths)
+            {
+                if (!File.Exists(path)) continue;
+                using (StreamReader sr = new StreamReader(path))
+                {
+                    string line;
+                    while ((line = sr.ReadLine()) != null)
+                    {
+                        if (line.Contains(",") || line.Contains("-"))
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
 
         /// <summary>
-        /// Calculates the number of big cores in Android based on https://docs.unity3d.com/2022.3/Documentation/Manual/android-thread-configuration.html
+        /// Calculates the number of big cores in Android similarly to ncnn (https://github.com/Tencent/ncnn)
         /// </summary>
         /// <returns></returns>
         public static int AndroidGetNumBigCores()
+        {
+            int maxFreqKHzMin = int.MaxValue;
+            int maxFreqKHzMax = 0;
+            List<int> cpuMaxFreqKHz = new List<int>();
+            List<bool> cpuIsSmtCpu = new List<bool>();
+
+            try
+            {
+                string cpuPath = "/sys/devices/system/cpu/";
+                int coreIndex;
+                if (Directory.Exists(cpuPath))
+                {
+                    foreach (string cpuDir in Directory.GetDirectories(cpuPath))
+                    {
+                        string dirName = Path.GetFileName(cpuDir);
+                        if (!dirName.StartsWith("cpu")) continue;
+                        if (!int.TryParse(dirName.Substring(3), out coreIndex)) continue;
+
+                        int maxFreqKHz = GetMaxFreqKHz(coreIndex);
+                        cpuMaxFreqKHz.Add(maxFreqKHz);
+                        if (maxFreqKHz > maxFreqKHzMax) maxFreqKHzMax = maxFreqKHz;
+                        if (maxFreqKHz < maxFreqKHzMin)  maxFreqKHzMin = maxFreqKHz;
+                        cpuIsSmtCpu.Add(IsSmtCpu(coreIndex));
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e.Message);
+            }
+
+            int numBigCores = 0;
+            int numCores = SystemInfo.processorCount;
+            int maxFreqKHzMedium = (maxFreqKHzMin + maxFreqKHzMax) / 2;
+            if (maxFreqKHzMedium == maxFreqKHzMax) numBigCores = numCores;
+            else
+            {
+                for (int i = 0; i < cpuMaxFreqKHz.Count; i++)
+                {
+                    if (cpuIsSmtCpu[i] || cpuMaxFreqKHz[i] >= maxFreqKHzMedium) numBigCores++;
+                }
+            }
+
+            if (numBigCores == 0) numBigCores = SystemInfo.processorCount / 2;
+            else numBigCores = Math.Min(numBigCores, SystemInfo.processorCount);
+
+            return numBigCores;
+        }
+
+        /// <summary>
+        /// Calculates the number of big cores in Android similarly to Unity (https://docs.unity3d.com/2022.3/Documentation/Manual/android-thread-configuration.html)
+        /// </summary>
+        /// <returns></returns>
+        public static int AndroidGetNumBigCoresCapacity()
         {
             List<int> capacities = new List<int>();
             int minCapacity = int.MaxValue;
