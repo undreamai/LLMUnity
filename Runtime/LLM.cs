@@ -215,8 +215,10 @@ namespace LLMUnity
         public async void Awake()
         {
             if (!enabled) return;
-            if (asynchronousStartup) await Task.Run(() => StartLLMServer());
-            else StartLLMServer();
+            string arguments = GetLlamaccpArguments();
+            if (arguments == null) return;
+            if (asynchronousStartup) await Task.Run(() => StartLLMServer(arguments));
+            else StartLLMServer(arguments);
             if (dontDestroyOnLoad) DontDestroyOnLoad(transform.root.gameObject);
             if (basePrompt != "") await SetBasePrompt(basePrompt);
         }
@@ -234,12 +236,10 @@ namespace LLMUnity
             DestroyStreamWrapper(logStreamWrapper);
         }
 
-        private void StartLLMServer()
+        private void StartLLMServer(string arguments)
         {
             started = false;
             failed = false;
-            string arguments = GetLlamaccpArguments();
-            if (arguments == null) return;
             bool useGPU = numGPULayers > 0;
             LLMUnitySetup.Log($"Server command: {arguments}");
 
