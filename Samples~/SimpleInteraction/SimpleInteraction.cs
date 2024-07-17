@@ -9,11 +9,21 @@ namespace LLMUnitySamples
         public LLMCharacter llmCharacter;
         public InputField playerText;
         public Text AIText;
+        int cores;
 
         void Start()
         {
             playerText.onSubmit.AddListener(onInputFieldSubmit);
-            playerText.Select();
+            playerText.interactable = false;
+            cores = LLMUnitySetup.AndroidGetNumBigCores();
+            AIText.text = $"Warming up the model...\nWill use {cores} cores";
+            _ = llmCharacter.Warmup(WarmupDone);
+        }
+
+        void WarmupDone()
+        {
+            AIText.text = $"Ready when you are ({cores} cores)!";
+            AIReplyComplete();
         }
 
         void onInputFieldSubmit(string message)
