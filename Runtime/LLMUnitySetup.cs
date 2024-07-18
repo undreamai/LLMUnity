@@ -4,15 +4,9 @@ using UnityEditor;
 using System.IO;
 using UnityEngine;
 using System.Threading.Tasks;
-using System.Net;
 using System;
 using System.IO.Compression;
 using System.Collections.Generic;
-<<<<<<< HEAD
-=======
-using UnityEngine.Networking;
-using System.Collections.Generic;
->>>>>>> d9fdc86 (function to determine the number of big cores in Android)
 
 /// @defgroup llm LLM
 /// @defgroup template Chat Templates
@@ -165,70 +159,60 @@ namespace LLMUnity
             await DownloadLibrary();
             LoadDebugMode();
         }
+
 #else
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         void InitializeOnLoad()
         {
             LoadDebugMode();
         }
+
 #endif
 
-#if UNITY_EDITOR
-        [HideInInspector] public static float libraryProgress = 1;
+        static Dictionary<string, ResumingWebClient> downloadClients = new Dictionary<string, ResumingWebClient>();
 
-        public class DownloadStatus
+        public static void CancelDownload(string savePath)
         {
-            Callback<float> progresscallback;
-
-            public DownloadStatus(Callback<float> progresscallback = null)
-            {
-                this.progresscallback = progresscallback;
-            }
-
-            public void DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
-            {
-                progresscallback?.Invoke(e.ProgressPercentage / 100.0f);
-            }
+            if (!downloadClients.ContainsKey(savePath)) return;
+            downloadClients[savePath].CancelDownloadAsync();
+            downloadClients.Remove(savePath);
         }
 
         public static async Task DownloadFile(
             string fileUrl, string savePath, bool overwrite = false,
-            TaskCallback<string> callback = null, Callback<float> progresscallback = null,
-            bool async = true
+            TaskCallback<string> callback = null, Callback<float> progressCallback = null
         )
         {
-            // download a file to the specified path
             if (File.Exists(savePath) && !overwrite)
             {
                 Log($"File already exists at: {savePath}");
             }
             else
             {
-                Log($"Downloading {fileUrl}...");
+                Log($"Downloading {fileUrl} to {savePath}...");
                 string tmpPath = Path.Combine(Application.temporaryCachePath, Path.GetFileName(savePath));
 
-                WebClient client = new WebClient();
-                DownloadStatus downloadStatus = new DownloadStatus(progresscallback);
-                client.DownloadProgressChanged += downloadStatus.DownloadProgressChanged;
-                if (async)
-                {
-                    await client.DownloadFileTaskAsync(fileUrl, tmpPath);
-                }
-                else
-                {
-                    client.DownloadFile(fileUrl, tmpPath);
-                }
-
+                ResumingWebClient client = new ResumingWebClient();
+                downloadClients[savePath] = client;
+                await client.DownloadFileTaskAsyncResume(new Uri(fileUrl), tmpPath, !overwrite, progressCallback);
+                downloadClients.Remove(savePath);
+#if UNITY_EDITOR
                 AssetDatabase.StartAssetEditing();
+#endif
                 Directory.CreateDirectory(Path.GetDirectoryName(savePath));
                 File.Move(tmpPath, savePath);
+#if UNITY_EDITOR
                 AssetDatabase.StopAssetEditing();
+#endif
                 Log($"Download complete!");
             }
 
-            progresscallback?.Invoke(1f);
+            progressCallback?.Invoke(1f);
             if (callback != null) await callback.Invoke(savePath);
         }
+
+#if UNITY_EDITOR
+        [HideInInspector] public static float libraryProgress = 1;
 
         public static async Task<string> AddAsset(string assetPath, string basePath)
         {
