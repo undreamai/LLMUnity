@@ -32,7 +32,7 @@ namespace LLMUnityTests
             string modelUrl = "https://huggingface.co/afrideva/smol_llama-220M-openhermes-GGUF/resolve/main/smol_llama-220m-openhermes.q4_k_m.gguf?download=true";
             string modelPath = "LLMUnityTests/smol_llama-220m-openhermes.q4_k_m.gguf";
             string fullModelPath = LLMUnitySetup.GetAssetPath(modelPath);
-            _ = LLMUnitySetup.DownloadFile(modelUrl, fullModelPath, false, null, null, false);
+            await LLMUnitySetup.DownloadFile(modelUrl, fullModelPath, false, null, null);
             await llm.SetModel(fullModelPath);
             llm.parallelPrompts = 1;
             llm.SetTemplate("alpaca");
