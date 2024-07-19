@@ -265,18 +265,6 @@ namespace LLMUnity
             libraryProgress = progress;
         }
 
-        public static void DownloadModel(LLM llm, int optionIndex)
-        {
-            // download default model and disable model editor properties until the model is set
-            llm.SelectedModel = optionIndex;
-            string modelUrl = modelOptions[optionIndex].Item2;
-            if (modelUrl == null) return;
-            llm.modelProgress = 0;
-            string modelName = Path.GetFileName(modelUrl).Split("?")[0];
-            string modelPath = GetAssetPath(modelName);
-            Task downloadTask = DownloadFile(modelUrl, modelPath, false, llm.SetModel, llm.SetModelProgress);
-        }
-
 #endif
         /// \endcond
         public static int GetMaxFreqKHz(int cpuId)

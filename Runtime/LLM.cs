@@ -122,6 +122,35 @@ namespace LLMUnity
             return path;
         }
 
+        public async Task DownloadDefaultModel(int optionIndex)
+        {
+            // download default model and disable model editor properties until the model is set
+            SelectedModel = optionIndex;
+            string modelUrl = LLMUnitySetup.modelOptions[optionIndex].Item2;
+            if (modelUrl == null) return;
+            string modelName = Path.GetFileName(modelUrl).Split("?")[0];
+            await DownloadModel(modelUrl, modelName);
+        }
+
+        public async Task DownloadModel(string modelUrl, string modelName = null, Callback<float> progressCallback = null, bool overwrite = false)
+        {
+            modelProgress = 0;
+            if (modelName == null) modelName = model;
+            string modelPath = LLMUnitySetup.GetAssetPath(modelName);
+
+            Callback<float> callback = (floatArg) =>
+            {
+                progressCallback?.Invoke(floatArg);
+                SetModelProgress(floatArg);
+            };
+            await LLMUnitySetup.DownloadFile(modelUrl, modelPath, overwrite, SetModel, callback);
+        }
+
+        public async Task DownloadModel(string modelUrl, Callback<float> progressCallback = null, bool overwrite = false)
+        {
+            await DownloadModel(modelUrl, null, progressCallback, overwrite);
+        }
+
         /// <summary>
         /// Allows to set the model used by the LLM.
         /// The model provided is copied to the Assets/StreamingAssets folder that allows it to also work in the build.
