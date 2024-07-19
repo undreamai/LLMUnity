@@ -35,7 +35,7 @@ namespace LLMUnity
             int newIndex = EditorGUILayout.Popup("Model", llmScript.SelectedModel, options);
             if (newIndex != llmScript.SelectedModel)
             {
-                LLMUnitySetup.DownloadModel(llmScript, newIndex);
+                llmScript.DownloadDefaultModel(newIndex);
             }
 
             if (GUILayout.Button("Load model", GUILayout.Width(buttonWidth)))
