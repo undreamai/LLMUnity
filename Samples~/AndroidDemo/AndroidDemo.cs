@@ -39,11 +39,10 @@ namespace LLMUnitySamples
             AIText.text = "Downloading model...";
             Task downloadTask = llm.DownloadModel(
                 "https://huggingface.co/afrideva/smol_llama-220M-openhermes-GGUF/resolve/main/smol_llama-220m-openhermes.q4_k_m.gguf?download=true",
-                null,
-                SetProgress,
-                true
+                SetProgress
             );
             while (!downloadTask.IsCompleted) yield return null;
+            llm.SetTemplate("alpaca");
             DownloadPanel.SetActive(false);
 
             ChatPanel.SetActive(true);
