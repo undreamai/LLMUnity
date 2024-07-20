@@ -45,7 +45,7 @@ namespace LLMUnity
                     string path = EditorUtility.OpenFilePanelWithFilters("Select a gguf model file", "", new string[] { "Model Files", "gguf" });
                     if (!string.IsNullOrEmpty(path))
                     {
-                        llmScript.SelectedModel = 0;
+                        llmScript.ResetSelectedModel();
                         llmScript.SetModel(path);
                     }
                 };
@@ -89,6 +89,10 @@ namespace LLMUnity
             if (llmScriptSO.FindProperty("advancedOptions").boolValue)
             {
                 attributeClasses.Add(typeof(ModelAdvancedAttribute));
+            }
+            if (llmScriptSO.FindProperty("downloadOnBuild").boolValue)
+            {
+                attributeClasses.Add(typeof(ModelDownloadAttribute));
             }
             ShowPropertiesOfClass("", llmScriptSO, attributeClasses, false);
             Space();
