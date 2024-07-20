@@ -20,37 +20,29 @@ namespace LLMUnitySamples
         public Text progressText;
         int cores;
 
-        void Awake()
-        {
-            ChatPanel.SetActive(false);
-            DownloadPanel.SetActive(false);
-        }
-
-        void Start()
+        async void Start()
         {
             playerText.onSubmit.AddListener(onInputFieldSubmit);
             playerText.interactable = false;
-            StartCoroutine(Loading());
+            await ShowDownloadScreen();
+            await WarmUp();
         }
 
-        IEnumerator<string> Loading()
+        async Task ShowDownloadScreen()
         {
+            ChatPanel.SetActive(false);
             DownloadPanel.SetActive(true);
-            AIText.text = "Downloading model...";
-            Task downloadTask = llm.DownloadModel(
-                "https://huggingface.co/afrideva/smol_llama-220M-openhermes-GGUF/resolve/main/smol_llama-220m-openhermes.q4_k_m.gguf?download=true",
-                SetProgress
-            );
-            while (!downloadTask.IsCompleted) yield return null;
-            llm.SetTemplate("alpaca");
+            // await llm.WaitUntilModelDownloaded(SetProgress);
             DownloadPanel.SetActive(false);
-
             ChatPanel.SetActive(true);
-            cores = LLMUnitySetup.AndroidGetNumBigCores();
-            AIText.text += $"\nWarming up the model...\nWill use {cores} cores";
-            Task warmup = llmCharacter.Warmup();
-            while (!warmup.IsCompleted) yield return null;
+        }
 
+        async Task WarmUp()
+        {
+            llm.SetTemplate("alpaca");
+            cores = LLMUnitySetup.AndroidGetNumBigCores();
+            AIText.text += $"Warming up the model...\nWill use {cores} cores";
+            await llmCharacter.Warmup();
             AIText.text = $"Ready when you are ({cores} cores)!";
             AIReplyComplete();
         }
