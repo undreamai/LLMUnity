@@ -19,6 +19,14 @@ namespace LLMUnity
             _context = SynchronizationContext.Current ?? new SynchronizationContext();
         }
 
+        private long GetRemoteFileSizeAsync(Uri address)
+        {
+            WebRequest request = GetWebRequest(address);
+            request.Method = "HEAD";
+            WebResponse response = request.GetResponse();
+            return response.ContentLength;
+        }
+
         public Task DownloadFileTaskAsyncResume(Uri address, string fileName, bool resume = false, Callback<float> progressCallback = null)
         {
             var tcs = new TaskCompletionSource<object>(address);
@@ -37,6 +45,14 @@ namespace LLMUnity
                 WebRequest request = GetWebRequest(address);
                 if (request is HttpWebRequest webRequest && bytesToSkip > 0)
                 {
+                    long remoteFileSize = GetRemoteFileSizeAsync(address);
+                    if (bytesToSkip >= remoteFileSize)
+                    {
+                        LLMUnitySetup.Log($"File is already fully downloaded: {fileName}");
+                        tcs.TrySetResult(true);
+                        return tcs.Task;
+                    }
+
                     filemode = FileMode.Append;
                     LLMUnitySetup.Log($"File exists at {fileName}, skipping {bytesToSkip} bytes");
                     webRequest.AddRange(bytesToSkip);
