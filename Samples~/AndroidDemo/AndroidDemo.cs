@@ -32,7 +32,7 @@ namespace LLMUnitySamples
         {
             ChatPanel.SetActive(false);
             DownloadPanel.SetActive(true);
-            // await llm.WaitUntilModelDownloaded(SetProgress);
+            await llm.WaitUntilModelDownloaded(SetProgress);
             DownloadPanel.SetActive(false);
             ChatPanel.SetActive(true);
         }
