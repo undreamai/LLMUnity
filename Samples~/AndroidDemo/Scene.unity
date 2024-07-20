@@ -1323,22 +1323,24 @@ MonoBehaviour:
   advancedOptions: 0
   remote: 0
   port: 13333
-  numThreads: -1
+  numThreads: 2
   numGPULayers: 0
-  debug: 1
+  debug: 0
   parallelPrompts: -1
   asynchronousStartup: 1
   dontDestroyOnLoad: 1
-  model: smol_llama-220m-openhermes.q4_k_m.gguf
+  model: Phi-3-mini-4k-instruct-q4.gguf
+  downloadOnBuild: 0
+  modelURL: https://huggingface.co/microsoft/Phi-3-mini-4k-instruct-gguf/resolve/main/Phi-3-mini-4k-instruct-q4.gguf?download=true
   lora: 
   contextSize: 0
   batchSize: 512
   basePrompt: 
-  SelectedModel: 0
+  SelectedModel: 3
   modelProgress: 1
   modelCopyProgress: 1
   modelHide: 1
-  chatTemplate: chatml
+  chatTemplate: phi-3
 --- !u!4 &1047848255
 Transform:
   m_ObjectHideFlags: 0
