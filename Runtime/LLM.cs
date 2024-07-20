@@ -71,6 +71,11 @@ namespace LLMUnity
         /// <summary> the path of the model being used (relative to the Assets/StreamingAssets folder).
         /// Models with .gguf format are allowed.</summary>
         [Model] public string model = "";
+        /// <summary> toggle to enable model download on build </summary>
+        [Model] public bool downloadOnBuild = false;
+        /// <summary> the URL of the model to use.
+        /// Models with .gguf format are allowed.</summary>
+        [ModelDownload] public string modelURL = "";
         /// <summary> the path of the LORA model being used (relative to the Assets/StreamingAssets folder).
         /// Models with .bin format are allowed.</summary>
         [ModelAdvanced] public string lora = "";
@@ -81,7 +86,8 @@ namespace LLMUnity
         [ModelAdvanced] public int batchSize = 512;
         /// <summary> a base prompt to use as a base for all LLMCharacter objects </summary>
         [TextArea(5, 10), ChatAdvanced] public string basePrompt = "";
-
+        /// <summary> Boolean set to true if the server has started and is ready to receive requests, false otherwise. </summary>
+        public bool modelDownloaded { get; protected set; } = false;
         /// <summary> Boolean set to true if the server has started and is ready to receive requests, false otherwise. </summary>
         public bool started { get; protected set; } = false;
         /// <summary> Boolean set to true if the server has failed to start. </summary>
@@ -101,10 +107,12 @@ namespace LLMUnity
         StreamWrapper logStreamWrapper = null;
         Thread llmThread = null;
         List<StreamWrapper> streamWrappers = new List<StreamWrapper>();
+        List<Callback<float>> progressCallbacks = new List<Callback<float>>();
 
         public void SetModelProgress(float progress)
         {
             modelProgress = progress;
+            foreach (Callback<float> progressCallback in progressCallbacks) progressCallback?.Invoke(progress);
         }
 
         /// \endcond
@@ -122,22 +130,32 @@ namespace LLMUnity
             return path;
         }
 
+        public void ResetSelectedModel()
+        {
+            SelectedModel = 0;
+            modelURL = "";
+            model = "";
+        }
+
         public async Task DownloadDefaultModel(int optionIndex)
         {
             // download default model and disable model editor properties until the model is set
+            if (optionIndex == 0)
+            {
+                ResetSelectedModel();
+                return;
+            }
             SelectedModel = optionIndex;
             string modelUrl = LLMUnitySetup.modelOptions[optionIndex].Item2;
-            if (modelUrl == null) return;
+            modelURL = modelUrl;
             string modelName = Path.GetFileName(modelUrl).Split("?")[0];
             await DownloadModel(modelUrl, modelName);
         }
 
-        public async Task DownloadModel(string modelUrl, string modelName = null, Callback<float> progressCallback = null, bool overwrite = false)
+        public async Task DownloadModel(string modelUrl, string modelName, Callback<float> progressCallback = null, bool overwrite = false)
         {
             modelProgress = 0;
-            if (modelName == null) modelName = model;
             string modelPath = LLMUnitySetup.GetAssetPath(modelName);
-
             Callback<float> callback = (floatArg) =>
             {
                 progressCallback?.Invoke(floatArg);
@@ -146,9 +164,21 @@ namespace LLMUnity
             await LLMUnitySetup.DownloadFile(modelUrl, modelPath, overwrite, SetModel, callback);
         }
 
-        public async Task DownloadModel(string modelUrl, Callback<float> progressCallback = null, bool overwrite = false)
+        public async Task DownloadModel()
         {
-            await DownloadModel(modelUrl, null, progressCallback, overwrite);
+            await DownloadModel(modelURL, model);
+        }
+
+        public async Task WaitUntilModelDownloaded(Callback<float> progressCallback = null)
+        {
+            if (progressCallback != null) progressCallbacks.Add(progressCallback);
+            while (!modelDownloaded) await Task.Yield();
+            if (progressCallback != null) progressCallbacks.Remove(progressCallback);
+        }
+
+        public async Task WaitUntilReady()
+        {
+            while (!started) await Task.Yield();
         }
 
         /// <summary>
@@ -244,6 +274,8 @@ namespace LLMUnity
         public async void Awake()
         {
             if (!enabled) return;
+            if (downloadOnBuild) await DownloadModel();
+            modelDownloaded = true;
             string arguments = GetLlamaccpArguments();
             if (arguments == null) return;
             if (asynchronousStartup) await Task.Run(() => StartLLMServer(arguments));

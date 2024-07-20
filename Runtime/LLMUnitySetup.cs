@@ -43,6 +43,7 @@ namespace LLMUnity
     public class RemoteAttribute : PropertyAttribute {}
     public class LocalAttribute : PropertyAttribute {}
     public class ModelAttribute : PropertyAttribute {}
+    public class ModelDownloadAttribute : PropertyAttribute {}
     public class ModelAdvancedAttribute : PropertyAttribute {}
     public class ChatAttribute : PropertyAttribute {}
     public class ChatAdvancedAttribute : PropertyAttribute {}
@@ -149,7 +150,8 @@ namespace LLMUnity
         public static string GetAssetPath(string relPath = "")
         {
             // Path to store llm server binaries and models
-            return Path.Combine(Application.streamingAssetsPath, relPath).Replace('\\', '/');
+            string assetsDir = Application.platform == RuntimePlatform.Android ? Application.persistentDataPath : Application.streamingAssetsPath;
+            return Path.Combine(assetsDir, relPath).Replace('\\', '/');
         }
 
 #if UNITY_EDITOR
