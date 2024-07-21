@@ -1330,7 +1330,7 @@ MonoBehaviour:
   asynchronousStartup: 1
   dontDestroyOnLoad: 1
   model: Phi-3-mini-4k-instruct-q4.gguf
-  downloadOnBuild: 0
+  downloadOnBuild: 1
   modelURL: https://huggingface.co/microsoft/Phi-3-mini-4k-instruct-gguf/resolve/main/Phi-3-mini-4k-instruct-q4.gguf?download=true
   lora: 
   contextSize: 0
