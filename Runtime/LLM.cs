@@ -218,7 +218,7 @@ namespace LLMUnity
         public void SetTemplate(string templateName)
         {
             chatTemplate = templateName;
-            llmlib?.LLM_SetTemplate(LLMObject, chatTemplate);
+            if (started) llmlib?.LLM_SetTemplate(LLMObject, chatTemplate);
         }
 
         /// <summary>
