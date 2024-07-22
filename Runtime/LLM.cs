@@ -117,13 +117,13 @@ namespace LLMUnity
 
         /// \endcond
 
-        async Task<string> CopyAsset(string path)
+        string CopyAsset(string path)
         {
 #if UNITY_EDITOR
             if (!EditorApplication.isPlaying)
             {
                 modelCopyProgress = 0;
-                path = await LLMUnitySetup.AddAsset(path, LLMUnitySetup.GetAssetPath());
+                path = LLMUnitySetup.AddAsset(path, LLMUnitySetup.GetAssetPath());
                 modelCopyProgress = 1;
             }
 #endif
@@ -187,10 +187,10 @@ namespace LLMUnity
         /// Models supported are in .gguf format.
         /// </summary>
         /// <param name="path">path to model to use (.gguf format)</param>
-        public async Task SetModel(string path)
+        public void SetModel(string path)
         {
             // set the model and enable the model editor properties
-            model = await CopyAsset(path);
+            model = CopyAsset(path);
             SetTemplate(ChatTemplate.FromGGUF(LLMUnitySetup.GetAssetPath(model)));
 #if UNITY_EDITOR
             if (!EditorApplication.isPlaying) EditorUtility.SetDirty(this);
@@ -203,9 +203,9 @@ namespace LLMUnity
         /// Models supported are in .bin format.
         /// </summary>
         /// <param name="path">path to LORA model to use (.bin format)</param>
-        public async Task SetLora(string path)
+        public void SetLora(string path)
         {
-            lora = await CopyAsset(path);
+            lora = CopyAsset(path);
 #if UNITY_EDITOR
             if (!EditorApplication.isPlaying) EditorUtility.SetDirty(this);
 #endif
