@@ -86,15 +86,14 @@ namespace LLMUnity
         public void AddModelSettings(SerializedObject llmScriptSO)
         {
             List<Type> attributeClasses = new List<Type> { typeof(ModelAttribute) };
+            List<Type> excludeAttributeClasses = new List<Type> { typeof(ModelDownloadAttribute), typeof(ModelDownloadAdvancedAttribute) };
+            if (llmScriptSO.FindProperty("downloadOnBuild").boolValue) excludeAttributeClasses.Remove(typeof(ModelDownloadAttribute));
             if (llmScriptSO.FindProperty("advancedOptions").boolValue)
             {
                 attributeClasses.Add(typeof(ModelAdvancedAttribute));
+                if (llmScriptSO.FindProperty("downloadOnBuild").boolValue) excludeAttributeClasses.Remove(typeof(ModelDownloadAdvancedAttribute));
             }
-            if (llmScriptSO.FindProperty("downloadOnBuild").boolValue)
-            {
-                attributeClasses.Add(typeof(ModelDownloadAttribute));
-            }
-            ShowPropertiesOfClass("", llmScriptSO, attributeClasses, false);
+            ShowPropertiesOfClass("", llmScriptSO, attributeClasses, false, excludeAttributeClasses);
             Space();
         }
 
