@@ -68,17 +68,20 @@ namespace LLMUnity
         [LLMAdvanced] public bool asynchronousStartup = true;
         /// <summary> select to not destroy the LLM GameObject when loading a new Scene. </summary>
         [LLMAdvanced] public bool dontDestroyOnLoad = true;
+        /// <summary> toggle to enable model download on build </summary>
+        [Model] public bool downloadOnBuild = false;
         /// <summary> the path of the model being used (relative to the Assets/StreamingAssets folder).
         /// Models with .gguf format are allowed.</summary>
         [Model] public string model = "";
-        /// <summary> toggle to enable model download on build </summary>
-        [Model] public bool downloadOnBuild = false;
         /// <summary> the URL of the model to use.
         /// Models with .gguf format are allowed.</summary>
         [ModelDownload] public string modelURL = "";
         /// <summary> the path of the LORA model being used (relative to the Assets/StreamingAssets folder).
         /// Models with .bin format are allowed.</summary>
         [ModelAdvanced] public string lora = "";
+        /// <summary> the URL of the LORA to use.
+        /// Models with .bin format are allowed.</summary>
+        [ModelDownloadAdvanced] public string loraURL = "";
         /// <summary> Size of the prompt context (0 = context size of the model).
         /// This is the number of tokens the model can take as input when generating responses. </summary>
         [ModelAdvanced] public int contextSize = 0;
@@ -87,7 +90,7 @@ namespace LLMUnity
         /// <summary> a base prompt to use as a base for all LLMCharacter objects </summary>
         [TextArea(5, 10), ChatAdvanced] public string basePrompt = "";
         /// <summary> Boolean set to true if the server has started and is ready to receive requests, false otherwise. </summary>
-        public bool modelDownloaded { get; protected set; } = false;
+        public bool modelsDownloaded { get; protected set; } = false;
         /// <summary> Boolean set to true if the server has started and is ready to receive requests, false otherwise. </summary>
         public bool started { get; protected set; } = false;
         /// <summary> Boolean set to true if the server has failed to start. </summary>
@@ -96,6 +99,7 @@ namespace LLMUnity
         /// \cond HIDE
         public int SelectedModel = 0;
         [HideInInspector] public float modelProgress = 1;
+        [HideInInspector] public float loraProgress = 1;
         [HideInInspector] public float modelCopyProgress = 1;
         [HideInInspector] public bool modelHide = true;
 
@@ -107,12 +111,19 @@ namespace LLMUnity
         StreamWrapper logStreamWrapper = null;
         Thread llmThread = null;
         List<StreamWrapper> streamWrappers = new List<StreamWrapper>();
-        List<Callback<float>> progressCallbacks = new List<Callback<float>>();
+        List<Callback<float>> modelProgressCallbacks = new List<Callback<float>>();
+        List<Callback<float>> loraProgressCallbacks = new List<Callback<float>>();
 
         public void SetModelProgress(float progress)
         {
             modelProgress = progress;
-            foreach (Callback<float> progressCallback in progressCallbacks) progressCallback?.Invoke(progress);
+            foreach (Callback<float> modelProgressCallback in modelProgressCallbacks) modelProgressCallback?.Invoke(progress);
+        }
+
+        public void SetLoraProgress(float progress)
+        {
+            loraProgress = progress;
+            foreach (Callback<float> loraProgressCallback in loraProgressCallbacks) loraProgressCallback?.Invoke(progress);
         }
 
         /// \endcond
@@ -152,28 +163,39 @@ namespace LLMUnity
             await DownloadModel(modelUrl, modelName);
         }
 
-        public async Task DownloadModel(string modelUrl, string modelName, Callback<float> progressCallback = null, bool overwrite = false)
+        public async Task DownloadModel(string modelUrl, string modelName, bool overwrite = false)
         {
             modelProgress = 0;
             string modelPath = LLMUnitySetup.GetAssetPath(modelName);
-            Callback<float> callback = (floatArg) =>
-            {
-                progressCallback?.Invoke(floatArg);
-                SetModelProgress(floatArg);
-            };
-            await LLMUnitySetup.DownloadFile(modelUrl, modelPath, overwrite, SetModel, callback);
+            await LLMUnitySetup.DownloadFile(modelUrl, modelPath, overwrite, SetModel, SetModelProgress);
         }
 
-        public async Task DownloadModel()
+        public async Task DownloadLora(string loraUrl, string loraName, bool overwrite = false)
         {
-            await DownloadModel(modelURL, model);
+            loraProgress = 0;
+            string loraPath = LLMUnitySetup.GetAssetPath(loraName);
+            await LLMUnitySetup.DownloadFile(loraUrl, loraPath, overwrite, SetLora, SetLoraProgress);
         }
 
-        public async Task WaitUntilModelDownloaded(Callback<float> progressCallback = null)
+        public async Task DownloadModels()
         {
-            if (progressCallback != null) progressCallbacks.Add(progressCallback);
-            while (!modelDownloaded) await Task.Yield();
-            if (progressCallback != null) progressCallbacks.Remove(progressCallback);
+            if (modelURL != "") await DownloadModel(modelURL, model);
+            if (loraURL != "") await DownloadLora(loraURL, lora);
+        }
+
+        public async Task AndroidExtractModels()
+        {
+            if (!downloadOnBuild || modelURL == "") await LLMUnitySetup.AndroidExtractFile(model);
+            if (!downloadOnBuild || loraURL == "") await LLMUnitySetup.AndroidExtractFile(lora);
+        }
+
+        public async Task WaitUntilModelsDownloaded(Callback<float> modelProgressCallback = null, Callback<float> loraProgressCallback = null)
+        {
+            if (modelProgressCallback != null) modelProgressCallbacks.Add(modelProgressCallback);
+            if (loraProgressCallback != null) loraProgressCallbacks.Add(loraProgressCallback);
+            while (!modelsDownloaded) await Task.Yield();
+            if (modelProgressCallback != null) modelProgressCallbacks.Remove(modelProgressCallback);
+            if (loraProgressCallback != null) loraProgressCallbacks.Remove(loraProgressCallback);
         }
 
         public async Task WaitUntilReady()
@@ -274,8 +296,9 @@ namespace LLMUnity
         public async void Awake()
         {
             if (!enabled) return;
-            if (downloadOnBuild) await DownloadModel();
-            modelDownloaded = true;
+            if (downloadOnBuild) await DownloadModels();
+            modelsDownloaded = true;
+            if (Application.platform == RuntimePlatform.Android) await AndroidExtractModels();
             string arguments = GetLlamaccpArguments();
             if (arguments == null) return;
             if (asynchronousStartup) await Task.Run(() => StartLLMServer(arguments));
