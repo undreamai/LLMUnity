@@ -45,7 +45,8 @@ namespace LLMUnity
     public class RemoteAttribute : PropertyAttribute {}
     public class LocalAttribute : PropertyAttribute {}
     public class ModelAttribute : PropertyAttribute {}
-    public class ModelDownloadAttribute : PropertyAttribute {}
+    public class ModelDownloadAttribute : ModelAttribute {}
+    public class ModelDownloadAdvancedAttribute : ModelAdvancedAttribute {}
     public class ModelAdvancedAttribute : PropertyAttribute {}
     public class ChatAttribute : PropertyAttribute {}
     public class ChatAdvancedAttribute : PropertyAttribute {}
