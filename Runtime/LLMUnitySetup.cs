@@ -8,6 +8,7 @@ using System;
 using System.IO.Compression;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using UnityEngine.Networking;
 
 /// @defgroup llm LLM
 /// @defgroup template Chat Templates
@@ -212,6 +213,43 @@ namespace LLMUnity
 
             progressCallback?.Invoke(1f);
             callback?.Invoke(savePath);
+        }
+
+        public static async Task AndroidExtractFile(string assetName, bool overwrite = false, int chunkSize = 1024*1024)
+        {
+            string source = "jar:file://" + Application.dataPath + "!/assets/" + assetName;
+            string target = GetAssetPath(assetName);
+            if (!overwrite && File.Exists(target))
+            {
+                Debug.Log($"File {target} already exists");
+                return;
+            }
+
+            Debug.Log($"Extracting {source} to {target}");
+
+            // UnityWebRequest to read the file from StreamingAssets
+            UnityWebRequest www = UnityWebRequest.Get(source);
+            // Send the request and await its completion
+            var operation = www.SendWebRequest();
+
+            while (!operation.isDone) await Task.Delay(1);
+            if (www.result != UnityWebRequest.Result.Success)
+            {
+                Debug.LogError("Failed to load file from StreamingAssets: " + www.error);
+            }
+            else
+            {
+                byte[] buffer = new byte[chunkSize];
+                using (Stream responseStream = new MemoryStream(www.downloadHandler.data))
+                using (FileStream fileStream = new FileStream(target, FileMode.Create, FileAccess.Write))
+                {
+                    int bytesRead;
+                    while ((bytesRead = await responseStream.ReadAsync(buffer, 0, buffer.Length)) > 0)
+                    {
+                        await fileStream.WriteAsync(buffer, 0, bytesRead);
+                    }
+                }
+            }
         }
 
 #if UNITY_EDITOR
