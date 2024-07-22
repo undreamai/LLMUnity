@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System;
 using System.IO.Compression;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 /// @defgroup llm LLM
 /// @defgroup template Chat Templates
@@ -182,7 +183,7 @@ namespace LLMUnity
 
         public static async Task DownloadFile(
             string fileUrl, string savePath, bool overwrite = false,
-            TaskCallback<string> callback = null, Callback<float> progressCallback = null
+            Callback<string> callback = null, Callback<float> progressCallback = null
         )
         {
             if (File.Exists(savePath) && !overwrite)
@@ -210,43 +211,11 @@ namespace LLMUnity
             }
 
             progressCallback?.Invoke(1f);
-            if (callback != null) await callback.Invoke(savePath);
+            callback?.Invoke(savePath);
         }
 
 #if UNITY_EDITOR
         [HideInInspector] public static float libraryProgress = 1;
-
-        public static async Task<string> AddAsset(string assetPath, string basePath)
-        {
-            if (!File.Exists(assetPath))
-            {
-                LogError($"{assetPath} does not exist!");
-                return null;
-            }
-            // add an asset to the basePath directory if it is not already there and return the relative path
-            string basePathSlash = basePath.Replace('\\', '/');
-            string fullPath = Path.GetFullPath(assetPath).Replace('\\', '/');
-            Directory.CreateDirectory(basePathSlash);
-            if (!fullPath.StartsWith(basePathSlash))
-            {
-                // if the asset is not in the assets dir copy it over
-                fullPath = Path.Combine(basePathSlash, Path.GetFileName(assetPath));
-                Log($"copying {assetPath} to {fullPath}");
-                AssetDatabase.StartAssetEditing();
-                await Task.Run(() =>
-                {
-                    foreach (string filename in new string[] {fullPath, fullPath + ".meta"})
-                    {
-                        if (File.Exists(fullPath))
-                            File.Delete(fullPath);
-                    }
-                    File.Copy(assetPath, fullPath);
-                });
-                AssetDatabase.StopAssetEditing();
-                Log("copying complete!");
-            }
-            return fullPath.Substring(basePathSlash.Length + 1);
-        }
 
         private static async Task DownloadLibrary()
         {
@@ -266,6 +235,52 @@ namespace LLMUnity
         {
             libraryProgress = progress;
         }
+
+        public static string AddAsset(string assetPath, string basePath)
+        {
+            if (!File.Exists(assetPath))
+            {
+                LogError($"{assetPath} does not exist!");
+                return null;
+            }
+            // add an asset to the basePath directory if it is not already there and return the relative path
+            string basePathSlash = basePath.Replace('\\', '/');
+            string fullPath = Path.GetFullPath(assetPath).Replace('\\', '/');
+            Directory.CreateDirectory(basePathSlash);
+            if (!fullPath.StartsWith(basePathSlash))
+            {
+                // if the asset is not in the assets dir copy it over
+                fullPath = Path.Combine(basePathSlash, Path.GetFileName(assetPath));
+                AssetDatabase.StartAssetEditing();
+                foreach (string filename in new string[] {fullPath, fullPath + ".meta"})
+                {
+                    if (File.Exists(filename)) File.Delete(filename);
+                }
+                CreateSymlink(assetPath, fullPath);
+                AssetDatabase.StopAssetEditing();
+            }
+            return fullPath.Substring(basePathSlash.Length + 1);
+        }
+
+        public static void CreateSymlink(string sourcePath, string targetPath)
+        {
+            bool isDirectory = Directory.Exists(sourcePath);
+            if (!isDirectory && !File.Exists(sourcePath)) throw new FileNotFoundException($"Source path does not exist: {sourcePath}");
+
+            bool success;
+#if UNITY_STANDALONE_WIN
+            success = CreateSymbolicLink(targetPath, sourcePath, (int)isDirectory);
+#else
+            success = symlink(sourcePath, targetPath) == 0;
+#endif
+            if (!success) throw new IOException($"Failed to create symbolic link: {targetPath}");
+        }
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        private static extern bool CreateSymbolicLink(string lpSymlinkFileName, string lpTargetFileName, int dwFlags);
+
+        [DllImport("libc", SetLastError = true)]
+        private static extern int symlink(string oldpath, string newpath);
 
 #endif
         /// \endcond
