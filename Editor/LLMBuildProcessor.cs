@@ -8,17 +8,18 @@ using System;
 
 namespace LLMUnity
 {
-    public class LLMBuildProcessor : IPreprocessBuildWithReport, IPostprocessBuildWithReport
+    public class LLMBuildProcessor : MonoBehaviour, IPreprocessBuildWithReport, IPostprocessBuildWithReport
     {
         public int callbackOrder => 0;
         static string tempDir = Path.Combine(Application.temporaryCachePath, "LLMBuildProcessor", Path.GetFileName(LLMUnitySetup.libraryPath));
-        static string foldersMovedCache = Path.Combine(tempDir, "moved.json");
+        static List<MovedPair> movedPairs = new List<MovedPair>();
+        static string movedCache = Path.Combine(tempDir, "moved.json");
 
         [InitializeOnLoadMethod]
         private static void InitializeOnLoad()
         {
             if (!Directory.Exists(tempDir)) Directory.CreateDirectory(tempDir);
-            else ResetLibraryPlatforms();
+            else ResetMoves();
         }
 
         // CALLED BEFORE THE BUILD
@@ -26,8 +27,9 @@ namespace LLMUnity
         {
             // Start listening for errors when build starts
             Application.logMessageReceived += OnBuildError;
-            List<string> platforms = GetLibraryPlatformsToHide(report.summary.platform);
-            HideLibraryPlatforms(platforms);
+            HideLibraryPlatforms(report.summary.platform);
+            HideModels();
+            if (movedPairs.Count > 0) AssetDatabase.Refresh();
         }
 
         // CALLED DURING BUILD TO CHECK FOR ERRORS
@@ -49,13 +51,40 @@ namespace LLMUnity
         public void BuildCompleted()
         {
             Application.logMessageReceived -= OnBuildError;
-            ResetLibraryPlatforms();
+            ResetMoves();
         }
 
-        static List<string> GetLibraryPlatformsToHide(BuildTarget platform)
+        static bool MovePath(string source, string target)
+        {
+            bool moved = false;
+            if (File.Exists(source))
+            {
+                File.Move(source, target);
+                moved = true;
+            }
+            else if (Directory.Exists(source))
+            {
+                Directory.Move(source, target);
+                moved = true;
+            }
+            if (moved)
+            {
+                movedPairs.Add(new MovedPair {source = source, target = target});
+                File.WriteAllText(movedCache, JsonUtility.ToJson(new FoldersMovedWrapper { movedPairs = movedPairs }));
+            }
+            return moved;
+        }
+
+        static void MoveAssetAndMeta(string source, string target)
+        {
+            MovePath(source + ".meta", target + ".meta");
+            MovePath(source, target);
+        }
+
+        static void HideLibraryPlatforms(BuildTarget buildPlatform)
         {
             List<string> platforms = new List<string>(){ "windows", "macos", "linux", "android" };
-            switch (platform)
+            switch (buildPlatform)
             {
                 case BuildTarget.StandaloneWindows:
                 case BuildTarget.StandaloneWindows64:
@@ -71,61 +100,44 @@ namespace LLMUnity
                     platforms.Remove("android");
                     break;
             }
-            return platforms;
-        }
 
-        static bool MovePath(string source, string target, List<FoldersMovedPair> foldersMoved = null)
-        {
-            bool moved = false;
-            if (File.Exists(source))
-            {
-                File.Move(source, target);
-                moved = true;
-            }
-            else if (Directory.Exists(source))
-            {
-                Directory.Move(source, target);
-                moved = true;
-            }
-            if (moved && foldersMoved != null) foldersMoved.Add(new FoldersMovedPair {source = source, target = target});
-            return moved;
-        }
-
-        static void HideLibraryPlatforms(List<string> platforms)
-        {
-            List<FoldersMovedPair> foldersMoved = new List<FoldersMovedPair>();
             foreach (string dirname in Directory.GetDirectories(LLMUnitySetup.libraryPath))
             {
                 foreach (string platform in platforms)
                 {
                     if (Path.GetFileName(dirname).StartsWith(platform))
                     {
-                        string movePath = Path.Combine(tempDir, Path.GetFileName(dirname));
-                        MovePath(dirname + ".meta", movePath + ".meta", foldersMoved);
-                        MovePath(dirname, movePath, foldersMoved);
-                        File.WriteAllText(foldersMovedCache, JsonUtility.ToJson(new FoldersMovedWrapper { foldersMoved = foldersMoved }));
+                        MoveAssetAndMeta(dirname, Path.Combine(tempDir, Path.GetFileName(dirname)));
                     }
                 }
             }
-            if (foldersMoved.Count > 0) AssetDatabase.Refresh();
         }
 
-        static void ResetLibraryPlatforms()
+        static void HideModels()
         {
-            if (!File.Exists(foldersMovedCache)) return;
-            List<FoldersMovedPair> foldersMoved = JsonUtility.FromJson<FoldersMovedWrapper>(File.ReadAllText(foldersMovedCache)).foldersMoved;
-            if (foldersMoved == null) return;
+            foreach (LLM llm in FindObjectsOfType<LLM>())
+            {
+                if (!llm.downloadOnBuild) continue;
+                if (llm.modelURL != "") MoveAssetAndMeta(LLMUnitySetup.GetAssetPath(llm.model), Path.Combine(tempDir, Path.GetFileName(llm.model)));
+                if (llm.loraURL != "") MoveAssetAndMeta(LLMUnitySetup.GetAssetPath(llm.lora), Path.Combine(tempDir, Path.GetFileName(llm.lora)));
+            }
+        }
+
+        static void ResetMoves()
+        {
+            if (!File.Exists(movedCache)) return;
+            List<MovedPair> movedPairs = JsonUtility.FromJson<FoldersMovedWrapper>(File.ReadAllText(movedCache)).movedPairs;
+            if (movedPairs == null) return;
 
             bool refresh = false;
-            foreach (var pair in foldersMoved) refresh |= MovePath(pair.target, pair.source);
+            foreach (var pair in movedPairs) refresh |= MovePath(pair.target, pair.source);
             if (refresh) AssetDatabase.Refresh();
-
-            File.Delete(foldersMovedCache);
+            File.Delete(movedCache);
         }
     }
 
     [Serializable]
-    public struct FoldersMovedPair
+    public struct MovedPair
     {
         public string source;
         public string target;
@@ -134,6 +146,6 @@ namespace LLMUnity
     [Serializable]
     public class FoldersMovedWrapper
     {
-        public List<FoldersMovedPair> foldersMoved;
+        public List<MovedPair> movedPairs;
     }
 }
