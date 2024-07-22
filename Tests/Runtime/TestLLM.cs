@@ -33,7 +33,7 @@ namespace LLMUnityTests
             string modelPath = "LLMUnityTests/smol_llama-220m-openhermes.q4_k_m.gguf";
             string fullModelPath = LLMUnitySetup.GetAssetPath(modelPath);
             await LLMUnitySetup.DownloadFile(modelUrl, fullModelPath, false, null, null);
-            await llm.SetModel(fullModelPath);
+            llm.SetModel(fullModelPath);
             llm.parallelPrompts = 1;
             llm.SetTemplate("alpaca");
             llm.asynchronousStartup = false;
