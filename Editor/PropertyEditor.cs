@@ -94,10 +94,23 @@ namespace LLMUnity
             return properties;
         }
 
-        public void ShowPropertiesOfClass(string title, SerializedObject so, List<Type> attributeClasses, bool addSpace = true)
+        public void ShowPropertiesOfClass(string title, SerializedObject so, List<Type> attributeClasses, bool addSpace = true, List<Type> excludeAttributeClasses = null)
         {
             // display a property if it belongs to a certain class and/or has a specific attribute class
             List<SerializedProperty> properties = GetPropertiesOfClass(so, attributeClasses);
+            if (excludeAttributeClasses != null)
+            {
+                List<SerializedProperty> excludeProperties = GetPropertiesOfClass(so, excludeAttributeClasses);
+                List<SerializedProperty> removeProperties = new List<SerializedProperty>();
+                foreach (SerializedProperty excprop in excludeProperties)
+                {
+                    foreach (SerializedProperty prop in properties)
+                    {
+                        if (prop.displayName == excprop.displayName) removeProperties.Add(prop);
+                    }
+                }
+                foreach (SerializedProperty prop in removeProperties) properties.Remove(prop);
+            }
             if (properties.Count == 0) return;
             if (title != "") EditorGUILayout.LabelField(title, EditorStyles.boldLabel);
             foreach (SerializedProperty prop in properties)
@@ -141,7 +154,7 @@ namespace LLMUnity
                     {
                         foreach (Attribute attr in fieldInfo.GetCustomAttributes(attributeClass, true))
                         {
-                            if (attr.GetType() == attributeClass)
+                            if (attributeClass.IsAssignableFrom(attr.GetType()))
                                 return attr;
                         }
                     }
