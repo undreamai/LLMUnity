@@ -163,11 +163,11 @@ namespace LLMUnity
             await DownloadModel(modelUrl, modelName);
         }
 
-        public async Task DownloadModel(string modelUrl, string modelName, bool overwrite = false)
+        public async Task DownloadModel(string modelUrl, string modelName, bool overwrite = false, bool setTemplate = true)
         {
             modelProgress = 0;
             string modelPath = LLMUnitySetup.GetAssetPath(modelName);
-            await LLMUnitySetup.DownloadFile(modelUrl, modelPath, overwrite, SetModel, SetModelProgress);
+            await LLMUnitySetup.DownloadFile(modelUrl, modelPath, overwrite, (string path) => SetModel(path, setTemplate), SetModelProgress);
         }
 
         public async Task DownloadLora(string loraUrl, string loraName, bool overwrite = false)
@@ -177,10 +177,10 @@ namespace LLMUnity
             await LLMUnitySetup.DownloadFile(loraUrl, loraPath, overwrite, SetLora, SetLoraProgress);
         }
 
-        public async Task DownloadModels()
+        public async Task DownloadModels(bool overwrite = false)
         {
-            if (modelURL != "") await DownloadModel(modelURL, model);
-            if (loraURL != "") await DownloadLora(loraURL, lora);
+            if (modelURL != "") await DownloadModel(modelURL, model, overwrite, false);
+            if (loraURL != "") await DownloadLora(loraURL, lora, overwrite);
         }
 
         public async Task AndroidExtractModels()
@@ -209,11 +209,11 @@ namespace LLMUnity
         /// Models supported are in .gguf format.
         /// </summary>
         /// <param name="path">path to model to use (.gguf format)</param>
-        public void SetModel(string path)
+        public void SetModel(string path, bool setTemplate = true)
         {
             // set the model and enable the model editor properties
             model = CopyAsset(path);
-            SetTemplate(ChatTemplate.FromGGUF(LLMUnitySetup.GetAssetPath(model)));
+            if (setTemplate) SetTemplate(ChatTemplate.FromGGUF(LLMUnitySetup.GetAssetPath(model)));
 #if UNITY_EDITOR
             if (!EditorApplication.isPlaying) EditorUtility.SetDirty(this);
 #endif
