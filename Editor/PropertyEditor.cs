@@ -8,7 +8,7 @@ namespace LLMUnity
 {
     public class PropertyEditor : Editor
     {
-        protected int buttonWidth = 150;
+        public static int buttonWidth = 150;
 
         public void AddScript(SerializedObject llmScriptSO)
         {
