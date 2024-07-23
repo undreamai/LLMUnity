@@ -97,6 +97,7 @@ namespace LLMUnity
         public bool failed { get; protected set; } = false;
 
         /// \cond HIDE
+        public LLMManager llmManager = new LLMManager();
         public int SelectedModel = 0;
         [HideInInspector] public float modelProgress = 1;
         [HideInInspector] public float loraProgress = 1;
