@@ -23,7 +23,7 @@ namespace LLMUnity
         public List<ModelEntry> modelEntries;
     }
 
-    public class LLMManager : MonoBehaviour
+    public class LLMManager
     {
         public static List<ModelEntry> modelEntries = new List<ModelEntry>();
 
