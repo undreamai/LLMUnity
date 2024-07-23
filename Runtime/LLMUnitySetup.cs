@@ -258,6 +258,13 @@ namespace LLMUnity
             }
         }
 
+        public static bool IsSubPath(string childPath, string parentPath)
+        {
+            string fullParentPath = Path.GetFullPath(parentPath).Replace('\\', '/');
+            string fullChildPath = Path.GetFullPath(childPath).Replace('\\', '/');
+            return fullChildPath.StartsWith(fullParentPath, StringComparison.OrdinalIgnoreCase);
+        }
+
 #if UNITY_EDITOR
         [HideInInspector] public static float libraryProgress = 1;
 

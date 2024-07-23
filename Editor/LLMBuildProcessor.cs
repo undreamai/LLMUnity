@@ -117,8 +117,8 @@ namespace LLMUnity
         {
             foreach (LLM llm in FindObjectsOfType<LLM>())
             {
-                if (!llm.downloadOnBuild) continue;
-                if (llm.modelURL != "") MoveAssetAndMeta(LLMUnitySetup.GetAssetPath(llm.model), Path.Combine(tempDir, Path.GetFileName(llm.model)));
+                // if (!llm.downloadOnBuild) continue;
+                // if (llm.modelURL != "") MoveAssetAndMeta(LLMUnitySetup.GetAssetPath(llm.model), Path.Combine(tempDir, Path.GetFileName(llm.model)));
                 if (llm.loraURL != "") MoveAssetAndMeta(LLMUnitySetup.GetAssetPath(llm.lora), Path.Combine(tempDir, Path.GetFileName(llm.lora)));
             }
         }
