@@ -11,14 +11,16 @@ namespace LLMUnity
     public class LLMEditor : PropertyEditor
     {
         private ReorderableList modelList;
-        static float nameColumnWidth = 250f;
+        static float nameColumnWidth = 150f;
+        static float templateColumnWidth = 100f;
         static float textColumnWidth = 150f;
         static float includeInBuildColumnWidth = 50f;
-        static float actionColumnWidth = 30f;
+        static float actionColumnWidth = 20f;
         static int elementPadding = 10;
         static GUIContent trashIcon;
         static List<string> modelOptions;
         static List<string> modelURLs;
+        string[] templateOptions;
 
         protected override Type[] GetPropertyTypes()
         {
@@ -35,14 +37,12 @@ namespace LLMUnity
 
         public void AddModelLoaders(SerializedObject llmScriptSO, LLM llmScript)
         {
+            float[] widths = GetColumnWidths();
+            float listWidth = ReorderableList.Defaults.dragHandleWidth;
+            foreach (float width in widths) listWidth += width + (listWidth == 0 ? 0 : elementPadding);
+            EditorGUILayout.BeginVertical(GUILayout.Width(listWidth));
             modelList.DoLayoutList();
-            string[] templateOptions = ChatTemplate.templatesDescription.Keys.ToList().ToArray();
-            int index = Array.IndexOf(ChatTemplate.templatesDescription.Values.ToList().ToArray(), llmScript.chatTemplate);
-            int newIndex = EditorGUILayout.Popup("Chat Template", index, templateOptions);
-            if (newIndex != index)
-            {
-                llmScript.SetTemplate(ChatTemplate.templatesDescription[templateOptions[newIndex]]);
-            }
+            EditorGUILayout.EndVertical();
         }
 
         public void AddModelAddonLoaders(SerializedObject llmScriptSO, LLM llmScript, bool layout = true)
@@ -70,14 +70,11 @@ namespace LLMUnity
         public void AddModelSettings(SerializedObject llmScriptSO)
         {
             List<Type> attributeClasses = new List<Type> { typeof(ModelAttribute) };
-            List<Type> excludeAttributeClasses = new List<Type> { typeof(ModelDownloadAttribute), typeof(ModelDownloadAdvancedAttribute) };
-            if (llmScriptSO.FindProperty("downloadOnBuild").boolValue) excludeAttributeClasses.Remove(typeof(ModelDownloadAttribute));
             if (llmScriptSO.FindProperty("advancedOptions").boolValue)
             {
                 attributeClasses.Add(typeof(ModelAdvancedAttribute));
-                if (llmScriptSO.FindProperty("downloadOnBuild").boolValue) excludeAttributeClasses.Remove(typeof(ModelDownloadAdvancedAttribute));
             }
-            ShowPropertiesOfClass("", llmScriptSO, attributeClasses, false, excludeAttributeClasses);
+            ShowPropertiesOfClass("", llmScriptSO, attributeClasses, false);
             Space();
         }
 
@@ -95,23 +92,29 @@ namespace LLMUnity
             for (int i = 0; i < LLMUnitySetup.modelOptions.Length; i++)
             {
                 string url = LLMUnitySetup.modelOptions[i].Item2;
-                if (existingOptions.Contains(url)) continue;
+                if (i > 0 && existingOptions.Contains(url)) continue;
                 modelOptions.Add(LLMUnitySetup.modelOptions[i].Item1);
                 modelURLs.Add(url);
             }
         }
 
-        List<float[]> getColumnPositions(float offsetX)
+        float[] GetColumnWidths()
         {
-            List<float> offsets = new List<float>();
-            float[] widths = new float[] {actionColumnWidth, nameColumnWidth, textColumnWidth, textColumnWidth, includeInBuildColumnWidth};
-            float offset = offsetX;
+            float[] widths = new float[] {actionColumnWidth, nameColumnWidth, templateColumnWidth, textColumnWidth, textColumnWidth, includeInBuildColumnWidth, actionColumnWidth};
+            return widths;
+        }
+
+        List<Rect> CreateColumnRects(float x, float y)
+        {
+            float[] widths = GetColumnWidths();
+            float offset = x;
+            List<Rect> rects = new List<Rect>();
             foreach (float width in widths)
             {
-                offsets.Add(offset);
+                rects.Add(new Rect(offset, y, width, EditorGUIUtility.singleLineHeight));
                 offset += width + elementPadding;
             }
-            return new List<float[]>(){offsets.ToArray(), widths};
+            return rects;
         }
 
         void UpdateModels(bool resetOptions = false)
@@ -123,41 +126,54 @@ namespace LLMUnity
 
         void OnEnable()
         {
+            var llmScript = (LLM)target;
             ResetModelOptions();
+            templateOptions = ChatTemplate.templatesDescription.Keys.ToList().ToArray();
             trashIcon = new GUIContent(Resources.Load<Texture2D>("llmunity_trash_icon"), "Delete Model");
 
             modelList = new ReorderableList(LLMManager.modelEntries, typeof(ModelEntry), true, true, true, true)
             {
-                drawElementCallback = async(rect, index, isActive, isFocused) =>
+                drawElementCallback = (rect, index, isActive, isFocused) =>
                 {
                     if (index >= LLMManager.modelEntries.Count) return;
 
-                    List<float[]> positions = getColumnPositions(rect.x);
-                    float[] offsets = positions[0];
-                    float[] widths = positions[1];
-                    var actionRect = new Rect(offsets[0], rect.y, widths[0], EditorGUIUtility.singleLineHeight);
-                    var nameRect = new Rect(offsets[1], rect.y, widths[1], EditorGUIUtility.singleLineHeight);
-                    var urlRect = new Rect(offsets[2], rect.y, widths[2], EditorGUIUtility.singleLineHeight);
-                    var pathRect = new Rect(offsets[3], rect.y, widths[3], EditorGUIUtility.singleLineHeight);
-                    var includeInBuildRect = new Rect(offsets[4], rect.y, widths[4], EditorGUIUtility.singleLineHeight);
+                    List<Rect> rects = CreateColumnRects(rect.x, rect.y);
+                    var selectRect = rects[0];
+                    var nameRect = rects[1];
+                    var templateRect = rects[2];
+                    var urlRect = rects[3];
+                    var pathRect = rects[4];
+                    var includeInBuildRect = rects[5];
+                    var actionRect = rects[6];
                     var entry = LLMManager.modelEntries[index];
 
                     bool hasPath = entry.localPath != null && entry.localPath != "";
                     bool hasURL = entry.url != null && entry.url != "";
 
-                    if (GUI.Button(actionRect, trashIcon))
+                    bool isSelected = llmScript.model == entry.localPath;
+                    bool newSelected = EditorGUI.Toggle(selectRect, isSelected, EditorStyles.radioButton);
+                    if (newSelected && !isSelected)
                     {
-                        LLMManager.modelEntries.Remove(entry);
-                        UpdateModels(true);
+                        llmScript.model = entry.localPath;
+                        llmScript.SetTemplate(entry.chatTemplate);
                     }
 
                     DrawCopyableLabel(nameRect, entry.name);
+
+                    int templateIndex = Array.IndexOf(ChatTemplate.templatesDescription.Values.ToList().ToArray(), entry.chatTemplate);
+                    int newTemplateIndex = EditorGUI.Popup(templateRect, templateIndex, templateOptions);
+                    if (newTemplateIndex != templateIndex)
+                    {
+                        entry.chatTemplate = ChatTemplate.templatesDescription[templateOptions[newTemplateIndex]];
+                        if (isSelected) llmScript.SetTemplate(entry.chatTemplate);
+                        UpdateModels();
+                    }
 
                     if (hasURL)
                     {
                         DrawCopyableLabel(urlRect, entry.url);
                     }
-                    else if (hasPath)
+                    else
                     {
                         string newURL = EditorGUI.TextField(urlRect, entry.url);
                         if (newURL != entry.url)
@@ -166,38 +182,7 @@ namespace LLMUnity
                             UpdateModels();
                         }
                     }
-                    else
-                    {
-                        urlRect.width = buttonWidth;
-                        int newIndex = EditorGUI.Popup(urlRect, 0, modelOptions.ToArray());
-                        if (newIndex != 0)
-                        {
-                            await LLMManager.DownloadModel(entry, modelURLs[newIndex], modelOptions[newIndex]);
-                            UpdateModels(true);
-                        }
-                    }
-
-                    if (hasPath)
-                    {
-                        DrawCopyableLabel(pathRect, entry.localPath);
-                    }
-                    else
-                    {
-                        pathRect.width = buttonWidth;
-                        if (GUI.Button(pathRect, "Load model"))
-                        {
-                            EditorApplication.delayCall += () =>
-                            {
-                                string path = EditorUtility.OpenFilePanelWithFilters("Select a gguf model file", "", new string[] { "Model Files", "gguf" });
-                                if (!string.IsNullOrEmpty(path))
-                                {
-                                    entry.localPath = path;
-                                    entry.name = LLMManager.ModelPathToName(path);
-                                    UpdateModels();
-                                }
-                            };
-                        }
-                    }
+                    DrawCopyableLabel(pathRect, entry.localPath);
 
                     bool includeInBuild = EditorGUI.ToggleLeft(includeInBuildRect, "", entry.includeInBuild);
                     if (includeInBuild != entry.includeInBuild)
@@ -205,17 +190,55 @@ namespace LLMUnity
                         entry.includeInBuild = includeInBuild;
                         UpdateModels();
                     }
+
+                    if (GUI.Button(actionRect, trashIcon))
+                    {
+                        LLMManager.modelEntries.Remove(entry);
+                        UpdateModels(true);
+                    }
                 },
                 drawHeaderCallback = (rect) =>
                 {
-                    List<float[]> positions = getColumnPositions(rect.x + ReorderableList.Defaults.dragHandleWidth - ReorderableList.Defaults.padding + 1);
-                    float[] offsets = positions[0];
-                    float[] widths = positions[1];
-                    EditorGUI.LabelField(new Rect(offsets[0], rect.y, widths[0], EditorGUIUtility.singleLineHeight), "");
-                    EditorGUI.LabelField(new Rect(offsets[1], rect.y, widths[1], EditorGUIUtility.singleLineHeight), "Model");
-                    EditorGUI.LabelField(new Rect(offsets[2], rect.y, widths[2], EditorGUIUtility.singleLineHeight), "URL");
-                    EditorGUI.LabelField(new Rect(offsets[3], rect.y, widths[3], EditorGUIUtility.singleLineHeight), "Local Path");
-                    EditorGUI.LabelField(new Rect(offsets[4], rect.y, widths[4], EditorGUIUtility.singleLineHeight), "Build");
+                    List<Rect> rects = CreateColumnRects(rect.x + ReorderableList.Defaults.dragHandleWidth - ReorderableList.Defaults.padding + 1, rect.y);
+                    EditorGUI.LabelField(rects[0], "");
+                    EditorGUI.LabelField(rects[1], "Model");
+                    EditorGUI.LabelField(rects[2], "Chat template");
+                    EditorGUI.LabelField(rects[3], "URL");
+                    EditorGUI.LabelField(rects[4], "Path");
+                    EditorGUI.LabelField(rects[5], "Build");
+                    EditorGUI.LabelField(rects[6], "");
+                },
+                drawFooterCallback = async(rect) =>
+                {
+                    Rect downloadRect = new Rect(rect.x, rect.y, buttonWidth, EditorGUIUtility.singleLineHeight);
+                    Rect loadRect = new Rect(rect.x + buttonWidth + elementPadding, rect.y, buttonWidth, EditorGUIUtility.singleLineHeight);
+
+                    int newIndex = EditorGUI.Popup(downloadRect, 0, modelOptions.ToArray());
+                    if (newIndex != 0)
+                    {
+                        await LLMManager.DownloadModel(modelURLs[newIndex], modelOptions[newIndex]);
+                        UpdateModels(true);
+                    }
+
+                    if (GUI.Button(loadRect, "Load model"))
+                    {
+                        EditorApplication.delayCall += () =>
+                        {
+                            string path = EditorUtility.OpenFilePanelWithFilters("Select a gguf model file", "", new string[] { "Model Files", "gguf" });
+                            if (!string.IsNullOrEmpty(path))
+                            {
+                                LLMManager.LoadModel(path);
+                                UpdateModels();
+                            }
+                        };
+                    }
+
+                    bool downloadOnBuild = EditorGUILayout.Toggle("Download on Build", LLMManager.downloadOnBuild);
+                    if (downloadOnBuild != LLMManager.downloadOnBuild)
+                    {
+                        LLMManager.downloadOnBuild = downloadOnBuild;
+                        UpdateModels();
+                    }
                 }
             };
         }
@@ -250,14 +273,12 @@ namespace LLMUnity
             OnInspectorGUIStart(llmScriptSO);
 
             ShowProgress(LLMUnitySetup.libraryProgress, "Setup Library");
-            ShowProgress(llmScript.modelProgress, "Model Downloading");
-            ShowProgress(llmScript.modelCopyProgress, "Model Copying");
+            ShowProgress(LLMManager.modelProgress, "Model Downloading");
+            GUI.enabled = LLMUnitySetup.libraryProgress == 1 && LLMManager.modelProgress == 1;
 
-            GUI.enabled = LLMUnitySetup.libraryProgress == 1 && llmScript.modelProgress == 1 && llmScript.modelCopyProgress == 1;
             AddOptionsToggles(llmScriptSO);
             AddSetupSettings(llmScriptSO);
             AddModelLoadersSettings(llmScriptSO, llmScript);
-            GUI.enabled = true;
             AddChatSettings(llmScriptSO);
 
             OnInspectorGUIEnd(llmScriptSO);
