@@ -95,12 +95,13 @@ namespace LLMUnity
         List<Rect> CreateColumnRects(Rect rect)
         {
             float[] widths = GetColumnWidths();
-            float offset = rect.x;
+            float offsetX = rect.x;
+            float offsetY = rect.y + (rect.height - EditorGUIUtility.singleLineHeight) / 2;
             List<Rect> rects = new List<Rect>();
             foreach (float width in widths)
             {
-                rects.Add(new Rect(offset, rect.y, width, EditorGUIUtility.singleLineHeight));
-                offset += width + elementPadding;
+                rects.Add(new Rect(offsetX, offsetY, width, EditorGUIUtility.singleLineHeight));
+                offsetX += width + elementPadding;
             }
             return rects;
         }
@@ -162,8 +163,8 @@ namespace LLMUnity
         {
             Rect downloadModelRect = new Rect(rect.x, rect.y, buttonWidth, EditorGUIUtility.singleLineHeight);
             Rect loadModelRect = new Rect(rect.x + buttonWidth + elementPadding, rect.y, buttonWidth, EditorGUIUtility.singleLineHeight);
-            Rect downloadLoraRect = new Rect(rect.width - 2 * buttonWidth - elementPadding, rect.y, buttonWidth, EditorGUIUtility.singleLineHeight);
-            Rect loadLoraRect = new Rect(rect.width - buttonWidth, rect.y, buttonWidth, EditorGUIUtility.singleLineHeight);
+            Rect downloadLoraRect = new Rect(rect.xMax - 2 * buttonWidth - elementPadding, rect.y, buttonWidth, EditorGUIUtility.singleLineHeight);
+            Rect loadLoraRect = new Rect(rect.xMax - buttonWidth, rect.y, buttonWidth, EditorGUIUtility.singleLineHeight);
 
             int modelIndex = EditorGUI.Popup(downloadModelRect, 0, modelOptions.ToArray());
             if (modelIndex == 1)
@@ -212,11 +213,16 @@ namespace LLMUnity
             ResetModelOptions();
             templateOptions = ChatTemplate.templatesDescription.Keys.ToList().ToArray();
             trashIcon = new GUIContent(Resources.Load<Texture2D>("llmunity_trash_icon"), "Delete Model");
+            Texture2D loraLineTexture = new Texture2D(1, 1);
+            loraLineTexture.SetPixel(0, 0, Color.black);
+            loraLineTexture.Apply();
+
             modelList = new ReorderableList(LLMManager.modelEntries, typeof(ModelEntry), false, true, false, false)
             {
                 drawElementCallback = (rect, index, isActive, isFocused) =>
                 {
                     if (index >= LLMManager.modelEntries.Count) return;
+                    var entry = LLMManager.modelEntries[index];
 
                     List<Rect> rects = CreateColumnRects(rect);
                     var selectRect = rects[0];
@@ -226,7 +232,6 @@ namespace LLMUnity
                     var pathRect = rects[4];
                     var includeInBuildRect = rects[5];
                     var actionRect = rects[6];
-                    var entry = LLMManager.modelEntries[index];
 
                     bool hasPath = entry.localPath != null && entry.localPath != "";
                     bool hasURL = entry.url != null && entry.url != "";
@@ -287,6 +292,11 @@ namespace LLMUnity
                     {
                         LLMManager.Remove(entry);
                         UpdateModels(true);
+                    }
+
+                    if (!entry.lora && index < LLMManager.modelEntries.Count - 1 && LLMManager.modelEntries[index + 1].lora)
+                    {
+                        GUI.DrawTexture(new Rect(rect.x - ReorderableList.Defaults.padding, rect.yMax, rect.width + ReorderableList.Defaults.padding * 2, 1), loraLineTexture);
                     }
                 },
                 drawHeaderCallback = (rect) =>
