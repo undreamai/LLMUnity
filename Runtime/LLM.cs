@@ -68,12 +68,6 @@ namespace LLMUnity
         [LLMAdvanced] public bool asynchronousStartup = true;
         /// <summary> select to not destroy the LLM GameObject when loading a new Scene. </summary>
         [LLMAdvanced] public bool dontDestroyOnLoad = true;
-        /// <summary> the path of the LORA model being used (relative to the Assets/StreamingAssets folder).
-        /// Models with .bin format are allowed.</summary>
-        [ModelAdvanced] public string lora = "";
-        /// <summary> the URL of the LORA to use.
-        /// Models with .bin format are allowed.</summary>
-        [ModelDownloadAdvanced] public string loraURL = "";
         /// <summary> Size of the prompt context (0 = context size of the model).
         /// This is the number of tokens the model can take as input when generating responses. </summary>
         [ModelAdvanced] public int contextSize = 0;
@@ -88,6 +82,7 @@ namespace LLMUnity
 
         /// \cond HIDE
         public LLMManager llmManager = new LLMManager();
+        public string lora = "";
         public string model = "";
         public string chatTemplate = ChatTemplate.DefaultTemplate;
 
