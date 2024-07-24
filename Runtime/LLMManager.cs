@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
@@ -23,13 +22,13 @@ namespace LLMUnity
     [Serializable]
     public class LLMManagerStore
     {
-        public bool downloadOnBuild;
+        public bool downloadOnStart;
         public List<ModelEntry> modelEntries;
     }
 
     public class LLMManager
     {
-        public static bool downloadOnBuild = false;
+        public static bool downloadOnStart = false;
         public static List<ModelEntry> modelEntries = new List<ModelEntry>();
 
         /// <summary> Boolean set to true if the server has started and is ready to receive requests, false otherwise. </summary>
@@ -53,13 +52,14 @@ namespace LLMUnity
 
         public static string AddEntry(string path, bool lora = false, string name = null, string url = null)
         {
-            string key = name == null ? ModelPathToName(url) : name;
+            string key = name == null ? ModelPathToName(path) : name;
             ModelEntry entry = new ModelEntry();
             entry.name = key;
             entry.lora = lora;
             entry.chatTemplate = lora ? null : ChatTemplate.FromGGUF(path);
             entry.url = url;
             entry.localPath = Path.GetFullPath(path).Replace('\\', '/');
+            entry.includeInBuild = true;
             int indexToInsert = modelEntries.Count;
             if (!lora)
             {
@@ -93,31 +93,27 @@ namespace LLMUnity
             }
             string modelName = Path.GetFileName(url).Split("?")[0];
             string modelPath = Path.Combine(LLMUnitySetup.modelDownloadPath, modelName);
-            if (!lora)
+            float preModelProgress = modelProgress;
+            float preLoraProgress = loraProgress;
+            try
             {
-                modelProgress = 0;
-                try
+                if (!lora)
                 {
+                    modelProgress = 0;
                     await LLMUnitySetup.DownloadFile(url, modelPath, false, null, SetModelProgress);
                 }
-                catch (Exception ex)
+                else
                 {
-                    modelProgress = 1;
-                    throw ex;
-                }
-            }
-            else
-            {
-                loraProgress = 0;
-                try
-                {
+                    loraProgress = 0;
                     await LLMUnitySetup.DownloadFile(url, modelPath, false, null, SetLoraProgress);
                 }
-                catch (Exception ex)
-                {
-                    loraProgress = 1;
-                    throw ex;
-                }
+            }
+            catch (Exception ex)
+            {
+                modelProgress = preModelProgress;
+                loraProgress = preLoraProgress;
+                LLMUnitySetup.LogError($"Error downloading the model from URL '{url}': " + ex.Message);
+                return null;
             }
             return AddEntry(modelPath, lora, name, url);
         }
@@ -199,14 +195,14 @@ namespace LLMUnity
         public static void Save()
         {
             Directory.CreateDirectory(Path.GetDirectoryName(LLMUnitySetup.modelListPath));
-            File.WriteAllText(LLMUnitySetup.modelListPath, JsonUtility.ToJson(new LLMManagerStore { modelEntries = modelEntries, downloadOnBuild = downloadOnBuild }, true));
+            File.WriteAllText(LLMUnitySetup.modelListPath, JsonUtility.ToJson(new LLMManagerStore { modelEntries = modelEntries, downloadOnStart = downloadOnStart }, true));
         }
 
         public static void Load()
         {
             if (!File.Exists(LLMUnitySetup.modelListPath)) return;
             LLMManagerStore store = JsonUtility.FromJson<LLMManagerStore>(File.ReadAllText(LLMUnitySetup.modelListPath));
-            downloadOnBuild = store.downloadOnBuild;
+            downloadOnStart = store.downloadOnStart;
             modelEntries = store.modelEntries;
         }
     }
