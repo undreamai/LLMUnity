@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
@@ -21,6 +22,11 @@ namespace LLMUnity
         static List<string> modelOptions;
         static List<string> modelURLs;
         string[] templateOptions;
+        string elementFocus = "";
+        bool showCustomURL = false;
+        string customURL = "";
+        bool customURLLora = false;
+        bool customURLFocus = false;
 
         protected override Type[] GetPropertyTypes()
         {
@@ -31,7 +37,6 @@ namespace LLMUnity
         {
             EditorGUILayout.LabelField("Model Settings", EditorStyles.boldLabel);
             AddModelLoaders(llmScriptSO, llmScript);
-            AddModelAddonLoaders(llmScriptSO, llmScript);
             AddModelSettings(llmScriptSO);
         }
 
@@ -42,29 +47,13 @@ namespace LLMUnity
             foreach (float width in widths) listWidth += width + (listWidth == 0 ? 0 : elementPadding);
             EditorGUILayout.BeginVertical(GUILayout.Width(listWidth));
             modelList.DoLayoutList();
-            EditorGUILayout.EndVertical();
-        }
-
-        public void AddModelAddonLoaders(SerializedObject llmScriptSO, LLM llmScript, bool layout = true)
-        {
-            if (llmScriptSO.FindProperty("advancedOptions").boolValue)
+            bool downloadOnBuild = EditorGUILayout.Toggle("Download on Build", LLMManager.downloadOnBuild);
+            if (downloadOnBuild != LLMManager.downloadOnBuild)
             {
-                EditorGUILayout.BeginHorizontal();
-                GUILayout.Label("Lora", GUILayout.Width(EditorGUIUtility.labelWidth));
-
-                if (GUILayout.Button("Load lora", GUILayout.Width(buttonWidth)))
-                {
-                    EditorApplication.delayCall += () =>
-                    {
-                        string path = EditorUtility.OpenFilePanelWithFilters("Select a bin lora file", "", new string[] { "Model Files", "bin" });
-                        if (!string.IsNullOrEmpty(path))
-                        {
-                            llmScript.SetLora(path);
-                        }
-                    };
-                }
-                EditorGUILayout.EndHorizontal();
+                LLMManager.downloadOnBuild = downloadOnBuild;
+                LLMManager.Save();
             }
+            EditorGUILayout.EndVertical();
         }
 
         public void AddModelSettings(SerializedObject llmScriptSO)
@@ -89,11 +78,10 @@ namespace LLMUnity
             foreach (ModelEntry entry in LLMManager.modelEntries) existingOptions.Add(entry.url);
             modelOptions = new List<string>();
             modelURLs = new List<string>();
-            for (int i = 0; i < LLMUnitySetup.modelOptions.Length; i++)
+            foreach ((string name, string url) in LLMUnitySetup.modelOptions)
             {
-                string url = LLMUnitySetup.modelOptions[i].Item2;
-                if (i > 0 && existingOptions.Contains(url)) continue;
-                modelOptions.Add(LLMUnitySetup.modelOptions[i].Item1);
+                if (url != null && existingOptions.Contains(url)) continue;
+                modelOptions.Add(name);
                 modelURLs.Add(url);
             }
         }
@@ -104,14 +92,14 @@ namespace LLMUnity
             return widths;
         }
 
-        List<Rect> CreateColumnRects(float x, float y)
+        List<Rect> CreateColumnRects(Rect rect)
         {
             float[] widths = GetColumnWidths();
-            float offset = x;
+            float offset = rect.x;
             List<Rect> rects = new List<Rect>();
             foreach (float width in widths)
             {
-                rects.Add(new Rect(offset, y, width, EditorGUIUtility.singleLineHeight));
+                rects.Add(new Rect(offset, rect.y, width, EditorGUIUtility.singleLineHeight));
                 offset += width + elementPadding;
             }
             return rects;
@@ -124,20 +112,112 @@ namespace LLMUnity
             Repaint();
         }
 
+        void showCustomURLField(bool lora)
+        {
+            customURL = "";
+            customURLLora = lora;
+            showCustomURL = true;
+            customURLFocus = true;
+            Repaint();
+        }
+
+        async Task createCustomURLField(Rect rect)
+        {
+            bool submit;
+            Event e = Event.current;
+            if (e.type == EventType.KeyDown && (e.keyCode == KeyCode.Return || e.keyCode == KeyCode.KeypadEnter))
+            {
+                submit = true;
+                e.Use();
+            }
+            else
+            {
+                Rect labelRect = new Rect(rect.x, rect.y, 100, EditorGUIUtility.singleLineHeight);
+                Rect textRect = new Rect(rect.x + labelRect.width + elementPadding, rect.y, buttonWidth, EditorGUIUtility.singleLineHeight);
+                Rect submitRect = new Rect(rect.x + labelRect.width + buttonWidth + elementPadding * 2 , rect.y, buttonWidth, EditorGUIUtility.singleLineHeight);
+
+                EditorGUI.LabelField(labelRect, "Enter URL:");
+                GUI.SetNextControlName("customURLFocus");
+                customURL = EditorGUI.TextField(textRect, customURL);
+                submit = GUI.Button(submitRect, "Submit");
+
+                if (customURLFocus)
+                {
+                    customURLFocus = false;
+                    elementFocus = "customURLFocus";
+                }
+            }
+
+            if (submit)
+            {
+                showCustomURL = false;
+                elementFocus = "dummy";
+                Repaint();
+                await LLMManager.Download(customURL, customURLLora);
+                UpdateModels(true);
+            }
+        }
+
+        async Task createButtons(Rect rect, LLM llmScript)
+        {
+            Rect downloadModelRect = new Rect(rect.x, rect.y, buttonWidth, EditorGUIUtility.singleLineHeight);
+            Rect loadModelRect = new Rect(rect.x + buttonWidth + elementPadding, rect.y, buttonWidth, EditorGUIUtility.singleLineHeight);
+            Rect downloadLoraRect = new Rect(rect.x + (buttonWidth + elementPadding) * 2, rect.y, buttonWidth, EditorGUIUtility.singleLineHeight);
+            Rect loadLoraRect = new Rect(rect.x + (buttonWidth + elementPadding) * 3, rect.y, buttonWidth, EditorGUIUtility.singleLineHeight); int modelIndex = EditorGUI.Popup(downloadModelRect, 0, modelOptions.ToArray());
+
+            if (modelIndex == 1)
+            {
+                showCustomURLField(false);
+            }
+            else if (modelIndex > 1)
+            {
+                await LLMManager.DownloadModel(modelURLs[modelIndex], modelOptions[modelIndex]);
+                UpdateModels(true);
+            }
+
+            if (GUI.Button(loadModelRect, "Load model"))
+            {
+                EditorApplication.delayCall += () =>
+                {
+                    string path = EditorUtility.OpenFilePanelWithFilters("Select a gguf model file", "", new string[] { "Model Files", "gguf" });
+                    if (!string.IsNullOrEmpty(path))
+                    {
+                        LLMManager.LoadModel(path);
+                        UpdateModels();
+                    }
+                };
+            }
+
+            if (GUI.Button(downloadLoraRect, "Download LoRA"))
+            {
+                showCustomURLField(true);
+            }
+            if (GUI.Button(loadLoraRect, "Load LoRA"))
+            {
+                EditorApplication.delayCall += () =>
+                {
+                    string path = EditorUtility.OpenFilePanelWithFilters("Select a bin lora file", "", new string[] { "Model Files", "bin" });
+                    if (!string.IsNullOrEmpty(path))
+                    {
+                        llmScript.SetLora(path);
+                    }
+                };
+            }
+        }
+
         void OnEnable()
         {
-            var llmScript = (LLM)target;
+            LLM llmScript = (LLM)target;
             ResetModelOptions();
             templateOptions = ChatTemplate.templatesDescription.Keys.ToList().ToArray();
             trashIcon = new GUIContent(Resources.Load<Texture2D>("llmunity_trash_icon"), "Delete Model");
-
-            modelList = new ReorderableList(LLMManager.modelEntries, typeof(ModelEntry), true, true, true, true)
+            modelList = new ReorderableList(LLMManager.modelEntries, typeof(ModelEntry), false, true, false, false)
             {
                 drawElementCallback = (rect, index, isActive, isFocused) =>
                 {
                     if (index >= LLMManager.modelEntries.Count) return;
 
-                    List<Rect> rects = CreateColumnRects(rect.x, rect.y);
+                    List<Rect> rects = CreateColumnRects(rect);
                     var selectRect = rects[0];
                     var nameRect = rects[1];
                     var templateRect = rects[2];
@@ -150,23 +230,34 @@ namespace LLMUnity
                     bool hasPath = entry.localPath != null && entry.localPath != "";
                     bool hasURL = entry.url != null && entry.url != "";
 
-                    bool isSelected = llmScript.model == entry.localPath;
-                    bool newSelected = EditorGUI.Toggle(selectRect, isSelected, EditorStyles.radioButton);
-                    if (newSelected && !isSelected)
+                    bool isSelected = false;
+                    if (!entry.lora)
                     {
-                        llmScript.model = entry.localPath;
-                        llmScript.SetTemplate(entry.chatTemplate);
+                        isSelected = llmScript.model == entry.localPath;
+                        bool newSelected = EditorGUI.Toggle(selectRect, isSelected, EditorStyles.radioButton);
+                        if (newSelected && !isSelected) llmScript.SetModel(entry.localPath);
                     }
+                    else
+                    {
+                        isSelected = llmScript.lora == entry.localPath;
+                        bool newSelected = EditorGUI.Toggle(selectRect, isSelected, EditorStyles.radioButton);
+                        if (newSelected && !isSelected) llmScript.SetLora(entry.localPath);
+                        else if (!newSelected && isSelected) llmScript.SetLora("");
+                    }
+
 
                     DrawCopyableLabel(nameRect, entry.name);
 
-                    int templateIndex = Array.IndexOf(ChatTemplate.templatesDescription.Values.ToList().ToArray(), entry.chatTemplate);
-                    int newTemplateIndex = EditorGUI.Popup(templateRect, templateIndex, templateOptions);
-                    if (newTemplateIndex != templateIndex)
+                    if (!entry.lora)
                     {
-                        entry.chatTemplate = ChatTemplate.templatesDescription[templateOptions[newTemplateIndex]];
-                        if (isSelected) llmScript.SetTemplate(entry.chatTemplate);
-                        UpdateModels();
+                        int templateIndex = Array.IndexOf(ChatTemplate.templatesDescription.Values.ToList().ToArray(), entry.chatTemplate);
+                        int newTemplateIndex = EditorGUI.Popup(templateRect, templateIndex, templateOptions);
+                        if (newTemplateIndex != templateIndex)
+                        {
+                            entry.chatTemplate = ChatTemplate.templatesDescription[templateOptions[newTemplateIndex]];
+                            if (isSelected) llmScript.SetTemplate(entry.chatTemplate);
+                            UpdateModels();
+                        }
                     }
 
                     if (hasURL)
@@ -193,13 +284,13 @@ namespace LLMUnity
 
                     if (GUI.Button(actionRect, trashIcon))
                     {
-                        LLMManager.modelEntries.Remove(entry);
+                        LLMManager.Remove(entry);
                         UpdateModels(true);
                     }
                 },
                 drawHeaderCallback = (rect) =>
                 {
-                    List<Rect> rects = CreateColumnRects(rect.x + ReorderableList.Defaults.dragHandleWidth - ReorderableList.Defaults.padding + 1, rect.y);
+                    List<Rect> rects = CreateColumnRects(rect);
                     EditorGUI.LabelField(rects[0], "");
                     EditorGUI.LabelField(rects[1], "Model");
                     EditorGUI.LabelField(rects[2], "Chat template");
@@ -210,35 +301,8 @@ namespace LLMUnity
                 },
                 drawFooterCallback = async(rect) =>
                 {
-                    Rect downloadRect = new Rect(rect.x, rect.y, buttonWidth, EditorGUIUtility.singleLineHeight);
-                    Rect loadRect = new Rect(rect.x + buttonWidth + elementPadding, rect.y, buttonWidth, EditorGUIUtility.singleLineHeight);
-
-                    int newIndex = EditorGUI.Popup(downloadRect, 0, modelOptions.ToArray());
-                    if (newIndex != 0)
-                    {
-                        await LLMManager.DownloadModel(modelURLs[newIndex], modelOptions[newIndex]);
-                        UpdateModels(true);
-                    }
-
-                    if (GUI.Button(loadRect, "Load model"))
-                    {
-                        EditorApplication.delayCall += () =>
-                        {
-                            string path = EditorUtility.OpenFilePanelWithFilters("Select a gguf model file", "", new string[] { "Model Files", "gguf" });
-                            if (!string.IsNullOrEmpty(path))
-                            {
-                                LLMManager.LoadModel(path);
-                                UpdateModels();
-                            }
-                        };
-                    }
-
-                    bool downloadOnBuild = EditorGUILayout.Toggle("Download on Build", LLMManager.downloadOnBuild);
-                    if (downloadOnBuild != LLMManager.downloadOnBuild)
-                    {
-                        LLMManager.downloadOnBuild = downloadOnBuild;
-                        UpdateModels();
-                    }
+                    if (showCustomURL) await createCustomURLField(rect);
+                    else await createButtons(rect, llmScript);
                 }
             };
         }
@@ -267,6 +331,12 @@ namespace LLMUnity
 
         public override void OnInspectorGUI()
         {
+            if (elementFocus != "")
+            {
+                EditorGUI.FocusTextInControl(elementFocus);
+                elementFocus = "";
+            }
+
             LLM llmScript = (LLM)target;
             SerializedObject llmScriptSO = new SerializedObject(llmScript);
 
@@ -274,7 +344,8 @@ namespace LLMUnity
 
             ShowProgress(LLMUnitySetup.libraryProgress, "Setup Library");
             ShowProgress(LLMManager.modelProgress, "Model Downloading");
-            GUI.enabled = LLMUnitySetup.libraryProgress == 1 && LLMManager.modelProgress == 1;
+            ShowProgress(LLMManager.loraProgress, "LoRA Downloading");
+            GUI.enabled = LLMUnitySetup.libraryProgress == 1 && LLMManager.modelProgress == 1 && LLMManager.loraProgress == 1;
 
             AddOptionsToggles(llmScriptSO);
             AddSetupSettings(llmScriptSO);
