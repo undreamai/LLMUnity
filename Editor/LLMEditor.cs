@@ -162,9 +162,10 @@ namespace LLMUnity
         {
             Rect downloadModelRect = new Rect(rect.x, rect.y, buttonWidth, EditorGUIUtility.singleLineHeight);
             Rect loadModelRect = new Rect(rect.x + buttonWidth + elementPadding, rect.y, buttonWidth, EditorGUIUtility.singleLineHeight);
-            Rect downloadLoraRect = new Rect(rect.x + (buttonWidth + elementPadding) * 2, rect.y, buttonWidth, EditorGUIUtility.singleLineHeight);
-            Rect loadLoraRect = new Rect(rect.x + (buttonWidth + elementPadding) * 3, rect.y, buttonWidth, EditorGUIUtility.singleLineHeight); int modelIndex = EditorGUI.Popup(downloadModelRect, 0, modelOptions.ToArray());
+            Rect downloadLoraRect = new Rect(rect.width - 2 * buttonWidth - elementPadding, rect.y, buttonWidth, EditorGUIUtility.singleLineHeight);
+            Rect loadLoraRect = new Rect(rect.width - buttonWidth, rect.y, buttonWidth, EditorGUIUtility.singleLineHeight);
 
+            int modelIndex = EditorGUI.Popup(downloadModelRect, 0, modelOptions.ToArray());
             if (modelIndex == 1)
             {
                 showCustomURLField(false);
