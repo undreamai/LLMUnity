@@ -199,7 +199,7 @@ namespace LLMUnity
         public static void Save()
         {
             Directory.CreateDirectory(Path.GetDirectoryName(LLMUnitySetup.modelListPath));
-            File.WriteAllText(LLMUnitySetup.modelListPath, JsonUtility.ToJson(new LLMManagerStore { modelEntries = modelEntries, downloadOnBuild = downloadOnBuild }));
+            File.WriteAllText(LLMUnitySetup.modelListPath, JsonUtility.ToJson(new LLMManagerStore { modelEntries = modelEntries, downloadOnBuild = downloadOnBuild }, true));
         }
 
         public static void Load()
