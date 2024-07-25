@@ -90,7 +90,6 @@ namespace LLMUnity
         public string lora = "";
 
         /// \cond HIDE
-        public LLMManager llmManager = new LLMManager();
 
         IntPtr LLMObject = IntPtr.Zero;
         List<LLMCharacter> clients = new List<LLMCharacter>();
@@ -102,6 +101,9 @@ namespace LLMUnity
         /// \endcond
 
 #if UNITY_EDITOR
+
+        public LLMManager llmManager = new LLMManager();
+
         public LLM()
         {
             LLMManager.Register(this);
@@ -171,7 +173,11 @@ namespace LLMUnity
                 LLMUnitySetup.LogError("No model file provided!");
                 return null;
             }
+#if UNITY_EDITOR
+            string modelPath = LLMManager.Get(model).path;
+#else
             string modelPath = LLMUnitySetup.GetAssetPath(model);
+#endif
             if (!File.Exists(modelPath))
             {
                 LLMUnitySetup.LogError($"File {modelPath} not found!");
@@ -180,7 +186,11 @@ namespace LLMUnity
             string loraPath = "";
             if (lora != "")
             {
+#if UNITY_EDITOR
+                loraPath = LLMManager.Get(lora).path;
+#else
                 loraPath = LLMUnitySetup.GetAssetPath(lora);
+#endif
                 if (!File.Exists(loraPath))
                 {
                     LLMUnitySetup.LogError($"File {loraPath} not found!");
