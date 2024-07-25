@@ -322,7 +322,7 @@ namespace LLMUnity
         public void SetGrammar(string path)
         {
 #if UNITY_EDITOR
-            if (!EditorApplication.isPlaying) path = LLMUnitySetup.AddAsset(path, LLMUnitySetup.GetAssetPath());
+            if (!EditorApplication.isPlaying) path = LLMUnitySetup.AddAsset(path);
 #endif
             grammar = path;
             InitGrammar();
