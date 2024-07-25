@@ -288,30 +288,23 @@ namespace LLMUnity
             libraryProgress = progress;
         }
 
-        public static string AddAsset(string assetPath, string basePath)
+        public static string AddAsset(string assetPath)
         {
             if (!File.Exists(assetPath))
             {
                 LogError($"{assetPath} does not exist!");
                 return null;
             }
-            // add an asset to the basePath directory if it is not already there and return the relative path
-            string basePathSlash = basePath.Replace('\\', '/');
-            string fullPath = Path.GetFullPath(assetPath).Replace('\\', '/');
-            Directory.CreateDirectory(basePathSlash);
-            if (!fullPath.StartsWith(basePathSlash))
+            string filename = Path.GetFileName(assetPath);
+            string fullPath = GetAssetPath(filename);
+            AssetDatabase.StartAssetEditing();
+            foreach (string path in new string[] {fullPath, fullPath + ".meta"})
             {
-                // if the asset is not in the assets dir copy it over
-                fullPath = Path.Combine(basePathSlash, Path.GetFileName(assetPath));
-                AssetDatabase.StartAssetEditing();
-                foreach (string filename in new string[] {fullPath, fullPath + ".meta"})
-                {
-                    if (File.Exists(filename)) File.Delete(filename);
-                }
-                CreateSymlink(assetPath, fullPath);
-                AssetDatabase.StopAssetEditing();
+                if (File.Exists(path)) File.Delete(path);
             }
-            return fullPath.Substring(basePathSlash.Length + 1);
+            File.Copy(assetPath, fullPath);
+            AssetDatabase.StopAssetEditing();
+            return filename;
         }
 
         public static void CreateSymlink(string sourcePath, string targetPath)
