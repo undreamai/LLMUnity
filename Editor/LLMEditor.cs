@@ -27,6 +27,7 @@ namespace LLMUnity
         string customURL = "";
         bool customURLLora = false;
         bool customURLFocus = false;
+        bool expandedView = false;
 
         protected override Type[] GetPropertyTypes()
         {
@@ -42,19 +43,27 @@ namespace LLMUnity
 
         public void AddModelLoaders(SerializedObject llmScriptSO, LLM llmScript)
         {
-            if (LLMManager.modelEntries.Count == 0)
+            if (LLMManager.modelEntries.Count > 0)
             {
-                DrawFooter(EditorGUILayout.GetControlRect());
-            }
-            else
-            {
-                float[] widths = GetColumnWidths(llmScript.advancedOptions);
-                float listWidth = 2 * ReorderableList.Defaults.padding * 2;
+                float[] widths = GetColumnWidths(expandedView);
+                float listWidth = 2 * ReorderableList.Defaults.padding;
                 foreach (float width in widths) listWidth += width + (listWidth == 0 ? 0 : elementPadding);
+                EditorGUILayout.BeginHorizontal(GUILayout.Width(listWidth + actionColumnWidth));
+
                 EditorGUILayout.BeginVertical(GUILayout.Width(listWidth));
                 modelList.DoLayoutList();
                 EditorGUILayout.EndVertical();
+
+                Rect expandedRect = GUILayoutUtility.GetRect(actionColumnWidth, modelList.elementHeight + ReorderableList.Defaults.padding);
+                expandedRect.y += modelList.GetHeight() - modelList.elementHeight - ReorderableList.Defaults.padding;
+                if (GUI.Button(expandedRect, expandedView ? "«" : "»"))
+                {
+                    expandedView = !expandedView;
+                    Repaint();
+                }
+                EditorGUILayout.EndHorizontal();
             }
+            AddLoadButtons();
             bool downloadOnStart = EditorGUILayout.Toggle("Download on Start", LLMManager.downloadOnStart);
             if (downloadOnStart != LLMManager.downloadOnStart)
             {
@@ -101,7 +110,7 @@ namespace LLMUnity
             return widths.ToArray();
         }
 
-        List<Rect> CreateColumnRects(Rect rect, bool expandedView)
+        List<Rect> CreateColumnRects(Rect rect)
         {
             float[] widths = GetColumnWidths(expandedView);
             float offsetX = rect.x;
@@ -131,13 +140,15 @@ namespace LLMUnity
             Repaint();
         }
 
-        void SetModelIfNone()
+        void SetModelIfNone(string filename, bool lora)
         {
             LLM llmScript = (LLM)target;
-            if (llmScript.model == "" && LLMManager.modelEntries.Count == 1) llmScript.SetModel(LLMManager.modelEntries[0].localPath);
+            int num = LLMManager.Num(lora);
+            if (!lora && llmScript.model == "" && num == 1) llmScript.SetModel(filename);
+            if (lora && llmScript.lora == "" && num == 1) llmScript.SetLora(filename);
         }
 
-        async Task createCustomURLField(Rect rect)
+        async Task createCustomURLField()
         {
             bool submit = false;
             bool exit = false;
@@ -154,16 +165,13 @@ namespace LLMUnity
             }
             else
             {
-                Rect labelRect = new Rect(rect.x, rect.y, 100, EditorGUIUtility.singleLineHeight);
-                Rect textRect = new Rect(rect.x + labelRect.width + elementPadding, rect.y, buttonWidth, EditorGUIUtility.singleLineHeight);
-                Rect submitRect = new Rect(rect.x + labelRect.width + buttonWidth + elementPadding * 2, rect.y, buttonWidth / 2f, EditorGUIUtility.singleLineHeight);
-                Rect backRect = new Rect(rect.x + labelRect.width + buttonWidth * 1.5f + elementPadding * 3, rect.y, buttonWidth / 2f, EditorGUIUtility.singleLineHeight);
-
-                EditorGUI.LabelField(labelRect, "Enter URL:");
+                EditorGUILayout.BeginHorizontal();
+                EditorGUILayout.LabelField("Enter URL", GUILayout.Width(100));
                 GUI.SetNextControlName("customURLFocus");
-                customURL = EditorGUI.TextField(textRect, customURL);
-                submit = GUI.Button(submitRect, "Submit");
-                exit = GUI.Button(backRect, "Back");
+                customURL = EditorGUILayout.TextField(customURL, GUILayout.Width(buttonWidth));
+                submit = GUILayout.Button("Submit", GUILayout.Width(buttonWidth));
+                exit = GUILayout.Button("Back", GUILayout.Width(buttonWidth));
+                EditorGUILayout.EndHorizontal();
 
                 if (customURLFocus)
                 {
@@ -179,32 +187,33 @@ namespace LLMUnity
                 Repaint();
                 if (submit && customURL != "")
                 {
-                    await LLMManager.Download(customURL, customURLLora);
-                    SetModelIfNone();
+                    string filename = await LLMManager.Download(customURL, customURLLora);
+                    SetModelIfNone(filename, customURLLora);
                     UpdateModels(true);
                 }
             }
         }
 
-        async Task createButtons(Rect rect, LLM llmScript)
+        async Task createButtons()
         {
-            Rect downloadModelRect = new Rect(rect.x, rect.y, buttonWidth, EditorGUIUtility.singleLineHeight);
-            Rect loadModelRect = new Rect(rect.x + buttonWidth + elementPadding, rect.y, buttonWidth, EditorGUIUtility.singleLineHeight);
-            Rect downloadLoraRect = new Rect(rect.xMax - 2 * buttonWidth - elementPadding, rect.y, buttonWidth, EditorGUIUtility.singleLineHeight);
-            Rect loadLoraRect = new Rect(rect.xMax - buttonWidth, rect.y, buttonWidth, EditorGUIUtility.singleLineHeight);
-            int modelIndex = EditorGUI.Popup(downloadModelRect, 0, modelOptions.ToArray());
+            LLM llmScript = (LLM)target;
+            EditorGUILayout.BeginHorizontal();
+
+            GUIStyle centeredPopupStyle = new GUIStyle(EditorStyles.popup);
+            centeredPopupStyle.alignment = TextAnchor.MiddleCenter;
+            int modelIndex = EditorGUILayout.Popup(0, modelOptions.ToArray(), centeredPopupStyle, GUILayout.Width(buttonWidth));
             if (modelIndex == 1)
             {
                 showCustomURLField(false);
             }
             else if (modelIndex > 1)
             {
-                await LLMManager.DownloadModel(modelURLs[modelIndex], modelOptions[modelIndex]);
-                SetModelIfNone();
+                string filename = await LLMManager.DownloadModel(modelURLs[modelIndex], modelOptions[modelIndex]);
+                SetModelIfNone(filename, false);
                 UpdateModels(true);
             }
 
-            if (GUI.Button(loadModelRect, "Load model"))
+            if (GUILayout.Button("Load model", GUILayout.Width(buttonWidth)))
             {
                 EditorApplication.delayCall += () =>
                 {
@@ -216,14 +225,16 @@ namespace LLMUnity
                     }
                 };
             }
+            EditorGUILayout.EndHorizontal();
 
             if (llmScript.advancedOptions)
             {
-                if (GUI.Button(downloadLoraRect, "Download LoRA"))
+                EditorGUILayout.BeginHorizontal();
+                if (GUILayout.Button("Download LoRA", GUILayout.Width(buttonWidth)))
                 {
                     showCustomURLField(true);
                 }
-                if (GUI.Button(loadLoraRect, "Load LoRA"))
+                if (GUILayout.Button("Load LoRA", GUILayout.Width(buttonWidth)))
                 {
                     EditorApplication.delayCall += () =>
                     {
@@ -234,14 +245,14 @@ namespace LLMUnity
                         }
                     };
                 }
+                EditorGUILayout.EndHorizontal();
             }
         }
 
-        async void DrawFooter(Rect rect)
+        async Task AddLoadButtons()
         {
-            LLM llmScript = (LLM)target;
-            if (showCustomURL) await createCustomURLField(rect);
-            else await createButtons(rect, llmScript);
+            if (showCustomURL) await createCustomURLField();
+            else await createButtons();
         }
 
         void OnEnable()
@@ -261,14 +272,14 @@ namespace LLMUnity
                     if (index >= LLMManager.modelEntries.Count) return;
                     ModelEntry entry = LLMManager.modelEntries[index];
 
-                    List<Rect> rects = CreateColumnRects(rect, llmScript.advancedOptions);
+                    List<Rect> rects = CreateColumnRects(rect);
                     int col = 0;
                     Rect selectRect = rects[col++];
                     Rect nameRect = rects[col++];
                     Rect templateRect = rects[col++];
                     Rect urlRect = new Rect();
                     Rect pathRect = new Rect();
-                    if (llmScript.advancedOptions)
+                    if (expandedView)
                     {
                         urlRect = rects[col++];
                         pathRect = rects[col++];
@@ -276,25 +287,25 @@ namespace LLMUnity
                     Rect includeInBuildRect = rects[col++];
                     Rect actionRect = rects[col++];
 
-                    bool hasPath = entry.localPath != null && entry.localPath != "";
+                    bool hasPath = entry.path != null && entry.path != "";
                     bool hasURL = entry.url != null && entry.url != "";
 
                     bool isSelected = false;
                     if (!entry.lora)
                     {
-                        isSelected = llmScript.model == entry.localPath;
+                        isSelected = llmScript.model == entry.filename;
                         bool newSelected = EditorGUI.Toggle(selectRect, isSelected, EditorStyles.radioButton);
-                        if (newSelected && !isSelected) llmScript.SetModel(entry.localPath);
+                        if (newSelected && !isSelected) llmScript.SetModel(entry.filename);
                     }
                     else
                     {
-                        isSelected = llmScript.lora == entry.localPath;
+                        isSelected = llmScript.lora == entry.filename;
                         bool newSelected = EditorGUI.Toggle(selectRect, isSelected, EditorStyles.radioButton);
-                        if (newSelected && !isSelected) llmScript.SetLora(entry.localPath);
+                        if (newSelected && !isSelected) llmScript.SetLora(entry.filename);
                         else if (!newSelected && isSelected) llmScript.SetLora("");
                     }
 
-                    DrawCopyableLabel(nameRect, entry.name);
+                    DrawCopyableLabel(nameRect, entry.label);
 
                     if (!entry.lora)
                     {
@@ -308,7 +319,7 @@ namespace LLMUnity
                         }
                     }
 
-                    if (llmScript.advancedOptions)
+                    if (expandedView)
                     {
                         if (hasURL)
                         {
@@ -323,7 +334,7 @@ namespace LLMUnity
                                 UpdateModels();
                             }
                         }
-                        DrawCopyableLabel(pathRect, entry.localPath);
+                        DrawCopyableLabel(pathRect, entry.path);
                     }
 
                     bool includeInBuild = EditorGUI.ToggleLeft(includeInBuildRect, "", entry.includeInBuild);
@@ -346,12 +357,12 @@ namespace LLMUnity
                 },
                 drawHeaderCallback = (rect) =>
                 {
-                    List<Rect> rects = CreateColumnRects(rect, llmScript.advancedOptions);
+                    List<Rect> rects = CreateColumnRects(rect);
                     int col = 0;
                     EditorGUI.LabelField(rects[col++], "");
                     EditorGUI.LabelField(rects[col++], "Model");
                     EditorGUI.LabelField(rects[col++], "Chat template");
-                    if (llmScript.advancedOptions)
+                    if (expandedView)
                     {
                         EditorGUI.LabelField(rects[col++], "URL");
                         EditorGUI.LabelField(rects[col++], "Path");
@@ -359,7 +370,8 @@ namespace LLMUnity
                     EditorGUI.LabelField(rects[col++], "Build");
                     EditorGUI.LabelField(rects[col++], "");
                 },
-                drawFooterCallback = DrawFooter,
+                drawFooterCallback = {},
+                footerHeight = 0,
             };
         }
 
