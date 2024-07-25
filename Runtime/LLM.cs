@@ -80,11 +80,17 @@ namespace LLMUnity
         /// <summary> Boolean set to true if the server has failed to start. </summary>
         public bool failed { get; protected set; } = false;
 
+        /// <summary> the LLM model to use.
+        /// Models with .gguf format are allowed.</summary>
+        public string model = "";
+        /// <summary> Chat template used for the model </summary>
+        public string chatTemplate = ChatTemplate.DefaultTemplate;
+        /// <summary> the path of the LORA model being used (relative to the Assets/StreamingAssets folder).
+        /// Models with .bin format are allowed.</summary>
+        public string lora = "";
+
         /// \cond HIDE
         public LLMManager llmManager = new LLMManager();
-        public string lora = "";
-        public string model = "";
-        public string chatTemplate = ChatTemplate.DefaultTemplate;
 
         IntPtr LLMObject = IntPtr.Zero;
         List<LLMCharacter> clients = new List<LLMCharacter>();
@@ -94,6 +100,14 @@ namespace LLMUnity
         List<StreamWrapper> streamWrappers = new List<StreamWrapper>();
 
         /// \endcond
+
+#if UNITY_EDITOR
+        public LLM()
+        {
+            LLMManager.Register(this);
+        }
+
+#endif
 
         public async Task WaitUntilReady()
         {
@@ -109,13 +123,10 @@ namespace LLMUnity
         public void SetModel(string path)
         {
             // set the model and enable the model editor properties
-#if UNITY_EDITOR
-            ModelEntry entry = LLMManager.Get(LLMManager.LoadModel(path));
-            model = entry.localPath;
-            SetTemplate(entry.chatTemplate);
-            if (!EditorApplication.isPlaying) EditorUtility.SetDirty(this);
-#else
             model = path;
+#if UNITY_EDITOR
+            SetTemplate(LLMManager.Get(path).chatTemplate);
+            if (!EditorApplication.isPlaying) EditorUtility.SetDirty(this);
 #endif
         }
 
@@ -486,6 +497,9 @@ namespace LLMUnity
         public void OnDestroy()
         {
             Destroy();
+#if UNITY_EDITOR
+            LLMManager.Unregister(this);
+#endif
         }
     }
 }
