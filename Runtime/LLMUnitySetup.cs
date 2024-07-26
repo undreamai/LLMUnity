@@ -60,6 +60,20 @@ namespace LLMUnity
     public delegate void Callback<T>(T message);
     public delegate Task TaskCallback<T>(T message);
     public delegate T2 ContentCallback<T, T2>(T message);
+    public delegate void ActionCallback(string source, string target);
+
+    [Serializable]
+    public struct StringPair
+    {
+        public string source;
+        public string target;
+    }
+
+    [Serializable]
+    public class ListStringPair
+    {
+        public List<StringPair> pairs;
+    }
     /// \endcond
 
     /// @ingroup utils
@@ -82,7 +96,9 @@ namespace LLMUnity
         /// <summary> Model download path </summary>
         public static string modelDownloadPath = Path.Combine(LLMUnityStore, "models");
         /// <summary> Temporary dir for build </summary>
-        public static string buildTempDir = Path.Combine(Application.temporaryCachePath, "LLMUnityBuild");
+        public static string BuildTempDir = Path.Combine(Application.temporaryCachePath, "LLMUnityBuild");
+        /// <summary> Temporary dir for build </summary>
+        public static string BuildFile = GetAssetPath("LLMUnityBuild.bin");
 
         /// <summary> Default models for download </summary>
         [HideInInspector] public static readonly (string, string)[] modelOptions = new(string, string)[]
@@ -294,7 +310,7 @@ namespace LLMUnity
 
         public static bool DeletePath(string path)
         {
-            if (!IsSubPath(path, GetAssetPath()) && !IsSubPath(path, buildTempDir))
+            if (!IsSubPath(path, GetAssetPath()) && !IsSubPath(path, BuildTempDir))
             {
                 LogError($"Safeguard: {path} will not be deleted because it may not be safe");
                 return false;
