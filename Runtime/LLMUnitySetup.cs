@@ -97,8 +97,10 @@ namespace LLMUnity
         public static string modelDownloadPath = Path.Combine(LLMUnityStore, "models");
         /// <summary> Temporary dir for build </summary>
         public static string BuildTempDir = Path.Combine(Application.temporaryCachePath, "LLMUnityBuild");
-        /// <summary> Temporary dir for build </summary>
-        public static string BuildFile = GetAssetPath("LLMUnityBuild.bin");
+        /// <summary> Name of file with build information for runtime </summary>
+        public static string BuildFilename = "LLMUnityBuild.bin";
+        /// <summary> Path of file with build information for runtime </summary>
+        public static string BuildFile = GetAssetPath(BuildFilename);
 
         /// <summary> Default models for download </summary>
         [HideInInspector] public static readonly (string, string)[] modelOptions = new(string, string)[]
@@ -237,13 +239,13 @@ namespace LLMUnity
             callback?.Invoke(savePath);
         }
 
-        public static async Task AndroidExtractFile(string assetName, bool overwrite = false, int chunkSize = 1024*1024)
+        public static async Task AndroidExtractFile(string assetName, bool overwrite = false, bool log = true, int chunkSize = 1024*1024)
         {
             string source = "jar:file://" + Application.dataPath + "!/assets/" + assetName;
             string target = GetAssetPath(assetName);
             if (!overwrite && File.Exists(target))
             {
-                Log($"File {target} already exists");
+                if (log) Log($"File {target} already exists");
                 return;
             }
 
