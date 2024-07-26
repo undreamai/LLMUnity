@@ -36,7 +36,6 @@ namespace LLMUnityTests
             llm.SetModel(fullModelPath);
             llm.parallelPrompts = 1;
             llm.SetTemplate("alpaca");
-            llm.asynchronousStartup = false;
 
             llmCharacter = gameObject.AddComponent<LLMCharacter>();
             llmCharacter.llm = llm;
