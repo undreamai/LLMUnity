@@ -79,8 +79,10 @@ namespace LLMUnity
         public bool started { get; protected set; } = false;
         /// <summary> Boolean set to true if the server has failed to start. </summary>
         public bool failed { get; protected set; } = false;
+        /// <summary> Boolean set to true if the models were not downloaded successfully. </summary>
+        public static bool downloadFailed { get; protected set; } = false;
         /// <summary> Boolean set to true if the server has started and is ready to receive requests, false otherwise. </summary>
-        public static bool modelsDownloaded { get; protected set; } = false;
+        public static bool downloadComplete { get; protected set; } = false;
 
         /// <summary> the LLM model to use.
         /// Models with .gguf format are allowed.</summary>
@@ -110,9 +112,10 @@ namespace LLMUnity
         {
             if (!enabled) return;
 #if !UNITY_EDITOR
-            await LLMManager.DownloadModels();
+            downloadFailed = !await LLMManager.DownloadModels();
 #endif
-            modelsDownloaded = true;
+            downloadComplete = true;
+            if (downloadFailed) return;
             await AndroidSetup();
             string arguments = GetLlamaccpArguments();
             if (arguments == null) return;
@@ -147,10 +150,11 @@ namespace LLMUnity
             while (!started) await Task.Yield();
         }
 
-        public static async Task WaitUntilModelsDownloaded(Callback<float> downloadProgressCallback = null)
+        public static async Task<bool> WaitUntilModelsDownloaded(Callback<float> downloadProgressCallback = null)
         {
             if (downloadProgressCallback != null) LLMManager.downloadProgressCallbacks.Add(downloadProgressCallback);
-            while (!modelsDownloaded) await Task.Yield();
+            while (!downloadComplete) await Task.Yield();
+            return !downloadFailed;
         }
 
         /// <summary>
