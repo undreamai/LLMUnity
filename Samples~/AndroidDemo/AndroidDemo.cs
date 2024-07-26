@@ -17,7 +17,6 @@ namespace LLMUnitySamples
         public GameObject DownloadPanel;
         public Scrollbar progressBar;
         public Text progressText;
-        int cores;
 
         async void Start()
         {
@@ -45,10 +44,9 @@ namespace LLMUnitySamples
 
         async Task WarmUp()
         {
-            cores = LLMUnitySetup.AndroidGetNumBigCores();
-            AIText.text += $"Warming up the model...\nWill use {cores} cores";
+            AIText.text += $"Warming up the model...";
             await llmCharacter.Warmup();
-            AIText.text = $"Ready when you are ({cores} cores)!";
+            AIText.text = "";
             AIReplyComplete();
         }
 
