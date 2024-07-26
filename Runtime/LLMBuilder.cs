@@ -2,29 +2,31 @@ using UnityEditor;
 using UnityEngine;
 using System.IO;
 using System.Collections.Generic;
-using System;
 
 #if UNITY_EDITOR
 namespace LLMUnity
 {
     public class LLMBuilder
     {
-        static List<MovedPair> movedPairs = new List<MovedPair>();
-        static string movedCache = Path.Combine(LLMUnitySetup.buildTempDir, "moved.json");
+        static List<StringPair> movedPairs = new List<StringPair>();
+        static string movedCache = Path.Combine(LLMUnitySetup.BuildTempDir, "moved.json");
 
         [InitializeOnLoadMethod]
         private static void InitializeOnLoad()
         {
-            Directory.CreateDirectory(LLMUnitySetup.buildTempDir);
+            Directory.CreateDirectory(LLMUnitySetup.BuildTempDir);
             Reset();
         }
 
-        public delegate void ActionCallback(string source, string target);
-
         static void AddMovedPair(string source, string target)
         {
-            movedPairs.Add(new MovedPair {source = source, target = target});
-            File.WriteAllText(movedCache, JsonUtility.ToJson(new FoldersMovedWrapper { movedPairs = movedPairs }, true));
+            movedPairs.Add(new StringPair {source = source, target = target});
+            File.WriteAllText(movedCache, JsonUtility.ToJson(new ListStringPair { pairs = movedPairs }, true));
+        }
+
+        static void AddTargetPair(string target)
+        {
+            AddMovedPair("", target);
         }
 
         static bool MoveAction(string source, string target, bool addEntry = true)
@@ -46,9 +48,15 @@ namespace LLMUnity
             else if (Directory.Exists(source)) copyCallback = LLMUnitySetup.CopyPath;
             else return false;
 
-            if (addEntry) AddMovedPair("", target);
+            if (addEntry) AddTargetPair(target);
             copyCallback(source, target);
             return true;
+        }
+
+        static void CopyActionAddMeta(string source, string target)
+        {
+            CopyAction(source, target);
+            AddTargetPair(target + ".meta");
         }
 
         static bool DeleteAction(string source)
@@ -66,7 +74,7 @@ namespace LLMUnity
                 {
                     if (Path.GetFileName(source).StartsWith(platformPrefix))
                     {
-                        string target = Path.Combine(LLMUnitySetup.buildTempDir, Path.GetFileName(source));
+                        string target = Path.Combine(LLMUnitySetup.BuildTempDir, Path.GetFileName(source));
                         MoveAction(source, target);
                         MoveAction(source + ".meta", target + ".meta");
                     }
@@ -74,23 +82,17 @@ namespace LLMUnity
             }
         }
 
-        public static void CopyModels()
+        public static void BuildModels()
         {
-            if (LLMManager.downloadOnStart) return;
-            foreach (ModelEntry modelEntry in LLMManager.modelEntries)
-            {
-                string source = modelEntry.path;
-                string target = LLMUnitySetup.GetAssetPath(modelEntry.filename);
-                if (!modelEntry.includeInBuild || File.Exists(target)) continue;
-                CopyAction(source, target);
-                AddMovedPair("", target + ".meta");
-            }
+            LLMUnitySetup.DeletePath(LLMUnitySetup.BuildFile);
+            LLMManager.Build(CopyActionAddMeta);
+            if (File.Exists(LLMUnitySetup.BuildFile)) AddTargetPair(LLMUnitySetup.BuildFile);
         }
 
         public static void Reset()
         {
             if (!File.Exists(movedCache)) return;
-            List<MovedPair> movedPairs = JsonUtility.FromJson<FoldersMovedWrapper>(File.ReadAllText(movedCache)).movedPairs;
+            List<StringPair> movedPairs = JsonUtility.FromJson<ListStringPair>(File.ReadAllText(movedCache)).pairs;
             if (movedPairs == null) return;
 
             bool refresh = false;
@@ -102,19 +104,6 @@ namespace LLMUnity
             if (refresh) AssetDatabase.Refresh();
             LLMUnitySetup.DeletePath(movedCache);
         }
-    }
-
-    [Serializable]
-    public struct MovedPair
-    {
-        public string source;
-        public string target;
-    }
-
-    [Serializable]
-    public class FoldersMovedWrapper
-    {
-        public List<MovedPair> movedPairs;
     }
 }
 #endif

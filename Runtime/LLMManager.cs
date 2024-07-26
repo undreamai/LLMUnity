@@ -1,4 +1,3 @@
-#if UNITY_EDITOR
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,6 +7,7 @@ using UnityEngine;
 
 namespace LLMUnity
 {
+#if UNITY_EDITOR
     [Serializable]
     public class ModelEntry
     {
@@ -26,17 +26,77 @@ namespace LLMUnity
         public bool downloadOnStart;
         public List<ModelEntry> modelEntries;
     }
+#endif
 
     public class LLMManager
     {
+        public static float downloadProgress = 1;
+        public static List<Callback<float>> downloadProgressCallbacks = new List<Callback<float>>();
+        static long totalSize;
+        static long currFileSize;
+        static long completedSize;
+
+        public static void SetDownloadProgress(float progress)
+        {
+            downloadProgress = (completedSize + progress * currFileSize) / totalSize;
+            foreach (Callback<float> downloadProgressCallback in downloadProgressCallbacks) downloadProgressCallback?.Invoke(downloadProgress);
+        }
+
+        public static async Task DownloadModels()
+        {
+            if (!File.Exists(LLMUnitySetup.BuildFile)) return;
+
+            List<StringPair> downloads = new List<StringPair>();
+            using (FileStream fs = new FileStream(LLMUnitySetup.BuildFile, FileMode.Open, FileAccess.Read))
+            {
+                using (BinaryReader reader = new BinaryReader(fs))
+                {
+                    List<StringPair> downloadsToDo = JsonUtility.FromJson<ListStringPair>(reader.ReadString()).pairs;
+                    foreach (StringPair pair in downloadsToDo)
+                    {
+                        string target = LLMUnitySetup.GetAssetPath(pair.target);
+                        if (!File.Exists(target)) downloads.Add(new StringPair {source = pair.source, target = target});
+                    }
+                }
+            }
+            if (downloads.Count == 0) return;
+
+            try
+            {
+                downloadProgress = 0;
+                totalSize = 0;
+                completedSize = 0;
+
+                ResumingWebClient client = new ResumingWebClient();
+                Dictionary<string, long> fileSizes = new Dictionary<string, long>();
+                foreach (StringPair pair in downloads)
+                {
+                    long size = client.GetURLFileSize(pair.source);
+                    fileSizes[pair.source] = size;
+                    totalSize += size;
+                }
+
+                foreach (StringPair pair in downloads)
+                {
+                    currFileSize = fileSizes[pair.source];
+                    await LLMUnitySetup.DownloadFile(pair.source, pair.target, false, null, SetDownloadProgress);
+                    totalSize += currFileSize;
+                }
+
+                completedSize = totalSize;
+                SetDownloadProgress(0);
+            }
+            catch (Exception ex)
+            {
+                LLMUnitySetup.LogError($"Error downloading the models");
+                throw ex;
+            }
+        }
+
+#if UNITY_EDITOR
         static string LLMManagerPref = "LLMManager";
         public static bool downloadOnStart = false;
         public static List<ModelEntry> modelEntries = new List<ModelEntry>();
-
-        /// <summary> Boolean set to true if the server has started and is ready to receive requests, false otherwise. </summary>
-        public static bool modelsDownloaded { get; protected set; } = false;
-        static List<Callback<float>> modelProgressCallbacks = new List<Callback<float>>();
-        static List<Callback<float>> loraProgressCallbacks = new List<Callback<float>>();
 
         [HideInInspector] public static float modelProgress = 1;
         [HideInInspector] public static float loraProgress = 1;
@@ -73,15 +133,6 @@ namespace LLMUnity
             modelEntries.Insert(indexToInsert, entry);
             Save();
             return entry.filename;
-        }
-
-        public static async Task WaitUntilModelsDownloaded(Callback<float> modelProgressCallback = null, Callback<float> loraProgressCallback = null)
-        {
-            if (modelProgressCallback != null) modelProgressCallbacks.Add(modelProgressCallback);
-            if (loraProgressCallback != null) loraProgressCallbacks.Add(loraProgressCallback);
-            while (!modelsDownloaded) await Task.Yield();
-            if (modelProgressCallback != null) modelProgressCallbacks.Remove(modelProgressCallback);
-            if (loraProgressCallback != null) loraProgressCallbacks.Remove(loraProgressCallback);
         }
 
         public static async Task<string> Download(string url, bool lora = false, string label = null)
@@ -147,16 +198,44 @@ namespace LLMUnity
             return Load(url, true, label);
         }
 
-        public static void SetModelTemplate(string filename, string chatTemplate)
+        public static void SetTemplate(string filename, string chatTemplate)
         {
-            foreach (ModelEntry entry in modelEntries)
+            SetTemplate(Get(filename), chatTemplate);
+        }
+
+        public static void SetTemplate(ModelEntry entry, string chatTemplate)
+        {
+            if (entry == null) return;
+            entry.chatTemplate = chatTemplate;
+            foreach (LLM llm in llms)
             {
-                if (entry.filename == filename)
-                {
-                    entry.chatTemplate = chatTemplate;
-                    break;
-                }
+                if (llm.model == entry.filename) llm.SetTemplate(chatTemplate);
             }
+            Save();
+        }
+
+        public static void SetURL(string filename, string url)
+        {
+            SetURL(Get(filename), url);
+        }
+
+        public static void SetURL(ModelEntry entry, string url)
+        {
+            if (entry == null) return;
+            entry.url = url;
+            Save();
+        }
+
+        public static void SetIncludeInBuild(string filename, bool includeInBuild)
+        {
+            SetIncludeInBuild(Get(filename), includeInBuild);
+        }
+
+        public static void SetIncludeInBuild(ModelEntry entry, bool includeInBuild)
+        {
+            if (entry == null) return;
+            entry.includeInBuild = includeInBuild;
+            Save();
         }
 
         public static ModelEntry Get(string filename)
@@ -218,13 +297,11 @@ namespace LLMUnity
         public static void SetModelProgress(float progress)
         {
             modelProgress = progress;
-            foreach (Callback<float> modelProgressCallback in modelProgressCallbacks) modelProgressCallback?.Invoke(progress);
         }
 
         public static void SetLoraProgress(float progress)
         {
             loraProgress = progress;
-            foreach (Callback<float> loraProgressCallback in loraProgressCallbacks) loraProgressCallback?.Invoke(progress);
         }
 
         public static void Save()
@@ -242,6 +319,29 @@ namespace LLMUnity
             downloadOnStart = store.downloadOnStart;
             modelEntries = store.modelEntries;
         }
+
+        public static void Build(ActionCallback copyCallback)
+        {
+            List<StringPair> downloads = new List<StringPair>();
+            foreach (ModelEntry modelEntry in modelEntries)
+            {
+                if (!modelEntry.includeInBuild) continue;
+                string target = LLMUnitySetup.GetAssetPath(modelEntry.filename);
+                if (File.Exists(target)) continue;
+                if (!downloadOnStart) copyCallback(modelEntry.path, target);
+                else downloads.Add(new StringPair { source = modelEntry.url, target = modelEntry.filename });
+            }
+
+            if (downloads.Count > 0)
+            {
+                string downloadJSON = JsonUtility.ToJson(new ListStringPair { pairs = downloads }, true);
+                using (FileStream fs = new FileStream(LLMUnitySetup.BuildFile, FileMode.Create, FileAccess.Write))
+                {
+                    using (BinaryWriter writer = new BinaryWriter(fs)) writer.Write(downloadJSON);
+                }
+            }
+        }
+
+#endif
     }
 }
-#endif

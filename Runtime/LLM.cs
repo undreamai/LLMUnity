@@ -79,6 +79,8 @@ namespace LLMUnity
         public bool started { get; protected set; } = false;
         /// <summary> Boolean set to true if the server has failed to start. </summary>
         public bool failed { get; protected set; } = false;
+        /// <summary> Boolean set to true if the server has started and is ready to receive requests, false otherwise. </summary>
+        public static bool modelsDownloaded { get; protected set; } = false;
 
         /// <summary> the LLM model to use.
         /// Models with .gguf format are allowed.</summary>
@@ -100,6 +102,26 @@ namespace LLMUnity
 
         /// \endcond
 
+        /// <summary>
+        /// The Unity Awake function that starts the LLM server.
+        /// The server can be started asynchronously if the asynchronousStartup option is set.
+        /// </summary>
+        public async void Awake()
+        {
+            if (!enabled) return;
+#if !UNITY_EDITOR
+            await LLMManager.DownloadModels();
+#endif
+            modelsDownloaded = true;
+            // if (Application.platform == RuntimePlatform.Android) await AndroidExtractModels();
+            string arguments = GetLlamaccpArguments();
+            if (arguments == null) return;
+            if (asynchronousStartup) await Task.Run(() => StartLLMServer(arguments));
+            else StartLLMServer(arguments);
+            if (dontDestroyOnLoad) DontDestroyOnLoad(transform.root.gameObject);
+            if (basePrompt != "") await SetBasePrompt(basePrompt);
+        }
+
 #if UNITY_EDITOR
 
         public LLMManager llmManager = new LLMManager();
@@ -114,6 +136,12 @@ namespace LLMUnity
         public async Task WaitUntilReady()
         {
             while (!started) await Task.Yield();
+        }
+
+        public static async Task WaitUntilModelsDownloaded(Callback<float> downloadProgressCallback = null)
+        {
+            if (downloadProgressCallback != null) LLMManager.downloadProgressCallbacks.Add(downloadProgressCallback);
+            while (!modelsDownloaded) await Task.Yield();
         }
 
         /// <summary>
@@ -208,24 +236,6 @@ namespace LLMUnity
             if (loraPath != "") arguments += $" --lora \"{loraPath}\"";
             arguments += $" -ngl {numGPULayers}";
             return arguments;
-        }
-
-        /// <summary>
-        /// The Unity Awake function that starts the LLM server.
-        /// The server can be started asynchronously if the asynchronousStartup option is set.
-        /// </summary>
-        public async void Awake()
-        {
-            if (!enabled) return;
-            // if (downloadOnBuild) await DownloadModels();
-            // modelsDownloaded = true;
-            // if (Application.platform == RuntimePlatform.Android) await AndroidExtractModels();
-            string arguments = GetLlamaccpArguments();
-            if (arguments == null) return;
-            if (asynchronousStartup) await Task.Run(() => StartLLMServer(arguments));
-            else StartLLMServer(arguments);
-            if (dontDestroyOnLoad) DontDestroyOnLoad(transform.root.gameObject);
-            if (basePrompt != "") await SetBasePrompt(basePrompt);
         }
 
         private void SetupLogging()
