@@ -44,6 +44,7 @@ namespace LLMUnity
 
         public static async Task DownloadModels()
         {
+            if (Application.platform == RuntimePlatform.Android) await LLMUnitySetup.AndroidExtractFile(LLMUnitySetup.BuildFilename);
             if (!File.Exists(LLMUnitySetup.BuildFile)) return;
 
             List<StringPair> downloads = new List<StringPair>();
@@ -80,7 +81,7 @@ namespace LLMUnity
                 {
                     currFileSize = fileSizes[pair.source];
                     await LLMUnitySetup.DownloadFile(pair.source, pair.target, false, null, SetDownloadProgress);
-                    totalSize += currFileSize;
+                    completedSize += currFileSize;
                 }
 
                 completedSize = totalSize;
