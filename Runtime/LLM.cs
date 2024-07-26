@@ -45,27 +45,6 @@ namespace LLMUnity
         [LLM] public bool debug = false;
         /// <summary> number of prompts that can happen in parallel (-1 = number of LLMCharacter objects) </summary>
         [LLMAdvanced] public int parallelPrompts = -1;
-        /// <summary> allows to start the server asynchronously.
-        /// This is useful to not block Unity while the server is initialised.
-        /// For example it can be used as follows:
-        /// \code
-        /// void Start(){
-        ///     StartCoroutine(Loading());
-        ///     ...
-        /// }
-        ///
-        /// IEnumerator<string> Loading()
-        /// {
-        ///     // show loading screen
-        ///     while (!llm.started)
-        ///     {
-        ///         yield return null;
-        ///     }
-        ///     Debug.Log("Server is ready");
-        /// }
-        /// \endcode
-        /// </summary>
-        [LLMAdvanced] public bool asynchronousStartup = true;
         /// <summary> select to not destroy the LLM GameObject when loading a new Scene. </summary>
         [LLMAdvanced] public bool dontDestroyOnLoad = true;
         /// <summary> Size of the prompt context (0 = context size of the model).
@@ -119,8 +98,7 @@ namespace LLMUnity
             await AndroidSetup();
             string arguments = GetLlamaccpArguments();
             if (arguments == null) return;
-            if (asynchronousStartup) await Task.Run(() => StartLLMServer(arguments));
-            else StartLLMServer(arguments);
+            await Task.Run(() => StartLLMServer(arguments));
             if (dontDestroyOnLoad) DontDestroyOnLoad(transform.root.gameObject);
             if (basePrompt != "") await SetBasePrompt(basePrompt);
         }
