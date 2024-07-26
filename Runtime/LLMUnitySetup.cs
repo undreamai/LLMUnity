@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using System;
 using System.IO.Compression;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using UnityEngine.Networking;
 
 /// @defgroup llm LLM
@@ -82,8 +81,6 @@ namespace LLMUnity
         public static string LLMUnityStore = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "LLMUnity");
         /// <summary> Model download path </summary>
         public static string modelDownloadPath = Path.Combine(LLMUnityStore, "models");
-        /// <summary> Model list for project </summary>
-        public static string modelListPath = Path.Combine(Application.temporaryCachePath, "modelCache.json");
         /// <summary> Temporary dir for build </summary>
         public static string buildTempDir = Path.Combine(Application.temporaryCachePath, "LLMUnityBuild");
 
