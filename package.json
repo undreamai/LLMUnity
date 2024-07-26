@@ -44,6 +44,11 @@
       "displayName": "ChatBot",
       "description": "Interaction between a player and a AI with a UI similar to a messaging app",
       "path": "Samples~/ChatBot"
+    },
+    {
+      "displayName": "AndroidDemo",
+      "description": "Example Android app with an initial screen with model download progress",
+      "path": "Samples~/AndroidDemo"
     }
    ],
    "author": {
