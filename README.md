@@ -284,6 +284,7 @@ The [Samples~](Samples~) folder contains several examples of interaction 🤖:
 - [MultipleCharacters](Samples~/MultipleCharacters): Demonstrates a simple interaction using multiple AI characters
 - [KnowledgeBaseGame](Samples~/KnowledgeBaseGame): Simple detective game using a knowledge base to provide information to the LLM based on [google/mysteryofthreebots](https://github.com/google/mysteryofthreebots)
 - [ChatBot](Samples~/ChatBot): Demonstrates interaction between a player and a AI with a UI similar to a messaging app (see image below)
+- [AndroidDemo](Samples~/AndroidDemo): Example Android app with an initial screen with model download progress
   
 <img width="400" src=".github/demo.gif">
 
