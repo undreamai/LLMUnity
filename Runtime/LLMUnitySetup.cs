@@ -337,8 +337,9 @@ namespace LLMUnity
                 string androidDir = Path.Combine(libraryPath, "android");
                 if (Directory.Exists(androidDir))
                 {
-                    string androidPluginDir = Path.Combine(Application.dataPath, "Plugins", "Android", Path.GetFileName(libraryPath));
-                    Directory.Move(androidDir, androidPluginDir);
+                    string androidPluginDir = Path.Combine(Application.dataPath, "Plugins", "Android");
+                    Directory.CreateDirectory(androidPluginDir);
+                    Directory.Move(androidDir, Path.Combine(androidPluginDir, Path.GetFileName(libraryPath)));
                 }
                 foreach (string librarySubPath in Directory.GetDirectories(libraryPath))
                 {
