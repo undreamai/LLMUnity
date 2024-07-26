@@ -63,7 +63,7 @@ namespace LLMUnity
                 }
                 EditorGUILayout.EndHorizontal();
             }
-            AddLoadButtons();
+            _ = AddLoadButtons();
             bool downloadOnStart = EditorGUILayout.Toggle("Download on Start", LLMManager.downloadOnStart);
             if (downloadOnStart != LLMManager.downloadOnStart)
             {
@@ -92,8 +92,8 @@ namespace LLMUnity
         {
             List<string> existingOptions = new List<string>();
             foreach (ModelEntry entry in LLMManager.modelEntries) existingOptions.Add(entry.url);
-            modelOptions = new List<string>();
-            modelURLs = new List<string>();
+            modelOptions = new List<string>(){"Download model", "Custom URL"};
+            modelURLs = new List<string>(){null, null};
             foreach ((string name, string url) in LLMUnitySetup.modelOptions)
             {
                 if (url != null && existingOptions.Contains(url)) continue;
