@@ -1,3 +1,9 @@
+## v2.1.0
+#### 🚀 Features
+
+- Android deployment (PR: #194)
+
+
 ## v2.0.3
 #### 🚀 Features
 

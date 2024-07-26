@@ -35,7 +35,7 @@ namespace LLMUnity
             int newIndex = EditorGUILayout.Popup("Model", llmScript.SelectedModel, options);
             if (newIndex != llmScript.SelectedModel)
             {
-                LLMUnitySetup.DownloadModel(llmScript, newIndex);
+                llmScript.DownloadDefaultModel(newIndex);
             }
 
             if (GUILayout.Button("Load model", GUILayout.Width(buttonWidth)))
@@ -45,7 +45,7 @@ namespace LLMUnity
                     string path = EditorUtility.OpenFilePanelWithFilters("Select a gguf model file", "", new string[] { "Model Files", "gguf" });
                     if (!string.IsNullOrEmpty(path))
                     {
-                        llmScript.SelectedModel = 0;
+                        llmScript.ResetSelectedModel();
                         llmScript.SetModel(path);
                     }
                 };
@@ -86,11 +86,14 @@ namespace LLMUnity
         public void AddModelSettings(SerializedObject llmScriptSO)
         {
             List<Type> attributeClasses = new List<Type> { typeof(ModelAttribute) };
+            List<Type> excludeAttributeClasses = new List<Type> { typeof(ModelDownloadAttribute), typeof(ModelDownloadAdvancedAttribute) };
+            if (llmScriptSO.FindProperty("downloadOnBuild").boolValue) excludeAttributeClasses.Remove(typeof(ModelDownloadAttribute));
             if (llmScriptSO.FindProperty("advancedOptions").boolValue)
             {
                 attributeClasses.Add(typeof(ModelAdvancedAttribute));
+                if (llmScriptSO.FindProperty("downloadOnBuild").boolValue) excludeAttributeClasses.Remove(typeof(ModelDownloadAdvancedAttribute));
             }
-            ShowPropertiesOfClass("", llmScriptSO, attributeClasses, false);
+            ShowPropertiesOfClass("", llmScriptSO, attributeClasses, false, excludeAttributeClasses);
             Space();
         }
 

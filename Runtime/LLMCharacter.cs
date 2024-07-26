@@ -319,10 +319,10 @@ namespace LLMUnity
         /// Set the grammar file of the LLMCharacter
         /// </summary>
         /// <param name="path">path to the grammar file</param>
-        public async void SetGrammar(string path)
+        public void SetGrammar(string path)
         {
 #if UNITY_EDITOR
-            if (!EditorApplication.isPlaying) path = await LLMUnitySetup.AddAsset(path, LLMUnitySetup.GetAssetPath());
+            if (!EditorApplication.isPlaying) path = LLMUnitySetup.AddAsset(path, LLMUnitySetup.GetAssetPath());
 #endif
             grammar = path;
             InitGrammar();

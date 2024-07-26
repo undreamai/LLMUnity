@@ -4,10 +4,11 @@ using UnityEditor;
 using System.IO;
 using UnityEngine;
 using System.Threading.Tasks;
-using System.Net;
 using System;
 using System.IO.Compression;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
+using UnityEngine.Networking;
 
 /// @defgroup llm LLM
 /// @defgroup template Chat Templates
@@ -44,6 +45,8 @@ namespace LLMUnity
     public class RemoteAttribute : PropertyAttribute {}
     public class LocalAttribute : PropertyAttribute {}
     public class ModelAttribute : PropertyAttribute {}
+    public class ModelDownloadAttribute : ModelAttribute {}
+    public class ModelDownloadAdvancedAttribute : ModelAdvancedAttribute {}
     public class ModelAdvancedAttribute : PropertyAttribute {}
     public class ChatAttribute : PropertyAttribute {}
     public class ChatAdvancedAttribute : PropertyAttribute {}
@@ -150,7 +153,8 @@ namespace LLMUnity
         public static string GetAssetPath(string relPath = "")
         {
             // Path to store llm server binaries and models
-            return Path.Combine(Application.streamingAssetsPath, relPath).Replace('\\', '/');
+            string assetsDir = Application.platform == RuntimePlatform.Android ? Application.persistentDataPath : Application.streamingAssetsPath;
+            return Path.Combine(assetsDir, relPath).Replace('\\', '/');
         }
 
 #if UNITY_EDITOR
@@ -160,102 +164,97 @@ namespace LLMUnity
             await DownloadLibrary();
             LoadDebugMode();
         }
+
 #else
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         void InitializeOnLoad()
         {
             LoadDebugMode();
         }
+
 #endif
 
-#if UNITY_EDITOR
-        [HideInInspector] public static float libraryProgress = 1;
+        static Dictionary<string, ResumingWebClient> downloadClients = new Dictionary<string, ResumingWebClient>();
 
-        public class DownloadStatus
+        public static void CancelDownload(string savePath)
         {
-            Callback<float> progresscallback;
-
-            public DownloadStatus(Callback<float> progresscallback = null)
-            {
-                this.progresscallback = progresscallback;
-            }
-
-            public void DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
-            {
-                progresscallback?.Invoke(e.ProgressPercentage / 100.0f);
-            }
+            if (!downloadClients.ContainsKey(savePath)) return;
+            downloadClients[savePath].CancelDownloadAsync();
+            downloadClients.Remove(savePath);
         }
 
         public static async Task DownloadFile(
             string fileUrl, string savePath, bool overwrite = false,
-            TaskCallback<string> callback = null, Callback<float> progresscallback = null,
-            bool async = true
+            Callback<string> callback = null, Callback<float> progressCallback = null
         )
         {
-            // download a file to the specified path
             if (File.Exists(savePath) && !overwrite)
             {
                 Log($"File already exists at: {savePath}");
             }
             else
             {
-                Log($"Downloading {fileUrl}...");
+                Log($"Downloading {fileUrl} to {savePath}...");
                 string tmpPath = Path.Combine(Application.temporaryCachePath, Path.GetFileName(savePath));
 
-                WebClient client = new WebClient();
-                DownloadStatus downloadStatus = new DownloadStatus(progresscallback);
-                client.DownloadProgressChanged += downloadStatus.DownloadProgressChanged;
-                if (async)
-                {
-                    await client.DownloadFileTaskAsync(fileUrl, tmpPath);
-                }
-                else
-                {
-                    client.DownloadFile(fileUrl, tmpPath);
-                }
-
+                ResumingWebClient client = new ResumingWebClient();
+                downloadClients[savePath] = client;
+                await client.DownloadFileTaskAsyncResume(new Uri(fileUrl), tmpPath, !overwrite, progressCallback);
+                downloadClients.Remove(savePath);
+#if UNITY_EDITOR
                 AssetDatabase.StartAssetEditing();
+#endif
                 Directory.CreateDirectory(Path.GetDirectoryName(savePath));
                 File.Move(tmpPath, savePath);
+#if UNITY_EDITOR
                 AssetDatabase.StopAssetEditing();
+#endif
                 Log($"Download complete!");
             }
 
-            progresscallback?.Invoke(1f);
-            if (callback != null) await callback.Invoke(savePath);
+            progressCallback?.Invoke(1f);
+            callback?.Invoke(savePath);
         }
 
-        public static async Task<string> AddAsset(string assetPath, string basePath)
+        public static async Task AndroidExtractFile(string assetName, bool overwrite = false, int chunkSize = 1024*1024)
         {
-            if (!File.Exists(assetPath))
+            string source = "jar:file://" + Application.dataPath + "!/assets/" + assetName;
+            string target = GetAssetPath(assetName);
+            if (!overwrite && File.Exists(target))
             {
-                LogError($"{assetPath} does not exist!");
-                return null;
+                Debug.Log($"File {target} already exists");
+                return;
             }
-            // add an asset to the basePath directory if it is not already there and return the relative path
-            string basePathSlash = basePath.Replace('\\', '/');
-            string fullPath = Path.GetFullPath(assetPath).Replace('\\', '/');
-            Directory.CreateDirectory(basePathSlash);
-            if (!fullPath.StartsWith(basePathSlash))
+
+            Debug.Log($"Extracting {source} to {target}");
+
+            // UnityWebRequest to read the file from StreamingAssets
+            UnityWebRequest www = UnityWebRequest.Get(source);
+            // Send the request and await its completion
+            var operation = www.SendWebRequest();
+
+            while (!operation.isDone) await Task.Delay(1);
+            if (www.result != UnityWebRequest.Result.Success)
             {
-                // if the asset is not in the assets dir copy it over
-                fullPath = Path.Combine(basePathSlash, Path.GetFileName(assetPath));
-                Log($"copying {assetPath} to {fullPath}");
-                AssetDatabase.StartAssetEditing();
-                await Task.Run(() =>
+                Debug.LogError("Failed to load file from StreamingAssets: " + www.error);
+            }
+            else
+            {
+                byte[] buffer = new byte[chunkSize];
+                using (Stream responseStream = new MemoryStream(www.downloadHandler.data))
+                using (FileStream fileStream = new FileStream(target, FileMode.Create, FileAccess.Write))
                 {
-                    foreach (string filename in new string[] {fullPath, fullPath + ".meta"})
+                    int bytesRead;
+                    while ((bytesRead = await responseStream.ReadAsync(buffer, 0, buffer.Length)) > 0)
                     {
-                        if (File.Exists(fullPath))
-                            File.Delete(fullPath);
+                        await fileStream.WriteAsync(buffer, 0, bytesRead);
                     }
-                    File.Copy(assetPath, fullPath);
-                });
-                AssetDatabase.StopAssetEditing();
-                Log("copying complete!");
+                }
             }
-            return fullPath.Substring(basePathSlash.Length + 1);
         }
+
+#if UNITY_EDITOR
+        [HideInInspector] public static float libraryProgress = 1;
 
         private static async Task DownloadLibrary()
         {
@@ -276,19 +275,210 @@ namespace LLMUnity
             libraryProgress = progress;
         }
 
-        public static void DownloadModel(LLM llm, int optionIndex)
+        public static string AddAsset(string assetPath, string basePath)
         {
-            // download default model and disable model editor properties until the model is set
-            llm.SelectedModel = optionIndex;
-            string modelUrl = modelOptions[optionIndex].Item2;
-            if (modelUrl == null) return;
-            llm.modelProgress = 0;
-            string modelName = Path.GetFileName(modelUrl).Split("?")[0];
-            string modelPath = GetAssetPath(modelName);
-            Task downloadTask = DownloadFile(modelUrl, modelPath, false, llm.SetModel, llm.SetModelProgress);
+            if (!File.Exists(assetPath))
+            {
+                LogError($"{assetPath} does not exist!");
+                return null;
+            }
+            // add an asset to the basePath directory if it is not already there and return the relative path
+            string basePathSlash = basePath.Replace('\\', '/');
+            string fullPath = Path.GetFullPath(assetPath).Replace('\\', '/');
+            Directory.CreateDirectory(basePathSlash);
+            if (!fullPath.StartsWith(basePathSlash))
+            {
+                // if the asset is not in the assets dir copy it over
+                fullPath = Path.Combine(basePathSlash, Path.GetFileName(assetPath));
+                AssetDatabase.StartAssetEditing();
+                foreach (string filename in new string[] {fullPath, fullPath + ".meta"})
+                {
+                    if (File.Exists(filename)) File.Delete(filename);
+                }
+                CreateSymlink(assetPath, fullPath);
+                AssetDatabase.StopAssetEditing();
+            }
+            return fullPath.Substring(basePathSlash.Length + 1);
         }
+
+        public static void CreateSymlink(string sourcePath, string targetPath)
+        {
+            bool isDirectory = Directory.Exists(sourcePath);
+            if (!isDirectory && !File.Exists(sourcePath)) throw new FileNotFoundException($"Source path does not exist: {sourcePath}");
+
+            bool success;
+#if UNITY_STANDALONE_WIN
+            success = CreateSymbolicLink(targetPath, sourcePath, (int)isDirectory);
+#else
+            success = symlink(sourcePath, targetPath) == 0;
+#endif
+            if (!success) throw new IOException($"Failed to create symbolic link: {targetPath}");
+        }
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        private static extern bool CreateSymbolicLink(string lpSymlinkFileName, string lpTargetFileName, int dwFlags);
+
+        [DllImport("libc", SetLastError = true)]
+        private static extern int symlink(string oldpath, string newpath);
 
 #endif
         /// \endcond
+        public static int GetMaxFreqKHz(int cpuId)
+        {
+            string[] paths = new string[]
+            {
+                $"/sys/devices/system/cpu/cpufreq/stats/cpu{cpuId}/time_in_state",
+                $"/sys/devices/system/cpu/cpu{cpuId}/cpufreq/stats/time_in_state",
+                $"/sys/devices/system/cpu/cpu{cpuId}/cpufreq/cpuinfo_max_freq"
+            };
+
+            foreach (var path in paths)
+            {
+                if (!File.Exists(path)) continue;
+
+                int maxFreqKHz = 0;
+                using (StreamReader sr = new StreamReader(path))
+                {
+                    string line;
+                    while ((line = sr.ReadLine()) != null)
+                    {
+                        string[] parts = line.Split(' ');
+                        if (parts.Length > 0 && int.TryParse(parts[0], out int freqKHz))
+                        {
+                            if (freqKHz > maxFreqKHz)
+                            {
+                                maxFreqKHz = freqKHz;
+                            }
+                        }
+                    }
+                }
+                if (maxFreqKHz != 0) return maxFreqKHz;
+            }
+            return -1;
+        }
+
+        public static bool IsSmtCpu(int cpuId)
+        {
+            string[] paths = new string[]
+            {
+                $"/sys/devices/system/cpu/cpu{cpuId}/topology/core_cpus_list",
+                $"/sys/devices/system/cpu/cpu{cpuId}/topology/thread_siblings_list"
+            };
+
+            foreach (var path in paths)
+            {
+                if (!File.Exists(path)) continue;
+                using (StreamReader sr = new StreamReader(path))
+                {
+                    string line;
+                    while ((line = sr.ReadLine()) != null)
+                    {
+                        if (line.Contains(",") || line.Contains("-"))
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Calculates the number of big cores in Android similarly to ncnn (https://github.com/Tencent/ncnn)
+        /// </summary>
+        /// <returns></returns>
+        public static int AndroidGetNumBigCores()
+        {
+            int maxFreqKHzMin = int.MaxValue;
+            int maxFreqKHzMax = 0;
+            List<int> cpuMaxFreqKHz = new List<int>();
+            List<bool> cpuIsSmtCpu = new List<bool>();
+
+            try
+            {
+                string cpuPath = "/sys/devices/system/cpu/";
+                int coreIndex;
+                if (Directory.Exists(cpuPath))
+                {
+                    foreach (string cpuDir in Directory.GetDirectories(cpuPath))
+                    {
+                        string dirName = Path.GetFileName(cpuDir);
+                        if (!dirName.StartsWith("cpu")) continue;
+                        if (!int.TryParse(dirName.Substring(3), out coreIndex)) continue;
+
+                        int maxFreqKHz = GetMaxFreqKHz(coreIndex);
+                        cpuMaxFreqKHz.Add(maxFreqKHz);
+                        if (maxFreqKHz > maxFreqKHzMax) maxFreqKHzMax = maxFreqKHz;
+                        if (maxFreqKHz < maxFreqKHzMin)  maxFreqKHzMin = maxFreqKHz;
+                        cpuIsSmtCpu.Add(IsSmtCpu(coreIndex));
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e.Message);
+            }
+
+            int numBigCores = 0;
+            int numCores = SystemInfo.processorCount;
+            int maxFreqKHzMedium = (maxFreqKHzMin + maxFreqKHzMax) / 2;
+            if (maxFreqKHzMedium == maxFreqKHzMax) numBigCores = numCores;
+            else
+            {
+                for (int i = 0; i < cpuMaxFreqKHz.Count; i++)
+                {
+                    if (cpuIsSmtCpu[i] || cpuMaxFreqKHz[i] >= maxFreqKHzMedium) numBigCores++;
+                }
+            }
+
+            if (numBigCores == 0) numBigCores = SystemInfo.processorCount / 2;
+            else numBigCores = Math.Min(numBigCores, SystemInfo.processorCount);
+
+            return numBigCores;
+        }
+
+        /// <summary>
+        /// Calculates the number of big cores in Android similarly to Unity (https://docs.unity3d.com/2022.3/Documentation/Manual/android-thread-configuration.html)
+        /// </summary>
+        /// <returns></returns>
+        public static int AndroidGetNumBigCoresCapacity()
+        {
+            List<int> capacities = new List<int>();
+            int minCapacity = int.MaxValue;
+            try
+            {
+                string cpuPath = "/sys/devices/system/cpu/";
+                int coreIndex;
+                if (Directory.Exists(cpuPath))
+                {
+                    foreach (string cpuDir in Directory.GetDirectories(cpuPath))
+                    {
+                        string dirName = Path.GetFileName(cpuDir);
+                        if (!dirName.StartsWith("cpu")) continue;
+                        if (!int.TryParse(dirName.Substring(3), out coreIndex)) continue;
+
+                        string capacityPath = Path.Combine(cpuDir, "cpu_capacity");
+                        if (!File.Exists(capacityPath)) break;
+
+                        int capacity = int.Parse(File.ReadAllText(capacityPath).Trim());
+                        capacities.Add(capacity);
+                        if (minCapacity > capacity) minCapacity = capacity;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e.Message);
+            }
+
+            int numBigCores = 0;
+            foreach (int capacity in capacities)
+            {
+                if (capacity >= 2 * minCapacity) numBigCores++;
+            }
+
+            if (numBigCores == 0 || numBigCores > SystemInfo.processorCount) numBigCores = SystemInfo.processorCount;
+            return numBigCores;
+        }
     }
 }

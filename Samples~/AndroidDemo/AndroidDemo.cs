@@ -1,29 +1,56 @@
 using UnityEngine;
 using LLMUnity;
 using UnityEngine.UI;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace LLMUnitySamples
 {
-    public class SimpleInteraction : MonoBehaviour
+    public class AndroidDemo : MonoBehaviour
     {
+        public LLM llm;
         public LLMCharacter llmCharacter;
+
+        public GameObject ChatPanel;
         public InputField playerText;
         public Text AIText;
+
+        public GameObject DownloadPanel;
+        public Scrollbar progressBar;
+        public Text progressText;
         int cores;
 
-        void Start()
+        async void Start()
         {
             playerText.onSubmit.AddListener(onInputFieldSubmit);
             playerText.interactable = false;
-            cores = LLMUnitySetup.AndroidGetNumBigCores();
-            AIText.text = $"Warming up the model...\nWill use {cores} cores";
-            _ = llmCharacter.Warmup(WarmupDone);
+            await ShowDownloadScreen();
+            await WarmUp();
         }
 
-        void WarmupDone()
+        async Task ShowDownloadScreen()
         {
+            ChatPanel.SetActive(false);
+            DownloadPanel.SetActive(true);
+            await llm.WaitUntilModelDownloaded(SetProgress);
+            DownloadPanel.SetActive(false);
+            ChatPanel.SetActive(true);
+        }
+
+        async Task WarmUp()
+        {
+            llm.SetTemplate("alpaca");
+            cores = LLMUnitySetup.AndroidGetNumBigCores();
+            AIText.text += $"Warming up the model...\nWill use {cores} cores";
+            await llmCharacter.Warmup();
             AIText.text = $"Ready when you are ({cores} cores)!";
             AIReplyComplete();
+        }
+
+        void SetProgress(float progress)
+        {
+            progressText.text = ((int)(progress * 100)).ToString() + "%";
+            progressBar.size = progress;
         }
 
         void onInputFieldSubmit(string message)

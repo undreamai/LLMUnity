@@ -68,12 +68,20 @@ namespace LLMUnity
         [LLMAdvanced] public bool asynchronousStartup = true;
         /// <summary> select to not destroy the LLM GameObject when loading a new Scene. </summary>
         [LLMAdvanced] public bool dontDestroyOnLoad = true;
+        /// <summary> toggle to enable model download on build </summary>
+        [Model] public bool downloadOnBuild = false;
         /// <summary> the path of the model being used (relative to the Assets/StreamingAssets folder).
         /// Models with .gguf format are allowed.</summary>
         [Model] public string model = "";
+        /// <summary> the URL of the model to use.
+        /// Models with .gguf format are allowed.</summary>
+        [ModelDownload] public string modelURL = "";
         /// <summary> the path of the LORA model being used (relative to the Assets/StreamingAssets folder).
         /// Models with .bin format are allowed.</summary>
         [ModelAdvanced] public string lora = "";
+        /// <summary> the URL of the LORA to use.
+        /// Models with .bin format are allowed.</summary>
+        [ModelDownloadAdvanced] public string loraURL = "";
         /// <summary> Size of the prompt context (0 = context size of the model).
         /// This is the number of tokens the model can take as input when generating responses. </summary>
         [ModelAdvanced] public int contextSize = 0;
@@ -81,7 +89,8 @@ namespace LLMUnity
         [ModelAdvanced] public int batchSize = 512;
         /// <summary> a base prompt to use as a base for all LLMCharacter objects </summary>
         [TextArea(5, 10), ChatAdvanced] public string basePrompt = "";
-
+        /// <summary> Boolean set to true if the server has started and is ready to receive requests, false otherwise. </summary>
+        public bool modelsDownloaded { get; protected set; } = false;
         /// <summary> Boolean set to true if the server has started and is ready to receive requests, false otherwise. </summary>
         public bool started { get; protected set; } = false;
         /// <summary> Boolean set to true if the server has failed to start. </summary>
@@ -90,6 +99,7 @@ namespace LLMUnity
         /// \cond HIDE
         public int SelectedModel = 0;
         [HideInInspector] public float modelProgress = 1;
+        [HideInInspector] public float loraProgress = 1;
         [HideInInspector] public float modelCopyProgress = 1;
         [HideInInspector] public bool modelHide = true;
 
@@ -101,25 +111,96 @@ namespace LLMUnity
         StreamWrapper logStreamWrapper = null;
         Thread llmThread = null;
         List<StreamWrapper> streamWrappers = new List<StreamWrapper>();
+        List<Callback<float>> modelProgressCallbacks = new List<Callback<float>>();
+        List<Callback<float>> loraProgressCallbacks = new List<Callback<float>>();
 
         public void SetModelProgress(float progress)
         {
             modelProgress = progress;
+            foreach (Callback<float> modelProgressCallback in modelProgressCallbacks) modelProgressCallback?.Invoke(progress);
+        }
+
+        public void SetLoraProgress(float progress)
+        {
+            loraProgress = progress;
+            foreach (Callback<float> loraProgressCallback in loraProgressCallbacks) loraProgressCallback?.Invoke(progress);
         }
 
         /// \endcond
 
-        async Task<string> CopyAsset(string path)
+        string CopyAsset(string path)
         {
 #if UNITY_EDITOR
             if (!EditorApplication.isPlaying)
             {
                 modelCopyProgress = 0;
-                path = await LLMUnitySetup.AddAsset(path, LLMUnitySetup.GetAssetPath());
+                path = LLMUnitySetup.AddAsset(path, LLMUnitySetup.GetAssetPath());
                 modelCopyProgress = 1;
             }
 #endif
             return path;
+        }
+
+        public void ResetSelectedModel()
+        {
+            SelectedModel = 0;
+            modelURL = "";
+            model = "";
+        }
+
+        public async Task DownloadDefaultModel(int optionIndex)
+        {
+            // download default model and disable model editor properties until the model is set
+            if (optionIndex == 0)
+            {
+                ResetSelectedModel();
+                return;
+            }
+            SelectedModel = optionIndex;
+            string modelUrl = LLMUnitySetup.modelOptions[optionIndex].Item2;
+            modelURL = modelUrl;
+            string modelName = Path.GetFileName(modelUrl).Split("?")[0];
+            await DownloadModel(modelUrl, modelName);
+        }
+
+        public async Task DownloadModel(string modelUrl, string modelName, bool overwrite = false, bool setTemplate = true)
+        {
+            modelProgress = 0;
+            string modelPath = LLMUnitySetup.GetAssetPath(modelName);
+            await LLMUnitySetup.DownloadFile(modelUrl, modelPath, overwrite, (string path) => SetModel(path, setTemplate), SetModelProgress);
+        }
+
+        public async Task DownloadLora(string loraUrl, string loraName, bool overwrite = false)
+        {
+            loraProgress = 0;
+            string loraPath = LLMUnitySetup.GetAssetPath(loraName);
+            await LLMUnitySetup.DownloadFile(loraUrl, loraPath, overwrite, SetLora, SetLoraProgress);
+        }
+
+        public async Task DownloadModels(bool overwrite = false)
+        {
+            if (modelURL != "") await DownloadModel(modelURL, model, overwrite, false);
+            if (loraURL != "") await DownloadLora(loraURL, lora, overwrite);
+        }
+
+        public async Task AndroidExtractModels()
+        {
+            if (!downloadOnBuild || modelURL == "") await LLMUnitySetup.AndroidExtractFile(model);
+            if (!downloadOnBuild || loraURL == "") await LLMUnitySetup.AndroidExtractFile(lora);
+        }
+
+        public async Task WaitUntilModelsDownloaded(Callback<float> modelProgressCallback = null, Callback<float> loraProgressCallback = null)
+        {
+            if (modelProgressCallback != null) modelProgressCallbacks.Add(modelProgressCallback);
+            if (loraProgressCallback != null) loraProgressCallbacks.Add(loraProgressCallback);
+            while (!modelsDownloaded) await Task.Yield();
+            if (modelProgressCallback != null) modelProgressCallbacks.Remove(modelProgressCallback);
+            if (loraProgressCallback != null) loraProgressCallbacks.Remove(loraProgressCallback);
+        }
+
+        public async Task WaitUntilReady()
+        {
+            while (!started) await Task.Yield();
         }
 
         /// <summary>
@@ -128,11 +209,11 @@ namespace LLMUnity
         /// Models supported are in .gguf format.
         /// </summary>
         /// <param name="path">path to model to use (.gguf format)</param>
-        public async Task SetModel(string path)
+        public void SetModel(string path, bool setTemplate = true)
         {
             // set the model and enable the model editor properties
-            model = await CopyAsset(path);
-            SetTemplate(ChatTemplate.FromGGUF(LLMUnitySetup.GetAssetPath(model)));
+            model = CopyAsset(path);
+            if (setTemplate) SetTemplate(ChatTemplate.FromGGUF(LLMUnitySetup.GetAssetPath(model)));
 #if UNITY_EDITOR
             if (!EditorApplication.isPlaying) EditorUtility.SetDirty(this);
 #endif
@@ -144,9 +225,9 @@ namespace LLMUnity
         /// Models supported are in .bin format.
         /// </summary>
         /// <param name="path">path to LORA model to use (.bin format)</param>
-        public async Task SetLora(string path)
+        public void SetLora(string path)
         {
-            lora = await CopyAsset(path);
+            lora = CopyAsset(path);
 #if UNITY_EDITOR
             if (!EditorApplication.isPlaying) EditorUtility.SetDirty(this);
 #endif
@@ -159,7 +240,7 @@ namespace LLMUnity
         public void SetTemplate(string templateName)
         {
             chatTemplate = templateName;
-            llmlib?.LLM_SetTemplate(LLMObject, chatTemplate);
+            if (started) llmlib?.LLM_SetTemplate(LLMObject, chatTemplate);
         }
 
         /// <summary>
@@ -196,10 +277,13 @@ namespace LLMUnity
                 }
             }
 
+            int numThreadsToUse = numThreads;
+            if (Application.platform == RuntimePlatform.Android && numThreads <= 0) numThreadsToUse = LLMUnitySetup.AndroidGetNumBigCores();
+
             int slots = GetNumClients();
             string arguments = $"-m \"{modelPath}\" -c {contextSize} -b {batchSize} --log-disable -np {slots}";
             if (remote) arguments += $" --port {port} --host 0.0.0.0";
-            if (numThreads > 0) arguments += $" -t {numThreads}";
+            if (numThreadsToUse > 0) arguments += $" -t {numThreadsToUse}";
             if (loraPath != "") arguments += $" --lora \"{loraPath}\"";
             arguments += $" -ngl {numGPULayers}";
             return arguments;
@@ -212,8 +296,13 @@ namespace LLMUnity
         public async void Awake()
         {
             if (!enabled) return;
-            if (asynchronousStartup) await Task.Run(() => StartLLMServer());
-            else StartLLMServer();
+            if (downloadOnBuild) await DownloadModels();
+            modelsDownloaded = true;
+            if (Application.platform == RuntimePlatform.Android) await AndroidExtractModels();
+            string arguments = GetLlamaccpArguments();
+            if (arguments == null) return;
+            if (asynchronousStartup) await Task.Run(() => StartLLMServer(arguments));
+            else StartLLMServer(arguments);
             if (dontDestroyOnLoad) DontDestroyOnLoad(transform.root.gameObject);
             if (basePrompt != "") await SetBasePrompt(basePrompt);
         }
@@ -231,12 +320,10 @@ namespace LLMUnity
             DestroyStreamWrapper(logStreamWrapper);
         }
 
-        private void StartLLMServer()
+        private void StartLLMServer(string arguments)
         {
             started = false;
             failed = false;
-            string arguments = GetLlamaccpArguments();
-            if (arguments == null) return;
             bool useGPU = numGPULayers > 0;
             LLMUnitySetup.Log($"Server command: {arguments}");
 
