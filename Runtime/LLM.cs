@@ -146,7 +146,8 @@ namespace LLMUnity
             // set the model and enable the model editor properties
             model = path;
 #if UNITY_EDITOR
-            SetTemplate(LLMManager.Get(path).chatTemplate);
+            model = LLMManager.LoadModel(path);
+            SetTemplate(LLMManager.Get(model).chatTemplate);
             if (!EditorApplication.isPlaying) EditorUtility.SetDirty(this);
 #endif
         }
