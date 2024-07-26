@@ -218,7 +218,8 @@ namespace LLMUnity
                     string path = EditorUtility.OpenFilePanelWithFilters("Select a gguf model file", "", new string[] { "Model Files", "gguf" });
                     if (!string.IsNullOrEmpty(path))
                     {
-                        LLMManager.LoadModel(path);
+                        string filename = LLMManager.LoadModel(path);
+                        SetModelIfNone(filename, false);
                         UpdateModels();
                     }
                 };
