@@ -334,6 +334,12 @@ namespace LLMUnity
                 await DownloadFile(LlamaLibURL, libZip, true, null, SetLibraryProgress);
                 AssetDatabase.StartAssetEditing();
                 ZipFile.ExtractToDirectory(libZip, libraryPath);
+                string androidDir = Path.Combine(libraryPath, "android");
+                if (Directory.Exists(androidDir))
+                {
+                    string androidPluginDir = Path.Combine(Application.dataPath, "Plugins", "Android", Path.GetFileName(libraryPath));
+                    Directory.Move(androidDir, androidPluginDir);
+                }
                 foreach (string librarySubPath in Directory.GetDirectories(libraryPath))
                 {
                     if (Path.GetFileName(librarySubPath).StartsWith("android"))
