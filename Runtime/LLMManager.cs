@@ -29,6 +29,7 @@ namespace LLMUnity
 
     public class LLMManager
     {
+        static string LLMManagerPref = "LLMManager";
         public static bool downloadOnStart = false;
         public static List<ModelEntry> modelEntries = new List<ModelEntry>();
 
@@ -70,6 +71,7 @@ namespace LLMUnity
                 }
             }
             modelEntries.Insert(indexToInsert, entry);
+            Save();
             return entry.filename;
         }
 
@@ -175,6 +177,7 @@ namespace LLMUnity
         {
             if (entry == null) return;
             modelEntries.Remove(entry);
+            Save();
             foreach (LLM llm in llms)
             {
                 if (!entry.lora && llm.model == entry.filename) llm.model = "";
@@ -226,14 +229,16 @@ namespace LLMUnity
 
         public static void Save()
         {
-            Directory.CreateDirectory(Path.GetDirectoryName(LLMUnitySetup.modelListPath));
-            File.WriteAllText(LLMUnitySetup.modelListPath, JsonUtility.ToJson(new LLMManagerStore { modelEntries = modelEntries, downloadOnStart = downloadOnStart }, true));
+            string pref = JsonUtility.ToJson(new LLMManagerStore { modelEntries = modelEntries, downloadOnStart = downloadOnStart }, true);
+            PlayerPrefs.SetString(LLMManagerPref, pref);
+            PlayerPrefs.Save();
         }
 
         public static void Load()
         {
-            if (!File.Exists(LLMUnitySetup.modelListPath)) return;
-            LLMManagerStore store = JsonUtility.FromJson<LLMManagerStore>(File.ReadAllText(LLMUnitySetup.modelListPath));
+            string pref = PlayerPrefs.GetString(LLMManagerPref);
+            if (pref == null || pref == "") return;
+            LLMManagerStore store = JsonUtility.FromJson<LLMManagerStore>(pref);
             downloadOnStart = store.downloadOnStart;
             modelEntries = store.modelEntries;
         }
