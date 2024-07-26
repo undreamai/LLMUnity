@@ -90,12 +90,18 @@ namespace LLMUnitySamples
         }
 
         bool onValidateWarning = true;
+        bool onValidateInfo = true;
         void OnValidate()
         {
             if (onValidateWarning && !llmCharacter.remote && llmCharacter.llm != null && llmCharacter.llm.model == "")
             {
                 Debug.LogWarning($"Please select a model in the {llmCharacter.llm.gameObject.name} GameObject!");
                 onValidateWarning = false;
+            }
+            if (onValidateInfo)
+            {
+                Debug.Log($"Select 'Download On Start' in the {llmCharacter.llm.gameObject.name} GameObject to download the models when the app starts.");
+                onValidateInfo = false;
             }
         }
     }
