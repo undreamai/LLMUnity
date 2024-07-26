@@ -404,7 +404,7 @@ namespace LLMUnity
             }
             else if (Application.platform == RuntimePlatform.Android)
             {
-                return "libundreamai_android_plugin.so";
+                return "libundreamai_android.so";
             }
             else
             {
