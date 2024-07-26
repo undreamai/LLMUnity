@@ -34,7 +34,7 @@ namespace LLMUnity
                     break;
             }
             LLMBuilder.HideLibraryPlatforms(platform);
-            LLMBuilder.CopyModels();
+            LLMBuilder.BuildModels();
             AssetDatabase.Refresh();
         }
 

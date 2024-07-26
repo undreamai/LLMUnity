@@ -8,7 +8,6 @@ namespace LLMUnitySamples
 {
     public class AndroidDemo : MonoBehaviour
     {
-        public LLM llm;
         public LLMCharacter llmCharacter;
 
         public GameObject ChatPanel;
@@ -32,14 +31,13 @@ namespace LLMUnitySamples
         {
             ChatPanel.SetActive(false);
             DownloadPanel.SetActive(true);
-            await llm.WaitUntilModelDownloaded(SetProgress);
+            await LLM.WaitUntilModelsDownloaded(SetProgress);
             DownloadPanel.SetActive(false);
             ChatPanel.SetActive(true);
         }
 
         async Task WarmUp()
         {
-            llm.SetTemplate("alpaca");
             cores = LLMUnitySetup.AndroidGetNumBigCores();
             AIText.text += $"Warming up the model...\nWill use {cores} cores";
             await llmCharacter.Warmup();

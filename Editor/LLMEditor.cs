@@ -21,7 +21,6 @@ namespace LLMUnity
         static GUIContent trashIcon;
         static List<string> modelOptions;
         static List<string> modelURLs;
-        string[] templateOptions;
         string elementFocus = "";
         bool showCustomURL = false;
         string customURL = "";
@@ -126,7 +125,6 @@ namespace LLMUnity
 
         void UpdateModels(bool resetOptions = false)
         {
-            LLMManager.Save();
             if (resetOptions) ResetModelOptions();
             Repaint();
         }
@@ -259,7 +257,6 @@ namespace LLMUnity
         {
             LLM llmScript = (LLM)target;
             ResetModelOptions();
-            templateOptions = ChatTemplate.templatesDescription.Keys.ToList().ToArray();
             trashIcon = new GUIContent(Resources.Load<Texture2D>("llmunity_trash_icon"), "Delete Model");
             Texture2D loraLineTexture = new Texture2D(1, 1);
             loraLineTexture.SetPixel(0, 0, Color.black);
@@ -309,12 +306,13 @@ namespace LLMUnity
 
                     if (!entry.lora)
                     {
-                        int templateIndex = Array.IndexOf(ChatTemplate.templatesDescription.Values.ToList().ToArray(), entry.chatTemplate);
-                        int newTemplateIndex = EditorGUI.Popup(templateRect, templateIndex, templateOptions);
+                        string[] templateDescriptions = ChatTemplate.templatesDescription.Keys.ToList().ToArray();
+                        string[] templates = ChatTemplate.templatesDescription.Values.ToList().ToArray();
+                        int templateIndex = Array.IndexOf(templates, entry.chatTemplate);
+                        int newTemplateIndex = EditorGUI.Popup(templateRect, templateIndex, templateDescriptions);
                         if (newTemplateIndex != templateIndex)
                         {
-                            entry.chatTemplate = ChatTemplate.templatesDescription[templateOptions[newTemplateIndex]];
-                            if (isSelected) llmScript.SetTemplate(entry.chatTemplate);
+                            LLMManager.SetTemplate(entry.filename, templates[newTemplateIndex]);
                             UpdateModels();
                         }
                     }
@@ -330,7 +328,7 @@ namespace LLMUnity
                             string newURL = EditorGUI.TextField(urlRect, entry.url);
                             if (newURL != entry.url)
                             {
-                                entry.url = newURL;
+                                LLMManager.SetURL(entry, newURL);
                                 UpdateModels();
                             }
                         }
@@ -340,7 +338,7 @@ namespace LLMUnity
                     bool includeInBuild = EditorGUI.ToggleLeft(includeInBuildRect, "", entry.includeInBuild);
                     if (includeInBuild != entry.includeInBuild)
                     {
-                        entry.includeInBuild = includeInBuild;
+                        LLMManager.SetIncludeInBuild(entry, includeInBuild);
                         UpdateModels();
                     }
 
