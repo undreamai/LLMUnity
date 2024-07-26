@@ -35,7 +35,7 @@ namespace LLMUnity
         public Task DownloadFileTaskAsyncResume(Uri address, string fileName, bool resume = false, Callback<float> progressCallback = null)
         {
             var tcs = new TaskCompletionSource<object>(address);
-            FileStream? fs = null;
+            FileStream fs = null;
             long bytesToSkip = 0;
 
             try
