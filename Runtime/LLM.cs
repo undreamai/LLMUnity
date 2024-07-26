@@ -113,13 +113,22 @@ namespace LLMUnity
             await LLMManager.DownloadModels();
 #endif
             modelsDownloaded = true;
-            // if (Application.platform == RuntimePlatform.Android) await AndroidExtractModels();
+            await AndroidSetup();
             string arguments = GetLlamaccpArguments();
             if (arguments == null) return;
             if (asynchronousStartup) await Task.Run(() => StartLLMServer(arguments));
             else StartLLMServer(arguments);
             if (dontDestroyOnLoad) DontDestroyOnLoad(transform.root.gameObject);
             if (basePrompt != "") await SetBasePrompt(basePrompt);
+        }
+
+        public async Task AndroidSetup()
+        {
+            if (Application.platform != RuntimePlatform.Android) return;
+            foreach (string path in new string[] {model, lora})
+            {
+                if (path != "" && !File.Exists(LLMUnitySetup.GetAssetPath(path))) await LLMUnitySetup.AndroidExtractFile(path);
+            }
         }
 
 #if UNITY_EDITOR
