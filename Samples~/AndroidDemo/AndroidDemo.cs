@@ -1,7 +1,6 @@
 using UnityEngine;
 using LLMUnity;
 using UnityEngine.UI;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace LLMUnitySamples
@@ -13,6 +12,7 @@ namespace LLMUnitySamples
         public GameObject ChatPanel;
         public InputField playerText;
         public Text AIText;
+        public GameObject ErrorText;
 
         public GameObject DownloadPanel;
         public Scrollbar progressBar;
@@ -23,17 +23,24 @@ namespace LLMUnitySamples
         {
             playerText.onSubmit.AddListener(onInputFieldSubmit);
             playerText.interactable = false;
-            await ShowDownloadScreen();
-            await WarmUp();
+            await DownloadThenWarmup();
         }
 
-        async Task ShowDownloadScreen()
+        async Task DownloadThenWarmup()
         {
             ChatPanel.SetActive(false);
             DownloadPanel.SetActive(true);
-            await LLM.WaitUntilModelsDownloaded(SetProgress);
-            DownloadPanel.SetActive(false);
-            ChatPanel.SetActive(true);
+            bool downloadOK = await LLM.WaitUntilModelsDownloaded(SetProgress);
+            if (!downloadOK)
+            {
+                ErrorText.SetActive(true);
+            }
+            else
+            {
+                DownloadPanel.SetActive(false);
+                ChatPanel.SetActive(true);
+                await WarmUp();
+            }
         }
 
         async Task WarmUp()
