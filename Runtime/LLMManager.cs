@@ -32,7 +32,7 @@ namespace LLMUnity
     {
         public static float downloadProgress = 1;
         public static List<Callback<float>> downloadProgressCallbacks = new List<Callback<float>>();
-        static Task downloadModelsTask;
+        static Task<bool> downloadModelsTask;
         static readonly object lockObject = new object();
         static long totalSize;
         static long currFileSize;
@@ -44,7 +44,7 @@ namespace LLMUnity
             foreach (Callback<float> downloadProgressCallback in downloadProgressCallbacks) downloadProgressCallback?.Invoke(downloadProgress);
         }
 
-        public static Task DownloadModels()
+        public static Task<bool> DownloadModels()
         {
             lock (lockObject)
             {
@@ -53,10 +53,10 @@ namespace LLMUnity
             return downloadModelsTask;
         }
 
-        public static async Task DownloadModelsOnce()
+        public static async Task<bool> DownloadModelsOnce()
         {
             if (Application.platform == RuntimePlatform.Android) await LLMUnitySetup.AndroidExtractFile(LLMUnitySetup.BuildFilename);
-            if (!File.Exists(LLMUnitySetup.BuildFile)) return;
+            if (!File.Exists(LLMUnitySetup.BuildFile)) return true;
 
             List<StringPair> downloads = new List<StringPair>();
             using (FileStream fs = new FileStream(LLMUnitySetup.BuildFile, FileMode.Open, FileAccess.Read))
@@ -71,7 +71,7 @@ namespace LLMUnity
                     }
                 }
             }
-            if (downloads.Count == 0) return;
+            if (downloads.Count == 0) return true;
 
             try
             {
@@ -100,9 +100,10 @@ namespace LLMUnity
             }
             catch (Exception ex)
             {
-                LLMUnitySetup.LogError($"Error downloading the models");
-                throw ex;
+                LLMUnitySetup.LogError($"Error downloading the models: {ex.Message}");
+                return false;
             }
+            return true;
         }
 
 #if UNITY_EDITOR
