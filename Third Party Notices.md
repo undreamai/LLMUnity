@@ -26,6 +26,22 @@ License: [link](https://github.com/Mozilla-Ocho/llamafile/blob/main/LICENSE)
 
 The following models can be downloaded with LLMUnity:
 
+### meta-llama/Meta-Llama-3-8B-Instruct
+
+Developer: Meta<br>
+Origin: [link](https://huggingface.co/meta-llama/Meta-Llama-3-8B-Instruct)<br>
+License Type: "llama3"<br>
+License: [link](https://huggingface.co/meta-llama/Meta-Llama-3-8B/blob/main/LICENSE)
+
+##### modified by: lmstudio-community/Meta-Llama-3-8B-Instruct-GGUF
+
+Developer: LM Studio<br>
+Origin: [link](https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.2-GGUF)<br>
+License Type: "llama3"<br>
+License: [link](https://huggingface.co/meta-llama/Meta-Llama-3-8B/blob/main/LICENSE)
+
+<br>
+
 ### mistralai/Mistral-7B-Instruct-v0.2
 
 Developer: Mistral AI<br>
@@ -64,6 +80,15 @@ Developer: TheBloke<br>
 Origin: [link](https://huggingface.co/TheBloke/OpenHermes-2.5-Mistral-7B-GGUF)<br>
 License Type: "Apache 2.0"<br>
 License: [link](https://huggingface.co/TheBloke/OpenHermes-2.5-Mistral-7B-GGUF)
+
+<br>
+
+### Qwen/Qwen2-0.5B-Instruct-GGUF
+
+Developer: Qwen<br>
+Origin: [link](https://huggingface.co/Qwen/Qwen2-0.5B-Instruct-GGUF)<br>
+License Type: "Apache 2.0"<br>
+License: [link](https://huggingface.co/Qwen/Qwen2-0.5B-Instruct-GGUF/blob/main/LICENSE)
 
 ---
 
