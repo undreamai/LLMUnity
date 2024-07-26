@@ -251,6 +251,21 @@ namespace LLMUnity
             Save();
         }
 
+        public static void SetDownloadOnStart(bool value)
+        {
+            downloadOnStart = value;
+            if (downloadOnStart)
+            {
+                bool warn = false;
+                foreach (ModelEntry entry in modelEntries)
+                {
+                    if (entry.url == null || entry.url == "") warn = true;
+                }
+                if (warn) LLMUnitySetup.LogWarning("Some models do not have a URL and will be copied in the build. To resolve this fill in the URL field in the expanded view of the LLM Model list.");
+            }
+            Save();
+        }
+
         public static ModelEntry Get(string filename)
         {
             foreach (ModelEntry entry in modelEntries)
@@ -341,7 +356,7 @@ namespace LLMUnity
                 if (!modelEntry.includeInBuild) continue;
                 string target = LLMUnitySetup.GetAssetPath(modelEntry.filename);
                 if (File.Exists(target)) continue;
-                if (!downloadOnStart) copyCallback(modelEntry.path, target);
+                if (!downloadOnStart || modelEntry.url == null || modelEntry.url == "") copyCallback(modelEntry.path, target);
                 else downloads.Add(new StringPair { source = modelEntry.url, target = modelEntry.filename });
             }
 
