@@ -32,6 +32,8 @@ namespace LLMUnity
     {
         public static float downloadProgress = 1;
         public static List<Callback<float>> downloadProgressCallbacks = new List<Callback<float>>();
+        static Task downloadModelsTask;
+        static readonly object lockObject = new object();
         static long totalSize;
         static long currFileSize;
         static long completedSize;
@@ -42,7 +44,16 @@ namespace LLMUnity
             foreach (Callback<float> downloadProgressCallback in downloadProgressCallbacks) downloadProgressCallback?.Invoke(downloadProgress);
         }
 
-        public static async Task DownloadModels()
+        public static Task DownloadModels()
+        {
+            lock (lockObject)
+            {
+                if (downloadModelsTask == null) downloadModelsTask = DownloadModelsOnce();
+            }
+            return downloadModelsTask;
+        }
+
+        public static async Task DownloadModelsOnce()
         {
             if (Application.platform == RuntimePlatform.Android) await LLMUnitySetup.AndroidExtractFile(LLMUnitySetup.BuildFilename);
             if (!File.Exists(LLMUnitySetup.BuildFile)) return;
