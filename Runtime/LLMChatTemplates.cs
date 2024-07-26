@@ -207,7 +207,7 @@ namespace LLMUnity
     {
         public override string GetName() { return "chatml"; }
         public override string GetDescription() { return "chatml (most widely used)"; }
-        public override string[] GetNameMatches() { return new string[] {"chatml", "hermes"}; }
+        public override string[] GetNameMatches() { return new string[] {"chatml", "hermes", "qwen"}; }
         public override string[] GetChatTemplateMatches() { return new string[] {"{% for message in messages %}{{'<|im_start|>' + message['role'] + '\n' + message['content'] + '<|im_end|>' + '\n'}}{% endfor %}{% if add_generation_prompt %}{{ '<|im_start|>assistant\n' }}{% endif %}"}; }
 
         protected override string SystemPrefix() { return "<|im_start|>system\n"; }
