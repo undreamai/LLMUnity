@@ -20,6 +20,7 @@ namespace LLMUnity
         static int elementPadding = 10;
         static GUIContent trashIcon;
         static List<string> modelOptions;
+        static List<string> modelLicenses;
         static List<string> modelURLs;
         string elementFocus = "";
         bool showCustomURL = false;
@@ -64,11 +65,7 @@ namespace LLMUnity
             }
             _ = AddLoadButtons();
             bool downloadOnStart = EditorGUILayout.Toggle("Download on Start", LLMManager.downloadOnStart);
-            if (downloadOnStart != LLMManager.downloadOnStart)
-            {
-                LLMManager.downloadOnStart = downloadOnStart;
-                LLMManager.Save();
-            }
+            if (downloadOnStart != LLMManager.downloadOnStart) LLMManager.SetDownloadOnStart(downloadOnStart);
         }
 
         public void AddModelSettings(SerializedObject llmScriptSO)
@@ -93,11 +90,13 @@ namespace LLMUnity
             foreach (ModelEntry entry in LLMManager.modelEntries) existingOptions.Add(entry.url);
             modelOptions = new List<string>(){"Download model", "Custom URL"};
             modelURLs = new List<string>(){null, null};
-            foreach ((string name, string url) in LLMUnitySetup.modelOptions)
+            modelLicenses = new List<string>(){null, null};
+            foreach ((string name, string url, string license) in LLMUnitySetup.modelOptions)
             {
                 if (url != null && existingOptions.Contains(url)) continue;
                 modelOptions.Add(name);
                 modelURLs.Add(url);
+                modelLicenses.Add(license);
             }
         }
 
@@ -206,6 +205,7 @@ namespace LLMUnity
             }
             else if (modelIndex > 1)
             {
+                if (modelLicenses[modelIndex] != null) Debug.LogWarning($"The {modelOptions[modelIndex]} model is released under the following license: {modelLicenses[modelIndex]}. By using this model, you agree to the terms of the license.");
                 string filename = await LLMManager.DownloadModel(modelURLs[modelIndex], modelOptions[modelIndex]);
                 SetModelIfNone(filename, false);
                 UpdateModels(true);
