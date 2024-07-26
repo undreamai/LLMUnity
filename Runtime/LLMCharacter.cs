@@ -319,11 +319,12 @@ namespace LLMUnity
         /// Set the grammar file of the LLMCharacter
         /// </summary>
         /// <param name="path">path to the grammar file</param>
-        public void SetGrammar(string path)
+        public async void SetGrammar(string path)
         {
 #if UNITY_EDITOR
             if (!EditorApplication.isPlaying) path = LLMUnitySetup.AddAsset(path);
 #endif
+            if (Application.platform == RuntimePlatform.Android) await LLMUnitySetup.AndroidExtractFile(path);
             grammar = path;
             InitGrammar();
         }
