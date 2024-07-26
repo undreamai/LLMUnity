@@ -1045,16 +1045,12 @@ MonoBehaviour:
   parallelPrompts: -1
   asynchronousStartup: 1
   dontDestroyOnLoad: 1
-  model: smol_llama-220m-openhermes.q4_k_m.gguf
-  lora: 
   contextSize: 0
   batchSize: 512
   basePrompt: 
-  SelectedModel: 0
-  modelProgress: 1
-  modelCopyProgress: 1
-  modelHide: 1
+  model: smol_llama-220m-openhermes.q4_k_m.gguf
   chatTemplate: chatml
+  lora: 
 --- !u!4 &1047848255
 Transform:
   m_ObjectHideFlags: 0
