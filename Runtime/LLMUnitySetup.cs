@@ -78,16 +78,18 @@ namespace LLMUnity
         public static string LlamaLibURL = $"https://github.com/undreamai/LlamaLib/releases/download/{LlamaLibVersion}/undreamai-{LlamaLibVersion}-llamacpp.zip";
         /// <summary> LlamaLib path </summary>
         public static string libraryPath = GetAssetPath(Path.GetFileName(LlamaLibURL).Replace(".zip", ""));
+        /// <summary> LLMnity store path </summary>
+        public static string LLMUnityStore = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "LLMUnity");
         /// <summary> Model download path </summary>
-        public static string modelDownloadPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "LLMUnity");
+        public static string modelDownloadPath = Path.Combine(LLMUnityStore, "models");
         /// <summary> Model list for project </summary>
         public static string modelListPath = Path.Combine(Application.temporaryCachePath, "modelCache.json");
+        /// <summary> Temporary dir for build </summary>
+        public static string buildTempDir = Path.Combine(Application.temporaryCachePath, "LLMUnityBuild");
 
         /// <summary> Default models for download </summary>
         [HideInInspector] public static readonly (string, string)[] modelOptions = new(string, string)[]
         {
-            ("Download model", null),
-            ("Custom URL", null),
             ("Mistral 7B Instruct v0.2 (medium, best overall)", "https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.2-GGUF/resolve/main/mistral-7b-instruct-v0.2.Q4_K_M.gguf?download=true"),
             ("OpenHermes 2.5 7B (medium, best for conversation)", "https://huggingface.co/TheBloke/OpenHermes-2.5-Mistral-7B-GGUF/resolve/main/openhermes-2.5-mistral-7b.Q4_K_M.gguf?download=true"),
             ("Phi 3 (small, great)", "https://huggingface.co/microsoft/Phi-3-mini-4k-instruct-gguf/resolve/main/Phi-3-mini-4k-instruct-q4.gguf?download=true"),
@@ -228,11 +230,11 @@ namespace LLMUnity
             string target = GetAssetPath(assetName);
             if (!overwrite && File.Exists(target))
             {
-                Debug.Log($"File {target} already exists");
+                Log($"File {target} already exists");
                 return;
             }
 
-            Debug.Log($"Extracting {source} to {target}");
+            Log($"Extracting {source} to {target}");
 
             // UnityWebRequest to read the file from StreamingAssets
             UnityWebRequest www = UnityWebRequest.Get(source);
@@ -242,7 +244,7 @@ namespace LLMUnity
             while (!operation.isDone) await Task.Delay(1);
             if (www.result != UnityWebRequest.Result.Success)
             {
-                Debug.LogError("Failed to load file from StreamingAssets: " + www.error);
+                LogError("Failed to load file from StreamingAssets: " + www.error);
             }
             else
             {
@@ -267,6 +269,44 @@ namespace LLMUnity
         }
 
 #if UNITY_EDITOR
+
+        public static void CopyPath(string source, string target)
+        {
+            if (File.Exists(source))
+            {
+                File.Copy(source, target);
+            }
+            else if (Directory.Exists(source))
+            {
+                Directory.CreateDirectory(target);
+                List<string> filesAndDirs = new List<string>();
+                filesAndDirs.AddRange(Directory.GetFiles(source));
+                filesAndDirs.AddRange(Directory.GetDirectories(source));
+                foreach (string path in filesAndDirs)
+                {
+                    CopyPath(path, Path.Combine(target, Path.GetFileName(path)));
+                }
+            }
+        }
+
+        public static void MovePath(string source, string target)
+        {
+            CopyPath(source, target);
+            DeletePath(source);
+        }
+
+        public static bool DeletePath(string path)
+        {
+            if (!IsSubPath(path, GetAssetPath()) && !IsSubPath(path, buildTempDir))
+            {
+                LogError($"Safeguard: {path} will not be deleted because it may not be safe");
+                return false;
+            }
+            if (File.Exists(path)) File.Delete(path);
+            else if (Directory.Exists(path)) Directory.Delete(path, true);
+            return true;
+        }
+
         [HideInInspector] public static float libraryProgress = 1;
 
         private static async Task DownloadLibrary()
@@ -277,7 +317,9 @@ namespace LLMUnity
             if (!Directory.Exists(libraryPath))
             {
                 await DownloadFile(LlamaLibURL, libZip, true, null, SetLibraryProgress);
+                AssetDatabase.StartAssetEditing();
                 ZipFile.ExtractToDirectory(libZip, libraryPath);
+                AssetDatabase.StopAssetEditing();
                 File.Delete(libZip);
             }
             libraryProgress = 1;
@@ -306,26 +348,6 @@ namespace LLMUnity
             AssetDatabase.StopAssetEditing();
             return filename;
         }
-
-        public static void CreateSymlink(string sourcePath, string targetPath)
-        {
-            bool isDirectory = Directory.Exists(sourcePath);
-            if (!isDirectory && !File.Exists(sourcePath)) throw new FileNotFoundException($"Source path does not exist: {sourcePath}");
-
-            bool success;
-#if UNITY_STANDALONE_WIN
-            success = CreateSymbolicLink(targetPath, sourcePath, (int)isDirectory);
-#else
-            success = symlink(sourcePath, targetPath) == 0;
-#endif
-            if (!success) throw new IOException($"Failed to create symbolic link: {targetPath}");
-        }
-
-        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-        private static extern bool CreateSymbolicLink(string lpSymlinkFileName, string lpTargetFileName, int dwFlags);
-
-        [DllImport("libc", SetLastError = true)]
-        private static extern int symlink(string oldpath, string newpath);
 
 #endif
         /// \endcond
@@ -422,7 +444,7 @@ namespace LLMUnity
             }
             catch (Exception e)
             {
-                Debug.LogError(e.Message);
+                LogError(e.Message);
             }
 
             int numBigCores = 0;
@@ -474,7 +496,7 @@ namespace LLMUnity
             }
             catch (Exception e)
             {
-                Debug.LogError(e.Message);
+                LogError(e.Message);
             }
 
             int numBigCores = 0;
