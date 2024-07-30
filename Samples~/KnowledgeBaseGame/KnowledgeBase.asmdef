@@ -1,0 +1,28 @@
+{
+    "name": "KnowledgeBase",
+    "rootNamespace": "",
+    "references": [
+        "undream.llmunity.Runtime",
+        "undream.RAGSearchUnity.Runtime",
+        "Unity.Sentis",
+        "HuggingFace.SharpTransformers",
+        "Cloud.Unum.USearch"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "RAGSEARCHUNITY"
+    ],
+    "versionDefines": [
+        {
+            "name": "ai.undream.ragsearchunity",
+            "expression": "1.0.0",
+            "define": "RAGSEARCHUNITY"
+        }
+    ],
+    "noEngineReferences": false
+}
