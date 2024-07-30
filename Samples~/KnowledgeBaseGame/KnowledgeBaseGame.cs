@@ -188,6 +188,7 @@ namespace LLMUnitySamples
     {
         public Dropdown CharacterSelect;
         public InputField PlayerText;
+        public Text SetupText;
         public Text AIText;
 
         public TextAsset ButlerText;
@@ -214,6 +215,11 @@ namespace LLMUnitySamples
         public Dropdown Answer1;
         public Dropdown Answer2;
         public Dropdown Answer3;
+
+        void Awake()
+        {
+            if (SetupText != null) SetupText.gameObject.SetActive(false);
+        }
 
         protected void Start()
         {
