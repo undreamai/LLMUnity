@@ -29,7 +29,7 @@ namespace LLMUnitySamples
         {
             ChatPanel.SetActive(false);
             DownloadPanel.SetActive(true);
-            bool downloadOK = await LLM.WaitUntilModelsDownloaded(SetProgress);
+            bool downloadOK = await LLM.WaitUntilModelSetup(SetProgress);
             if (!downloadOK)
             {
                 ErrorText.SetActive(true);
