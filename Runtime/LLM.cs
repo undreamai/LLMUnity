@@ -207,12 +207,12 @@ namespace LLMUnity
         /// Set the chat template for the LLM.
         /// </summary>
         /// <param name="templateName">the chat template to use. The available templates can be found in the ChatTemplate.templates.Keys array </param>
-        public void SetTemplate(string templateName)
+        public void SetTemplate(string templateName, bool setDirty=true)
         {
             chatTemplate = templateName;
             if (started) llmlib?.LLM_SetTemplate(LLMObject, chatTemplate);
 #if UNITY_EDITOR
-            if (!EditorApplication.isPlaying) EditorUtility.SetDirty(this);
+            if (setDirty && !EditorApplication.isPlaying) EditorUtility.SetDirty(this);
 #endif
         }
 
@@ -324,7 +324,7 @@ namespace LLMUnity
             if (debug) SetupLogging();
             LLMObject = llmlib.LLM_Construct(arguments);
             if (remote) llmlib.LLM_StartServer(LLMObject);
-            SetTemplate(chatTemplate);
+            SetTemplate(chatTemplate, false);
             CheckLLMStatus(false);
         }
 
