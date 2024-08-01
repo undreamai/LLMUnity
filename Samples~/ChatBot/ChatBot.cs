@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using LLMUnity;
+using UnityEngine.UI;
 
 namespace LLMUnitySamples
 {
@@ -18,6 +19,7 @@ namespace LLMUnitySamples
         public float textPadding = 10f;
         public float bubbleSpacing = 10f;
         public Sprite sprite;
+        public Button stopButton;
 
         private InputBubble inputBubble;
         private List<Bubble> chatBubbles = new List<Bubble>();
@@ -51,6 +53,7 @@ namespace LLMUnitySamples
             inputBubble.AddSubmitListener(onInputFieldSubmit);
             inputBubble.AddValueChangedListener(onValueChanged);
             inputBubble.setInteractable(false);
+            stopButton.gameObject.SetActive(true);
             _ = llmCharacter.Warmup(WarmUpCallback);
         }
 
