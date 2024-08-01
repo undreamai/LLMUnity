@@ -182,6 +182,7 @@ MonoBehaviour:
   textPadding: 10
   bubbleSpacing: 10
   sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  stopButton: {fileID: 600245850}
 --- !u!1 &507661347
 GameObject:
   m_ObjectHideFlags: 0
@@ -350,7 +351,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &600245849
 RectTransform:
   m_ObjectHideFlags: 0
