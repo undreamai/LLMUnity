@@ -34,7 +34,7 @@ LLM for Unity is built on top of the awesome [llama.cpp](https://github.com/gger
 </sub>
 
 ## At a glance
-- 💻 Cross-platform! Windows, Linux and macOS
+- 💻 Cross-platform! Windows, Linux, macOS and Android
 - 🏠 Runs locally without internet access. No data ever leaves the game!
 - ⚡ Blazing fast inference on CPU and GPU (Nvidia, AMD, Apple Metal)
 - 🤗 Supports all major LLM models
@@ -79,7 +79,7 @@ First you will setup the LLM for your game 🏎:
 Then you can setup each of your characters as follows 🙋‍♀️:
 - Create an empty GameObject for the character.<br>In the GameObject Inspector click `Add Component` and select the LLMCharacter script.
 - Select the LLM constructed above in the `LLM` field.
-- Define the role of your AI in the `Prompt`. You can also define the name of the AI (`AI Name`) and the player (`Player Name`).
+- Define the role of your AI in the `Prompt`. You can define the name of the AI (`AI Name`) and the player (`Player Name`).
 
 You can also adjust the LLM and character settings according to your preference (see [Options](#options)).
 
@@ -268,10 +268,10 @@ public class MyScript : MonoBehaviour
 <details>
 <summary>Use a remote server</summary>
 
-You can also use a remote server that does the processing and implement Characters that interact with it. To do that:
+You can also use a remote server that does the processing and implement characters that interact with it. To do that:
 - Create a project with a GameObject using the `LLM` script as described above. Enable the `Remote` option and optionally configure the port.
 - Create a second project with the game characters using the `LLMCharacter` script as described above.
-  Enable the `Remote` option and configure the host and port with the IP address (starting with "http://") and port of the server.
+  Enable the `Remote` option and configure the host with the IP address (starting with "http://") and port of the server.
 
 </details>
 
@@ -298,11 +298,11 @@ You can also load your own model in .gguf format with the `Load model` button (s
 Save the scene, run and enjoy!
 
 ## Use your own model
-LLM for Unity uses the [Mistral 7B Instruct](https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.2), [OpenHermes 2.5](https://huggingface.co/teknium/OpenHermes-2.5-Mistral-7B) or [Microsoft Phi-3](https://huggingface.co/microsoft/Phi-3-mini-4k-instruct-gguf) model by default, quantised with the Q4 method.<br>
+LLM for Unity has different state of the art models built-in for different model sizes, quantised with the Q4_K_M method.<br>
 
 Alternative models can be downloaded from [HuggingFace](https://huggingface.co/models?library=gguf&sort=downloads).<br>
 The required model format is .gguf as defined by the llama.cpp.<br>
-HuggingFace models can be converted to gguf with this [online converter](https://huggingface.co/spaces/ggml-org/gguf-my-repo).<br>
+HuggingFace models can alternatively be converted to gguf with this [online converter](https://huggingface.co/spaces/ggml-org/gguf-my-repo).<br>
 
 ❕ Before using any model make sure you **check their license** ❕
 
