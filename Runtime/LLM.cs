@@ -65,12 +65,12 @@ namespace LLMUnity
 
         /// <summary> the LLM model to use.
         /// Models with .gguf format are allowed.</summary>
-        public string model = "";
+        [ModelAdvanced] public string model = "";
         /// <summary> Chat template used for the model </summary>
-        public string chatTemplate = ChatTemplate.DefaultTemplate;
+        [ModelAdvanced] public string chatTemplate = ChatTemplate.DefaultTemplate;
         /// <summary> the path of the LORA model being used (relative to the Assets/StreamingAssets folder).
         /// Models with .bin format are allowed.</summary>
-        public string lora = "";
+        [ModelAdvanced] public string lora = "";
 
         /// \cond HIDE
 
@@ -211,6 +211,9 @@ namespace LLMUnity
         {
             chatTemplate = templateName;
             if (started) llmlib?.LLM_SetTemplate(LLMObject, chatTemplate);
+#if UNITY_EDITOR
+            if (!EditorApplication.isPlaying) EditorUtility.SetDirty(this);
+#endif
         }
 
         /// <summary>
@@ -538,9 +541,7 @@ namespace LLMUnity
         public void OnDestroy()
         {
             Destroy();
-#if UNITY_EDITOR
             LLMManager.Unregister(this);
-#endif
         }
     }
 }
