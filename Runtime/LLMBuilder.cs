@@ -84,9 +84,8 @@ namespace LLMUnity
 
         public static void BuildModels()
         {
-            LLMUnitySetup.DeletePath(LLMUnitySetup.BuildFile);
             LLMManager.Build(CopyActionAddMeta);
-            if (File.Exists(LLMUnitySetup.BuildFile)) AddTargetPair(LLMUnitySetup.BuildFile);
+            if (File.Exists(LLMUnitySetup.LLMManagerPath)) AddMovedPair("", LLMUnitySetup.LLMManagerPath);
         }
 
         public static void Reset()

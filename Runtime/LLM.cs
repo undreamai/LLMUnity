@@ -59,9 +59,9 @@ namespace LLMUnity
         /// <summary> Boolean set to true if the server has failed to start. </summary>
         public bool failed { get; protected set; } = false;
         /// <summary> Boolean set to true if the models were not downloaded successfully. </summary>
-        public static bool downloadFailed { get; protected set; } = false;
+        public static bool modelSetupFailed { get; protected set; } = false;
         /// <summary> Boolean set to true if the server has started and is ready to receive requests, false otherwise. </summary>
-        public static bool downloadComplete { get; protected set; } = false;
+        public static bool modelSetupComplete { get; protected set; } = false;
 
         /// <summary> the LLM model to use.
         /// Models with .gguf format are allowed.</summary>
@@ -80,8 +80,14 @@ namespace LLMUnity
         StreamWrapper logStreamWrapper = null;
         Thread llmThread = null;
         List<StreamWrapper> streamWrappers = new List<StreamWrapper>();
+        public LLMManager llmManager = new LLMManager();
 
         /// \endcond
+
+        public LLM()
+        {
+            LLMManager.Register(this);
+        }
 
         /// <summary>
         /// The Unity Awake function that starts the LLM server.
@@ -91,13 +97,21 @@ namespace LLMUnity
         {
             if (!enabled) return;
 #if !UNITY_EDITOR
-            downloadFailed = !await LLMManager.DownloadModels();
+            modelSetupFailed = !await LLMManager.Setup();
 #endif
-            downloadComplete = true;
-            if (downloadFailed) return;
+            modelSetupComplete = true;
+            if (modelSetupFailed)
+            {
+                failed = true;
+                return;
+            }
             await AndroidSetup();
             string arguments = GetLlamaccpArguments();
-            if (arguments == null) return;
+            if (arguments == null)
+            {
+                failed = true;
+                return;
+            }
             await Task.Run(() => StartLLMServer(arguments));
             if (dontDestroyOnLoad) DontDestroyOnLoad(transform.root.gameObject);
             if (basePrompt != "") await SetBasePrompt(basePrompt);
@@ -112,27 +126,47 @@ namespace LLMUnity
             }
         }
 
-#if UNITY_EDITOR
-
-        public LLMManager llmManager = new LLMManager();
-
-        public LLM()
-        {
-            LLMManager.Register(this);
-        }
-
-#endif
-
         public async Task WaitUntilReady()
         {
             while (!started) await Task.Yield();
         }
 
-        public static async Task<bool> WaitUntilModelsDownloaded(Callback<float> downloadProgressCallback = null)
+        public static async Task<bool> WaitUntilModelSetup(Callback<float> downloadProgressCallback = null)
         {
             if (downloadProgressCallback != null) LLMManager.downloadProgressCallbacks.Add(downloadProgressCallback);
-            while (!downloadComplete) await Task.Yield();
-            return !downloadFailed;
+            while (!modelSetupComplete) await Task.Yield();
+            return !modelSetupFailed;
+        }
+
+        public string GetModelLoraPath(string path)
+        {
+            string modelPath = LLMUnitySetup.GetAssetPath(path);
+#if UNITY_EDITOR
+            if (!File.Exists(modelPath))
+            {
+                ModelEntry modelEntry = LLMManager.Get(path);
+                if (modelEntry != null) modelPath = modelEntry.path;
+            }
+#endif
+            return modelPath;
+        }
+
+        public string SetModelLoraPath(string path, bool lora)
+        {
+            ModelEntry modelEntry = LLMManager.Get(path);
+            if (modelEntry != null) return modelEntry.filename;
+            string assetPath = LLMUnitySetup.GetAssetPath(path);
+            if (LLMUnitySetup.IsSubPath(assetPath, LLMUnitySetup.GetAssetPath()) && File.Exists(assetPath)) return path;
+
+            string errorMessage;
+            string modelType = lora ? "Lora" : "Model";
+            if (File.Exists(path)) errorMessage = $"The {modelType} path needs to be relative to the StreamingAssets folder.";
+            else errorMessage = $"The {modelType} path was not found.";
+            errorMessage += " Use one of the following methods:";
+            errorMessage += $"\n-Copy the {modelType} inside the StreamingAssets folder and use its relative path or";
+            errorMessage += $"\n-Load the {modelType} with the LLMManager: `string filename=LLMManager.Load{modelType}(path); llm.Set{modelType}(filename)`";
+            LLMUnitySetup.LogError(errorMessage);
+            return "";
         }
 
         /// <summary>
@@ -143,11 +177,14 @@ namespace LLMUnity
         /// <param name="path">path to model to use (.gguf format)</param>
         public void SetModel(string path)
         {
-            // set the model and enable the model editor properties
-            model = path;
+            model = SetModelLoraPath(path, false);
+            if (!string.IsNullOrEmpty(model))
+            {
+                ModelEntry modelEntry = LLMManager.Get(model);
+                string template = modelEntry != null ? modelEntry.chatTemplate : ChatTemplate.FromGGUF(GetModelLoraPath(model));
+                SetTemplate(template);
+            }
 #if UNITY_EDITOR
-            model = LLMManager.LoadModel(path);
-            SetTemplate(LLMManager.Get(model).chatTemplate);
             if (!EditorApplication.isPlaying) EditorUtility.SetDirty(this);
 #endif
         }
@@ -160,7 +197,7 @@ namespace LLMUnity
         /// <param name="path">path to LORA model to use (.bin format)</param>
         public void SetLora(string path)
         {
-            lora = path;
+            lora = SetModelLoraPath(path, true);
 #if UNITY_EDITOR
             if (!EditorApplication.isPlaying) EditorUtility.SetDirty(this);
 #endif
@@ -193,11 +230,7 @@ namespace LLMUnity
                 LLMUnitySetup.LogError("No model file provided!");
                 return null;
             }
-#if UNITY_EDITOR
-            string modelPath = LLMManager.Get(model).path;
-#else
-            string modelPath = LLMUnitySetup.GetAssetPath(model);
-#endif
+            string modelPath = GetModelLoraPath(model);
             if (!File.Exists(modelPath))
             {
                 LLMUnitySetup.LogError($"File {modelPath} not found!");
@@ -206,11 +239,7 @@ namespace LLMUnity
             string loraPath = "";
             if (lora != "")
             {
-#if UNITY_EDITOR
-                loraPath = LLMManager.Get(lora).path;
-#else
-                loraPath = LLMUnitySetup.GetAssetPath(lora);
-#endif
+                loraPath = GetModelLoraPath(lora);
                 if (!File.Exists(loraPath))
                 {
                     LLMUnitySetup.LogError($"File {loraPath} not found!");
