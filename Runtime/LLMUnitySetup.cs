@@ -97,10 +97,8 @@ namespace LLMUnity
         public static string modelDownloadPath = Path.Combine(LLMUnityStore, "models");
         /// <summary> Temporary dir for build </summary>
         public static string BuildTempDir = Path.Combine(Application.temporaryCachePath, "LLMUnityBuild");
-        /// <summary> Name of file with build information for runtime </summary>
-        public static string BuildFilename = "LLMUnityBuild.bin";
         /// <summary> Path of file with build information for runtime </summary>
-        public static string BuildFile = GetAssetPath(BuildFilename);
+        public static string LLMManagerPath = GetAssetPath("LLMManager.bin");
 
         /// <summary> Default models for download </summary>
         [HideInInspector] public static readonly (string, string, string)[] modelOptions = new(string, string, string)[]
@@ -275,6 +273,12 @@ namespace LLMUnity
                     }
                 }
             }
+        }
+
+        public static async Task AndroidExtractAsset(string path)
+        {
+            if (Application.platform != RuntimePlatform.Android) return;
+            await AndroidExtractFile(Path.GetFileName(path));
         }
 
         public static bool IsSubPath(string childPath, string parentPath)
