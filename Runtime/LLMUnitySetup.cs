@@ -138,6 +138,8 @@ namespace LLMUnity
         }
         [LLMUnity] public static DebugModeType DebugMode = DebugModeType.All;
         static List<Callback<string>> errorCallbacks = new List<Callback<string>>();
+        static readonly object lockObject = new object();
+        static Dictionary<string, Task> androidExtractTasks = new Dictionary<string, Task>();
 
         public static void Log(string message)
         {
@@ -240,6 +242,20 @@ namespace LLMUnity
 
         public static async Task AndroidExtractFile(string assetName, bool overwrite = false, bool log = true, int chunkSize = 1024*1024)
         {
+            Task extractionTask;
+            lock (lockObject)
+            {
+                if (!androidExtractTasks.TryGetValue(assetName, out extractionTask))
+                {
+                    extractionTask = AndroidExtractFileOnce(assetName, overwrite, log, chunkSize);
+                    androidExtractTasks[assetName] = extractionTask;
+                }
+            }
+            await extractionTask;
+        }
+
+        public static async Task AndroidExtractFileOnce(string assetName, bool overwrite = false, bool log = true, int chunkSize = 1024*1024)
+        {
             string source = "jar:file://" + Application.dataPath + "!/assets/" + assetName;
             string target = GetAssetPath(assetName);
             if (!overwrite && File.Exists(target))
@@ -275,10 +291,10 @@ namespace LLMUnity
             }
         }
 
-        public static async Task AndroidExtractAsset(string path)
+        public static async Task AndroidExtractAsset(string path, bool overwrite = false)
         {
             if (Application.platform != RuntimePlatform.Android) return;
-            await AndroidExtractFile(Path.GetFileName(path));
+            await AndroidExtractFile(Path.GetFileName(path), overwrite);
         }
 
         public static bool IsSubPath(string childPath, string parentPath)

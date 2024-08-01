@@ -77,7 +77,7 @@ namespace LLMUnity
 
         public static async Task<bool> SetupOnce()
         {
-            await LLMUnitySetup.AndroidExtractAsset(LLMUnitySetup.LLMManagerPath);
+            await LLMUnitySetup.AndroidExtractAsset(LLMUnitySetup.LLMManagerPath, true);
             LoadFromDisk();
             if (!downloadOnStart) return true;
 

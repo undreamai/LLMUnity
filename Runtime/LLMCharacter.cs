@@ -324,7 +324,7 @@ namespace LLMUnity
 #if UNITY_EDITOR
             if (!EditorApplication.isPlaying) path = LLMUnitySetup.AddAsset(path);
 #endif
-            await LLMUnitySetup.AndroidExtractAsset(path);
+            await LLMUnitySetup.AndroidExtractAsset(path, true);
             grammar = path;
             InitGrammar();
         }
