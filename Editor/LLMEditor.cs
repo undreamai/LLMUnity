@@ -166,8 +166,8 @@ namespace LLMUnity
                 EditorGUILayout.LabelField("Enter URL", GUILayout.Width(100));
                 GUI.SetNextControlName("customURLFocus");
                 customURL = EditorGUILayout.TextField(customURL, GUILayout.Width(buttonWidth));
-                submit = GUILayout.Button("Submit", GUILayout.Width(buttonWidth));
-                exit = GUILayout.Button("Back", GUILayout.Width(buttonWidth));
+                submit = GUILayout.Button("Submit", GUILayout.Width(buttonWidth / 2));
+                exit = GUILayout.Button("Back", GUILayout.Width(buttonWidth / 2));
                 EditorGUILayout.EndHorizontal();
 
                 if (customURLFocus)
