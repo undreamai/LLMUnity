@@ -167,11 +167,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 708542fec6999ea3ebd7c69404932bb3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  llm: {fileID: 1047848254}
   llmCharacter: {fileID: 498662973}
   ChatPanel: {fileID: 1084608230}
   playerText: {fileID: 1966107897}
   AIText: {fileID: 887085510}
+  ErrorText: {fileID: 0}
   DownloadPanel: {fileID: 332743750}
   progressBar: {fileID: 332743752}
   progressText: {fileID: 381203299}
@@ -1323,24 +1323,17 @@ MonoBehaviour:
   advancedOptions: 0
   remote: 0
   port: 13333
-  numThreads: 2
+  numThreads: -1
   numGPULayers: 0
   debug: 0
   parallelPrompts: -1
-  asynchronousStartup: 1
   dontDestroyOnLoad: 1
-  model: Phi-3-mini-4k-instruct-q4.gguf
-  downloadOnBuild: 1
-  modelURL: https://huggingface.co/microsoft/Phi-3-mini-4k-instruct-gguf/resolve/main/Phi-3-mini-4k-instruct-q4.gguf?download=true
-  lora: 
   contextSize: 0
   batchSize: 512
   basePrompt: 
-  SelectedModel: 3
-  modelProgress: 1
-  modelCopyProgress: 1
-  modelHide: 1
-  chatTemplate: phi-3
+  model: 
+  chatTemplate: chatml
+  lora: 
 --- !u!4 &1047848255
 Transform:
   m_ObjectHideFlags: 0

@@ -1043,17 +1043,13 @@ MonoBehaviour:
   numGPULayers: 0
   debug: 0
   parallelPrompts: -1
-  asynchronousStartup: 1
   dontDestroyOnLoad: 1
-  model: 
-  lora: 
   contextSize: 0
   batchSize: 512
-  SelectedModel: 0
-  modelProgress: 1
-  modelCopyProgress: 1
-  modelHide: 1
+  basePrompt: 
+  model: 
   chatTemplate: chatml
+  lora: 
 --- !u!4 &1047848255
 Transform:
   m_ObjectHideFlags: 0
