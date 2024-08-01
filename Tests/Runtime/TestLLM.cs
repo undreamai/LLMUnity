@@ -6,37 +6,52 @@ using System.Collections.Generic;
 using System;
 using System.Collections;
 using UnityEngine.TestTools;
+using System.IO;
 
 namespace LLMUnityTests
 {
     public class TestLLM
     {
-        GameObject gameObject;
-        LLM llm;
-        LLMCharacter llmCharacter;
+        protected GameObject gameObject;
+        protected LLM llm;
+        protected LLMCharacter llmCharacter;
+        protected static string modelUrl = "https://huggingface.co/afrideva/smol_llama-220M-openhermes-GGUF/resolve/main/smol_llama-220m-openhermes.q4_k_m.gguf?download=true";
+        protected static string filename = Path.GetFileName(modelUrl).Split("?")[0];
         Exception error = null;
         string prompt = "Below is an instruction that describes a task, paired with an input that provides further context. Write a response that appropriately completes the request.";
 
         public TestLLM()
         {
+            LLMUnitySetup.SetDebugMode(LLMUnitySetup.DebugModeType.All);
             Task task = Init();
             task.Wait();
         }
 
-        public async Task Init()
+        public virtual async Task Init()
         {
             gameObject = new GameObject();
             gameObject.SetActive(false);
+            await SetLLM();
+            SetLLMCharacter();
+            gameObject.SetActive(true);
+        }
 
+        public async Task EmptyTask()
+        {
+            await Task.Delay(1);
+        }
+
+        public virtual async Task SetLLM()
+        {
             llm = gameObject.AddComponent<LLM>();
-            string modelUrl = "https://huggingface.co/afrideva/smol_llama-220M-openhermes-GGUF/resolve/main/smol_llama-220m-openhermes.q4_k_m.gguf?download=true";
-            string modelPath = "LLMUnityTests/smol_llama-220m-openhermes.q4_k_m.gguf";
-            string fullModelPath = LLMUnitySetup.GetAssetPath(modelPath);
-            await LLMUnitySetup.DownloadFile(modelUrl, fullModelPath, false, null, null);
-            llm.SetModel(fullModelPath);
+            string filename = await LLMManager.DownloadModel(modelUrl);
+            llm.SetModel(filename);
             llm.parallelPrompts = 1;
             llm.SetTemplate("alpaca");
+        }
 
+        public virtual void SetLLMCharacter()
+        {
             llmCharacter = gameObject.AddComponent<LLMCharacter>();
             llmCharacter.llm = llm;
             llmCharacter.playerName = "Instruction";
@@ -46,11 +61,9 @@ namespace LLMUnityTests
             llmCharacter.seed = 0;
             llmCharacter.stream = false;
             llmCharacter.numPredict = 20;
-
-            gameObject.SetActive(true);
         }
 
-        public async Task RunTests()
+        public virtual async Task RunTests()
         {
             error = null;
             try
@@ -91,6 +104,7 @@ namespace LLMUnityTests
                 Debug.LogError(error.ToString());
                 throw (error);
             }
+            OnDestroy();
         }
 
         public void TestInitParameters(int nkeep, int chats)
@@ -126,5 +140,77 @@ namespace LLMUnityTests
         {
             Assert.That(llmCharacter.chat.Count == num);
         }
+
+        public virtual void OnDestroy()
+        {
+            LLMManager.Remove(filename);
+        }
+    }
+
+    public class TestLLM_LLMManager_Load : TestLLM
+    {
+        public override Task SetLLM()
+        {
+            llm = gameObject.AddComponent<LLM>();
+            string sourcePath = Path.Combine(LLMUnitySetup.modelDownloadPath, filename);
+            filename = LLMManager.LoadModel(sourcePath);
+            llm.SetModel(filename);
+            llm.parallelPrompts = 1;
+            llm.SetTemplate("alpaca");
+            return Task.CompletedTask;
+        }
+    }
+
+    public class TestLLM_StreamingAssets_Load : TestLLM
+    {
+        public override Task SetLLM()
+        {
+            llm = gameObject.AddComponent<LLM>();
+            string sourcePath = Path.Combine(LLMUnitySetup.modelDownloadPath, filename);
+            string targetPath = LLMUnitySetup.GetAssetPath(filename);
+            if (!File.Exists(targetPath)) File.Copy(sourcePath, targetPath);
+            llm.SetModel(filename);
+            llm.parallelPrompts = 1;
+            llm.SetTemplate("alpaca");
+            return Task.CompletedTask;
+        }
+
+        public override void OnDestroy()
+        {
+            string targetPath = LLMUnitySetup.GetAssetPath(filename);
+            if (!File.Exists(targetPath)) File.Delete(targetPath);
+        }
+    }
+
+    public class TestLLM_SetModel_Fail : TestLLM
+    {
+        public TestLLM_SetModel_Fail()
+        {
+            LLMUnitySetup.SetDebugMode(LLMUnitySetup.DebugModeType.None);
+            Task task = Init();
+            task.Wait();
+        }
+
+        public override Task SetLLM()
+        {
+            LLMUnitySetup.SetDebugMode(LLMUnitySetup.DebugModeType.None);
+            llm = gameObject.AddComponent<LLM>();
+            string sourcePath = Path.Combine(LLMUnitySetup.modelDownloadPath, filename);
+            llm.SetModel(sourcePath);
+            llm.parallelPrompts = 1;
+            llm.SetTemplate("alpaca");
+            return Task.CompletedTask;
+        }
+
+        public override Task RunTests()
+        {
+            Assert.That(llm.model == "");
+            llm.Awake();
+            Assert.That(llm.failed);
+            llm.OnDestroy();
+            return Task.CompletedTask;
+        }
+
+        public override void OnDestroy() {}
     }
 }
