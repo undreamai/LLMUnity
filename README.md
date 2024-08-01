@@ -47,7 +47,7 @@ LLM for Unity is built on top of the awesome [llama.cpp](https://github.com/gger
 ## How to help
 - [⭐ Star](https://github.com/undreamai/LLMUnity) the repo, leave us a [review](https://assetstore.unity.com/packages/slug/273604) and spread the word about the project!
 - Join us at [Discord](https://discord.gg/RwXKQb6zdv) and say hi!
-- Submit feature requests or bugs as issues or even submit a PR and become a collaborator
+- [Contribute](CONTRIBUTING.md) by submitting feature requests or bugs as issues or even submiting a PR and become a collaborator!
 
 ## Games using LLM for Unity
 - [Verbal Verdict](https://store.steampowered.com/app/2778780/Verbal_Verdict/)
