@@ -98,7 +98,7 @@ namespace LLMUnity
         /// <summary> Temporary dir for build </summary>
         public static string BuildTempDir = Path.Combine(Application.temporaryCachePath, "LLMUnityBuild");
         /// <summary> Path of file with build information for runtime </summary>
-        public static string LLMManagerPath = GetAssetPath("LLMManager.bin");
+        public static string LLMManagerPath = GetAssetPath("LLMManager.json");
 
         /// <summary> Default models for download </summary>
         [HideInInspector] public static readonly (string, string, string)[] modelOptions = new(string, string, string)[]
