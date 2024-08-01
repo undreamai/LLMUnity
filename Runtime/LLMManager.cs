@@ -133,7 +133,7 @@ namespace LLMUnity
             entry.chatTemplate = chatTemplate;
             foreach (LLM llm in llms)
             {
-                if (llm.model == entry.filename) llm.SetTemplate(chatTemplate);
+                if (llm != null && llm.model == entry.filename) llm.SetTemplate(chatTemplate);
             }
 #if UNITY_EDITOR
             Save();
