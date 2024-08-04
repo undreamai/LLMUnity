@@ -140,13 +140,26 @@ namespace LLMUnity
 #endif
         }
 
-        public static ModelEntry Get(string filename)
+        public static ModelEntry Get(string path)
         {
+            string filename = Path.GetFileName(path);
+            string fullPath = Path.GetFullPath(path).Replace('\\', '/');
             foreach (ModelEntry entry in modelEntries)
             {
-                if (entry.filename == filename) return entry;
+                if (entry.filename == filename || entry.path == fullPath) return entry;
             }
             return null;
+        }
+
+        public static string GetAssetPath(string filename)
+        {
+            ModelEntry entry = Get(filename);
+            if (entry == null) return "";
+#if UNITY_EDITOR
+            return entry.path;
+#else
+            return LLMUnitySetup.GetAssetPath(entry.filename);
+#endif
         }
 
         public static int Num(bool lora)
@@ -227,9 +240,21 @@ namespace LLMUnity
         {
             foreach (ModelEntry entry in modelEntries)
             {
-                if (entry.url == url) return entry.filename;
+                if (entry.url == url)
+                {
+                    LLMUnitySetup.Log($"Found existing entry for {url}");
+                    return entry.filename;
+                }
             }
+
             string modelName = Path.GetFileName(url).Split("?")[0];
+            ModelEntry entryPath = Get(modelName);
+            if (entryPath != null)
+            {
+                LLMUnitySetup.Log($"Found existing entry for {modelName}");
+                return entryPath.filename;
+            }
+
             string modelPath = Path.Combine(LLMUnitySetup.modelDownloadPath, modelName);
             float preModelProgress = modelProgress;
             float preLoraProgress = loraProgress;
@@ -258,12 +283,13 @@ namespace LLMUnity
 
         public static string Load(string path, bool lora = false, string label = null)
         {
-            string fullPath = Path.GetFullPath(path).Replace('\\', '/');
-            foreach (ModelEntry entry in modelEntries)
+            ModelEntry entry = Get(path);
+            if (entry != null)
             {
-                if (entry.path == fullPath) return entry.filename;
+                LLMUnitySetup.Log($"Found existing entry for {entry.filename}");
+                return entry.filename;
             }
-            return AddEntry(fullPath, lora, label);
+            return AddEntry(path, lora, label);
         }
 
         public static async Task<string> DownloadModel(string url, string label = null)
