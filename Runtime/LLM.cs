@@ -140,33 +140,32 @@ namespace LLMUnity
 
         public string GetModelLoraPath(string path)
         {
-            string modelPath = LLMUnitySetup.GetAssetPath(path);
-#if UNITY_EDITOR
-            if (!File.Exists(modelPath))
-            {
-                ModelEntry modelEntry = LLMManager.Get(path);
-                if (modelEntry != null) modelPath = modelEntry.path;
-            }
-#endif
-            return modelPath;
+            string assetPath = LLMManager.GetAssetPath(path);
+            if (!string.IsNullOrEmpty(assetPath)) return assetPath;
+            return path;
         }
 
         public string SetModelLoraPath(string path, bool lora)
         {
             ModelEntry modelEntry = LLMManager.Get(path);
             if (modelEntry != null) return modelEntry.filename;
-            string assetPath = LLMUnitySetup.GetAssetPath(path);
-            if (LLMUnitySetup.IsSubPath(assetPath, LLMUnitySetup.GetAssetPath()) && File.Exists(assetPath)) return path;
 
-            string errorMessage;
             string modelType = lora ? "Lora" : "Model";
-            if (File.Exists(path)) errorMessage = $"The {modelType} path needs to be relative to the StreamingAssets folder.";
-            else errorMessage = $"The {modelType} path was not found.";
-            errorMessage += " Use one of the following methods:";
-            errorMessage += $"\n-Copy the {modelType} inside the StreamingAssets folder and use its relative path or";
-            errorMessage += $"\n-Load the {modelType} with the LLMManager: `string filename=LLMManager.Load{modelType}(path); llm.Set{modelType}(filename)`";
-            LLMUnitySetup.LogError(errorMessage);
-            return "";
+            string assetPath = LLMUnitySetup.GetAssetPath(path);
+            if (!File.Exists(assetPath))
+            {
+                LLMUnitySetup.LogError($"The {modelType} file {path} was not found.");
+                return path;
+            }
+
+            if (!LLMUnitySetup.IsSubPath(assetPath, LLMUnitySetup.GetAssetPath()))
+            {
+                string errorMessage = $"The {modelType} file {path} was loaded locally. If you want to include it in the build:";
+                errorMessage += $"\n-Copy the {modelType} inside the StreamingAssets folder and use its relative path or";
+                errorMessage += $"\n-Load the {modelType} with the LLMManager: `string filename=LLMManager.Load{modelType}(path); llm.Set{modelType}(filename)`";
+                LLMUnitySetup.LogWarning(errorMessage);
+            }
+            return assetPath;
         }
 
         /// <summary>
@@ -207,7 +206,7 @@ namespace LLMUnity
         /// Set the chat template for the LLM.
         /// </summary>
         /// <param name="templateName">the chat template to use. The available templates can be found in the ChatTemplate.templates.Keys array </param>
-        public void SetTemplate(string templateName, bool setDirty=true)
+        public void SetTemplate(string templateName, bool setDirty = true)
         {
             chatTemplate = templateName;
             if (started) llmlib?.LLM_SetTemplate(LLMObject, chatTemplate);

@@ -59,6 +59,12 @@ namespace LLMUnity
             AddTargetPair(target + ".meta");
         }
 
+        static void AddActionAddMeta(string target)
+        {
+            AddTargetPair(target);
+            AddTargetPair(target + ".meta");
+        }
+
         static bool DeleteAction(string source)
         {
             return LLMUnitySetup.DeletePath(source);
@@ -85,7 +91,7 @@ namespace LLMUnity
         public static void BuildModels()
         {
             LLMManager.Build(CopyActionAddMeta);
-            if (File.Exists(LLMUnitySetup.LLMManagerPath)) AddMovedPair("", LLMUnitySetup.LLMManagerPath);
+            if (File.Exists(LLMUnitySetup.LLMManagerPath)) AddActionAddMeta(LLMUnitySetup.LLMManagerPath);
         }
 
         public static void Reset()

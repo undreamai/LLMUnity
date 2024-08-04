@@ -182,18 +182,10 @@ namespace LLMUnityTests
         }
     }
 
-    public class TestLLM_SetModel_Fail : TestLLM
+    public class TestLLM_SetModel_Warning : TestLLM
     {
-        public TestLLM_SetModel_Fail()
-        {
-            LLMUnitySetup.SetDebugMode(LLMUnitySetup.DebugModeType.None);
-            Task task = Init();
-            task.Wait();
-        }
-
         public override Task SetLLM()
         {
-            LLMUnitySetup.SetDebugMode(LLMUnitySetup.DebugModeType.None);
             llm = gameObject.AddComponent<LLM>();
             string sourcePath = Path.Combine(LLMUnitySetup.modelDownloadPath, filename);
             llm.SetModel(sourcePath);
@@ -201,16 +193,5 @@ namespace LLMUnityTests
             llm.SetTemplate("alpaca");
             return Task.CompletedTask;
         }
-
-        public override Task RunTests()
-        {
-            Assert.That(llm.model == "");
-            llm.Awake();
-            Assert.That(llm.failed);
-            llm.OnDestroy();
-            return Task.CompletedTask;
-        }
-
-        public override void OnDestroy() {}
     }
 }
