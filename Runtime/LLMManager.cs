@@ -236,13 +236,13 @@ namespace LLMUnity
             return AddEntry(new ModelEntry(path, lora, label, url));
         }
 
-        public static async Task<string> Download(string url, bool lora = false, string label = null)
+        public static async Task<string> Download(string url, bool lora = false, bool log = false, string label = null)
         {
             foreach (ModelEntry entry in modelEntries)
             {
                 if (entry.url == url)
                 {
-                    LLMUnitySetup.Log($"Found existing entry for {url}");
+                    if (log) LLMUnitySetup.Log($"Found existing entry for {url}");
                     return entry.filename;
                 }
             }
@@ -251,7 +251,7 @@ namespace LLMUnity
             ModelEntry entryPath = Get(modelName);
             if (entryPath != null)
             {
-                LLMUnitySetup.Log($"Found existing entry for {modelName}");
+                if (log) LLMUnitySetup.Log($"Found existing entry for {modelName}");
                 return entryPath.filename;
             }
 
@@ -281,35 +281,35 @@ namespace LLMUnity
             return AddEntry(modelPath, lora, label, url);
         }
 
-        public static string Load(string path, bool lora = false, string label = null)
+        public static string Load(string path, bool lora = false, bool log = false, string label = null)
         {
             ModelEntry entry = Get(path);
             if (entry != null)
             {
-                LLMUnitySetup.Log($"Found existing entry for {entry.filename}");
+                if (log) LLMUnitySetup.Log($"Found existing entry for {entry.filename}");
                 return entry.filename;
             }
             return AddEntry(path, lora, label);
         }
 
-        public static async Task<string> DownloadModel(string url, string label = null)
+        public static async Task<string> DownloadModel(string url, bool log = false, string label = null)
         {
-            return await Download(url, false, label);
+            return await Download(url, false, log, label);
         }
 
-        public static async Task<string> DownloadLora(string url, string label = null)
+        public static async Task<string> DownloadLora(string url, bool log = false, string label = null)
         {
-            return await Download(url, true, label);
+            return await Download(url, true, log, label);
         }
 
-        public static string LoadModel(string path, string label = null)
+        public static string LoadModel(string path, bool log = false, string label = null)
         {
-            return Load(path, false, label);
+            return Load(path, false, log, label);
         }
 
-        public static string LoadLora(string path, string label = null)
+        public static string LoadLora(string path, bool log = false, string label = null)
         {
-            return Load(path, true, label);
+            return Load(path, true, log, label);
         }
 
         public static void SetURL(string filename, string url)
