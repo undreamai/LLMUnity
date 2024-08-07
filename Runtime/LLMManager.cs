@@ -86,7 +86,7 @@ namespace LLMUnity
             foreach (ModelEntry modelEntry in modelEntries)
             {
                 string target = LLMUnitySetup.GetAssetPath(modelEntry.filename);
-                if (!File.Exists(target)) downloads.Add(new StringPair {source = modelEntry.url, target = target});
+                if (!File.Exists(target) && !string.IsNullOrEmpty(modelEntry.url)) downloads.Add(new StringPair {source = modelEntry.url, target = target});
             }
             if (downloads.Count == 0) return true;
 
