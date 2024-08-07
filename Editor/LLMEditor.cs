@@ -184,7 +184,7 @@ namespace LLMUnity
                 Repaint();
                 if (submit && customURL != "")
                 {
-                    string filename = await LLMManager.Download(customURL, customURLLora);
+                    string filename = await LLMManager.Download(customURL, customURLLora, true);
                     SetModelIfNone(filename, customURLLora);
                     UpdateModels(true);
                 }
@@ -206,7 +206,7 @@ namespace LLMUnity
             else if (modelIndex > 1)
             {
                 if (modelLicenses[modelIndex] != null) Debug.LogWarning($"The {modelOptions[modelIndex]} model is released under the following license: {modelLicenses[modelIndex]}. By using this model, you agree to the terms of the license.");
-                string filename = await LLMManager.DownloadModel(modelURLs[modelIndex], modelOptions[modelIndex]);
+                string filename = await LLMManager.DownloadModel(modelURLs[modelIndex], true, modelOptions[modelIndex]);
                 SetModelIfNone(filename, false);
                 UpdateModels(true);
             }
@@ -218,7 +218,7 @@ namespace LLMUnity
                     string path = EditorUtility.OpenFilePanelWithFilters("Select a gguf model file", "", new string[] { "Model Files", "gguf" });
                     if (!string.IsNullOrEmpty(path))
                     {
-                        string filename = LLMManager.LoadModel(path);
+                        string filename = LLMManager.LoadModel(path, true);
                         SetModelIfNone(filename, false);
                         UpdateModels();
                     }
