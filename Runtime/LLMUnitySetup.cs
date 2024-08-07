@@ -95,8 +95,6 @@ namespace LLMUnity
         public static string LLMUnityStore = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "LLMUnity");
         /// <summary> Model download path </summary>
         public static string modelDownloadPath = Path.Combine(LLMUnityStore, "models");
-        /// <summary> Temporary dir for build </summary>
-        public static string BuildTempDir = Path.Combine(Application.temporaryCachePath, "LLMUnityBuild");
         /// <summary> Path of file with build information for runtime </summary>
         public static string LLMManagerPath = GetAssetPath("LLMManager.json");
 
@@ -305,43 +303,6 @@ namespace LLMUnity
         }
 
 #if UNITY_EDITOR
-
-        public static void CopyPath(string source, string target)
-        {
-            if (File.Exists(source))
-            {
-                File.Copy(source, target);
-            }
-            else if (Directory.Exists(source))
-            {
-                Directory.CreateDirectory(target);
-                List<string> filesAndDirs = new List<string>();
-                filesAndDirs.AddRange(Directory.GetFiles(source));
-                filesAndDirs.AddRange(Directory.GetDirectories(source));
-                foreach (string path in filesAndDirs)
-                {
-                    CopyPath(path, Path.Combine(target, Path.GetFileName(path)));
-                }
-            }
-        }
-
-        public static void MovePath(string source, string target)
-        {
-            CopyPath(source, target);
-            DeletePath(source);
-        }
-
-        public static bool DeletePath(string path)
-        {
-            if (!IsSubPath(path, GetAssetPath()) && !IsSubPath(path, BuildTempDir))
-            {
-                LogError($"Safeguard: {path} will not be deleted because it may not be safe");
-                return false;
-            }
-            if (File.Exists(path)) File.Delete(path);
-            else if (Directory.Exists(path)) Directory.Delete(path, true);
-            return true;
-        }
 
         [HideInInspector] public static float libraryProgress = 1;
 
