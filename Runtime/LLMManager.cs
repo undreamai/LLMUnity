@@ -218,12 +218,16 @@ namespace LLMUnity
             int indexToInsert = modelEntries.Count;
             if (!entry.lora)
             {
-                for (int i = modelEntries.Count - 1; i >= 0; i--)
+                if (modelEntries[0].lora) indexToInsert = 0;
+                else
                 {
-                    if (!modelEntries[i].lora)
+                    for (int i = modelEntries.Count - 1; i >= 0; i--)
                     {
-                        indexToInsert = i + 1;
-                        break;
+                        if (!modelEntries[i].lora)
+                        {
+                            indexToInsert = i + 1;
+                            break;
+                        }
                     }
                 }
             }
