@@ -240,7 +240,9 @@ namespace LLMUnity
                         string path = EditorUtility.OpenFilePanelWithFilters("Select a bin lora file", "", new string[] { "Model Files", "bin" });
                         if (!string.IsNullOrEmpty(path))
                         {
-                            llmScript.SetLora(path);
+                            string filename = LLMManager.LoadLora(path, true);
+                            SetModelIfNone(filename, true);
+                            UpdateModels();
                         }
                     };
                 }
