@@ -46,6 +46,7 @@ namespace LLMUnity
         public List<ModelEntry> modelEntries;
     }
 
+    [DefaultExecutionOrder(-2)]
     public class LLMManager
     {
         public static bool downloadOnStart = false;
