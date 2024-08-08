@@ -28,7 +28,7 @@ LLM for Unity is built on top of the awesome [llama.cpp](https://github.com/gger
 <a href="#setup" style=color: black>Setup</a>&nbsp;&nbsp;•&nbsp;
 <a href="#how-to-use" style=color: black>How to use</a>&nbsp;&nbsp;•&nbsp;
 <a href="#examples" style=color: black>Examples</a>&nbsp;&nbsp;•&nbsp;
-<a href="#use-your-own-model" style=color: black>Use your own model</a>&nbsp;&nbsp;•&nbsp;
+<a href="#llm-model-management" style=color: black>LLM model management</a>&nbsp;&nbsp;•&nbsp;
 <a href="#options" style=color: black>Options</a>&nbsp;&nbsp;•&nbsp;
 <a href="#license" style=color: black>License</a>
 </sub>
@@ -74,12 +74,12 @@ _Method 2: Install using the GitHub repo:_
 
 First you will setup the LLM for your game 🏎:
 - Create an empty GameObject.<br>In the GameObject Inspector click `Add Component` and select the LLM script.
-- Download one of the default models with the `Download Model` button (~GBs).<br>Or load your own .gguf model with the `Load model` button (see [Use your own model](#use-your-own-model)).
+- Download one of the default models with the `Download Model` button (~GBs).<br>Or load your own .gguf model with the `Load model` button (see [LLM model management](#llm-model-management)).
 
 Then you can setup each of your characters as follows 🙋‍♀️:
 - Create an empty GameObject for the character.<br>In the GameObject Inspector click `Add Component` and select the LLMCharacter script.
-- Select the LLM constructed above in the `LLM` field.
 - Define the role of your AI in the `Prompt`. You can define the name of the AI (`AI Name`) and the player (`Player Name`).
+- (Optional) Select the LLM constructed above in the `LLM` field if you have more than one LLM GameObjects.
 
 You can also adjust the LLM and character settings according to your preference (see [Options](#options)).
 
@@ -132,7 +132,17 @@ That's all ✨!
 <br><br>
 You can also:
 
+<details>
+<summary>Build a mobile app on Android</summary>
 
+To build an Android app you need to specify the `IL2CPP` scripting backend and the `ARM64` as the target architecture in the player settings.<br>
+These settings can be accessed from the `Edit > Project Settings` menu within the `Player > Other Settings` section.<br>
+
+<img width="400" src=".github/android.png">
+
+It is also a good idea to enable the `Download on Build` option in the LLM GameObject to download the model on launch in order to keep the app size small.
+
+</details>
 <details>
 <summary>Save / Load your chat history</summary>
 
@@ -157,7 +167,7 @@ where filename the filename or relative path of your choice.
 ``` c#
   void WarmupCompleted(){
     // do something when the warmup is complete
-    Debug.Log("The AI is warm");
+    Debug.Log("The AI is nice and ready");
   }
 
   void Game(){
@@ -228,15 +238,20 @@ public class MyScript : MonoBehaviour
 
     async void Start()
     {
-        // disable gameObject so that Awake is not called immediately
+        // disable gameObject so that theAwake is not called immediately
         gameObject.SetActive(false);
 
         // Add an LLM object
         llm = gameObject.AddComponent<LLM>();
-        // set the model with a path relative to StreamingAssets folder
-        await llm.SetModel("Phi-3-mini-4k-instruct-q4.gguf");
-        // you can also set a lora in a similar fashion
-        // await llm.SetLora("my-lora.bin");
+        // set the model using the filename of the model.
+        // The model needs to be added to the LLM model manager (see LLM model management) by loading or downloading it.
+        // Otherwise the model file can be copied directly inside the StreamingAssets folder.
+        llm.SetModel("Phi-3-mini-4k-instruct-q4.gguf");
+        // optional: you can also set a lora in a similar fashion
+        llm.SetLora("my-lora.bin");
+        // optional: you can set the chat template of the model if it is not correctly identified
+        // You can find a list of chat templates in the ChatTemplate.templates.Keys
+        llm.SetTemplate("phi-3");
         // optional: set number of threads
         llm.numThreads = -1;
         // optional: enable GPU by setting the number of model layers to offload to it
@@ -251,12 +266,14 @@ public class MyScript : MonoBehaviour
         // set the AI and player name
         llmCharacter.AIName = "AI";
         llmCharacter.playerName = "Human";
-        //  optional: set streaming to false to get the complete result in one go
+        // optional: set streaming to false to get the complete result in one go
         // llmCharacter.stream = true;
-        //  optional: set a save path
+        // optional: set a save path
         // llmCharacter.save = "AICharacter1";
-        //  optional: set a grammar
-        // llmCharacter.SetGrammar("json.gbnf");
+        // optional: enable the save cache to avoid recomputation when loading a save file (requires ~100 MB)
+        // llmCharacter.saveCache = true;
+        // optional: set a grammar
+        // await llmCharacter.SetGrammar("json.gbnf");
 
         // re-enable gameObject
         gameObject.SetActive(true);
@@ -268,7 +285,7 @@ public class MyScript : MonoBehaviour
 <details>
 <summary>Use a remote server</summary>
 
-You can also use a remote server that does the processing and implement characters that interact with it. To do that:
+You can use a remote server to carry out the processing and implement characters that interact with it. To do that:
 - Create a project with a GameObject using the `LLM` script as described above. Enable the `Remote` option and optionally configure the port.
 - Create a second project with the game characters using the `LLMCharacter` script as described above.
   Enable the `Remote` option and configure the host with the IP address (starting with "http://") and port of the server.
@@ -293,16 +310,32 @@ To install a sample:
 - Select the `LLM for Unity` Package. From the `Samples` Tab, click `Import` next to the sample you want to install.
 
 The samples can be run with the `Scene.unity` scene they contain inside their folder.<br>
-In the scene, select the `LLM` GameObject and click the `Download Model` button to download the default model.<br>
-You can also load your own model in .gguf format with the `Load model` button (see [Use your own model](#use-your-own-model)).<br>
+In the scene, select the `LLM` GameObject and click the `Download Model` button to download a default model or `Load model` to load your own model (see [LLM model management](#llm-model-management)).<br>
 Save the scene, run and enjoy!
 
-## Use your own model
-LLM for Unity has different state of the art models built-in for different model sizes, quantised with the Q4_K_M method.<br>
+## LLM model management
+LLM for Unity implements a model manager that allows to load or download LLMs and ship them directly in your game.<br>
+The model manager can be found as part of the LLM GameObject:<br>
+<img width="360" src=".github/LLM_manager.png">
 
-Alternative models can be downloaded from [HuggingFace](https://huggingface.co/models?library=gguf&sort=downloads).<br>
-The required model format is .gguf as defined by the llama.cpp.<br>
-HuggingFace models can alternatively be converted to gguf with this [online converter](https://huggingface.co/spaces/ggml-org/gguf-my-repo).<br>
+You can download models with the `Download model` button.<br>
+LLM for Unity includes different state of the art models built-in for different model sizes, quantised with the Q4_K_M method.<br>
+Alternative models can be downloaded from [HuggingFace](https://huggingface.co/models?library=gguf&sort=downloads) in the .gguf format.<br>
+You can download a model locally and load it with the `Load model` button, or copy the URL in the `Download model > Custom URL` field to directly download it.<br>
+If a HuggingFace model does not provide a gguf file, it can be converted to gguf with this [online converter](https://huggingface.co/spaces/ggml-org/gguf-my-repo).<br>
+
+The chat template used for constructing the prompts is determined automatically from the model (if a relevant entry exists) or the model name. <br>
+If incorrecly identified, you can select another template from the chat template dropdown.<br>
+<br>
+Models added in the model manager are copied to the game during the building process.<br>
+You can omit a model from being built in by deselecting the "Build" checkbox.<br>
+To remove the model (but not delete it from disk) you can click the bin button.<br>
+The the path and URL (if downloaded) of each added model is diplayed in the expanded view of the model manager access with the `>>` button:<br>
+<img width="600" src=".github/LLM_manager_expanded.png">
+
+You can create lighter builds by selecting the `Download on Build` option.<br>
+Using this option the models will be downloaded the first time the game starts instead of copied in the build.<br>
+If you have loaded a model locally you need to set its URL through the expanded view, otherwise it will be copied in the build.<br>
 
 ❕ Before using any model make sure you **check their license** ❕
 
@@ -337,14 +370,17 @@ If the user's GPU is not supported, the LLM will fall back to the CPU
 #### 🤗 Model Settings
 - `Download model` click to download one of the default models
 - `Load model` click to load your own model in .gguf format
-- `Model` the path of the model being used (relative to the Assets/StreamingAssets folder)
-- <details><summary><code>Chat Template</code> the chat template to use for constructing the prompts</summary> The chat template is determined automatically by the chat template of the model (if it exists) or the model name. <br> The "chatml" template works with most of the models.</details>
+- `Download on Start` enable to downloaded the LLM models the first time the game starts. Alternatively the LLM models wil be copied directly in the build
+
 - <details><summary>Advanced options</summary>
 
+  - `Download lora` click to download a LoRA model in .bin format
   - `Load lora` click to load a LoRA model in .bin format
-  - `Lora` the path of the LoRA being used (relative to the Assets/StreamingAssets folder)
   - <details><summary><code>Context Size</code> size of the prompt context (0 = context size of the model)</summary> This is the number of tokens the model can take as input when generating responses. Higher values use more RAM or VRAM (if using GPU). </details>
   - `Batch Size` batch size for prompt processing (default: 512)
+  - `Model` the path of the model being used (relative to the Assets/StreamingAssets folder)
+  - `Chat Template` the chat template being used for the LLM
+  - `Lora` the path of the LoRA being used (relative to the Assets/StreamingAssets folder)
 
 </details>
 
