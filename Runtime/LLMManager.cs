@@ -228,7 +228,7 @@ namespace LLMUnity
             int indexToInsert = modelEntries.Count;
             if (!entry.lora)
             {
-                if (modelEntries[0].lora) indexToInsert = 0;
+                if (modelEntries.Count > 0 && modelEntries[0].lora) indexToInsert = 0;
                 else
                 {
                     for (int i = modelEntries.Count - 1; i >= 0; i--)
