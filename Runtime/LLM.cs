@@ -137,6 +137,7 @@ namespace LLMUnity
 
         public string SetModelLoraPath(string path, bool lora)
         {
+            if (string.IsNullOrEmpty(path)) return path;
             ModelEntry modelEntry = LLMManager.Get(path);
             if (modelEntry != null) return modelEntry.filename;
 
