@@ -80,13 +80,22 @@ namespace LLMUnity
         {
             await LLMUnitySetup.AndroidExtractAsset(LLMUnitySetup.LLMManagerPath, true);
             LoadFromDisk();
-            if (!downloadOnStart) return true;
 
             List<StringPair> downloads = new List<StringPair>();
             foreach (ModelEntry modelEntry in modelEntries)
             {
                 string target = LLMUnitySetup.GetAssetPath(modelEntry.filename);
-                if (!File.Exists(target) && !string.IsNullOrEmpty(modelEntry.url)) downloads.Add(new StringPair {source = modelEntry.url, target = target});
+                if (File.Exists(target)) continue;
+
+                if (!downloadOnStart || string.IsNullOrEmpty(modelEntry.url))
+                {
+                    await LLMUnitySetup.AndroidExtractFile(modelEntry.filename);
+                    if (!File.Exists(target)) LLMUnitySetup.LogError($"Model {modelEntry.filename} could not be found!");
+                }
+                else
+                {
+                    downloads.Add(new StringPair {source = modelEntry.url, target = target});
+                }
             }
             if (downloads.Count == 0) return true;
 
@@ -109,6 +118,7 @@ namespace LLMUnity
                 {
                     currFileSize = fileSizes[pair.source];
                     await LLMUnitySetup.DownloadFile(pair.source, pair.target, false, null, SetDownloadProgress);
+                    await LLMUnitySetup.AndroidExtractFile(Path.GetFileName(pair.target));
                     completedSize += currFileSize;
                 }
 

@@ -105,7 +105,6 @@ namespace LLMUnity
                 failed = true;
                 return;
             }
-            await AndroidSetup();
             string arguments = GetLlamaccpArguments();
             if (arguments == null)
             {
@@ -115,15 +114,6 @@ namespace LLMUnity
             await Task.Run(() => StartLLMServer(arguments));
             if (dontDestroyOnLoad) DontDestroyOnLoad(transform.root.gameObject);
             if (basePrompt != "") await SetBasePrompt(basePrompt);
-        }
-
-        public async Task AndroidSetup()
-        {
-            if (Application.platform != RuntimePlatform.Android) return;
-            foreach (string path in new string[] {model, lora})
-            {
-                if (path != "" && !File.Exists(LLMUnitySetup.GetAssetPath(path))) await LLMUnitySetup.AndroidExtractFile(path);
-            }
         }
 
         public async Task WaitUntilReady()
