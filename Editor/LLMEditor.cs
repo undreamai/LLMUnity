@@ -305,7 +305,7 @@ namespace LLMUnity
                         else if (!newSelected && isSelected) llmScript.SetLora("");
                     }
 
-                    DrawCopyableLabel(nameRect, entry.label);
+                    DrawCopyableLabel(nameRect, entry.label, entry.filename);
 
                     if (!entry.lora)
                     {
@@ -376,9 +376,10 @@ namespace LLMUnity
             };
         }
 
-        private void DrawCopyableLabel(Rect rect, string text)
+        private void DrawCopyableLabel(Rect rect, string label, string text = "")
         {
-            EditorGUI.LabelField(rect, text);
+            if (text == "") text = label;
+            EditorGUI.LabelField(rect, label);
             if (Event.current.type == EventType.ContextClick && rect.Contains(Event.current.mousePosition))
             {
                 GenericMenu menu = new GenericMenu();
