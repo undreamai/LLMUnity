@@ -1,7 +1,6 @@
 var searchData=
 [
-  ['7b_0',['teknium/OpenHermes-2.5-Mistral-7B',['../md_Third_01Party_01Notices.html#autotoc_md27',1,'']]],
-  ['7b_20gguf_1',['modified by: TheBloke/OpenHermes-2.5-Mistral-7B-GGUF',['../md_Third_01Party_01Notices.html#autotoc_md28',1,'']]],
-  ['7b_20instruct_20v0_202_2',['mistralai/Mistral-7B-Instruct-v0.2',['../md_Third_01Party_01Notices.html#autotoc_md24',1,'']]],
-  ['7b_20instruct_20v0_202_20gguf_3',['modified by: TheBloke/Mistral-7B-Instruct-v0.2-GGUF',['../md_Third_01Party_01Notices.html#autotoc_md25',1,'']]]
+  ['5_20mistral_207b_0',['teknium/OpenHermes-2.5-Mistral-7B',['../md_Third_01Party_01Notices.html#autotoc_md29',1,'']]],
+  ['5_20mistral_207b_20gguf_1',['modified by: TheBloke/OpenHermes-2.5-Mistral-7B-GGUF',['../md_Third_01Party_01Notices.html#autotoc_md30',1,'']]],
+  ['5b_20instruct_20gguf_2',['Qwen/Qwen2-0.5B-Instruct-GGUF',['../md_Third_01Party_01Notices.html#autotoc_md31',1,'']]]
 ];

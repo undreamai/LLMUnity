@@ -47,7 +47,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_tiny.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">LLM for Unity
-   &#160;<span id="projectnumber">v2.0.3</span>
+   &#160;<span id="projectnumber">v2.1.0</span>
    </div>
    <div id="projectbrief">Create characters in Unity with LLMs!</div>
   </td>
@@ -125,10 +125,10 @@ $(function(){initNavTree('classLLMUnity_1_1LLMUnitySetup.html',''); initResizabl
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:ad1f9ea3019b6f94c6a60bb285059c54f" id="r_ad1f9ea3019b6f94c6a60bb285059c54f"><td class="memItemLeft" align="right" valign="top"><a id="ad1f9ea3019b6f94c6a60bb285059c54f" name="ad1f9ea3019b6f94c6a60bb285059c54f"></a>
-static&#160;</td><td class="memItemRight" valign="bottom"><b>readonly</b> (string, string)[] modelOptions</td></tr>
-<tr class="memdesc:ad1f9ea3019b6f94c6a60bb285059c54f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default models for download. <br /></td></tr>
-<tr class="separator:ad1f9ea3019b6f94c6a60bb285059c54f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad49f23856bb6aabe0625988329fb0cb8" id="r_ad49f23856bb6aabe0625988329fb0cb8"><td class="memItemLeft" align="right" valign="top"><a id="ad49f23856bb6aabe0625988329fb0cb8" name="ad49f23856bb6aabe0625988329fb0cb8"></a>
+static&#160;</td><td class="memItemRight" valign="bottom"><b>readonly</b> (string, string, string)[] modelOptions</td></tr>
+<tr class="memdesc:ad49f23856bb6aabe0625988329fb0cb8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default models for download. <br /></td></tr>
+<tr class="separator:ad49f23856bb6aabe0625988329fb0cb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeaa7ccc72452c140af55987d8e5efa64" id="r_aeaa7ccc72452c140af55987d8e5efa64"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aeaa7ccc72452c140af55987d8e5efa64">AddErrorCallBack</a> (Callback&lt; string &gt; callback)</td></tr>
 <tr class="memdesc:aeaa7ccc72452c140af55987d8e5efa64"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add callback function to call for error logs.  <br /></td></tr>
 <tr class="separator:aeaa7ccc72452c140af55987d8e5efa64"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -138,13 +138,23 @@ static&#160;</td><td class="memItemRight" valign="bottom"><b>readonly</b> (strin
 <tr class="memitem:a7d41394dd57b4a3d89c1a2d8628f7d28" id="r_a7d41394dd57b4a3d89c1a2d8628f7d28"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7d41394dd57b4a3d89c1a2d8628f7d28">ClearErrorCallBacks</a> ()</td></tr>
 <tr class="memdesc:a7d41394dd57b4a3d89c1a2d8628f7d28"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove all callback function added for error logs.  <br /></td></tr>
 <tr class="separator:a7d41394dd57b4a3d89c1a2d8628f7d28"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a402384bded83e6ca13330385d3a6434b" id="r_a402384bded83e6ca13330385d3a6434b"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a402384bded83e6ca13330385d3a6434b">GetMaxFreqKHz</a> (int cpuId)</td></tr>
+<tr class="separator:a402384bded83e6ca13330385d3a6434b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9b270433d4c058a8a22b358dcb2049bc" id="r_a9b270433d4c058a8a22b358dcb2049bc"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9b270433d4c058a8a22b358dcb2049bc">IsSmtCpu</a> (int cpuId)</td></tr>
+<tr class="separator:a9b270433d4c058a8a22b358dcb2049bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa037fe48a1b79528ebcf34b81412c441" id="r_aa037fe48a1b79528ebcf34b81412c441"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa037fe48a1b79528ebcf34b81412c441">AndroidGetNumBigCores</a> ()</td></tr>
+<tr class="memdesc:aa037fe48a1b79528ebcf34b81412c441"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates the number of big cores in Android similarly to ncnn (<a href="https://github.com/Tencent/ncnn">https://github.com/Tencent/ncnn</a>)  <br /></td></tr>
+<tr class="separator:aa037fe48a1b79528ebcf34b81412c441"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a178786e4a60fe1a30f702457f47013ca" id="r_a178786e4a60fe1a30f702457f47013ca"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a178786e4a60fe1a30f702457f47013ca">AndroidGetNumBigCoresCapacity</a> ()</td></tr>
+<tr class="memdesc:a178786e4a60fe1a30f702457f47013ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates the number of big cores in Android similarly to Unity (<a href="https://docs.unity3d.com/2022.3/Documentation/Manual/android-thread-configuration.html">https://docs.unity3d.com/2022.3/Documentation/Manual/android-thread-configuration.html</a>)  <br /></td></tr>
+<tr class="separator:a178786e4a60fe1a30f702457f47013ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
-<tr class="memitem:aa9e562edf406d931b3f58b28b28e7c60" id="r_aa9e562edf406d931b3f58b28b28e7c60"><td class="memItemLeft" align="right" valign="top">static string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa9e562edf406d931b3f58b28b28e7c60">Version</a> = &quot;v2.0.3&quot;</td></tr>
+<tr class="memitem:aa9e562edf406d931b3f58b28b28e7c60" id="r_aa9e562edf406d931b3f58b28b28e7c60"><td class="memItemLeft" align="right" valign="top">static string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa9e562edf406d931b3f58b28b28e7c60">Version</a> = &quot;v2.1.0&quot;</td></tr>
 <tr class="memdesc:aa9e562edf406d931b3f58b28b28e7c60"><td class="mdescLeft">&#160;</td><td class="mdescRight">LLM for Unity version.  <br /></td></tr>
 <tr class="separator:aa9e562edf406d931b3f58b28b28e7c60"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8c890a623cf474c4515ae64698c3f236" id="r_a8c890a623cf474c4515ae64698c3f236"><td class="memItemLeft" align="right" valign="top">static string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8c890a623cf474c4515ae64698c3f236">LlamaLibVersion</a> = &quot;v1.1.5&quot;</td></tr>
+<tr class="memitem:a8c890a623cf474c4515ae64698c3f236" id="r_a8c890a623cf474c4515ae64698c3f236"><td class="memItemLeft" align="right" valign="top">static string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8c890a623cf474c4515ae64698c3f236">LlamaLibVersion</a> = &quot;v1.1.6&quot;</td></tr>
 <tr class="memdesc:a8c890a623cf474c4515ae64698c3f236"><td class="mdescLeft">&#160;</td><td class="mdescRight">LlamaLib version.  <br /></td></tr>
 <tr class="separator:a8c890a623cf474c4515ae64698c3f236"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae298a065eafff77f499f05f5f4447427" id="r_ae298a065eafff77f499f05f5f4447427"><td class="memItemLeft" align="right" valign="top">static string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae298a065eafff77f499f05f5f4447427">LlamaLibURL</a> = $&quot;https://github.com/undreamai/LlamaLib/releases/download/{<a class="el" href="#a8c890a623cf474c4515ae64698c3f236">LlamaLibVersion</a>}/undreamai-{<a class="el" href="#a8c890a623cf474c4515ae64698c3f236">LlamaLibVersion</a>}-llamacpp.zip&quot;</td></tr>
@@ -153,11 +163,20 @@ Static Public Attributes</h2></td></tr>
 <tr class="memitem:a4fbf1bc2995c0267c45395e6532002a8" id="r_a4fbf1bc2995c0267c45395e6532002a8"><td class="memItemLeft" align="right" valign="top">static string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4fbf1bc2995c0267c45395e6532002a8">libraryPath</a> = GetAssetPath(Path.GetFileName(<a class="el" href="#ae298a065eafff77f499f05f5f4447427">LlamaLibURL</a>).Replace(&quot;.zip&quot;, &quot;&quot;))</td></tr>
 <tr class="memdesc:a4fbf1bc2995c0267c45395e6532002a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">LlamaLib path.  <br /></td></tr>
 <tr class="separator:a4fbf1bc2995c0267c45395e6532002a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acc4cf4e81898fc852f1c22ac754b10e2" id="r_acc4cf4e81898fc852f1c22ac754b10e2"><td class="memItemLeft" align="right" valign="top">static string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acc4cf4e81898fc852f1c22ac754b10e2">LLMUnityStore</a> = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), &quot;LLMUnity&quot;)</td></tr>
+<tr class="memdesc:acc4cf4e81898fc852f1c22ac754b10e2"><td class="mdescLeft">&#160;</td><td class="mdescRight">LLMnity store path.  <br /></td></tr>
+<tr class="separator:acc4cf4e81898fc852f1c22ac754b10e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8ba1f072d5bbe4c6ba7041b86b13c4ed" id="r_a8ba1f072d5bbe4c6ba7041b86b13c4ed"><td class="memItemLeft" align="right" valign="top">static string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8ba1f072d5bbe4c6ba7041b86b13c4ed">modelDownloadPath</a> = Path.Combine(<a class="el" href="#acc4cf4e81898fc852f1c22ac754b10e2">LLMUnityStore</a>, &quot;models&quot;)</td></tr>
+<tr class="memdesc:a8ba1f072d5bbe4c6ba7041b86b13c4ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Model download path.  <br /></td></tr>
+<tr class="separator:a8ba1f072d5bbe4c6ba7041b86b13c4ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a457f4ce48c2d305d2e1ba1c891c2c751" id="r_a457f4ce48c2d305d2e1ba1c891c2c751"><td class="memItemLeft" align="right" valign="top">static string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a457f4ce48c2d305d2e1ba1c891c2c751">LLMManagerPath</a> = GetAssetPath(&quot;LLMManager.json&quot;)</td></tr>
+<tr class="memdesc:a457f4ce48c2d305d2e1ba1c891c2c751"><td class="mdescLeft">&#160;</td><td class="mdescRight">Path of file with build information for runtime.  <br /></td></tr>
+<tr class="separator:a457f4ce48c2d305d2e1ba1c891c2c751"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class implementing helper functions for setup and process management. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00067">67</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00083">83</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="aeaa7ccc72452c140af55987d8e5efa64" name="aeaa7ccc72452c140af55987d8e5efa64"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aeaa7ccc72452c140af55987d8e5efa64">&#9670;&#160;</a></span>AddErrorCallBack()</h2>
@@ -184,7 +203,67 @@ Static Public Attributes</h2></td></tr>
 
 <p>Add callback function to call for error logs. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00089">89</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00112">112</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
+
+</div>
+</div>
+<a id="aa037fe48a1b79528ebcf34b81412c441" name="aa037fe48a1b79528ebcf34b81412c441"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa037fe48a1b79528ebcf34b81412c441">&#9670;&#160;</a></span>AndroidGetNumBigCores()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static int LLMUnity.LLMUnitySetup.AndroidGetNumBigCores </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Calculates the number of big cores in Android similarly to ncnn (<a href="https://github.com/Tencent/ncnn">https://github.com/Tencent/ncnn</a>) </p>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00430">430</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
+
+</div>
+</div>
+<a id="a178786e4a60fe1a30f702457f47013ca" name="a178786e4a60fe1a30f702457f47013ca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a178786e4a60fe1a30f702457f47013ca">&#9670;&#160;</a></span>AndroidGetNumBigCoresCapacity()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static int LLMUnity.LLMUnitySetup.AndroidGetNumBigCoresCapacity </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Calculates the number of big cores in Android similarly to Unity (<a href="https://docs.unity3d.com/2022.3/Documentation/Manual/android-thread-configuration.html">https://docs.unity3d.com/2022.3/Documentation/Manual/android-thread-configuration.html</a>) </p>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00484">484</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
 
 </div>
 </div>
@@ -213,7 +292,61 @@ Static Public Attributes</h2></td></tr>
 
 <p>Remove all callback function added for error logs. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00101">101</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00124">124</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
+
+</div>
+</div>
+<a id="a402384bded83e6ca13330385d3a6434b" name="a402384bded83e6ca13330385d3a6434b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a402384bded83e6ca13330385d3a6434b">&#9670;&#160;</a></span>GetMaxFreqKHz()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static int LLMUnity.LLMUnitySetup.GetMaxFreqKHz </td>
+          <td>(</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>cpuId</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00366">366</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
+
+</div>
+</div>
+<a id="a9b270433d4c058a8a22b358dcb2049bc" name="a9b270433d4c058a8a22b358dcb2049bc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9b270433d4c058a8a22b358dcb2049bc">&#9670;&#160;</a></span>IsSmtCpu()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static bool LLMUnity.LLMUnitySetup.IsSmtCpu </td>
+          <td>(</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>cpuId</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00400">400</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
 
 </div>
 </div>
@@ -242,7 +375,7 @@ Static Public Attributes</h2></td></tr>
 
 <p>Remove callback function added for error logs. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00095">95</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00118">118</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
 
 </div>
 </div>
@@ -269,7 +402,7 @@ Static Public Attributes</h2></td></tr>
 
 <p>LlamaLib path. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00077">77</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00093">93</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
 
 </div>
 </div>
@@ -295,7 +428,7 @@ Static Public Attributes</h2></td></tr>
 
 <p>LlamaLib url. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00075">75</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00091">91</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
 
 </div>
 </div>
@@ -309,7 +442,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">string LLMUnity.LLMUnitySetup.LlamaLibVersion = &quot;v1.1.5&quot;</td>
+          <td class="memname">string LLMUnity.LLMUnitySetup.LlamaLibVersion = &quot;v1.1.6&quot;</td>
         </tr>
       </table>
   </td>
@@ -321,7 +454,85 @@ Static Public Attributes</h2></td></tr>
 
 <p>LlamaLib version. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00073">73</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00089">89</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
+
+</div>
+</div>
+<a id="a457f4ce48c2d305d2e1ba1c891c2c751" name="a457f4ce48c2d305d2e1ba1c891c2c751"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a457f4ce48c2d305d2e1ba1c891c2c751">&#9670;&#160;</a></span>LLMManagerPath</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">string LLMUnity.LLMUnitySetup.LLMManagerPath = GetAssetPath(&quot;LLMManager.json&quot;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Path of file with build information for runtime. </p>
+
+<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00099">99</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
+
+</div>
+</div>
+<a id="acc4cf4e81898fc852f1c22ac754b10e2" name="acc4cf4e81898fc852f1c22ac754b10e2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acc4cf4e81898fc852f1c22ac754b10e2">&#9670;&#160;</a></span>LLMUnityStore</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">string LLMUnity.LLMUnitySetup.LLMUnityStore = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), &quot;LLMUnity&quot;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>LLMnity store path. </p>
+
+<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00095">95</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
+
+</div>
+</div>
+<a id="a8ba1f072d5bbe4c6ba7041b86b13c4ed" name="a8ba1f072d5bbe4c6ba7041b86b13c4ed"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8ba1f072d5bbe4c6ba7041b86b13c4ed">&#9670;&#160;</a></span>modelDownloadPath</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">string LLMUnity.LLMUnitySetup.modelDownloadPath = Path.Combine(<a class="el" href="#acc4cf4e81898fc852f1c22ac754b10e2">LLMUnityStore</a>, &quot;models&quot;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Model download path. </p>
+
+<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00097">97</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
 
 </div>
 </div>
@@ -335,7 +546,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">string LLMUnity.LLMUnitySetup.Version = &quot;v2.0.3&quot;</td>
+          <td class="memname">string LLMUnity.LLMUnitySetup.Version = &quot;v2.1.0&quot;</td>
         </tr>
       </table>
   </td>
@@ -347,7 +558,7 @@ Static Public Attributes</h2></td></tr>
 
 <p>LLM for Unity version. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00071">71</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00087">87</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
 
 </div>
 </div>

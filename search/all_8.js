@@ -1,10 +1,10 @@
 var searchData=
 [
-  ['data_20smol_5fllama_20220m_20openhermes_0',['BEE-spoke-data/smol_llama-220M-openhermes',['../md_Third_01Party_01Notices.html#autotoc_md31',1,'']]],
-  ['debug_1',['debug',['../classLLMUnity_1_1LLM.html#a415905d972e2922dd99b289ceaf56a5c',1,'LLMUnity::LLM']]],
-  ['debugprompt_2',['debugPrompt',['../classLLMUnity_1_1LLMCharacter.html#a6d63a498a29fc44adaef26182c84122e',1,'LLMUnity::LLMCharacter']]],
-  ['defaulttemplate_3',['DefaultTemplate',['../classLLMUnity_1_1ChatTemplate.html#afd8535970354d20efc257916e725dcef',1,'LLMUnity::ChatTemplate']]],
-  ['destroy_4',['Destroy',['../classLLMUnity_1_1LLM.html#ad8bf6e0910008f748ac0bce42da4a4dd',1,'LLMUnity::LLM']]],
-  ['detokenize_5',['Detokenize',['../classLLMUnity_1_1LLM.html#a4f7107b488a3592dca7555371d91f763',1,'LLMUnity.LLM.Detokenize()'],['../classLLMUnity_1_1LLMCharacter.html#a63335d87492fc928872b146d61f5cb4e',1,'LLMUnity.LLMCharacter.Detokenize()']]],
-  ['dontdestroyonload_6',['dontDestroyOnLoad',['../classLLMUnity_1_1LLM.html#ab1cd3fa19215c0ccc3c9cea09fe4b669',1,'LLMUnity::LLM']]]
+  ['baseprompt_0',['basePrompt',['../classLLMUnity_1_1LLM.html#a4541fffb47e71d6853e567e424278326',1,'LLMUnity::LLM']]],
+  ['batchsize_1',['batchSize',['../classLLMUnity_1_1LLM.html#ac1d133a050b4cc2ec567fcb1691f46b3',1,'LLMUnity::LLM']]],
+  ['bee_20spoke_20data_20smol_5fllama_20220m_20openhermes_2',['BEE-spoke-data/smol_llama-220M-openhermes',['../md_Third_01Party_01Notices.html#autotoc_md34',1,'']]],
+  ['by_3a_20afrideva_20smol_5fllama_20220m_20openhermes_20gguf_3',['modified by: afrideva/smol_llama-220M-openhermes-GGUF',['../md_Third_01Party_01Notices.html#autotoc_md35',1,'']]],
+  ['by_3a_20lmstudio_20community_20meta_20llama_203_208b_20instruct_20gguf_4',['modified by: lmstudio-community/Meta-Llama-3-8B-Instruct-GGUF',['../md_Third_01Party_01Notices.html#autotoc_md25',1,'']]],
+  ['by_3a_20thebloke_20mistral_207b_20instruct_20v0_202_20gguf_5',['modified by: TheBloke/Mistral-7B-Instruct-v0.2-GGUF',['../md_Third_01Party_01Notices.html#autotoc_md27',1,'']]],
+  ['by_3a_20thebloke_20openhermes_202_205_20mistral_207b_20gguf_6',['modified by: TheBloke/OpenHermes-2.5-Mistral-7B-GGUF',['../md_Third_01Party_01Notices.html#autotoc_md30',1,'']]]
 ];

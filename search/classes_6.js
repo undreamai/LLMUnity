@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['vicunatemplate_0',['VicunaTemplate',['../classLLMUnity_1_1VicunaTemplate.html',1,'LLMUnity']]]
+  ['resumingwebclient_0',['ResumingWebClient',['../classLLMUnity_1_1ResumingWebClient.html',1,'LLMUnity']]]
 ];

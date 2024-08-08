@@ -6,7 +6,7 @@ var index =
     [ "Setup", "index.html#autotoc_md4", null ],
     [ "How to use", "index.html#autotoc_md5", null ],
     [ "Examples", "index.html#autotoc_md6", null ],
-    [ "Use your own model", "index.html#autotoc_md7", null ],
+    [ "LLM model management", "index.html#autotoc_md7", null ],
     [ "Options", "index.html#autotoc_md8", [
       [ "LLM Settings", "index.html#autotoc_md9", [
         [ "💻 Setup Settings", "index.html#autotoc_md10", null ],
