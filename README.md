@@ -51,7 +51,7 @@ LLM for Unity is built on top of the awesome [llama.cpp](https://github.com/gger
 
 ## Games using LLM for Unity
 - [Verbal Verdict](https://store.steampowered.com/app/2778780/Verbal_Verdict/)
-- [I, Chatbot: AISYLUM](https://store.steampowered.com/app/2786750/I_Chatbot_AISYLUM)
+- [I, Chatbot: AISYLUM](https://store.epicgames.com/de/p/i-chatbot-aisylum-83b2b5)
 - [Nameless Souls of the Void](https://unicorninteractive.itch.io/nameless-souls-of-the-void)
 - [Murder in Aisle 4](https://roadedlich.itch.io/murder-in-aisle-4)
 - [Finicky Food Delivery AI](https://helixngc7293.itch.io/finicky-food-delivery-ai)
