@@ -33,8 +33,7 @@ namespace LLMUnity
                     platform = "ios";
                     break;
             }
-            LLMBuilder.HideLibraryPlatforms(platform);
-            LLMBuilder.BuildModels();
+            LLMBuilder.Build(platform);
             AssetDatabase.Refresh();
         }
 
