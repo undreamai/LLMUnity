@@ -1,3 +1,8 @@
+## v2.1.1
+#### 🐛 Fixes
+
+- Resolve build directory creation
+
 ## v2.1.0
 #### 🚀 Features
 
