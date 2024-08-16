@@ -1,3 +1,9 @@
+## v2.1.2
+#### 🐛 Fixes
+
+- Fix set template for remote setup (PR: #208)
+
+
 ## v2.1.1
 #### 🐛 Fixes
 
