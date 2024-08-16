@@ -1,3 +1,4 @@
 ### 🐛 Fixes
 
-- Resolve build directory creation
+- Fix set template for remote setup (PR: #208)
+

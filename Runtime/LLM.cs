@@ -314,7 +314,7 @@ namespace LLMUnity
             if (debug) SetupLogging();
             LLMObject = llmlib.LLM_Construct(arguments);
             if (remote) llmlib.LLM_StartServer(LLMObject);
-            SetTemplate(chatTemplate, false);
+            llmlib.LLM_SetTemplate(LLMObject, chatTemplate);
             CheckLLMStatus(false);
         }
 
