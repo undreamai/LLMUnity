@@ -1,5 +1,6 @@
 /// @file
 /// @brief File implementing the chat templates.
+using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -113,9 +114,12 @@ namespace LLMUnity
         /// <returns>template name</returns>
         public static string FromGGUF(string path)
         {
-            GGUFReader reader = new GGUFReader(path);
-            string name;
+            return FromGGUF(new GGUFReader(path), path);
+        }
 
+        public static string FromGGUF(GGUFReader reader, string path)
+        {
+            string name;
             name = FromTemplate(reader.GetStringField("tokenizer.chat_template"));
             if (name != null) return name;
 

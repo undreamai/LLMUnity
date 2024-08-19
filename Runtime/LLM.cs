@@ -173,8 +173,13 @@ namespace LLMUnity
             if (!string.IsNullOrEmpty(model))
             {
                 ModelEntry modelEntry = LLMManager.Get(model);
-                string template = modelEntry != null ? modelEntry.chatTemplate : ChatTemplate.FromGGUF(GetModelLoraPathRuntime(model));
-                SetTemplate(template);
+                if (modelEntry == null) modelEntry = new ModelEntry(GetModelLoraPathRuntime(model));
+                SetTemplate(modelEntry.chatTemplate);
+                Debug.Log(modelEntry.contextLength);
+                if (contextSize == 0 && modelEntry.contextLength > 32768)
+                {
+                    LLMUnitySetup.LogWarning($"The model {path} has very large context size ({modelEntry.contextLength}), consider setting it to a smaller value (<=32768) to avoid filling up the RAM");
+                }
             }
 #if UNITY_EDITOR
             if (!EditorApplication.isPlaying) EditorUtility.SetDirty(this);
