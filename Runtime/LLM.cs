@@ -175,7 +175,6 @@ namespace LLMUnity
                 ModelEntry modelEntry = LLMManager.Get(model);
                 if (modelEntry == null) modelEntry = new ModelEntry(GetModelLoraPathRuntime(model));
                 SetTemplate(modelEntry.chatTemplate);
-                Debug.Log(modelEntry.contextLength);
                 if (contextSize == 0 && modelEntry.contextLength > 32768)
                 {
                     LLMUnitySetup.LogWarning($"The model {path} has very large context size ({modelEntry.contextLength}), consider setting it to a smaller value (<=32768) to avoid filling up the RAM");
