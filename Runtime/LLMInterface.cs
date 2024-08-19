@@ -94,6 +94,25 @@ namespace LLMUnity
     }
 
     [Serializable]
+    public struct EmbeddingsResult
+    {
+        public List<float> embedding;
+    }
+
+    [Serializable]
+    public struct LoraWeightRequest
+    {
+        public int id;
+        public float scale;
+    }
+
+    [Serializable]
+    public struct LoraWeightRequestList
+    {
+        public List<LoraWeightRequest> loraWeights;
+    }
+
+    [Serializable]
     public struct TemplateResult
     {
         public string template;
