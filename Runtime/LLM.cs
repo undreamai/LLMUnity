@@ -130,7 +130,7 @@ namespace LLMUnity
             return !modelSetupFailed;
         }
 
-        public string GetModelLoraPath(string path)
+        public string GetModelLoraPathRuntime(string path)
         {
             string assetPath = LLMManager.GetAssetPath(path);
             if (!string.IsNullOrEmpty(assetPath)) return assetPath;
@@ -173,7 +173,7 @@ namespace LLMUnity
             if (!string.IsNullOrEmpty(model))
             {
                 ModelEntry modelEntry = LLMManager.Get(model);
-                string template = modelEntry != null ? modelEntry.chatTemplate : ChatTemplate.FromGGUF(GetModelLoraPath(model));
+                string template = modelEntry != null ? modelEntry.chatTemplate : ChatTemplate.FromGGUF(GetModelLoraPathRuntime(model));
                 SetTemplate(template);
             }
 #if UNITY_EDITOR
@@ -261,16 +261,17 @@ namespace LLMUnity
                 LLMUnitySetup.LogError("No model file provided!");
                 return null;
             }
-            string modelPath = GetModelLoraPath(model);
+            string modelPath = GetModelLoraPathRuntime(model);
             if (!File.Exists(modelPath))
             {
                 LLMUnitySetup.LogError($"File {modelPath} not found!");
                 return null;
             }
             string loraArgument = "";
-            foreach (string lora in lora.Split(" "))
+            foreach (string lora in lora.Trim().Split(" "))
             {
-                string loraPath = GetModelLoraPath(lora);
+                if (lora == "") continue;
+                string loraPath = GetModelLoraPathRuntime(lora);
                 if (!File.Exists(loraPath))
                 {
                     LLMUnitySetup.LogError($"File {loraPath} not found!");
