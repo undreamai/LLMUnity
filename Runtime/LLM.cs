@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEditor;
@@ -68,7 +69,7 @@ namespace LLMUnity
         [ModelAdvanced] public string model = "";
         /// <summary> Chat template used for the model </summary>
         [ModelAdvanced] public string chatTemplate = ChatTemplate.DefaultTemplate;
-        /// <summary> the path of the LORA model being used (relative to the Assets/StreamingAssets folder).
+        /// <summary> the paths of the LORA models being used (relative to the Assets/StreamingAssets folder).
         /// Models with .bin format are allowed.</summary>
         [ModelAdvanced] public string lora = "";
 
@@ -81,6 +82,7 @@ namespace LLMUnity
         Thread llmThread = null;
         List<StreamWrapper> streamWrappers = new List<StreamWrapper>();
         public LLMManager llmManager = new LLMManager();
+        List<float> loraWeights = new List<float>();
 
         /// \endcond
 
@@ -135,7 +137,7 @@ namespace LLMUnity
             return path;
         }
 
-        public string SetModelLoraPath(string path, bool lora)
+        public string GetModelLoraPath(string path, bool lora)
         {
             if (string.IsNullOrEmpty(path)) return path;
             ModelEntry modelEntry = LLMManager.Get(path);
@@ -167,7 +169,7 @@ namespace LLMUnity
         /// <param name="path">path to model to use (.gguf format)</param>
         public void SetModel(string path)
         {
-            model = SetModelLoraPath(path, false);
+            model = GetModelLoraPath(path, false);
             if (!string.IsNullOrEmpty(model))
             {
                 ModelEntry modelEntry = LLMManager.Get(model);
@@ -187,7 +189,43 @@ namespace LLMUnity
         /// <param name="path">path to LORA model to use (.bin format)</param>
         public void SetLora(string path)
         {
-            lora = SetModelLoraPath(path, true);
+            lora = "";
+            AddLora(path);
+        }
+
+        /// <summary>
+        /// Allows to add a LORA model to use in the LLM.
+        /// The model provided is copied to the Assets/StreamingAssets folder that allows it to also work in the build.
+        /// Models supported are in .bin format.
+        /// </summary>
+        /// <param name="path">path to LORA model to use (.bin format)</param>
+        public void AddLora(string path)
+        {
+            string loraPath = GetModelLoraPath(path, true);
+            if (lora.Split(" ").Contains(loraPath)) return;
+            if (lora != "") lora += " ";
+            lora += loraPath;
+#if UNITY_EDITOR
+            if (!EditorApplication.isPlaying) EditorUtility.SetDirty(this);
+#endif
+        }
+
+        /// <summary>
+        /// Allows to remove a LORA model from the LLM.
+        /// Models supported are in .bin format.
+        /// </summary>
+        /// <param name="path">path to LORA model to remove (.bin format)</param>
+        public void RemoveLora(string path)
+        {
+            string loraPath = GetModelLoraPath(path, true);
+            List<string> loras = new List<string>(lora.Split(" "));
+            loras.Remove(loraPath);
+            lora = "";
+            for (int i = 0; i < loras.Count; i++)
+            {
+                if (i > 0) lora += " ";
+                lora += loras[i];
+            }
 #if UNITY_EDITOR
             if (!EditorApplication.isPlaying) EditorUtility.SetDirty(this);
 #endif
@@ -229,15 +267,16 @@ namespace LLMUnity
                 LLMUnitySetup.LogError($"File {modelPath} not found!");
                 return null;
             }
-            string loraPath = "";
-            if (lora != "")
+            string loraArgument = "";
+            foreach (string lora in lora.Split(" "))
             {
-                loraPath = GetModelLoraPath(lora);
+                string loraPath = GetModelLoraPath(lora);
                 if (!File.Exists(loraPath))
                 {
                     LLMUnitySetup.LogError($"File {loraPath} not found!");
                     return null;
                 }
+                loraArgument += $" --lora \"{loraPath}\"";
             }
 
             int numThreadsToUse = numThreads;
@@ -247,7 +286,7 @@ namespace LLMUnity
             string arguments = $"-m \"{modelPath}\" -c {contextSize} -b {batchSize} --log-disable -np {slots}";
             if (remote) arguments += $" --port {port} --host 0.0.0.0";
             if (numThreadsToUse > 0) arguments += $" -t {numThreadsToUse}";
-            if (loraPath != "") arguments += $" --lora \"{loraPath}\"";
+            arguments += loraArgument;
             arguments += $" -ngl {numGPULayers}";
             return arguments;
         }
@@ -323,6 +362,8 @@ namespace LLMUnity
             llmThread = new Thread(() => llmlib.LLM_Start(LLMObject));
             llmThread.Start();
             while (!llmlib.LLM_Started(LLMObject)) {}
+            loraWeights = new List<float>();
+            for (int i = 0; i < lora.Split(" ").Count(); i++) loraWeights.Add(1f);
             started = true;
         }
 
@@ -345,7 +386,7 @@ namespace LLMUnity
 
         /// \cond HIDE
         public delegate void LLMStatusCallback(IntPtr LLMObject, IntPtr stringWrapper);
-        public delegate void LLMSimpleCallback(IntPtr LLMObject, string json_data);
+        public delegate void LLMNoInputReplyCallback(IntPtr LLMObject, IntPtr stringWrapper);
         public delegate void LLMReplyCallback(IntPtr LLMObject, string json_data, IntPtr stringWrapper);
         /// \endcond
 
@@ -400,6 +441,17 @@ namespace LLMUnity
             }
         }
 
+        async Task<string> LLMNoInputReply(LLMNoInputReplyCallback callback)
+        {
+            AssertStarted();
+            IntPtr stringWrapper = llmlib.StringWrapper_Construct();
+            await Task.Run(() => callback(LLMObject, stringWrapper));
+            string result = llmlib?.GetStringWrapperResult(stringWrapper);
+            llmlib?.StringWrapper_Delete(stringWrapper);
+            CheckLLMStatus();
+            return result;
+        }
+
         async Task<string> LLMReply(LLMReplyCallback callback, string json)
         {
             AssertStarted();
@@ -439,6 +491,74 @@ namespace LLMUnity
                 llmlib.LLM_Detokenize(LLMObject, jsonData, strWrapper);
             };
             return await LLMReply(callback, json);
+        }
+
+        /// <summary>
+        /// Computes the embeddings of the provided query.
+        /// </summary>
+        /// <param name="json">json request containing the query</param>
+        /// <returns>embeddings result</returns>
+        public async Task<string> Embeddings(string json)
+        {
+            AssertStarted();
+            LLMReplyCallback callback = (IntPtr LLMObject, string jsonData, IntPtr strWrapper) =>
+            {
+                llmlib.LLM_Embeddings(LLMObject, jsonData, strWrapper);
+            };
+            return await LLMReply(callback, json);
+        }
+
+        /// <summary>
+        /// Sets the lora scale, only works after the LLM service has started
+        /// </summary>
+        /// <returns>switch result</returns>
+        public async Task<string> SetLoraScale(string loraToScale, float scale)
+        {
+            AssertStarted();
+            List<string> loras = new List<string>(lora.Split(" "));
+            string loraToScalePath = GetModelLoraPath(loraToScale, true);
+
+            int index = loras.IndexOf(loraToScale);
+            if (index == -1) index = loras.IndexOf(loraToScalePath);
+            if (index == -1)
+            {
+                LLMUnitySetup.LogError($"LoRA {loraToScale} not loaded with the LLM");
+                return "";
+            }
+
+            loraWeights[index] = scale;
+            LoraWeightRequestList loraWeightRequest = new LoraWeightRequestList();
+            loraWeightRequest.loraWeights = new List<LoraWeightRequest>();
+            for (int i = 0; i < loraWeights.Count; i++)
+            {
+                loraWeightRequest.loraWeights.Add(new LoraWeightRequest() {id = i, scale = loraWeights[i]});
+            }
+            ;
+
+            string json = JsonUtility.ToJson(loraWeightRequest);
+            int startIndex = json.IndexOf("[");
+            int endIndex = json.LastIndexOf("]") + 1;
+            json = json.Substring(startIndex, endIndex - startIndex);
+
+            LLMReplyCallback callback = (IntPtr LLMObject, string jsonData, IntPtr strWrapper) =>
+            {
+                llmlib.LLM_Lora_Weight(LLMObject, jsonData, strWrapper);
+            };
+            return await LLMReply(callback, json);
+        }
+
+        /// <summary>
+        /// Gets a list of the lora adapters
+        /// </summary>
+        /// <returns>list of lara adapters</returns>
+        public async Task<string> ListLora()
+        {
+            AssertStarted();
+            LLMNoInputReplyCallback callback = (IntPtr LLMObject, IntPtr strWrapper) =>
+            {
+                llmlib.LLM_LoraList(LLMObject, strWrapper);
+            };
+            return await LLMNoInputReply(callback);
         }
 
         /// <summary>
