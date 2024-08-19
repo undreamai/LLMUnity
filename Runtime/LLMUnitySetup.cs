@@ -101,7 +101,8 @@ namespace LLMUnity
         /// <summary> Default models for download </summary>
         [HideInInspector] public static readonly (string, string, string)[] modelOptions = new(string, string, string)[]
         {
-            ("Llama 3 7B (medium, best overall)", "https://huggingface.co/lmstudio-community/Meta-Llama-3-8B-Instruct-GGUF/resolve/main/Meta-Llama-3-8B-Instruct-Q4_K_M.gguf?download=true", "https://huggingface.co/meta-llama/Meta-Llama-3-8B/blob/main/LICENSE"),
+            ("Llama 3.1 8B (medium, best overall)", "https://huggingface.co/bartowski/Meta-Llama-3.1-8B-Instruct-GGUF/resolve/main/Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf?download=true", "https://huggingface.co/meta-llama/Meta-Llama-3.1-8B/blob/main/LICENSE"),
+            ("Gemma 2 9B it (medium, great overall)", "https://huggingface.co/bartowski/gemma-2-9b-it-GGUF/resolve/main/gemma-2-9b-it-Q4_K_M.gguf?download=true", "https://ai.google.dev/gemma/terms"),
             ("Mistral 7B Instruct v0.2 (medium, great overall)", "https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.2-GGUF/resolve/main/mistral-7b-instruct-v0.2.Q4_K_M.gguf?download=true", null),
             ("OpenHermes 2.5 7B (medium, good for conversation)", "https://huggingface.co/TheBloke/OpenHermes-2.5-Mistral-7B-GGUF/resolve/main/openhermes-2.5-mistral-7b.Q4_K_M.gguf?download=true", null),
             ("Phi 3 (small, great small model)", "https://huggingface.co/microsoft/Phi-3-mini-4k-instruct-gguf/resolve/main/Phi-3-mini-4k-instruct-q4.gguf?download=true", null),

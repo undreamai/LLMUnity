@@ -446,4 +446,6 @@ If it is not selected, the full reply from the model is received in one go
 </details>
 
 ## License
-The license of LLM for Unity is MIT ([LICENSE.md](LICENSE.md)) and uses third-party software with MIT and Apache licenses ([Third Party Notices.md](<Third Party Notices.md>)).
+The license of LLM for Unity is MIT ([LICENSE.md](LICENSE.md)) and uses third-party software with MIT and Apache licenses.
+Some models included in the asset define their own license terms, please review them before using each model.
+Third-party licenses can be found in the ([Third Party Notices.md](<Third Party Notices.md>)).
