@@ -142,7 +142,7 @@ namespace LLMUnity
             LLM llmScript = (LLM)target;
             int num = LLMManager.Num(lora);
             if (!lora && llmScript.model == "" && num == 1) llmScript.SetModel(filename);
-            if (lora && llmScript.lora == "" && num == 1) llmScript.SetLora(filename);
+            if (lora) llmScript.AddLora(filename);
         }
 
         async Task createCustomURLField()
@@ -237,7 +237,7 @@ namespace LLMUnity
                 {
                     EditorApplication.delayCall += () =>
                     {
-                        string path = EditorUtility.OpenFilePanelWithFilters("Select a bin lora file", "", new string[] { "Model Files", "bin" });
+                        string path = EditorUtility.OpenFilePanelWithFilters("Select a gguf lora file", "", new string[] { "Model Files", "gguf" });
                         if (!string.IsNullOrEmpty(path))
                         {
                             string filename = LLMManager.LoadLora(path, true);
@@ -299,10 +299,10 @@ namespace LLMUnity
                     }
                     else
                     {
-                        isSelected = llmScript.lora == entry.filename;
-                        bool newSelected = EditorGUI.Toggle(selectRect, isSelected, EditorStyles.radioButton);
-                        if (newSelected && !isSelected) llmScript.SetLora(entry.filename);
-                        else if (!newSelected && isSelected) llmScript.SetLora("");
+                        isSelected = llmScript.lora.Split(" ").Contains(entry.filename);
+                        bool newSelected = EditorGUI.Toggle(selectRect, isSelected);
+                        if (newSelected && !isSelected) llmScript.AddLora(entry.filename);
+                        else if (!newSelected && isSelected) llmScript.RemoveLora(entry.filename);
                     }
 
                     DrawCopyableLabel(nameRect, entry.label, entry.filename);
@@ -347,6 +347,11 @@ namespace LLMUnity
 
                     if (GUI.Button(actionRect, trashIcon))
                     {
+                        if (isSelected)
+                        {
+                            if (!entry.lora) llmScript.SetModel("");
+                            else llmScript.RemoveLora(entry.filename);
+                        }
                         LLMManager.Remove(entry);
                         UpdateModels(true);
                     }
