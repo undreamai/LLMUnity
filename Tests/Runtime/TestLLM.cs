@@ -7,6 +7,7 @@ using System;
 using System.Collections;
 using UnityEngine.TestTools;
 using System.IO;
+using NUnit.Framework.Internal;
 
 namespace LLMUnityTests
 {
@@ -86,6 +87,8 @@ namespace LLMUnityTests
                 llmCharacter.SetPrompt(prompt);
                 await llmCharacter.Chat("hi");
                 TestInitParameters((await llmCharacter.Tokenize(prompt)).Count + 2, 3);
+                List<float> embeddings = await llmCharacter.Embeddings("hi how are you?");
+                TestEmbeddings(embeddings);
                 llm.OnDestroy();
             }
             catch  (Exception e)
@@ -126,7 +129,7 @@ namespace LLMUnityTests
 
         public void TestChat(string reply)
         {
-            string AIReply = "To increase your meme production/output, you can consider the following:\n1. Use";
+            string AIReply = "One way to increase your meme production/output is by creating a more complex and customized";
             Assert.That(reply.Trim() == AIReply);
         }
 
@@ -139,6 +142,11 @@ namespace LLMUnityTests
         public void TestPostChat(int num)
         {
             Assert.That(llmCharacter.chat.Count == num);
+        }
+
+        public void TestEmbeddings(List<float> embeddings)
+        {
+            Assert.That(embeddings.Count == 1024);
         }
 
         public virtual void OnDestroy()
