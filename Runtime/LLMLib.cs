@@ -298,6 +298,9 @@ namespace LLMUnity
             LLM_SetTemplate = LibraryLoader.GetSymbolDelegate<LLM_SetTemplateDelegate>(libraryHandle, "LLM_SetTemplate");
             LLM_Tokenize = LibraryLoader.GetSymbolDelegate<LLM_TokenizeDelegate>(libraryHandle, "LLM_Tokenize");
             LLM_Detokenize = LibraryLoader.GetSymbolDelegate<LLM_DetokenizeDelegate>(libraryHandle, "LLM_Detokenize");
+            LLM_Embeddings = LibraryLoader.GetSymbolDelegate<LLM_EmbeddingsDelegate>(libraryHandle, "LLM_Embeddings");
+            LLM_Lora_Weight = LibraryLoader.GetSymbolDelegate<LLM_LoraWeightDelegate>(libraryHandle, "LLM_Lora_Weight");
+            LLM_LoraList = LibraryLoader.GetSymbolDelegate<LLM_LoraListDelegate>(libraryHandle, "LLM_Lora_List");
             LLM_Completion = LibraryLoader.GetSymbolDelegate<LLM_CompletionDelegate>(libraryHandle, "LLM_Completion");
             LLM_Slot = LibraryLoader.GetSymbolDelegate<LLM_SlotDelegate>(libraryHandle, "LLM_Slot");
             LLM_Cancel = LibraryLoader.GetSymbolDelegate<LLM_CancelDelegate>(libraryHandle, "LLM_Cancel");
@@ -452,6 +455,9 @@ namespace LLMUnity
         public delegate void LLM_SetTemplateDelegate(IntPtr LLMObject, string chatTemplate);
         public delegate void LLM_TokenizeDelegate(IntPtr LLMObject, string jsonData, IntPtr stringWrapper);
         public delegate void LLM_DetokenizeDelegate(IntPtr LLMObject, string jsonData, IntPtr stringWrapper);
+        public delegate void LLM_EmbeddingsDelegate(IntPtr LLMObject, string jsonData, IntPtr stringWrapper);
+        public delegate void LLM_LoraWeightDelegate(IntPtr LLMObject, string jsonData, IntPtr stringWrapper);
+        public delegate void LLM_LoraListDelegate(IntPtr LLMObject, IntPtr stringWrapper);
         public delegate void LLM_CompletionDelegate(IntPtr LLMObject, string jsonData, IntPtr stringWrapper);
         public delegate void LLM_SlotDelegate(IntPtr LLMObject, string jsonData, IntPtr stringWrapper);
         public delegate void LLM_CancelDelegate(IntPtr LLMObject, int idSlot);
@@ -474,6 +480,9 @@ namespace LLMUnity
         public LLM_TokenizeDelegate LLM_Tokenize;
         public LLM_DetokenizeDelegate LLM_Detokenize;
         public LLM_CompletionDelegate LLM_Completion;
+        public LLM_EmbeddingsDelegate LLM_Embeddings;
+        public LLM_LoraWeightDelegate LLM_Lora_Weight;
+        public LLM_LoraListDelegate LLM_LoraList;
         public LLM_SlotDelegate LLM_Slot;
         public LLM_CancelDelegate LLM_Cancel;
         public LLM_StatusDelegate LLM_Status;
