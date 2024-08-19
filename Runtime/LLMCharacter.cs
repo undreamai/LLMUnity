@@ -430,16 +430,22 @@ namespace LLMUnity
             return result.tokens;
         }
 
-        protected string SlotContent(SlotResult result)
-        {
-            // get the tokens from a tokenize result received from the endpoint
-            return result.filename;
-        }
-
         protected string DetokenizeContent(TokenizeRequest result)
         {
             // get content from a chat result received from the endpoint
             return result.content;
+        }
+
+        protected List<float> EmbeddingsContent(EmbeddingsResult result)
+        {
+            // get content from a chat result received from the endpoint
+            return result.embedding;
+        }
+
+        protected string SlotContent(SlotResult result)
+        {
+            // get the tokens from a tokenize result received from the endpoint
+            return result.filename;
         }
 
         /// <summary>
@@ -572,6 +578,21 @@ namespace LLMUnity
             return await PostRequest<TokenizeRequest, string>(json, "detokenize", DetokenizeContent, callback);
         }
 
+        /// <summary>
+        /// Computes the embeddings of the provided input.
+        /// </summary>
+        /// <param name="tokens">input to compute the embeddings for</param>
+        /// <param name="callback">callback function called with the result string</param>
+        /// <returns>the computed embeddings</returns>
+        public async Task<List<float>> Embeddings(string query, Callback<List<float>> callback = null)
+        {
+            // handle the tokenization of a message by the user
+            TokenizeRequest tokenizeRequest = new TokenizeRequest();
+            tokenizeRequest.content = query;
+            string json = JsonUtility.ToJson(tokenizeRequest);
+            return await PostRequest<EmbeddingsResult, List<float>>(json, "embeddings", EmbeddingsContent, callback);
+        }
+
         private async Task<string> Slot(string filepath, string action)
         {
             SlotRequest slotRequest = new SlotRequest();
@@ -681,6 +702,9 @@ namespace LLMUnity
                     break;
                 case "detokenize":
                     callResult = await llm.Detokenize(json);
+                    break;
+                case "embeddings":
+                    callResult = await llm.Embeddings(json);
                     break;
                 case "slots":
                     callResult = await llm.Slot(json);
