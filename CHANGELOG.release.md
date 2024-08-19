@@ -1,7 +1,7 @@
 ### 🚀 Features
 
-- Update to latest llama.cpp (b3600) (PR: #210)
 - Implement embedding and lora adapter functionality (PR: #210)
+- Read context length and warn if it is very large (PR: #211)
 
 ### 🐛 Fixes
 
