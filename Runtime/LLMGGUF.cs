@@ -125,6 +125,13 @@ namespace LLMUnity
             return null;
         }
 
+        public byte[] GetGenericField(string key)
+        {
+            ReaderField field = GetField(key);
+            if (field == null || field.parts.Count == 0) return null;
+            return (byte[])field.parts[field.parts.Count - 1];
+        }
+
         /// <summary>
         /// Allows to retrieve a string GGUF field.
         /// </summary>
@@ -132,9 +139,21 @@ namespace LLMUnity
         /// <returns> Retrieved GGUF value </returns>
         public string GetStringField(string key)
         {
-            ReaderField field = GetField(key);
-            if (field == null || field.parts.Count == 0) return null;
-            return System.Text.Encoding.UTF8.GetString((byte[])field.parts[field.parts.Count - 1]);
+            byte[] value = GetGenericField(key);
+            if (value == null) return null;
+            return System.Text.Encoding.UTF8.GetString(value);
+        }
+
+        /// <summary>
+        /// Allows to retrieve an integer GGUF field.
+        /// </summary>
+        /// <param name="key"> GGUF field to retrieve </param>
+        /// <returns> Retrieved GGUF value </returns>
+        public int GetIntField(string key)
+        {
+            byte[] value = GetGenericField(key);
+            if (value == null) return -1;
+            return BitConverter.ToInt32(value, 0);
         }
 
         private byte[] ReadBytes(int offset, int count)
