@@ -17,7 +17,7 @@ namespace LLMUnity
         public string chatTemplate;
         public string url;
         public bool includeInBuild;
-
+        public int contextLength;
 
         public ModelEntry(string path, bool lora = false, string label = null, string url = null)
         {
@@ -25,9 +25,17 @@ namespace LLMUnity
             this.label = label == null ? filename : label;
             this.lora = lora;
             this.path = Path.GetFullPath(path).Replace('\\', '/');
-            chatTemplate = lora ? null : ChatTemplate.FromGGUF(this.path);
             this.url = url;
             includeInBuild = true;
+            chatTemplate = null;
+            contextLength = -1;
+            if (!lora)
+            {
+                GGUFReader reader = new GGUFReader(this.path);
+                chatTemplate = ChatTemplate.FromGGUF(reader, this.path);
+                string arch = reader.GetStringField("general.architecture");
+                if (arch != null) contextLength = reader.GetIntField($"{arch}.context_length");
+            }
         }
 
         public ModelEntry OnlyRequiredFields()
