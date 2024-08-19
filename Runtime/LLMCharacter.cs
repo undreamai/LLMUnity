@@ -274,7 +274,7 @@ namespace LLMUnity
         {
             if (setNKeepToPrompt && nKeep == -1)
             {
-                string systemPrompt = template.ComputePrompt(new List<ChatMessage>(){chat[0]}, "", false);
+                string systemPrompt = template.ComputePrompt(new List<ChatMessage>(){chat[0]}, playerName, "", false);
                 await Tokenize(systemPrompt, SetNKeep);
             }
         }
@@ -472,7 +472,7 @@ namespace LLMUnity
             try
             {
                 AddPlayerMessage(query);
-                string prompt = template.ComputePrompt(chat, AIName);
+                string prompt = template.ComputePrompt(chat, playerName, AIName);
                 json = JsonUtility.ToJson(GenerateRequest(prompt));
                 chat.RemoveAt(chat.Count - 1);
             }

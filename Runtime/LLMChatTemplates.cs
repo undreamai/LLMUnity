@@ -37,6 +37,7 @@ namespace LLMUnity
             {
                 new ChatMLTemplate(),
                 new AlpacaTemplate(),
+                new GemmaTemplate(),
                 new MistralChatTemplate(),
                 new MistralInstructTemplate(),
                 new LLama3ChatTemplate(),
@@ -169,7 +170,7 @@ namespace LLMUnity
         /// <param name="AIName"> the AI name </param>
         /// <param name="endWithPrefix"> whether to end the prompt with the AI prefix </param>
         /// <returns>prompt</returns>
-        public virtual string ComputePrompt(List<ChatMessage> messages, string AIName, bool endWithPrefix = true)
+        public virtual string ComputePrompt(List<ChatMessage> messages, string playerName, string AIName, bool endWithPrefix = true)
         {
             string chatPrompt = PromptPrefix();
             int start = 0;
@@ -338,6 +339,47 @@ namespace LLMUnity
 
     /// @ingroup template
     /// <summary>
+    /// Class implementing the Gemma template
+    /// </summary>
+    public class GemmaTemplate : ChatTemplate
+    {
+        public override string GetName() { return "gemma"; }
+        public override string GetDescription() { return "gemma"; }
+        public override string[] GetNameMatches() { return new string[] {"gemma"}; }
+
+        protected override string RequestSuffix() { return "<end_of_turn>\n"; }
+        protected override string PairSuffix() { return "<end_of_turn>\n"; }
+
+        protected override string PlayerPrefix(string playerName) { return "<start_of_turn>" + playerName + "\n"; }
+        protected override string AIPrefix(string AIName) { return "<start_of_turn>" + AIName + "\n"; }
+
+        public override string ComputePrompt(List<ChatMessage> messages, string playerName, string AIName, bool endWithPrefix = true)
+        {
+            List<ChatMessage> messagesSystemPrompt = messages;
+            if (messages[0].role == "system")
+            {
+                string firstUserMessage = messages[0].content;
+                int start = 1;
+                if (messages.Count > 1)
+                {
+                    if (firstUserMessage != "") firstUserMessage += "\n\n";
+                    firstUserMessage += messages[1].content;
+                    start = 2;
+                }
+                messagesSystemPrompt = new List<ChatMessage>(){new ChatMessage { role = playerName, content = firstUserMessage }};
+                messagesSystemPrompt.AddRange(messages.GetRange(start, messages.Count - start));
+            }
+            return base.ComputePrompt(messagesSystemPrompt, playerName, AIName, endWithPrefix);
+        }
+
+        public override string[] GetStop(string playerName, string AIName)
+        {
+            return AddStopNewlines(new string[] { "<start_of_turn>", "<end_of_turn>" });
+        }
+    }
+
+    /// @ingroup template
+    /// <summary>
     /// Class implementing the Alpaca template
     /// </summary>
     public class AlpacaTemplate : ChatTemplate
@@ -421,7 +463,7 @@ namespace LLMUnity
         protected override string PairSuffix() { return "<|end|>\n"; }
 
 
-        public override string ComputePrompt(List<ChatMessage> messages, string AIName, bool endWithPrefix = true)
+        public override string ComputePrompt(List<ChatMessage> messages, string playerName, string AIName, bool endWithPrefix = true)
         {
             List<ChatMessage> messagesSystemPrompt = messages;
             if (messages[0].role == "system")
@@ -437,7 +479,7 @@ namespace LLMUnity
                 messagesSystemPrompt = new List<ChatMessage>(){new ChatMessage { role = "user", content = firstUserMessage }};
                 messagesSystemPrompt.AddRange(messages.GetRange(start, messages.Count - start));
             }
-            return base.ComputePrompt(messagesSystemPrompt, AIName, endWithPrefix);
+            return base.ComputePrompt(messagesSystemPrompt, playerName, AIName, endWithPrefix);
         }
 
         public override string[] GetStop(string playerName, string AIName)
