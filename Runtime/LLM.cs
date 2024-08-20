@@ -21,6 +21,8 @@ namespace LLMUnity
             ErrorCode = errorCode;
         }
     }
+
+    public class DestroyException : Exception {}
     /// \endcond
 
     [DefaultExecutionOrder(-1)]
@@ -83,6 +85,7 @@ namespace LLMUnity
         List<StreamWrapper> streamWrappers = new List<StreamWrapper>();
         public LLMManager llmManager = new LLMManager();
         List<float> loraWeights = new List<float>();
+        private readonly object startLock = new object();
 
         /// \endcond
 
@@ -114,6 +117,7 @@ namespace LLMUnity
                 return;
             }
             await Task.Run(() => StartLLMServer(arguments));
+            if (!started) return;
             if (dontDestroyOnLoad) DontDestroyOnLoad(transform.root.gameObject);
             if (basePrompt != "") await SetBasePrompt(basePrompt);
         }
@@ -322,7 +326,7 @@ namespace LLMUnity
                 try
                 {
                     InitLib(arch);
-                    InitServer(arguments);
+                    InitService(arguments);
                     LLMUnitySetup.Log($"Using architecture: {arch}");
                     break;
                 }
@@ -330,6 +334,10 @@ namespace LLMUnity
                 {
                     error = e.Message;
                     Destroy();
+                }
+                catch (DestroyException)
+                {
+                    break;
                 }
                 catch (Exception e)
                 {
@@ -343,7 +351,7 @@ namespace LLMUnity
                 failed = true;
                 return;
             }
-            StartService();
+            CallIfNotDestroyed(() => StartService());
             LLMUnitySetup.Log("LLM service created");
         }
 
@@ -353,13 +361,22 @@ namespace LLMUnity
             CheckLLMStatus(false);
         }
 
-        private void InitServer(string arguments)
+        void CallIfNotDestroyed(EmptyCallback fn)
         {
-            if (debug) SetupLogging();
-            LLMObject = llmlib.LLM_Construct(arguments);
-            if (remote) llmlib.LLM_StartServer(LLMObject);
-            llmlib.LLM_SetTemplate(LLMObject, chatTemplate);
-            CheckLLMStatus(false);
+            lock (startLock)
+            {
+                if (llmlib == null) throw new DestroyException();
+                fn();
+            }
+        }
+
+        private void InitService(string arguments)
+        {
+            if (debug) CallIfNotDestroyed(() => SetupLogging());
+            CallIfNotDestroyed(() => {LLMObject = llmlib.LLM_Construct(arguments);});
+            if (remote) CallIfNotDestroyed(() => llmlib.LLM_StartServer(LLMObject));
+            CallIfNotDestroyed(() => llmlib.LLM_SetTemplate(LLMObject, chatTemplate));
+            CallIfNotDestroyed(() => CheckLLMStatus(false));
         }
 
         private void StartService()
@@ -624,28 +641,31 @@ namespace LLMUnity
         /// </summary>
         public void Destroy()
         {
-            try
+            lock (startLock)
             {
-                if (llmlib != null)
+                try
                 {
-                    if (LLMObject != IntPtr.Zero)
+                    if (llmlib != null)
                     {
-                        llmlib.LLM_Stop(LLMObject);
-                        if (remote) llmlib.LLM_StopServer(LLMObject);
-                        StopLogging();
-                        llmThread?.Join();
-                        llmlib.LLM_Delete(LLMObject);
-                        LLMObject = IntPtr.Zero;
+                        if (LLMObject != IntPtr.Zero)
+                        {
+                            llmlib.LLM_Stop(LLMObject);
+                            if (remote) llmlib.LLM_StopServer(LLMObject);
+                            StopLogging();
+                            llmThread?.Join();
+                            llmlib.LLM_Delete(LLMObject);
+                            LLMObject = IntPtr.Zero;
+                        }
+                        llmlib.Destroy();
+                        llmlib = null;
                     }
-                    llmlib.Destroy();
+                    started = false;
+                    failed = false;
                 }
-                started = false;
-                failed = false;
-                llmlib = null;
-            }
-            catch (Exception e)
-            {
-                LLMUnitySetup.LogError(e.Message);
+                catch (Exception e)
+                {
+                    LLMUnitySetup.LogError(e.Message);
+                }
             }
         }
 
