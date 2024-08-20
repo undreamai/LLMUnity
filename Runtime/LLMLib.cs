@@ -281,7 +281,6 @@ namespace LLMUnity
 
         public LLMLib(string arch)
         {
-            LLMUnitySetup.Log(GetArchitecturePath(arch));
             libraryHandle = LibraryLoader.LoadLibrary(GetArchitecturePath(arch));
             if (libraryHandle == IntPtr.Zero)
             {
