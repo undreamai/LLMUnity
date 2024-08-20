@@ -975,8 +975,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0180c30196eb12b469cecc25d1a49cf7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AnyImageData: 
-  AD: {fileID: 0}
+  AnyImageData: {fileID: 2062680525}
+  AD: {fileID: 107963747}
 --- !u!4 &623752464
 Transform:
   m_ObjectHideFlags: 0
@@ -1716,7 +1716,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a50e3140c3ecaaf1c848dbf141cc2074, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  advancedOptions: 1
+  advancedOptions: 0
   remote: 0
   port: 13333
   numThreads: -1
