@@ -248,7 +248,7 @@ public class MyScript : MonoBehaviour
         // Otherwise the model file can be copied directly inside the StreamingAssets folder.
         llm.SetModel("Phi-3-mini-4k-instruct-q4.gguf");
         // optional: you can also set a lora in a similar fashion
-        llm.SetLora("my-lora.bin");
+        llm.SetLora("my-lora.gguf");
         // optional: you can set the chat template of the model if it is not correctly identified
         // You can find a list of chat templates in the ChatTemplate.templates.Keys
         llm.SetTemplate("phi-3");
@@ -374,8 +374,8 @@ If the user's GPU is not supported, the LLM will fall back to the CPU
 
 - <details><summary>Advanced options</summary>
 
-  - `Download lora` click to download a LoRA model in .bin format
-  - `Load lora` click to load a LoRA model in .bin format
+  - `Download lora` click to download a LoRA model in .gguf format
+  - `Load lora` click to load a LoRA model in .gguf format
   - <details><summary><code>Context Size</code> size of the prompt context (0 = context size of the model)</summary> This is the number of tokens the model can take as input when generating responses. Higher values use more RAM or VRAM (if using GPU). </details>
   - `Batch Size` batch size for prompt processing (default: 512)
   - `Model` the path of the model being used (relative to the Assets/StreamingAssets folder)
