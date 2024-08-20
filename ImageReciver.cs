@@ -12,7 +12,7 @@ public class ImageReciver : MonoBehaviour
 
     //This field is used to relay the image to the AI, this can be done by both a URL or a file in your system.
    
-    public TMP_InputField AnyImageData;
+    public TextMeshProUGUI AnyImageData;
 
     // Should work with any script that calls the Chat function on the LLMCharacter script. 
     public AndroidDemo AD;
