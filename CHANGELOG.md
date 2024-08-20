@@ -7,6 +7,7 @@
 #### 🐛 Fixes
 
 - Fix set template for remote setup (PR: #208)
+- fix crash when stopping scene before LLM creation (PR: #214)
 
 
 ## v2.1.1
