@@ -22,7 +22,7 @@ namespace LLMUnity
         }
     }
 
-    public class DestroyException : Exception {}
+    public class DestroyException : Exception { }
     /// \endcond
 
     [DefaultExecutionOrder(-1)]
@@ -72,7 +72,7 @@ namespace LLMUnity
         /// <summary> Chat template used for the model </summary>
         [ModelAdvanced] public string chatTemplate = ChatTemplate.DefaultTemplate;
         /// <summary> the paths of the LORA models being used (relative to the Assets/StreamingAssets folder).
-        /// Models with .bin format are allowed.</summary>
+        /// Models with .gguf format are allowed.</summary>
         [ModelAdvanced] public string lora = "";
 
         /// \cond HIDE
@@ -192,9 +192,9 @@ namespace LLMUnity
         /// <summary>
         /// Allows to set a LORA model to use in the LLM.
         /// The model provided is copied to the Assets/StreamingAssets folder that allows it to also work in the build.
-        /// Models supported are in .bin format.
+        /// Models supported are in .gguf format.
         /// </summary>
-        /// <param name="path">path to LORA model to use (.bin format)</param>
+        /// <param name="path">path to LORA model to use (.gguf format)</param>
         public void SetLora(string path)
         {
             lora = "";
@@ -204,9 +204,9 @@ namespace LLMUnity
         /// <summary>
         /// Allows to add a LORA model to use in the LLM.
         /// The model provided is copied to the Assets/StreamingAssets folder that allows it to also work in the build.
-        /// Models supported are in .bin format.
+        /// Models supported are in .gguf format.
         /// </summary>
-        /// <param name="path">path to LORA model to use (.bin format)</param>
+        /// <param name="path">path to LORA model to use (.gguf format)</param>
         public void AddLora(string path)
         {
             string loraPath = GetModelLoraPath(path, true);
@@ -220,9 +220,9 @@ namespace LLMUnity
 
         /// <summary>
         /// Allows to remove a LORA model from the LLM.
-        /// Models supported are in .bin format.
+        /// Models supported are in .gguf format.
         /// </summary>
-        /// <param name="path">path to LORA model to remove (.bin format)</param>
+        /// <param name="path">path to LORA model to remove (.gguf format)</param>
         public void RemoveLora(string path)
         {
             string loraPath = GetModelLoraPath(path, true);
@@ -373,7 +373,7 @@ namespace LLMUnity
         private void InitService(string arguments)
         {
             if (debug) CallIfNotDestroyed(() => SetupLogging());
-            CallIfNotDestroyed(() => {LLMObject = llmlib.LLM_Construct(arguments);});
+            CallIfNotDestroyed(() => { LLMObject = llmlib.LLM_Construct(arguments); });
             if (remote) CallIfNotDestroyed(() => llmlib.LLM_StartServer(LLMObject));
             CallIfNotDestroyed(() => llmlib.LLM_SetTemplate(LLMObject, chatTemplate));
             CallIfNotDestroyed(() => CheckLLMStatus(false));
@@ -383,7 +383,7 @@ namespace LLMUnity
         {
             llmThread = new Thread(() => llmlib.LLM_Start(LLMObject));
             llmThread.Start();
-            while (!llmlib.LLM_Started(LLMObject)) {}
+            while (!llmlib.LLM_Started(LLMObject)) { }
             loraWeights = new List<float>();
             for (int i = 0; i < lora.Split(" ").Count(); i++) loraWeights.Add(1f);
             started = true;
@@ -446,7 +446,7 @@ namespace LLMUnity
 
         void CheckLLMStatus(bool log = true)
         {
-            if (llmlib == null) {return;}
+            if (llmlib == null) { return; }
             IntPtr stringWrapper = llmlib.StringWrapper_Construct();
             int status = llmlib.LLM_Status(LLMObject, stringWrapper);
             string result = llmlib.GetStringWrapperResult(stringWrapper);
@@ -553,7 +553,7 @@ namespace LLMUnity
             loraWeightRequest.loraWeights = new List<LoraWeightRequest>();
             for (int i = 0; i < loraWeights.Count; i++)
             {
-                loraWeightRequest.loraWeights.Add(new LoraWeightRequest() {id = i, scale = loraWeights[i]});
+                loraWeightRequest.loraWeights.Add(new LoraWeightRequest() { id = i, scale = loraWeights[i] });
             }
             ;
 
@@ -607,7 +607,7 @@ namespace LLMUnity
         public async Task<string> Completion(string json, Callback<string> streamCallback = null)
         {
             AssertStarted();
-            if (streamCallback == null) streamCallback = (string s) => {};
+            if (streamCallback == null) streamCallback = (string s) => { };
             StreamWrapper streamWrapper = ConstructStreamWrapper(streamCallback);
             await Task.Run(() => llmlib.LLM_Completion(LLMObject, json, streamWrapper.GetStringWrapper()));
             if (!started) return null;
@@ -621,7 +621,7 @@ namespace LLMUnity
         public async Task SetBasePrompt(string base_prompt)
         {
             AssertStarted();
-            SystemPromptRequest request = new SystemPromptRequest(){system_prompt = base_prompt, prompt = " ", n_predict = 0};
+            SystemPromptRequest request = new SystemPromptRequest() { system_prompt = base_prompt, prompt = " ", n_predict = 0 };
             await Completion(JsonUtility.ToJson(request));
         }
 
