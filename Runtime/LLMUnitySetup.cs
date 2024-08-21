@@ -187,8 +187,8 @@ namespace LLMUnity
         [InitializeOnLoadMethod]
         static async Task InitializeOnLoad()
         {
-            await DownloadLibrary();
             LoadPlayerPrefs();
+            await DownloadLibrary();
         }
 
 #else
@@ -370,9 +370,11 @@ namespace LLMUnity
                 string androidDir = Path.Combine(libraryPath, "android");
                 if (Directory.Exists(androidDir))
                 {
-                    string androidPluginDir = Path.Combine(Application.dataPath, "Plugins", "Android");
-                    Directory.CreateDirectory(androidPluginDir);
-                    Directory.Move(androidDir, Path.Combine(androidPluginDir, Path.GetFileName(libraryPath)));
+                    string androidPluginsDir = Path.Combine(Application.dataPath, "Plugins", "Android");
+                    Directory.CreateDirectory(androidPluginsDir);
+                    string pluginDir = Path.Combine(androidPluginsDir, Path.GetFileName(libraryPath));
+                    if (Directory.Exists(pluginDir)) Directory.Delete(pluginDir, true);
+                    Directory.Move(androidDir, pluginDir);
                     if (File.Exists(androidDir + ".meta")) File.Delete(androidDir + ".meta");
                 }
                 AssetDatabase.StopAssetEditing();
@@ -390,7 +392,7 @@ namespace LLMUnity
 
         private static void SetLibraryProgress(float progress)
         {
-            libraryProgress = progress;
+            libraryProgress = Math.Min(0.99f, progress);
         }
 
         public static string AddAsset(string assetPath)
