@@ -104,15 +104,19 @@ namespace LLMUnity
 
         public static void HideLibraryPlatforms(string platform)
         {
-            List<string> platforms = new List<string>(){ "windows", "macos", "linux", "android", "ios" };
+            List<string> platforms = new List<string>(){ "windows", "macos", "linux", "android", "ios", "setup" };
             platforms.Remove(platform);
             foreach (string source in Directory.GetDirectories(LLMUnitySetup.libraryPath))
             {
+                string sourceName = Path.GetFileName(source);
                 foreach (string platformPrefix in platforms)
                 {
-                    if (Path.GetFileName(source).StartsWith(platformPrefix))
+                    bool move = sourceName.StartsWith(platformPrefix);
+                    move = move || (sourceName.Contains("cuda") && !sourceName.Contains("full") && LLMUnitySetup.FullLlamaLib);
+                    move = move || (sourceName.Contains("cuda") && sourceName.Contains("full") && !LLMUnitySetup.FullLlamaLib);
+                    if (move)
                     {
-                        string target = Path.Combine(BuildTempDir, Path.GetFileName(source));
+                        string target = Path.Combine(BuildTempDir, sourceName);
                         MoveAction(source, target);
                         MoveAction(source + ".meta", target + ".meta");
                     }
