@@ -109,25 +109,13 @@ namespace LLMUnity
             ("Qwen 2 0.5B (tiny, useful for mobile)", "https://huggingface.co/Qwen/Qwen2-0.5B-Instruct-GGUF/resolve/main/qwen2-0_5b-instruct-q4_k_m.gguf?download=true", null),
         };
 
-        /// <summary> Add callback function to call for error logs </summary>
-        public static void AddErrorCallBack(Callback<string> callback)
-        {
-            errorCallbacks.Add(callback);
-        }
-
-        /// <summary> Remove callback function added for error logs </summary>
-        public static void RemoveErrorCallBack(Callback<string> callback)
-        {
-            errorCallbacks.Remove(callback);
-        }
-
-        /// <summary> Remove all callback function added for error logs </summary>
-        public static void ClearErrorCallBacks()
-        {
-            errorCallbacks.Clear();
-        }
-
         /// \cond HIDE
+        [LLMUnity] public static DebugModeType DebugMode = DebugModeType.All;
+        static List<Callback<string>> errorCallbacks = new List<Callback<string>>();
+        static readonly object lockObject = new object();
+        static Dictionary<string, Task> androidExtractTasks = new Dictionary<string, Task>();
+        static string DebugModeKey = "DebugMode";
+
         public enum DebugModeType
         {
             All,
@@ -135,10 +123,6 @@ namespace LLMUnity
             Error,
             None
         }
-        [LLMUnity] public static DebugModeType DebugMode = DebugModeType.All;
-        static List<Callback<string>> errorCallbacks = new List<Callback<string>>();
-        static readonly object lockObject = new object();
-        static Dictionary<string, Task> androidExtractTasks = new Dictionary<string, Task>();
 
         public static void Log(string message)
         {
@@ -159,7 +143,6 @@ namespace LLMUnity
             foreach (Callback<string> errorCallback in errorCallbacks) errorCallback(message);
         }
 
-        static string DebugModeKey = "DebugMode";
         static void LoadDebugMode()
         {
             DebugMode = (DebugModeType)PlayerPrefs.GetInt(DebugModeKey, (int)DebugModeType.All);
@@ -364,6 +347,25 @@ namespace LLMUnity
 
 #endif
         /// \endcond
+
+        /// <summary> Add callback function to call for error logs </summary>
+        public static void AddErrorCallBack(Callback<string> callback)
+        {
+            errorCallbacks.Add(callback);
+        }
+
+        /// <summary> Remove callback function added for error logs </summary>
+        public static void RemoveErrorCallBack(Callback<string> callback)
+        {
+            errorCallbacks.Remove(callback);
+        }
+
+        /// <summary> Remove all callback function added for error logs </summary>
+        public static void ClearErrorCallBacks()
+        {
+            errorCallbacks.Clear();
+        }
+
         public static int GetMaxFreqKHz(int cpuId)
         {
             string[] paths = new string[]
