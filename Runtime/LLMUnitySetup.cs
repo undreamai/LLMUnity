@@ -47,6 +47,7 @@ namespace LLMUnity
     public class ModelDownloadAttribute : ModelAttribute {}
     public class ModelDownloadAdvancedAttribute : ModelAdvancedAttribute {}
     public class ModelAdvancedAttribute : PropertyAttribute {}
+    public class ModelExtrasAttribute : PropertyAttribute {}
     public class ChatAttribute : PropertyAttribute {}
     public class ChatAdvancedAttribute : PropertyAttribute {}
     public class LLMUnityAttribute : PropertyAttribute {}
@@ -87,8 +88,12 @@ namespace LLMUnity
         public static string Version = "v2.1.2";
         /// <summary> LlamaLib version </summary>
         public static string LlamaLibVersion = "v1.1.8";
+        /// <summary> LlamaLib release url </summary>
+        public static string LlamaLibReleaseURL = $"https://github.com/undreamai/LlamaLib/releases/download/{LlamaLibVersion}";
         /// <summary> LlamaLib url </summary>
-        public static string LlamaLibURL = $"https://github.com/undreamai/LlamaLib/releases/download/{LlamaLibVersion}/undreamai-{LlamaLibVersion}-llamacpp.zip";
+        public static string LlamaLibURL = $"{LlamaLibReleaseURL}/undreamai-{LlamaLibVersion}-llamacpp.zip";
+        /// <summary> LlamaLib extension url </summary>
+        public static string LlamaLibExtensionURL = $"{LlamaLibReleaseURL}/undreamai-{LlamaLibVersion}-llamacpp-full.zip";
         /// <summary> LlamaLib path </summary>
         public static string libraryPath = GetAssetPath(Path.GetFileName(LlamaLibURL).Replace(".zip", ""));
         /// <summary> LLMnity store path </summary>
@@ -111,10 +116,12 @@ namespace LLMUnity
 
         /// \cond HIDE
         [LLMUnity] public static DebugModeType DebugMode = DebugModeType.All;
+        static string DebugModeKey = "DebugMode";
+        public static bool FullLlamaLib = false;
+        static string FullLlamaLibKey = "FullLlamaLib";
         static List<Callback<string>> errorCallbacks = new List<Callback<string>>();
         static readonly object lockObject = new object();
         static Dictionary<string, Task> androidExtractTasks = new Dictionary<string, Task>();
-        static string DebugModeKey = "DebugMode";
 
         public enum DebugModeType
         {
@@ -143,9 +150,10 @@ namespace LLMUnity
             foreach (Callback<string> errorCallback in errorCallbacks) errorCallback(message);
         }
 
-        static void LoadDebugMode()
+        static void LoadPlayerPrefs()
         {
             DebugMode = (DebugModeType)PlayerPrefs.GetInt(DebugModeKey, (int)DebugModeType.All);
+            FullLlamaLib = PlayerPrefs.GetInt(FullLlamaLibKey, 0) == 1;
         }
 
         public static void SetDebugMode(DebugModeType newDebugMode)
@@ -155,6 +163,18 @@ namespace LLMUnity
             PlayerPrefs.SetInt(DebugModeKey, (int)DebugMode);
             PlayerPrefs.Save();
         }
+
+#if UNITY_EDITOR
+        public static void SetFullLlamaLib(bool value)
+        {
+            if (FullLlamaLib == value) return;
+            FullLlamaLib = value;
+            PlayerPrefs.SetInt(FullLlamaLibKey, value ? 1 : 0);
+            PlayerPrefs.Save();
+            _ = DownloadLibrary();
+        }
+
+#endif
 
         public static string GetAssetPath(string relPath = "")
         {
@@ -168,14 +188,14 @@ namespace LLMUnity
         static async Task InitializeOnLoad()
         {
             await DownloadLibrary();
-            LoadDebugMode();
+            LoadPlayerPrefs();
         }
 
 #else
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         void InitializeOnLoad()
         {
-            LoadDebugMode();
+            LoadPlayerPrefs();
         }
 
 #endif
@@ -290,35 +310,82 @@ namespace LLMUnity
 
         [HideInInspector] public static float libraryProgress = 1;
 
-        private static async Task DownloadLibrary()
+        static void CreateEmptyFile(string path)
         {
-            if (libraryProgress < 1) return;
-            libraryProgress = 0;
-            string libZip = Path.Combine(Application.temporaryCachePath, Path.GetFileName(LlamaLibURL));
-            if (!Directory.Exists(libraryPath))
+            File.Create(path).Dispose();
+        }
+
+        static void ExtractInsideDirectory(string zipPath, string extractPath, bool overwrite = true)
+        {
+            using (ZipArchive archive = ZipFile.OpenRead(zipPath))
             {
-                await DownloadFile(LlamaLibURL, libZip, true, null, SetLibraryProgress);
+                foreach (ZipArchiveEntry entry in archive.Entries)
+                {
+                    if (string.IsNullOrEmpty(entry.Name)) continue;
+                    string destinationPath = Path.Combine(extractPath, entry.FullName);
+                    Directory.CreateDirectory(Path.GetDirectoryName(destinationPath));
+                    entry.ExtractToFile(destinationPath, overwrite);
+                }
+            }
+        }
+
+        static async Task DownloadAndExtractInsideDirectory(string url, string path, string setupDir)
+        {
+            string urlName = Path.GetFileName(url);
+            string setupFile = Path.Combine(setupDir, urlName + ".complete");
+            if (File.Exists(setupFile)) return;
+
+            string zipPath = Path.Combine(Application.temporaryCachePath, urlName);
+            await DownloadFile(url, zipPath, true, null, SetLibraryProgress);
+
+            AssetDatabase.StartAssetEditing();
+            ExtractInsideDirectory(zipPath, path);
+            CreateEmptyFile(setupFile);
+            AssetDatabase.StopAssetEditing();
+
+            File.Delete(zipPath);
+        }
+
+        static async Task DownloadLibrary()
+        {
+            void DeleteFileAndMeta(string path)
+            {
+                if (File.Exists(path + ".meta")) File.Delete(path + ".meta");
+                if (File.Exists(path)) File.Delete(path);
+            }
+
+            try
+            {
+                string setupDir = Path.Combine(libraryPath, "setup");
+                Directory.CreateDirectory(setupDir);
+
+                string lockFile = Path.Combine(setupDir, "LLMUnitySetup.lock");
+                if (File.Exists(lockFile)) return;
+                CreateEmptyFile(lockFile);
+
+                libraryProgress = 0;
+                await DownloadAndExtractInsideDirectory(LlamaLibURL, libraryPath, setupDir);
+
                 AssetDatabase.StartAssetEditing();
-                ZipFile.ExtractToDirectory(libZip, libraryPath);
                 string androidDir = Path.Combine(libraryPath, "android");
                 if (Directory.Exists(androidDir))
                 {
                     string androidPluginDir = Path.Combine(Application.dataPath, "Plugins", "Android");
                     Directory.CreateDirectory(androidPluginDir);
                     Directory.Move(androidDir, Path.Combine(androidPluginDir, Path.GetFileName(libraryPath)));
-                }
-                foreach (string librarySubPath in Directory.GetDirectories(libraryPath))
-                {
-                    if (Path.GetFileName(librarySubPath).StartsWith("android"))
-                    {
-                        string pluginPath = Path.Combine(Application.dataPath, "Plugins", "Android", Path.GetFileName(librarySubPath));
-                        Directory.Move(librarySubPath, pluginPath);
-                    }
+                    if (File.Exists(androidDir + ".meta")) File.Delete(androidDir + ".meta");
                 }
                 AssetDatabase.StopAssetEditing();
-                File.Delete(libZip);
+
+                if (FullLlamaLib) await DownloadAndExtractInsideDirectory(LlamaLibExtensionURL, libraryPath, setupDir);
+
+                libraryProgress = 1;
+                DeleteFileAndMeta(lockFile);
             }
-            libraryProgress = 1;
+            catch (Exception e)
+            {
+                LogError(e.Message);
+            }
         }
 
         private static void SetLibraryProgress(float progress)
