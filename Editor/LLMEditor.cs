@@ -74,6 +74,7 @@ namespace LLMUnity
             if (llmScriptSO.FindProperty("advancedOptions").boolValue)
             {
                 attributeClasses.Add(typeof(ModelAdvancedAttribute));
+                if (LLMUnitySetup.FullLlamaLib) attributeClasses.Add(typeof(ModelExtrasAttribute));
             }
             ShowPropertiesOfClass("", llmScriptSO, attributeClasses, false);
             Space();

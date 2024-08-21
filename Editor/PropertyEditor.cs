@@ -16,17 +16,11 @@ namespace LLMUnity
             EditorGUILayout.PropertyField(scriptProp);
         }
 
-        public void AddOptionsToggle(SerializedObject llmScriptSO, string propertyName, string name)
+        public bool ToggleButton(string text, bool activated)
         {
-            SerializedProperty advancedOptionsProp = llmScriptSO.FindProperty(propertyName);
-            string toggleText = (advancedOptionsProp.boolValue ? "Hide" : "Show") + " " + name;
             GUIStyle style = new GUIStyle("Button");
-            if (advancedOptionsProp.boolValue)
-                style.normal = new GUIStyleState() { background = Texture2D.grayTexture };
-            if (GUILayout.Button(toggleText, style, GUILayout.Width(buttonWidth)))
-            {
-                advancedOptionsProp.boolValue = !advancedOptionsProp.boolValue;
-            }
+            if (activated) style.normal = new GUIStyleState() { background = Texture2D.grayTexture };
+            return GUILayout.Button(text, style, GUILayout.Width(buttonWidth));
         }
 
         public void AddSetupSettings(SerializedObject llmScriptSO)
@@ -54,8 +48,12 @@ namespace LLMUnity
         public void AddOptionsToggles(SerializedObject llmScriptSO)
         {
             LLMUnitySetup.SetDebugMode((LLMUnitySetup.DebugModeType)EditorGUILayout.EnumPopup("Log Level", LLMUnitySetup.DebugMode));
+
             EditorGUILayout.BeginHorizontal();
-            AddOptionsToggle(llmScriptSO, "advancedOptions", "Advanced Options");
+            SerializedProperty advancedOptionsProp = llmScriptSO.FindProperty("advancedOptions");
+            string toggleText = (advancedOptionsProp.boolValue ? "Hide" : "Show") + " Advanced Options";
+            if (ToggleButton(toggleText, advancedOptionsProp.boolValue)) advancedOptionsProp.boolValue = !advancedOptionsProp.boolValue;
+            if (ToggleButton("Use extras", LLMUnitySetup.FullLlamaLib)) LLMUnitySetup.SetFullLlamaLib(!LLMUnitySetup.FullLlamaLib);
             EditorGUILayout.EndHorizontal();
             Space();
         }
