@@ -354,7 +354,7 @@ namespace LLMUnity
                 failed = true;
                 return;
             }
-            CallIfNotDestroyed(() => StartService());
+            CallWithLock(StartService);
             LLMUnitySetup.Log("LLM service created");
         }
 
@@ -364,22 +364,22 @@ namespace LLMUnity
             CheckLLMStatus(false);
         }
 
-        void CallIfNotDestroyed(EmptyCallback fn)
+        void CallWithLock(EmptyCallback fn, bool checkNull = true)
         {
             lock (startLock)
             {
-                if (llmlib == null) throw new DestroyException();
+                if (checkNull && llmlib == null) throw new DestroyException();
                 fn();
             }
         }
 
         private void InitService(string arguments)
         {
-            if (debug) CallIfNotDestroyed(() => SetupLogging());
-            CallIfNotDestroyed(() => { LLMObject = llmlib.LLM_Construct(arguments); });
-            if (remote) CallIfNotDestroyed(() => llmlib.LLM_StartServer(LLMObject));
-            CallIfNotDestroyed(() => llmlib.LLM_SetTemplate(LLMObject, chatTemplate));
-            CallIfNotDestroyed(() => CheckLLMStatus(false));
+            if (debug) CallWithLock(SetupLogging);
+            CallWithLock(() => { LLMObject = llmlib.LLM_Construct(arguments); });
+            if (remote) CallWithLock(() => llmlib.LLM_StartServer(LLMObject));
+            CallWithLock(() => llmlib.LLM_SetTemplate(LLMObject, chatTemplate));
+            CallWithLock(() => CheckLLMStatus(false));
         }
 
         private void StartService()
@@ -644,7 +644,7 @@ namespace LLMUnity
         /// </summary>
         public void Destroy()
         {
-            lock (startLock)
+            CallWithLock(() =>
             {
                 try
                 {
@@ -669,7 +669,7 @@ namespace LLMUnity
                 {
                     LLMUnitySetup.LogError(e.Message);
                 }
-            }
+            }, false);
         }
 
         /// <summary>
