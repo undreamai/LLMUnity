@@ -22,7 +22,7 @@ namespace LLMUnity
         }
     }
 
-    public class DestroyException : Exception { }
+    public class DestroyException : Exception {}
     /// \endcond
 
     [DefaultExecutionOrder(-1)]
@@ -74,6 +74,8 @@ namespace LLMUnity
         /// <summary> the paths of the LORA models being used (relative to the Assets/StreamingAssets folder).
         /// Models with .gguf format are allowed.</summary>
         [ModelAdvanced] public string lora = "";
+        /// <summary> enable use of flash attention </summary>
+        [ModelExtras] public bool flashAttention = false;
 
         /// \cond HIDE
 
@@ -297,6 +299,7 @@ namespace LLMUnity
             if (numThreadsToUse > 0) arguments += $" -t {numThreadsToUse}";
             arguments += loraArgument;
             arguments += $" -ngl {numGPULayers}";
+            if (LLMUnitySetup.FullLlamaLib && flashAttention) arguments += $" --flash-attn";
             return arguments;
         }
 
@@ -383,7 +386,7 @@ namespace LLMUnity
         {
             llmThread = new Thread(() => llmlib.LLM_Start(LLMObject));
             llmThread.Start();
-            while (!llmlib.LLM_Started(LLMObject)) { }
+            while (!llmlib.LLM_Started(LLMObject)) {}
             loraWeights = new List<float>();
             for (int i = 0; i < lora.Split(" ").Count(); i++) loraWeights.Add(1f);
             started = true;
@@ -607,7 +610,7 @@ namespace LLMUnity
         public async Task<string> Completion(string json, Callback<string> streamCallback = null)
         {
             AssertStarted();
-            if (streamCallback == null) streamCallback = (string s) => { };
+            if (streamCallback == null) streamCallback = (string s) => {};
             StreamWrapper streamWrapper = ConstructStreamWrapper(streamCallback);
             await Task.Run(() => llmlib.LLM_Completion(LLMObject, json, streamWrapper.GetStringWrapper()));
             if (!started) return null;
