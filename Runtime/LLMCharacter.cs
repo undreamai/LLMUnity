@@ -27,6 +27,8 @@ namespace LLMUnity
         [Remote] public string host = "localhost";
         /// <summary> port to use for the LLM server </summary>
         [Remote] public int port = 13333;
+        /// <summary> number of retries to use for the LLM server requests (-1 = infinite) </summary>
+        [Remote] public int numRetries = -1;
         /// <summary> file to save the chat history.
         /// The file is saved only for Chat calls with addToHistory set to true.
         /// The file will be saved within the persistentDataPath directory (see https://docs.unity3d.com/ScriptReference/Application-persistentDataPath.html). </summary>
@@ -750,38 +752,57 @@ namespace LLMUnity
 
             Ret result = default;
             byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(json);
-            using (var request = UnityWebRequest.Put($"{host}:{port}/{endpoint}", jsonToSend))
+            UnityWebRequest request = null;
+            string error = null;
+            int tryNr = numRetries;
+
+            while (tryNr != 0)
             {
-                WIPRequests.Add(request);
-
-                request.method = "POST";
-                if (requestHeaders != null)
+                using (request = UnityWebRequest.Put($"{host}:{port}/{endpoint}", jsonToSend))
                 {
-                    for (int i = 0; i < requestHeaders.Count; i++)
-                        request.SetRequestHeader(requestHeaders[i].Item1, requestHeaders[i].Item2);
-                }
+                    WIPRequests.Add(request);
 
-                // Start the request asynchronously
-                var asyncOperation = request.SendWebRequest();
-                float lastProgress = 0f;
-                // Continue updating progress until the request is completed
-                while (!asyncOperation.isDone)
-                {
-                    float currentProgress = request.downloadProgress;
-                    // Check if progress has changed
-                    if (currentProgress != lastProgress && callback != null)
+                    request.method = "POST";
+                    if (requestHeaders != null)
                     {
-                        callback?.Invoke(ConvertContent(request.downloadHandler.text, getContent));
-                        lastProgress = currentProgress;
+                        for (int i = 0; i < requestHeaders.Count; i++)
+                            request.SetRequestHeader(requestHeaders[i].Item1, requestHeaders[i].Item2);
                     }
-                    // Wait for the next frame
-                    await Task.Yield();
+
+                    // Start the request asynchronously
+                    var asyncOperation = request.SendWebRequest();
+                    float lastProgress = 0f;
+                    // Continue updating progress until the request is completed
+                    while (!asyncOperation.isDone)
+                    {
+                        float currentProgress = request.downloadProgress;
+                        // Check if progress has changed
+                        if (currentProgress != lastProgress && callback != null)
+                        {
+                            callback?.Invoke(ConvertContent(request.downloadHandler.text, getContent));
+                            lastProgress = currentProgress;
+                        }
+                        // Wait for the next frame
+                        await Task.Yield();
+                    }
+                    WIPRequests.Remove(request);
+                    if (request.result == UnityWebRequest.Result.Success)
+                    {
+                        result = ConvertContent(request.downloadHandler.text, getContent);
+                        error = null;
+                        break;
+                    }
+                    else
+                    {
+                        result = default;
+                        error = request.error;
+                    }
                 }
-                WIPRequests.Remove(request);
-                if (request.result != UnityWebRequest.Result.Success) LLMUnitySetup.LogError(request.error);
-                else result = ConvertContent(request.downloadHandler.text, getContent);
-                callback?.Invoke(result);
+                tryNr--;
             }
+
+            if (error != null) LLMUnitySetup.LogError(error);
+            callback?.Invoke(result);
             return result;
         }
 
