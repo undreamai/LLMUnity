@@ -377,8 +377,8 @@ namespace LLMUnity
         {
             if (debug) CallWithLock(SetupLogging);
             CallWithLock(() => { LLMObject = llmlib.LLM_Construct(arguments); });
-            if (remote) CallWithLock(() => llmlib.LLM_StartServer(LLMObject));
             CallWithLock(() => llmlib.LLM_SetTemplate(LLMObject, chatTemplate));
+            if (remote) CallWithLock(() => llmlib.LLM_StartServer(LLMObject));
             CallWithLock(() => CheckLLMStatus(false));
         }
 
