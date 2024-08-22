@@ -120,7 +120,7 @@ namespace LLMUnity
         public List<ChatMessage> chat;
         private SemaphoreSlim chatLock = new SemaphoreSlim(1, 1);
         private string chatTemplate;
-        private ChatTemplate template;
+        private ChatTemplate template = null;
         public string grammarString;
         protected int id_slot = -1;
         private List<(string, string)> requestHeaders = new List<(string, string)> { ("Content-Type", "application/json") };
@@ -272,10 +272,21 @@ namespace LLMUnity
             InitPrompt(clearChat);
         }
 
+        private bool CheckTemplate()
+        {
+            if (template == null)
+            {
+                LLMUnitySetup.LogError("Template not set!");
+                return false;
+            }
+            return true;
+        }
+
         private async Task InitNKeep()
         {
             if (setNKeepToPrompt && nKeep == -1)
             {
+                if (!CheckTemplate()) return;
                 string systemPrompt = template.ComputePrompt(new List<ChatMessage>(){chat[0]}, playerName, "", false);
                 await Tokenize(systemPrompt, SetNKeep);
             }
@@ -313,7 +324,7 @@ namespace LLMUnity
             if (llmTemplate != chatTemplate)
             {
                 chatTemplate = llmTemplate;
-                template = ChatTemplate.GetTemplate(chatTemplate);
+                template = chatTemplate == null ? null : ChatTemplate.GetTemplate(chatTemplate);
             }
         }
 
@@ -333,6 +344,7 @@ namespace LLMUnity
 
         List<string> GetStopwords()
         {
+            if (!CheckTemplate()) return null;
             List<string> stopAll = new List<string>(template.GetStop(playerName, AIName));
             if (stop != null) stopAll.AddRange(stop);
             return stopAll;
@@ -467,6 +479,7 @@ namespace LLMUnity
             // call the callback function while the answer is received
             // call the completionCallback function when the answer is fully received
             await LoadTemplate();
+            if (!CheckTemplate()) return null;
             await InitNKeep();
 
             string json;
