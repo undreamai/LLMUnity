@@ -406,8 +406,9 @@ If the user's GPU is not supported, the LLM will fall back to the CPU
 
 - `Remote` whether the LLM used is remote or local
 - `LLM` the LLM GameObject (if `Remote` is not set)
-- `Hort` ip of the LLM (if `Remote` is set)
-- `Port` port of the LLM (if `Remote` is set)
+- `Hort` ip of the LLM server (if `Remote` is set)
+- `Port` port of the LLM server (if `Remote` is set)
+- `Num Retries` number of HTTP request retries from the LLM server (if `Remote` is set)
 - <details><summary><code>Save</code> save filename or relative path</summary> If set, the chat history and LLM state (if save cache is enabled) is automatically saved to file specified. <br> The chat history is saved with a json suffix and the LLM state with a cache suffix. <br> Both files are saved in the [persistentDataPath folder of Unity](https://docs.unity3d.com/ScriptReference/Application-persistentDataPath.html).</details>
 - `Save Cache` select to save the LLM state along with the chat history. The LLM state is typically around 100MB+.
 - `Debug Prompt` select to log the constructed prompts in the Unity Editor
