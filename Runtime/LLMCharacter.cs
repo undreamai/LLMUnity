@@ -325,6 +325,7 @@ namespace LLMUnity
             {
                 chatTemplate = llmTemplate;
                 template = chatTemplate == null ? null : ChatTemplate.GetTemplate(chatTemplate);
+                nKeep = -1;
             }
         }
 
