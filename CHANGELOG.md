@@ -4,6 +4,7 @@
 - Implement embedding and lora adapter functionality (PR: #210)
 - Read context length and warn if it is very large (PR: #211)
 - Setup allowing to use extra features: flash attention and IQ quants (PR: #216)
+- Allow HTTP request retries for remote server (PR: #217)
 
 #### 🐛 Fixes
 
