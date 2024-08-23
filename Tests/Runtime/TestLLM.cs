@@ -5,48 +5,98 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System;
 using System.Collections;
-using UnityEngine.TestTools;
 using System.IO;
-using NUnit.Framework.Internal;
+using UnityEngine.TestTools;
 
 namespace LLMUnityTests
 {
     public class TestLLM
     {
+        protected static string modelUrl = "https://huggingface.co/afrideva/smol_llama-220M-openhermes-GGUF/resolve/main/smol_llama-220m-openhermes.q4_k_m.gguf?download=true";
+        protected string modelNameLLManager;
+
         protected GameObject gameObject;
         protected LLM llm;
         protected LLMCharacter llmCharacter;
-        protected static string modelUrl = "https://huggingface.co/afrideva/smol_llama-220M-openhermes-GGUF/resolve/main/smol_llama-220m-openhermes.q4_k_m.gguf?download=true";
-        protected static string filename = Path.GetFileName(modelUrl).Split("?")[0];
         Exception error = null;
         string prompt = "Below is an instruction that describes a task, paired with an input that provides further context. Write a response that appropriately completes the request.";
 
+
         public TestLLM()
         {
-            LLMUnitySetup.SetDebugMode(LLMUnitySetup.DebugModeType.All);
             Task task = Init();
             task.Wait();
         }
 
         public virtual async Task Init()
         {
+            modelNameLLManager = await LLMManager.DownloadModel(modelUrl);
             gameObject = new GameObject();
             gameObject.SetActive(false);
-            await SetLLM();
+            SetLLM();
             SetLLMCharacter();
             gameObject.SetActive(true);
         }
 
-        public async Task EmptyTask()
+        [Test]
+        public void TestGetLLMManagerAssetRuntime()
         {
-            await Task.Delay(1);
+            string path = "";
+            string managerPath = LLM.GetLLMManagerAssetRuntime(path);
+            Assert.AreEqual(managerPath, path);
+
+            path = "/tmp/lala";
+            LLMUnitySetup.CreateEmptyFile(path);
+            managerPath = LLM.GetLLMManagerAssetRuntime(path);
+            Assert.AreEqual(managerPath, path);
+            File.Delete(path);
+
+            path = modelNameLLManager;
+            managerPath = LLM.GetLLMManagerAssetRuntime(path);
+            Assert.AreEqual(managerPath, LLMManager.GetAssetPath(path));
+
+            path = LLMUnitySetup.GetAssetPath("lala");
+            LLMUnitySetup.CreateEmptyFile(path);
+            managerPath = LLM.GetLLMManagerAssetRuntime(path);
+            Assert.AreEqual(managerPath, path);
+            File.Delete(path);
         }
 
-        public virtual async Task SetLLM()
+        [Test]
+        public void TestGetLLMManagerAssetEditor()
+        {
+            string path = "";
+            string managerPath = LLM.GetLLMManagerAssetEditor(path);
+            Assert.AreEqual(managerPath, path);
+
+            path = modelNameLLManager;
+            managerPath = LLM.GetLLMManagerAssetEditor(path);
+            Assert.AreEqual(managerPath, modelNameLLManager);
+
+            path = LLMManager.Get(modelNameLLManager).path;
+            managerPath = LLM.GetLLMManagerAssetEditor(path);
+            Assert.AreEqual(managerPath, modelNameLLManager);
+
+            string filename = "lala";
+            path = LLMUnitySetup.GetAssetPath(filename);
+            LLMUnitySetup.CreateEmptyFile(path);
+            managerPath = LLM.GetLLMManagerAssetEditor(filename);
+            Assert.AreEqual(managerPath, filename);
+            managerPath = LLM.GetLLMManagerAssetEditor(path);
+            Assert.AreEqual(managerPath, filename);
+            File.Delete(path);
+
+            path = "/tmp/lala";
+            LLMUnitySetup.CreateEmptyFile(path);
+            managerPath = LLM.GetLLMManagerAssetEditor(path);
+            Assert.AreEqual(managerPath, path);
+            File.Delete(path);
+        }
+
+        public virtual void SetLLM()
         {
             llm = gameObject.AddComponent<LLM>();
-            string filename = await LLMManager.DownloadModel(modelUrl);
-            llm.SetModel(filename);
+            llm.SetModel(modelNameLLManager);
             llm.parallelPrompts = 1;
             llm.SetTemplate("alpaca");
         }
@@ -64,13 +114,28 @@ namespace LLMUnityTests
             llmCharacter.numPredict = 20;
         }
 
-        public virtual async Task RunTests()
+        [UnityTest]
+        public IEnumerator RunTests()
+        {
+            Task task = RunTestsTask();
+            while (!task.IsCompleted) yield return null;
+            if (error != null)
+            {
+                Debug.LogError(error.ToString());
+                throw (error);
+            }
+            OnDestroy();
+        }
+
+        public async Task RunTestsTask()
         {
             error = null;
             try
             {
-                llm.Awake();
-                llmCharacter.Awake();
+                // await llm.WaitUntilReady();
+
+                // llm.Awake();
+                // llmCharacter.Awake();
                 await llmCharacter.Tokenize("I", TestTokens);
                 await llmCharacter.Warmup();
                 TestInitParameters((await llmCharacter.Tokenize(prompt)).Count + 2, 1);
@@ -95,19 +160,6 @@ namespace LLMUnityTests
             {
                 error = e;
             }
-        }
-
-        [UnityTest]
-        public IEnumerator RunTestsWait()
-        {
-            Task task = RunTests();
-            while (!task.IsCompleted) yield return null;
-            if (error != null)
-            {
-                Debug.LogError(error.ToString());
-                throw (error);
-            }
-            OnDestroy();
         }
 
         public void TestInitParameters(int nkeep, int chats)
@@ -149,57 +201,55 @@ namespace LLMUnityTests
             Assert.That(embeddings.Count == 1024);
         }
 
-        public virtual void OnDestroy()
-        {
-            LLMManager.Remove(filename);
-        }
+        public virtual void OnDestroy() {}
     }
 
     public class TestLLM_LLMManager_Load : TestLLM
     {
-        public override Task SetLLM()
+        public override void SetLLM()
         {
             llm = gameObject.AddComponent<LLM>();
+            string filename = Path.GetFileName(modelUrl).Split("?")[0];
             string sourcePath = Path.Combine(LLMUnitySetup.modelDownloadPath, filename);
             filename = LLMManager.LoadModel(sourcePath);
             llm.SetModel(filename);
             llm.parallelPrompts = 1;
             llm.SetTemplate("alpaca");
-            return Task.CompletedTask;
         }
     }
 
     public class TestLLM_StreamingAssets_Load : TestLLM
     {
-        public override Task SetLLM()
+        string loadPath;
+
+        public override void SetLLM()
         {
             llm = gameObject.AddComponent<LLM>();
+            string filename = Path.GetFileName(modelUrl).Split("?")[0];
             string sourcePath = Path.Combine(LLMUnitySetup.modelDownloadPath, filename);
-            string targetPath = LLMUnitySetup.GetAssetPath(filename);
-            if (!File.Exists(targetPath)) File.Copy(sourcePath, targetPath);
-            llm.SetModel(filename);
+            loadPath = LLMUnitySetup.GetAssetPath(filename);
+            if (!File.Exists(loadPath)) File.Copy(sourcePath, loadPath);
+            llm.SetModel(loadPath);
             llm.parallelPrompts = 1;
             llm.SetTemplate("alpaca");
-            return Task.CompletedTask;
         }
 
         public override void OnDestroy()
         {
-            string targetPath = LLMUnitySetup.GetAssetPath(filename);
-            if (!File.Exists(targetPath)) File.Delete(targetPath);
+            if (!File.Exists(loadPath)) File.Delete(loadPath);
         }
     }
 
     public class TestLLM_SetModel_Warning : TestLLM
     {
-        public override Task SetLLM()
+        public override void SetLLM()
         {
             llm = gameObject.AddComponent<LLM>();
-            string sourcePath = Path.Combine(LLMUnitySetup.modelDownloadPath, filename);
-            llm.SetModel(sourcePath);
+            string filename = Path.GetFileName(modelUrl).Split("?")[0];
+            string loadPath = Path.Combine(LLMUnitySetup.modelDownloadPath, filename);
+            llm.SetModel(loadPath);
             llm.parallelPrompts = 1;
             llm.SetTemplate("alpaca");
-            return Task.CompletedTask;
         }
     }
 }
