@@ -2,11 +2,6 @@
 /// @brief File implementing LLM helper code.
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
-using UnityEditor;
-using UnityEngine;
 
 namespace LLMUnity
 {
