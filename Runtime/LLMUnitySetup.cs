@@ -299,18 +299,21 @@ namespace LLMUnity
             await AndroidExtractFile(Path.GetFileName(path), overwrite);
         }
 
+        public static string GetFullPath(string path)
+        {
+            return Path.GetFullPath(path).Replace('\\', '/');
+        }
+
         public static bool IsSubPath(string childPath, string parentPath)
         {
-            string fullParentPath = Path.GetFullPath(parentPath).Replace('\\', '/');
-            string fullChildPath = Path.GetFullPath(childPath).Replace('\\', '/');
-            return fullChildPath.StartsWith(fullParentPath, StringComparison.OrdinalIgnoreCase);
+            return GetFullPath(childPath).StartsWith(GetFullPath(parentPath), StringComparison.OrdinalIgnoreCase);
         }
 
         public static string RelativePath(string fullPath, string basePath)
         {
             // Get the full paths and replace backslashes with forward slashes (or vice versa)
-            string fullParentPath = Path.GetFullPath(basePath).Replace('\\', '/').TrimEnd('/');
-            string fullChildPath = Path.GetFullPath(fullPath).Replace('\\', '/');
+            string fullParentPath = GetFullPath(basePath).TrimEnd('/');
+            string fullChildPath = GetFullPath(fullPath);
 
             string relativePath = fullChildPath;
             if (fullChildPath.StartsWith(fullParentPath, StringComparison.OrdinalIgnoreCase))
