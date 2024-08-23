@@ -136,35 +136,57 @@ namespace LLMUnity
             return !modelSetupFailed;
         }
 
-        public string GetModelLoraPathRuntime(string path)
+        public string GetLLMManagerAsset(string path)
         {
-            string assetPath = LLMManager.GetAssetPath(path);
-            if (!string.IsNullOrEmpty(assetPath)) return assetPath;
+#if UNITY_EDITOR
+            if (!EditorApplication.isPlaying) return GetLLMManagerAssetEditor(path);
+#endif
+            return GetLLMManagerAssetRuntime(path);
+        }
+
+        public static string GetLLMManagerAssetEditor(string path)
+        {
+            // empty
+            if (string.IsNullOrEmpty(path)) return path;
+            // LLMManager - return location the file will be stored in StreamingAssets
+            ModelEntry modelEntry = LLMManager.Get(path);
+            if (modelEntry != null) return modelEntry.filename;
+            // StreamingAssets - return relative location within StreamingAssets
+            string assetPath = LLMUnitySetup.GetAssetPath(path); // Note: this will return the full path if a full path is passed
+            string basePath = LLMUnitySetup.GetAssetPath();
+            if (File.Exists(assetPath))
+            {
+                if (LLMUnitySetup.IsSubPath(assetPath, basePath)) return LLMUnitySetup.RelativePath(assetPath, basePath);
+            }
+            // full path
+            if (!File.Exists(assetPath))
+            {
+                LLMUnitySetup.LogError($"Model {path} was not found.");
+            }
+            else
+            {
+                string errorMessage = $"The model {path} was loaded locally. You can include it in the build in one of these ways:";
+                errorMessage += $"\n-Copy the model inside the StreamingAssets folder and use its StreamingAssets path";
+                errorMessage += $"\n-Load the model with the model manager inside the LLM GameObject and use its filename";
+                LLMUnitySetup.LogWarning(errorMessage);
+            }
             return path;
         }
 
-        public string GetModelLoraPath(string path, bool lora)
+        public static string GetLLMManagerAssetRuntime(string path)
         {
+            // empty
             if (string.IsNullOrEmpty(path)) return path;
-            ModelEntry modelEntry = LLMManager.Get(path);
-            if (modelEntry != null) return modelEntry.filename;
-
-            string modelType = lora ? "Lora" : "Model";
+            // full path
+            if (File.Exists(path)) return path;
+            // LLMManager
+            string managerPath = LLMManager.GetAssetPath(path);
+            if (!string.IsNullOrEmpty(managerPath) && File.Exists(managerPath)) return managerPath;
+            // StreamingAssets
             string assetPath = LLMUnitySetup.GetAssetPath(path);
-            if (!File.Exists(assetPath))
-            {
-                LLMUnitySetup.LogError($"The {modelType} file {path} was not found.");
-                return path;
-            }
-
-            if (!LLMUnitySetup.IsSubPath(assetPath, LLMUnitySetup.GetAssetPath()))
-            {
-                string errorMessage = $"The {modelType} file {path} was loaded locally. If you want to include it in the build:";
-                errorMessage += $"\n-Copy the {modelType} inside the StreamingAssets folder and use its relative path or";
-                errorMessage += $"\n-Load the {modelType} with the LLMManager: `string filename=LLMManager.Load{modelType}(path); llm.Set{modelType}(filename)`";
-                LLMUnitySetup.LogWarning(errorMessage);
-            }
-            return assetPath;
+            if (File.Exists(assetPath)) return assetPath;
+            // give up
+            return path;
         }
 
         /// <summary>
@@ -175,11 +197,11 @@ namespace LLMUnity
         /// <param name="path">path to model to use (.gguf format)</param>
         public void SetModel(string path)
         {
-            model = GetModelLoraPath(path, false);
+            model = GetLLMManagerAsset(path);
             if (!string.IsNullOrEmpty(model))
             {
                 ModelEntry modelEntry = LLMManager.Get(model);
-                if (modelEntry == null) modelEntry = new ModelEntry(GetModelLoraPathRuntime(model));
+                if (modelEntry == null) modelEntry = new ModelEntry(GetLLMManagerAssetRuntime(model));
                 SetTemplate(modelEntry.chatTemplate);
                 if (contextSize == 0 && modelEntry.contextLength > 32768)
                 {
@@ -211,7 +233,7 @@ namespace LLMUnity
         /// <param name="path">path to LORA model to use (.gguf format)</param>
         public void AddLora(string path)
         {
-            string loraPath = GetModelLoraPath(path, true);
+            string loraPath = GetLLMManagerAsset(path);
             if (lora.Split(" ").Contains(loraPath)) return;
             if (lora != "") lora += " ";
             lora += loraPath;
@@ -227,7 +249,7 @@ namespace LLMUnity
         /// <param name="path">path to LORA model to remove (.gguf format)</param>
         public void RemoveLora(string path)
         {
-            string loraPath = GetModelLoraPath(path, true);
+            string loraPath = GetLLMManagerAsset(path);
             List<string> loras = new List<string>(lora.Split(" "));
             loras.Remove(loraPath);
             lora = "";
@@ -271,7 +293,7 @@ namespace LLMUnity
                 LLMUnitySetup.LogError("No model file provided!");
                 return null;
             }
-            string modelPath = GetModelLoraPathRuntime(model);
+            string modelPath = GetLLMManagerAssetRuntime(model);
             if (!File.Exists(modelPath))
             {
                 LLMUnitySetup.LogError($"File {modelPath} not found!");
@@ -281,7 +303,7 @@ namespace LLMUnity
             foreach (string lora in lora.Trim().Split(" "))
             {
                 if (lora == "") continue;
-                string loraPath = GetModelLoraPathRuntime(lora);
+                string loraPath = GetLLMManagerAssetRuntime(lora);
                 if (!File.Exists(loraPath))
                 {
                     LLMUnitySetup.LogError($"File {loraPath} not found!");
@@ -541,7 +563,7 @@ namespace LLMUnity
         {
             AssertStarted();
             List<string> loras = new List<string>(lora.Split(" "));
-            string loraToScalePath = GetModelLoraPath(loraToScale, true);
+            string loraToScalePath = GetLLMManagerAssetRuntime(loraToScale);
 
             int index = loras.IndexOf(loraToScale);
             if (index == -1) index = loras.IndexOf(loraToScalePath);
