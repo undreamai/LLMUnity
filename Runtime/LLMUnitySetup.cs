@@ -306,11 +306,26 @@ namespace LLMUnity
             return fullChildPath.StartsWith(fullParentPath, StringComparison.OrdinalIgnoreCase);
         }
 
+        public static string RelativePath(string fullPath, string basePath)
+        {
+            // Get the full paths and replace backslashes with forward slashes (or vice versa)
+            string fullParentPath = Path.GetFullPath(basePath).Replace('\\', '/').TrimEnd('/');
+            string fullChildPath = Path.GetFullPath(fullPath).Replace('\\', '/');
+
+            string relativePath = fullChildPath;
+            if (fullChildPath.StartsWith(fullParentPath, StringComparison.OrdinalIgnoreCase))
+            {
+                relativePath = fullChildPath.Substring(fullParentPath.Length);
+                while (relativePath.StartsWith("/")) relativePath = relativePath.Substring(1);
+            }
+            return relativePath;
+        }
+
 #if UNITY_EDITOR
 
         [HideInInspector] public static float libraryProgress = 1;
 
-        static void CreateEmptyFile(string path)
+        public static void CreateEmptyFile(string path)
         {
             File.Create(path).Dispose();
         }
