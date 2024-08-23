@@ -24,7 +24,7 @@ namespace LLMUnity
             filename = Path.GetFileName(path);
             this.label = label == null ? filename : label;
             this.lora = lora;
-            this.path = Path.GetFullPath(path).Replace('\\', '/');
+            this.path = LLMUnitySetup.GetFullPath(path);
             this.url = url;
             includeInBuild = true;
             chatTemplate = null;
@@ -162,7 +162,7 @@ namespace LLMUnity
         public static ModelEntry Get(string path)
         {
             string filename = Path.GetFileName(path);
-            string fullPath = Path.GetFullPath(path).Replace('\\', '/');
+            string fullPath = LLMUnitySetup.GetFullPath(path);
             foreach (ModelEntry entry in modelEntries)
             {
                 if (entry.filename == filename || entry.path == fullPath) return entry;
