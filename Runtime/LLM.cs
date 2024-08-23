@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEditor;
@@ -11,20 +10,6 @@ using UnityEngine;
 
 namespace LLMUnity
 {
-    /// \cond HIDE
-    public class LLMException : Exception
-    {
-        public int ErrorCode { get; private set; }
-
-        public LLMException(string message, int errorCode) : base(message)
-        {
-            ErrorCode = errorCode;
-        }
-    }
-
-    public class DestroyException : Exception {}
-    /// \endcond
-
     [DefaultExecutionOrder(-1)]
     /// @ingroup llm
     /// <summary>
@@ -74,6 +59,8 @@ namespace LLMUnity
         /// <summary> the paths of the LORA models being used (relative to the Assets/StreamingAssets folder).
         /// Models with .gguf format are allowed.</summary>
         [ModelAdvanced] public string lora = "";
+        /// <summary> the weights of the LORA models being used.</summary>
+        [ModelAdvanced] public string loraWeights = "";
         /// <summary> enable use of flash attention </summary>
         [ModelExtras] public bool flashAttention = false;
 
@@ -86,8 +73,8 @@ namespace LLMUnity
         Thread llmThread = null;
         List<StreamWrapper> streamWrappers = new List<StreamWrapper>();
         public LLMManager llmManager = new LLMManager();
-        List<float> loraWeights = new List<float>();
         private readonly object startLock = new object();
+        LoraManager loraManager = new LoraManager();
 
         /// \endcond
 
@@ -136,7 +123,7 @@ namespace LLMUnity
             return !modelSetupFailed;
         }
 
-        public string GetLLMManagerAsset(string path)
+        public static string GetLLMManagerAsset(string path)
         {
 #if UNITY_EDITOR
             if (!EditorApplication.isPlaying) return GetLLMManagerAssetEditor(path);
@@ -177,8 +164,6 @@ namespace LLMUnity
         {
             // empty
             if (string.IsNullOrEmpty(path)) return path;
-            // full path
-            if (File.Exists(path)) return path;
             // LLMManager
             string managerPath = LLMManager.GetAssetPath(path);
             if (!string.IsNullOrEmpty(managerPath) && File.Exists(managerPath)) return managerPath;
@@ -219,10 +204,11 @@ namespace LLMUnity
         /// Models supported are in .gguf format.
         /// </summary>
         /// <param name="path">path to LORA model to use (.gguf format)</param>
-        public void SetLora(string path)
+        public void SetLora(string path, float weight = 1)
         {
-            lora = "";
-            AddLora(path);
+            AssertNotStarted();
+            loraManager.Clear();
+            AddLora(path, weight);
         }
 
         /// <summary>
@@ -231,15 +217,11 @@ namespace LLMUnity
         /// Models supported are in .gguf format.
         /// </summary>
         /// <param name="path">path to LORA model to use (.gguf format)</param>
-        public void AddLora(string path)
+        public void AddLora(string path, float weight = 1)
         {
-            string loraPath = GetLLMManagerAsset(path);
-            if (lora.Split(" ").Contains(loraPath)) return;
-            if (lora != "") lora += " ";
-            lora += loraPath;
-#if UNITY_EDITOR
-            if (!EditorApplication.isPlaying) EditorUtility.SetDirty(this);
-#endif
+            AssertNotStarted();
+            loraManager.Add(path, weight);
+            UpdateLoras();
         }
 
         /// <summary>
@@ -249,15 +231,38 @@ namespace LLMUnity
         /// <param name="path">path to LORA model to remove (.gguf format)</param>
         public void RemoveLora(string path)
         {
-            string loraPath = GetLLMManagerAsset(path);
-            List<string> loras = new List<string>(lora.Split(" "));
-            loras.Remove(loraPath);
-            lora = "";
-            for (int i = 0; i < loras.Count; i++)
-            {
-                if (i > 0) lora += " ";
-                lora += loras[i];
-            }
+            AssertNotStarted();
+            loraManager.Remove(path);
+            UpdateLoras();
+        }
+
+        /// <summary>
+        /// Allows to remove all LORA models from the LLM.
+        /// </summary>
+        public void RemoveLoras()
+        {
+            AssertNotStarted();
+            loraManager.Clear();
+            UpdateLoras();
+        }
+
+        /// <summary>
+        /// Allows to change the scale (weight) of a LORA model in the LLM.
+        /// </summary>
+        /// <param name="path">path of LORA model to change (.gguf format)</param>
+        /// <param name="scale">scale of LORA</param>
+        public void SetLoraScale(string path, float scale)
+        {
+            loraManager.SetWeight(path, scale);
+            UpdateLoras();
+            if (started) ApplyLoras();
+        }
+
+        public void UpdateLoras()
+        {
+            StringPair pair = loraManager.ToStrings();
+            lora = pair.source;
+            loraWeights = pair.target;
 #if UNITY_EDITOR
             if (!EditorApplication.isPlaying) EditorUtility.SetDirty(this);
 #endif
@@ -409,8 +414,7 @@ namespace LLMUnity
             llmThread = new Thread(() => llmlib.LLM_Start(LLMObject));
             llmThread.Start();
             while (!llmlib.LLM_Started(LLMObject)) {}
-            loraWeights = new List<float>();
-            for (int i = 0; i < lora.Split(" ").Count(); i++) loraWeights.Add(1f);
+            ApplyLoras();
             started = true;
         }
 
@@ -464,6 +468,16 @@ namespace LLMUnity
             else if (!started) error = "LLM service not started";
             if (error != null)
             {
+                LLMUnitySetup.LogError(error);
+                throw new Exception(error);
+            }
+        }
+
+        void AssertNotStarted()
+        {
+            if (started)
+            {
+                string error = "This method can't be called when the LLM has started";
                 LLMUnitySetup.LogError(error);
                 throw new Exception(error);
             }
@@ -559,46 +573,31 @@ namespace LLMUnity
         /// Sets the lora scale, only works after the LLM service has started
         /// </summary>
         /// <returns>switch result</returns>
-        public async Task<string> SetLoraScale(string loraToScale, float scale)
+        public void ApplyLoras()
         {
-            AssertStarted();
-            List<string> loras = new List<string>(lora.Split(" "));
-            string loraToScalePath = GetLLMManagerAssetRuntime(loraToScale);
-
-            int index = loras.IndexOf(loraToScale);
-            if (index == -1) index = loras.IndexOf(loraToScalePath);
-            if (index == -1)
-            {
-                LLMUnitySetup.LogError($"LoRA {loraToScale} not loaded with the LLM");
-                return "";
-            }
-
-            loraWeights[index] = scale;
             LoraWeightRequestList loraWeightRequest = new LoraWeightRequestList();
             loraWeightRequest.loraWeights = new List<LoraWeightRequest>();
-            for (int i = 0; i < loraWeights.Count; i++)
+            float[] weights = loraManager.GetWeights();
+            for (int i = 0; i < weights.Length; i++)
             {
-                loraWeightRequest.loraWeights.Add(new LoraWeightRequest() { id = i, scale = loraWeights[i] });
+                loraWeightRequest.loraWeights.Add(new LoraWeightRequest() { id = i, scale = weights[i] });
             }
-            ;
 
             string json = JsonUtility.ToJson(loraWeightRequest);
             int startIndex = json.IndexOf("[");
             int endIndex = json.LastIndexOf("]") + 1;
             json = json.Substring(startIndex, endIndex - startIndex);
 
-            LLMReplyCallback callback = (IntPtr LLMObject, string jsonData, IntPtr strWrapper) =>
-            {
-                llmlib.LLM_Lora_Weight(LLMObject, jsonData, strWrapper);
-            };
-            return await LLMReply(callback, json);
+            IntPtr stringWrapper = llmlib.StringWrapper_Construct();
+            llmlib.LLM_Lora_Weight(LLMObject, json, stringWrapper);
+            llmlib.StringWrapper_Delete(stringWrapper);
         }
 
         /// <summary>
         /// Gets a list of the lora adapters
         /// </summary>
         /// <returns>list of lara adapters</returns>
-        public async Task<string> ListLora()
+        public async Task<string> ListLoras()
         {
             AssertStarted();
             LLMNoInputReplyCallback callback = (IntPtr LLMObject, IntPtr strWrapper) =>
