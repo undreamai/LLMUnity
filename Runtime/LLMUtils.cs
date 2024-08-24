@@ -101,7 +101,7 @@ namespace LLMUnity
             }
         }
 
-        public StringPair ToStrings()
+        public (string, string) ToStrings()
         {
             string loraString = "";
             string loraWeightsString = "";
@@ -115,7 +115,7 @@ namespace LLMUnity
                 loraString += loras[i].assetPath;
                 loraWeightsString += loras[i].weight;
             }
-            return new StringPair(){source = loraString, target = loraWeightsString};
+            return (loraString, loraWeightsString);
         }
 
         public float[] GetWeights()
