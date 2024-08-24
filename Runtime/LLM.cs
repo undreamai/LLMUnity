@@ -74,13 +74,25 @@ namespace LLMUnity
         List<StreamWrapper> streamWrappers = new List<StreamWrapper>();
         public LLMManager llmManager = new LLMManager();
         private readonly object startLock = new object();
-        LoraManager loraManager = new LoraManager();
+        public LoraManager loraManager = new LoraManager();
+        string loraPre = "";
+        string loraWeightsPre = "";
 
         /// \endcond
 
         public LLM()
         {
             LLMManager.Register(this);
+        }
+
+        void OnValidate()
+        {
+            if (lora != loraPre || loraWeights != loraWeightsPre)
+            {
+                loraManager.FromStrings(lora, loraWeights);
+                loraPre = lora;
+                loraWeightsPre = loraWeights;
+            }
         }
 
         /// <summary>
@@ -263,6 +275,8 @@ namespace LLMUnity
             StringPair pair = loraManager.ToStrings();
             lora = pair.source;
             loraWeights = pair.target;
+            loraPre = lora;
+            loraWeightsPre = loraWeights;
 #if UNITY_EDITOR
             if (!EditorApplication.isPlaying) EditorUtility.SetDirty(this);
 #endif
