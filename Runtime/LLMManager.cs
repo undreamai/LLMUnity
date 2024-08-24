@@ -387,7 +387,7 @@ namespace LLMUnity
             foreach (LLM llm in llms)
             {
                 if (!entry.lora && llm.model == entry.filename) llm.model = "";
-                else if (entry.lora && llm.lora == entry.filename) llm.lora = "";
+                else if (entry.lora) llm.RemoveLora(entry.filename);
             }
         }
 

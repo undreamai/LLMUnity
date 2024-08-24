@@ -206,7 +206,7 @@ namespace LLMUnity
             }
             else if (modelIndex > 1)
             {
-                if (modelLicenses[modelIndex] != null) Debug.LogWarning($"The {modelOptions[modelIndex]} model is released under the following license: {modelLicenses[modelIndex]}. By using this model, you agree to the terms of the license.");
+                if (modelLicenses[modelIndex] != null) LLMUnitySetup.LogWarning($"The {modelOptions[modelIndex]} model is released under the following license: {modelLicenses[modelIndex]}. By using this model, you agree to the terms of the license.");
                 string filename = await LLMManager.DownloadModel(modelURLs[modelIndex], true, modelOptions[modelIndex]);
                 SetModelIfNone(filename, false);
                 UpdateModels(true);
@@ -300,7 +300,7 @@ namespace LLMUnity
                     }
                     else
                     {
-                        isSelected = llmScript.lora.Split(" ").Contains(entry.filename);
+                        isSelected = llmScript.loraManager.Contains(entry.filename);
                         bool newSelected = EditorGUI.Toggle(selectRect, isSelected);
                         if (newSelected && !isSelected) llmScript.AddLora(entry.filename);
                         else if (!newSelected && isSelected) llmScript.RemoveLora(entry.filename);
