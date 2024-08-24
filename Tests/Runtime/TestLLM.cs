@@ -10,6 +10,57 @@ using UnityEngine.TestTools;
 
 namespace LLMUnityTests
 {
+    public class TestLLMLoras
+    {
+        [Test]
+        public void TestLLMLorasAssign()
+        {
+            GameObject gameObject = new GameObject();
+            gameObject.SetActive(false);
+            LLM llm = gameObject.AddComponent<LLM>();
+
+            string lora1 = "/tmp/lala";
+            string lora2Rel = "test/lala";
+            string lora2 = LLMUnitySetup.GetAssetPath(lora2Rel);
+            LLMUnitySetup.CreateEmptyFile(lora1);
+            LLMUnitySetup.CreateEmptyFile(lora2);
+
+            llm.AddLora(lora1);
+            llm.AddLora(lora2);
+            Assert.AreEqual(llm.lora, lora1 + " " + lora2);
+            Assert.AreEqual(llm.loraWeights, "1 1");
+
+            llm.RemoveLoras();
+            Assert.AreEqual(llm.lora, "");
+            Assert.AreEqual(llm.loraWeights, "");
+
+            llm.AddLora(lora1, 0.8f);
+            llm.AddLora(lora2Rel, 0.9f);
+            Assert.AreEqual(llm.lora, lora1 + " " + lora2);
+            Assert.AreEqual(llm.loraWeights, "0.8 0.9");
+
+            llm.SetLoraScale(lora2Rel, 0.7f);
+            Assert.AreEqual(llm.lora, lora1 + " " + lora2);
+            Assert.AreEqual(llm.loraWeights, "0.8 0.7");
+
+            llm.RemoveLora(lora2Rel);
+            Assert.AreEqual(llm.lora, lora1);
+            Assert.AreEqual(llm.loraWeights, "0.8");
+
+            llm.AddLora(lora2Rel);
+            llm.SetLoraScale(lora2Rel, 0.5f);
+            Assert.AreEqual(llm.lora, lora1 + " " + lora2);
+            Assert.AreEqual(llm.loraWeights, "0.8 0.5");
+
+            llm.SetLoraScale(lora2, 0.1f);
+            Assert.AreEqual(llm.lora, lora1 + " " + lora2);
+            Assert.AreEqual(llm.loraWeights, "0.8 0.1");
+
+            File.Delete(lora1);
+            File.Delete(lora2);
+        }
+    }
+
     public class TestLLM
     {
         protected static string modelUrl = "https://huggingface.co/afrideva/smol_llama-220M-openhermes-GGUF/resolve/main/smol_llama-220m-openhermes.q4_k_m.gguf?download=true";
