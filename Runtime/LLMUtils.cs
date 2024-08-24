@@ -53,6 +53,12 @@ namespace LLMUnity
             loras.Clear();
         }
 
+        public bool Contains(string path)
+        {
+            LoraAsset lora = new LoraAsset(path);
+            return loras.Contains(lora);
+        }
+
         public void Add(string path, float weight = 1)
         {
             LoraAsset lora = new LoraAsset(path, weight);
@@ -79,17 +85,19 @@ namespace LLMUnity
 
         public void FromStrings(string loraString, string loraWeightsString)
         {
-            Clear();
-            List<string> loraStringArr = new List<string>(loraString.Split(" "));
-            List<string> loraWeightsStringArr = new List<string>(loraWeightsString.Split(" "));
-            if (loraStringArr.Count != loraWeightsStringArr.Count)
+            try
             {
-                LLMUnitySetup.LogError($"LoRAs number ({loraString}) doesn't match the number of weights ({loraWeightsString})");
-                return;
+                List<string> loraStringArr = new List<string>(loraString.Split(" "));
+                List<string> loraWeightsStringArr = new List<string>(loraWeightsString.Split(" "));
+                if (loraStringArr.Count != loraWeightsStringArr.Count) throw new Exception($"LoRAs number ({loraString}) doesn't match the number of weights ({loraWeightsString})");
+
+                List<LoraAsset> lorasNew = new List<LoraAsset>();
+                for (int i = 0; i < loraStringArr.Count; i++) lorasNew.Add(new LoraAsset(loraStringArr[i], float.Parse(loraWeightsStringArr[i])));
+                loras = lorasNew;
             }
-            for (int i = 0; i < loraStringArr.Count; i++)
+            catch (Exception e)
             {
-                Add(loraStringArr[i], float.Parse(loraWeightsStringArr[i]));
+                LLMUnitySetup.LogError($"Loras not set: {e.Message}");
             }
         }
 
