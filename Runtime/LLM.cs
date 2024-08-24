@@ -90,8 +90,7 @@ namespace LLMUnity
             if (lora != loraPre || loraWeights != loraWeightsPre)
             {
                 loraManager.FromStrings(lora, loraWeights);
-                loraPre = lora;
-                loraWeightsPre = loraWeights;
+                (loraPre, loraWeightsPre) = (lora, loraWeights);
             }
         }
 
@@ -272,11 +271,8 @@ namespace LLMUnity
 
         public void UpdateLoras()
         {
-            StringPair pair = loraManager.ToStrings();
-            lora = pair.source;
-            loraWeights = pair.target;
-            loraPre = lora;
-            loraWeightsPre = loraWeights;
+            (lora, loraWeights) = loraManager.ToStrings();
+            (loraPre, loraWeightsPre) = (lora, loraWeights);
 #if UNITY_EDITOR
             if (!EditorApplication.isPlaying) EditorUtility.SetDirty(this);
 #endif
