@@ -40,7 +40,7 @@ namespace LLMUnityTests
             Assert.AreEqual(llm.lora, lora1 + " " + lora2);
             Assert.AreEqual(llm.loraWeights, "0.8 0.9");
 
-            llm.SetLoraScale(lora2Rel, 0.7f);
+            llm.SetLoraWeight(lora2Rel, 0.7f);
             Assert.AreEqual(llm.lora, lora1 + " " + lora2);
             Assert.AreEqual(llm.loraWeights, "0.8 0.7");
 
@@ -49,11 +49,11 @@ namespace LLMUnityTests
             Assert.AreEqual(llm.loraWeights, "0.8");
 
             llm.AddLora(lora2Rel);
-            llm.SetLoraScale(lora2Rel, 0.5f);
+            llm.SetLoraWeight(lora2Rel, 0.5f);
             Assert.AreEqual(llm.lora, lora1 + " " + lora2);
             Assert.AreEqual(llm.loraWeights, "0.8 0.5");
 
-            llm.SetLoraScale(lora2, 0.1f);
+            llm.SetLoraWeight(lora2, 0.1f);
             Assert.AreEqual(llm.lora, lora1 + " " + lora2);
             Assert.AreEqual(llm.loraWeights, "0.8 0.1");
 

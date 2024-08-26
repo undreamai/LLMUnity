@@ -262,7 +262,7 @@ namespace LLMUnity
         /// </summary>
         /// <param name="path">path of LORA model to change (.gguf format)</param>
         /// <param name="scale">scale of LORA</param>
-        public void SetLoraScale(string path, float scale)
+        public void SetLoraWeight(string path, float scale)
         {
             loraManager.SetWeight(path, scale);
             UpdateLoras();
