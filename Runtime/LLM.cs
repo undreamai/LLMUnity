@@ -326,6 +326,7 @@ namespace LLMUnity
                 }
                 loraArgument += $" --lora \"{loraPath}\"";
             }
+            loraManager.FromStrings(lora, loraWeights);
 
             int numThreadsToUse = numThreads;
             if (Application.platform == RuntimePlatform.Android && numThreads <= 0) numThreadsToUse = LLMUnitySetup.AndroidGetNumBigCores();
