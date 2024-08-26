@@ -251,7 +251,7 @@ public class MyScript : MonoBehaviour
         llm.SetModel("Phi-3-mini-4k-instruct-q4.gguf");
         // optional: you can also set loras in a similar fashion and set their weights (if needed)
         llm.AddLora("my-lora.gguf");
-        llm.SetLoraScale(0.5f);
+        llm.SetLoraWeight(0.5f);
         // optional: you can set the chat template of the model if it is not correctly identified
         // You can find a list of chat templates in the ChatTemplate.templates.Keys
         llm.SetTemplate("phi-3");
@@ -384,7 +384,8 @@ If the user's GPU is not supported, the LLM will fall back to the CPU
   - `Batch Size` batch size for prompt processing (default: 512)
   - `Model` the path of the model being used (relative to the Assets/StreamingAssets folder)
   - `Chat Template` the chat template being used for the LLM
-  - `Lora` the path of the LoRA being used (relative to the Assets/StreamingAssets folder)
+  - `Lora` the path of the LoRAs being used (relative to the Assets/StreamingAssets folder)
+  - `Lora Weights` the weights of the LoRAs being used
   - `Flash Attention` click to use flash attention in the model (if `Use extras` is enabled)
 
 </details>
