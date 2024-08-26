@@ -23,6 +23,7 @@ namespace LLMUnityTests
             string lora2Rel = "test/lala";
             string lora2 = LLMUnitySetup.GetAssetPath(lora2Rel);
             LLMUnitySetup.CreateEmptyFile(lora1);
+            Directory.CreateDirectory(Path.GetDirectoryName(lora2));
             LLMUnitySetup.CreateEmptyFile(lora2);
 
             llm.AddLora(lora1);
@@ -63,14 +64,19 @@ namespace LLMUnityTests
 
     public class TestLLM
     {
-        protected static string modelUrl = "https://huggingface.co/afrideva/smol_llama-220M-openhermes-GGUF/resolve/main/smol_llama-220m-openhermes.q4_k_m.gguf?download=true";
+        protected static string modelUrl = "https://huggingface.co/Qwen/Qwen2-0.5B-Instruct-GGUF/resolve/main/qwen2-0_5b-instruct-q4_k_m.gguf?download=true";
         protected string modelNameLLManager;
 
         protected GameObject gameObject;
         protected LLM llm;
         protected LLMCharacter llmCharacter;
         Exception error = null;
-        string prompt = "Below is an instruction that describes a task, paired with an input that provides further context. Write a response that appropriately completes the request.";
+        protected string prompt;
+        protected string query;
+        protected string reply1;
+        protected string reply2;
+        protected int tokens1;
+        protected int tokens2;
 
 
         public TestLLM()
@@ -81,12 +87,28 @@ namespace LLMUnityTests
 
         public virtual async Task Init()
         {
-            modelNameLLManager = await LLMManager.DownloadModel(modelUrl);
+            SetParameters();
+            await DownloadModels();
             gameObject = new GameObject();
             gameObject.SetActive(false);
-            SetLLM();
-            SetLLMCharacter();
+            llm = CreateLLM();
+            llmCharacter = CreateLLMCharacter();
             gameObject.SetActive(true);
+        }
+
+        public virtual void SetParameters()
+        {
+            prompt = "Below is an instruction that describes a task, paired with an input that provides further context. Write a response that appropriately completes the request.";
+            query = "How can I increase my meme production/output? Currently, I only create them in ancient babylonian which is time consuming.";
+            reply1 = "To increase your meme production/output, you can try using more modern tools and techniques. For instance,";
+            reply2 = "To increase your meme production/output, you can try the following strategies:\n\n1. Use a meme generator";
+            tokens1 = 32;
+            tokens2 = 9;
+        }
+
+        public virtual async Task DownloadModels()
+        {
+            modelNameLLManager = await LLMManager.DownloadModel(modelUrl);
         }
 
         [Test]
@@ -144,17 +166,17 @@ namespace LLMUnityTests
             File.Delete(path);
         }
 
-        public virtual void SetLLM()
+        public virtual LLM CreateLLM()
         {
-            llm = gameObject.AddComponent<LLM>();
+            LLM llm = gameObject.AddComponent<LLM>();
             llm.SetModel(modelNameLLManager);
             llm.parallelPrompts = 1;
-            llm.SetTemplate("alpaca");
+            return llm;
         }
 
-        public virtual void SetLLMCharacter()
+        public virtual LLMCharacter CreateLLMCharacter()
         {
-            llmCharacter = gameObject.AddComponent<LLMCharacter>();
+            LLMCharacter llmCharacter = gameObject.AddComponent<LLMCharacter>();
             llmCharacter.llm = llm;
             llmCharacter.playerName = "Instruction";
             llmCharacter.AIName = "Response";
@@ -163,6 +185,7 @@ namespace LLMUnityTests
             llmCharacter.seed = 0;
             llmCharacter.stream = false;
             llmCharacter.numPredict = 20;
+            return llmCharacter;
         }
 
         [UnityTest]
@@ -183,26 +206,22 @@ namespace LLMUnityTests
             error = null;
             try
             {
-                // await llm.WaitUntilReady();
-
-                // llm.Awake();
-                // llmCharacter.Awake();
                 await llmCharacter.Tokenize("I", TestTokens);
                 await llmCharacter.Warmup();
-                TestInitParameters((await llmCharacter.Tokenize(prompt)).Count + 2, 1);
+                TestInitParameters(tokens1, 1);
                 TestWarmup();
-                await llmCharacter.Chat("How can I increase my meme production/output? Currently, I only create them in ancient babylonian which is time consuming.", TestChat);
+                await llmCharacter.Chat(query, (string reply) => TestChat(reply, reply1));
                 TestPostChat(3);
                 llmCharacter.SetPrompt(llmCharacter.prompt);
                 llmCharacter.AIName = "False response";
-                await llmCharacter.Chat("How can I increase my meme production/output? Currently, I only create them in ancient babylonian which is time consuming.", TestChat2);
+                await llmCharacter.Chat(query, (string reply) => TestChat(reply, reply2));
                 TestPostChat(3);
                 await llmCharacter.Chat("bye!");
                 TestPostChat(5);
                 prompt = "How are you?";
                 llmCharacter.SetPrompt(prompt);
                 await llmCharacter.Chat("hi");
-                TestInitParameters((await llmCharacter.Tokenize(prompt)).Count + 2, 3);
+                TestInitParameters(tokens2, 3);
                 List<float> embeddings = await llmCharacter.Embeddings("hi how are you?");
                 TestEmbeddings(embeddings);
                 llm.OnDestroy();
@@ -222,7 +241,7 @@ namespace LLMUnityTests
 
         public void TestTokens(List<int> tokens)
         {
-            Assert.AreEqual(tokens, new List<int> {306});
+            Assert.AreEqual(tokens, new List<int> {40});
         }
 
         public void TestWarmup()
@@ -230,16 +249,9 @@ namespace LLMUnityTests
             Assert.That(llmCharacter.chat.Count == 1);
         }
 
-        public void TestChat(string reply)
+        public void TestChat(string reply, string replyGT)
         {
-            string AIReply = "One way to increase your meme production/output is by creating a more complex and customized";
-            Assert.That(reply.Trim() == AIReply);
-        }
-
-        public void TestChat2(string reply)
-        {
-            string AIReply = "One possible solution is to use a more advanced natural language processing library like NLTK or sp";
-            Assert.That(reply.Trim() == AIReply);
+            Assert.That(reply.Trim() == replyGT);
         }
 
         public void TestPostChat(int num)
@@ -249,7 +261,7 @@ namespace LLMUnityTests
 
         public void TestEmbeddings(List<float> embeddings)
         {
-            Assert.That(embeddings.Count == 1024);
+            Assert.That(embeddings.Count == 896);
         }
 
         public virtual void OnDestroy() {}
@@ -257,15 +269,15 @@ namespace LLMUnityTests
 
     public class TestLLM_LLMManager_Load : TestLLM
     {
-        public override void SetLLM()
+        public override LLM CreateLLM()
         {
-            llm = gameObject.AddComponent<LLM>();
+            LLM llm = gameObject.AddComponent<LLM>();
             string filename = Path.GetFileName(modelUrl).Split("?")[0];
             string sourcePath = Path.Combine(LLMUnitySetup.modelDownloadPath, filename);
             filename = LLMManager.LoadModel(sourcePath);
             llm.SetModel(filename);
             llm.parallelPrompts = 1;
-            llm.SetTemplate("alpaca");
+            return llm;
         }
     }
 
@@ -273,16 +285,16 @@ namespace LLMUnityTests
     {
         string loadPath;
 
-        public override void SetLLM()
+        public override LLM CreateLLM()
         {
-            llm = gameObject.AddComponent<LLM>();
+            LLM llm = gameObject.AddComponent<LLM>();
             string filename = Path.GetFileName(modelUrl).Split("?")[0];
             string sourcePath = Path.Combine(LLMUnitySetup.modelDownloadPath, filename);
             loadPath = LLMUnitySetup.GetAssetPath(filename);
             if (!File.Exists(loadPath)) File.Copy(sourcePath, loadPath);
             llm.SetModel(loadPath);
             llm.parallelPrompts = 1;
-            llm.SetTemplate("alpaca");
+            return llm;
         }
 
         public override void OnDestroy()
@@ -293,14 +305,83 @@ namespace LLMUnityTests
 
     public class TestLLM_SetModel_Warning : TestLLM
     {
-        public override void SetLLM()
+        public override LLM CreateLLM()
         {
-            llm = gameObject.AddComponent<LLM>();
+            LLM llm = gameObject.AddComponent<LLM>();
             string filename = Path.GetFileName(modelUrl).Split("?")[0];
             string loadPath = Path.Combine(LLMUnitySetup.modelDownloadPath, filename);
             llm.SetModel(loadPath);
             llm.parallelPrompts = 1;
-            llm.SetTemplate("alpaca");
+            return llm;
+        }
+    }
+
+    public class TestLLM_NoLora : TestLLM
+    {
+        public override void SetParameters()
+        {
+            prompt = "";
+            query = "кто ты?";
+            reply1 = "Я - искусственный интеллект, который помогаю вам с информацией и задачами";
+            reply2 = "I'm sorry, but I didn't understand your request. Could you please provide more information or clarify";
+            tokens1 = 5;
+            tokens2 = 9;
+        }
+    }
+
+    public class TestLLM_Lora : TestLLM
+    {
+        string loraUrl = "https://huggingface.co/undreamer/Qwen2-0.5B-Instruct-ru-lora/resolve/main/Qwen2-0.5B-Instruct-ru-lora.gguf?download=true";
+        string loraNameLLManager;
+
+        public override async Task DownloadModels()
+        {
+            await base.DownloadModels();
+            loraNameLLManager = await LLMManager.DownloadLora(loraUrl);
+        }
+
+        public override LLM CreateLLM()
+        {
+            LLM llm = base.CreateLLM();
+            llm.AddLora(loraNameLLManager);
+            return llm;
+        }
+
+        public override void SetParameters()
+        {
+            prompt = "";
+            query = "кто ты?";
+            reply1 = "Я - искусственный интеллект, созданный для помощи и общения с людьми";
+            reply2 = "Идиот";
+            tokens1 = 5;
+            tokens2 = 9;
+        }
+
+        [Test]
+        public void TestModelPaths()
+        {
+            Assert.AreEqual(llm.model, Path.Combine(LLMUnitySetup.modelDownloadPath, Path.GetFileName(modelUrl).Split("?")[0]));
+            Assert.AreEqual(llm.lora, Path.Combine(LLMUnitySetup.modelDownloadPath, Path.GetFileName(loraUrl).Split("?")[0]));
+        }
+    }
+
+
+    public class TestLLM_Double : TestLLM
+    {
+        LLM llm1;
+        LLMCharacter lLMCharacter1;
+
+        public override async Task Init()
+        {
+            SetParameters();
+            await DownloadModels();
+            gameObject = new GameObject();
+            gameObject.SetActive(false);
+            llm = CreateLLM();
+            llmCharacter = CreateLLMCharacter();
+            llm1 = CreateLLM();
+            lLMCharacter1 = CreateLLMCharacter();
+            gameObject.SetActive(true);
         }
     }
 }
