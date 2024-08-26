@@ -21,26 +21,19 @@ namespace LLMUnity
     public class LoraAsset
     {
         public string assetPath;
+        public string fullPath;
         public float weight;
 
         public LoraAsset(string path, float weight = 1)
         {
             assetPath = LLM.GetLLMManagerAsset(path);
+            fullPath = RuntimePath(path);
             this.weight = weight;
         }
 
-        public override bool Equals(object obj)
+        public static string RuntimePath(string path)
         {
-            string RuntimePath(string path) {return LLMUnitySetup.GetFullPath(LLM.GetLLMManagerAssetRuntime(path));}
-
-            if (obj == null || obj.GetType() != this.GetType()) return false;
-            LoraAsset other = (LoraAsset)obj;
-            return assetPath == other.assetPath || RuntimePath(assetPath) == RuntimePath(other.assetPath);
-        }
-
-        public override int GetHashCode()
-        {
-            return (assetPath + "," + weight.ToString()).GetHashCode();
+            return LLMUnitySetup.GetFullPath(LLM.GetLLMManagerAssetRuntime(path));
         }
     }
 
@@ -53,28 +46,37 @@ namespace LLMUnity
             loras.Clear();
         }
 
+        public int IndexOf(string path)
+        {
+            string fullPath = LoraAsset.RuntimePath(path);
+            for (int i = 0; i < loras.Count; i++)
+            {
+                LoraAsset lora = loras[i];
+                if (lora.assetPath == path || lora.fullPath == fullPath) return i;
+            }
+            return -1;
+        }
+
         public bool Contains(string path)
         {
-            LoraAsset lora = new LoraAsset(path);
-            return loras.Contains(lora);
+            return IndexOf(path) != -1;
         }
 
         public void Add(string path, float weight = 1)
         {
-            LoraAsset lora = new LoraAsset(path, weight);
-            if (loras.Contains(lora)) return;
-            loras.Add(lora);
+            if (Contains(path)) return;
+            loras.Add(new LoraAsset(path, weight));
         }
 
         public void Remove(string path)
         {
-            loras.Remove(new LoraAsset(path));
+            int index = IndexOf(path);
+            if (index != -1) loras.RemoveAt(index);
         }
 
         public void SetWeight(string path, float weight)
         {
-            LoraAsset lora = new LoraAsset(path);
-            int index = loras.IndexOf(lora);
+            int index = IndexOf(path);
             if (index == -1)
             {
                 LLMUnitySetup.LogError($"LoRA {path} not loaded with the LLM");
@@ -85,6 +87,12 @@ namespace LLMUnity
 
         public void FromStrings(string loraString, string loraWeightsString)
         {
+            if (string.IsNullOrEmpty(loraString) && string.IsNullOrEmpty(loraWeightsString))
+            {
+                Clear();
+                return;
+            }
+
             try
             {
                 List<string> loraStringArr = new List<string>(loraString.Split(" "));
