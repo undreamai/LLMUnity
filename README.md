@@ -249,8 +249,9 @@ public class MyScript : MonoBehaviour
         // The model needs to be added to the LLM model manager (see LLM model management) by loading or downloading it.
         // Otherwise the model file can be copied directly inside the StreamingAssets folder.
         llm.SetModel("Phi-3-mini-4k-instruct-q4.gguf");
-        // optional: you can also set a lora in a similar fashion
-        llm.SetLora("my-lora.gguf");
+        // optional: you can also set loras in a similar fashion and set their weights (if needed)
+        llm.AddLora("my-lora.gguf");
+        llm.SetLoraScale(0.5f);
         // optional: you can set the chat template of the model if it is not correctly identified
         // You can find a list of chat templates in the ChatTemplate.templates.Keys
         llm.SetTemplate("phi-3");
