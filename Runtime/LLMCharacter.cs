@@ -27,6 +27,8 @@ namespace LLMUnity
         [Remote] public string host = "localhost";
         /// <summary> port to use for the LLM server </summary>
         [Remote] public int port = 13333;
+        /// <summary> number of retries to use for the LLM server requests (-1 = infinite) </summary>
+        [Remote] public int numRetries = -1;
         /// <summary> file to save the chat history.
         /// The file is saved only for Chat calls with addToHistory set to true.
         /// The file will be saved within the persistentDataPath directory (see https://docs.unity3d.com/ScriptReference/Application-persistentDataPath.html). </summary>
@@ -118,7 +120,7 @@ namespace LLMUnity
         public List<ChatMessage> chat;
         private SemaphoreSlim chatLock = new SemaphoreSlim(1, 1);
         private string chatTemplate;
-        private ChatTemplate template;
+        private ChatTemplate template = null;
         public string grammarString;
         protected int id_slot = -1;
         private List<(string, string)> requestHeaders = new List<(string, string)> { ("Content-Type", "application/json") };
@@ -270,11 +272,22 @@ namespace LLMUnity
             InitPrompt(clearChat);
         }
 
+        private bool CheckTemplate()
+        {
+            if (template == null)
+            {
+                LLMUnitySetup.LogError("Template not set!");
+                return false;
+            }
+            return true;
+        }
+
         private async Task InitNKeep()
         {
             if (setNKeepToPrompt && nKeep == -1)
             {
-                string systemPrompt = template.ComputePrompt(new List<ChatMessage>(){chat[0]}, "", false);
+                if (!CheckTemplate()) return;
+                string systemPrompt = template.ComputePrompt(new List<ChatMessage>(){chat[0]}, playerName, "", false);
                 await Tokenize(systemPrompt, SetNKeep);
             }
         }
@@ -311,7 +324,8 @@ namespace LLMUnity
             if (llmTemplate != chatTemplate)
             {
                 chatTemplate = llmTemplate;
-                template = ChatTemplate.GetTemplate(chatTemplate);
+                template = chatTemplate == null ? null : ChatTemplate.GetTemplate(chatTemplate);
+                nKeep = -1;
             }
         }
 
@@ -331,6 +345,7 @@ namespace LLMUnity
 
         List<string> GetStopwords()
         {
+            if (!CheckTemplate()) return null;
             List<string> stopAll = new List<string>(template.GetStop(playerName, AIName));
             if (stop != null) stopAll.AddRange(stop);
             return stopAll;
@@ -430,16 +445,22 @@ namespace LLMUnity
             return result.tokens;
         }
 
-        protected string SlotContent(SlotResult result)
-        {
-            // get the tokens from a tokenize result received from the endpoint
-            return result.filename;
-        }
-
         protected string DetokenizeContent(TokenizeRequest result)
         {
             // get content from a chat result received from the endpoint
             return result.content;
+        }
+
+        protected List<float> EmbeddingsContent(EmbeddingsResult result)
+        {
+            // get content from a chat result received from the endpoint
+            return result.embedding;
+        }
+
+        protected string SlotContent(SlotResult result)
+        {
+            // get the tokens from a tokenize result received from the endpoint
+            return result.filename;
         }
 
         /// <summary>
@@ -459,6 +480,7 @@ namespace LLMUnity
             // call the callback function while the answer is received
             // call the completionCallback function when the answer is fully received
             await LoadTemplate();
+            if (!CheckTemplate()) return null;
             await InitNKeep();
 
             string json;
@@ -466,7 +488,7 @@ namespace LLMUnity
             try
             {
                 AddPlayerMessage(query);
-                string prompt = template.ComputePrompt(chat, AIName);
+                string prompt = template.ComputePrompt(chat, playerName, AIName);
                 json = JsonUtility.ToJson(GenerateRequest(prompt));
                 chat.RemoveAt(chat.Count - 1);
             }
@@ -570,6 +592,21 @@ namespace LLMUnity
             tokenizeRequest.tokens = tokens;
             string json = JsonUtility.ToJson(tokenizeRequest);
             return await PostRequest<TokenizeRequest, string>(json, "detokenize", DetokenizeContent, callback);
+        }
+
+        /// <summary>
+        /// Computes the embeddings of the provided input.
+        /// </summary>
+        /// <param name="tokens">input to compute the embeddings for</param>
+        /// <param name="callback">callback function called with the result string</param>
+        /// <returns>the computed embeddings</returns>
+        public async Task<List<float>> Embeddings(string query, Callback<List<float>> callback = null)
+        {
+            // handle the tokenization of a message by the user
+            TokenizeRequest tokenizeRequest = new TokenizeRequest();
+            tokenizeRequest.content = query;
+            string json = JsonUtility.ToJson(tokenizeRequest);
+            return await PostRequest<EmbeddingsResult, List<float>>(json, "embeddings", EmbeddingsContent, callback);
         }
 
         private async Task<string> Slot(string filepath, string action)
@@ -682,6 +719,9 @@ namespace LLMUnity
                 case "detokenize":
                     callResult = await llm.Detokenize(json);
                     break;
+                case "embeddings":
+                    callResult = await llm.Embeddings(json);
+                    break;
                 case "slots":
                     callResult = await llm.Slot(json);
                     break;
@@ -726,38 +766,57 @@ namespace LLMUnity
 
             Ret result = default;
             byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(json);
-            using (var request = UnityWebRequest.Put($"{host}:{port}/{endpoint}", jsonToSend))
+            UnityWebRequest request = null;
+            string error = null;
+            int tryNr = numRetries;
+
+            while (tryNr != 0)
             {
-                WIPRequests.Add(request);
-
-                request.method = "POST";
-                if (requestHeaders != null)
+                using (request = UnityWebRequest.Put($"{host}:{port}/{endpoint}", jsonToSend))
                 {
-                    for (int i = 0; i < requestHeaders.Count; i++)
-                        request.SetRequestHeader(requestHeaders[i].Item1, requestHeaders[i].Item2);
-                }
+                    WIPRequests.Add(request);
 
-                // Start the request asynchronously
-                var asyncOperation = request.SendWebRequest();
-                float lastProgress = 0f;
-                // Continue updating progress until the request is completed
-                while (!asyncOperation.isDone)
-                {
-                    float currentProgress = request.downloadProgress;
-                    // Check if progress has changed
-                    if (currentProgress != lastProgress && callback != null)
+                    request.method = "POST";
+                    if (requestHeaders != null)
                     {
-                        callback?.Invoke(ConvertContent(request.downloadHandler.text, getContent));
-                        lastProgress = currentProgress;
+                        for (int i = 0; i < requestHeaders.Count; i++)
+                            request.SetRequestHeader(requestHeaders[i].Item1, requestHeaders[i].Item2);
                     }
-                    // Wait for the next frame
-                    await Task.Yield();
+
+                    // Start the request asynchronously
+                    var asyncOperation = request.SendWebRequest();
+                    float lastProgress = 0f;
+                    // Continue updating progress until the request is completed
+                    while (!asyncOperation.isDone)
+                    {
+                        float currentProgress = request.downloadProgress;
+                        // Check if progress has changed
+                        if (currentProgress != lastProgress && callback != null)
+                        {
+                            callback?.Invoke(ConvertContent(request.downloadHandler.text, getContent));
+                            lastProgress = currentProgress;
+                        }
+                        // Wait for the next frame
+                        await Task.Yield();
+                    }
+                    WIPRequests.Remove(request);
+                    if (request.result == UnityWebRequest.Result.Success)
+                    {
+                        result = ConvertContent(request.downloadHandler.text, getContent);
+                        error = null;
+                        break;
+                    }
+                    else
+                    {
+                        result = default;
+                        error = request.error;
+                    }
                 }
-                WIPRequests.Remove(request);
-                if (request.result != UnityWebRequest.Result.Success) LLMUnitySetup.LogError(request.error);
-                else result = ConvertContent(request.downloadHandler.text, getContent);
-                callback?.Invoke(result);
+                tryNr--;
             }
+
+            if (error != null) LLMUnitySetup.LogError(error);
+            callback?.Invoke(result);
             return result;
         }
 

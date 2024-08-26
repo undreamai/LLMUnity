@@ -17,17 +17,25 @@ namespace LLMUnity
         public string chatTemplate;
         public string url;
         public bool includeInBuild;
-
+        public int contextLength;
 
         public ModelEntry(string path, bool lora = false, string label = null, string url = null)
         {
             filename = Path.GetFileName(path);
             this.label = label == null ? filename : label;
             this.lora = lora;
-            this.path = Path.GetFullPath(path).Replace('\\', '/');
-            chatTemplate = lora ? null : ChatTemplate.FromGGUF(this.path);
+            this.path = LLMUnitySetup.GetFullPath(path);
             this.url = url;
             includeInBuild = true;
+            chatTemplate = null;
+            contextLength = -1;
+            if (!lora)
+            {
+                GGUFReader reader = new GGUFReader(this.path);
+                chatTemplate = ChatTemplate.FromGGUF(reader, this.path);
+                string arch = reader.GetStringField("general.architecture");
+                if (arch != null) contextLength = reader.GetIntField($"{arch}.context_length");
+            }
         }
 
         public ModelEntry OnlyRequiredFields()
@@ -154,7 +162,7 @@ namespace LLMUnity
         public static ModelEntry Get(string path)
         {
             string filename = Path.GetFileName(path);
-            string fullPath = Path.GetFullPath(path).Replace('\\', '/');
+            string fullPath = LLMUnitySetup.GetFullPath(path);
             foreach (ModelEntry entry in modelEntries)
             {
                 if (entry.filename == filename || entry.path == fullPath) return entry;
@@ -379,7 +387,7 @@ namespace LLMUnity
             foreach (LLM llm in llms)
             {
                 if (!entry.lora && llm.model == entry.filename) llm.model = "";
-                else if (entry.lora && llm.lora == entry.filename) llm.lora = "";
+                else if (entry.lora) llm.RemoveLora(entry.filename);
             }
         }
 

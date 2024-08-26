@@ -46,8 +46,10 @@ LLM for Unity is built on top of the awesome [llama.cpp](https://github.com/gger
 
 ## How to help
 - [⭐ Star](https://github.com/undreamai/LLMUnity) the repo, leave us a [review](https://assetstore.unity.com/packages/slug/273604) and spread the word about the project!
-- Join us at [Discord](https://discord.gg/RwXKQb6zdv) and say hi!
-- [Contribute](CONTRIBUTING.md) by submitting feature requests or bugs as issues or even submiting a PR and become a collaborator!
+- Join us at [Discord](https://discord.gg/RwXKQb6zdv) and say hi.
+- [Contribute](CONTRIBUTING.md) by submitting feature requests, bugs or even your own PR.
+- [![](https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&color=%23fe8e86)](https://github.com/sponsors/amakropoulos) this work to allow even cooler features!
+
 
 ## Games using LLM for Unity
 - [Verbal Verdict](https://store.steampowered.com/app/2778780/Verbal_Verdict/)
@@ -56,6 +58,7 @@ LLM for Unity is built on top of the awesome [llama.cpp](https://github.com/gger
 - [Murder in Aisle 4](https://roadedlich.itch.io/murder-in-aisle-4)
 - [Finicky Food Delivery AI](https://helixngc7293.itch.io/finicky-food-delivery-ai)
 - [AI Emotional Girlfriend](https://whynames.itch.io/aiemotionalgirlfriend)
+- [AI Speak](https://jdscogin.wixsite.com/aispeak)
 
 ## Setup
 _Method 1: Install using the asset store_
@@ -247,8 +250,9 @@ public class MyScript : MonoBehaviour
         // The model needs to be added to the LLM model manager (see LLM model management) by loading or downloading it.
         // Otherwise the model file can be copied directly inside the StreamingAssets folder.
         llm.SetModel("Phi-3-mini-4k-instruct-q4.gguf");
-        // optional: you can also set a lora in a similar fashion
-        llm.SetLora("my-lora.bin");
+        // optional: you can also set loras in a similar fashion and set their weights (if needed)
+        llm.AddLora("my-lora.gguf");
+        llm.SetLoraWeight(0.5f);
         // optional: you can set the chat template of the model if it is not correctly identified
         // You can find a list of chat templates in the ChatTemplate.templates.Keys
         llm.SetTemplate("phi-3");
@@ -345,6 +349,7 @@ If you have loaded a model locally you need to set its URL through the expanded 
 
 - `Show/Hide Advanced Options` Toggle to show/hide advanced options from below
 - `Log Level` select how verbose the log messages are
+- `Use extras` select to install and allow the use of extra features (flash attention and IQ quants)
 
 #### 💻 Setup Settings
 
@@ -374,13 +379,15 @@ If the user's GPU is not supported, the LLM will fall back to the CPU
 
 - <details><summary>Advanced options</summary>
 
-  - `Download lora` click to download a LoRA model in .bin format
-  - `Load lora` click to load a LoRA model in .bin format
+  - `Download lora` click to download a LoRA model in .gguf format
+  - `Load lora` click to load a LoRA model in .gguf format
   - <details><summary><code>Context Size</code> size of the prompt context (0 = context size of the model)</summary> This is the number of tokens the model can take as input when generating responses. Higher values use more RAM or VRAM (if using GPU). </details>
   - `Batch Size` batch size for prompt processing (default: 512)
   - `Model` the path of the model being used (relative to the Assets/StreamingAssets folder)
   - `Chat Template` the chat template being used for the LLM
-  - `Lora` the path of the LoRA being used (relative to the Assets/StreamingAssets folder)
+  - `Lora` the path of the LoRAs being used (relative to the Assets/StreamingAssets folder)
+  - `Lora Weights` the weights of the LoRAs being used
+  - `Flash Attention` click to use flash attention in the model (if `Use extras` is enabled)
 
 </details>
 
@@ -395,6 +402,7 @@ If the user's GPU is not supported, the LLM will fall back to the CPU
 
 - `Show/Hide Advanced Options` Toggle to show/hide advanced options from below
 - `Log Level` select how verbose the log messages are
+- `Use extras` select to install and allow the use of extra features (flash attention and IQ quants)
 
 #### 💻 Setup Settings
 <div>
@@ -403,8 +411,9 @@ If the user's GPU is not supported, the LLM will fall back to the CPU
 
 - `Remote` whether the LLM used is remote or local
 - `LLM` the LLM GameObject (if `Remote` is not set)
-- `Hort` ip of the LLM (if `Remote` is set)
-- `Port` port of the LLM (if `Remote` is set)
+- `Hort` ip of the LLM server (if `Remote` is set)
+- `Port` port of the LLM server (if `Remote` is set)
+- `Num Retries` number of HTTP request retries from the LLM server (if `Remote` is set)
 - <details><summary><code>Save</code> save filename or relative path</summary> If set, the chat history and LLM state (if save cache is enabled) is automatically saved to file specified. <br> The chat history is saved with a json suffix and the LLM state with a cache suffix. <br> Both files are saved in the [persistentDataPath folder of Unity](https://docs.unity3d.com/ScriptReference/Application-persistentDataPath.html).</details>
 - `Save Cache` select to save the LLM state along with the chat history. The LLM state is typically around 100MB+.
 - `Debug Prompt` select to log the constructed prompts in the Unity Editor
@@ -446,4 +455,6 @@ If it is not selected, the full reply from the model is received in one go
 </details>
 
 ## License
-The license of LLM for Unity is MIT ([LICENSE.md](LICENSE.md)) and uses third-party software with MIT and Apache licenses ([Third Party Notices.md](<Third Party Notices.md>)).
+The license of LLM for Unity is MIT ([LICENSE.md](LICENSE.md)) and uses third-party software with MIT and Apache licenses.
+Some models included in the asset define their own license terms, please review them before using each model.
+Third-party licenses can be found in the ([Third Party Notices.md](<Third Party Notices.md>)).
