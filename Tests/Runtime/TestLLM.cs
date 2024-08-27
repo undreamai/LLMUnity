@@ -57,6 +57,13 @@ namespace LLMUnityTests
             Assert.AreEqual(llm.lora, lora1 + " " + lora2);
             Assert.AreEqual(llm.loraWeights, "0.8 0.1");
 
+            Dictionary<string, float> loraToWeight = new Dictionary<string, float>();
+            loraToWeight[lora1] = 0;
+            loraToWeight[lora2] = 0.2f;
+            llm.SetLoraWeights(loraToWeight);
+            Assert.AreEqual(llm.lora, lora1 + " " + lora2);
+            Assert.AreEqual(llm.loraWeights, "0 0.2");
+
             File.Delete(lora1);
             File.Delete(lora2);
         }
