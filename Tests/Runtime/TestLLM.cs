@@ -10,10 +10,10 @@ using UnityEngine.TestTools;
 
 namespace LLMUnityTests
 {
-    public class TestLLMLoras
+    public class TestLLMLoraAssignment
     {
         [Test]
-        public void TestLLMLorasAssign()
+        public void TestLoras()
         {
             GameObject gameObject = new GameObject();
             gameObject.SetActive(false);
@@ -70,7 +70,7 @@ namespace LLMUnityTests
         protected GameObject gameObject;
         protected LLM llm;
         protected LLMCharacter llmCharacter;
-        Exception error = null;
+        protected Exception error = null;
         protected string prompt;
         protected string query;
         protected string reply1;
@@ -206,30 +206,35 @@ namespace LLMUnityTests
             error = null;
             try
             {
-                await llmCharacter.Tokenize("I", TestTokens);
-                await llmCharacter.Warmup();
-                TestInitParameters(tokens1, 1);
-                TestWarmup();
-                await llmCharacter.Chat(query, (string reply) => TestChat(reply, reply1));
-                TestPostChat(3);
-                llmCharacter.SetPrompt(llmCharacter.prompt);
-                llmCharacter.AIName = "False response";
-                await llmCharacter.Chat(query, (string reply) => TestChat(reply, reply2));
-                TestPostChat(3);
-                await llmCharacter.Chat("bye!");
-                TestPostChat(5);
-                prompt = "How are you?";
-                llmCharacter.SetPrompt(prompt);
-                await llmCharacter.Chat("hi");
-                TestInitParameters(tokens2, 3);
-                List<float> embeddings = await llmCharacter.Embeddings("hi how are you?");
-                TestEmbeddings(embeddings);
+                await Tests();
                 llm.OnDestroy();
             }
             catch  (Exception e)
             {
                 error = e;
             }
+        }
+
+        public virtual async Task Tests()
+        {
+            await llmCharacter.Tokenize("I", TestTokens);
+            await llmCharacter.Warmup();
+            TestInitParameters(tokens1, 1);
+            TestWarmup();
+            await llmCharacter.Chat(query, (string reply) => TestChat(reply, reply1));
+            TestPostChat(3);
+            llmCharacter.SetPrompt(llmCharacter.prompt);
+            llmCharacter.AIName = "False response";
+            await llmCharacter.Chat(query, (string reply) => TestChat(reply, reply2));
+            TestPostChat(3);
+            await llmCharacter.Chat("bye!");
+            TestPostChat(5);
+            prompt = "How are you?";
+            llmCharacter.SetPrompt(prompt);
+            await llmCharacter.Chat("hi");
+            TestInitParameters(tokens2, 3);
+            List<float> embeddings = await llmCharacter.Embeddings("hi how are you?");
+            TestEmbeddings(embeddings);
         }
 
         public void TestInitParameters(int nkeep, int chats)
@@ -316,23 +321,11 @@ namespace LLMUnityTests
         }
     }
 
-    public class TestLLM_NoLora : TestLLM
-    {
-        public override void SetParameters()
-        {
-            prompt = "";
-            query = "кто ты?";
-            reply1 = "Я - искусственный интеллект, который помогаю вам с информацией и задачами";
-            reply2 = "I'm sorry, but I didn't understand your request. Could you please provide more information or clarify";
-            tokens1 = 5;
-            tokens2 = 9;
-        }
-    }
-
     public class TestLLM_Lora : TestLLM
     {
-        string loraUrl = "https://huggingface.co/undreamer/Qwen2-0.5B-Instruct-ru-lora/resolve/main/Qwen2-0.5B-Instruct-ru-lora.gguf?download=true";
-        string loraNameLLManager;
+        protected string loraUrl = "https://huggingface.co/undreamer/Qwen2-0.5B-Instruct-ru-lora/resolve/main/Qwen2-0.5B-Instruct-ru-lora.gguf?download=true";
+        protected string loraNameLLManager;
+        protected float loraWeight;
 
         public override async Task DownloadModels()
         {
@@ -343,7 +336,7 @@ namespace LLMUnityTests
         public override LLM CreateLLM()
         {
             LLM llm = base.CreateLLM();
-            llm.AddLora(loraNameLLManager);
+            llm.AddLora(loraNameLLManager, loraWeight);
             return llm;
         }
 
@@ -351,20 +344,45 @@ namespace LLMUnityTests
         {
             prompt = "";
             query = "кто ты?";
-            reply1 = "Я - искусственный интеллект, созданный для помощи и общения с людьми";
+            reply1 = "Я - искусственный интеллект, создан для общения и понимания людей.";
             reply2 = "Идиот";
             tokens1 = 5;
             tokens2 = 9;
+            loraWeight = 0.9f;
         }
 
-        [Test]
+        public override async Task Tests()
+        {
+            await base.Tests();
+            TestModelPaths();
+            await TestLoraWeight();
+        }
+
         public void TestModelPaths()
         {
             Assert.AreEqual(llm.model, Path.Combine(LLMUnitySetup.modelDownloadPath, Path.GetFileName(modelUrl).Split("?")[0]));
             Assert.AreEqual(llm.lora, Path.Combine(LLMUnitySetup.modelDownloadPath, Path.GetFileName(loraUrl).Split("?")[0]));
         }
+
+        public async Task TestLoraWeight()
+        {
+            string json = await llm.ListLoras();
+            LoraWeightResultList loraRequest = JsonUtility.FromJson<LoraWeightResultList>("{\"loraWeights\": " + json + "}");
+            Assert.AreEqual(loraRequest.loraWeights[0].scale, loraWeight);
+        }
     }
 
+
+    public class TestLLM_Lora_ChangeWeight : TestLLM_Lora
+    {
+        public override async Task Tests()
+        {
+            await base.Tests();
+            loraWeight = 0.6f;
+            llm.SetLoraWeight(loraNameLLManager, loraWeight);
+            await TestLoraWeight();
+        }
+    }
 
     public class TestLLM_Double : TestLLM
     {
