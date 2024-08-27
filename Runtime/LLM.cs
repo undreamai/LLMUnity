@@ -258,13 +258,24 @@ namespace LLMUnity
         }
 
         /// <summary>
-        /// Allows to change the scale (weight) of a LORA model in the LLM.
+        /// Allows to change the weight (scale) of a LORA model in the LLM.
         /// </summary>
         /// <param name="path">path of LORA model to change (.gguf format)</param>
-        /// <param name="scale">scale of LORA</param>
-        public void SetLoraWeight(string path, float scale)
+        /// <param name="weight">weight of LORA</param>
+        public void SetLoraWeight(string path, float weight)
         {
-            loraManager.SetWeight(path, scale);
+            loraManager.SetWeight(path, weight);
+            UpdateLoras();
+            if (started) ApplyLoras();
+        }
+
+        /// <summary>
+        /// Allows to change the weights (scale) of the LORA models in the LLM.
+        /// </summary>
+        /// <param name="loraToWeight">Dictionary (string, float) mapping the path of LORA models with weights to change</param>
+        public void SetLoraWeights(Dictionary<string, float> loraToWeight)
+        {
+            foreach (KeyValuePair<string, float> entry in loraToWeight) loraManager.SetWeight(entry.Key, entry.Value);
             UpdateLoras();
             if (started) ApplyLoras();
         }
