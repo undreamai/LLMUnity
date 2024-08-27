@@ -113,6 +113,20 @@ namespace LLMUnity
     }
 
     [Serializable]
+    public struct LoraWeightResult
+    {
+        public int id;
+        public string path;
+        public float scale;
+    }
+
+    [Serializable]
+    public struct LoraWeightResultList
+    {
+        public List<LoraWeightResult> loraWeights;
+    }
+
+    [Serializable]
     public struct TemplateResult
     {
         public string template;

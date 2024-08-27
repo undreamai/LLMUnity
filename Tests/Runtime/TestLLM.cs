@@ -383,9 +383,8 @@ namespace LLMUnityTests
 
         public async Task TestLoraWeight()
         {
-            string json = await llm.ListLoras();
-            LoraWeightResultList loraRequest = JsonUtility.FromJson<LoraWeightResultList>("{\"loraWeights\": " + json + "}");
-            Assert.AreEqual(loraRequest.loraWeights[0].scale, loraWeight);
+            List<LoraWeightResult> loras = await llm.ListLoras();
+            Assert.AreEqual(loras[0].scale, loraWeight);
         }
     }
 
