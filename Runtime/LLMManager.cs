@@ -19,9 +19,20 @@ namespace LLMUnity
         public bool includeInBuild;
         public int contextLength;
 
+        public static string GetFilenameOrRelativeAssetPath(string path)
+        {
+            string assetPath = LLMUnitySetup.GetAssetPath(path); // Note: this will return the full path if a full path is passed
+            string basePath = LLMUnitySetup.GetAssetPath();
+            if (File.Exists(assetPath) && LLMUnitySetup.IsSubPath(assetPath, basePath))
+            {
+                return LLMUnitySetup.RelativePath(assetPath, basePath);
+            }
+            return path;
+        }
+
         public ModelEntry(string path, bool lora = false, string label = null, string url = null)
         {
-            filename = Path.GetFileName(path);
+            filename = GetFilenameOrRelativeAssetPath(path);
             this.label = label == null ? filename : label;
             this.lora = lora;
             this.path = LLMUnitySetup.GetFullPath(path);
