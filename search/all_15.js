@@ -1,5 +1,10 @@
 var searchData=
 [
-  ['qwen_20qwen2_200_205b_20instruct_20gguf_0',['Qwen/Qwen2-0.5B-Instruct-GGUF',['../md_Third_01Party_01Notices.html#autotoc_md31',1,'']]],
-  ['qwen2_200_205b_20instruct_20gguf_1',['Qwen/Qwen2-0.5B-Instruct-GGUF',['../md_Third_01Party_01Notices.html#autotoc_md31',1,'']]]
+  ['ondestroy_0',['OnDestroy',['../classLLMUnity_1_1LLM.html#a52ae6076746695d25592f8355a18414e',1,'LLMUnity::LLM']]],
+  ['openhermes_1',['BEE-spoke-data/smol_llama-220M-openhermes',['../md_Third_01Party_01Notices.html#autotoc_md36',1,'']]],
+  ['openhermes_202_205_20mistral_207b_2',['teknium/OpenHermes-2.5-Mistral-7B',['../md_Third_01Party_01Notices.html#autotoc_md31',1,'']]],
+  ['openhermes_202_205_20mistral_207b_20gguf_3',['modified by: TheBloke/OpenHermes-2.5-Mistral-7B-GGUF',['../md_Third_01Party_01Notices.html#autotoc_md32',1,'']]],
+  ['openhermes_20gguf_4',['modified by: afrideva/smol_llama-220M-openhermes-GGUF',['../md_Third_01Party_01Notices.html#autotoc_md37',1,'']]],
+  ['options_5',['Options',['../index.html#autotoc_md8',1,'']]],
+  ['overview_6',['Overview',['../index.html',1,'']]]
 ];

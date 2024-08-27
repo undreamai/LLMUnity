@@ -1,8 +1,27 @@
 var searchData=
 [
-  ['unity_0',['Games using LLM for Unity',['../index.html#autotoc_md3',1,'']]],
-  ['update_1',['Update',['../classLLMUnity_1_1LLM.html#adadd6997f4df7412db71a7218eb3917b',1,'LLMUnity::LLM']]],
-  ['use_2',['How to use',['../index.html#autotoc_md5',1,'']]],
-  ['using_20llm_20for_20unity_3',['Games using LLM for Unity',['../index.html#autotoc_md3',1,'']]],
-  ['utils_4',['Utils',['../group__utils.html',1,'']]]
+  ['save_0',['Save',['../classLLMUnity_1_1LLMCharacter.html#a78a2e9a3a6b95a86f6eac824fc302858',1,'LLMUnity::LLMCharacter']]],
+  ['save_1',['save',['../classLLMUnity_1_1LLMCharacter.html#af5d8f07cad7066700b19689a0b493d38',1,'LLMUnity::LLMCharacter']]],
+  ['savecache_2',['saveCache',['../classLLMUnity_1_1LLMCharacter.html#a796c05dab6ed5c3cebb6f67353535164',1,'LLMUnity::LLMCharacter']]],
+  ['seed_3',['seed',['../classLLMUnity_1_1LLMCharacter.html#ac49b82eed69f8cfb62ef837743b0cdc4',1,'LLMUnity::LLMCharacter']]],
+  ['setgrammar_4',['SetGrammar',['../classLLMUnity_1_1LLMCharacter.html#aee4abf630820cbd00ef4aca0f04807b9',1,'LLMUnity::LLMCharacter']]],
+  ['setlora_5',['SetLora',['../classLLMUnity_1_1LLM.html#a5605295ba173a06f26099125681753c6',1,'LLMUnity::LLM']]],
+  ['setloraweight_6',['SetLoraWeight',['../classLLMUnity_1_1LLM.html#a26e01ce3a14c30da752cf216acfbb3ff',1,'LLMUnity::LLM']]],
+  ['setloraweights_7',['SetLoraWeights',['../classLLMUnity_1_1LLM.html#a1bd7e0bc45826dba87990fa088a32bf9',1,'LLMUnity::LLM']]],
+  ['setmodel_8',['SetModel',['../classLLMUnity_1_1LLM.html#a9cdc4850537724d94bf88e7b78372883',1,'LLMUnity::LLM']]],
+  ['setnkeeptoprompt_9',['setNKeepToPrompt',['../classLLMUnity_1_1LLMCharacter.html#aba1febf8ee339fd76351655b05d07a69',1,'LLMUnity::LLMCharacter']]],
+  ['setprompt_10',['SetPrompt',['../classLLMUnity_1_1LLMCharacter.html#ac0f8bab15daa6ec99724c7ef24814939',1,'LLMUnity::LLMCharacter']]],
+  ['settemplate_11',['SetTemplate',['../classLLMUnity_1_1LLM.html#ad4c7250286a33527cb211bd980f1c307',1,'LLMUnity::LLM']]],
+  ['settings_12',['Settings',['../index.html#autotoc_md10',1,'💻 Setup Settings'],['../index.html#autotoc_md14',1,'💻 Setup Settings'],['../index.html#autotoc_md12',1,'🗨️ Chat Settings'],['../index.html#autotoc_md15',1,'🗨️ Chat Settings'],['../index.html#autotoc_md11',1,'🤗 Model Settings'],['../index.html#autotoc_md16',1,'🤗 Model Settings'],['../index.html#autotoc_md9',1,'LLM Settings'],['../index.html#autotoc_md13',1,'LLMCharacter Settings']]],
+  ['setup_13',['Setup',['../index.html#autotoc_md4',1,'']]],
+  ['setup_20settings_14',['Setup Settings',['../index.html#autotoc_md10',1,'💻 Setup Settings'],['../index.html#autotoc_md14',1,'💻 Setup Settings']]],
+  ['slot_15',['Slot',['../classLLMUnity_1_1LLM.html#a16381a5907592831a0ea35137b9921ff',1,'LLMUnity::LLM']]],
+  ['smol_5fllama_20220m_20openhermes_16',['BEE-spoke-data/smol_llama-220M-openhermes',['../md_Third_01Party_01Notices.html#autotoc_md36',1,'']]],
+  ['smol_5fllama_20220m_20openhermes_20gguf_17',['modified by: afrideva/smol_llama-220M-openhermes-GGUF',['../md_Third_01Party_01Notices.html#autotoc_md37',1,'']]],
+  ['software_18',['Software',['../md_Third_01Party_01Notices.html#autotoc_md19',1,'']]],
+  ['software_20notices_20and_20information_19',['THIRD-PARTY SOFTWARE NOTICES AND INFORMATION',['../md_Third_01Party_01Notices.html',1,'']]],
+  ['spoke_20data_20smol_5fllama_20220m_20openhermes_20',['BEE-spoke-data/smol_llama-220M-openhermes',['../md_Third_01Party_01Notices.html#autotoc_md36',1,'']]],
+  ['started_21',['started',['../classLLMUnity_1_1LLM.html#a9bf3f3bd1e5ac32e5790415e448762e7',1,'LLMUnity::LLM']]],
+  ['stop_22',['stop',['../classLLMUnity_1_1LLMCharacter.html#a1f52b3ca2ac0bee954bf5171742c9a5e',1,'LLMUnity::LLMCharacter']]],
+  ['stream_23',['stream',['../classLLMUnity_1_1LLMCharacter.html#a99a58a6ef8c6bc48036403df0fe7c139',1,'LLMUnity::LLMCharacter']]]
 ];

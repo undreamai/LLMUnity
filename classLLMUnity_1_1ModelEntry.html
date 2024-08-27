@@ -47,7 +47,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_tiny.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">LLM for Unity
-   &#160;<span id="projectnumber">v2.1.1</span>
+   &#160;<span id="projectnumber">v2.2.0</span>
    </div>
    <div id="projectbrief">Create characters in Unity with LLMs!</div>
   </td>
@@ -114,6 +114,7 @@ $(function(){initNavTree('classLLMUnity_1_1ModelEntry.html',''); initResizable()
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="classLLMUnity_1_1ModelEntry-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">LLMUnity.ModelEntry Class Reference</div></div>
@@ -126,6 +127,11 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a5ec75ad312519e5d4877fe5b24fc96b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af361ecc0b83af2434a3abf14d2a54018" id="r_af361ecc0b83af2434a3abf14d2a54018"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classLLMUnity_1_1ModelEntry.html">ModelEntry</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af361ecc0b83af2434a3abf14d2a54018">OnlyRequiredFields</a> ()</td></tr>
 <tr class="separator:af361ecc0b83af2434a3abf14d2a54018"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:ad4f833eb9cfadb9183aca47d401fa8c9" id="r_ad4f833eb9cfadb9183aca47d401fa8c9"><td class="memItemLeft" align="right" valign="top">static string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad4f833eb9cfadb9183aca47d401fa8c9">GetFilenameOrRelativeAssetPath</a> (string path)</td></tr>
+<tr class="separator:ad4f833eb9cfadb9183aca47d401fa8c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -143,6 +149,8 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a12a83936500cfdb1a03e860fb65c01a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8827c634bd47306b89171eeb8bfc09f6" id="r_a8827c634bd47306b89171eeb8bfc09f6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8827c634bd47306b89171eeb8bfc09f6">includeInBuild</a></td></tr>
 <tr class="separator:a8827c634bd47306b89171eeb8bfc09f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3f867ef3692ccfda42e4d970d770abfb" id="r_a3f867ef3692ccfda42e4d970d770abfb"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3f867ef3692ccfda42e4d970d770abfb">contextLength</a></td></tr>
+<tr class="separator:a3f867ef3692ccfda42e4d970d770abfb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
@@ -185,11 +193,38 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00022">22</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00033">33</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="ad4f833eb9cfadb9183aca47d401fa8c9" name="ad4f833eb9cfadb9183aca47d401fa8c9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad4f833eb9cfadb9183aca47d401fa8c9">&#9670;&#160;</a></span>GetFilenameOrRelativeAssetPath()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static string LLMUnity.ModelEntry.GetFilenameOrRelativeAssetPath </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>path</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00022">22</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+
+</div>
+</div>
 <a id="af361ecc0b83af2434a3abf14d2a54018" name="af361ecc0b83af2434a3abf14d2a54018"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af361ecc0b83af2434a3abf14d2a54018">&#9670;&#160;</a></span>OnlyRequiredFields()</h2>
 
@@ -213,7 +248,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00033">33</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00052">52</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>
@@ -231,6 +266,22 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00017">17</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+
+</div>
+</div>
+<a id="a3f867ef3692ccfda42e4d970d770abfb" name="a3f867ef3692ccfda42e4d970d770abfb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3f867ef3692ccfda42e4d970d770abfb">&#9670;&#160;</a></span>contextLength</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int LLMUnity.ModelEntry.contextLength</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00020">20</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>

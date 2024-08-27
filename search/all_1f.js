@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['🤗_20model_20settings_0',['🤗 Model Settings',['../index.html#autotoc_md11',1,'🤗 Model Settings'],['../index.html#autotoc_md16',1,'🤗 Model Settings']]]
+  ['💻_20setup_20settings_0',['💻 Setup Settings',['../index.html#autotoc_md10',1,'💻 Setup Settings'],['../index.html#autotoc_md14',1,'💻 Setup Settings']]]
 ];

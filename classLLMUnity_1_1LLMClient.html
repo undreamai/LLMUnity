@@ -47,7 +47,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_tiny.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">LLM for Unity
-   &#160;<span id="projectnumber">v2.1.1</span>
+   &#160;<span id="projectnumber">v2.2.0</span>
    </div>
    <div id="projectbrief">Create characters in Unity with LLMs!</div>
   </td>
@@ -162,6 +162,9 @@ Additional Inherited Members</h2></td></tr>
 <tr class="memitem:a63335d87492fc928872b146d61f5cb4e inherit pub_methods_classLLMUnity_1_1LLMCharacter" id="r_a63335d87492fc928872b146d61f5cb4e"><td class="memItemLeft" align="right" valign="top">async Task&lt; string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMCharacter.html#a63335d87492fc928872b146d61f5cb4e">Detokenize</a> (List&lt; int &gt; tokens, Callback&lt; string &gt; callback=null)</td></tr>
 <tr class="memdesc:a63335d87492fc928872b146d61f5cb4e inherit pub_methods_classLLMUnity_1_1LLMCharacter"><td class="mdescLeft">&#160;</td><td class="mdescRight">Detokenises the provided tokens to a string.  <br /></td></tr>
 <tr class="separator:a63335d87492fc928872b146d61f5cb4e inherit pub_methods_classLLMUnity_1_1LLMCharacter"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a329b6f6f2f77bfe45508b7d8c49af422 inherit pub_methods_classLLMUnity_1_1LLMCharacter" id="r_a329b6f6f2f77bfe45508b7d8c49af422"><td class="memItemLeft" align="right" valign="top">async Task&lt; List&lt; float &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMCharacter.html#a329b6f6f2f77bfe45508b7d8c49af422">Embeddings</a> (string query, Callback&lt; List&lt; float &gt; &gt; callback=null)</td></tr>
+<tr class="memdesc:a329b6f6f2f77bfe45508b7d8c49af422 inherit pub_methods_classLLMUnity_1_1LLMCharacter"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the embeddings of the provided input.  <br /></td></tr>
+<tr class="separator:a329b6f6f2f77bfe45508b7d8c49af422 inherit pub_methods_classLLMUnity_1_1LLMCharacter"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a78a2e9a3a6b95a86f6eac824fc302858 inherit pub_methods_classLLMUnity_1_1LLMCharacter" id="r_a78a2e9a3a6b95a86f6eac824fc302858"><td class="memItemLeft" align="right" valign="top">async Task&lt; string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMCharacter.html#a78a2e9a3a6b95a86f6eac824fc302858">Save</a> (string filename)</td></tr>
 <tr class="memdesc:a78a2e9a3a6b95a86f6eac824fc302858 inherit pub_methods_classLLMUnity_1_1LLMCharacter"><td class="mdescLeft">&#160;</td><td class="mdescRight">Saves the chat history and cache to the provided filename / relative path.  <br /></td></tr>
 <tr class="separator:a78a2e9a3a6b95a86f6eac824fc302858 inherit pub_methods_classLLMUnity_1_1LLMCharacter"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -187,6 +190,9 @@ Additional Inherited Members</h2></td></tr>
 <tr class="memitem:ab1f57c929f3b6d690076bc59b0bbb785 inherit pub_attribs_classLLMUnity_1_1LLMCharacter" id="r_ab1f57c929f3b6d690076bc59b0bbb785"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMCharacter.html#ab1f57c929f3b6d690076bc59b0bbb785">port</a> = 13333</td></tr>
 <tr class="memdesc:ab1f57c929f3b6d690076bc59b0bbb785 inherit pub_attribs_classLLMUnity_1_1LLMCharacter"><td class="mdescLeft">&#160;</td><td class="mdescRight">port to use for the LLM server  <br /></td></tr>
 <tr class="separator:ab1f57c929f3b6d690076bc59b0bbb785 inherit pub_attribs_classLLMUnity_1_1LLMCharacter"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a46872a74a6f62503a28bba4929621c42 inherit pub_attribs_classLLMUnity_1_1LLMCharacter" id="r_a46872a74a6f62503a28bba4929621c42"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMCharacter.html#a46872a74a6f62503a28bba4929621c42">numRetries</a> = -1</td></tr>
+<tr class="memdesc:a46872a74a6f62503a28bba4929621c42 inherit pub_attribs_classLLMUnity_1_1LLMCharacter"><td class="mdescLeft">&#160;</td><td class="mdescRight">number of retries to use for the LLM server requests (-1 = infinite)  <br /></td></tr>
+<tr class="separator:a46872a74a6f62503a28bba4929621c42 inherit pub_attribs_classLLMUnity_1_1LLMCharacter"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af5d8f07cad7066700b19689a0b493d38 inherit pub_attribs_classLLMUnity_1_1LLMCharacter" id="r_af5d8f07cad7066700b19689a0b493d38"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMCharacter.html#af5d8f07cad7066700b19689a0b493d38">save</a> = &quot;&quot;</td></tr>
 <tr class="memdesc:af5d8f07cad7066700b19689a0b493d38 inherit pub_attribs_classLLMUnity_1_1LLMCharacter"><td class="mdescLeft">&#160;</td><td class="mdescRight">file to save the chat history. The file is saved only for Chat calls with addToHistory set to true. The file will be saved within the persistentDataPath directory (see <a href="https://docs.unity3d.com/ScriptReference/Application-persistentDataPath.html">https://docs.unity3d.com/ScriptReference/Application-persistentDataPath.html</a>).  <br /></td></tr>
 <tr class="separator:af5d8f07cad7066700b19689a0b493d38 inherit pub_attribs_classLLMUnity_1_1LLMCharacter"><td class="memSeparator" colspan="2">&#160;</td></tr>

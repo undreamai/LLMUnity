@@ -1,19 +1,17 @@
 var searchData=
 [
-  ['cacheprompt_0',['cachePrompt',['../classLLMUnity_1_1LLMCharacter.html#a03d3a1dff711f98d27726a190fe1a215',1,'LLMUnity::LLMCharacter']]],
-  ['cancelrequest_1',['CancelRequest',['../classLLMUnity_1_1LLM.html#a281d49a8f23fbf506d178a875b43c688',1,'LLMUnity::LLM']]],
-  ['cancelrequests_2',['CancelRequests',['../classLLMUnity_1_1LLMCharacter.html#a1c8c35f4e0c2d3d381561fd42e1e25d7',1,'LLMUnity::LLMCharacter']]],
-  ['chat_3',['Chat',['../classLLMUnity_1_1LLMCharacter.html#a92800650189059a2eaf572659a8ca1a0',1,'LLMUnity::LLMCharacter']]],
-  ['chat_20settings_4',['Chat Settings',['../index.html#autotoc_md12',1,'🗨️ Chat Settings'],['../index.html#autotoc_md15',1,'🗨️ Chat Settings']]],
-  ['chat_20templates_5',['Chat Templates',['../group__template.html',1,'']]],
-  ['chatmltemplate_6',['ChatMLTemplate',['../classLLMUnity_1_1ChatMLTemplate.html',1,'LLMUnity']]],
-  ['chattemplate_7',['ChatTemplate',['../classLLMUnity_1_1ChatTemplate.html',1,'LLMUnity']]],
-  ['chattemplate_8',['chatTemplate',['../classLLMUnity_1_1LLM.html#ac45dcfa1ea44a94b26642ab844b0e0dd',1,'LLMUnity::LLM']]],
-  ['clearerrorcallbacks_9',['ClearErrorCallBacks',['../classLLMUnity_1_1LLMUnitySetup.html#a7d41394dd57b4a3d89c1a2d8628f7d28',1,'LLMUnity::LLMUnitySetup']]],
-  ['community_20meta_20llama_203_208b_20instruct_20gguf_10',['modified by: lmstudio-community/Meta-Llama-3-8B-Instruct-GGUF',['../md_Third_01Party_01Notices.html#autotoc_md25',1,'']]],
-  ['complete_11',['Complete',['../classLLMUnity_1_1LLMCharacter.html#af0ab230552052b379b89f4c13c7c80f4',1,'LLMUnity::LLMCharacter']]],
-  ['completion_12',['Completion',['../classLLMUnity_1_1LLM.html#ac50c648dc8594b31b7d3bbd54e5c3ab9',1,'LLMUnity::LLM']]],
-  ['computeprompt_13',['ComputePrompt',['../classLLMUnity_1_1ChatTemplate.html#a470480717841821742c57c931ae6307c',1,'LLMUnity.ChatTemplate.ComputePrompt()'],['../classLLMUnity_1_1Phi3Template.html#adda6f14e44264196bff147351f839cc4',1,'LLMUnity.Phi3Template.ComputePrompt()']]],
-  ['contextsize_14',['contextSize',['../classLLMUnity_1_1LLM.html#a8e358f7a834e6ede3cc19aa7142e67e8',1,'LLMUnity::LLM']]],
-  ['cpp_15',['llama.cpp',['../md_Third_01Party_01Notices.html#autotoc_md20',1,'']]]
+  ['a_20glance_0',['At a glance',['../index.html#autotoc_md1',1,'']]],
+  ['adderrorcallback_1',['AddErrorCallBack',['../classLLMUnity_1_1LLMUnitySetup.html#aeaa7ccc72452c140af55987d8e5efa64',1,'LLMUnity::LLMUnitySetup']]],
+  ['addlora_2',['AddLora',['../classLLMUnity_1_1LLM.html#a5c4cd1f8b959b1f36c8c50d08ee114c4',1,'LLMUnity::LLM']]],
+  ['advancedoptions_3',['advancedOptions',['../classLLMUnity_1_1LLM.html#a6f40f3b1281cce08d0c0327943b32cd7',1,'LLMUnity.LLM.advancedOptions'],['../classLLMUnity_1_1LLMCharacter.html#ab180e58b83e3f10c09e620c42542bf08',1,'LLMUnity.LLMCharacter.advancedOptions']]],
+  ['afrideva_20smol_5fllama_20220m_20openhermes_20gguf_4',['modified by: afrideva/smol_llama-220M-openhermes-GGUF',['../md_Third_01Party_01Notices.html#autotoc_md37',1,'']]],
+  ['ainame_5',['AIName',['../classLLMUnity_1_1LLMCharacter.html#a232035352610374224b6e2dc3da297da',1,'LLMUnity::LLMCharacter']]],
+  ['alpacatemplate_6',['AlpacaTemplate',['../classLLMUnity_1_1AlpacaTemplate.html',1,'LLMUnity']]],
+  ['and_20information_7',['THIRD-PARTY SOFTWARE NOTICES AND INFORMATION',['../md_Third_01Party_01Notices.html',1,'']]],
+  ['androidgetnumbigcores_8',['AndroidGetNumBigCores',['../classLLMUnity_1_1LLMUnitySetup.html#aa037fe48a1b79528ebcf34b81412c441',1,'LLMUnity::LLMUnitySetup']]],
+  ['androidgetnumbigcorescapacity_9',['AndroidGetNumBigCoresCapacity',['../classLLMUnity_1_1LLMUnitySetup.html#a178786e4a60fe1a30f702457f47013ca',1,'LLMUnity::LLMUnitySetup']]],
+  ['applyloras_10',['ApplyLoras',['../classLLMUnity_1_1LLM.html#a0d9a070a62030d25a2baa0178db3abeb',1,'LLMUnity::LLM']]],
+  ['asktemplate_11',['AskTemplate',['../classLLMUnity_1_1LLMCharacter.html#a49b2dc59a64d69ece5aea9c602d28f95',1,'LLMUnity::LLMCharacter']]],
+  ['at_20a_20glance_12',['At a glance',['../index.html#autotoc_md1',1,'']]],
+  ['awake_13',['Awake',['../classLLMUnity_1_1LLM.html#a4ab4bbfb8a83cbe4a19e7aef153c980e',1,'LLMUnity.LLM.Awake()'],['../classLLMUnity_1_1LLMCharacter.html#a1b2b5787e2695697962f520b0813aa3b',1,'LLMUnity.LLMCharacter.Awake()']]]
 ];

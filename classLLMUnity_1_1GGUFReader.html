@@ -47,7 +47,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_tiny.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">LLM for Unity
-   &#160;<span id="projectnumber">v2.1.1</span>
+   &#160;<span id="projectnumber">v2.2.0</span>
    </div>
    <div id="projectbrief">Create characters in Unity with LLMs!</div>
   </td>
@@ -131,9 +131,14 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:af80f28cb469725c6707e8aee1a332ac6" id="r_af80f28cb469725c6707e8aee1a332ac6"><td class="memItemLeft" align="right" valign="top">ReaderField&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af80f28cb469725c6707e8aee1a332ac6">GetField</a> (string key)</td></tr>
 <tr class="memdesc:af80f28cb469725c6707e8aee1a332ac6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allows to retrieve location info for a GGUF field.  <br /></td></tr>
 <tr class="separator:af80f28cb469725c6707e8aee1a332ac6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0df398e396896320ae8006d475f554a5" id="r_a0df398e396896320ae8006d475f554a5"><td class="memItemLeft" align="right" valign="top">byte[]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0df398e396896320ae8006d475f554a5">GetGenericField</a> (string key)</td></tr>
+<tr class="separator:a0df398e396896320ae8006d475f554a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad2355ac7292bda7f4e2168ada895c6d9" id="r_ad2355ac7292bda7f4e2168ada895c6d9"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad2355ac7292bda7f4e2168ada895c6d9">GetStringField</a> (string key)</td></tr>
 <tr class="memdesc:ad2355ac7292bda7f4e2168ada895c6d9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allows to retrieve a string GGUF field.  <br /></td></tr>
 <tr class="separator:ad2355ac7292bda7f4e2168ada895c6d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aceb694bcba141427638f39e96c34226e" id="r_aceb694bcba141427638f39e96c34226e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aceb694bcba141427638f39e96c34226e">GetIntField</a> (string key)</td></tr>
+<tr class="memdesc:aceb694bcba141427638f39e96c34226e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allows to retrieve an integer GGUF field.  <br /></td></tr>
+<tr class="separator:aceb694bcba141427638f39e96c34226e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -218,6 +223,69 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a0df398e396896320ae8006d475f554a5" name="a0df398e396896320ae8006d475f554a5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0df398e396896320ae8006d475f554a5">&#9670;&#160;</a></span>GetGenericField()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">byte[] LLMUnity.GGUFReader.GetGenericField </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>key</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="LLMGGUF_8cs_source.html#l00128">128</a> of file <a class="el" href="LLMGGUF_8cs_source.html">LLMGGUF.cs</a>.</p>
+
+</div>
+</div>
+<a id="aceb694bcba141427638f39e96c34226e" name="aceb694bcba141427638f39e96c34226e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aceb694bcba141427638f39e96c34226e">&#9670;&#160;</a></span>GetIntField()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int LLMUnity.GGUFReader.GetIntField </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>key</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Allows to retrieve an integer GGUF field. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">key</td><td>GGUF field to retrieve </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Retrieved GGUF value </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="LLMGGUF_8cs_source.html#l00152">152</a> of file <a class="el" href="LLMGGUF_8cs_source.html">LLMGGUF.cs</a>.</p>
+
+</div>
+</div>
 <a id="ad2355ac7292bda7f4e2168ada895c6d9" name="ad2355ac7292bda7f4e2168ada895c6d9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad2355ac7292bda7f4e2168ada895c6d9">&#9670;&#160;</a></span>GetStringField()</h2>
 
@@ -250,7 +318,7 @@ Public Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Retrieved GGUF value </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMGGUF_8cs_source.html#l00133">133</a> of file <a class="el" href="LLMGGUF_8cs_source.html">LLMGGUF.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMGGUF_8cs_source.html#l00140">140</a> of file <a class="el" href="LLMGGUF_8cs_source.html">LLMGGUF.cs</a>.</p>
 
 </div>
 </div>

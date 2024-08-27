@@ -6,5 +6,5 @@ var searchData=
   ['clearerrorcallbacks_3',['ClearErrorCallBacks',['../classLLMUnity_1_1LLMUnitySetup.html#a7d41394dd57b4a3d89c1a2d8628f7d28',1,'LLMUnity::LLMUnitySetup']]],
   ['complete_4',['Complete',['../classLLMUnity_1_1LLMCharacter.html#af0ab230552052b379b89f4c13c7c80f4',1,'LLMUnity::LLMCharacter']]],
   ['completion_5',['Completion',['../classLLMUnity_1_1LLM.html#ac50c648dc8594b31b7d3bbd54e5c3ab9',1,'LLMUnity::LLM']]],
-  ['computeprompt_6',['ComputePrompt',['../classLLMUnity_1_1ChatTemplate.html#a470480717841821742c57c931ae6307c',1,'LLMUnity.ChatTemplate.ComputePrompt()'],['../classLLMUnity_1_1Phi3Template.html#adda6f14e44264196bff147351f839cc4',1,'LLMUnity.Phi3Template.ComputePrompt()']]]
+  ['computeprompt_6',['ComputePrompt',['../classLLMUnity_1_1ChatTemplate.html#acb15dfd2a970f019f18ecaa83cf03d01',1,'LLMUnity.ChatTemplate.ComputePrompt()'],['../classLLMUnity_1_1GemmaTemplate.html#aa5db7c82bc3d646998d7acb631061165',1,'LLMUnity.GemmaTemplate.ComputePrompt()'],['../classLLMUnity_1_1Phi3Template.html#aeedd597d07a95311fd6a80324b139c2a',1,'LLMUnity.Phi3Template.ComputePrompt()']]]
 ];

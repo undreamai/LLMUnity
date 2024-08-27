@@ -47,7 +47,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_tiny.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">LLM for Unity
-   &#160;<span id="projectnumber">v2.1.1</span>
+   &#160;<span id="projectnumber">v2.2.0</span>
    </div>
    <div id="projectbrief">Create characters in Unity with LLMs!</div>
   </td>
@@ -137,16 +137,29 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a4ab4bbfb8a83cbe4a19e7aef153c980e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad3499733035a57a839d22c66f39d3f36" id="r_ad3499733035a57a839d22c66f39d3f36"><td class="memItemLeft" align="right" valign="top">async Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad3499733035a57a839d22c66f39d3f36">WaitUntilReady</a> ()</td></tr>
 <tr class="separator:ad3499733035a57a839d22c66f39d3f36"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ace5dff4dbab504b58bab62c5d1ea9ef5" id="r_ace5dff4dbab504b58bab62c5d1ea9ef5"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ace5dff4dbab504b58bab62c5d1ea9ef5">GetModelLoraPath</a> (string path)</td></tr>
-<tr class="separator:ace5dff4dbab504b58bab62c5d1ea9ef5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3cb56c397647a53e7c2df3b1443ad767" id="r_a3cb56c397647a53e7c2df3b1443ad767"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3cb56c397647a53e7c2df3b1443ad767">SetModelLoraPath</a> (string path, bool <a class="el" href="#a80c81993fcc33ee253ffec2f3d1302fd">lora</a>)</td></tr>
-<tr class="separator:a3cb56c397647a53e7c2df3b1443ad767"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9cdc4850537724d94bf88e7b78372883" id="r_a9cdc4850537724d94bf88e7b78372883"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9cdc4850537724d94bf88e7b78372883">SetModel</a> (string path)</td></tr>
 <tr class="memdesc:a9cdc4850537724d94bf88e7b78372883"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allows to set the model used by the LLM. The model provided is copied to the Assets/StreamingAssets folder that allows it to also work in the build. Models supported are in .gguf format.  <br /></td></tr>
 <tr class="separator:a9cdc4850537724d94bf88e7b78372883"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab7cf23df4b4e6e545eea1f929d748440" id="r_ab7cf23df4b4e6e545eea1f929d748440"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab7cf23df4b4e6e545eea1f929d748440">SetLora</a> (string path)</td></tr>
-<tr class="memdesc:ab7cf23df4b4e6e545eea1f929d748440"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allows to set a LORA model to use in the LLM. The model provided is copied to the Assets/StreamingAssets folder that allows it to also work in the build. Models supported are in .bin format.  <br /></td></tr>
-<tr class="separator:ab7cf23df4b4e6e545eea1f929d748440"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5605295ba173a06f26099125681753c6" id="r_a5605295ba173a06f26099125681753c6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5605295ba173a06f26099125681753c6">SetLora</a> (string path, float weight=1)</td></tr>
+<tr class="memdesc:a5605295ba173a06f26099125681753c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allows to set a LORA model to use in the LLM. The model provided is copied to the Assets/StreamingAssets folder that allows it to also work in the build. Models supported are in .gguf format.  <br /></td></tr>
+<tr class="separator:a5605295ba173a06f26099125681753c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5c4cd1f8b959b1f36c8c50d08ee114c4" id="r_a5c4cd1f8b959b1f36c8c50d08ee114c4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5c4cd1f8b959b1f36c8c50d08ee114c4">AddLora</a> (string path, float weight=1)</td></tr>
+<tr class="memdesc:a5c4cd1f8b959b1f36c8c50d08ee114c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allows to add a LORA model to use in the LLM. The model provided is copied to the Assets/StreamingAssets folder that allows it to also work in the build. Models supported are in .gguf format.  <br /></td></tr>
+<tr class="separator:a5c4cd1f8b959b1f36c8c50d08ee114c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a716e19a5161ca61b2ba4e64da3e4cac2" id="r_a716e19a5161ca61b2ba4e64da3e4cac2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a716e19a5161ca61b2ba4e64da3e4cac2">RemoveLora</a> (string path)</td></tr>
+<tr class="memdesc:a716e19a5161ca61b2ba4e64da3e4cac2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allows to remove a LORA model from the LLM. Models supported are in .gguf format.  <br /></td></tr>
+<tr class="separator:a716e19a5161ca61b2ba4e64da3e4cac2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab02fa0f6e97b8c7cbe85806885727200" id="r_ab02fa0f6e97b8c7cbe85806885727200"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab02fa0f6e97b8c7cbe85806885727200">RemoveLoras</a> ()</td></tr>
+<tr class="memdesc:ab02fa0f6e97b8c7cbe85806885727200"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allows to remove all LORA models from the LLM.  <br /></td></tr>
+<tr class="separator:ab02fa0f6e97b8c7cbe85806885727200"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a26e01ce3a14c30da752cf216acfbb3ff" id="r_a26e01ce3a14c30da752cf216acfbb3ff"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a26e01ce3a14c30da752cf216acfbb3ff">SetLoraWeight</a> (string path, float weight)</td></tr>
+<tr class="memdesc:a26e01ce3a14c30da752cf216acfbb3ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allows to change the weight (scale) of a LORA model in the LLM.  <br /></td></tr>
+<tr class="separator:a26e01ce3a14c30da752cf216acfbb3ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1bd7e0bc45826dba87990fa088a32bf9" id="r_a1bd7e0bc45826dba87990fa088a32bf9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1bd7e0bc45826dba87990fa088a32bf9">SetLoraWeights</a> (Dictionary&lt; string, float &gt; loraToWeight)</td></tr>
+<tr class="memdesc:a1bd7e0bc45826dba87990fa088a32bf9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allows to change the weights (scale) of the LORA models in the LLM.  <br /></td></tr>
+<tr class="separator:a1bd7e0bc45826dba87990fa088a32bf9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5ef8b94e4aebb09c42713d91bf3e42e5" id="r_a5ef8b94e4aebb09c42713d91bf3e42e5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5ef8b94e4aebb09c42713d91bf3e42e5">UpdateLoras</a> ()</td></tr>
+<tr class="separator:a5ef8b94e4aebb09c42713d91bf3e42e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad4c7250286a33527cb211bd980f1c307" id="r_ad4c7250286a33527cb211bd980f1c307"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad4c7250286a33527cb211bd980f1c307">SetTemplate</a> (string templateName, bool setDirty=true)</td></tr>
 <tr class="memdesc:ad4c7250286a33527cb211bd980f1c307"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the chat template for the LLM.  <br /></td></tr>
 <tr class="separator:ad4c7250286a33527cb211bd980f1c307"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -165,6 +178,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a4f7107b488a3592dca7555371d91f763" id="r_a4f7107b488a3592dca7555371d91f763"><td class="memItemLeft" align="right" valign="top">async Task&lt; string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4f7107b488a3592dca7555371d91f763">Detokenize</a> (string json)</td></tr>
 <tr class="memdesc:a4f7107b488a3592dca7555371d91f763"><td class="mdescLeft">&#160;</td><td class="mdescRight">Detokenises the provided query.  <br /></td></tr>
 <tr class="separator:a4f7107b488a3592dca7555371d91f763"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aef2e7a567f59048336950592f563b720" id="r_aef2e7a567f59048336950592f563b720"><td class="memItemLeft" align="right" valign="top">async Task&lt; string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aef2e7a567f59048336950592f563b720">Embeddings</a> (string json)</td></tr>
+<tr class="memdesc:aef2e7a567f59048336950592f563b720"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the embeddings of the provided query.  <br /></td></tr>
+<tr class="separator:aef2e7a567f59048336950592f563b720"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0d9a070a62030d25a2baa0178db3abeb" id="r_a0d9a070a62030d25a2baa0178db3abeb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0d9a070a62030d25a2baa0178db3abeb">ApplyLoras</a> ()</td></tr>
+<tr class="memdesc:a0d9a070a62030d25a2baa0178db3abeb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the lora scale, only works after the LLM service has started.  <br /></td></tr>
+<tr class="separator:a0d9a070a62030d25a2baa0178db3abeb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c8f169076c614dd7630268e64296130" id="r_a1c8f169076c614dd7630268e64296130"><td class="memItemLeft" align="right" valign="top">async Task&lt; List&lt; LoraWeightResult &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1c8f169076c614dd7630268e64296130">ListLoras</a> ()</td></tr>
+<tr class="memdesc:a1c8f169076c614dd7630268e64296130"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets a list of the lora adapters.  <br /></td></tr>
+<tr class="separator:a1c8f169076c614dd7630268e64296130"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a16381a5907592831a0ea35137b9921ff" id="r_a16381a5907592831a0ea35137b9921ff"><td class="memItemLeft" align="right" valign="top">async Task&lt; string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a16381a5907592831a0ea35137b9921ff">Slot</a> (string json)</td></tr>
 <tr class="memdesc:a16381a5907592831a0ea35137b9921ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allows to save / restore the state of a slot.  <br /></td></tr>
 <tr class="separator:a16381a5907592831a0ea35137b9921ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -187,6 +209,12 @@ Public Member Functions</h2></td></tr>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a1f41b07eb274fd6194f0e97eea4ca331" id="r_a1f41b07eb274fd6194f0e97eea4ca331"><td class="memItemLeft" align="right" valign="top">static async Task&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1f41b07eb274fd6194f0e97eea4ca331">WaitUntilModelSetup</a> (Callback&lt; float &gt; downloadProgressCallback=null)</td></tr>
 <tr class="separator:a1f41b07eb274fd6194f0e97eea4ca331"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e3224c7064a41aef93647affda063d7" id="r_a2e3224c7064a41aef93647affda063d7"><td class="memItemLeft" align="right" valign="top">static string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2e3224c7064a41aef93647affda063d7">GetLLMManagerAsset</a> (string path)</td></tr>
+<tr class="separator:a2e3224c7064a41aef93647affda063d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a94f79708bfb1ab2ad303b62310213ad0" id="r_a94f79708bfb1ab2ad303b62310213ad0"><td class="memItemLeft" align="right" valign="top">static string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a94f79708bfb1ab2ad303b62310213ad0">GetLLMManagerAssetEditor</a> (string path)</td></tr>
+<tr class="separator:a94f79708bfb1ab2ad303b62310213ad0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a53edd8bdbca587cf5b6166e5ff5b8c63" id="r_a53edd8bdbca587cf5b6166e5ff5b8c63"><td class="memItemLeft" align="right" valign="top">static string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a53edd8bdbca587cf5b6166e5ff5b8c63">GetLLMManagerAssetRuntime</a> (string path)</td></tr>
+<tr class="separator:a53edd8bdbca587cf5b6166e5ff5b8c63"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -230,8 +258,14 @@ Public Attributes</h2></td></tr>
 <tr class="memdesc:ac45dcfa1ea44a94b26642ab844b0e0dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Chat template used for the model.  <br /></td></tr>
 <tr class="separator:ac45dcfa1ea44a94b26642ab844b0e0dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a80c81993fcc33ee253ffec2f3d1302fd" id="r_a80c81993fcc33ee253ffec2f3d1302fd"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a80c81993fcc33ee253ffec2f3d1302fd">lora</a> = &quot;&quot;</td></tr>
-<tr class="memdesc:a80c81993fcc33ee253ffec2f3d1302fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">the path of the LORA model being used (relative to the Assets/StreamingAssets folder). Models with .bin format are allowed.  <br /></td></tr>
+<tr class="memdesc:a80c81993fcc33ee253ffec2f3d1302fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">the paths of the LORA models being used (relative to the Assets/StreamingAssets folder). Models with .gguf format are allowed.  <br /></td></tr>
 <tr class="separator:a80c81993fcc33ee253ffec2f3d1302fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae1093ec1e0baaab9620276c7a628649a" id="r_ae1093ec1e0baaab9620276c7a628649a"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae1093ec1e0baaab9620276c7a628649a">loraWeights</a> = &quot;&quot;</td></tr>
+<tr class="memdesc:ae1093ec1e0baaab9620276c7a628649a"><td class="mdescLeft">&#160;</td><td class="mdescRight">the weights of the LORA models being used.  <br /></td></tr>
+<tr class="separator:ae1093ec1e0baaab9620276c7a628649a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac4cd7573f92b344e8171a6c88bbf0da3" id="r_ac4cd7573f92b344e8171a6c88bbf0da3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac4cd7573f92b344e8171a6c88bbf0da3">flashAttention</a> = false</td></tr>
+<tr class="memdesc:ac4cd7573f92b344e8171a6c88bbf0da3"><td class="mdescLeft">&#160;</td><td class="mdescRight">enable use of flash attention  <br /></td></tr>
+<tr class="separator:ac4cd7573f92b344e8171a6c88bbf0da3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="properties" name="properties"></a>
 Properties</h2></td></tr>
@@ -251,7 +285,7 @@ Properties</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class implementing the LLM server. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00030">30</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00018">18</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="aea7584d7316ab288f016646e1782fc79" name="aea7584d7316ab288f016646e1782fc79"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aea7584d7316ab288f016646e1782fc79">&#9670;&#160;</a></span>LLM()</h2>
@@ -276,11 +310,80 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00087">87</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00083">83</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a5c4cd1f8b959b1f36c8c50d08ee114c4" name="a5c4cd1f8b959b1f36c8c50d08ee114c4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5c4cd1f8b959b1f36c8c50d08ee114c4">&#9670;&#160;</a></span>AddLora()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void LLMUnity.LLM.AddLora </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>path</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>weight</em><span class="paramdefsep"> = </span><span class="paramdefval">1</span></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Allows to add a LORA model to use in the LLM. The model provided is copied to the Assets/StreamingAssets folder that allows it to also work in the build. Models supported are in .gguf format. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">path</td><td>path to LORA model to use (.gguf format)</td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00231">231</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+
+</div>
+</div>
+<a id="a0d9a070a62030d25a2baa0178db3abeb" name="a0d9a070a62030d25a2baa0178db3abeb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0d9a070a62030d25a2baa0178db3abeb">&#9670;&#160;</a></span>ApplyLoras()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void LLMUnity.LLM.ApplyLoras </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sets the lora scale, only works after the LLM service has started. </p>
+<dl class="section return"><dt>Returns</dt><dd>switch result</dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00598">598</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+
+</div>
+</div>
 <a id="a4ab4bbfb8a83cbe4a19e7aef153c980e" name="a4ab4bbfb8a83cbe4a19e7aef153c980e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4ab4bbfb8a83cbe4a19e7aef153c980e">&#9670;&#160;</a></span>Awake()</h2>
 
@@ -306,7 +409,7 @@ Properties</h2></td></tr>
 
 <p>The Unity Awake function that starts the LLM server. The server can be started asynchronously if the asynchronousStartup option is set. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00096">96</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00101">101</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -341,7 +444,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00490">490</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00681">681</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -382,7 +485,7 @@ Properties</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>completion result</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00465">465</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00656">656</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -411,7 +514,7 @@ Properties</h2></td></tr>
 
 <p>Stops and destroys the LLM. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00500">500</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00691">691</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -447,12 +550,12 @@ Properties</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>detokenisation result</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00434">434</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00569">569</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
-<a id="ace5dff4dbab504b58bab62c5d1ea9ef5" name="ace5dff4dbab504b58bab62c5d1ea9ef5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ace5dff4dbab504b58bab62c5d1ea9ef5">&#9670;&#160;</a></span>GetModelLoraPath()</h2>
+<a id="aef2e7a567f59048336950592f563b720" name="aef2e7a567f59048336950592f563b720"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aef2e7a567f59048336950592f563b720">&#9670;&#160;</a></span>Embeddings()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -461,9 +564,9 @@ Properties</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">string LLMUnity.LLM.GetModelLoraPath </td>
+          <td class="memname">async Task&lt; string &gt; LLMUnity.LLM.Embeddings </td>
           <td>(</td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>path</em></span></td><td>)</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>json</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -474,7 +577,97 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00131">131</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p>Computes the embeddings of the provided query. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">json</td><td>json request containing the query</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>embeddings result</dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00584">584</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+
+</div>
+</div>
+<a id="a2e3224c7064a41aef93647affda063d7" name="a2e3224c7064a41aef93647affda063d7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2e3224c7064a41aef93647affda063d7">&#9670;&#160;</a></span>GetLLMManagerAsset()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static string LLMUnity.LLM.GetLLMManagerAsset </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>path</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00137">137</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+
+</div>
+</div>
+<a id="a94f79708bfb1ab2ad303b62310213ad0" name="a94f79708bfb1ab2ad303b62310213ad0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a94f79708bfb1ab2ad303b62310213ad0">&#9670;&#160;</a></span>GetLLMManagerAssetEditor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static string LLMUnity.LLM.GetLLMManagerAssetEditor </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>path</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00145">145</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+
+</div>
+</div>
+<a id="a53edd8bdbca587cf5b6166e5ff5b8c63" name="a53edd8bdbca587cf5b6166e5ff5b8c63"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a53edd8bdbca587cf5b6166e5ff5b8c63">&#9670;&#160;</a></span>GetLLMManagerAssetRuntime()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static string LLMUnity.LLM.GetLLMManagerAssetRuntime </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>path</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00174">174</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -504,7 +697,37 @@ Properties</h2></td></tr>
 <p>Returns the chat template of the LLM. </p>
 <dl class="section return"><dt>Returns</dt><dd>chat template of the LLM</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00213">213</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00309">309</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+
+</div>
+</div>
+<a id="a1c8f169076c614dd7630268e64296130" name="a1c8f169076c614dd7630268e64296130"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1c8f169076c614dd7630268e64296130">&#9670;&#160;</a></span>ListLoras()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">async Task&lt; List&lt; LoraWeightResult &gt; &gt; LLMUnity.LLM.ListLoras </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gets a list of the lora adapters. </p>
+<dl class="section return"><dt>Returns</dt><dd>list of lara adapters</dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00622">622</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -533,7 +756,7 @@ Properties</h2></td></tr>
 
 <p>The Unity OnDestroy function called when the onbject is destroyed. The function StopProcess is called to stop the LLM server. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00531">531</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00725">725</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -569,7 +792,71 @@ Properties</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00335">335</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00449">449</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+
+</div>
+</div>
+<a id="a716e19a5161ca61b2ba4e64da3e4cac2" name="a716e19a5161ca61b2ba4e64da3e4cac2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a716e19a5161ca61b2ba4e64da3e4cac2">&#9670;&#160;</a></span>RemoveLora()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void LLMUnity.LLM.RemoveLora </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>path</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Allows to remove a LORA model from the LLM. Models supported are in .gguf format. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">path</td><td>path to LORA model to remove (.gguf format)</td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00243">243</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+
+</div>
+</div>
+<a id="ab02fa0f6e97b8c7cbe85806885727200" name="ab02fa0f6e97b8c7cbe85806885727200"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab02fa0f6e97b8c7cbe85806885727200">&#9670;&#160;</a></span>RemoveLoras()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void LLMUnity.LLM.RemoveLoras </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Allows to remove all LORA models from the LLM. </p>
+
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00253">253</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -596,12 +883,12 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00479">479</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00670">670</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
-<a id="ab7cf23df4b4e6e545eea1f929d748440" name="ab7cf23df4b4e6e545eea1f929d748440"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab7cf23df4b4e6e545eea1f929d748440">&#9670;&#160;</a></span>SetLora()</h2>
+<a id="a5605295ba173a06f26099125681753c6" name="a5605295ba173a06f26099125681753c6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5605295ba173a06f26099125681753c6">&#9670;&#160;</a></span>SetLora()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -612,7 +899,86 @@ Properties</h2></td></tr>
         <tr>
           <td class="memname">void LLMUnity.LLM.SetLora </td>
           <td>(</td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>path</em></span></td><td>)</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>path</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>weight</em><span class="paramdefsep"> = </span><span class="paramdefval">1</span></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Allows to set a LORA model to use in the LLM. The model provided is copied to the Assets/StreamingAssets folder that allows it to also work in the build. Models supported are in .gguf format. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">path</td><td>path to LORA model to use (.gguf format)</td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00218">218</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+
+</div>
+</div>
+<a id="a26e01ce3a14c30da752cf216acfbb3ff" name="a26e01ce3a14c30da752cf216acfbb3ff"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a26e01ce3a14c30da752cf216acfbb3ff">&#9670;&#160;</a></span>SetLoraWeight()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void LLMUnity.LLM.SetLoraWeight </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>path</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>weight</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Allows to change the weight (scale) of a LORA model in the LLM. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">path</td><td>path of LORA model to change (.gguf format)</td></tr>
+    <tr><td class="paramname">weight</td><td>weight of LORA</td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00265">265</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+
+</div>
+</div>
+<a id="a1bd7e0bc45826dba87990fa088a32bf9" name="a1bd7e0bc45826dba87990fa088a32bf9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1bd7e0bc45826dba87990fa088a32bf9">&#9670;&#160;</a></span>SetLoraWeights()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void LLMUnity.LLM.SetLoraWeights </td>
+          <td>(</td>
+          <td class="paramtype">Dictionary&lt; string, float &gt;</td>          <td class="paramname"><span class="paramname"><em>loraToWeight</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -623,15 +989,15 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Allows to set a LORA model to use in the LLM. The model provided is copied to the Assets/StreamingAssets folder that allows it to also work in the build. Models supported are in .bin format. </p>
+<p>Allows to change the weights (scale) of the LORA models in the LLM. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">path</td><td>path to LORA model to use (.bin format)</td></tr>
+    <tr><td class="paramname">loraToWeight</td><td>Dictionary (string, float) mapping the path of LORA models with weights to change</td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00188">188</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00276">276</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -666,38 +1032,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00168">168</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
-
-</div>
-</div>
-<a id="a3cb56c397647a53e7c2df3b1443ad767" name="a3cb56c397647a53e7c2df3b1443ad767"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3cb56c397647a53e7c2df3b1443ad767">&#9670;&#160;</a></span>SetModelLoraPath()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">string LLMUnity.LLM.SetModelLoraPath </td>
-          <td>(</td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>path</em>, </span></td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>lora</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00138">138</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00194">194</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -736,7 +1071,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00200">200</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00296">296</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -772,7 +1107,7 @@ Properties</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>slot result</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00449">449</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00640">640</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -808,7 +1143,7 @@ Properties</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>tokenisation result</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00419">419</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00554">554</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -837,7 +1172,34 @@ Properties</h2></td></tr>
 
 <p>The Unity Update function. It is used to retrieve the LLM replies. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00367">367</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00481">481</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+
+</div>
+</div>
+<a id="a5ef8b94e4aebb09c42713d91bf3e42e5" name="a5ef8b94e4aebb09c42713d91bf3e42e5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5ef8b94e4aebb09c42713d91bf3e42e5">&#9670;&#160;</a></span>UpdateLoras()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void LLMUnity.LLM.UpdateLoras </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00283">283</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -864,7 +1226,7 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00124">124</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00130">130</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -891,7 +1253,7 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00119">119</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00125">125</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -910,7 +1272,7 @@ Properties</h2></td></tr>
 
 <p>toggle to show/hide advanced options in the GameObject </p>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00033">33</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00021">21</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -928,7 +1290,7 @@ Properties</h2></td></tr>
 
 <p>a base prompt to use as a base for all LLMCharacter objects </p>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00056">56</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00044">44</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -946,7 +1308,7 @@ Properties</h2></td></tr>
 
 <p>Batch size for prompt processing. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00054">54</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00042">42</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -964,7 +1326,7 @@ Properties</h2></td></tr>
 
 <p>Chat template used for the model. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00070">70</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00058">58</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -982,7 +1344,7 @@ Properties</h2></td></tr>
 
 <p>Size of the prompt context (0 = context size of the model). This is the number of tokens the model can take as input when generating responses. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00052">52</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00040">40</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -1000,7 +1362,7 @@ Properties</h2></td></tr>
 
 <p>select to log the output of the LLM in the Unity Editor. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00045">45</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00033">33</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -1018,7 +1380,25 @@ Properties</h2></td></tr>
 
 <p>select to not destroy the LLM GameObject when loading a new Scene. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00049">49</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00037">37</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+
+</div>
+</div>
+<a id="ac4cd7573f92b344e8171a6c88bbf0da3" name="ac4cd7573f92b344e8171a6c88bbf0da3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac4cd7573f92b344e8171a6c88bbf0da3">&#9670;&#160;</a></span>flashAttention</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool LLMUnity.LLM.flashAttention = false</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>enable use of flash attention </p>
+
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00065">65</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -1034,9 +1414,27 @@ Properties</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>the path of the LORA model being used (relative to the Assets/StreamingAssets folder). Models with .bin format are allowed. </p>
+<p>the paths of the LORA models being used (relative to the Assets/StreamingAssets folder). Models with .gguf format are allowed. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00073">73</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00061">61</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+
+</div>
+</div>
+<a id="ae1093ec1e0baaab9620276c7a628649a" name="ae1093ec1e0baaab9620276c7a628649a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae1093ec1e0baaab9620276c7a628649a">&#9670;&#160;</a></span>loraWeights</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string LLMUnity.LLM.loraWeights = &quot;&quot;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>the weights of the LORA models being used. </p>
+
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00063">63</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -1054,7 +1452,7 @@ Properties</h2></td></tr>
 
 <p>the LLM model to use. Models with .gguf format are allowed. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00068">68</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00056">56</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -1072,7 +1470,7 @@ Properties</h2></td></tr>
 
 <p>number of model layers to offload to the GPU (0 = GPU not used). Use a large number i.e. &gt;30 to utilise the GPU as much as possible. If the user's GPU is not supported, the LLM will fall back to the CPU </p>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00043">43</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00031">31</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -1090,7 +1488,7 @@ Properties</h2></td></tr>
 
 <p>number of threads to use (-1 = all) </p>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00039">39</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00027">27</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -1108,7 +1506,7 @@ Properties</h2></td></tr>
 
 <p>number of prompts that can happen in parallel (-1 = number of LLMCharacter objects) </p>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00047">47</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00035">35</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -1126,7 +1524,7 @@ Properties</h2></td></tr>
 
 <p>port to use for the LLM server </p>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00037">37</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00025">25</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -1144,7 +1542,7 @@ Properties</h2></td></tr>
 
 <p>toggle to enable remote server functionality </p>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00035">35</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00023">23</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -1171,7 +1569,7 @@ Properties</h2></td></tr>
 
 <p>Boolean set to true if the server has failed to start. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00060">60</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00048">48</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -1197,7 +1595,7 @@ Properties</h2></td></tr>
 
 <p>Boolean set to true if the server has started and is ready to receive requests, false otherwise. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00064">64</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00052">52</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -1223,7 +1621,7 @@ Properties</h2></td></tr>
 
 <p>Boolean set to true if the models were not downloaded successfully. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00062">62</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00050">50</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -1249,7 +1647,7 @@ Properties</h2></td></tr>
 
 <p>Boolean set to true if the server has started and is ready to receive requests, false otherwise. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00058">58</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00046">46</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>

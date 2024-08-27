@@ -1,7 +1,7 @@
 var group__template =
 [
     [ "LLMUnity.ChatTemplate", "classLLMUnity_1_1ChatTemplate.html", [
-      [ "ComputePrompt", "classLLMUnity_1_1ChatTemplate.html#a470480717841821742c57c931ae6307c", null ],
+      [ "ComputePrompt", "classLLMUnity_1_1ChatTemplate.html#acb15dfd2a970f019f18ecaa83cf03d01", null ],
       [ "GetChatTemplateMatches", "classLLMUnity_1_1ChatTemplate.html#a503d59c8232b18f0b9ad139f438d186f", null ],
       [ "GetDescription", "classLLMUnity_1_1ChatTemplate.html#af073ef07917d61eefd6f2d861657fd38", null ],
       [ "GetName", "classLLMUnity_1_1ChatTemplate.html#aea386f3fcdd35a4a48aa701a9e31f12c", null ],
@@ -45,6 +45,13 @@ var group__template =
       [ "GetNameMatches", "classLLMUnity_1_1MistralChatTemplate.html#a36c069e46c9055fd85990e704a7d9ec2", null ],
       [ "GetStop", "classLLMUnity_1_1MistralChatTemplate.html#a798b015a67969d291ab0a3fa0cea1b77", null ]
     ] ],
+    [ "LLMUnity.GemmaTemplate", "classLLMUnity_1_1GemmaTemplate.html", [
+      [ "ComputePrompt", "classLLMUnity_1_1GemmaTemplate.html#aa5db7c82bc3d646998d7acb631061165", null ],
+      [ "GetDescription", "classLLMUnity_1_1GemmaTemplate.html#a9fff6e483dc025fdbab654119c5c49e0", null ],
+      [ "GetName", "classLLMUnity_1_1GemmaTemplate.html#ab48ecf4939938f28163ccd183de7c34a", null ],
+      [ "GetNameMatches", "classLLMUnity_1_1GemmaTemplate.html#a168e4535570168d6268e45287b11f2ae", null ],
+      [ "GetStop", "classLLMUnity_1_1GemmaTemplate.html#a1cc780b7a91cf3140713b353b65eeb54", null ]
+    ] ],
     [ "LLMUnity.AlpacaTemplate", "classLLMUnity_1_1AlpacaTemplate.html", [
       [ "GetDescription", "classLLMUnity_1_1AlpacaTemplate.html#a52132ef47bbf57bcdf8fe56fa071091d", null ],
       [ "GetName", "classLLMUnity_1_1AlpacaTemplate.html#a6b04ec010e4f61340718f975c97d1398", null ],
@@ -65,7 +72,7 @@ var group__template =
       [ "GetStop", "classLLMUnity_1_1Phi2Template.html#ac6c6a719728bafded61b57547bc16fa0", null ]
     ] ],
     [ "LLMUnity.Phi3Template", "classLLMUnity_1_1Phi3Template.html", [
-      [ "ComputePrompt", "classLLMUnity_1_1Phi3Template.html#adda6f14e44264196bff147351f839cc4", null ],
+      [ "ComputePrompt", "classLLMUnity_1_1Phi3Template.html#aeedd597d07a95311fd6a80324b139c2a", null ],
       [ "GetChatTemplateMatches", "classLLMUnity_1_1Phi3Template.html#acce2995beebab19eb00fe973ab21c49f", null ],
       [ "GetDescription", "classLLMUnity_1_1Phi3Template.html#a034efcf3a452e4f5f2fa1155b215a034", null ],
       [ "GetName", "classLLMUnity_1_1Phi3Template.html#ab5b68651d20623e0650a0e5282aefc27", null ],
