@@ -608,14 +608,17 @@ namespace LLMUnity
         /// Gets a list of the lora adapters
         /// </summary>
         /// <returns>list of lara adapters</returns>
-        public async Task<string> ListLoras()
+        public async Task<List<LoraWeightResult>> ListLoras()
         {
             AssertStarted();
             LLMNoInputReplyCallback callback = (IntPtr LLMObject, IntPtr strWrapper) =>
             {
                 llmlib.LLM_LoraList(LLMObject, strWrapper);
             };
-            return await LLMNoInputReply(callback);
+            string json = await LLMNoInputReply(callback);
+            if (String.IsNullOrEmpty(json)) return null;
+            LoraWeightResultList loraRequest = JsonUtility.FromJson<LoraWeightResultList>("{\"loraWeights\": " + json + "}");
+            return loraRequest.loraWeights;
         }
 
         /// <summary>
