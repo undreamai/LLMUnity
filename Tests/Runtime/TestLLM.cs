@@ -321,6 +321,23 @@ namespace LLMUnityTests
         }
     }
 
+    public class TestLLM_Remote : TestLLM
+    {
+        public override LLM CreateLLM()
+        {
+            LLM llm = base.CreateLLM();
+            llm.remote = true;
+            return llm;
+        }
+
+        public override LLMCharacter CreateLLMCharacter()
+        {
+            LLMCharacter llmCharacter = base.CreateLLMCharacter();
+            llmCharacter.remote = true;
+            return llmCharacter;
+        }
+    }
+
     public class TestLLM_Lora : TestLLM
     {
         protected string loraUrl = "https://huggingface.co/undreamer/Qwen2-0.5B-Instruct-ru-lora/resolve/main/Qwen2-0.5B-Instruct-ru-lora.gguf?download=true";
