@@ -1,18 +1,19 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace LLMUnity
 {
-    public class ResumingWebClient : WebClient
+    public class ResumingWebClient
     {
         private const int timeoutMs = 30 * 1000;
         private SynchronizationContext _context;
         private const int DefaultDownloadBufferLength = 65536;
-        List<WebRequest> requests = new List<WebRequest>();
+        private static readonly HttpClient client = new HttpClient { Timeout = TimeSpan.FromMilliseconds(timeoutMs) };
+        private List<HttpRequestMessage> requests = new List<HttpRequestMessage>();
 
         public ResumingWebClient()
         {
@@ -21,15 +22,25 @@ namespace LLMUnity
 
         public long GetURLFileSize(string address)
         {
-            return GetURLFileSize(new Uri(address));
+            return GetURLFileSize(new Uri(address)).GetAwaiter().GetResult();
         }
 
-        public long GetURLFileSize(Uri address)
+        public async Task<long> GetURLFileSize(Uri address)
         {
-            WebRequest request = GetWebRequest(address);
-            request.Method = "HEAD";
-            WebResponse response = request.GetResponse();
-            return response.ContentLength;
+            try
+            {
+                using (var request = new HttpRequestMessage(HttpMethod.Head, address))
+                {
+                    var response = await client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
+                    response.EnsureSuccessStatusCode();
+                    return response.Content.Headers.ContentLength ?? 0;
+                }
+            }
+            catch (Exception e)
+            {
+                LLMUnitySetup.LogError($"Error getting file size: {e.Message}");
+                return -1; // Return -1 if an error occurs
+            }
         }
 
         public Task DownloadFileTaskAsyncResume(Uri address, string fileName, bool resume = false, Callback<float> progressCallback = null)
@@ -47,10 +58,12 @@ namespace LLMUnity
                     if (fileInfo.Exists) bytesToSkip = fileInfo.Length;
                 }
 
-                WebRequest request = GetWebRequest(address);
-                if (request is HttpWebRequest webRequest && bytesToSkip > 0)
+                var request = new HttpRequestMessage(HttpMethod.Get, address);
+                requests.Add(request);
+
+                if (bytesToSkip > 0)
                 {
-                    long remoteFileSize = GetURLFileSize(address);
+                    long remoteFileSize = GetURLFileSize(address).GetAwaiter().GetResult();
                     if (bytesToSkip >= remoteFileSize)
                     {
                         LLMUnitySetup.Log($"File is already fully downloaded: {fileName}");
@@ -60,8 +73,7 @@ namespace LLMUnity
 
                     filemode = FileMode.Append;
                     LLMUnitySetup.Log($"File exists at {fileName}, skipping {bytesToSkip} bytes");
-                    webRequest.AddRange(bytesToSkip);
-                    webRequest.ReadWriteTimeout = timeoutMs;
+                    request.Headers.Range = new System.Net.Http.Headers.RangeHeaderValue(bytesToSkip, null);
                 }
 
                 fs = new FileStream(fileName, filemode, FileAccess.Write);
@@ -79,15 +91,15 @@ namespace LLMUnity
         public void CancelDownloadAsync()
         {
             LLMUnitySetup.Log("Cancellation requested, aborting download.");
-            foreach (WebRequest request in requests) AbortRequest(request);
+            foreach (var request in requests) AbortRequest(request);
             requests.Clear();
         }
 
-        public void AbortRequest(WebRequest request)
+        public void AbortRequest(HttpRequestMessage request)
         {
             try
             {
-                request?.Abort();
+                request?.Dispose();
             }
             catch (Exception e)
             {
@@ -95,27 +107,26 @@ namespace LLMUnity
             }
         }
 
-        private async void DownloadBitsAsync(WebRequest request, Stream writeStream, long bytesToSkip = 0, Callback<float> progressCallback = null, TaskCompletionSource<object> tcs = null)
+        private async void DownloadBitsAsync(HttpRequestMessage request, Stream writeStream, long bytesToSkip = 0, Callback<float> progressCallback = null, TaskCompletionSource<object> tcs = null)
         {
             try
             {
-                requests.Add(request);
-                WebResponse response = await request.GetResponseAsync().ConfigureAwait(false);
-
-                long contentLength = response.ContentLength;
-                byte[] copyBuffer = new byte[contentLength == -1 || contentLength > DefaultDownloadBufferLength ? DefaultDownloadBufferLength : contentLength];
-
-                long TotalBytesToReceive = Math.Max(contentLength, 0) + bytesToSkip;
-                long BytesReceived = bytesToSkip;
-
-                using (writeStream)
-                using (Stream readStream = response.GetResponseStream())
+                using (var response = await client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false))
                 {
-                    if (readStream != null)
+                    response.EnsureSuccessStatusCode();
+
+                    long contentLength = response.Content.Headers.ContentLength ?? -1;
+                    byte[] copyBuffer = new byte[contentLength == -1 || contentLength > DefaultDownloadBufferLength ? DefaultDownloadBufferLength : contentLength];
+
+                    long TotalBytesToReceive = Math.Max(contentLength, 0) + bytesToSkip;
+                    long BytesReceived = bytesToSkip;
+
+                    using (writeStream)
+                    using (Stream readStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false))
                     {
                         while (true)
                         {
-                            int bytesRead = await readStream.ReadAsync(new Memory<byte>(copyBuffer)).ConfigureAwait(false);
+                            int bytesRead = await readStream.ReadAsync(copyBuffer, 0, copyBuffer.Length).ConfigureAwait(false);
                             if (bytesRead == 0)
                             {
                                 break;
@@ -127,15 +138,15 @@ namespace LLMUnity
                                 PostProgressChanged(progressCallback, BytesReceived, TotalBytesToReceive);
                             }
 
-                            await writeStream.WriteAsync(new ReadOnlyMemory<byte>(copyBuffer, 0, bytesRead)).ConfigureAwait(false);
+                            await writeStream.WriteAsync(copyBuffer, 0, bytesRead).ConfigureAwait(false);
                         }
-                    }
 
-                    if (TotalBytesToReceive < 0)
-                    {
-                        TotalBytesToReceive = BytesReceived;
+                        if (TotalBytesToReceive < 0)
+                        {
+                            TotalBytesToReceive = BytesReceived;
+                        }
+                        PostProgressChanged(progressCallback, BytesReceived, TotalBytesToReceive);
                     }
-                    PostProgressChanged(progressCallback, BytesReceived, TotalBytesToReceive);
                 }
                 tcs.TrySetResult(true);
             }
@@ -144,7 +155,6 @@ namespace LLMUnity
                 tcs.TrySetException(e);
                 LLMUnitySetup.LogError(e.Message);
                 AbortRequest(request);
-                tcs.TrySetResult(false);
             }
             finally
             {
