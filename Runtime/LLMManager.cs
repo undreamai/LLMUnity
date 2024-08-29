@@ -27,13 +27,13 @@ namespace LLMUnity
             {
                 return LLMUnitySetup.RelativePath(assetPath, basePath);
             }
-            return path;
+            return Path.GetFileName(path);
         }
 
         public ModelEntry(string path, bool lora = false, string label = null, string url = null)
         {
             filename = GetFilenameOrRelativeAssetPath(path);
-            this.label = label == null ? filename : label;
+            this.label = label == null ? Path.GetFileName(filename) : label;
             this.lora = lora;
             this.path = LLMUnitySetup.GetFullPath(path);
             this.url = url;
