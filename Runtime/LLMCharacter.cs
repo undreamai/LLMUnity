@@ -11,6 +11,7 @@ using UnityEngine.Networking;
 
 namespace LLMUnity
 {
+    [DefaultExecutionOrder(-2)]
     /// @ingroup llm
     /// <summary>
     /// Class implementing the LLM characters.
