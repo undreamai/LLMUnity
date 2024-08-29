@@ -1,3 +1,9 @@
+## v2.2.1
+#### 🐛 Fixes
+
+- Fix naming showing full path when loading model (PR: #224)
+
+
 ## v2.2.0
 #### 🚀 Features
 
