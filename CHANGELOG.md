@@ -1,3 +1,9 @@
+## v2.2.2
+#### 🐛 Fixes
+
+- fix adding grammar from StreamingAssets (PR: #229)
+
+
 ## v2.2.1
 #### 🐛 Fixes
 

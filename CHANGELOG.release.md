@@ -1,5 +1,4 @@
 ### 🐛 Fixes
 
-- Fix naming showing full path when loading model (PR: #224)
-- Fix parallel prompts (PR: #226)
+- fix adding grammar from StreamingAssets (PR: #229)
 
