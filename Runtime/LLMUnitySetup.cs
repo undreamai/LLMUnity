@@ -420,6 +420,9 @@ namespace LLMUnity
                 LogError($"{assetPath} does not exist!");
                 return null;
             }
+            string assetDir = GetAssetPath();
+            if (IsSubPath(assetPath, assetDir)) return RelativePath(assetPath, assetDir);
+
             string filename = Path.GetFileName(assetPath);
             string fullPath = GetAssetPath(filename);
             AssetDatabase.StartAssetEditing();
