@@ -241,6 +241,8 @@ namespace LLMUnity
         private static class Android
         {
             public static IntPtr dlopen(string path) => dlopen(path, 1);
+
+#if UNITY_ANDROID
             // LoadLibrary for Android
             [DllImport("__Internal")]
             public static extern IntPtr dlopen(string filename, int flags);
@@ -252,6 +254,23 @@ namespace LLMUnity
             // FreeLibrary for Android
             [DllImport("__Internal")]
             public static extern int dlclose(IntPtr handle);
+#else
+            public static IntPtr dlopen(string filename, int flags)
+            {
+                return default;
+            }
+
+            public static IntPtr dlsym(IntPtr handle, string symbol)
+            {
+                return default;
+            }
+
+            public static int dlclose(IntPtr handle)
+            {
+                return default;
+            }
+
+#endif
         }
     }
 
