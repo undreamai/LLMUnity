@@ -7,13 +7,20 @@ using UnityEngine;
 
 namespace LLMUnity
 {
+    public enum ModelEntryType
+    {
+        model,
+        LoRA,
+        mmproj
+    }
+
     [Serializable]
     public class ModelEntry
     {
         public string label;
         public string filename;
         public string path;
-        public bool lora;
+        public ModelEntryType type;
         public string chatTemplate;
         public string url;
         public bool includeInBuild;
@@ -30,17 +37,17 @@ namespace LLMUnity
             return Path.GetFileName(path);
         }
 
-        public ModelEntry(string path, bool lora = false, string label = null, string url = null)
+        public ModelEntry(string path, ModelEntryType type = ModelEntryType.model, string label = null, string url = null)
         {
             filename = GetFilenameOrRelativeAssetPath(path);
             this.label = label == null ? Path.GetFileName(filename) : label;
-            this.lora = lora;
+            this.type = type;
             this.path = LLMUnitySetup.GetFullPath(path);
             this.url = url;
             includeInBuild = true;
             chatTemplate = null;
             contextLength = -1;
-            if (!lora)
+            if (type == ModelEntryType.model)
             {
                 GGUFReader reader = new GGUFReader(this.path);
                 chatTemplate = ChatTemplate.FromGGUF(reader, this.path);
@@ -192,24 +199,24 @@ namespace LLMUnity
 #endif
         }
 
-        public static int Num(bool lora)
+        public static int Num(ModelEntryType type)
         {
             int num = 0;
             foreach (ModelEntry entry in modelEntries)
             {
-                if (entry.lora == lora) num++;
+                if (entry.type == type) num++;
             }
             return num;
         }
 
         public static int NumModels()
         {
-            return Num(false);
+            return Num(ModelEntryType.model);
         }
 
         public static int NumLoras()
         {
-            return Num(true);
+            return Num(ModelEntryType.LoRA);
         }
 
         public static void Register(LLM llm)
@@ -244,33 +251,34 @@ namespace LLMUnity
 
         public static string AddEntry(ModelEntry entry)
         {
-            int indexToInsert = modelEntries.Count;
-            if (!entry.lora)
+            int FindLastOfType(ModelEntryType type)
             {
-                if (modelEntries.Count > 0 && modelEntries[0].lora) indexToInsert = 0;
-                else
+                for (int i = modelEntries.Count - 1; i >= 0; i--)
                 {
-                    for (int i = modelEntries.Count - 1; i >= 0; i--)
+                    if (modelEntries[i].type == type)
                     {
-                        if (!modelEntries[i].lora)
-                        {
-                            indexToInsert = i + 1;
-                            break;
-                        }
+                        return i + 1;
                     }
                 }
+                return 0;
             }
+
+            int indexToInsert = modelEntries.Count;
+            int lastModelIndex = FindLastOfType(ModelEntryType.model);
+            int lastLoraIndex = FindLastOfType(ModelEntryType.LoRA);
+            if (entry.type == ModelEntryType.model) indexToInsert = lastModelIndex;
+            else if (entry.type == ModelEntryType.LoRA) indexToInsert = Math.Max(lastModelIndex, lastLoraIndex);
             modelEntries.Insert(indexToInsert, entry);
             Save();
             return entry.filename;
         }
 
-        public static string AddEntry(string path, bool lora = false, string label = null, string url = null)
+        public static string AddEntry(string path, ModelEntryType type = ModelEntryType.model, string label = null, string url = null)
         {
-            return AddEntry(new ModelEntry(path, lora, label, url));
+            return AddEntry(new ModelEntry(path, type, label, url));
         }
 
-        public static async Task<string> Download(string url, bool lora = false, bool log = false, string label = null)
+        public static async Task<string> Download(string url, ModelEntryType type = ModelEntryType.model, bool log = false, string label = null)
         {
             foreach (ModelEntry entry in modelEntries)
             {
@@ -291,31 +299,21 @@ namespace LLMUnity
 
             string modelPath = Path.Combine(LLMUnitySetup.modelDownloadPath, modelName);
             float preModelProgress = modelProgress;
-            float preLoraProgress = loraProgress;
             try
             {
-                if (!lora)
-                {
-                    modelProgress = 0;
-                    await LLMUnitySetup.DownloadFile(url, modelPath, false, null, SetModelProgress);
-                }
-                else
-                {
-                    loraProgress = 0;
-                    await LLMUnitySetup.DownloadFile(url, modelPath, false, null, SetLoraProgress);
-                }
+                modelProgress = 0;
+                await LLMUnitySetup.DownloadFile(url, modelPath, false, null, SetModelProgress);
             }
             catch (Exception ex)
             {
                 modelProgress = preModelProgress;
-                loraProgress = preLoraProgress;
                 LLMUnitySetup.LogError($"Error downloading the model from URL '{url}': " + ex.Message);
                 return null;
             }
-            return AddEntry(modelPath, lora, label, url);
+            return AddEntry(modelPath, type, label, url);
         }
 
-        public static string Load(string path, bool lora = false, bool log = false, string label = null)
+        public static string Load(string path, ModelEntryType type = ModelEntryType.model, bool log = false, string label = null)
         {
             ModelEntry entry = Get(path);
             if (entry != null)
@@ -323,27 +321,37 @@ namespace LLMUnity
                 if (log) LLMUnitySetup.Log($"Found existing entry for {entry.filename}");
                 return entry.filename;
             }
-            return AddEntry(path, lora, label);
+            return AddEntry(path, type, label);
         }
 
         public static async Task<string> DownloadModel(string url, bool log = false, string label = null)
         {
-            return await Download(url, false, log, label);
+            return await Download(url, ModelEntryType.model, log, label);
         }
 
         public static async Task<string> DownloadLora(string url, bool log = false, string label = null)
         {
-            return await Download(url, true, log, label);
+            return await Download(url, ModelEntryType.LoRA, log, label);
+        }
+
+        public static async Task<string> DownloadMmproj(string url, bool log = false, string label = null)
+        {
+            return await Download(url, ModelEntryType.mmproj, log, label);
         }
 
         public static string LoadModel(string path, bool log = false, string label = null)
         {
-            return Load(path, false, log, label);
+            return Load(path, ModelEntryType.model, log, label);
         }
 
         public static string LoadLora(string path, bool log = false, string label = null)
         {
-            return Load(path, true, log, label);
+            return Load(path, ModelEntryType.LoRA, log, label);
+        }
+
+        public static string LoadMmproj(string path, bool log = false, string label = null)
+        {
+            return Load(path, ModelEntryType.mmproj, log, label);
         }
 
         public static void SetURL(string filename, string url)
@@ -397,8 +405,8 @@ namespace LLMUnity
             Save();
             foreach (LLM llm in llms)
             {
-                if (!entry.lora && llm.model == entry.filename) llm.model = "";
-                else if (entry.lora) llm.RemoveLora(entry.filename);
+                if (entry.type == ModelEntryType.model && llm.model == entry.filename) llm.model = "";
+                else if (entry.type == ModelEntryType.LoRA) llm.RemoveLora(entry.filename);
             }
         }
 

@@ -56,11 +56,14 @@ namespace LLMUnity
         [ModelAdvanced] public string model = "";
         /// <summary> Chat template used for the model </summary>
         [ModelAdvanced] public string chatTemplate = ChatTemplate.DefaultTemplate;
-        /// <summary> the paths of the LORA models being used (relative to the Assets/StreamingAssets folder).
+        /// <summary> the LORA models to use.
         /// Models with .gguf format are allowed.</summary>
         [ModelAdvanced] public string lora = "";
         /// <summary> the weights of the LORA models being used.</summary>
         [ModelAdvanced] public string loraWeights = "";
+        /// <summary> the mmproj model to use.
+        /// Models with .gguf format are allowed.</summary>
+        [ModelAdvanced] public string mmproj = "";
         /// <summary> enable use of flash attention </summary>
         [ModelExtras] public bool flashAttention = false;
 
@@ -187,7 +190,6 @@ namespace LLMUnity
 
         /// <summary>
         /// Allows to set the model used by the LLM.
-        /// The model provided is copied to the Assets/StreamingAssets folder that allows it to also work in the build.
         /// Models supported are in .gguf format.
         /// </summary>
         /// <param name="path">path to model to use (.gguf format)</param>
@@ -211,7 +213,6 @@ namespace LLMUnity
 
         /// <summary>
         /// Allows to set a LORA model to use in the LLM.
-        /// The model provided is copied to the Assets/StreamingAssets folder that allows it to also work in the build.
         /// Models supported are in .gguf format.
         /// </summary>
         /// <param name="path">path to LORA model to use (.gguf format)</param>
@@ -220,6 +221,19 @@ namespace LLMUnity
             AssertNotStarted();
             loraManager.Clear();
             AddLora(path, weight);
+        }
+
+        /// <summary>
+        /// Allows to set a mmproj model to use in the LLM.
+        /// Models supported are in .gguf format.
+        /// </summary>
+        /// <param name="path">path to model to use (.gguf format)</param>
+        public void SetMmproj(string path)
+        {
+            mmproj = GetLLMManagerAsset(path);
+#if UNITY_EDITOR
+            if (!EditorApplication.isPlaying) EditorUtility.SetDirty(this);
+#endif
         }
 
         /// <summary>
@@ -325,6 +339,8 @@ namespace LLMUnity
                 LLMUnitySetup.LogError($"File {modelPath} not found!");
                 return null;
             }
+            string modelArgument = $"-m \"{modelPath}\"";
+
             string loraArgument = "";
             foreach (string lora in lora.Trim().Split(" "))
             {
@@ -339,16 +355,30 @@ namespace LLMUnity
             }
             loraManager.FromStrings(lora, loraWeights);
 
+            string mmprojArgument = "";
+            if (mmproj != "")
+            {
+                string mmprojPath = GetLLMManagerAssetRuntime(mmproj);
+                if (!File.Exists(mmprojPath))
+                {
+                    LLMUnitySetup.LogError($"File {mmprojPath} not found!");
+                    return null;
+                }
+                mmprojArgument = $" --mmproj \"{modelPath}\"";
+            }
+
             int numThreadsToUse = numThreads;
             if (Application.platform == RuntimePlatform.Android && numThreads <= 0) numThreadsToUse = LLMUnitySetup.AndroidGetNumBigCores();
 
             int slots = GetNumClients();
-            string arguments = $"-m \"{modelPath}\" -c {contextSize} -b {batchSize} --log-disable -np {slots}";
-            if (remote) arguments += $" --port {port} --host 0.0.0.0";
-            if (numThreadsToUse > 0) arguments += $" -t {numThreadsToUse}";
+            string arguments = modelArgument;
             arguments += loraArgument;
+            arguments += mmprojArgument;
+            arguments += $" -c {contextSize} -b {batchSize} --log-disable -np {slots}";
             arguments += $" -ngl {numGPULayers}";
+            if (numThreadsToUse > 0) arguments += $" -t {numThreadsToUse}";
             if (LLMUnitySetup.FullLlamaLib && flashAttention) arguments += $" --flash-attn";
+            if (remote) arguments += $" --port {port} --host 0.0.0.0";
             return arguments;
         }
 
