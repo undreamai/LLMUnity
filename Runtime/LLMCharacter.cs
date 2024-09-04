@@ -3,8 +3,10 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -119,6 +121,7 @@ namespace LLMUnity
 
         /// \cond HIDE
         public List<ChatMessage> chat;
+        public List<ImageDataContent> chatImages;
         private SemaphoreSlim chatLock = new SemaphoreSlim(1, 1);
         private string chatTemplate;
         private ChatTemplate template = null;
@@ -249,6 +252,7 @@ namespace LLMUnity
             else
             {
                 chat = new List<ChatMessage>();
+                chatImages = new List<ImageDataContent>();
             }
             ChatMessage promptMessage = new ChatMessage { role = "system", content = prompt };
             if (chat.Count == 0)
@@ -358,6 +362,7 @@ namespace LLMUnity
             ChatRequest chatRequest = new ChatRequest();
             if (debugPrompt) LLMUnitySetup.Log(prompt);
             chatRequest.prompt = prompt;
+            chatRequest.image_data = chatImages;
             chatRequest.id_slot = id_slot;
             chatRequest.temperature = temperature;
             chatRequest.top_k = topK;
@@ -401,6 +406,47 @@ namespace LLMUnity
         public void AddAIMessage(string content)
         {
             AddMessage(AIName, content);
+        }
+
+        public string URLToSafeFilename(string url)
+        {
+            string encodedString = HttpUtility.UrlEncode(url);
+            string fileName = Regex.Replace(encodedString, $"[{Regex.Escape(new string(Path.GetInvalidFileNameChars()))}]", "_");
+            if (fileName.Length > 255) fileName = fileName.Substring(0, 255);
+            return fileName;
+        }
+
+        public async Task<int> AddImage(string imagePathOrURL)
+        {
+            string imagePath = null;
+            Uri uri;
+            if (Uri.TryCreate(imagePathOrURL, UriKind.Absolute, out uri))
+            {
+                if (uri.IsFile)
+                {
+                    imagePath = imagePathOrURL;
+                }
+                else if (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps)
+                {
+                    imagePath = GetSavePath(URLToSafeFilename(imagePathOrURL));
+                    await LLMUnitySetup.DownloadFile(imagePathOrURL, imagePath);
+                }
+            }
+            if (String.IsNullOrEmpty(imagePath))
+            {
+                LLMUnitySetup.LogError($"Invalid path or URL: {imagePath}!");
+                return -1;
+            }
+            if (!File.Exists(imagePath))
+            {
+                LLMUnitySetup.LogError($"Image {imagePath} not found!");
+                return -1;
+            }
+            int id = 1;
+            if (chatImages.Count > 0) id = chatImages[chatImages.Count - 1].id + 1;
+            string data = Convert.ToBase64String(File.ReadAllBytes(imagePath));
+            chatImages.Add(new ImageDataContent { id = id, data = data });
+            return id;
         }
 
         protected string ChatContent(ChatResult result)
@@ -475,7 +521,7 @@ namespace LLMUnity
         /// <param name="completionCallback">callback function called when the full response has been received</param>
         /// <param name="addToHistory">whether to add the user query to the chat history</param>
         /// <returns>the LLM response</returns>
-        public async Task<string> Chat(string query, Callback<string> callback = null, EmptyCallback completionCallback = null, bool addToHistory = true)
+        public async Task<string> Chat(string query, Callback<string> callback = null, EmptyCallback completionCallback = null, bool addToHistory = true, string imagePathOrURL = null)
         {
             // handle a chat message by the user
             // call the callback function while the answer is received
@@ -486,9 +532,15 @@ namespace LLMUnity
 
             string json;
             await chatLock.WaitAsync();
+            string message = query;
             try
             {
-                AddPlayerMessage(query);
+                if (!String.IsNullOrEmpty(imagePathOrURL))
+                {
+                    int imageId = await AddImage(imagePathOrURL);
+                    if (imageId != -1) message = $"[img-{imageId}]" + message;
+                }
+                AddPlayerMessage(message);
                 string prompt = template.ComputePrompt(chat, playerName, AIName);
                 json = JsonUtility.ToJson(GenerateRequest(prompt));
                 chat.RemoveAt(chat.Count - 1);
@@ -505,7 +557,7 @@ namespace LLMUnity
                 await chatLock.WaitAsync();
                 try
                 {
-                    AddPlayerMessage(query);
+                    AddPlayerMessage(message);
                     AddAIMessage(result);
                 }
                 finally

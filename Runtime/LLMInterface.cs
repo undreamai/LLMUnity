@@ -7,9 +7,17 @@ using System.Collections.Generic;
 namespace LLMUnity
 {
     [Serializable]
+    public struct ImageDataContent
+    {
+        public int id;
+        public string data;
+    }
+
+    [Serializable]
     public struct ChatRequest
     {
         public string prompt;
+        public List<ImageDataContent> image_data;
         public int id_slot;
         public float temperature;
         public int top_k;
