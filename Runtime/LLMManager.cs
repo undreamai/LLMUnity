@@ -113,7 +113,7 @@ namespace LLMUnity
                 }
                 else
                 {
-                    downloads.Add(new StringPair {source = modelEntry.url, target = target});
+                    downloads.Add(new StringPair {source = modelEntry.url, target = modelEntry.filename});
                 }
             }
             if (downloads.Count == 0) return true;
@@ -136,8 +136,9 @@ namespace LLMUnity
                 foreach (StringPair pair in downloads)
                 {
                     currFileSize = fileSizes[pair.source];
-                    await LLMUnitySetup.DownloadFile(pair.source, pair.target, false, null, SetDownloadProgress);
-                    await LLMUnitySetup.AndroidExtractFile(Path.GetFileName(pair.target));
+                    string target = LLMUnitySetup.GetAssetPath(pair.target);
+                    await LLMUnitySetup.DownloadFile(pair.source, target, false, null, SetDownloadProgress);
+                    await LLMUnitySetup.AndroidExtractFile(pair.target);
                     completedSize += currFileSize;
                 }
 
