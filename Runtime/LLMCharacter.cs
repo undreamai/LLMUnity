@@ -45,6 +45,8 @@ namespace LLMUnity
         [ModelAdvanced] public string grammar = null;
         /// <summary> option to cache the prompt as it is being created by the chat to avoid reprocessing the entire prompt every time (default: true) </summary>
         [ModelAdvanced] public bool cachePrompt = true;
+        /// <summary> specify which slot of the server to use for computation (affects caching) </summary>
+        [ModelAdvanced] public int slot = -1;
         /// <summary> seed for reproducibility. For random results every time set to -1. </summary>
         [ModelAdvanced] public int seed = 0;
         /// <summary> number of tokens to predict (-1 = infinity, -2 = until context filled).
@@ -123,7 +125,6 @@ namespace LLMUnity
         private string chatTemplate;
         private ChatTemplate template = null;
         public string grammarString;
-        protected int id_slot = -1;
         private List<(string, string)> requestHeaders = new List<(string, string)> { ("Content-Type", "application/json") };
         private List<UnityWebRequest> WIPRequests = new List<UnityWebRequest>();
         /// \endcond
@@ -149,7 +150,8 @@ namespace LLMUnity
                     LLMUnitySetup.LogError($"No LLM assigned or detected for LLMCharacter {name}!");
                     return;
                 }
-                id_slot = llm.Register(this);
+                int slotFromServer = llm.Register(this);
+                if (slot == -1) slot = slotFromServer;
             }
 
             InitGrammar();
@@ -159,6 +161,7 @@ namespace LLMUnity
         void OnValidate()
         {
             AssignLLM();
+            if (llm != null && llm.parallelPrompts > -1 && (slot < -1 || slot >= llm.parallelPrompts)) LLMUnitySetup.LogError($"The slot needs to be between 0 and {llm.parallelPrompts-1}, or -1 to be automatically set");
         }
 
         void Reset()
@@ -358,7 +361,7 @@ namespace LLMUnity
             ChatRequest chatRequest = new ChatRequest();
             if (debugPrompt) LLMUnitySetup.Log(prompt);
             chatRequest.prompt = prompt;
-            chatRequest.id_slot = id_slot;
+            chatRequest.id_slot = slot;
             chatRequest.temperature = temperature;
             chatRequest.top_k = topK;
             chatRequest.top_p = topP;
@@ -613,7 +616,7 @@ namespace LLMUnity
         private async Task<string> Slot(string filepath, string action)
         {
             SlotRequest slotRequest = new SlotRequest();
-            slotRequest.id_slot = id_slot;
+            slotRequest.id_slot = slot;
             slotRequest.filepath = filepath;
             slotRequest.action = action;
             string json = JsonUtility.ToJson(slotRequest);
@@ -683,7 +686,7 @@ namespace LLMUnity
 
         protected void CancelRequestsLocal()
         {
-            if (id_slot >= 0) llm.CancelRequest(id_slot);
+            if (slot >= 0) llm.CancelRequest(slot);
         }
 
         protected void CancelRequestsRemote()

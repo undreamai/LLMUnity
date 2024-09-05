@@ -449,7 +449,9 @@ namespace LLMUnity
         public int Register(LLMCharacter llmCharacter)
         {
             clients.Add(llmCharacter);
-            return clients.IndexOf(llmCharacter);
+            int index = clients.IndexOf(llmCharacter);
+            if (parallelPrompts != -1) return index % parallelPrompts;
+            return index;
         }
 
         protected int GetNumClients()
