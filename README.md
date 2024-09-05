@@ -376,7 +376,8 @@ If the user's GPU is not supported, the LLM will fall back to the CPU
 - `Debug` select to log the output of the model in the Unity Editor
 - <details><summary>Advanced options</summary>
 
-  - `Parallel Prompts` number of prompts that can happen in parallel (default: -1 = number of LLMCharacter objects)
+  - <details><summary><code>Parallel Prompts</code> number of prompts / slots that can happen in parallel (default: -1 = number of LLMCharacter objects). Note that the context size is divided among the slots.</summary> If you want to retain as much context for the LLM and don't need all the characters present at the same time, you can set this number and specify the slot for each LLMCharacter object.
+  e.g. Setting `Parallel Prompts` to 1 and slot 0 for all LLMCharacter objects will use the full context, but the entire prompt will need to be computed (no caching) whenever a LLMCharacter object is used for chat. </details>
   - `Dont Destroy On Load` select to not destroy the LLM GameObject when loading a new Scene
 
 </details>
@@ -441,6 +442,7 @@ If it is not selected, the full reply from the model is received in one go
   - `Load grammar` click to load a grammar in .gbnf format
   - `Grammar` the path of the grammar being used (relative to the Assets/StreamingAssets folder)
   - <details><summary><code>Cache Prompt</code> save the ongoing prompt from the chat (default: true)</summary> Saves the prompt while it is being created by the chat to avoid reprocessing the entire prompt every time</details>
+  - `Slot` slot of the server to use for computation. Value can be set from 0 to `Parallel Prompts`-1 (default: -1 = new slot for each character)
   - `Seed` seed for reproducibility. For random results every time use -1
   - <details><summary><code>Num Predict</code> maximum number of tokens to predict (default: 256, -1 = infinity, -2 = until context filled)</summary>This is the maximum amount of tokens the model will maximum predict. When N tokens are reached the model will stop generating. This means words / sentences might not get finished if this is too low. </details>
   - <details><summary><code>Temperature</code> LLM temperature, lower values give more deterministic answers (default: 0.2)</summary>The temperature setting adjusts how random the generated responses are. Turning it up makes the generated choices more varied and unpredictable. Turning it down makes the generated responses more predictable and focused on the most likely options.</details>
