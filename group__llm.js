@@ -88,6 +88,7 @@ var group__llm =
       [ "saveCache", "classLLMUnity_1_1LLMCharacter.html#a796c05dab6ed5c3cebb6f67353535164", null ],
       [ "seed", "classLLMUnity_1_1LLMCharacter.html#ac49b82eed69f8cfb62ef837743b0cdc4", null ],
       [ "setNKeepToPrompt", "classLLMUnity_1_1LLMCharacter.html#aba1febf8ee339fd76351655b05d07a69", null ],
+      [ "slot", "classLLMUnity_1_1LLMCharacter.html#a0a946ac2956e5b3800f68a34a3a93609", null ],
       [ "stop", "classLLMUnity_1_1LLMCharacter.html#a1f52b3ca2ac0bee954bf5171742c9a5e", null ],
       [ "stream", "classLLMUnity_1_1LLMCharacter.html#a99a58a6ef8c6bc48036403df0fe7c139", null ],
       [ "temperature", "classLLMUnity_1_1LLMCharacter.html#a47c420043ce02024e2ac9a1a5802a3b3", null ],

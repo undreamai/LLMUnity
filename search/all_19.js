@@ -16,12 +16,13 @@ var searchData=
   ['setup_13',['Setup',['../index.html#autotoc_md4',1,'']]],
   ['setup_20settings_14',['Setup Settings',['../index.html#autotoc_md10',1,'💻 Setup Settings'],['../index.html#autotoc_md14',1,'💻 Setup Settings']]],
   ['slot_15',['Slot',['../classLLMUnity_1_1LLM.html#a16381a5907592831a0ea35137b9921ff',1,'LLMUnity::LLM']]],
-  ['smol_5fllama_20220m_20openhermes_16',['BEE-spoke-data/smol_llama-220M-openhermes',['../md_Third_01Party_01Notices.html#autotoc_md36',1,'']]],
-  ['smol_5fllama_20220m_20openhermes_20gguf_17',['modified by: afrideva/smol_llama-220M-openhermes-GGUF',['../md_Third_01Party_01Notices.html#autotoc_md37',1,'']]],
-  ['software_18',['Software',['../md_Third_01Party_01Notices.html#autotoc_md19',1,'']]],
-  ['software_20notices_20and_20information_19',['THIRD-PARTY SOFTWARE NOTICES AND INFORMATION',['../md_Third_01Party_01Notices.html',1,'']]],
-  ['spoke_20data_20smol_5fllama_20220m_20openhermes_20',['BEE-spoke-data/smol_llama-220M-openhermes',['../md_Third_01Party_01Notices.html#autotoc_md36',1,'']]],
-  ['started_21',['started',['../classLLMUnity_1_1LLM.html#a9bf3f3bd1e5ac32e5790415e448762e7',1,'LLMUnity::LLM']]],
-  ['stop_22',['stop',['../classLLMUnity_1_1LLMCharacter.html#a1f52b3ca2ac0bee954bf5171742c9a5e',1,'LLMUnity::LLMCharacter']]],
-  ['stream_23',['stream',['../classLLMUnity_1_1LLMCharacter.html#a99a58a6ef8c6bc48036403df0fe7c139',1,'LLMUnity::LLMCharacter']]]
+  ['slot_16',['slot',['../classLLMUnity_1_1LLMCharacter.html#a0a946ac2956e5b3800f68a34a3a93609',1,'LLMUnity::LLMCharacter']]],
+  ['smol_5fllama_20220m_20openhermes_17',['BEE-spoke-data/smol_llama-220M-openhermes',['../md_Third_01Party_01Notices.html#autotoc_md36',1,'']]],
+  ['smol_5fllama_20220m_20openhermes_20gguf_18',['modified by: afrideva/smol_llama-220M-openhermes-GGUF',['../md_Third_01Party_01Notices.html#autotoc_md37',1,'']]],
+  ['software_19',['Software',['../md_Third_01Party_01Notices.html#autotoc_md19',1,'']]],
+  ['software_20notices_20and_20information_20',['THIRD-PARTY SOFTWARE NOTICES AND INFORMATION',['../md_Third_01Party_01Notices.html',1,'']]],
+  ['spoke_20data_20smol_5fllama_20220m_20openhermes_21',['BEE-spoke-data/smol_llama-220M-openhermes',['../md_Third_01Party_01Notices.html#autotoc_md36',1,'']]],
+  ['started_22',['started',['../classLLMUnity_1_1LLM.html#a9bf3f3bd1e5ac32e5790415e448762e7',1,'LLMUnity::LLM']]],
+  ['stop_23',['stop',['../classLLMUnity_1_1LLMCharacter.html#a1f52b3ca2ac0bee954bf5171742c9a5e',1,'LLMUnity::LLMCharacter']]],
+  ['stream_24',['stream',['../classLLMUnity_1_1LLMCharacter.html#a99a58a6ef8c6bc48036403df0fe7c139',1,'LLMUnity::LLMCharacter']]]
 ];
