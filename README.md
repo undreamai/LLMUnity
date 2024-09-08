@@ -60,6 +60,8 @@ LLM for Unity is built on top of the awesome [llama.cpp](https://github.com/gger
 - [AI Emotional Girlfriend](https://whynames.itch.io/aiemotionalgirlfriend)
 - [AI Speak](https://jdscogin.wixsite.com/aispeak)
 
+Contact us to add your project!
+
 ## Setup
 _Method 1: Install using the asset store_
 - Open the [LLM for Unity](https://assetstore.unity.com/packages/slug/273604) asset page and click `Add to My Assets`
@@ -293,6 +295,8 @@ You can use a remote server to carry out the processing and implement characters
 - Create a project with a GameObject using the `LLM` script as described above. Enable the `Remote` option and optionally configure the port.
 - Create a second project with the game characters using the `LLMCharacter` script as described above.
   Enable the `Remote` option and configure the host with the IP address (starting with "http://") and port of the server.
+
+If you want to deploy the remote server as a service without using Unity you can follow the instructions at this [link](https://github.com/undreamai/LlamaLib).
 
 </details>
 <details>
