@@ -23,6 +23,8 @@ namespace LLMUnity
         [LocalRemote] public bool remote = false;
         /// <summary> port to use for the LLM server </summary>
         [Remote] public int port = 13333;
+        /// <summary> API key to use for the server (optional) </summary>
+        [Remote] public string APIKey;
         /// <summary> number of threads to use (-1 = all) </summary>
         [LLM] public int numThreads = -1;
         /// <summary> number of model layers to offload to the GPU (0 = GPU not used).
@@ -344,7 +346,11 @@ namespace LLMUnity
 
             int slots = GetNumClients();
             string arguments = $"-m \"{modelPath}\" -c {contextSize} -b {batchSize} --log-disable -np {slots}";
-            if (remote) arguments += $" --port {port} --host 0.0.0.0";
+            if (remote)
+            {
+                arguments += $" --port {port} --host 0.0.0.0";
+                if (!String.IsNullOrEmpty(APIKey)) arguments += $" --api-key {APIKey}";
+            }
             if (numThreadsToUse > 0) arguments += $" -t {numThreadsToUse}";
             arguments += loraArgument;
             arguments += $" -ngl {numGPULayers}";
