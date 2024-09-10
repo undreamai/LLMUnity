@@ -30,6 +30,8 @@ namespace LLMUnity
         [Remote] public int port = 13333;
         /// <summary> number of retries to use for the LLM server requests (-1 = infinite) </summary>
         [Remote] public int numRetries = -1;
+        /// <summary> allows to use a server with API key </summary>
+        [Remote] public string APIKey;
         /// <summary> file to save the chat history.
         /// The file is saved only for Chat calls with addToHistory set to true.
         /// The file will be saved within the persistentDataPath directory (see https://docs.unity3d.com/ScriptReference/Application-persistentDataPath.html). </summary>
@@ -125,7 +127,7 @@ namespace LLMUnity
         private string chatTemplate;
         private ChatTemplate template = null;
         public string grammarString;
-        private List<(string, string)> requestHeaders = new List<(string, string)> { ("Content-Type", "application/json") };
+        private List<(string, string)> requestHeaders;
         private List<UnityWebRequest> WIPRequests = new List<UnityWebRequest>();
         /// \endcond
 
@@ -142,6 +144,8 @@ namespace LLMUnity
         {
             // Start the LLM server in a cross-platform way
             if (!enabled) return;
+
+            requestHeaders = new List<(string, string)> { ("Content-Type", "application/json") };
             if (!remote)
             {
                 AssignLLM();
@@ -152,6 +156,10 @@ namespace LLMUnity
                 }
                 int slotFromServer = llm.Register(this);
                 if (slot == -1) slot = slotFromServer;
+            }
+            else
+            {
+                if (!String.IsNullOrEmpty(APIKey)) requestHeaders.Add(("Authorization", "Bearer " + APIKey));
             }
 
             InitGrammar();
@@ -286,14 +294,17 @@ namespace LLMUnity
             return true;
         }
 
-        private async Task InitNKeep()
+        private async Task<bool> InitNKeep()
         {
             if (setNKeepToPrompt && nKeep == -1)
             {
-                if (!CheckTemplate()) return;
+                if (!CheckTemplate()) return false;
                 string systemPrompt = template.ComputePrompt(new List<ChatMessage>(){chat[0]}, playerName, "", false);
-                await Tokenize(systemPrompt, SetNKeep);
+                List<int> tokens = await Tokenize(systemPrompt);
+                if (tokens == null) return false;
+                SetNKeep(tokens);
             }
+            return true;
         }
 
         private void InitGrammar()
@@ -485,7 +496,7 @@ namespace LLMUnity
             // call the completionCallback function when the answer is fully received
             await LoadTemplate();
             if (!CheckTemplate()) return null;
-            await InitNKeep();
+            if (!await InitNKeep()) return null;
 
             string json;
             await chatLock.WaitAsync();
@@ -814,6 +825,7 @@ namespace LLMUnity
                     {
                         result = default;
                         error = request.error;
+                        if (request.responseCode == (int)System.Net.HttpStatusCode.Unauthorized) break;
                     }
                 }
                 tryNr--;
