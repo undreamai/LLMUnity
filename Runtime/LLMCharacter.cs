@@ -40,6 +40,8 @@ namespace LLMUnity
         [LLM] public bool saveCache = false;
         /// <summary> select to log the constructed prompt the Unity Editor. </summary>
         [LLM] public bool debugPrompt = false;
+        /// <summary> allows to bypass certificate checks (note: only for development!). </summary>
+        [LLMAdvanced] public bool bypassCertificate = false;
         /// <summary> option to receive the reply from the model as it is produced (recommended!).
         /// If it is not selected, the full reply from the model is received in one go </summary>
         [Model] public bool stream = true;
@@ -129,6 +131,7 @@ namespace LLMUnity
         public string grammarString;
         private List<(string, string)> requestHeaders;
         private List<UnityWebRequest> WIPRequests = new List<UnityWebRequest>();
+        bool prebypassCertificate = false;
         /// \endcond
 
         /// <summary>
@@ -170,6 +173,7 @@ namespace LLMUnity
         {
             AssignLLM();
             if (llm != null && llm.parallelPrompts > -1 && (slot < -1 || slot >= llm.parallelPrompts)) LLMUnitySetup.LogError($"The slot needs to be between 0 and {llm.parallelPrompts-1}, or -1 to be automatically set");
+            if (prebypassCertificate != bypassCertificate && bypassCertificate) LLMUnitySetup.LogWarning("All of the certificates will be accepted. Use only for development!");
         }
 
         void Reset()
@@ -792,6 +796,7 @@ namespace LLMUnity
                     WIPRequests.Add(request);
 
                     request.method = "POST";
+                    if (bypassCertificate) request.certificateHandler = new BypassCertificateHandler();
                     if (requestHeaders != null)
                     {
                         for (int i = 0; i < requestHeaders.Count; i++)
@@ -848,6 +853,16 @@ namespace LLMUnity
     public class ChatListWrapper
     {
         public List<ChatMessage> chat;
+    }
+
+    // Custom certificate handler that bypasses validation
+    class BypassCertificateHandler : CertificateHandler
+    {
+        protected override bool ValidateCertificate(byte[] certificateData)
+        {
+            // Always accept the certificate
+            return true;
+        }
     }
     /// \endcond
 }
