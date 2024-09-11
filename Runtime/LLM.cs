@@ -85,6 +85,7 @@ namespace LLMUnity
         List<StreamWrapper> streamWrappers = new List<StreamWrapper>();
         public LLMManager llmManager = new LLMManager();
         private readonly object startLock = new object();
+        static readonly object staticLock = new object();
         public LoraManager loraManager = new LoraManager();
         string loraPre = "";
         string loraWeightsPre = "";
@@ -469,30 +470,33 @@ namespace LLMUnity
             CheckLLMStatus(false);
         }
 
-        void CallWithLock(EmptyCallback fn, bool checkNull = true)
+        void CallWithLock(EmptyCallback fn)
         {
             lock (startLock)
             {
-                if (checkNull && llmlib == null) throw new DestroyException();
+                if (llmlib == null) throw new DestroyException();
                 fn();
             }
         }
 
         private void InitService(string arguments)
         {
-            if (debug) CallWithLock(SetupLogging);
-            CallWithLock(() => { LLMObject = llmlib.LLM_Construct(arguments); });
-            CallWithLock(() => llmlib.LLM_SetTemplate(LLMObject, chatTemplate));
-            if (remote)
+            lock(staticLock)
             {
-                if (SSLCert != "" && SSLKey != "")
+                if (debug) CallWithLock(SetupLogging);
+                CallWithLock(() => { LLMObject = llmlib.LLM_Construct(arguments); });
+                CallWithLock(() => llmlib.LLM_SetTemplate(LLMObject, chatTemplate));
+                if (remote)
                 {
-                    LLMUnitySetup.Log("Using SSL");
-                    CallWithLock(() => llmlib.LLM_SetSSL(LLMObject, SSLCert, SSLKey));
+                    if (SSLCert != "" && SSLKey != "")
+                    {
+                        LLMUnitySetup.Log("Using SSL");
+                        CallWithLock(() => llmlib.LLM_SetSSL(LLMObject, SSLCert, SSLKey));
+                    }
+                    CallWithLock(() => llmlib.LLM_StartServer(LLMObject));
                 }
-                CallWithLock(() => llmlib.LLM_StartServer(LLMObject));
+                CallWithLock(() => CheckLLMStatus(false));
             }
-            CallWithLock(() => CheckLLMStatus(false));
         }
 
         private void StartService()
@@ -756,7 +760,8 @@ namespace LLMUnity
         /// </summary>
         public void Destroy()
         {
-            CallWithLock(() =>
+            lock(staticLock)
+            lock(startLock)
             {
                 try
                 {
@@ -781,7 +786,7 @@ namespace LLMUnity
                 {
                     LLMUnitySetup.LogError(e.Message);
                 }
-            }, false);
+            }
         }
 
         /// <summary>
