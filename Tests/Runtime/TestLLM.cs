@@ -108,7 +108,14 @@ namespace LLMUnityTests
             prompt = "Below is an instruction that describes a task, paired with an input that provides further context. Write a response that appropriately completes the request.";
             query = "How can I increase my meme production/output? Currently, I only create them in ancient babylonian which is time consuming.";
             reply1 = "To increase your meme production/output, you can try using more modern tools and techniques. For instance,";
-            reply2 = "To increase your meme production/output, you can try using various tools and techniques to create more engaging content";
+            if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer)
+            {
+                reply2 = "To increase your meme production/output, you can try using various tools and techniques to create more engaging content";
+            }
+            else
+            {
+                reply2 = "To increase your meme production/output, you can try the following strategies:\n\n1. Use a meme generator";
+            }
             tokens1 = 32;
             tokens2 = 9;
         }
@@ -369,8 +376,16 @@ namespace LLMUnityTests
         {
             prompt = "";
             query = "кто ты?";
-            reply1 = "Я - искусственный интеллект, создан для помощи и общения с людьми.";
-            reply2 = "Я - искусственный интеллект";
+            if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer)
+            {
+                reply1 = "Я - искусственный интеллект, создан для помощи и общения с людьми.";
+                reply2 = "Я - искусственный интеллект";
+            }
+            else
+            {
+                reply1 = "Я - искусственный интеллект, создан для общения и понимания людей.";
+                reply2 = "Идиот";
+            }
             tokens1 = 5;
             tokens2 = 9;
             loraWeight = 0.9f;
