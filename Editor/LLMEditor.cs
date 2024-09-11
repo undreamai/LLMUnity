@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace LLMUnity
 {
-    [CustomEditor(typeof(LLM))]
+    [CustomEditor(typeof(LLM), true)]
     public class LLMEditor : PropertyEditor
     {
         private ReorderableList modelList;
