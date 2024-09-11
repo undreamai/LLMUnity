@@ -285,7 +285,7 @@ namespace LLMUnity
 
         static LLMLib()
         {
-            lock(staticLock)
+            lock (staticLock)
             {
                 if (has_avx_set) return;
                 string archCheckerPath = GetArchitectureCheckerPath();
