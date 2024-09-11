@@ -314,6 +314,7 @@ namespace LLMUnity
             LLM_Started = LibraryLoader.GetSymbolDelegate<LLM_StartedDelegate>(libraryHandle, "LLM_Started");
             LLM_Stop = LibraryLoader.GetSymbolDelegate<LLM_StopDelegate>(libraryHandle, "LLM_Stop");
             LLM_SetTemplate = LibraryLoader.GetSymbolDelegate<LLM_SetTemplateDelegate>(libraryHandle, "LLM_SetTemplate");
+            LLM_SetSSL = LibraryLoader.GetSymbolDelegate<LLM_SetSSLDelegate>(libraryHandle, "LLM_SetSSL");
             LLM_Tokenize = LibraryLoader.GetSymbolDelegate<LLM_TokenizeDelegate>(libraryHandle, "LLM_Tokenize");
             LLM_Detokenize = LibraryLoader.GetSymbolDelegate<LLM_DetokenizeDelegate>(libraryHandle, "LLM_Detokenize");
             LLM_Embeddings = LibraryLoader.GetSymbolDelegate<LLM_EmbeddingsDelegate>(libraryHandle, "LLM_Embeddings");
@@ -479,6 +480,7 @@ namespace LLMUnity
         public delegate bool LLM_StartedDelegate(IntPtr LLMObject);
         public delegate void LLM_StopDelegate(IntPtr LLMObject);
         public delegate void LLM_SetTemplateDelegate(IntPtr LLMObject, string chatTemplate);
+        public delegate void LLM_SetSSLDelegate(IntPtr LLMObject, string SSLCert, string SSLKey);
         public delegate void LLM_TokenizeDelegate(IntPtr LLMObject, string jsonData, IntPtr stringWrapper);
         public delegate void LLM_DetokenizeDelegate(IntPtr LLMObject, string jsonData, IntPtr stringWrapper);
         public delegate void LLM_EmbeddingsDelegate(IntPtr LLMObject, string jsonData, IntPtr stringWrapper);
@@ -503,6 +505,7 @@ namespace LLMUnity
         public LLM_StartedDelegate LLM_Started;
         public LLM_StopDelegate LLM_Stop;
         public LLM_SetTemplateDelegate LLM_SetTemplate;
+        public LLM_SetSSLDelegate LLM_SetSSL;
         public LLM_TokenizeDelegate LLM_Tokenize;
         public LLM_DetokenizeDelegate LLM_Detokenize;
         public LLM_CompletionDelegate LLM_Completion;
