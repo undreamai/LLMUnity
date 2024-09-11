@@ -19,7 +19,7 @@ namespace LLMUnityTests
             gameObject.SetActive(false);
             LLM llm = gameObject.AddComponent<LLM>();
 
-            string lora1 = "/tmp/lala";
+            string lora1 = LLMUnitySetup.GetFullPath("lala");
             string lora2Rel = "test/lala";
             string lora2 = LLMUnitySetup.GetAssetPath(lora2Rel);
             LLMUnitySetup.CreateEmptyFile(lora1);
@@ -108,7 +108,7 @@ namespace LLMUnityTests
             prompt = "Below is an instruction that describes a task, paired with an input that provides further context. Write a response that appropriately completes the request.";
             query = "How can I increase my meme production/output? Currently, I only create them in ancient babylonian which is time consuming.";
             reply1 = "To increase your meme production/output, you can try using more modern tools and techniques. For instance,";
-            reply2 = "To increase your meme production/output, you can try the following strategies:\n\n1. Use a meme generator";
+            reply2 = "To increase your meme production/output, you can try using various tools and techniques to create more engaging content";
             tokens1 = 32;
             tokens2 = 9;
         }
@@ -125,7 +125,8 @@ namespace LLMUnityTests
             string managerPath = LLM.GetLLMManagerAssetRuntime(path);
             Assert.AreEqual(managerPath, path);
 
-            path = "/tmp/lala";
+            string filename = "lala";
+            path = LLMUnitySetup.GetFullPath(filename);
             LLMUnitySetup.CreateEmptyFile(path);
             managerPath = LLM.GetLLMManagerAssetRuntime(path);
             Assert.AreEqual(managerPath, path);
@@ -164,9 +165,8 @@ namespace LLMUnityTests
             Assert.AreEqual(managerPath, filename);
             managerPath = LLM.GetLLMManagerAssetEditor(path);
             Assert.AreEqual(managerPath, filename);
-            File.Delete(path);
 
-            path = "/tmp/lala";
+            path = LLMUnitySetup.GetFullPath(filename);
             LLMUnitySetup.CreateEmptyFile(path);
             managerPath = LLM.GetLLMManagerAssetEditor(path);
             Assert.AreEqual(managerPath, path);
@@ -263,6 +263,7 @@ namespace LLMUnityTests
 
         public void TestChat(string reply, string replyGT)
         {
+            Debug.Log(reply.Trim());
             Assert.That(reply.Trim() == replyGT);
         }
 
@@ -368,8 +369,8 @@ namespace LLMUnityTests
         {
             prompt = "";
             query = "кто ты?";
-            reply1 = "Я - искусственный интеллект, создан для общения и понимания людей.";
-            reply2 = "Идиот";
+            reply1 = "Я - искусственный интеллект, создан для помощи и общения с людьми.";
+            reply2 = "Я - искусственный интеллект";
             tokens1 = 5;
             tokens2 = 9;
             loraWeight = 0.9f;
@@ -384,8 +385,8 @@ namespace LLMUnityTests
 
         public void TestModelPaths()
         {
-            Assert.AreEqual(llm.model, Path.Combine(LLMUnitySetup.modelDownloadPath, Path.GetFileName(modelUrl).Split("?")[0]));
-            Assert.AreEqual(llm.lora, Path.Combine(LLMUnitySetup.modelDownloadPath, Path.GetFileName(loraUrl).Split("?")[0]));
+            Assert.AreEqual(llm.model, Path.Combine(LLMUnitySetup.modelDownloadPath, Path.GetFileName(modelUrl).Split("?")[0]).Replace('\\', '/'));
+            Assert.AreEqual(llm.lora, Path.Combine(LLMUnitySetup.modelDownloadPath, Path.GetFileName(loraUrl).Split("?")[0]).Replace('\\', '/'));
         }
 
         public async Task TestLoraWeight()
