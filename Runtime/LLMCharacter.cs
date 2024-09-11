@@ -30,6 +30,8 @@ namespace LLMUnity
         [Remote] public int port = 13333;
         /// <summary> number of retries to use for the LLM server requests (-1 = infinite) </summary>
         [Remote] public int numRetries = -1;
+        /// <summary> allows to use a server with API key </summary>
+        [Remote] public string APIKey;
         /// <summary> file to save the chat history.
         /// The file is saved only for Chat calls with addToHistory set to true.
         /// The file will be saved within the persistentDataPath directory (see https://docs.unity3d.com/ScriptReference/Application-persistentDataPath.html). </summary>
@@ -38,6 +40,8 @@ namespace LLMUnity
         [LLM] public bool saveCache = false;
         /// <summary> select to log the constructed prompt the Unity Editor. </summary>
         [LLM] public bool debugPrompt = false;
+        /// <summary> allows to bypass certificate checks (note: only for development!). </summary>
+        [LLMAdvanced] public bool bypassCertificate = false;
         /// <summary> option to receive the reply from the model as it is produced (recommended!).
         /// If it is not selected, the full reply from the model is received in one go </summary>
         [Model] public bool stream = true;
@@ -125,8 +129,9 @@ namespace LLMUnity
         private string chatTemplate;
         private ChatTemplate template = null;
         public string grammarString;
-        private List<(string, string)> requestHeaders = new List<(string, string)> { ("Content-Type", "application/json") };
+        private List<(string, string)> requestHeaders;
         private List<UnityWebRequest> WIPRequests = new List<UnityWebRequest>();
+        bool prebypassCertificate = false;
         /// \endcond
 
         /// <summary>
@@ -142,6 +147,8 @@ namespace LLMUnity
         {
             // Start the LLM server in a cross-platform way
             if (!enabled) return;
+
+            requestHeaders = new List<(string, string)> { ("Content-Type", "application/json") };
             if (!remote)
             {
                 AssignLLM();
@@ -153,6 +160,10 @@ namespace LLMUnity
                 int slotFromServer = llm.Register(this);
                 if (slot == -1) slot = slotFromServer;
             }
+            else
+            {
+                if (!String.IsNullOrEmpty(APIKey)) requestHeaders.Add(("Authorization", "Bearer " + APIKey));
+            }
 
             InitGrammar();
             InitHistory();
@@ -162,6 +173,7 @@ namespace LLMUnity
         {
             AssignLLM();
             if (llm != null && llm.parallelPrompts > -1 && (slot < -1 || slot >= llm.parallelPrompts)) LLMUnitySetup.LogError($"The slot needs to be between 0 and {llm.parallelPrompts-1}, or -1 to be automatically set");
+            if (prebypassCertificate != bypassCertificate && bypassCertificate) LLMUnitySetup.LogWarning("All of the certificates will be accepted. Use only for development!");
         }
 
         void Reset()
@@ -227,17 +239,17 @@ namespace LLMUnity
             }
         }
 
-        string GetSavePath(string filename)
+        protected string GetSavePath(string filename)
         {
             return Path.Combine(Application.persistentDataPath, filename).Replace('\\', '/');
         }
 
-        string GetJsonSavePath(string filename)
+        protected string GetJsonSavePath(string filename)
         {
             return GetSavePath(filename + ".json");
         }
 
-        string GetCacheSavePath(string filename)
+        protected string GetCacheSavePath(string filename)
         {
             // this is saved already in the Application.persistentDataPath folder
             return GetSavePath(filename + ".cache");
@@ -286,14 +298,17 @@ namespace LLMUnity
             return true;
         }
 
-        private async Task InitNKeep()
+        private async Task<bool> InitNKeep()
         {
             if (setNKeepToPrompt && nKeep == -1)
             {
-                if (!CheckTemplate()) return;
+                if (!CheckTemplate()) return false;
                 string systemPrompt = template.ComputePrompt(new List<ChatMessage>(){chat[0]}, playerName, "", false);
-                await Tokenize(systemPrompt, SetNKeep);
+                List<int> tokens = await Tokenize(systemPrompt);
+                if (tokens == null) return false;
+                SetNKeep(tokens);
             }
+            return true;
         }
 
         private void InitGrammar()
@@ -485,7 +500,7 @@ namespace LLMUnity
             // call the completionCallback function when the answer is fully received
             await LoadTemplate();
             if (!CheckTemplate()) return null;
-            await InitNKeep();
+            if (!await InitNKeep()) return null;
 
             string json;
             await chatLock.WaitAsync();
@@ -613,7 +628,7 @@ namespace LLMUnity
             return await PostRequest<EmbeddingsResult, List<float>>(json, "embeddings", EmbeddingsContent, callback);
         }
 
-        private async Task<string> Slot(string filepath, string action)
+        protected async Task<string> Slot(string filepath, string action)
         {
             SlotRequest slotRequest = new SlotRequest();
             slotRequest.id_slot = slot;
@@ -781,6 +796,7 @@ namespace LLMUnity
                     WIPRequests.Add(request);
 
                     request.method = "POST";
+                    if (bypassCertificate) request.certificateHandler = new BypassCertificateHandler();
                     if (requestHeaders != null)
                     {
                         for (int i = 0; i < requestHeaders.Count; i++)
@@ -814,6 +830,7 @@ namespace LLMUnity
                     {
                         result = default;
                         error = request.error;
+                        if (request.responseCode == (int)System.Net.HttpStatusCode.Unauthorized) break;
                     }
                 }
                 tryNr--;
@@ -836,6 +853,16 @@ namespace LLMUnity
     public class ChatListWrapper
     {
         public List<ChatMessage> chat;
+    }
+
+    // Custom certificate handler that bypasses validation
+    class BypassCertificateHandler : CertificateHandler
+    {
+        protected override bool ValidateCertificate(byte[] certificateData)
+        {
+            // Always accept the certificate
+            return true;
+        }
     }
     /// \endcond
 }

@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace LLMUnity
 {
-    [CustomEditor(typeof(LLM))]
+    [CustomEditor(typeof(LLM), true)]
     public class LLMEditor : PropertyEditor
     {
         private ReorderableList modelList;
@@ -32,6 +32,47 @@ namespace LLMUnity
         protected override Type[] GetPropertyTypes()
         {
             return new Type[] { typeof(LLM) };
+        }
+
+        public void AddSecuritySettings(SerializedObject llmScriptSO, LLM llmScript)
+        {
+            void AddSSLLoad(string type, Callback<string> setterCallback)
+            {
+                if (GUILayout.Button("Load SSL " + type, GUILayout.Width(buttonWidth)))
+                {
+                    EditorApplication.delayCall += () =>
+                    {
+                        string path = EditorUtility.OpenFilePanel("Select a SSL " + type + " file", "", "");
+                        if (!string.IsNullOrEmpty(path)) setterCallback(path);
+                    };
+                }
+            }
+
+            void AddSSLInfo(string propertyName, string type, Callback<string> setterCallback)
+            {
+                string path = llmScriptSO.FindProperty(propertyName).stringValue;
+                if (path != "")
+                {
+                    EditorGUILayout.BeginHorizontal();
+                    EditorGUILayout.LabelField("SSL " + type + " path", path);
+                    if (GUILayout.Button(trashIcon, GUILayout.Height(actionColumnWidth), GUILayout.Width(actionColumnWidth))) setterCallback("");
+                    EditorGUILayout.EndHorizontal();
+                }
+            }
+
+            EditorGUILayout.LabelField("Server Security Settings", EditorStyles.boldLabel);
+            EditorGUILayout.PropertyField(llmScriptSO.FindProperty("APIKey"));
+
+            if (llmScriptSO.FindProperty("advancedOptions").boolValue)
+            {
+                EditorGUILayout.BeginHorizontal();
+                AddSSLLoad("certificate", llmScript.SetSSLCert);
+                AddSSLLoad("key", llmScript.SetSSLKey);
+                EditorGUILayout.EndHorizontal();
+                AddSSLInfo("SSLCertPath", "certificate", llmScript.SetSSLCert);
+                AddSSLInfo("SSLKeyPath", "key", llmScript.SetSSLKey);
+            }
+            Space();
         }
 
         public void AddModelLoadersSettings(SerializedObject llmScriptSO, LLM llmScript)
@@ -422,6 +463,7 @@ namespace LLMUnity
 
             AddOptionsToggles(llmScriptSO);
             AddSetupSettings(llmScriptSO);
+            if (llmScriptSO.FindProperty("remote").boolValue) AddSecuritySettings(llmScriptSO, llmScript);
             AddModelLoadersSettings(llmScriptSO, llmScript);
             AddChatSettings(llmScriptSO);
 

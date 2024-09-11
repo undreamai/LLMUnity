@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace LLMUnity
 {
-    [CustomEditor(typeof(LLMCharacter))]
+    [CustomEditor(typeof(LLMCharacter), true)]
     public class LLMCharacterEditor : PropertyEditor
     {
         protected override Type[] GetPropertyTypes()
