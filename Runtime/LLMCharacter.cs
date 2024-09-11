@@ -239,17 +239,17 @@ namespace LLMUnity
             }
         }
 
-        string GetSavePath(string filename)
+        protected string GetSavePath(string filename)
         {
             return Path.Combine(Application.persistentDataPath, filename).Replace('\\', '/');
         }
 
-        string GetJsonSavePath(string filename)
+        protected string GetJsonSavePath(string filename)
         {
             return GetSavePath(filename + ".json");
         }
 
-        string GetCacheSavePath(string filename)
+        protected string GetCacheSavePath(string filename)
         {
             // this is saved already in the Application.persistentDataPath folder
             return GetSavePath(filename + ".cache");
@@ -628,7 +628,7 @@ namespace LLMUnity
             return await PostRequest<EmbeddingsResult, List<float>>(json, "embeddings", EmbeddingsContent, callback);
         }
 
-        private async Task<string> Slot(string filepath, string action)
+        protected async Task<string> Slot(string filepath, string action)
         {
             SlotRequest slotRequest = new SlotRequest();
             slotRequest.id_slot = slot;
