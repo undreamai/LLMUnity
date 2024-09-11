@@ -276,25 +276,34 @@ namespace LLMUnity
 
     public class LLMLib
     {
-        static IntPtr archCheckerHandle = IntPtr.Zero;
         IntPtr libraryHandle = IntPtr.Zero;
+        static readonly object staticLock = new object();
+        static bool has_avx = false;
+        static bool has_avx2 = false;
+        static bool has_avx512 = false;
+        static bool has_avx_set = false;
 
         static LLMLib()
         {
-            string archCheckerPath = GetArchitectureCheckerPath();
-            if (archCheckerPath != null)
+            lock(staticLock)
             {
-                archCheckerHandle = LibraryLoader.LoadLibrary(archCheckerPath);
-                if (archCheckerHandle == IntPtr.Zero)
+                if (has_avx_set) return;
+                string archCheckerPath = GetArchitectureCheckerPath();
+                if (archCheckerPath != null)
                 {
-                    LLMUnitySetup.LogError($"Failed to load library {archCheckerPath}.");
+                    IntPtr archCheckerHandle = LibraryLoader.LoadLibrary(archCheckerPath);
+                    if (archCheckerHandle == IntPtr.Zero)
+                    {
+                        LLMUnitySetup.LogError($"Failed to load library {archCheckerPath}.");
+                    }
+                    else
+                    {
+                        has_avx = LibraryLoader.GetSymbolDelegate<HasArchDelegate>(archCheckerHandle, "has_avx")();
+                        has_avx2 = LibraryLoader.GetSymbolDelegate<HasArchDelegate>(archCheckerHandle, "has_avx2")();
+                        has_avx512 = LibraryLoader.GetSymbolDelegate<HasArchDelegate>(archCheckerHandle, "has_avx512")();
+                    }
                 }
-                else
-                {
-                    has_avx = LibraryLoader.GetSymbolDelegate<HasArchDelegate>(archCheckerHandle, "has_avx");
-                    has_avx2 = LibraryLoader.GetSymbolDelegate<HasArchDelegate>(archCheckerHandle, "has_avx2");
-                    has_avx512 = LibraryLoader.GetSymbolDelegate<HasArchDelegate>(archCheckerHandle, "has_avx512");
-                }
+                has_avx_set = true;
             }
         }
 
@@ -334,7 +343,6 @@ namespace LLMUnity
 
         public void Destroy()
         {
-            if (archCheckerHandle != IntPtr.Zero) LibraryLoader.FreeLibrary(libraryHandle);
             if (libraryHandle != IntPtr.Zero) LibraryLoader.FreeLibrary(libraryHandle);
         }
 
@@ -361,9 +369,9 @@ namespace LLMUnity
                 }
                 try
                 {
-                    if (has_avx512()) architectures.Add("avx512");
-                    if (has_avx2()) architectures.Add("avx2");
-                    if (has_avx()) architectures.Add("avx");
+                    if (has_avx512) architectures.Add("avx512");
+                    if (has_avx2) architectures.Add("avx2");
+                    if (has_avx) architectures.Add("avx");
                 }
                 catch (Exception e)
                 {
@@ -445,11 +453,6 @@ namespace LLMUnity
             return Path.Combine(LLMUnitySetup.libraryPath, filename);
         }
 
-        public delegate bool HasArchDelegate();
-        public static HasArchDelegate has_avx;
-        public static HasArchDelegate has_avx2;
-        public static HasArchDelegate has_avx512;
-
         public string GetStringWrapperResult(IntPtr stringWrapper)
         {
             string result = "";
@@ -470,6 +473,7 @@ namespace LLMUnity
             return result;
         }
 
+        public delegate bool HasArchDelegate();
         public delegate void LoggingDelegate(IntPtr stringWrapper);
         public delegate void StopLoggingDelegate();
         public delegate IntPtr LLM_ConstructDelegate(string command);
