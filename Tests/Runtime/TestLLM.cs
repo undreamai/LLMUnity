@@ -246,9 +246,9 @@ namespace LLMUnityTests
 
         public void TestInitParameters(int nkeep, int chats)
         {
-            Assert.That(llmCharacter.nKeep == nkeep);
+            Assert.AreEqual(llmCharacter.nKeep, nkeep);
             Assert.That(ChatTemplate.GetTemplate(llm.chatTemplate).GetStop(llmCharacter.playerName, llmCharacter.AIName).Length > 0);
-            Assert.That(llmCharacter.chat.Count == chats);
+            Assert.AreEqual(llmCharacter.chat.Count, chats);
         }
 
         public void TestTokens(List<int> tokens)
@@ -410,7 +410,7 @@ namespace LLMUnityTests
     public class TestLLM_Double : TestLLM
     {
         LLM llm1;
-        LLMCharacter lLMCharacter1;
+        LLMCharacter llmCharacter1;
 
         public override async Task Init()
         {
@@ -421,8 +421,51 @@ namespace LLMUnityTests
             llm = CreateLLM();
             llmCharacter = CreateLLMCharacter();
             llm1 = CreateLLM();
-            lLMCharacter1 = CreateLLMCharacter();
+            llmCharacter1 = CreateLLMCharacter();
             gameObject.SetActive(true);
+        }
+    }
+
+    public class TestLLMCharacter_Save : TestLLM
+    {
+        string saveName = "TestLLMCharacter_Save";
+
+        public override LLMCharacter CreateLLMCharacter()
+        {
+            LLMCharacter llmCharacter = base.CreateLLMCharacter();
+            llmCharacter.save = saveName;
+            llmCharacter.saveCache = true;
+            return llmCharacter;
+        }
+
+        public override async Task Tests()
+        {
+            await base.Tests();
+            TestSave();
+        }
+
+        public void TestSave()
+        {
+            string jsonPath = llmCharacter.GetJsonSavePath(saveName);
+            string cachePath = llmCharacter.GetCacheSavePath(saveName);
+            Assert.That(File.Exists(jsonPath));
+            Assert.That(File.Exists(cachePath));
+            string json = File.ReadAllText(jsonPath);
+            File.Delete(jsonPath);
+            File.Delete(cachePath);
+
+            List<ChatMessage> chatHistory = JsonUtility.FromJson<ChatListWrapper>(json).chat;
+            Assert.AreEqual(chatHistory.Count, 2);
+            Assert.AreEqual(chatHistory[0].role, llmCharacter.playerName);
+            Assert.AreEqual(chatHistory[0].content, "hi");
+            Assert.AreEqual(chatHistory[1].role, llmCharacter.AIName);
+
+            Assert.AreEqual(llmCharacter.chat.Count, chatHistory.Count + 1);
+            for (int i = 0; i < chatHistory.Count; i++)
+            {
+                Assert.AreEqual(chatHistory[i].role, llmCharacter.chat[i + 1].role);
+                Assert.AreEqual(chatHistory[i].content, llmCharacter.chat[i + 1].content);
+            }
         }
     }
 }
