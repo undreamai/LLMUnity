@@ -1,3 +1,9 @@
+## v2.2.3
+#### 🚀 Features
+
+- Server security with API key and SSL (PR: #238)
+
+
 ## v2.2.2
 #### 🚀 Features
 
