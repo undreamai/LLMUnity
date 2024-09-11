@@ -239,17 +239,17 @@ namespace LLMUnity
             }
         }
 
-        protected string GetSavePath(string filename)
+        public string GetSavePath(string filename)
         {
             return Path.Combine(Application.persistentDataPath, filename).Replace('\\', '/');
         }
 
-        protected string GetJsonSavePath(string filename)
+        public string GetJsonSavePath(string filename)
         {
             return GetSavePath(filename + ".json");
         }
 
-        protected string GetCacheSavePath(string filename)
+        public string GetCacheSavePath(string filename)
         {
             // this is saved already in the Application.persistentDataPath folder
             return GetSavePath(filename + ".cache");
@@ -648,7 +648,7 @@ namespace LLMUnity
             string filepath = GetJsonSavePath(filename);
             string dirname = Path.GetDirectoryName(filepath);
             if (!Directory.Exists(dirname)) Directory.CreateDirectory(dirname);
-            string json = JsonUtility.ToJson(new ChatListWrapper { chat = chat });
+            string json = JsonUtility.ToJson(new ChatListWrapper { chat = chat.GetRange(1, chat.Count - 1) });
             File.WriteAllText(filepath, json);
 
             string cachepath = GetCacheSavePath(filename);
@@ -671,7 +671,9 @@ namespace LLMUnity
                 return null;
             }
             string json = File.ReadAllText(filepath);
-            chat = JsonUtility.FromJson<ChatListWrapper>(json).chat;
+            List<ChatMessage> chatHistory = JsonUtility.FromJson<ChatListWrapper>(json).chat;
+            InitPrompt(true);
+            chat.AddRange(chatHistory);
             LLMUnitySetup.Log($"Loaded {filepath}");
 
             string cachepath = GetCacheSavePath(filename);
