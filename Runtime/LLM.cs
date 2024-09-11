@@ -23,8 +23,6 @@ namespace LLMUnity
         [LocalRemote] public bool remote = false;
         /// <summary> port to use for the LLM server </summary>
         [Remote] public int port = 13333;
-        /// <summary> API key to use for the server (optional) </summary>
-        [Remote] public string APIKey;
         /// <summary> number of threads to use (-1 = all) </summary>
         [LLM] public int numThreads = -1;
         /// <summary> number of model layers to offload to the GPU (0 = GPU not used).
@@ -65,6 +63,17 @@ namespace LLMUnity
         [ModelAdvanced] public string loraWeights = "";
         /// <summary> enable use of flash attention </summary>
         [ModelExtras] public bool flashAttention = false;
+
+        /// <summary> API key to use for the server (optional) </summary>
+        public string APIKey;
+        // SSL certificate
+        [SerializeField]
+        private string SSLCert = "";
+        public string SSLCertPath = "";
+        // SSL key
+        [SerializeField]
+        private string SSLKey = "";
+        public string SSLKeyPath = "";
 
         /// \cond HIDE
 
@@ -304,6 +313,41 @@ namespace LLMUnity
 #endif
         }
 
+        /// \cond HIDE
+
+        string ReadFileContents(string path)
+        {
+            if (String.IsNullOrEmpty(path)) return "";
+            else if (!File.Exists(path))
+            {
+                LLMUnitySetup.LogError($"File {path} not found!");
+                return "";
+            }
+            return File.ReadAllText(path);
+        }
+
+        /// \endcond
+
+        /// <summary>
+        /// Use a SSL certificate for the LLM server.
+        /// </summary>
+        /// <param name="templateName">the SSL certificate path </param>
+        public void SetSSLCert(string path)
+        {
+            SSLCertPath = path;
+            SSLCert = ReadFileContents(path);
+        }
+
+        /// <summary>
+        /// Use a SSL key for the LLM server.
+        /// </summary>
+        /// <param name="templateName">the SSL key path </param>
+        public void SetSSLKey(string path)
+        {
+            SSLKeyPath = path;
+            SSLKey = ReadFileContents(path);
+        }
+
         /// <summary>
         /// Returns the chat template of the LLM.
         /// </summary>
@@ -316,6 +360,12 @@ namespace LLMUnity
         protected virtual string GetLlamaccpArguments()
         {
             // Start the LLM server in a cross-platform way
+            if ((SSLCert != "" && SSLKey == "") || (SSLCert == "" && SSLKey != ""))
+            {
+                LLMUnitySetup.LogError($"Both SSL certificate and key need to be provided!");
+                return null;
+            }
+
             if (model == "")
             {
                 LLMUnitySetup.LogError("No model file provided!");
@@ -433,7 +483,15 @@ namespace LLMUnity
             if (debug) CallWithLock(SetupLogging);
             CallWithLock(() => { LLMObject = llmlib.LLM_Construct(arguments); });
             CallWithLock(() => llmlib.LLM_SetTemplate(LLMObject, chatTemplate));
-            if (remote) CallWithLock(() => llmlib.LLM_StartServer(LLMObject));
+            if (remote)
+            {
+                if (SSLCert != "" && SSLKey != "")
+                {
+                    LLMUnitySetup.Log("Using SSL");
+                    CallWithLock(() => llmlib.LLM_SetSSL(LLMObject, SSLCert, SSLKey));
+                }
+                CallWithLock(() => llmlib.LLM_StartServer(LLMObject));
+            }
             CallWithLock(() => CheckLLMStatus(false));
         }
 
