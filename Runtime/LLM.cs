@@ -481,7 +481,7 @@ namespace LLMUnity
 
         private void InitService(string arguments)
         {
-            lock(staticLock)
+            lock (staticLock)
             {
                 if (debug) CallWithLock(SetupLogging);
                 CallWithLock(() => { LLMObject = llmlib.LLM_Construct(arguments); });
@@ -760,33 +760,33 @@ namespace LLMUnity
         /// </summary>
         public void Destroy()
         {
-            lock(staticLock)
-            lock(startLock)
-            {
-                try
+            lock (staticLock)
+                lock (startLock)
                 {
-                    if (llmlib != null)
+                    try
                     {
-                        if (LLMObject != IntPtr.Zero)
+                        if (llmlib != null)
                         {
-                            llmlib.LLM_Stop(LLMObject);
-                            if (remote) llmlib.LLM_StopServer(LLMObject);
-                            StopLogging();
-                            llmThread?.Join();
-                            llmlib.LLM_Delete(LLMObject);
-                            LLMObject = IntPtr.Zero;
+                            if (LLMObject != IntPtr.Zero)
+                            {
+                                llmlib.LLM_Stop(LLMObject);
+                                if (remote) llmlib.LLM_StopServer(LLMObject);
+                                StopLogging();
+                                llmThread?.Join();
+                                llmlib.LLM_Delete(LLMObject);
+                                LLMObject = IntPtr.Zero;
+                            }
+                            llmlib.Destroy();
+                            llmlib = null;
                         }
-                        llmlib.Destroy();
-                        llmlib = null;
+                        started = false;
+                        failed = false;
                     }
-                    started = false;
-                    failed = false;
+                    catch (Exception e)
+                    {
+                        LLMUnitySetup.LogError(e.Message);
+                    }
                 }
-                catch (Exception e)
-                {
-                    LLMUnitySetup.LogError(e.Message);
-                }
-            }
         }
 
         /// <summary>
