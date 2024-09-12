@@ -303,10 +303,7 @@ Alternatively you can use a server binary for easier deployment:
 - Run the above scene from the Editor and copy the command from the Debug messages (starting with "Server command:")
 - Download the [server binaries](https://github.com/undreamai/LlamaLib/releases/download/v1.1.12/undreamai-v1.1.12-server.zip) and [DLLs](https://github.com/undreamai/LlamaLib/releases/download/v1.1.12/undreamai-v1.1.12-llamacpp-full.zip) and extract them into the same folder
 - Find the architecture you are interested in from the folder above e.g. for Windows and CUDA use the `windows-cuda-cu12.2.0`.<br>You can also check the architecture that works for your system from the Debug messages (starting with "Using architecture").
-
-From command line:
-- change directory to the architecture folder selected above
-- start the server by running `undreamai_server.exe <command>` on Windows or `./undreamai_server <command>` on Linux / macOS where `<command>` the command copied from above.
+- From command line change directory to the architecture folder selected and start the server by running the command copied from above.
 
 **Create the characters**<br>
 Create a second project with the game characters using the `LLMCharacter` script as described above.
