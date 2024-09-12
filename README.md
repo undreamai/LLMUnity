@@ -291,12 +291,26 @@ public class MyScript : MonoBehaviour
 <details>
 <summary>Use a remote server</summary>
 
-You can use a remote server to carry out the processing and implement characters that interact with it. To do that:
-- Create a project with a GameObject using the `LLM` script as described above. Enable the `Remote` option and optionally configure the port.
-- Create a second project with the game characters using the `LLMCharacter` script as described above.
-  Enable the `Remote` option and configure the host with the IP address (starting with "http://") and port of the server.
+You can use a remote server to carry out the processing and implement characters that interact with it.
 
-If you want to deploy the remote server as a service without using Unity you can follow the instructions at this [link](https://github.com/undreamai/LlamaLib).
+**Create the server**<br>
+To create the server:
+- Create a project with a GameObject using the `LLM` script as described above
+- Enable the `Remote` option of the `LLM` and optionally configure the server parameters: port, API key, SSL certificate, SSL key
+- Build and run to start the server
+
+Alternatively you can use a server binary for easier deployment:
+- Run the above scene from the Editor and copy the command from the Debug messages (starting with "Server command:")
+- Download the [server binaries](https://github.com/undreamai/LlamaLib/releases/download/v1.1.12/undreamai-v1.1.12-server.zip) and [DLLs](https://github.com/undreamai/LlamaLib/releases/download/v1.1.12/undreamai-v1.1.12-llamacpp-full.zip) and extract them into the same folder
+- Find the architecture you are interested in from the folder above e.g. for Windows and CUDA use the `windows-cuda-cu12.2.0`.<br>You can also check the architecture that works for your system from the Debug messages (starting with "Using architecture").
+
+From command line:
+- change directory to the architecture folder selected above
+- start the server by running `undreamai_server.exe <command>` on Windows or `./undreamai_server <command>` on Linux / macOS where `<command>` the command copied from above.
+
+**Create the characters**<br>
+Create a second project with the game characters using the `LLMCharacter` script as described above.
+Enable the `Remote` option and configure the host with the IP address (starting with "http://") and port of the server.
 
 </details>
 <details>
