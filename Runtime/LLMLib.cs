@@ -298,9 +298,16 @@ namespace LLMUnity
                     }
                     else
                     {
-                        has_avx = LibraryLoader.GetSymbolDelegate<HasArchDelegate>(archCheckerHandle, "has_avx")();
-                        has_avx2 = LibraryLoader.GetSymbolDelegate<HasArchDelegate>(archCheckerHandle, "has_avx2")();
-                        has_avx512 = LibraryLoader.GetSymbolDelegate<HasArchDelegate>(archCheckerHandle, "has_avx512")();
+                        try
+                        {
+                            has_avx = LibraryLoader.GetSymbolDelegate<HasArchDelegate>(archCheckerHandle, "has_avx")();
+                            has_avx2 = LibraryLoader.GetSymbolDelegate<HasArchDelegate>(archCheckerHandle, "has_avx2")();
+                            has_avx512 = LibraryLoader.GetSymbolDelegate<HasArchDelegate>(archCheckerHandle, "has_avx512")();
+                        }
+                        catch (Exception e)
+                        {
+                            LLMUnitySetup.LogError($"{e.GetType()}: {e.Message}");
+                        }
                     }
                 }
                 has_avx_set = true;
@@ -367,16 +374,9 @@ namespace LLMUnity
                     architectures.Add("hip");
                     architectures.Add("vulkan");
                 }
-                try
-                {
-                    if (has_avx512) architectures.Add("avx512");
-                    if (has_avx2) architectures.Add("avx2");
-                    if (has_avx) architectures.Add("avx");
-                }
-                catch (Exception e)
-                {
-                    LLMUnitySetup.LogError($"{e.GetType()}: {e.Message}");
-                }
+                if (has_avx512) architectures.Add("avx512");
+                if (has_avx2) architectures.Add("avx2");
+                if (has_avx) architectures.Add("avx");
                 architectures.Add("noavx");
             }
             else if (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.OSXPlayer)
