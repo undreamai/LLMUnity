@@ -29,7 +29,7 @@ namespace LLMUnity
         /// <summary> port to use for the LLM server </summary>
         [Remote] public int port = 13333;
         /// <summary> number of retries to use for the LLM server requests (-1 = infinite) </summary>
-        [Remote] public int numRetries = -1;
+        [Remote] public int numRetries = 10;
         /// <summary> allows to use a server with API key </summary>
         [Remote] public string APIKey;
         /// <summary> file to save the chat history.
@@ -831,6 +831,7 @@ namespace LLMUnity
                     }
                 }
                 tryNr--;
+                if (tryNr > 0) await Task.Delay(200 * (numRetries - tryNr));
             }
 
             if (error != null) LLMUnitySetup.LogError(error);
