@@ -235,19 +235,18 @@ namespace LLMUnity
             }
         }
 
-        public string GetSavePath(string filename)
+        public virtual string GetSavePath(string filename)
         {
             return Path.Combine(Application.persistentDataPath, filename).Replace('\\', '/');
         }
 
-        public string GetJsonSavePath(string filename)
+        public virtual string GetJsonSavePath(string filename)
         {
             return GetSavePath(filename + ".json");
         }
 
-        public string GetCacheSavePath(string filename)
+        public virtual string GetCacheSavePath(string filename)
         {
-            // this is saved already in the Application.persistentDataPath folder
             return GetSavePath(filename + ".cache");
         }
 
@@ -639,7 +638,7 @@ namespace LLMUnity
         /// </summary>
         /// <param name="filename">filename / relative path to save the chat history</param>
         /// <returns></returns>
-        public async Task<string> Save(string filename)
+        public virtual async Task<string> Save(string filename)
         {
             string filepath = GetJsonSavePath(filename);
             string dirname = Path.GetDirectoryName(filepath);
@@ -658,7 +657,7 @@ namespace LLMUnity
         /// </summary>
         /// <param name="filename">filename / relative path to load the chat history from</param>
         /// <returns></returns>
-        public async Task<string> Load(string filename)
+        public virtual async Task<string> Load(string filename)
         {
             string filepath = GetJsonSavePath(filename);
             if (!File.Exists(filepath))
