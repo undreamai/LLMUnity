@@ -47,7 +47,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_tiny.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">LLM for Unity
-   &#160;<span id="projectnumber">v2.2.2</span>
+   &#160;<span id="projectnumber">v2.2.3</span>
    </div>
    <div id="projectbrief">Create characters in Unity with LLMs!</div>
   </td>
@@ -133,6 +133,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a1b2b5787e2695697962f520b0813aa3b" id="r_a1b2b5787e2695697962f520b0813aa3b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1b2b5787e2695697962f520b0813aa3b">Awake</a> ()</td></tr>
 <tr class="memdesc:a1b2b5787e2695697962f520b0813aa3b"><td class="mdescLeft">&#160;</td><td class="mdescRight">The Unity Awake function that initializes the state before the application starts. The following actions are executed:  <br /></td></tr>
 <tr class="separator:a1b2b5787e2695697962f520b0813aa3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae08fe19658f9fe1b5b48f61efbca4f14" id="r_ae08fe19658f9fe1b5b48f61efbca4f14"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">virtual</a> <a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">string</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae08fe19658f9fe1b5b48f61efbca4f14">GetSavePath</a> (<a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">string</a> filename)</td></tr>
+<tr class="separator:ae08fe19658f9fe1b5b48f61efbca4f14"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9413ce7a563cb3d17c096309b69c9349" id="r_a9413ce7a563cb3d17c096309b69c9349"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">virtual</a> <a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">string</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9413ce7a563cb3d17c096309b69c9349">GetJsonSavePath</a> (<a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">string</a> filename)</td></tr>
+<tr class="separator:a9413ce7a563cb3d17c096309b69c9349"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a558b84cb596733cfee1cebc3761c9782" id="r_a558b84cb596733cfee1cebc3761c9782"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">virtual</a> <a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">string</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a558b84cb596733cfee1cebc3761c9782">GetCacheSavePath</a> (<a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">string</a> filename)</td></tr>
+<tr class="separator:a558b84cb596733cfee1cebc3761c9782"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac0f8bab15daa6ec99724c7ef24814939" id="r_ac0f8bab15daa6ec99724c7ef24814939"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac0f8bab15daa6ec99724c7ef24814939">SetPrompt</a> (<a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">string</a> <a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">newPrompt</a>, <a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">bool</a> <a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">clearChat</a>=<a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">true</a>)</td></tr>
 <tr class="memdesc:ac0f8bab15daa6ec99724c7ef24814939"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the system prompt for the LLMCharacter.  <br /></td></tr>
 <tr class="separator:ac0f8bab15daa6ec99724c7ef24814939"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -169,12 +175,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a329b6f6f2f77bfe45508b7d8c49af422" id="r_a329b6f6f2f77bfe45508b7d8c49af422"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">async</a> <a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">Task</a>&lt; <a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">List</a>&lt; <a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">float</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a329b6f6f2f77bfe45508b7d8c49af422">Embeddings</a> (<a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">string</a> <a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">query</a>, <a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">Callback</a>&lt; <a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">List</a>&lt; <a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">float</a> &gt; &gt; <a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">callback</a>=<a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">null</a>)</td></tr>
 <tr class="memdesc:a329b6f6f2f77bfe45508b7d8c49af422"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the embeddings of the provided input.  <br /></td></tr>
 <tr class="separator:a329b6f6f2f77bfe45508b7d8c49af422"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a78a2e9a3a6b95a86f6eac824fc302858" id="r_a78a2e9a3a6b95a86f6eac824fc302858"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">async</a> <a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">Task</a>&lt; <a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">string</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a78a2e9a3a6b95a86f6eac824fc302858">Save</a> (<a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">string</a> filename)</td></tr>
-<tr class="memdesc:a78a2e9a3a6b95a86f6eac824fc302858"><td class="mdescLeft">&#160;</td><td class="mdescRight">Saves the chat history and cache to the provided filename / relative path.  <br /></td></tr>
-<tr class="separator:a78a2e9a3a6b95a86f6eac824fc302858"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af038296bb6679a042b05e073eb3a961a" id="r_af038296bb6679a042b05e073eb3a961a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">async</a> <a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">Task</a>&lt; <a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">string</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af038296bb6679a042b05e073eb3a961a">Load</a> (<a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">string</a> filename)</td></tr>
-<tr class="memdesc:af038296bb6679a042b05e073eb3a961a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load the chat history and cache from the provided filename / relative path.  <br /></td></tr>
-<tr class="separator:af038296bb6679a042b05e073eb3a961a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8777cf02ab4ecf5a967ade7e93925108" id="r_a8777cf02ab4ecf5a967ade7e93925108"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">virtual</a> <a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">async</a> <a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">Task</a>&lt; <a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">string</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8777cf02ab4ecf5a967ade7e93925108">Save</a> (<a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">string</a> filename)</td></tr>
+<tr class="memdesc:a8777cf02ab4ecf5a967ade7e93925108"><td class="mdescLeft">&#160;</td><td class="mdescRight">Saves the chat history and cache to the provided filename / relative path.  <br /></td></tr>
+<tr class="separator:a8777cf02ab4ecf5a967ade7e93925108"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5fcf385a45c9cd71e2428b7442a163a3" id="r_a5fcf385a45c9cd71e2428b7442a163a3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">virtual</a> <a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">async</a> <a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">Task</a>&lt; <a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">string</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5fcf385a45c9cd71e2428b7442a163a3">Load</a> (<a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">string</a> filename)</td></tr>
+<tr class="memdesc:a5fcf385a45c9cd71e2428b7442a163a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load the chat history and cache from the provided filename / relative path.  <br /></td></tr>
+<tr class="separator:a5fcf385a45c9cd71e2428b7442a163a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1c8c35f4e0c2d3d381561fd42e1e25d7" id="r_a1c8c35f4e0c2d3d381561fd42e1e25d7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1c8c35f4e0c2d3d381561fd42e1e25d7">CancelRequests</a> ()</td></tr>
 <tr class="memdesc:a1c8c35f4e0c2d3d381561fd42e1e25d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cancel the ongoing requests e.g. Chat, Complete.  <br /></td></tr>
 <tr class="separator:a1c8c35f4e0c2d3d381561fd42e1e25d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -196,9 +202,12 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:ab1f57c929f3b6d690076bc59b0bbb785" id="r_ab1f57c929f3b6d690076bc59b0bbb785"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab1f57c929f3b6d690076bc59b0bbb785">port</a> = 13333</td></tr>
 <tr class="memdesc:ab1f57c929f3b6d690076bc59b0bbb785"><td class="mdescLeft">&#160;</td><td class="mdescRight">port to use for the LLM server  <br /></td></tr>
 <tr class="separator:ab1f57c929f3b6d690076bc59b0bbb785"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a46872a74a6f62503a28bba4929621c42" id="r_a46872a74a6f62503a28bba4929621c42"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a46872a74a6f62503a28bba4929621c42">numRetries</a> = -1</td></tr>
+<tr class="memitem:a46872a74a6f62503a28bba4929621c42" id="r_a46872a74a6f62503a28bba4929621c42"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a46872a74a6f62503a28bba4929621c42">numRetries</a> = 10</td></tr>
 <tr class="memdesc:a46872a74a6f62503a28bba4929621c42"><td class="mdescLeft">&#160;</td><td class="mdescRight">number of retries to use for the LLM server requests (-1 = infinite)  <br /></td></tr>
 <tr class="separator:a46872a74a6f62503a28bba4929621c42"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa0109d7d189c9eb1fe3c3524f5a94a8c" id="r_aa0109d7d189c9eb1fe3c3524f5a94a8c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">string</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa0109d7d189c9eb1fe3c3524f5a94a8c">APIKey</a></td></tr>
+<tr class="memdesc:aa0109d7d189c9eb1fe3c3524f5a94a8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">allows to use a server with API key  <br /></td></tr>
+<tr class="separator:aa0109d7d189c9eb1fe3c3524f5a94a8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af5d8f07cad7066700b19689a0b493d38" id="r_af5d8f07cad7066700b19689a0b493d38"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">string</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af5d8f07cad7066700b19689a0b493d38">save</a> = &quot;&quot;</td></tr>
 <tr class="memdesc:af5d8f07cad7066700b19689a0b493d38"><td class="mdescLeft">&#160;</td><td class="mdescRight">file to save the chat history. The file is saved only for Chat calls with addToHistory set to true. The file will be saved within the persistentDataPath directory (see <a href="https://docs.unity3d.com/ScriptReference/Application-persistentDataPath.html">https://docs.unity3d.com/ScriptReference/Application-persistentDataPath.html</a>).  <br /></td></tr>
 <tr class="separator:af5d8f07cad7066700b19689a0b493d38"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -327,7 +336,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00404">404</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00414">414</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -358,7 +367,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00393">393</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00403">403</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -385,7 +394,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00399">399</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00409">409</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -415,7 +424,7 @@ Public Attributes</h2></td></tr>
 <p>Asks the LLM for the chat template to use. </p>
 <dl class="section return"><dt>Returns</dt><dd>the chat template of the LLM</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00566">566</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00576">576</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -451,7 +460,7 @@ Public Attributes</h2></td></tr>
 <li>the number of tokens to keep are based on the system prompt (if setNKeepToPrompt=true) </li>
 </ul>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00141">141</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00143">143</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -480,7 +489,7 @@ Public Attributes</h2></td></tr>
 
 <p>Cancel the ongoing requests e.g. Chat, Complete. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00705">705</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00717">717</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -533,7 +542,7 @@ Public Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the LLM response</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00481">481</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00491">491</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -580,7 +589,7 @@ Public Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the LLM response</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00534">534</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00544">544</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -621,7 +630,7 @@ Public Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the detokenised string</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00592">592</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00602">602</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -662,12 +671,12 @@ Public Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the computed embeddings</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00607">607</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00617">617</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
-<a id="af038296bb6679a042b05e073eb3a961a" name="af038296bb6679a042b05e073eb3a961a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af038296bb6679a042b05e073eb3a961a">&#9670;&#160;</a></span>Load()</h2>
+<a id="a558b84cb596733cfee1cebc3761c9782" name="a558b84cb596733cfee1cebc3761c9782"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a558b84cb596733cfee1cebc3761c9782">&#9670;&#160;</a></span>GetCacheSavePath()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -676,7 +685,7 @@ Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">async</a> <a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">Task</a>&lt; <a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">string</a> &gt; LLMUnity.LLMCharacter.Load </td>
+          <td class="memname"><a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">virtual</a> <a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">string</a> LLMUnity.LLMCharacter.GetCacheSavePath </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">string</a></td>          <td class="paramname"><span class="paramname"><em>filename</em></span></td><td>)</td>
           <td></td>
@@ -684,7 +693,88 @@ Public Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00248">248</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+
+</div>
+</div>
+<a id="a9413ce7a563cb3d17c096309b69c9349" name="a9413ce7a563cb3d17c096309b69c9349"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9413ce7a563cb3d17c096309b69c9349">&#9670;&#160;</a></span>GetJsonSavePath()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">virtual</a> <a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">string</a> LLMUnity.LLMCharacter.GetJsonSavePath </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">string</a></td>          <td class="paramname"><span class="paramname"><em>filename</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00243">243</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+
+</div>
+</div>
+<a id="ae08fe19658f9fe1b5b48f61efbca4f14" name="ae08fe19658f9fe1b5b48f61efbca4f14"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae08fe19658f9fe1b5b48f61efbca4f14">&#9670;&#160;</a></span>GetSavePath()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">virtual</a> <a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">string</a> LLMUnity.LLMCharacter.GetSavePath </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">string</a></td>          <td class="paramname"><span class="paramname"><em>filename</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00238">238</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+
+</div>
+</div>
+<a id="a5fcf385a45c9cd71e2428b7442a163a3" name="a5fcf385a45c9cd71e2428b7442a163a3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5fcf385a45c9cd71e2428b7442a163a3">&#9670;&#160;</a></span>Load()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">virtual</a> <a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">async</a> <a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">Task</a>&lt; <a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">string</a> &gt; LLMUnity.LLMCharacter.Load </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">string</a></td>          <td class="paramname"><span class="paramname"><em>filename</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -698,7 +788,7 @@ Public Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00650">650</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00660">660</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -728,12 +818,12 @@ Public Attributes</h2></td></tr>
 <p>Load the chat template of the LLMCharacter. </p>
 <dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00317">317</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00327">327</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
-<a id="a78a2e9a3a6b95a86f6eac824fc302858" name="a78a2e9a3a6b95a86f6eac824fc302858"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a78a2e9a3a6b95a86f6eac824fc302858">&#9670;&#160;</a></span>Save()</h2>
+<a id="a8777cf02ab4ecf5a967ade7e93925108" name="a8777cf02ab4ecf5a967ade7e93925108"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8777cf02ab4ecf5a967ade7e93925108">&#9670;&#160;</a></span>Save()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -742,7 +832,7 @@ Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">async</a> <a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">Task</a>&lt; <a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">string</a> &gt; LLMUnity.LLMCharacter.Save </td>
+          <td class="memname"><a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">virtual</a> <a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">async</a> <a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">Task</a>&lt; <a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">string</a> &gt; LLMUnity.LLMCharacter.Save </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">string</a></td>          <td class="paramname"><span class="paramname"><em>filename</em></span></td><td>)</td>
           <td></td>
@@ -750,7 +840,7 @@ Public Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -764,7 +854,7 @@ Public Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00631">631</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00641">641</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -799,7 +889,7 @@ Public Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00340">340</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00350">350</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -839,7 +929,7 @@ Public Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00272">272</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00279">279</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -880,7 +970,7 @@ Public Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>list of the tokens</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00577">577</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00587">587</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -922,7 +1012,7 @@ Public Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the LLM response</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00557">557</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00567">567</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -959,7 +1049,25 @@ Public Attributes</h2></td></tr>
 
 <p>the name of the AI </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00116">116</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00118">118</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+
+</div>
+</div>
+<a id="aa0109d7d189c9eb1fe3c3524f5a94a8c" name="aa0109d7d189c9eb1fe3c3524f5a94a8c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa0109d7d189c9eb1fe3c3524f5a94a8c">&#9670;&#160;</a></span>APIKey</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">string</a> LLMUnity.LLMCharacter.APIKey</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>allows to use a server with API key </p>
+
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00034">34</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -977,7 +1085,7 @@ Public Attributes</h2></td></tr>
 
 <p>option to cache the prompt as it is being created by the chat to avoid reprocessing the entire prompt every time (default: true) </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00047">47</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00049">49</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -995,7 +1103,7 @@ Public Attributes</h2></td></tr>
 
 <p>select to log the constructed prompt the Unity Editor. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00040">40</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00042">42</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -1013,7 +1121,7 @@ Public Attributes</h2></td></tr>
 
 <p>repeated token frequency penalty (0.0 = disabled). Positive values penalize new tokens based on their existing frequency in the text so far, decreasing the model's likelihood to repeat the same line verbatim. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00081">81</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00083">83</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -1031,7 +1139,7 @@ Public Attributes</h2></td></tr>
 
 <p>grammar file used for the LLM in .cbnf format (relative to the Assets/StreamingAssets folder) </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00045">45</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00047">47</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -1067,7 +1175,7 @@ Public Attributes</h2></td></tr>
 
 <p>ignore end of stream token and continue generating. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00103">103</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00105">105</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -1103,7 +1211,7 @@ Public Attributes</h2></td></tr>
 
 <p>the logit bias option allows to manually adjust the likelihood of specific tokens appearing in the generated text. By providing a token ID and a positive or negative bias value, you can increase or decrease the probability of that token being generated. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00111">111</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00113">113</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -1121,7 +1229,7 @@ Public Attributes</h2></td></tr>
 
 <p>minimum probability for a token to be used. The probability is defined relative to the probability of the most likely token. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00072">72</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00074">74</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -1139,7 +1247,7 @@ Public Attributes</h2></td></tr>
 
 <p>enable Mirostat sampling, controlling perplexity during text generation (0 = disabled, 1 = Mirostat, 2 = Mirostat 2.0). </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00095">95</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00097">97</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -1157,7 +1265,7 @@ Public Attributes</h2></td></tr>
 
 <p>set the Mirostat learning rate, parameter eta. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00099">99</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00101">101</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -1175,7 +1283,7 @@ Public Attributes</h2></td></tr>
 
 <p>set the Mirostat target entropy, parameter tau. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00097">97</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00099">99</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -1193,7 +1301,7 @@ Public Attributes</h2></td></tr>
 
 <p>number of tokens to retain from the prompt when the model runs out of context (-1 = LLMCharacter prompt tokens if setNKeepToPrompt is set to true). </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00106">106</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00108">108</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -1211,7 +1319,7 @@ Public Attributes</h2></td></tr>
 
 <p>if greater than 0, the response also contains the probabilities of top N tokens for each generated token. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00101">101</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00103">103</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -1229,7 +1337,7 @@ Public Attributes</h2></td></tr>
 
 <p>number of tokens to predict (-1 = infinity, -2 = until context filled). This is the amount of tokens the model will maximum predict. When N predict is reached the model will stop generating. This means words / sentences might not get finished if this is too low. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00056">56</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00058">58</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -1240,7 +1348,7 @@ Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int LLMUnity.LLMCharacter.numRetries = -1</td>
+          <td class="memname">int LLMUnity.LLMCharacter.numRetries = 10</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1265,7 +1373,7 @@ Public Attributes</h2></td></tr>
 
 <p>penalize newline tokens when applying the repeat penalty. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00090">90</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00092">92</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -1283,7 +1391,7 @@ Public Attributes</h2></td></tr>
 
 <p>prompt for the purpose of the penalty evaluation. Can be either null, a string or an array of numbers representing tokens (null/"" = use original prompt) </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00093">93</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00095">95</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -1301,7 +1409,7 @@ Public Attributes</h2></td></tr>
 
 <p>the name of the player </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00114">114</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00116">116</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -1337,7 +1445,7 @@ Public Attributes</h2></td></tr>
 
 <p>repeated token presence penalty (0.0 = disabled). Positive values penalize new tokens based on whether they appear in the text so far, increasing the model's likelihood to talk about new topics. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00078">78</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00080">80</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -1355,7 +1463,7 @@ Public Attributes</h2></td></tr>
 
 <p>a description of the AI role. This defines the LLMCharacter system prompt </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00118">118</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00120">120</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -1391,7 +1499,7 @@ Public Attributes</h2></td></tr>
 
 <p>last n tokens to consider for penalizing repetition (0 = disabled, -1 = ctx-size). </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00088">88</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00090">90</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -1409,7 +1517,7 @@ Public Attributes</h2></td></tr>
 
 <p>control the repetition of token sequences in the generated text. The penalty is applied to repeated tokens. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00075">75</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00077">77</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -1427,7 +1535,7 @@ Public Attributes</h2></td></tr>
 
 <p>file to save the chat history. The file is saved only for Chat calls with addToHistory set to true. The file will be saved within the persistentDataPath directory (see <a href="https://docs.unity3d.com/ScriptReference/Application-persistentDataPath.html">https://docs.unity3d.com/ScriptReference/Application-persistentDataPath.html</a>). </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00036">36</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00038">38</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -1445,7 +1553,7 @@ Public Attributes</h2></td></tr>
 
 <p>toggle to save the LLM cache. This speeds up the prompt calculation but also requires ~100MB of space per character. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00038">38</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00040">40</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -1463,7 +1571,7 @@ Public Attributes</h2></td></tr>
 
 <p>seed for reproducibility. For random results every time set to -1. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00051">51</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00053">53</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -1481,7 +1589,7 @@ Public Attributes</h2></td></tr>
 
 <p>option to set the number of tokens to retain from the prompt (nKeep) based on the LLMCharacter system prompt </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00120">120</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00122">122</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -1499,7 +1607,7 @@ Public Attributes</h2></td></tr>
 
 <p>specify which slot of the server to use for computation (affects caching) </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00049">49</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00051">51</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -1517,7 +1625,7 @@ Public Attributes</h2></td></tr>
 
 <p>stopwords to stop the LLM in addition to the default stopwords from the chat template. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00108">108</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00110">110</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -1535,7 +1643,7 @@ Public Attributes</h2></td></tr>
 
 <p>option to receive the reply from the model as it is produced (recommended!). If it is not selected, the full reply from the model is received in one go </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00043">43</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00045">45</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -1553,7 +1661,7 @@ Public Attributes</h2></td></tr>
 
 <p>LLM temperature, lower values give more deterministic answers. The temperature setting adjusts how random the generated responses are. Turning it up makes the generated choices more varied and unpredictable. Turning it down makes the generated responses more predictable and focused on the most likely options. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00061">61</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00063">63</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -1571,7 +1679,7 @@ Public Attributes</h2></td></tr>
 
 <p>enable tail free sampling with parameter z (1.0 = disabled). </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00084">84</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00086">86</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -1589,7 +1697,7 @@ Public Attributes</h2></td></tr>
 
 <p>top-k sampling (0 = disabled). The top k value controls the top k most probable tokens at each step of generation. This value can help fine tune the output and make this adhere to specific patterns or constraints. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00064">64</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00066">66</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -1607,7 +1715,7 @@ Public Attributes</h2></td></tr>
 
 <p>top-p sampling (1.0 = disabled). The top p value controls the cumulative probability of generated tokens. The model will generate tokens until this theshold (p) is reached. By lowering this value you can shorten output &amp; encourage / discourage more diverse output. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00069">69</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00071">71</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -1625,7 +1733,7 @@ Public Attributes</h2></td></tr>
 
 <p>enable locally typical sampling with parameter p (1.0 = disabled). </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00086">86</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00088">88</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>

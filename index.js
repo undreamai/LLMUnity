@@ -9,15 +9,17 @@ var index =
     [ "LLM model management", "index.html#autotoc_md7", null ],
     [ "Options", "index.html#autotoc_md8", [
       [ "LLM Settings", "index.html#autotoc_md9", [
-        [ "💻 Setup Settings", "index.html#autotoc_md10", null ],
-        [ "🤗 Model Settings", "index.html#autotoc_md11", null ],
-        [ "🗨️ Chat Settings", "index.html#autotoc_md12", null ]
+        [ "💻 Setup Settings", "index.html#autotoc_md10", null ]
       ] ],
-      [ "LLMCharacter Settings", "index.html#autotoc_md13", [
-        [ "💻 Setup Settings", "index.html#autotoc_md14", null ],
-        [ "🗨️ Chat Settings", "index.html#autotoc_md15", null ],
-        [ "🤗 Model Settings", "index.html#autotoc_md16", null ]
+      [ "Server Security Settings", "index.html#autotoc_md11", [
+        [ "🤗 Model Settings", "index.html#autotoc_md12", null ],
+        [ "🗨️ Chat Settings", "index.html#autotoc_md13", null ]
+      ] ],
+      [ "LLMCharacter Settings", "index.html#autotoc_md14", [
+        [ "💻 Setup Settings", "index.html#autotoc_md15", null ],
+        [ "🗨️ Chat Settings", "index.html#autotoc_md16", null ],
+        [ "🤗 Model Settings", "index.html#autotoc_md17", null ]
       ] ]
     ] ],
-    [ "License", "index.html#autotoc_md17", null ]
+    [ "License", "index.html#autotoc_md18", null ]
 ];
