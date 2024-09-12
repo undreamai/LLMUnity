@@ -386,6 +386,18 @@ If the user's GPU is not supported, the LLM will fall back to the CPU
 
 </details>
 
+### Server Security Settings
+
+- `API key` API key to use to allow access to requests from LLMCharacter objects (if `Remote` is set)
+- <details><summary>Advanced options</summary>
+
+  - `Load SSL certificate` allows to load a SSL certificate for end-to-end encryption of requests (if `Remote` is set). Requires SSL key as well.
+  - `Load SSL key` allows to load a SSL key for end-to-end encryption of requests (if `Remote` is set). Requires SSL certificate as well.
+  - `SSL certificate path` the SSL certificate used for end-to-end encryption of requests (if `Remote` is set).
+  - `SSL key path` the SSL key used for end-to-end encryption of requests (if `Remote` is set).
+
+</details>
+
 #### 🤗 Model Settings
 - `Download model` click to download one of the default models
 - `Load model` click to load your own model in .gguf format
@@ -428,6 +440,7 @@ If the user's GPU is not supported, the LLM will fall back to the CPU
 - `Hort` ip of the LLM server (if `Remote` is set)
 - `Port` port of the LLM server (if `Remote` is set)
 - `Num Retries` number of HTTP request retries from the LLM server (if `Remote` is set)
+- `API key` API key of the LLM server (if `Remote` is set)
 - <details><summary><code>Save</code> save filename or relative path</summary> If set, the chat history and LLM state (if save cache is enabled) is automatically saved to file specified. <br> The chat history is saved with a json suffix and the LLM state with a cache suffix. <br> Both files are saved in the [persistentDataPath folder of Unity](https://docs.unity3d.com/ScriptReference/Application-persistentDataPath.html).</details>
 - `Save Cache` select to save the LLM state along with the chat history. The LLM state is typically around 100MB+.
 - `Debug Prompt` select to log the constructed prompts in the Unity Editor
