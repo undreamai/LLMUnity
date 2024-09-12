@@ -406,6 +406,15 @@ namespace LLMUnity
             arguments += loraArgument;
             arguments += $" -ngl {numGPULayers}";
             if (LLMUnitySetup.FullLlamaLib && flashAttention) arguments += $" --flash-attn";
+
+            // the following is the equivalent for running from command line
+            string serverCommand;
+            if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer) serverCommand = "undreamai_server.exe";
+            else serverCommand = "./undreamai_server";
+            serverCommand += " " + arguments;
+            serverCommand += $" --template {chatTemplate}";
+            if (remote && SSLCert != "" && SSLKey != "") serverCommand += $" --ssl-cert-file {SSLCertPath} --ssl-key-file {SSLKeyPath}";
+            LLMUnitySetup.Log($"Server command: {serverCommand}");
             return arguments;
         }
 
@@ -427,7 +436,6 @@ namespace LLMUnity
             started = false;
             failed = false;
             bool useGPU = numGPULayers > 0;
-            LLMUnitySetup.Log($"Server command: {arguments}");
 
             foreach (string arch in LLMLib.PossibleArchitectures(useGPU))
             {
