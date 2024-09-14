@@ -174,7 +174,7 @@ namespace LLMUnity
         {
             string chatPrompt = PromptPrefix();
             int start = 0;
-            if (messages[0].role == "system")
+            if (messages[0].role == LLMConstants.SYSTEM_ROLE)
             {
                 chatPrompt += RequestPrefix() + SystemPrefix() + messages[0].content + SystemSuffix();
                 start = 1;
@@ -356,7 +356,7 @@ namespace LLMUnity
         public override string ComputePrompt(List<ChatMessage> messages, string playerName, string AIName, bool endWithPrefix = true)
         {
             List<ChatMessage> messagesSystemPrompt = messages;
-            if (messages[0].role == "system")
+            if (messages[0].role == LLMConstants.SYSTEM_ROLE)
             {
                 string firstUserMessage = messages[0].content;
                 int start = 1;
@@ -466,7 +466,7 @@ namespace LLMUnity
         public override string ComputePrompt(List<ChatMessage> messages, string playerName, string AIName, bool endWithPrefix = true)
         {
             List<ChatMessage> messagesSystemPrompt = messages;
-            if (messages[0].role == "system")
+            if (messages[0].role == LLMConstants.SYSTEM_ROLE)
             {
                 string firstUserMessage = messages[0].content;
                 int start = 1;

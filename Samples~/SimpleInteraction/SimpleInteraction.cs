@@ -16,11 +16,11 @@ namespace LLMUnitySamples
             playerText.Select();
         }
 
-        void onInputFieldSubmit(string message)
+        async void onInputFieldSubmit(string message)
         {
             playerText.interactable = false;
             AIText.text = "...";
-            _ = llmCharacter.Chat(message, SetAIText, AIReplyComplete);
+            await llmCharacter.Chat(message, SetAIText, AIReplyComplete);
         }
 
         public void SetAIText(string text)

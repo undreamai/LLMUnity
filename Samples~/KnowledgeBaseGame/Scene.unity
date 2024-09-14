@@ -38,7 +38,6 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657832, g: 0.49641222, b: 0.57481664, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -4260,6 +4259,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1275496424}
   - component: {fileID: 1275496423}
+  - component: {fileID: 1275496425}
   m_Layer: 0
   m_Name: LLMCharacter
   m_TagString: Untagged
@@ -4284,7 +4284,8 @@ MonoBehaviour:
   llm: {fileID: 2142407556}
   host: localhost
   port: 13333
-  save: 
+  numRetries: -1
+  cacheFilename: 
   saveCache: 0
   debugPrompt: 0
   stream: 1
@@ -4311,18 +4312,13 @@ MonoBehaviour:
   ignoreEos: 0
   nKeep: -1
   stop: []
-  playerName: Detective
-  AIName: 
-  prompt: 'You are a robot working at a house where a diamond was stolen and a detective
-    asks you questions about the robbery.
-
-    Answer the question provided at the
-    section "Question" based on the possible answers at the section "Answers".
-
-    Rephrase
-    the answer, do not copy it directly.'
+  playerRole: Detective
+  aiRole: 
+  systemPrompt: "You are a robot working at a house where a diamond was stolen and
+    a detective\r asks you questions about the robbery.\r\n\r\nAnswer the question
+    provided at the\r section \"Question\" based on the possible answers at the section
+    \"Answers\".\r\n\r\nRephrase\r the answer, do not copy it directly.'"
   setNKeepToPrompt: 1
-  chat: []
   grammarString: 
 --- !u!4 &1275496424
 Transform:
@@ -4339,6 +4335,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1275496425
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1275496422}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9aef079d11e8894bae3ae510742c32f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ChatHistoryFilename: 
 --- !u!1 &1278063793
 GameObject:
   m_ObjectHideFlags: 0
@@ -7548,6 +7557,8 @@ MonoBehaviour:
   model: 
   chatTemplate: chatml
   lora: 
+  loraWeights: 
+  flashAttention: 0
 --- !u!4 &2142407557
 Transform:
   m_ObjectHideFlags: 0
