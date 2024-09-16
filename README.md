@@ -59,6 +59,7 @@ LLM for Unity is built on top of the awesome [llama.cpp](https://github.com/gger
 - [Finicky Food Delivery AI](https://helixngc7293.itch.io/finicky-food-delivery-ai)
 - [AI Emotional Girlfriend](https://whynames.itch.io/aiemotionalgirlfriend)
 - [AI Speak](https://jdscogin.wixsite.com/aispeak)
+- [Case Closed](https://store.steampowered.com/app/2532160/Case_Closed)
 
 Contact us to add your project!
 
