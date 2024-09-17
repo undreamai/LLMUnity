@@ -5,8 +5,8 @@ using System.Diagnostics;
 using Debug = UnityEngine.Debug;
 using UnityEngine.UI;
 using System.Collections;
-using RAGSearchUnity;
 using LLMUnity;
+using System.Threading.Tasks;
 
 namespace LLMUnitySamples
 {
@@ -15,10 +15,10 @@ namespace LLMUnitySamples
         Dictionary<string, string> dialogues;
         SearchEngine search;
 
-        public Bot(string dialogueText, EmbeddingModel model, string embeddingsPath)
+        public Bot(string dialogueText, LLM llm, string embeddingsPath)
         {
             LoadDialogues(dialogueText);
-            CreateEmbeddings(model, embeddingsPath);
+            CreateEmbeddings(llm, embeddingsPath);
         }
 
         void LoadDialogues(string dialogueText)
@@ -32,17 +32,17 @@ namespace LLMUnitySamples
             }
         }
 
-        void CreateEmbeddings(EmbeddingModel model, string embeddingsPath)
+        void CreateEmbeddings(LLM llm, string embeddingsPath)
         {
             if (File.Exists(embeddingsPath))
             {
                 // load the embeddings
-                search = SearchEngine.Load(model, embeddingsPath);
+                search = SearchEngine.Load(llm, embeddingsPath);
             }
             else
             {
     #if UNITY_EDITOR
-                search = new SearchEngine(model);
+                search = new SearchEngine(llm);
                 Stopwatch stopwatch = new Stopwatch();
                 stopwatch.Start();
                 // build the embeddings
@@ -60,9 +60,9 @@ namespace LLMUnitySamples
             }
         }
 
-        public List<string> Retrieval(string question)
+        public async Task<List<string>> Retrieval(string question)
         {
-            string[] similarQuestions = search.Search(question, 3);
+            string[] similarQuestions = await search.Search(question, 3);
             List<string> similarAnswers = new List<string>();
             foreach (string similarQuestion in similarQuestions) similarAnswers.Add(dialogues[similarQuestion]);
             return similarAnswers;
@@ -77,7 +77,7 @@ namespace LLMUnitySamples
     public class KnowledgeBaseGame : KnowledgeBaseGameUI
     {
         public LLMCharacter llmCharacter;
-        public Embedding embedding;
+        public LLM llmEmbedding;
 
         Dictionary<string, Bot> bots = new Dictionary<string, Bot>();
         Dictionary<string, RawImage> botImages = new Dictionary<string, RawImage>();
@@ -106,14 +106,13 @@ namespace LLMUnitySamples
             if (!Directory.Exists(outputDir)) Directory.CreateDirectory(outputDir);
 
             // init the bots with the embeddings
-            EmbeddingModel model = embedding.GetModel();
-            if (model == null) throw new System.Exception("Please select a model in the Embedding GameObject!");
+            if (llmEmbedding == null) throw new System.Exception("Please select a model in the Embedding GameObject!");
             foreach ((string botName, TextAsset asset, RawImage image) in botInfo)
             {
                 string embeddingsPath = Path.Combine(outputDir, botName + ".zip");
                 PlayerText.text += File.Exists(embeddingsPath) ? $"Loading {botName} dialogues...\n" : $"Creating Embeddings for {botName} (only once)...\n";
                 yield return null;
-                bots[botName] = new Bot(asset.text, model, embeddingsPath);
+                bots[botName] = new Bot(asset.text, llmEmbedding, embeddingsPath);
                 botImages[botName] = image;
             }
 
@@ -125,10 +124,10 @@ namespace LLMUnitySamples
             yield return null;
         }
 
-        protected override void OnInputFieldSubmit(string question)
+        protected async override void OnInputFieldSubmit(string question)
         {
             PlayerText.interactable = false;
-            List<string> similarAnswers = currentBot.Retrieval(question);
+            List<string> similarAnswers = await currentBot.Retrieval(question);
             string prompt = $"Question:\n{question}\n\nAnswers:\n";
             foreach (string similarAnswer in similarAnswers) prompt += $"- {similarAnswer}\n";
             _ = llmCharacter.Chat(prompt, SetAIText, AIReplyComplete);
@@ -177,7 +176,7 @@ namespace LLMUnitySamples
         {
             if (onValidateWarning)
             {
-                if (embedding.SelectedOption == 0) Debug.LogWarning($"Please select a model in the {embedding.gameObject.name} GameObject!");
+                if (llmEmbedding == null) Debug.LogWarning($"Please select a llmEmbedding model in the {gameObject.name} GameObject!");
                 if (!llmCharacter.remote && llmCharacter.llm != null && llmCharacter.llm.model == "") Debug.LogWarning($"Please select a model in the {llmCharacter.llm.gameObject.name} GameObject!");
                 onValidateWarning = false;
             }
