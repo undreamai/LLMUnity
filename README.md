@@ -59,6 +59,9 @@ LLM for Unity is built on top of the awesome [llama.cpp](https://github.com/gger
 - [Finicky Food Delivery AI](https://helixngc7293.itch.io/finicky-food-delivery-ai)
 - [AI Emotional Girlfriend](https://whynames.itch.io/aiemotionalgirlfriend)
 - [AI Speak](https://jdscogin.wixsite.com/aispeak)
+- [Case Closed](https://store.steampowered.com/app/2532160/Case_Closed)
+
+Contact us to add your project!
 
 ## Setup
 _Method 1: Install using the asset store_
@@ -289,10 +292,23 @@ public class MyScript : MonoBehaviour
 <details>
 <summary>Use a remote server</summary>
 
-You can use a remote server to carry out the processing and implement characters that interact with it. To do that:
-- Create a project with a GameObject using the `LLM` script as described above. Enable the `Remote` option and optionally configure the port.
-- Create a second project with the game characters using the `LLMCharacter` script as described above.
-  Enable the `Remote` option and configure the host with the IP address (starting with "http://") and port of the server.
+You can use a remote server to carry out the processing and implement characters that interact with it.
+
+**Create the server**<br>
+To create the server:
+- Create a project with a GameObject using the `LLM` script as described above
+- Enable the `Remote` option of the `LLM` and optionally configure the server parameters: port, API key, SSL certificate, SSL key
+- Build and run to start the server
+
+Alternatively you can use a server binary for easier deployment:
+- Run the above scene from the Editor and copy the command from the Debug messages (starting with "Server command:")
+- Download the [server binaries](https://github.com/undreamai/LlamaLib/releases/download/v1.1.12/undreamai-v1.1.12-server.zip) and [DLLs](https://github.com/undreamai/LlamaLib/releases/download/v1.1.12/undreamai-v1.1.12-llamacpp-full.zip) and extract them into the same folder
+- Find the architecture you are interested in from the folder above e.g. for Windows and CUDA use the `windows-cuda-cu12.2.0`.<br>You can also check the architecture that works for your system from the Debug messages (starting with "Using architecture").
+- From command line change directory to the architecture folder selected and start the server by running the command copied from above.
+
+**Create the characters**<br>
+Create a second project with the game characters using the `LLMCharacter` script as described above.
+Enable the `Remote` option and configure the host with the IP address (starting with "http://") and port of the server.
 
 </details>
 <details>
@@ -376,8 +392,21 @@ If the user's GPU is not supported, the LLM will fall back to the CPU
 - `Debug` select to log the output of the model in the Unity Editor
 - <details><summary>Advanced options</summary>
 
-  - `Parallel Prompts` number of prompts that can happen in parallel (default: -1 = number of LLMCharacter objects)
+  - <details><summary><code>Parallel Prompts</code> number of prompts / slots that can happen in parallel (default: -1 = number of LLMCharacter objects). Note that the context size is divided among the slots.</summary> If you want to retain as much context for the LLM and don't need all the characters present at the same time, you can set this number and specify the slot for each LLMCharacter object.
+  e.g. Setting `Parallel Prompts` to 1 and slot 0 for all LLMCharacter objects will use the full context, but the entire prompt will need to be computed (no caching) whenever a LLMCharacter object is used for chat. </details>
   - `Dont Destroy On Load` select to not destroy the LLM GameObject when loading a new Scene
+
+</details>
+
+### Server Security Settings
+
+- `API key` API key to use to allow access to requests from LLMCharacter objects (if `Remote` is set)
+- <details><summary>Advanced options</summary>
+
+  - `Load SSL certificate` allows to load a SSL certificate for end-to-end encryption of requests (if `Remote` is set). Requires SSL key as well.
+  - `Load SSL key` allows to load a SSL key for end-to-end encryption of requests (if `Remote` is set). Requires SSL certificate as well.
+  - `SSL certificate path` the SSL certificate used for end-to-end encryption of requests (if `Remote` is set).
+  - `SSL key path` the SSL key used for end-to-end encryption of requests (if `Remote` is set).
 
 </details>
 
@@ -423,6 +452,7 @@ If the user's GPU is not supported, the LLM will fall back to the CPU
 - `Hort` ip of the LLM server (if `Remote` is set)
 - `Port` port of the LLM server (if `Remote` is set)
 - `Num Retries` number of HTTP request retries from the LLM server (if `Remote` is set)
+- `API key` API key of the LLM server (if `Remote` is set)
 - <details><summary><code>Save</code> save filename or relative path</summary> If set, the chat history and LLM state (if save cache is enabled) is automatically saved to file specified. <br> The chat history is saved with a json suffix and the LLM state with a cache suffix. <br> Both files are saved in the [persistentDataPath folder of Unity](https://docs.unity3d.com/ScriptReference/Application-persistentDataPath.html).</details>
 - `Save Cache` select to save the LLM state along with the chat history. The LLM state is typically around 100MB+.
 - `Debug Prompt` select to log the constructed prompts in the Unity Editor
@@ -441,6 +471,7 @@ If it is not selected, the full reply from the model is received in one go
   - `Load grammar` click to load a grammar in .gbnf format
   - `Grammar` the path of the grammar being used (relative to the Assets/StreamingAssets folder)
   - <details><summary><code>Cache Prompt</code> save the ongoing prompt from the chat (default: true)</summary> Saves the prompt while it is being created by the chat to avoid reprocessing the entire prompt every time</details>
+  - `Slot` slot of the server to use for computation. Value can be set from 0 to `Parallel Prompts`-1 (default: -1 = new slot for each character)
   - `Seed` seed for reproducibility. For random results every time use -1
   - <details><summary><code>Num Predict</code> maximum number of tokens to predict (default: 256, -1 = infinity, -2 = until context filled)</summary>This is the maximum amount of tokens the model will maximum predict. When N tokens are reached the model will stop generating. This means words / sentences might not get finished if this is too low. </details>
   - <details><summary><code>Temperature</code> LLM temperature, lower values give more deterministic answers (default: 0.2)</summary>The temperature setting adjusts how random the generated responses are. Turning it up makes the generated choices more varied and unpredictable. Turning it down makes the generated responses more predictable and focused on the most likely options.</details>

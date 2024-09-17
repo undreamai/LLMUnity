@@ -64,6 +64,17 @@ namespace LLMUnity
         /// <summary> enable use of flash attention </summary>
         [ModelExtras] public bool flashAttention = false;
 
+        /// <summary> API key to use for the server (optional) </summary>
+        public string APIKey;
+        // SSL certificate
+        [SerializeField]
+        private string SSLCert = "";
+        public string SSLCertPath = "";
+        // SSL key
+        [SerializeField]
+        private string SSLKey = "";
+        public string SSLKeyPath = "";
+
         /// \cond HIDE
 
         IntPtr LLMObject = IntPtr.Zero;
@@ -74,6 +85,7 @@ namespace LLMUnity
         List<StreamWrapper> streamWrappers = new List<StreamWrapper>();
         public LLMManager llmManager = new LLMManager();
         private readonly object startLock = new object();
+        static readonly object staticLock = new object();
         public LoraManager loraManager = new LoraManager();
         string loraPre = "";
         string loraWeightsPre = "";
@@ -302,6 +314,41 @@ namespace LLMUnity
 #endif
         }
 
+        /// \cond HIDE
+
+        string ReadFileContents(string path)
+        {
+            if (String.IsNullOrEmpty(path)) return "";
+            else if (!File.Exists(path))
+            {
+                LLMUnitySetup.LogError($"File {path} not found!");
+                return "";
+            }
+            return File.ReadAllText(path);
+        }
+
+        /// \endcond
+
+        /// <summary>
+        /// Use a SSL certificate for the LLM server.
+        /// </summary>
+        /// <param name="templateName">the SSL certificate path </param>
+        public void SetSSLCert(string path)
+        {
+            SSLCertPath = path;
+            SSLCert = ReadFileContents(path);
+        }
+
+        /// <summary>
+        /// Use a SSL key for the LLM server.
+        /// </summary>
+        /// <param name="templateName">the SSL key path </param>
+        public void SetSSLKey(string path)
+        {
+            SSLKeyPath = path;
+            SSLKey = ReadFileContents(path);
+        }
+
         /// <summary>
         /// Returns the chat template of the LLM.
         /// </summary>
@@ -314,6 +361,12 @@ namespace LLMUnity
         protected virtual string GetLlamaccpArguments()
         {
             // Start the LLM server in a cross-platform way
+            if ((SSLCert != "" && SSLKey == "") || (SSLCert == "" && SSLKey != ""))
+            {
+                LLMUnitySetup.LogError($"Both SSL certificate and key need to be provided!");
+                return null;
+            }
+
             if (model == "")
             {
                 LLMUnitySetup.LogError("No model file provided!");
@@ -344,11 +397,24 @@ namespace LLMUnity
 
             int slots = GetNumClients();
             string arguments = $"-m \"{modelPath}\" -c {contextSize} -b {batchSize} --log-disable -np {slots}";
-            if (remote) arguments += $" --port {port} --host 0.0.0.0";
+            if (remote)
+            {
+                arguments += $" --port {port} --host 0.0.0.0";
+                if (!String.IsNullOrEmpty(APIKey)) arguments += $" --api-key {APIKey}";
+            }
             if (numThreadsToUse > 0) arguments += $" -t {numThreadsToUse}";
             arguments += loraArgument;
             arguments += $" -ngl {numGPULayers}";
             if (LLMUnitySetup.FullLlamaLib && flashAttention) arguments += $" --flash-attn";
+
+            // the following is the equivalent for running from command line
+            string serverCommand;
+            if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer) serverCommand = "undreamai_server.exe";
+            else serverCommand = "./undreamai_server";
+            serverCommand += " " + arguments;
+            serverCommand += $" --template {chatTemplate}";
+            if (remote && SSLCert != "" && SSLKey != "") serverCommand += $" --ssl-cert-file {SSLCertPath} --ssl-key-file {SSLKeyPath}";
+            LLMUnitySetup.Log($"Server command: {serverCommand}");
             return arguments;
         }
 
@@ -370,7 +436,6 @@ namespace LLMUnity
             started = false;
             failed = false;
             bool useGPU = numGPULayers > 0;
-            LLMUnitySetup.Log($"Server command: {arguments}");
 
             foreach (string arch in LLMLib.PossibleArchitectures(useGPU))
             {
@@ -413,22 +478,33 @@ namespace LLMUnity
             CheckLLMStatus(false);
         }
 
-        void CallWithLock(EmptyCallback fn, bool checkNull = true)
+        void CallWithLock(EmptyCallback fn)
         {
             lock (startLock)
             {
-                if (checkNull && llmlib == null) throw new DestroyException();
+                if (llmlib == null) throw new DestroyException();
                 fn();
             }
         }
 
         private void InitService(string arguments)
         {
-            if (debug) CallWithLock(SetupLogging);
-            CallWithLock(() => { LLMObject = llmlib.LLM_Construct(arguments); });
-            CallWithLock(() => llmlib.LLM_SetTemplate(LLMObject, chatTemplate));
-            if (remote) CallWithLock(() => llmlib.LLM_StartServer(LLMObject));
-            CallWithLock(() => CheckLLMStatus(false));
+            lock (staticLock)
+            {
+                if (debug) CallWithLock(SetupLogging);
+                CallWithLock(() => { LLMObject = llmlib.LLM_Construct(arguments); });
+                CallWithLock(() => llmlib.LLM_SetTemplate(LLMObject, chatTemplate));
+                if (remote)
+                {
+                    if (SSLCert != "" && SSLKey != "")
+                    {
+                        LLMUnitySetup.Log("Using SSL");
+                        CallWithLock(() => llmlib.LLM_SetSSL(LLMObject, SSLCert, SSLKey));
+                    }
+                    CallWithLock(() => llmlib.LLM_StartServer(LLMObject));
+                }
+                CallWithLock(() => CheckLLMStatus(false));
+            }
         }
 
         private void StartService()
@@ -449,7 +525,9 @@ namespace LLMUnity
         public int Register(LLMCharacter llmCharacter)
         {
             clients.Add(llmCharacter);
-            return clients.IndexOf(llmCharacter);
+            int index = clients.IndexOf(llmCharacter);
+            if (parallelPrompts != -1) return index % parallelPrompts;
+            return index;
         }
 
         protected int GetNumClients()
@@ -690,32 +768,33 @@ namespace LLMUnity
         /// </summary>
         public void Destroy()
         {
-            CallWithLock(() =>
-            {
-                try
+            lock (staticLock)
+                lock (startLock)
                 {
-                    if (llmlib != null)
+                    try
                     {
-                        if (LLMObject != IntPtr.Zero)
+                        if (llmlib != null)
                         {
-                            llmlib.LLM_Stop(LLMObject);
-                            if (remote) llmlib.LLM_StopServer(LLMObject);
-                            StopLogging();
-                            llmThread?.Join();
-                            llmlib.LLM_Delete(LLMObject);
-                            LLMObject = IntPtr.Zero;
+                            if (LLMObject != IntPtr.Zero)
+                            {
+                                llmlib.LLM_Stop(LLMObject);
+                                if (remote) llmlib.LLM_StopServer(LLMObject);
+                                StopLogging();
+                                llmThread?.Join();
+                                llmlib.LLM_Delete(LLMObject);
+                                LLMObject = IntPtr.Zero;
+                            }
+                            llmlib.Destroy();
+                            llmlib = null;
                         }
-                        llmlib.Destroy();
-                        llmlib = null;
+                        started = false;
+                        failed = false;
                     }
-                    started = false;
-                    failed = false;
+                    catch (Exception e)
+                    {
+                        LLMUnitySetup.LogError(e.Message);
+                    }
                 }
-                catch (Exception e)
-                {
-                    LLMUnitySetup.LogError(e.Message);
-                }
-            }, false);
         }
 
         /// <summary>

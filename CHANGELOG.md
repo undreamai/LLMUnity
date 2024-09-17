@@ -1,3 +1,28 @@
+## v2.2.3
+#### 🚀 Features
+
+- LlamaLib v1.1.12: SSL certificate & API key for server, Support more AMD GPUs (PR: #241)
+- Server security with API key and SSL (PR: #238)
+- Show server command for easier deployment (PR #239)
+
+#### 🐛 Fixes
+
+- Fix multiple LLM crash on Windows (PR: #242)
+- Exclude system prompt from saving of chat history (PR: #240)
+
+
+## v2.2.2
+#### 🚀 Features
+
+- Allow to set the LLMCharacter slot (PR: #231)
+
+#### 🐛 Fixes
+
+- fix adding grammar from StreamingAssets (PR: #229)
+- fix library setup restart when interrupted (PR: #232)
+- Remove unnecessary Android linking in IL2CPP builds (PR: #233)
+
+
 ## v2.2.1
 #### 🐛 Fixes
 

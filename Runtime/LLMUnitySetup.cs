@@ -85,9 +85,9 @@ namespace LLMUnity
     {
         // DON'T CHANGE! the version is autocompleted with a GitHub action
         /// <summary> LLM for Unity version </summary>
-        public static string Version = "v2.2.1";
+        public static string Version = "v2.2.3";
         /// <summary> LlamaLib version </summary>
-        public static string LlamaLibVersion = "v1.1.10";
+        public static string LlamaLibVersion = "v1.1.12";
         /// <summary> LlamaLib release url </summary>
         public static string LlamaLibReleaseURL = $"https://github.com/undreamai/LlamaLib/releases/download/{LlamaLibVersion}";
         /// <summary> LlamaLib url </summary>
@@ -366,24 +366,18 @@ namespace LLMUnity
 
         static async Task DownloadLibrary()
         {
-            void DeleteFileAndMeta(string path)
-            {
-                if (File.Exists(path + ".meta")) File.Delete(path + ".meta");
-                if (File.Exists(path)) File.Delete(path);
-            }
+            if (libraryProgress < 1) return;
+            libraryProgress = 0;
 
             try
             {
                 string setupDir = Path.Combine(libraryPath, "setup");
                 Directory.CreateDirectory(setupDir);
 
-                string lockFile = Path.Combine(setupDir, "LLMUnitySetup.lock");
-                if (File.Exists(lockFile)) return;
-                CreateEmptyFile(lockFile);
-
-                libraryProgress = 0;
+                // setup LlamaLib in StreamingAssets
                 await DownloadAndExtractInsideDirectory(LlamaLibURL, libraryPath, setupDir);
 
+                // setup LlamaLib in Plugins for Android
                 AssetDatabase.StartAssetEditing();
                 string androidDir = Path.Combine(libraryPath, "android");
                 if (Directory.Exists(androidDir))
@@ -397,15 +391,15 @@ namespace LLMUnity
                 }
                 AssetDatabase.StopAssetEditing();
 
+                // setup LlamaLib extras in StreamingAssets
                 if (FullLlamaLib) await DownloadAndExtractInsideDirectory(LlamaLibExtensionURL, libraryPath, setupDir);
-
-                libraryProgress = 1;
-                DeleteFileAndMeta(lockFile);
             }
             catch (Exception e)
             {
                 LogError(e.Message);
             }
+
+            libraryProgress = 1;
         }
 
         private static void SetLibraryProgress(float progress)
@@ -420,6 +414,9 @@ namespace LLMUnity
                 LogError($"{assetPath} does not exist!");
                 return null;
             }
+            string assetDir = GetAssetPath();
+            if (IsSubPath(assetPath, assetDir)) return RelativePath(assetPath, assetDir);
+
             string filename = Path.GetFileName(assetPath);
             string fullPath = GetAssetPath(filename);
             AssetDatabase.StartAssetEditing();

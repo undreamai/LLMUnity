@@ -19,7 +19,7 @@ namespace LLMUnityTests
             gameObject.SetActive(false);
             LLM llm = gameObject.AddComponent<LLM>();
 
-            string lora1 = "/tmp/lala";
+            string lora1 = LLMUnitySetup.GetFullPath("lala");
             string lora2Rel = "test/lala";
             string lora2 = LLMUnitySetup.GetAssetPath(lora2Rel);
             LLMUnitySetup.CreateEmptyFile(lora1);
@@ -108,7 +108,14 @@ namespace LLMUnityTests
             prompt = "Below is an instruction that describes a task, paired with an input that provides further context. Write a response that appropriately completes the request.";
             query = "How can I increase my meme production/output? Currently, I only create them in ancient babylonian which is time consuming.";
             reply1 = "To increase your meme production/output, you can try using more modern tools and techniques. For instance,";
-            reply2 = "To increase your meme production/output, you can try the following strategies:\n\n1. Use a meme generator";
+            if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer)
+            {
+                reply2 = "To increase your meme production/output, you can try using various tools and techniques to create more engaging content";
+            }
+            else
+            {
+                reply2 = "To increase your meme production/output, you can try the following strategies:\n\n1. Use a meme generator";
+            }
             tokens1 = 32;
             tokens2 = 9;
         }
@@ -125,7 +132,8 @@ namespace LLMUnityTests
             string managerPath = LLM.GetLLMManagerAssetRuntime(path);
             Assert.AreEqual(managerPath, path);
 
-            path = "/tmp/lala";
+            string filename = "lala";
+            path = LLMUnitySetup.GetFullPath(filename);
             LLMUnitySetup.CreateEmptyFile(path);
             managerPath = LLM.GetLLMManagerAssetRuntime(path);
             Assert.AreEqual(managerPath, path);
@@ -164,9 +172,8 @@ namespace LLMUnityTests
             Assert.AreEqual(managerPath, filename);
             managerPath = LLM.GetLLMManagerAssetEditor(path);
             Assert.AreEqual(managerPath, filename);
-            File.Delete(path);
 
-            path = "/tmp/lala";
+            path = LLMUnitySetup.GetFullPath(filename);
             LLMUnitySetup.CreateEmptyFile(path);
             managerPath = LLM.GetLLMManagerAssetEditor(path);
             Assert.AreEqual(managerPath, path);
@@ -246,9 +253,9 @@ namespace LLMUnityTests
 
         public void TestInitParameters(int nkeep, int chats)
         {
-            Assert.That(llmCharacter.nKeep == nkeep);
+            Assert.AreEqual(llmCharacter.nKeep, nkeep);
             Assert.That(ChatTemplate.GetTemplate(llm.chatTemplate).GetStop(llmCharacter.playerName, llmCharacter.AIName).Length > 0);
-            Assert.That(llmCharacter.chat.Count == chats);
+            Assert.AreEqual(llmCharacter.chat.Count, chats);
         }
 
         public void TestTokens(List<int> tokens)
@@ -263,6 +270,7 @@ namespace LLMUnityTests
 
         public void TestChat(string reply, string replyGT)
         {
+            Debug.Log(reply.Trim());
             Assert.That(reply.Trim() == replyGT);
         }
 
@@ -368,8 +376,16 @@ namespace LLMUnityTests
         {
             prompt = "";
             query = "кто ты?";
-            reply1 = "Я - искусственный интеллект, создан для общения и понимания людей.";
-            reply2 = "Идиот";
+            if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer)
+            {
+                reply1 = "Я - искусственный интеллект, создан для помощи и общения с людьми.";
+                reply2 = "Я - искусственный интеллект";
+            }
+            else
+            {
+                reply1 = "Я - искусственный интеллект, создан для общения и понимания людей.";
+                reply2 = "Идиот";
+            }
             tokens1 = 5;
             tokens2 = 9;
             loraWeight = 0.9f;
@@ -384,8 +400,8 @@ namespace LLMUnityTests
 
         public void TestModelPaths()
         {
-            Assert.AreEqual(llm.model, Path.Combine(LLMUnitySetup.modelDownloadPath, Path.GetFileName(modelUrl).Split("?")[0]));
-            Assert.AreEqual(llm.lora, Path.Combine(LLMUnitySetup.modelDownloadPath, Path.GetFileName(loraUrl).Split("?")[0]));
+            Assert.AreEqual(llm.model, Path.Combine(LLMUnitySetup.modelDownloadPath, Path.GetFileName(modelUrl).Split("?")[0]).Replace('\\', '/'));
+            Assert.AreEqual(llm.lora, Path.Combine(LLMUnitySetup.modelDownloadPath, Path.GetFileName(loraUrl).Split("?")[0]).Replace('\\', '/'));
         }
 
         public async Task TestLoraWeight()
@@ -410,7 +426,7 @@ namespace LLMUnityTests
     public class TestLLM_Double : TestLLM
     {
         LLM llm1;
-        LLMCharacter lLMCharacter1;
+        LLMCharacter llmCharacter1;
 
         public override async Task Init()
         {
@@ -421,8 +437,51 @@ namespace LLMUnityTests
             llm = CreateLLM();
             llmCharacter = CreateLLMCharacter();
             llm1 = CreateLLM();
-            lLMCharacter1 = CreateLLMCharacter();
+            llmCharacter1 = CreateLLMCharacter();
             gameObject.SetActive(true);
+        }
+    }
+
+    public class TestLLMCharacter_Save : TestLLM
+    {
+        string saveName = "TestLLMCharacter_Save";
+
+        public override LLMCharacter CreateLLMCharacter()
+        {
+            LLMCharacter llmCharacter = base.CreateLLMCharacter();
+            llmCharacter.save = saveName;
+            llmCharacter.saveCache = true;
+            return llmCharacter;
+        }
+
+        public override async Task Tests()
+        {
+            await base.Tests();
+            TestSave();
+        }
+
+        public void TestSave()
+        {
+            string jsonPath = llmCharacter.GetJsonSavePath(saveName);
+            string cachePath = llmCharacter.GetCacheSavePath(saveName);
+            Assert.That(File.Exists(jsonPath));
+            Assert.That(File.Exists(cachePath));
+            string json = File.ReadAllText(jsonPath);
+            File.Delete(jsonPath);
+            File.Delete(cachePath);
+
+            List<ChatMessage> chatHistory = JsonUtility.FromJson<ChatListWrapper>(json).chat;
+            Assert.AreEqual(chatHistory.Count, 2);
+            Assert.AreEqual(chatHistory[0].role, llmCharacter.playerName);
+            Assert.AreEqual(chatHistory[0].content, "hi");
+            Assert.AreEqual(chatHistory[1].role, llmCharacter.AIName);
+
+            Assert.AreEqual(llmCharacter.chat.Count, chatHistory.Count + 1);
+            for (int i = 0; i < chatHistory.Count; i++)
+            {
+                Assert.AreEqual(chatHistory[i].role, llmCharacter.chat[i + 1].role);
+                Assert.AreEqual(chatHistory[i].content, llmCharacter.chat[i + 1].content);
+            }
         }
     }
 }

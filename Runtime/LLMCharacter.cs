@@ -29,7 +29,9 @@ namespace LLMUnity
         /// <summary> port to use for the LLM server </summary>
         [Remote] public int port = 13333;
         /// <summary> number of retries to use for the LLM server requests (-1 = infinite) </summary>
-        [Remote] public int numRetries = -1;
+        [Remote] public int numRetries = 10;
+        /// <summary> allows to use a server with API key </summary>
+        [Remote] public string APIKey;
         /// <summary> file to save the chat history.
         /// The file is saved only for Chat calls with addToHistory set to true.
         /// The file will be saved within the persistentDataPath directory (see https://docs.unity3d.com/ScriptReference/Application-persistentDataPath.html). </summary>
@@ -45,6 +47,8 @@ namespace LLMUnity
         [ModelAdvanced] public string grammar = null;
         /// <summary> option to cache the prompt as it is being created by the chat to avoid reprocessing the entire prompt every time (default: true) </summary>
         [ModelAdvanced] public bool cachePrompt = true;
+        /// <summary> specify which slot of the server to use for computation (affects caching) </summary>
+        [ModelAdvanced] public int slot = -1;
         /// <summary> seed for reproducibility. For random results every time set to -1. </summary>
         [ModelAdvanced] public int seed = 0;
         /// <summary> number of tokens to predict (-1 = infinity, -2 = until context filled).
@@ -123,8 +127,7 @@ namespace LLMUnity
         private string chatTemplate;
         private ChatTemplate template = null;
         public string grammarString;
-        protected int id_slot = -1;
-        private List<(string, string)> requestHeaders = new List<(string, string)> { ("Content-Type", "application/json") };
+        private List<(string, string)> requestHeaders;
         private List<UnityWebRequest> WIPRequests = new List<UnityWebRequest>();
         /// \endcond
 
@@ -141,6 +144,8 @@ namespace LLMUnity
         {
             // Start the LLM server in a cross-platform way
             if (!enabled) return;
+
+            requestHeaders = new List<(string, string)> { ("Content-Type", "application/json") };
             if (!remote)
             {
                 AssignLLM();
@@ -149,7 +154,12 @@ namespace LLMUnity
                     LLMUnitySetup.LogError($"No LLM assigned or detected for LLMCharacter {name}!");
                     return;
                 }
-                id_slot = llm.Register(this);
+                int slotFromServer = llm.Register(this);
+                if (slot == -1) slot = slotFromServer;
+            }
+            else
+            {
+                if (!String.IsNullOrEmpty(APIKey)) requestHeaders.Add(("Authorization", "Bearer " + APIKey));
             }
 
             InitGrammar();
@@ -159,6 +169,7 @@ namespace LLMUnity
         void OnValidate()
         {
             AssignLLM();
+            if (llm != null && llm.parallelPrompts > -1 && (slot < -1 || slot >= llm.parallelPrompts)) LLMUnitySetup.LogError($"The slot needs to be between 0 and {llm.parallelPrompts-1}, or -1 to be automatically set");
         }
 
         void Reset()
@@ -224,19 +235,18 @@ namespace LLMUnity
             }
         }
 
-        string GetSavePath(string filename)
+        public virtual string GetSavePath(string filename)
         {
             return Path.Combine(Application.persistentDataPath, filename).Replace('\\', '/');
         }
 
-        string GetJsonSavePath(string filename)
+        public virtual string GetJsonSavePath(string filename)
         {
             return GetSavePath(filename + ".json");
         }
 
-        string GetCacheSavePath(string filename)
+        public virtual string GetCacheSavePath(string filename)
         {
-            // this is saved already in the Application.persistentDataPath folder
             return GetSavePath(filename + ".cache");
         }
 
@@ -283,14 +293,17 @@ namespace LLMUnity
             return true;
         }
 
-        private async Task InitNKeep()
+        private async Task<bool> InitNKeep()
         {
             if (setNKeepToPrompt && nKeep == -1)
             {
-                if (!CheckTemplate()) return;
+                if (!CheckTemplate()) return false;
                 string systemPrompt = template.ComputePrompt(new List<ChatMessage>(){chat[0]}, playerName, "", false);
-                await Tokenize(systemPrompt, SetNKeep);
+                List<int> tokens = await Tokenize(systemPrompt);
+                if (tokens == null) return false;
+                SetNKeep(tokens);
             }
+            return true;
         }
 
         private void InitGrammar()
@@ -358,7 +371,7 @@ namespace LLMUnity
             ChatRequest chatRequest = new ChatRequest();
             if (debugPrompt) LLMUnitySetup.Log(prompt);
             chatRequest.prompt = prompt;
-            chatRequest.id_slot = id_slot;
+            chatRequest.id_slot = slot;
             chatRequest.temperature = temperature;
             chatRequest.top_k = topK;
             chatRequest.top_p = topP;
@@ -482,7 +495,7 @@ namespace LLMUnity
             // call the completionCallback function when the answer is fully received
             await LoadTemplate();
             if (!CheckTemplate()) return null;
-            await InitNKeep();
+            if (!await InitNKeep()) return null;
 
             string json;
             await chatLock.WaitAsync();
@@ -610,10 +623,10 @@ namespace LLMUnity
             return await PostRequest<EmbeddingsResult, List<float>>(json, "embeddings", EmbeddingsContent, callback);
         }
 
-        private async Task<string> Slot(string filepath, string action)
+        protected async Task<string> Slot(string filepath, string action)
         {
             SlotRequest slotRequest = new SlotRequest();
-            slotRequest.id_slot = id_slot;
+            slotRequest.id_slot = slot;
             slotRequest.filepath = filepath;
             slotRequest.action = action;
             string json = JsonUtility.ToJson(slotRequest);
@@ -625,12 +638,12 @@ namespace LLMUnity
         /// </summary>
         /// <param name="filename">filename / relative path to save the chat history</param>
         /// <returns></returns>
-        public async Task<string> Save(string filename)
+        public virtual async Task<string> Save(string filename)
         {
             string filepath = GetJsonSavePath(filename);
             string dirname = Path.GetDirectoryName(filepath);
             if (!Directory.Exists(dirname)) Directory.CreateDirectory(dirname);
-            string json = JsonUtility.ToJson(new ChatListWrapper { chat = chat });
+            string json = JsonUtility.ToJson(new ChatListWrapper { chat = chat.GetRange(1, chat.Count - 1) });
             File.WriteAllText(filepath, json);
 
             string cachepath = GetCacheSavePath(filename);
@@ -644,7 +657,7 @@ namespace LLMUnity
         /// </summary>
         /// <param name="filename">filename / relative path to load the chat history from</param>
         /// <returns></returns>
-        public async Task<string> Load(string filename)
+        public virtual async Task<string> Load(string filename)
         {
             string filepath = GetJsonSavePath(filename);
             if (!File.Exists(filepath))
@@ -653,7 +666,9 @@ namespace LLMUnity
                 return null;
             }
             string json = File.ReadAllText(filepath);
-            chat = JsonUtility.FromJson<ChatListWrapper>(json).chat;
+            List<ChatMessage> chatHistory = JsonUtility.FromJson<ChatListWrapper>(json).chat;
+            InitPrompt(true);
+            chat.AddRange(chatHistory);
             LLMUnitySetup.Log($"Loaded {filepath}");
 
             string cachepath = GetCacheSavePath(filename);
@@ -683,7 +698,7 @@ namespace LLMUnity
 
         protected void CancelRequestsLocal()
         {
-            if (id_slot >= 0) llm.CancelRequest(id_slot);
+            if (slot >= 0) llm.CancelRequest(slot);
         }
 
         protected void CancelRequestsRemote()
@@ -811,9 +826,11 @@ namespace LLMUnity
                     {
                         result = default;
                         error = request.error;
+                        if (request.responseCode == (int)System.Net.HttpStatusCode.Unauthorized) break;
                     }
                 }
                 tryNr--;
+                if (tryNr > 0) await Task.Delay(200 * (numRetries - tryNr));
             }
 
             if (error != null) LLMUnitySetup.LogError(error);
