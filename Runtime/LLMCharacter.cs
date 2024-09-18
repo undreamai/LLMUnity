@@ -809,7 +809,10 @@ namespace LLMUnity
                         // Check if progress has changed
                         if (currentProgress != lastProgress && callback != null)
                         {
-                            callback?.Invoke(ConvertContent(request.downloadHandler.text, getContent));
+                            try
+                            {
+                                callback?.Invoke(ConvertContent(request.downloadHandler.text, getContent));
+                            } catch (Exception) {}
                             lastProgress = currentProgress;
                         }
                         // Wait for the next frame
