@@ -1,3 +1,9 @@
+## v2.3.0
+#### 🐛 Fixes
+
+- fix handling of incomplete requests (PR: #247)
+
+
 ## v2.2.3
 #### 🚀 Features
 
