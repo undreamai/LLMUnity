@@ -30,8 +30,7 @@ namespace LLMUnity
             ulong connectivity = 32,
             ulong expansionAdd = 40,
             ulong expansionSearch = 16
-                // TODO dimensions!!!
-        ) : this(llm, new USearchIndex(512, metricKind, quantization, connectivity, expansionAdd, expansionSearch, false)) {}
+        ) : this(llm, new USearchIndex((ulong)llm.embeddingLength, metricKind, quantization, connectivity, expansionAdd, expansionSearch, false)) {}
 
         public ANNModelSearch(
             LLM llm,
