@@ -16,8 +16,11 @@ namespace LLMUnity
         public bool lora;
         public string chatTemplate;
         public string url;
+        public bool embeddingOnly;
         public bool includeInBuild;
         public int contextLength;
+
+        static List<string> embeddingOnlyArchs = new List<string> {"bert", "nomic-bert", "jina-bert-v2", "t5", "t5encoder"};
 
         public static string GetFilenameOrRelativeAssetPath(string path)
         {
@@ -40,12 +43,14 @@ namespace LLMUnity
             includeInBuild = true;
             chatTemplate = null;
             contextLength = -1;
+            embeddingOnly = false;
             if (!lora)
             {
                 GGUFReader reader = new GGUFReader(this.path);
                 chatTemplate = ChatTemplate.FromGGUF(reader, this.path);
                 string arch = reader.GetStringField("general.architecture");
                 if (arch != null) contextLength = reader.GetIntField($"{arch}.context_length");
+                embeddingOnly = embeddingOnlyArchs.Contains(arch);
             }
         }
 
