@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using UnityEditor;
@@ -18,7 +19,8 @@ namespace LLMUnity
         static float includeInBuildColumnWidth = 30f;
         static float actionColumnWidth = 20f;
         static int elementPadding = 10;
-        static GUIContent trashIcon;
+        static GUIContent trashGUIContent;
+        static Dictionary<string, Texture2D> icons = new Dictionary<string, Texture2D>();
         static List<string> modelOptions;
         static List<string> modelLicenses;
         static List<string> modelURLs;
@@ -55,7 +57,7 @@ namespace LLMUnity
                 {
                     EditorGUILayout.BeginHorizontal();
                     EditorGUILayout.LabelField("SSL " + type + " path", path);
-                    if (GUILayout.Button(trashIcon, GUILayout.Height(actionColumnWidth), GUILayout.Width(actionColumnWidth))) setterCallback("");
+                    if (GUILayout.Button(trashGUIContent, GUILayout.Height(actionColumnWidth), GUILayout.Width(actionColumnWidth))) setterCallback("");
                     EditorGUILayout.EndHorizontal();
                 }
             }
@@ -298,11 +300,20 @@ namespace LLMUnity
             else await createButtons();
         }
 
+        void LoadIcons()
+        {
+            if (icons.Count > 0) return;
+            icons["🗑️"] = Resources.Load<Texture2D>("llmunity_trash_icon");
+            icons["💬"] = Resources.Load<Texture2D>("llmunity_speechballoon_icon");
+            icons["🔍"] = Resources.Load<Texture2D>("llmunity_magnifier_icon");
+        }
+
         void OnEnable()
         {
             LLM llmScript = (LLM)target;
+            LoadIcons();
             ResetModelOptions();
-            trashIcon = new GUIContent(Resources.Load<Texture2D>("llmunity_trash_icon"), "Delete Model");
+            trashGUIContent = new GUIContent(icons["🗑️"], "Delete Model");
             Texture2D loraLineTexture = new Texture2D(1, 1);
             loraLineTexture.SetPixel(0, 0, Color.black);
             loraLineTexture.Apply();
@@ -387,7 +398,7 @@ namespace LLMUnity
                         UpdateModels();
                     }
 
-                    if (GUI.Button(actionRect, trashIcon))
+                    if (GUI.Button(actionRect, trashGUIContent))
                     {
                         if (isSelected)
                         {
@@ -426,7 +437,20 @@ namespace LLMUnity
         private void DrawCopyableLabel(Rect rect, string label, string text = "")
         {
             if (text == "") text = label;
-            EditorGUI.LabelField(rect, label);
+            string labelToShow = label;
+            foreach (var icon in icons)
+            {
+                if (StringInfo.GetNextTextElement(label) == icon.Key)
+                {
+                    float iconSize = rect.height * 3 / 4;
+                    GUI.DrawTexture(new Rect(rect.x, rect.y + (rect.height - iconSize) / 2, iconSize, iconSize), icon.Value);
+                    rect.x += iconSize;
+                    rect.width -= iconSize;
+                    labelToShow = label.Substring(icon.Key.Length);
+                    break;
+                }
+            }
+            EditorGUI.LabelField(rect, labelToShow);
             if (Event.current.type == EventType.ContextClick && rect.Contains(Event.current.mousePosition))
             {
                 GenericMenu menu = new GenericMenu();
