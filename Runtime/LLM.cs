@@ -91,6 +91,7 @@ namespace LLMUnity
         public LoraManager loraManager = new LoraManager();
         string loraPre = "";
         string loraWeightsPre = "";
+        public bool embeddingsOnly = false;
 
         /// \endcond
 
@@ -216,6 +217,7 @@ namespace LLMUnity
 
                 maxContextLength = modelEntry.contextLength;
                 if (contextSize > maxContextLength) contextSize = maxContextLength;
+                SetEmbeddingsOnly(modelEntry.embeddingOnly);
                 if (contextSize == 0 && modelEntry.contextLength > 32768)
                 {
                     LLMUnitySetup.LogWarning($"The model {path} has very large context size ({modelEntry.contextLength}), consider setting it to a smaller value (<=32768) to avoid filling up the RAM");
@@ -319,6 +321,20 @@ namespace LLMUnity
 #endif
         }
 
+        /// <summary>
+        /// Enable to use the LLM only for embeddings.
+        /// </summary>
+        /// <param name="embeddingsOnly">if true, the LLM will be used only for embeddings  </param>
+        public void SetEmbeddingsOnly(bool embeddingsOnly)
+        {
+            if (embeddingsOnly) LLMUnitySetup.LogWarning("This model can only be used for embeddings");
+            if (this.embeddingsOnly == embeddingsOnly) return;
+            this.embeddingsOnly = embeddingsOnly;
+#if UNITY_EDITOR
+            if (!EditorApplication.isPlaying) EditorUtility.SetDirty(this);
+#endif
+        }
+
         /// \cond HIDE
 
         string ReadFileContents(string path)
@@ -402,15 +418,16 @@ namespace LLMUnity
 
             int slots = GetNumClients();
             string arguments = $"-m \"{modelPath}\" -c {contextSize} -b {batchSize} --log-disable -np {slots}";
+            if (embeddingsOnly) arguments += " --embedding";
+            if (numThreadsToUse > 0) arguments += $" -t {numThreadsToUse}";
+            arguments += loraArgument;
+            arguments += $" -ngl {numGPULayers}";
+            if (LLMUnitySetup.FullLlamaLib && flashAttention) arguments += $" --flash-attn";
             if (remote)
             {
                 arguments += $" --port {port} --host 0.0.0.0";
                 if (!String.IsNullOrEmpty(APIKey)) arguments += $" --api-key {APIKey}";
             }
-            if (numThreadsToUse > 0) arguments += $" -t {numThreadsToUse}";
-            arguments += loraArgument;
-            arguments += $" -ngl {numGPULayers}";
-            if (LLMUnitySetup.FullLlamaLib && flashAttention) arguments += $" --flash-attn";
 
             // the following is the equivalent for running from command line
             string serverCommand;
