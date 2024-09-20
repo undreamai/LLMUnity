@@ -92,6 +92,7 @@ namespace LLMUnity
         string loraPre = "";
         string loraWeightsPre = "";
         public bool embeddingsOnly = false;
+        public int embeddingLength = 0;
 
         /// \endcond
 
@@ -217,7 +218,7 @@ namespace LLMUnity
 
                 maxContextLength = modelEntry.contextLength;
                 if (contextSize > maxContextLength) contextSize = maxContextLength;
-                SetEmbeddingsOnly(modelEntry.embeddingOnly);
+                SetEmbeddings(modelEntry.embeddingLength, modelEntry.embeddingOnly);
                 if (contextSize == 0 && modelEntry.contextLength > 32768)
                 {
                     LLMUnitySetup.LogWarning($"The model {path} has very large context size ({modelEntry.contextLength}), consider setting it to a smaller value (<=32768) to avoid filling up the RAM");
@@ -322,14 +323,16 @@ namespace LLMUnity
         }
 
         /// <summary>
-        /// Enable to use the LLM only for embeddings.
+        /// Set LLM Embedding parameters
         /// </summary>
-        /// <param name="embeddingsOnly">if true, the LLM will be used only for embeddings  </param>
-        public void SetEmbeddingsOnly(bool embeddingsOnly)
+        /// <param name="embeddingLength"> number of embedding dimensions </param>
+        /// <param name="embeddingsOnly"> if true, the LLM will be used only for embeddings </param>
+        public void SetEmbeddings(int embeddingLength, bool embeddingsOnly)
         {
             if (embeddingsOnly) LLMUnitySetup.LogWarning("This model can only be used for embeddings");
-            if (this.embeddingsOnly == embeddingsOnly) return;
             this.embeddingsOnly = embeddingsOnly;
+            this.embeddingLength = embeddingLength;
+            Debug.Log(embeddingLength + " " + embeddingsOnly);
 #if UNITY_EDITOR
             if (!EditorApplication.isPlaying) EditorUtility.SetDirty(this);
 #endif
