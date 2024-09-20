@@ -111,7 +111,7 @@ namespace LLMUnity
         int nextSentenceId = 0;
         [DataMember]
         SentenceSplitter sentenceSplitter;
-        ANNModelSearch searchMethod;
+        SearchMethod searchMethod;
 
         public SearchEngine(
             LLM llm,
@@ -134,9 +134,9 @@ namespace LLMUnity
             this.searchMethod = searchMethod;
         }
 
-        public void SetEmbedder(LLM llm)
+        public void SetLLM(LLM llm)
         {
-            searchMethod.SetEmbedder(llm);
+            searchMethod.SetLLM(llm);
         }
 
         public string GetPhrase(Sentence sentence)
@@ -242,7 +242,7 @@ namespace LLMUnity
         {
             if (returnSentences)
             {
-                int[] keys = searchMethod.SearchKey(encoding, k, out distances);
+                int[] keys = searchMethod.Search(encoding, k, out distances);
                 string[] result = new string[keys.Length];
                 for (int i = 0; i < keys.Length; i++)
                 {
@@ -258,7 +258,7 @@ namespace LLMUnity
                 int currK = k;
                 do
                 {
-                    int[] keys = searchMethod.SearchKey(encoding, currK, out float[] iterDistances);
+                    int[] keys = searchMethod.Search(encoding, currK, out float[] iterDistances);
                     phraseDistances = new List<float>();
                     phraseKeys = new List<int>();
                     for (int i = 0; i < keys.Length; i++)
