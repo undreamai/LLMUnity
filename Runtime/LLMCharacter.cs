@@ -751,23 +751,27 @@ namespace LLMUnity
                     callResult = await llm.Slot(json);
                     break;
                 case "completion":
-                    Callback<string> callbackString = null;
-                    if (stream && callback != null)
+                    if (llm.embeddingsOnly) LLMUnitySetup.LogError("The LLM can't be used for completion, only for embeddings");
+                    else
                     {
-                        if (typeof(Ret) == typeof(string))
+                        Callback<string> callbackString = null;
+                        if (stream && callback != null)
                         {
-                            callbackString = (strArg) =>
+                            if (typeof(Ret) == typeof(string))
                             {
-                                callback(ConvertContent(strArg, getContent));
-                            };
+                                callbackString = (strArg) =>
+                                {
+                                    callback(ConvertContent(strArg, getContent));
+                                };
+                            }
+                            else
+                            {
+                                LLMUnitySetup.LogError($"wrong callback type, should be string");
+                            }
+                            callbackCalled = true;
                         }
-                        else
-                        {
-                            LLMUnitySetup.LogError($"wrong callback type, should be string");
-                        }
-                        callbackCalled = true;
+                        callResult = await llm.Completion(json, callbackString);
                     }
-                    callResult = await llm.Completion(json, callbackString);
                     break;
                 default:
                     LLMUnitySetup.LogError($"Unknown endpoint {endpoint}");
