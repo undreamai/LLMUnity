@@ -151,19 +151,18 @@ It is also a good idea to enable the `Download on Build` option in the LLM GameO
 <details>
 <summary>Save / Load your chat history</summary>
 
-To automatically save / load your chat history, you can specify the `Save` parameter of the LLMCharacter to the filename (or relative path) of your choice.
-The file is saved in the [persistentDataPath folder of Unity](https://docs.unity3d.com/ScriptReference/Application-persistentDataPath.html).
-This also saves the state of the LLM which means that the previously cached prompt does not need to be recomputed.
+Your `LLMCharacter` components will automatically create corresponding `LLMChatHistory` components to store their chat histories.
+- If you don't want to save the chat history, set the `EnableAutoSave` of the `LLMChatHistory` to false.
+- You can specify the filename to use by setting the `ChatHistoryFilename` of the `LLMChatHistory`. The file is saved in the [persistentDataPath folder of Unity](https://docs.unity3d.com/ScriptReference/Application-persistentDataPath.html).
 
 To manually save your chat history, you can use:
 ``` c#
-    llmCharacter.Save("filename");
+    llmChatHistory.Save();
 ```
 and to load the history:
 ``` c#
-    llmCharacter.Load("filename");
+    llmChatHistory.Load();
 ```
-where filename the filename or relative path of your choice.
 
 </details>
 <details>
@@ -452,8 +451,8 @@ If the user's GPU is not supported, the LLM will fall back to the CPU
 - `Port` port of the LLM server (if `Remote` is set)
 - `Num Retries` number of HTTP request retries from the LLM server (if `Remote` is set)
 - `API key` API key of the LLM server (if `Remote` is set)
-- <details><summary><code>Save</code> save filename or relative path</summary> If set, the chat history and LLM state (if save cache is enabled) is automatically saved to file specified. <br> The chat history is saved with a json suffix and the LLM state with a cache suffix. <br> Both files are saved in the [persistentDataPath folder of Unity](https://docs.unity3d.com/ScriptReference/Application-persistentDataPath.html).</details>
-- `Save Cache` select to save the LLM state along with the chat history. The LLM state is typically around 100MB+.
+- <details><summary><code>Cache Filename</code> save filename or relative path</summary> If set, the LLM state (if save cache is enabled) is automatically saved to file specified. <br> The LLM state is saved with a cache suffix. <br> The file is saved in the [persistentDataPath folder of Unity](https://docs.unity3d.com/ScriptReference/Application-persistentDataPath.html).</details>
+- `Save Cache` select to save the LLM state. The LLM state is typically around 100MB+.
 - `Debug Prompt` select to log the constructed prompts in the Unity Editor
 
 #### 🗨️ Chat Settings
