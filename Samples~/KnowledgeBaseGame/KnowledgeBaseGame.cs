@@ -145,7 +145,7 @@ namespace LLMUnitySamples
             Debug.Log($"{currentBotName}: {currentBot.NumPhrases()} phrases available");
 
             // set the LLMCharacter name
-            llmCharacter.aiRole = currentBotName;
+            llmCharacter.aiName = currentBotName;
         }
 
         void SetAIText(string text)

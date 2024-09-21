@@ -110,21 +110,22 @@ namespace LLMUnity
         /// By providing a token ID and a positive or negative bias value, you can increase or decrease the probability of that token being generated. </summary>
         public Dictionary<int, string> logitBias = null;
 
+        /// <summary> the chat history component that this character uses to store it's chat messages </summary>
+        [Chat] public LLMChatHistory chatHistory;
         /// <summary> the name of the player </summary>
-        [Chat] public string playerRole = "user";
+        [Chat] public string playerName = "user";
         /// <summary> the name of the AI </summary>
-        [Chat] public string aiRole = "assistant";
+        [Chat] public string aiName = "assistant";
         /// <summary> a description of the AI role. This defines the LLMCharacter system prompt </summary>
         [TextArea(5, 10), Chat] public string systemPrompt = "A chat between a curious human and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the human's questions.";
         /// <summary> option to set the number of tokens to retain from the prompt (nKeep) based on the LLMCharacter system prompt </summary>
         public bool setNKeepToPrompt = true;
 
         /// \cond HIDE
-        private LLMChatHistory chatHistory;
         private string chatTemplate;
         private ChatTemplate template = null;
         public string grammarString;
-        private List<(string, string)> requestHeaders = new List<(string, string)> { ("Content-Type", "application/json") };
+        private List<(string, string)> requestHeaders;
         private List<UnityWebRequest> WIPRequests = new List<UnityWebRequest>();
         /// \endcond
 
@@ -141,6 +142,8 @@ namespace LLMUnity
         {
             // Start the LLM server in a cross-platform way
             if (!enabled) return;
+
+            requestHeaders = new List<(string, string)> { ("Content-Type", "application/json") };
             if (!remote)
             {
                 AssignLLM();
@@ -213,10 +216,7 @@ namespace LLMUnity
 
         protected void InitHistory()
         {
-            // Check if we have a chat history component available
-            chatHistory = GetComponent<LLMChatHistory>();
-
-            // If not, go ahead and create one.
+            // If no specific chat history object has been assigned to this character, create one.
             if (chatHistory == null) {
                 chatHistory = gameObject.AddComponent<LLMChatHistory>();
             }
@@ -262,7 +262,7 @@ namespace LLMUnity
             if (setNKeepToPrompt && nKeep == -1)
             {
                 if (!CheckTemplate()) return false;
-                string systemPrompt = template.ComputePrompt(new List<ChatMessage>(){GetSystemPromptMessage()}, playerRole, aiRole, false);
+                string systemPrompt = template.ComputePrompt(new List<ChatMessage>(){GetSystemPromptMessage()}, playerName, aiName, false);
                 List<int> tokens = await Tokenize(systemPrompt);
                 if (tokens == null) return false;
                 SetNKeep(tokens);
@@ -324,7 +324,7 @@ namespace LLMUnity
         List<string> GetStopwords()
         {
             if (!CheckTemplate()) return null;
-            List<string> stopAll = new List<string>(template.GetStop(playerRole, aiRole));
+            List<string> stopAll = new List<string>(template.GetStop(playerName, aiName));
             if (stop != null) stopAll.AddRange(stop);
             return stopAll;
         }
@@ -366,12 +366,12 @@ namespace LLMUnity
 
         public async Task AddPlayerMessage(string content)
         {
-            await chatHistory.AddMessage(playerRole, content);
+            await chatHistory.AddMessage(playerName, content);
         }
 
         public async Task AddAIMessage(string content)
         {
-            await chatHistory.AddMessage(aiRole, content);
+            await chatHistory.AddMessage(aiName, content);
         }
 
         public LLMChatHistory GetChatHistory()
@@ -457,7 +457,7 @@ namespace LLMUnity
             if (!CheckTemplate()) return null;
             if (!await InitNKeep()) return null;
            
-            var playerMessage = new ChatMessage() { role = playerRole, content = query };
+            var playerMessage = new ChatMessage() { role = playerName, content = query };
 
             // Setup the full list of messages for the current request
             List<ChatMessage> promptMessages = chatHistory ? chatHistory.GetChatMessages() : new List<ChatMessage>();
@@ -465,7 +465,7 @@ namespace LLMUnity
             promptMessages.Add(playerMessage);
 
             // Prepare the request
-            string formattedPrompt = template.ComputePrompt(promptMessages, playerRole, aiRole);
+            string formattedPrompt = template.ComputePrompt(promptMessages, playerName, aiName);
             string requestJson = JsonUtility.ToJson(GenerateRequest(formattedPrompt));
 
             // Call the LLM
@@ -575,7 +575,7 @@ namespace LLMUnity
             return await PostRequest<EmbeddingsResult, List<float>>(json, "embeddings", EmbeddingsContent, callback);
         }
 
-        private async Task<string> Slot(string filepath, string action)
+        protected async Task<string> Slot(string filepath, string action)
         {
             SlotRequest slotRequest = new SlotRequest();
             slotRequest.id_slot = slot;

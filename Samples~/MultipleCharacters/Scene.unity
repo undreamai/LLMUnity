@@ -555,7 +555,6 @@ GameObject:
   m_Component:
   - component: {fileID: 714802013}
   - component: {fileID: 714802014}
-  - component: {fileID: 714802015}
   m_Layer: 0
   m_Name: LLMCharacter2
   m_TagString: Untagged
@@ -596,12 +595,14 @@ MonoBehaviour:
   host: localhost
   port: 13333
   numRetries: -1
+  APIKey: 
   cacheFilename: 
   saveCache: 0
   debugPrompt: 0
   stream: 1
   grammar: 
   cachePrompt: 1
+  slot: -1
   seed: 0
   numPredict: 256
   temperature: 0.2
@@ -623,26 +624,14 @@ MonoBehaviour:
   ignoreEos: 0
   nKeep: -1
   stop: []
-  playerRole: Human
-  aiRole: Adam
+  chatHistory: {fileID: 0}
+  playerName: Human
+  aiName: Adam
   systemPrompt: A chat between a curious human and an artificial intelligence assistant
     named Adam. The assistant gives helpful, detailed, and polite answers to the
     human's questions.
   setNKeepToPrompt: 1
   grammarString: 
---- !u!114 &714802015
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 714802011}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b9aef079d11e8894bae3ae510742c32f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ChatHistoryFilename: 
 --- !u!1 &726528676
 GameObject:
   m_ObjectHideFlags: 0
@@ -1542,6 +1531,11 @@ MonoBehaviour:
   lora: 
   loraWeights: 
   flashAttention: 0
+  APIKey: 
+  SSLCert: 
+  SSLCertPath: 
+  SSLKey: 
+  SSLKeyPath: 
 --- !u!4 &1047848255
 Transform:
   m_ObjectHideFlags: 0
@@ -1937,7 +1931,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1493015759}
   - component: {fileID: 1493015760}
-  - component: {fileID: 1493015761}
   m_Layer: 0
   m_Name: LLMCharacter1
   m_TagString: Untagged
@@ -1978,12 +1971,14 @@ MonoBehaviour:
   host: localhost
   port: 13333
   numRetries: -1
+  APIKey: 
   cacheFilename: 
   saveCache: 0
   debugPrompt: 0
   stream: 1
   grammar: 
   cachePrompt: 1
+  slot: -1
   seed: 0
   numPredict: 256
   temperature: 0.2
@@ -2005,26 +2000,14 @@ MonoBehaviour:
   ignoreEos: 0
   nKeep: -1
   stop: []
-  playerRole: Human
-  aiRole: Eve
+  chatHistory: {fileID: 0}
+  playerName: Human
+  aiName: Eve
   systemPrompt: A chat between a curious human and an artificial intelligence assistant
     named Eve. The assistant gives helpful, detailed, and polite answers to the human's
     questions.
   setNKeepToPrompt: 1
   grammarString: 
---- !u!114 &1493015761
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1493015757}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b9aef079d11e8894bae3ae510742c32f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ChatHistoryFilename: 
 --- !u!1 &1609985808
 GameObject:
   m_ObjectHideFlags: 0

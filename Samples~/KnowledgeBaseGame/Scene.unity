@@ -4259,7 +4259,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1275496424}
   - component: {fileID: 1275496423}
-  - component: {fileID: 1275496425}
   m_Layer: 0
   m_Name: LLMCharacter
   m_TagString: Untagged
@@ -4285,12 +4284,14 @@ MonoBehaviour:
   host: localhost
   port: 13333
   numRetries: -1
+  APIKey: 
   cacheFilename: 
   saveCache: 0
   debugPrompt: 0
   stream: 1
   grammar: 
   cachePrompt: 1
+  slot: -1
   seed: 0
   numPredict: 256
   temperature: 0.2
@@ -4312,8 +4313,9 @@ MonoBehaviour:
   ignoreEos: 0
   nKeep: -1
   stop: []
-  playerRole: Detective
-  aiRole: 
+  chatHistory: {fileID: 0}
+  playerName: Detective
+  aiName:
   systemPrompt: "You are a robot working at a house where a diamond was stolen and
     a detective\r asks you questions about the robbery.\r\n\r\nAnswer the question
     provided at the\r section \"Question\" based on the possible answers at the section
@@ -4335,19 +4337,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1275496425
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1275496422}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b9aef079d11e8894bae3ae510742c32f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ChatHistoryFilename: 
 --- !u!1 &1278063793
 GameObject:
   m_ObjectHideFlags: 0
@@ -7559,6 +7548,11 @@ MonoBehaviour:
   lora: 
   loraWeights: 
   flashAttention: 0
+  APIKey: 
+  SSLCert: 
+  SSLCertPath: 
+  SSLKey: 
+  SSLKeyPath: 
 --- !u!4 &2142407557
 Transform:
   m_ObjectHideFlags: 0

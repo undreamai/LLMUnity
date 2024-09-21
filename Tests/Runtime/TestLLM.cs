@@ -193,8 +193,8 @@ namespace LLMUnityTests
         {
             LLMCharacter llmCharacter = gameObject.AddComponent<LLMCharacter>();
             llmCharacter.llm = llm;
-            llmCharacter.playerRole = "Instruction";
-            llmCharacter.aiRole = "Response";
+            llmCharacter.playerName = "Instruction";
+            llmCharacter.aiName = "Response";
             llmCharacter.systemPrompt = prompt;
             llmCharacter.temperature = 0;
             llmCharacter.seed = 0;
@@ -235,15 +235,14 @@ namespace LLMUnityTests
             await llmCharacter.Tokenize("I", TestTokens);
             await llmCharacter.Warmup();
             TestInitParameters(tokens1, 0);
-            TestWarmup();
             await llmCharacter.Chat(query, (string reply) => TestChat(reply, reply1));
-            TestPostChat(3);
+            TestPostChat(2);
             await llmCharacter.SetPrompt(llmCharacter.systemPrompt);
-            llmCharacter.aiRole = "False response";
+            llmCharacter.aiName = "False response";
             await llmCharacter.Chat(query, (string reply) => TestChat(reply, reply2));
-            TestPostChat(3);
+            TestPostChat(2);
             await llmCharacter.Chat("bye!");
-            TestPostChat(5);
+            TestPostChat(4);
             prompt = "How are you?";
             await llmCharacter.SetPrompt(prompt);
             await llmCharacter.Chat("hi");
@@ -255,18 +254,13 @@ namespace LLMUnityTests
         public void TestInitParameters(int nKeep, int expectedMessageCount)
         {
             Assert.AreEqual(llmCharacter.nKeep, nKeep);
-            Assert.That(ChatTemplate.GetTemplate(llm.chatTemplate).GetStop(llmCharacter.playerRole, llmCharacter.aiRole).Length > 0);
+            Assert.That(ChatTemplate.GetTemplate(llm.chatTemplate).GetStop(llmCharacter.playerName, llmCharacter.aiName).Length > 0);
             Assert.AreEqual(llmCharacter.GetChatHistory().GetChatMessages().Count, expectedMessageCount);
         }
 
         public void TestTokens(List<int> tokens)
         {
             Assert.AreEqual(tokens, new List<int> {40});
-        }
-
-        public void TestWarmup()
-        {
-            //Assert.That(llmCharacter.chat.Count == 1);
         }
 
         public void TestChat(string generatedReply, string expectedReply)
@@ -277,7 +271,7 @@ namespace LLMUnityTests
 
         public void TestPostChat(int num)
         {
-            //Assert.That(llmCharacter.chat.Count == num);
+            Assert.AreEqual(num, llmCharacter.chatHistory.GetChatMessages().Count);
         }
 
         public void TestEmbeddings(List<float> embeddings)

@@ -22,6 +22,11 @@ namespace LLMUnity
         public string ChatHistoryFilename = string.Empty;
 
         /// <summary>
+        /// If true, this component will automatically save a copy of its data to the filesystem with each update.
+        /// </summary>
+        public bool EnableAutoSave = true;
+
+        /// <summary>
         /// The current chat history
         /// </summary>
         protected List<ChatMessage> _chatHistory;
@@ -54,8 +59,9 @@ namespace LLMUnity
                 await Task.Run(() => _chatHistory.Add(new ChatMessage { role = role, content = content }));
             });
 
-            // Save our newly updated chat history to the file system
-            _ = Save();
+            if (EnableAutoSave) {
+                _ = Save();
+            }
         }
 
         public List<ChatMessage> GetChatMessages() {
@@ -114,7 +120,9 @@ namespace LLMUnity
                 await Task.Run(() => _chatHistory.Clear());
             });
 
-            _ = Save();
+            if (EnableAutoSave) {
+                _ = Save();
+            }
         }
 
         public bool IsEmpty() {
