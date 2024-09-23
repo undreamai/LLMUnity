@@ -38,7 +38,6 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657832, g: 0.49641222, b: 0.57481664, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -483,12 +482,15 @@ MonoBehaviour:
   llm: {fileID: 1047848254}
   host: localhost
   port: 13333
-  save: 
+  numRetries: -1
+  APIKey: 
+  cacheFilename: 
   saveCache: 0
   debugPrompt: 0
   stream: 1
   grammar: 
   cachePrompt: 1
+  slot: -1
   seed: 0
   numPredict: 256
   temperature: 0.2
@@ -510,12 +512,12 @@ MonoBehaviour:
   ignoreEos: 0
   nKeep: -1
   stop: []
+  chatHistory: {fileID: 0}
   playerName: user
-  AIName: assistant
-  prompt: A chat between a curious human and an artificial intelligence assistant.
+  aiName: assistant
+  systemPrompt: A chat between a curious human and an artificial intelligence assistant.
     The assistant gives helpful, detailed, and polite answers to the human's questions.
   setNKeepToPrompt: 1
-  chat: []
   grammarString: 
 --- !u!1 &724531319
 GameObject:
@@ -1050,6 +1052,13 @@ MonoBehaviour:
   model: 
   chatTemplate: chatml
   lora: 
+  loraWeights: 
+  flashAttention: 0
+  APIKey: 
+  SSLCert: 
+  SSLCertPath: 
+  SSLKey: 
+  SSLKeyPath: 
 --- !u!4 &1047848255
 Transform:
   m_ObjectHideFlags: 0
