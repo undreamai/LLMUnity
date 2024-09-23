@@ -255,7 +255,7 @@ namespace LLMUnityTests
         {
             Assert.AreEqual(llmCharacter.nKeep, nKeep);
             Assert.That(ChatTemplate.GetTemplate(llm.chatTemplate).GetStop(llmCharacter.playerName, llmCharacter.aiName).Length > 0);
-            Assert.AreEqual(llmCharacter.GetChatHistory().GetChatMessages().Count, expectedMessageCount);
+            Assert.AreEqual(llmCharacter.chatHistory?.GetChatMessages().Count, expectedMessageCount);
         }
 
         public void TestTokens(List<int> tokens)

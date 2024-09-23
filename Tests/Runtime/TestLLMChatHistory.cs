@@ -37,10 +37,10 @@ namespace LLMUnityTests
 
             // 2. ACT
             // Destroy the current chat history
-            Object.Destroy(_chatHistory);
+            Object.Destroy(_gameObject);
 
             // Recreate the chat history and load from the same file
-            _chatHistory = _gameObject.AddComponent<LLMChatHistory>();
+            Setup();
             _chatHistory.ChatHistoryFilename = filename;
             await _chatHistory.Load();
 

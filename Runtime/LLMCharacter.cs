@@ -111,7 +111,13 @@ namespace LLMUnity
         public Dictionary<int, string> logitBias = null;
 
         /// <summary> the chat history component that this character uses to store it's chat messages </summary>
-        [Chat] public LLMChatHistory chatHistory;
+        public LLMChatHistory chatHistory {
+            get { return _chatHistory; }
+            set {
+                _chatHistory = value;
+                isCacheInvalid = true;
+            }
+        }
         /// <summary> the name of the player </summary>
         [Chat] public string playerName = "user";
         /// <summary> the name of the AI </summary>
@@ -122,11 +128,14 @@ namespace LLMUnity
         public bool setNKeepToPrompt = true;
 
         /// \cond HIDE
+        [SerializeField, Chat]
+        private LLMChatHistory _chatHistory;
         private string chatTemplate;
         private ChatTemplate template = null;
         public string grammarString;
         private List<(string, string)> requestHeaders;
         private List<UnityWebRequest> WIPRequests = new List<UnityWebRequest>();
+        private bool isCacheInvalid = false;
         /// \endcond
 
         /// <summary>
@@ -374,11 +383,6 @@ namespace LLMUnity
             await chatHistory.AddMessage(aiName, content);
         }
 
-        public LLMChatHistory GetChatHistory()
-        {
-            return chatHistory;
-        }
-
         protected string ChatContent(ChatResult result)
         {
             // get content from a chat result received from the endpoint
@@ -605,6 +609,13 @@ namespace LLMUnity
         public virtual async Task<string> LoadCache()
         {
             if (remote || !saveCache || !File.Exists(GetCacheSavePath())) return null;
+
+            // If the cache has become invalid, don't bother loading this time.
+            if (isCacheInvalid) {
+                isCacheInvalid = false;
+                return null;
+            }
+
             string result = await Slot(GetCacheSavePath(), "restore");
             return result;
         }
