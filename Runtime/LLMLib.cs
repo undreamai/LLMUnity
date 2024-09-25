@@ -303,6 +303,7 @@ namespace LLMUnity
                             has_avx = LibraryLoader.GetSymbolDelegate<HasArchDelegate>(archCheckerHandle, "has_avx")();
                             has_avx2 = LibraryLoader.GetSymbolDelegate<HasArchDelegate>(archCheckerHandle, "has_avx2")();
                             has_avx512 = LibraryLoader.GetSymbolDelegate<HasArchDelegate>(archCheckerHandle, "has_avx512")();
+                            LibraryLoader.FreeLibrary(archCheckerHandle);
                         }
                         catch (Exception e)
                         {
