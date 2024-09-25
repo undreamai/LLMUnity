@@ -287,7 +287,7 @@ namespace LLMUnity
         {
             lock (staticLock)
             {
-                if (has_avx_set) return;
+                if (has_avx_set || Application.platform == RuntimePlatform.Android) return;
                 string archCheckerPath = GetArchitectureCheckerPath();
                 if (archCheckerPath != null)
                 {
