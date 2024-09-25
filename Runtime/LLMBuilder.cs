@@ -17,12 +17,12 @@ namespace LLMUnity
         {
             Reset();
         }
-
-        public static void CopyPath(string source, string target)
+        
+        public static void HandleActionFileRecursive(string source, string target, ActionCallback actionCallback)
         {
             if (File.Exists(source))
             {
-                File.Copy(source, target, true);
+                actionCallback(source, target);
             }
             else if (Directory.Exists(source))
             {
@@ -32,14 +32,24 @@ namespace LLMUnity
                 filesAndDirs.AddRange(Directory.GetDirectories(source));
                 foreach (string path in filesAndDirs)
                 {
-                    CopyPath(path, Path.Combine(target, Path.GetFileName(path)));
+                    HandleActionFileRecursive(path, Path.Combine(target, Path.GetFileName(path)), actionCallback);
                 }
             }
         }
 
+        public static void CopyWithOverwrite(string source, string target)
+        {
+            File.Copy(source, target, true);
+        }
+
+        public static void CopyPath(string source, string target)
+        {
+            HandleActionFileRecursive(source, target, CopyWithOverwrite);
+        }
+
         public static void MovePath(string source, string target)
         {
-            CopyPath(source, target);
+            HandleActionFileRecursive(source, target, File.Move);
             DeletePath(source);
         }
 
