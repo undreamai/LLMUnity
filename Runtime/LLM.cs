@@ -378,10 +378,11 @@ namespace LLMUnity
                 LLMUnitySetup.LogError($"File {modelPath} not found!");
                 return null;
             }
+
+            loraManager.FromStrings(lora, loraWeights);
             string loraArgument = "";
-            foreach (string lora in lora.Trim().Split(" "))
+            foreach (string lora in loraManager.GetLoras())
             {
-                if (lora == "") continue;
                 string loraPath = GetLLMManagerAssetRuntime(lora);
                 if (!File.Exists(loraPath))
                 {
@@ -390,7 +391,6 @@ namespace LLMUnity
                 }
                 loraArgument += $" --lora \"{loraPath}\"";
             }
-            loraManager.FromStrings(lora, loraWeights);
 
             int numThreadsToUse = numThreads;
             if (Application.platform == RuntimePlatform.Android && numThreads <= 0) numThreadsToUse = LLMUnitySetup.AndroidGetNumBigCores();
