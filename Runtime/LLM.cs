@@ -218,7 +218,7 @@ namespace LLMUnity
                 if (contextSize > maxContextLength) contextSize = maxContextLength;
                 if (contextSize == 0 && modelEntry.contextLength > 32768)
                 {
-                    LLMUnitySetup.LogWarning($"The model {path} has very large context size ({maxContextLength}), consider setting it to a smaller value (<=32768) to avoid filling up the RAM");
+                    LLMUnitySetup.LogWarning($"The model {path} has very large context size ({modelEntry.contextLength}), consider setting it to a smaller value (<=32768) to avoid filling up the RAM");
                 }
             }
 #if UNITY_EDITOR
