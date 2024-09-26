@@ -413,9 +413,9 @@ namespace LLMUnity
             if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer) serverCommand = "undreamai_server.exe";
             else serverCommand = "./undreamai_server";
             serverCommand += " " + arguments;
-            serverCommand += $" --template {chatTemplate}";
+            serverCommand += $" --template \"{chatTemplate}\"";
             if (remote && SSLCert != "" && SSLKey != "") serverCommand += $" --ssl-cert-file {SSLCertPath} --ssl-key-file {SSLKeyPath}";
-            LLMUnitySetup.Log($"Server command: {serverCommand}");
+            LLMUnitySetup.Log($"Deploy server command: {serverCommand}");
             return arguments;
         }
 
