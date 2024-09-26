@@ -115,13 +115,32 @@ namespace LLMUnity
             {
                 Attribute floatAttr = GetPropertyAttribute(prop, typeof(FloatAttribute));
                 Attribute intAttr = GetPropertyAttribute(prop, typeof(IntAttribute));
+                Attribute dynamicRangeAttr = GetPropertyAttribute(prop, typeof(DynamicRangeAttribute));
                 if (floatAttr != null)
                 {
-                    EditorGUILayout.Slider(prop, ((FloatAttribute)floatAttr).Min, ((FloatAttribute)floatAttr).Max, new GUIContent(prop.displayName));
+                    FloatAttribute attr = (FloatAttribute)floatAttr;
+                    EditorGUILayout.Slider(prop, attr.Min, attr.Max, new GUIContent(prop.displayName));
                 }
                 else if (intAttr != null)
                 {
-                    EditorGUILayout.IntSlider(prop, ((IntAttribute)intAttr).Min, ((IntAttribute)intAttr).Max, new GUIContent(prop.displayName));
+                    IntAttribute attr = (IntAttribute)intAttr;
+                    EditorGUILayout.IntSlider(prop, attr.Min, attr.Max, new GUIContent(prop.displayName));
+                }
+                else if (dynamicRangeAttr != null)
+                {
+                    DynamicRangeAttribute attr = (DynamicRangeAttribute)dynamicRangeAttr;
+                    if (attr.intOrFloat)
+                    {
+                        float minValue = so.FindProperty(attr.minVariable).floatValue;
+                        float maxValue = so.FindProperty(attr.maxVariable).floatValue;
+                        EditorGUILayout.Slider(prop, minValue, maxValue, new GUIContent(prop.displayName));
+                    }
+                    else
+                    {
+                        int minValue = so.FindProperty(attr.minVariable).intValue;
+                        int maxValue = so.FindProperty(attr.maxVariable).intValue;
+                        EditorGUILayout.IntSlider(prop, minValue, maxValue, new GUIContent(prop.displayName));
+                    }
                 }
                 else
                 {

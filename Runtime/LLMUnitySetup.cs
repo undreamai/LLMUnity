@@ -38,6 +38,21 @@ namespace LLMUnity
         }
     }
 
+    [AttributeUsage(AttributeTargets.Field, Inherited = true, AllowMultiple = false)]
+    public class DynamicRangeAttribute : PropertyAttribute
+    {
+        public readonly string minVariable;
+        public readonly string maxVariable;
+        public bool intOrFloat;
+
+        public DynamicRangeAttribute(string minVariable, string maxVariable, bool intOrFloat)
+        {
+            this.minVariable = minVariable;
+            this.maxVariable = maxVariable;
+            this.intOrFloat = intOrFloat;
+        }
+    }
+
     public class LLMAttribute : PropertyAttribute {}
     public class LLMAdvancedAttribute : PropertyAttribute {}
     public class LocalRemoteAttribute : PropertyAttribute {}
