@@ -114,7 +114,7 @@ namespace LLMUnity
                  ("OpenHermes 2.5 7B", "https://huggingface.co/TheBloke/OpenHermes-2.5-Mistral-7B-GGUF/resolve/main/openhermes-2.5-mistral-7b.Q4_K_M.gguf?download=true", null),
              }},
             {"Small models", new(string, string, string)[]
-             {  
+             {
                  ("Llama 3.2 3B", "https://huggingface.co/hugging-quants/Llama-3.2-3B-Instruct-Q4_K_M-GGUF/resolve/main/llama-3.2-3b-instruct-q4_k_m.gguf", null),
                  ("Phi 3.5 4B", "https://huggingface.co/bartowski/Phi-3.5-mini-instruct-GGUF/resolve/main/Phi-3.5-mini-instruct-Q4_K_M.gguf", null),
              }},
