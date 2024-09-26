@@ -104,14 +104,23 @@ namespace LLMUnity
         public static string LLMManagerPath = GetAssetPath("LLMManager.json");
 
         /// <summary> Default models for download </summary>
-        [HideInInspector] public static readonly (string, string, string, string)[] modelOptions = new(string, string, string, string)[]
+        [HideInInspector] public static readonly Dictionary<string, (string, string, string)[]> modelOptions = new Dictionary<string, (string, string, string)[]>()
         {
-            ("Llama 3.1 8B", "Medium models", "https://huggingface.co/bartowski/Meta-Llama-3.1-8B-Instruct-GGUF/resolve/main/Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf?download=true", "https://huggingface.co/meta-llama/Meta-Llama-3.1-8B/blob/main/LICENSE"),
-            ("Mistral 7B Instruct v0.2", "Medium models", "https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.2-GGUF/resolve/main/mistral-7b-instruct-v0.2.Q4_K_M.gguf?download=true", null),
-            ("Gemma 2 9B it", "Medium models", "https://huggingface.co/bartowski/gemma-2-9b-it-GGUF/resolve/main/gemma-2-9b-it-Q4_K_M.gguf?download=true", "https://ai.google.dev/gemma/terms"),
-            ("OpenHermes 2.5 7B", "Medium models", "https://huggingface.co/TheBloke/OpenHermes-2.5-Mistral-7B-GGUF/resolve/main/openhermes-2.5-mistral-7b.Q4_K_M.gguf?download=true", null),
-            ("Phi 3", "Small models", "https://huggingface.co/microsoft/Phi-3-mini-4k-instruct-gguf/resolve/main/Phi-3-mini-4k-instruct-q4.gguf?download=true", null),
-            ("Qwen 2 0.5B", "Tiny models", "https://huggingface.co/Qwen/Qwen2-0.5B-Instruct-GGUF/resolve/main/qwen2-0_5b-instruct-q4_k_m.gguf?download=true", null),
+            {"Medium models", new(string, string, string)[]
+             {
+                 ("Llama 3.1 8B", "https://huggingface.co/bartowski/Meta-Llama-3.1-8B-Instruct-GGUF/resolve/main/Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf?download=true", "https://huggingface.co/meta-llama/Meta-Llama-3.1-8B/blob/main/LICENSE"),
+                 ("Mistral 7B Instruct v0.2", "https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.2-GGUF/resolve/main/mistral-7b-instruct-v0.2.Q4_K_M.gguf?download=true", null),
+                 ("Gemma 2 9B it", "https://huggingface.co/bartowski/gemma-2-9b-it-GGUF/resolve/main/gemma-2-9b-it-Q4_K_M.gguf?download=true", "https://ai.google.dev/gemma/terms"),
+                 ("OpenHermes 2.5 7B", "https://huggingface.co/TheBloke/OpenHermes-2.5-Mistral-7B-GGUF/resolve/main/openhermes-2.5-mistral-7b.Q4_K_M.gguf?download=true", null),
+             }},
+            {"Small models", new(string, string, string)[]
+             {
+                 ("Phi 3", "https://huggingface.co/microsoft/Phi-3-mini-4k-instruct-gguf/resolve/main/Phi-3-mini-4k-instruct-q4.gguf?download=true", null),
+             }},
+            {"Tiny models", new(string, string, string)[]
+             {
+                 ("Qwen 2 0.5B", "https://huggingface.co/Qwen/Qwen2-0.5B-Instruct-GGUF/resolve/main/qwen2-0_5b-instruct-q4_k_m.gguf?download=true", null),
+             }},
         };
 
         /// \cond HIDE
