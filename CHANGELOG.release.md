@@ -2,6 +2,7 @@
 
 - Add Phi-3.5 and Llama 3.2 models (PR: #255)
 - Automatically set context size for models when it is too large (>32768) (PR: #256)
+- Speedup LLMCharacter warmup (PR: #257)
 
 ### 🐛 Fixes
 
