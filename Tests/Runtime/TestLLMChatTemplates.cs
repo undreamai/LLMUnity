@@ -117,6 +117,15 @@ namespace LLMUnityTests
         }
 
         [Test]
+        public void TestPhi3_5()
+        {
+            Assert.AreEqual(
+                new Phi3_5Template().ComputePrompt(messages, "user", "assistant"),
+                "<|system|>\nyou are a bot<|end|>\n<|user|>\nHello, how are you?<|end|>\n<|assistant|>\nI'm doing great. How can I help you today?<|end|>\n<|user|>\nI'd like to show off how chat templating works!<|end|>\n<|assistant|>\nchat template is awesome<|end|>\n<|user|>\ndo you think so?<|end|>\n<|assistant|>\n"
+            );
+        }
+
+        [Test]
         public void TestZephyr()
         {
             Assert.AreEqual(
