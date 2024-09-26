@@ -1,4 +1,8 @@
 ## v2.2.4
+#### 🚀 Features
+
+- Add Phi-3.5 and Llama 3.2 models (PR: #255)
+
 #### 🐛 Fixes
 
 - fix handling of incomplete requests (PR: #251)
