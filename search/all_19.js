@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['save_0',['Save',['../classLLMUnity_1_1LLMCharacter.html#a8777cf02ab4ecf5a967ade7e93925108',1,'LLMUnity::LLMCharacter']]],
-  ['save_1',['save',['../classLLMUnity_1_1LLMCharacter.html#af5d8f07cad7066700b19689a0b493d38',1,'LLMUnity::LLMCharacter']]],
+  ['save_0',['save',['../classLLMUnity_1_1LLMCharacter.html#af5d8f07cad7066700b19689a0b493d38',1,'LLMUnity::LLMCharacter']]],
+  ['save_1',['Save',['../classLLMUnity_1_1LLMCharacter.html#a8777cf02ab4ecf5a967ade7e93925108',1,'LLMUnity::LLMCharacter']]],
   ['savecache_2',['saveCache',['../classLLMUnity_1_1LLMCharacter.html#a796c05dab6ed5c3cebb6f67353535164',1,'LLMUnity::LLMCharacter']]],
   ['security_20settings_3',['Server Security Settings',['../index.html#autotoc_md11',1,'']]],
   ['seed_4',['seed',['../classLLMUnity_1_1LLMCharacter.html#ac49b82eed69f8cfb62ef837743b0cdc4',1,'LLMUnity::LLMCharacter']]],
@@ -19,14 +19,13 @@ var searchData=
   ['settings_16',['Settings',['../index.html#autotoc_md10',1,'💻 Setup Settings'],['../index.html#autotoc_md15',1,'💻 Setup Settings'],['../index.html#autotoc_md13',1,'🗨️ Chat Settings'],['../index.html#autotoc_md16',1,'🗨️ Chat Settings'],['../index.html#autotoc_md12',1,'🤗 Model Settings'],['../index.html#autotoc_md17',1,'🤗 Model Settings'],['../index.html#autotoc_md9',1,'LLM Settings'],['../index.html#autotoc_md14',1,'LLMCharacter Settings'],['../index.html#autotoc_md11',1,'Server Security Settings']]],
   ['setup_17',['Setup',['../index.html#autotoc_md4',1,'']]],
   ['setup_20settings_18',['Setup Settings',['../index.html#autotoc_md10',1,'💻 Setup Settings'],['../index.html#autotoc_md15',1,'💻 Setup Settings']]],
-  ['slot_19',['slot',['../classLLMUnity_1_1LLMCharacter.html#a0a946ac2956e5b3800f68a34a3a93609',1,'LLMUnity::LLMCharacter']]],
-  ['slot_20',['Slot',['../classLLMUnity_1_1LLM.html#a16381a5907592831a0ea35137b9921ff',1,'LLMUnity::LLM']]],
-  ['smol_5fllama_20220m_20openhermes_21',['BEE-spoke-data/smol_llama-220M-openhermes',['../md_Third_01Party_01Notices.html#autotoc_md37',1,'']]],
-  ['smol_5fllama_20220m_20openhermes_20gguf_22',['modified by: afrideva/smol_llama-220M-openhermes-GGUF',['../md_Third_01Party_01Notices.html#autotoc_md38',1,'']]],
-  ['software_23',['Software',['../md_Third_01Party_01Notices.html#autotoc_md20',1,'']]],
-  ['software_20notices_20and_20information_24',['THIRD-PARTY SOFTWARE NOTICES AND INFORMATION',['../md_Third_01Party_01Notices.html',1,'']]],
-  ['spoke_20data_20smol_5fllama_20220m_20openhermes_25',['BEE-spoke-data/smol_llama-220M-openhermes',['../md_Third_01Party_01Notices.html#autotoc_md37',1,'']]],
-  ['started_26',['started',['../classLLMUnity_1_1LLM.html#a9bf3f3bd1e5ac32e5790415e448762e7',1,'LLMUnity::LLM']]],
-  ['stop_27',['stop',['../classLLMUnity_1_1LLMCharacter.html#a1f52b3ca2ac0bee954bf5171742c9a5e',1,'LLMUnity::LLMCharacter']]],
-  ['stream_28',['stream',['../classLLMUnity_1_1LLMCharacter.html#a99a58a6ef8c6bc48036403df0fe7c139',1,'LLMUnity::LLMCharacter']]]
+  ['slot_19',['Slot',['../classLLMUnity_1_1LLM.html#a16381a5907592831a0ea35137b9921ff',1,'LLMUnity::LLM']]],
+  ['slot_20',['slot',['../classLLMUnity_1_1LLMCharacter.html#a0a946ac2956e5b3800f68a34a3a93609',1,'LLMUnity::LLMCharacter']]],
+  ['smol_5fllama_20220m_20openhermes_21',['BEE-spoke-data/smol_llama-220M-openhermes',['../md_Third_01Party_01Notices.html#autotoc_md35',1,'']]],
+  ['software_22',['Software',['../md_Third_01Party_01Notices.html#autotoc_md20',1,'']]],
+  ['software_20notices_20and_20information_23',['THIRD-PARTY SOFTWARE NOTICES AND INFORMATION',['../md_Third_01Party_01Notices.html',1,'']]],
+  ['spoke_20data_20smol_5fllama_20220m_20openhermes_24',['BEE-spoke-data/smol_llama-220M-openhermes',['../md_Third_01Party_01Notices.html#autotoc_md35',1,'']]],
+  ['started_25',['started',['../classLLMUnity_1_1LLM.html#a9bf3f3bd1e5ac32e5790415e448762e7',1,'LLMUnity::LLM']]],
+  ['stop_26',['stop',['../classLLMUnity_1_1LLMCharacter.html#a1f52b3ca2ac0bee954bf5171742c9a5e',1,'LLMUnity::LLMCharacter']]],
+  ['stream_27',['stream',['../classLLMUnity_1_1LLMCharacter.html#a99a58a6ef8c6bc48036403df0fe7c139',1,'LLMUnity::LLMCharacter']]]
 ];

@@ -1,25 +1,27 @@
 <map id="LLMUnity.ChatTemplate" name="LLMUnity.ChatTemplate">
-<area shape="rect" id="Node000001" title="Class implementing the skeleton of a chat template." alt="" coords="5,232,180,257"/>
+<area shape="rect" id="Node000001" title="Class implementing the skeleton of a chat template." alt="" coords="5,260,180,285"/>
 <area shape="rect" id="Node000002" href="$classLLMUnity_1_1AlpacaTemplate.html" title="Class implementing the Alpaca template." alt="" coords="247,5,436,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="101,218,118,178,145,130,181,81,203,59,227,40,248,28,251,33,229,44,206,63,185,84,150,133,123,181,106,220"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="99,246,115,200,141,144,178,88,201,62,226,40,247,28,250,33,230,44,204,66,182,91,146,147,120,202,104,247"/>
 <area shape="rect" id="Node000003" href="$classLLMUnity_1_1ChatMLTemplate.html" title="Class implementing the ChatML template." alt="" coords="245,55,438,80"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="106,219,154,153,188,118,227,89,252,78,254,83,229,94,191,122,158,157,110,222"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="103,246,122,210,149,167,184,125,227,89,250,78,252,83,229,94,188,128,153,170,126,213,108,248"/>
 <area shape="rect" id="Node000004" href="$classLLMUnity_1_1GemmaTemplate.html" title="Class implementing the Gemma template." alt="" coords="243,104,440,129"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="114,221,163,178,194,157,227,138,258,127,260,132,229,143,197,161,166,182,118,225"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="109,247,158,192,190,163,227,138,254,127,256,132,229,143,194,167,161,196,113,251"/>
 <area shape="rect" id="Node000005" href="$classLLMUnity_1_1LLama2Template.html" title="Class implementing the LLama2 template." alt="" coords="243,153,439,179"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="133,224,227,187,271,176,272,181,229,193,135,229"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="120,250,168,218,227,188,263,176,264,181,229,192,171,222,123,254"/>
 <area shape="rect" id="Node000007" href="$classLLMUnity_1_1LLama3ChatTemplate.html" title="Class implementing the LLama3 template for chat." alt="" coords="228,203,455,228"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="193,230,233,225,234,231,194,235"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="159,254,227,238,282,225,284,231,229,243,161,259"/>
 <area shape="rect" id="Node000008" href="$classLLMUnity_1_1MistralInstructTemplate.html" title="Class implementing the Mistral Instruct template." alt="" coords="252,253,431,293"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="194,253,252,260,252,265,193,259"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="194,270,252,270,252,275,194,275"/>
 <area shape="rect" id="Node000010" href="$classLLMUnity_1_1Phi2Template.html" title="Class implementing the Phi&#45;2 template." alt="" coords="255,317,428,343"/>
-<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="132,261,178,282,229,302,274,315,273,320,227,307,176,287,130,266"/>
-<area shape="rect" id="Node000011" href="$classLLMUnity_1_1Phi3Template.html" title="Class implementing the Zephyr template." alt="" coords="255,367,428,392"/>
-<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="117,266,165,311,196,334,229,353,259,364,257,369,227,358,193,338,162,315,113,269"/>
-<area shape="rect" id="Node000012" href="$classLLMUnity_1_1VicunaTemplate.html" title="Class implementing the Vicuna template." alt="" coords="247,416,436,441"/>
-<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="110,268,157,336,190,372,229,402,253,413,251,418,227,407,187,376,152,339,105,271"/>
-<area shape="rect" id="Node000013" href="$classLLMUnity_1_1ZephyrTemplate.html" title="Class implementing the Zephyr template." alt="" coords="246,465,437,491"/>
-<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="105,269,122,310,149,360,185,410,206,433,229,452,251,463,248,468,227,456,202,437,180,414,144,363,118,312,100,271"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="161,286,229,302,284,315,282,320,227,307,159,291"/>
+<area shape="rect" id="Node000011" href="$classLLMUnity_1_1Phi3Template.html" title="Class implementing the Phi&#45;3 template." alt="" coords="255,367,428,392"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="123,291,171,323,229,353,264,364,263,369,227,358,168,328,120,296"/>
+<area shape="rect" id="Node000012" href="$classLLMUnity_1_1Phi3__5Template.html" title="Class implementing the Phi&#45;3.5 template." alt="" coords="247,416,435,441"/>
+<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="113,295,161,350,194,378,229,402,256,413,254,418,227,407,190,383,158,354,109,298"/>
+<area shape="rect" id="Node000013" href="$classLLMUnity_1_1VicunaTemplate.html" title="Class implementing the Vicuna template." alt="" coords="247,465,436,491"/>
+<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="108,297,126,333,153,375,188,417,229,452,252,463,250,468,227,456,184,421,149,378,122,335,103,299"/>
+<area shape="rect" id="Node000014" href="$classLLMUnity_1_1ZephyrTemplate.html" title="Class implementing the Zephyr template." alt="" coords="246,515,437,540"/>
+<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="104,298,120,343,146,398,182,455,204,480,230,501,250,512,247,517,226,506,201,483,178,458,141,401,115,345,99,300"/>
 <area shape="rect" id="Node000006" href="$classLLMUnity_1_1LLama2ChatTemplate.html" title="Class implementing a modified version of the LLama2 template for chat." alt="" coords="503,153,729,179"/>
 <area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="453,163,502,163,502,169,453,169"/>
 <area shape="rect" id="Node000009" href="$classLLMUnity_1_1MistralChatTemplate.html" title="Class implementing a modified version of the Mistral Instruct template for chat." alt="" coords="506,260,726,285"/>

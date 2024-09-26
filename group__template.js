@@ -79,6 +79,13 @@ var group__template =
       [ "GetNameMatches", "classLLMUnity_1_1Phi3Template.html#a1ad61c24639f1431d47bc1e0d1dc3333", null ],
       [ "GetStop", "classLLMUnity_1_1Phi3Template.html#a5b75acbabc2f84aa1fe3ee51bd391f0c", null ]
     ] ],
+    [ "LLMUnity.Phi3_5Template", "classLLMUnity_1_1Phi3__5Template.html", [
+      [ "GetChatTemplateMatches", "classLLMUnity_1_1Phi3__5Template.html#ab7f03de6babccade99505f92f8ef3c16", null ],
+      [ "GetDescription", "classLLMUnity_1_1Phi3__5Template.html#acf2ba358b19896dd80980cad03d6f3f9", null ],
+      [ "GetName", "classLLMUnity_1_1Phi3__5Template.html#a73170cb8134c1b91de567ed9fecace5e", null ],
+      [ "GetNameMatches", "classLLMUnity_1_1Phi3__5Template.html#a9a591ad5d021f899a6460a97c5e1b67f", null ],
+      [ "GetStop", "classLLMUnity_1_1Phi3__5Template.html#a6c32ec6b0cda2ef1f6a1903536c580b8", null ]
+    ] ],
     [ "LLMUnity.ZephyrTemplate", "classLLMUnity_1_1ZephyrTemplate.html", [
       [ "GetChatTemplateMatches", "classLLMUnity_1_1ZephyrTemplate.html#a11040e0f56935627127f0df8e44d6826", null ],
       [ "GetDescription", "classLLMUnity_1_1ZephyrTemplate.html#a13543a1685832fef5c0d7665ca59690e", null ],

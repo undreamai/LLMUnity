@@ -59,7 +59,7 @@ var group__llm =
       [ "SetGrammar", "classLLMUnity_1_1LLMCharacter.html#aee4abf630820cbd00ef4aca0f04807b9", null ],
       [ "SetPrompt", "classLLMUnity_1_1LLMCharacter.html#ac0f8bab15daa6ec99724c7ef24814939", null ],
       [ "Tokenize", "classLLMUnity_1_1LLMCharacter.html#acfb6b52acb34a4507720eddd466a6a13", null ],
-      [ "Warmup", "classLLMUnity_1_1LLMCharacter.html#a2d763521d5e34ba2e2604a12b533d3df", null ],
+      [ "Warmup", "classLLMUnity_1_1LLMCharacter.html#a55f17930fb1f4ce352a29e247597babb", null ],
       [ "advancedOptions", "classLLMUnity_1_1LLMCharacter.html#ab180e58b83e3f10c09e620c42542bf08", null ],
       [ "AIName", "classLLMUnity_1_1LLMCharacter.html#a232035352610374224b6e2dc3da297da", null ],
       [ "APIKey", "classLLMUnity_1_1LLMCharacter.html#aa0109d7d189c9eb1fe3c3524f5a94a8c", null ],

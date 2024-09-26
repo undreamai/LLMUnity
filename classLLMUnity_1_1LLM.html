@@ -47,7 +47,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_tiny.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">LLM for Unity
-   &#160;<span id="projectnumber">v2.2.3</span>
+   &#160;<span id="projectnumber">v2.2.4</span>
    </div>
    <div id="projectbrief">Create characters in Unity with LLMs!</div>
   </td>
@@ -248,7 +248,7 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:ab1cd3fa19215c0ccc3c9cea09fe4b669" id="r_ab1cd3fa19215c0ccc3c9cea09fe4b669"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab1cd3fa19215c0ccc3c9cea09fe4b669">dontDestroyOnLoad</a> = true</td></tr>
 <tr class="memdesc:ab1cd3fa19215c0ccc3c9cea09fe4b669"><td class="mdescLeft">&#160;</td><td class="mdescRight">select to not destroy the LLM GameObject when loading a new Scene.  <br /></td></tr>
 <tr class="separator:ab1cd3fa19215c0ccc3c9cea09fe4b669"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8e358f7a834e6ede3cc19aa7142e67e8" id="r_a8e358f7a834e6ede3cc19aa7142e67e8"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8e358f7a834e6ede3cc19aa7142e67e8">contextSize</a> = 0</td></tr>
+<tr class="memitem:a8e358f7a834e6ede3cc19aa7142e67e8" id="r_a8e358f7a834e6ede3cc19aa7142e67e8"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8e358f7a834e6ede3cc19aa7142e67e8">contextSize</a> = 8192</td></tr>
 <tr class="memdesc:a8e358f7a834e6ede3cc19aa7142e67e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Size of the prompt context (0 = context size of the model). This is the number of tokens the model can take as input when generating responses.  <br /></td></tr>
 <tr class="separator:a8e358f7a834e6ede3cc19aa7142e67e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac1d133a050b4cc2ec567fcb1691f46b3" id="r_ac1d133a050b4cc2ec567fcb1691f46b3"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac1d133a050b4cc2ec567fcb1691f46b3">batchSize</a> = 512</td></tr>
@@ -323,7 +323,7 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00095">95</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00097">97</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -363,7 +363,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00243">243</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00248">248</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -393,7 +393,7 @@ Properties</h2></td></tr>
 <p>Sets the lora scale, only works after the LLM service has started. </p>
 <dl class="section return"><dt>Returns</dt><dd>switch result</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00676">676</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00681">681</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -422,7 +422,7 @@ Properties</h2></td></tr>
 
 <p>The Unity Awake function that starts the LLM server. The server can be started asynchronously if the asynchronousStartup option is set. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00113">113</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00115">115</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -457,7 +457,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00759">759</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00764">764</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -498,7 +498,7 @@ Properties</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>completion result</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00734">734</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00739">739</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -527,7 +527,7 @@ Properties</h2></td></tr>
 
 <p>Stops and destroys the LLM. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00769">769</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00774">774</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -563,7 +563,7 @@ Properties</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>detokenisation result</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00647">647</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00652">652</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -599,7 +599,7 @@ Properties</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>embeddings result</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00662">662</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00667">667</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -626,7 +626,7 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00149">149</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00151">151</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -653,7 +653,7 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00157">157</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00159">159</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -680,7 +680,7 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00186">186</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00188">188</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -710,7 +710,7 @@ Properties</h2></td></tr>
 <p>Returns the chat template of the LLM. </p>
 <dl class="section return"><dt>Returns</dt><dd>chat template of the LLM</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00356">356</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00361">361</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -740,7 +740,7 @@ Properties</h2></td></tr>
 <p>Gets a list of the lora adapters. </p>
 <dl class="section return"><dt>Returns</dt><dd>list of lara adapters</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00700">700</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00705">705</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -769,7 +769,7 @@ Properties</h2></td></tr>
 
 <p>The Unity OnDestroy function called when the onbject is destroyed. The function StopProcess is called to stop the LLM server. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00804">804</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00809">809</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -805,7 +805,7 @@ Properties</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00525">525</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00530">530</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -840,7 +840,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00255">255</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00260">260</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -869,7 +869,7 @@ Properties</h2></td></tr>
 
 <p>Allows to remove all LORA models from the LLM. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00265">265</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00270">270</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -896,7 +896,7 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00748">748</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00753">753</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -935,7 +935,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00230">230</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00235">235</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -975,7 +975,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00277">277</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00282">282</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -1010,7 +1010,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00288">288</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00293">293</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -1045,7 +1045,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00206">206</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00208">208</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -1080,7 +1080,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00336">336</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00341">341</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -1115,7 +1115,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00346">346</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00351">351</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -1154,7 +1154,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00308">308</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00313">313</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -1190,7 +1190,7 @@ Properties</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>slot result</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00718">718</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00723">723</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -1226,7 +1226,7 @@ Properties</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>tokenisation result</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00632">632</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00637">637</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -1255,7 +1255,7 @@ Properties</h2></td></tr>
 
 <p>The Unity Update function. It is used to retrieve the LLM replies. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00559">559</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00564">564</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -1282,7 +1282,7 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00295">295</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00300">300</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -1309,7 +1309,7 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00142">142</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00144">144</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -1336,7 +1336,7 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00137">137</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00139">139</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -1438,7 +1438,7 @@ Properties</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int LLMUnity.LLM.contextSize = 0</td>
+          <td class="memname">int LLMUnity.LLM.contextSize = 8192</td>
         </tr>
       </table>
 </div><div class="memdoc">
