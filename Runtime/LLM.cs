@@ -74,6 +74,7 @@ namespace LLMUnity
         [SerializeField]
         private string SSLKey = "";
         public string SSLKeyPath = "";
+        public static int maxContextLength = 32768;
 
         /// \cond HIDE
 
@@ -211,9 +212,15 @@ namespace LLMUnity
                 ModelEntry modelEntry = LLMManager.Get(model);
                 if (modelEntry == null) modelEntry = new ModelEntry(GetLLMManagerAssetRuntime(model));
                 SetTemplate(modelEntry.chatTemplate);
-                if (contextSize == 0 && modelEntry.contextLength > 32768)
+                if (contextSize > modelEntry.contextLength)
                 {
-                    LLMUnitySetup.LogWarning($"The model {path} has very large context size ({modelEntry.contextLength}), consider setting it to a smaller value (<=32768) to avoid filling up the RAM");
+                    contextSize = 0;
+                    LLMUnitySetup.LogWarning($"The selected context size {contextSize} is larger than the context size supported from the {path} model ({modelEntry.contextLength}), resetting it to use the model's default");
+                }
+                if (contextSize == 0 && modelEntry.contextLength > maxContextLength)
+                {
+                    contextSize = maxContextLength;
+                    LLMUnitySetup.LogWarning($"The {path} model has very large context size ({modelEntry.contextLength}), it was automatically set to {maxContextLength} to avoid filling up the RAM");
                 }
             }
 #if UNITY_EDITOR
