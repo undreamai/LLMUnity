@@ -564,9 +564,18 @@ namespace LLMUnity
         /// <param name="completionCallback">callback function called when the full response has been received</param>
         /// <param name="query">user prompt used during the initialisation (not added to history)</param>
         /// <returns>the LLM response</returns>
-        public async Task<string> Warmup(EmptyCallback completionCallback = null, string query = "hi")
+        public async Task Warmup(EmptyCallback completionCallback = null)
         {
-            return await Chat(query, null, completionCallback, false);
+            await LoadTemplate();
+            if (!CheckTemplate()) return;
+            if (!await InitNKeep()) return;
+
+            string prompt = template.ComputePrompt(chat, playerName, AIName);
+            ChatRequest request = GenerateRequest(prompt);
+            request.n_predict = 0;
+            string json = JsonUtility.ToJson(request);
+            await CompletionRequest(json);
+            completionCallback?.Invoke();
         }
 
         /// <summary>
