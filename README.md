@@ -414,12 +414,12 @@ If the user's GPU is not supported, the LLM will fall back to the CPU
 - `Download model` click to download one of the default models
 - `Load model` click to load your own model in .gguf format
 - `Download on Start` enable to downloaded the LLM models the first time the game starts. Alternatively the LLM models wil be copied directly in the build
+- <details><summary><code>Context Size</code> size of the prompt context (0 = context size of the model)</summary> This is the number of tokens the model can take as input when generating responses. Higher values use more RAM or VRAM (if using GPU). </details>
 
 - <details><summary>Advanced options</summary>
 
   - `Download lora` click to download a LoRA model in .gguf format
   - `Load lora` click to load a LoRA model in .gguf format
-  - <details><summary><code>Context Size</code> size of the prompt context (0 = context size of the model)</summary> This is the number of tokens the model can take as input when generating responses. Higher values use more RAM or VRAM (if using GPU). </details>
   - `Batch Size` batch size for prompt processing (default: 512)
   - `Model` the path of the model being used (relative to the Assets/StreamingAssets folder)
   - `Chat Template` the chat template being used for the LLM
