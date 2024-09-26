@@ -812,7 +812,8 @@ namespace LLMUnity
                             try
                             {
                                 callback?.Invoke(ConvertContent(request.downloadHandler.text, getContent));
-                            } catch (Exception) {}
+                            }
+                            catch (Exception) {}
                             lastProgress = currentProgress;
                         }
                         // Wait for the next frame

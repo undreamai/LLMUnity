@@ -40,6 +40,7 @@ namespace LLMUnity
     public class LoraManager
     {
         List<LoraAsset> loras = new List<LoraAsset>();
+        public string delimiter = ",";
 
         public void Clear()
         {
@@ -95,12 +96,12 @@ namespace LLMUnity
 
             try
             {
-                List<string> loraStringArr = new List<string>(loraString.Split(" "));
-                List<string> loraWeightsStringArr = new List<string>(loraWeightsString.Split(" "));
+                List<string> loraStringArr = new List<string>(loraString.Split(delimiter));
+                List<string> loraWeightsStringArr = new List<string>(loraWeightsString.Split(delimiter));
                 if (loraStringArr.Count != loraWeightsStringArr.Count) throw new Exception($"LoRAs number ({loraString}) doesn't match the number of weights ({loraWeightsString})");
 
                 List<LoraAsset> lorasNew = new List<LoraAsset>();
-                for (int i = 0; i < loraStringArr.Count; i++) lorasNew.Add(new LoraAsset(loraStringArr[i], float.Parse(loraWeightsStringArr[i])));
+                for (int i = 0; i < loraStringArr.Count; i++) lorasNew.Add(new LoraAsset(loraStringArr[i].Trim(), float.Parse(loraWeightsStringArr[i])));
                 loras = lorasNew;
             }
             catch (Exception e)
@@ -117,8 +118,8 @@ namespace LLMUnity
             {
                 if (i > 0)
                 {
-                    loraString += " ";
-                    loraWeightsString += " ";
+                    loraString += delimiter;
+                    loraWeightsString += delimiter;
                 }
                 loraString += loras[i].assetPath;
                 loraWeightsString += loras[i].weight;
@@ -131,6 +132,13 @@ namespace LLMUnity
             float[] weights = new float[loras.Count];
             for (int i = 0; i < loras.Count; i++) weights[i] = loras[i].weight;
             return weights;
+        }
+
+        public string[] GetLoras()
+        {
+            string[] loraPaths = new string[loras.Count];
+            for (int i = 0; i < loras.Count; i++) loraPaths[i] = loras[i].assetPath;
+            return loraPaths;
         }
     }
     /// \endcond
