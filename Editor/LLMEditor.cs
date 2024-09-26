@@ -135,13 +135,17 @@ namespace LLMUnity
             modelNames = new List<string>(){null, null};
             modelURLs = new List<string>(){null, null};
             modelLicenses = new List<string>(){null, null};
-            foreach ((string name, string category, string url, string license) in LLMUnitySetup.modelOptions)
+            foreach (var entry in LLMUnitySetup.modelOptions)
             {
-                if (url != null && existingOptions.Contains(url)) continue;
-                modelOptions.Add(category + "/" + name);
-                modelNames.Add(name);
-                modelURLs.Add(url);
-                modelLicenses.Add(license);
+                string category = entry.Key;
+                foreach ((string name, string url, string license) in entry.Value)
+                {
+                    if (url != null && existingOptions.Contains(url)) continue;
+                    modelOptions.Add(category + "/" + name);
+                    modelNames.Add(name);
+                    modelURLs.Add(url);
+                    modelLicenses.Add(license);
+                }
             }
         }
 
