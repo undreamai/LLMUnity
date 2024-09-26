@@ -37,7 +37,7 @@ namespace LLMUnity
         [LLMAdvanced] public bool dontDestroyOnLoad = true;
         /// <summary> Size of the prompt context (0 = context size of the model).
         /// This is the number of tokens the model can take as input when generating responses. </summary>
-        [ModelAdvanced] public int contextSize = 0;
+        [DynamicRange("minContextLength", "maxContextLength", false), Model] public int contextSize = 8192;
         /// <summary> Batch size for prompt processing. </summary>
         [ModelAdvanced] public int batchSize = 512;
         /// <summary> a base prompt to use as a base for all LLMCharacter objects </summary>
@@ -74,9 +74,10 @@ namespace LLMUnity
         [SerializeField]
         private string SSLKey = "";
         public string SSLKeyPath = "";
-        public static int maxContextLength = 32768;
 
         /// \cond HIDE
+        public int minContextLength = 0;
+        public int maxContextLength = 0;
 
         IntPtr LLMObject = IntPtr.Zero;
         List<LLMCharacter> clients = new List<LLMCharacter>();
@@ -212,16 +213,9 @@ namespace LLMUnity
                 ModelEntry modelEntry = LLMManager.Get(model);
                 if (modelEntry == null) modelEntry = new ModelEntry(GetLLMManagerAssetRuntime(model));
                 SetTemplate(modelEntry.chatTemplate);
-                if (contextSize > modelEntry.contextLength)
-                {
-                    contextSize = 0;
-                    LLMUnitySetup.LogWarning($"The selected context size {contextSize} is larger than the context size supported from the {path} model ({modelEntry.contextLength}), resetting it to use the model's default");
-                }
-                if (contextSize == 0 && modelEntry.contextLength > maxContextLength)
-                {
-                    contextSize = maxContextLength;
-                    LLMUnitySetup.LogWarning($"The {path} model has very large context size ({modelEntry.contextLength}), it was automatically set to {maxContextLength} to avoid filling up the RAM");
-                }
+
+                maxContextLength = modelEntry.contextLength;
+                if (contextSize > maxContextLength) contextSize = maxContextLength;
             }
 #if UNITY_EDITOR
             if (!EditorApplication.isPlaying) EditorUtility.SetDirty(this);
