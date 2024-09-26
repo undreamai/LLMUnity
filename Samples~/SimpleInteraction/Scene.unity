@@ -483,12 +483,15 @@ MonoBehaviour:
   llm: {fileID: 1047848254}
   host: localhost
   port: 13333
+  numRetries: 10
+  APIKey: 
   save: 
   saveCache: 0
   debugPrompt: 0
   stream: 1
   grammar: 
   cachePrompt: 1
+  slot: -1
   seed: 0
   numPredict: 256
   temperature: 0.2
@@ -1044,12 +1047,21 @@ MonoBehaviour:
   debug: 0
   parallelPrompts: -1
   dontDestroyOnLoad: 1
-  contextSize: 0
+  contextSize: 8192
   batchSize: 512
   basePrompt: 
   model: 
   chatTemplate: chatml
   lora: 
+  loraWeights: 
+  flashAttention: 0
+  APIKey: 
+  SSLCert: 
+  SSLCertPath: 
+  SSLKey: 
+  SSLKeyPath: 
+  minContextLength: 0
+  maxContextLength: 0
 --- !u!4 &1047848255
 Transform:
   m_ObjectHideFlags: 0
