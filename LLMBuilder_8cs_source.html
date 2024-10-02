@@ -47,7 +47,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_tiny.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">LLM for Unity
-   &#160;<span id="projectnumber">v2.2.4</span>
+   &#160;<span id="projectnumber">v2.2.5</span>
    </div>
    <div id="projectbrief">Create characters in Unity with LLMs!</div>
   </td>
@@ -276,19 +276,17 @@ $(function(){initNavTree('LLMBuilder_8cs_source.html',''); initResizable(); });
 <div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>            List&lt;StringPair&gt; movedPairs = JsonUtility.FromJson&lt;ListStringPair&gt;(File.ReadAllText(movedCache)).pairs;</div>
 <div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>            <span class="keywordflow">if</span> (movedPairs == <span class="keyword">null</span>) <span class="keywordflow">return</span>;</div>
 <div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span> </div>
-<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>            <span class="keywordtype">bool</span> refresh = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>            <span class="keywordflow">foreach</span> (var pair <span class="keywordflow">in</span> movedPairs)</div>
-<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>            {</div>
-<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>                <span class="keywordflow">if</span> (pair.source == <span class="stringliteral">&quot;&quot;</span>) refresh |= DeletePath(pair.target);</div>
-<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>                <span class="keywordflow">else</span> refresh |= MoveAction(pair.target, pair.source, <span class="keyword">false</span>);</div>
-<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>            }</div>
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>            <span class="keywordflow">if</span> (refresh) AssetDatabase.Refresh();</div>
-<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>            DeletePath(movedCache);</div>
-<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>        }</div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>    }</div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>            <span class="keywordflow">foreach</span> (var pair <span class="keywordflow">in</span> movedPairs)</div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>            {</div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>                <span class="keywordflow">if</span> (pair.source == <span class="stringliteral">&quot;&quot;</span>) DeletePath(pair.target);</div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>                <span class="keywordflow">else</span> MoveAction(pair.target, pair.source, <span class="keyword">false</span>);</div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>            }</div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>            DeletePath(movedCache);</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>        }</div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>    }</div>
 </div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>}</div>
-<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>}</div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aclassLLMUnity_1_1LLMBuilder_html"><div class="ttname"><a href="classLLMUnity_1_1LLMBuilder.html">LLMUnity.LLMBuilder</a></div><div class="ttdef"><b>Definition</b> <a href="#l00009">LLMBuilder.cs:10</a></div></div>
 <div class="ttc" id="aclassLLMUnity_1_1LLMManager_html"><div class="ttname"><a href="classLLMUnity_1_1LLMManager.html">LLMUnity.LLMManager</a></div><div class="ttdef"><b>Definition</b> <a href="LLMManager_8cs_source.html#l00069">LLMManager.cs:70</a></div></div>
 <div class="ttc" id="aclassLLMUnity_1_1LLMUnitySetup_html"><div class="ttname"><a href="classLLMUnity_1_1LLMUnitySetup.html">LLMUnity.LLMUnitySetup</a></div><div class="ttdoc">Class implementing helper functions for setup and process management.</div><div class="ttdef"><b>Definition</b> <a href="LLMUnitySetup_8cs_source.html#l00099">LLMUnitySetup.cs:100</a></div></div>
