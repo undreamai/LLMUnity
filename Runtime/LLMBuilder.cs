@@ -153,13 +153,11 @@ namespace LLMUnity
             List<StringPair> movedPairs = JsonUtility.FromJson<ListStringPair>(File.ReadAllText(movedCache)).pairs;
             if (movedPairs == null) return;
 
-            bool refresh = false;
             foreach (var pair in movedPairs)
             {
-                if (pair.source == "") refresh |= DeletePath(pair.target);
-                else refresh |= MoveAction(pair.target, pair.source, false);
+                if (pair.source == "") DeletePath(pair.target);
+                else MoveAction(pair.target, pair.source, false);
             }
-            if (refresh) AssetDatabase.Refresh();
             DeletePath(movedCache);
         }
     }
