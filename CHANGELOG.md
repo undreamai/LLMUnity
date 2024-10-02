@@ -1,3 +1,9 @@
+## v2.2.5
+#### 🐛 Fixes
+
+- Fix recursive serialization happening at some builds (PR: #260)
+
+
 ## v2.2.4
 #### 🚀 Features
 
