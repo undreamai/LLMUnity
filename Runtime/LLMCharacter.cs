@@ -32,8 +32,8 @@ namespace LLMUnity
         [Remote] public int numRetries = 10;
         /// <summary> allows to use a server with API key </summary>
         [Remote] public string APIKey;
-        /// <summary> file to save the cache. </summary>
-        [LLM] public string cacheFilename = "";
+        /// <summary> filename to use when saving the cache or chat history. </summary>
+        [LLM] public string save = "";
         /// <summary> toggle to save the LLM cache. This speeds up the prompt calculation but also requires ~100MB of space per character. </summary>
         [LLM] public bool saveCache = false;
         /// <summary> select to log the constructed prompt the Unity Editor. </summary>
@@ -121,9 +121,9 @@ namespace LLMUnity
         /// <summary> the name of the player </summary>
         [Chat] public string playerName = "user";
         /// <summary> the name of the AI </summary>
-        [Chat] public string aiName = "assistant";
+        [Chat] public string AIName = "assistant";
         /// <summary> a description of the AI role. This defines the LLMCharacter system prompt </summary>
-        [TextArea(5, 10), Chat] public string systemPrompt = "A chat between a curious human and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the human's questions.";
+        [TextArea(5, 10), Chat] public string prompt = "A chat between a curious human and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the human's questions.";
         /// <summary> option to set the number of tokens to retain from the prompt (nKeep) based on the LLMCharacter system prompt </summary>
         public bool setNKeepToPrompt = true;
 
@@ -170,7 +170,7 @@ namespace LLMUnity
             }
 
             InitGrammar();
-            InitHistory();
+            await InitHistory();
             await LoadCache();
         }
 
@@ -223,17 +223,19 @@ namespace LLMUnity
             }
         }
 
-        protected void InitHistory()
+        protected async Task InitHistory()
         {
             // If no specific chat history object has been assigned to this character, create one.
             if (chatHistory == null) {
                 chatHistory = gameObject.AddComponent<LLMChatHistory>();
+                chatHistory.ChatHistoryFilename = save;
+                await chatHistory.Load();
             }
         }
 
         public virtual string GetCacheSavePath()
         {
-            return Path.Combine(Application.persistentDataPath, cacheFilename + ".cache").Replace('\\', '/');
+            return Path.Combine(Application.persistentDataPath, save + ".cache").Replace('\\', '/');
         }
 
         /// <summary>
@@ -243,7 +245,7 @@ namespace LLMUnity
         /// <param name="clearChat"> whether to clear (true) or keep (false) the current chat history on top of the system prompt. </param>
         public async Task SetPrompt(string newPrompt, bool clearChat = true)
         {
-            systemPrompt = newPrompt;
+            prompt = newPrompt;
             nKeep = -1;
             
             if (clearChat) {
@@ -263,7 +265,7 @@ namespace LLMUnity
         }
 
         private ChatMessage GetSystemPromptMessage() {
-            return new ChatMessage() { role = LLMConstants.SYSTEM_ROLE, content = systemPrompt };
+            return new ChatMessage() { role = LLMConstants.SYSTEM_ROLE, content = prompt };
         }
 
         private async Task<bool> InitNKeep()
@@ -271,7 +273,7 @@ namespace LLMUnity
             if (setNKeepToPrompt && nKeep == -1)
             {
                 if (!CheckTemplate()) return false;
-                string systemPrompt = template.ComputePrompt(new List<ChatMessage>(){GetSystemPromptMessage()}, playerName, aiName, false);
+                string systemPrompt = template.ComputePrompt(new List<ChatMessage>(){GetSystemPromptMessage()}, playerName, AIName, false);
                 List<int> tokens = await Tokenize(systemPrompt);
                 if (tokens == null) return false;
                 SetNKeep(tokens);
@@ -333,7 +335,7 @@ namespace LLMUnity
         List<string> GetStopwords()
         {
             if (!CheckTemplate()) return null;
-            List<string> stopAll = new List<string>(template.GetStop(playerName, aiName));
+            List<string> stopAll = new List<string>(template.GetStop(playerName, AIName));
             if (stop != null) stopAll.AddRange(stop);
             return stopAll;
         }
@@ -380,7 +382,7 @@ namespace LLMUnity
 
         public async Task AddAIMessage(string content)
         {
-            await chatHistory.AddMessage(aiName, content);
+            await chatHistory.AddMessage(AIName, content);
         }
 
         protected string ChatContent(ChatResult result)
@@ -469,14 +471,14 @@ namespace LLMUnity
             promptMessages.Add(playerMessage);
 
             // Prepare the request
-            string formattedPrompt = template.ComputePrompt(promptMessages, playerName, aiName);
+            string formattedPrompt = template.ComputePrompt(promptMessages, playerName, AIName);
             string requestJson = JsonUtility.ToJson(GenerateRequest(formattedPrompt));
 
             // Call the LLM
             string result = await CompletionRequest(requestJson, callback);
 
             // Update our chat history if required
-            if (addToHistory && chatHistory && result != null)
+            if (addToHistory && result != null)
             {
                 await AddPlayerMessage(query);
                 await AddAIMessage(result);
@@ -598,23 +600,19 @@ namespace LLMUnity
         {
             if (remote || !saveCache) return null;
             string result = await Slot(GetCacheSavePath(), "save");
+
+            // We now have a valid cache
+            isCacheInvalid = false;
+
             return result;
         }
 
         /// <summary>
-        /// Load the cache from the provided filename / relative path.
+        /// Load the prompt cache.
         /// </summary>
-        /// <param name="filename">filename / relative path to load the cache from</param>
-        /// <returns></returns>
         public virtual async Task<string> LoadCache()
         {
-            if (remote || !saveCache || !File.Exists(GetCacheSavePath())) return null;
-
-            // If the cache has become invalid, don't bother loading this time.
-            if (isCacheInvalid) {
-                isCacheInvalid = false;
-                return null;
-            }
+            if (remote || !saveCache || isCacheInvalid || !File.Exists(GetCacheSavePath())) return null;
 
             string result = await Slot(GetCacheSavePath(), "restore");
             return result;
@@ -784,6 +782,33 @@ namespace LLMUnity
             if (remote) return await PostRequestRemote(json, endpoint, getContent, callback);
             return await PostRequestLocal(json, endpoint, getContent, callback);
         }
+
+        #region Obsolete Functions
+
+        [Obsolete]
+        public virtual async Task<string> Save(string filename) {
+
+            if (chatHistory) {
+                await chatHistory.Save();
+            }
+
+            return await SaveCache();
+        }
+
+        [Obsolete]
+        public virtual async Task<string> Load(string filename) {
+
+            if (chatHistory) {
+                chatHistory.ChatHistoryFilename = filename;
+                await chatHistory.Load();
+            }
+
+            save = filename;
+            return await LoadCache();
+        }
+
+        #endregion
+
     }
 
     /// \cond HIDE

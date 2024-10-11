@@ -194,8 +194,8 @@ namespace LLMUnityTests
             LLMCharacter llmCharacter = gameObject.AddComponent<LLMCharacter>();
             llmCharacter.llm = llm;
             llmCharacter.playerName = "Instruction";
-            llmCharacter.aiName = "Response";
-            llmCharacter.systemPrompt = prompt;
+            llmCharacter.AIName = "Response";
+            llmCharacter.prompt = prompt;
             llmCharacter.temperature = 0;
             llmCharacter.seed = 0;
             llmCharacter.stream = false;
@@ -237,8 +237,8 @@ namespace LLMUnityTests
             TestInitParameters(tokens1, 0);
             await llmCharacter.Chat(query, (string reply) => TestChat(reply, reply1));
             TestPostChat(2);
-            await llmCharacter.SetPrompt(llmCharacter.systemPrompt);
-            llmCharacter.aiName = "False response";
+            await llmCharacter.SetPrompt(llmCharacter.prompt);
+            llmCharacter.AIName = "False response";
             await llmCharacter.Chat(query, (string reply) => TestChat(reply, reply2));
             TestPostChat(2);
             await llmCharacter.Chat("bye!");
@@ -254,7 +254,7 @@ namespace LLMUnityTests
         public void TestInitParameters(int nKeep, int expectedMessageCount)
         {
             Assert.AreEqual(llmCharacter.nKeep, nKeep);
-            Assert.That(ChatTemplate.GetTemplate(llm.chatTemplate).GetStop(llmCharacter.playerName, llmCharacter.aiName).Length > 0);
+            Assert.That(ChatTemplate.GetTemplate(llm.chatTemplate).GetStop(llmCharacter.playerName, llmCharacter.AIName).Length > 0);
             Assert.AreEqual(llmCharacter.chatHistory?.GetChatMessages().Count, expectedMessageCount);
         }
 
@@ -444,7 +444,7 @@ namespace LLMUnityTests
         public override LLMCharacter CreateLLMCharacter()
         {
             LLMCharacter llmCharacter = base.CreateLLMCharacter();
-            llmCharacter.cacheFilename = saveName;
+            llmCharacter.save = saveName;
             llmCharacter.saveCache = true;
             return llmCharacter;
         }

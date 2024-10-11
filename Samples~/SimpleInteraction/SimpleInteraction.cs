@@ -16,7 +16,7 @@ namespace LLMUnitySamples
             playerText.Select();
         }
 
-        async void onInputFieldSubmit(string message)
+        void onInputFieldSubmit(string message)
         {
             playerText.interactable = false;
             AIText.text = "...";
