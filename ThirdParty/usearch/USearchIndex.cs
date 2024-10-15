@@ -119,7 +119,8 @@ namespace Cloud.Unum.USearch
         public void Save(string path, string name = "", FileMode mode = FileMode.Create)
         {
             using (FileStream zipFileStream = new FileStream(path, mode))
-            using (ZipArchive zipArchive = new ZipArchive(zipFileStream, ZipArchiveMode.Create)){
+            using (ZipArchive zipArchive = new ZipArchive(zipFileStream, ZipArchiveMode.Create))
+            {
                 Save(zipArchive, name);
             }
         }
@@ -353,7 +354,7 @@ namespace Cloud.Unum.USearch
             return foundVectorsCount;
         }
 
-        private int Search<T>(T[] queryVector, int count, out ulong[] keys, out float[] distances, ScalarKind scalarKind)
+        private int Search<T>(T[] queryVector, int count, out ulong[] keys, out float[] distances, ScalarKind scalarKind, NativeMethodsHelpers.FilterCallback filter = null)
         {
             keys = new ulong[count];
             distances = new float[count];
@@ -363,7 +364,15 @@ namespace Cloud.Unum.USearch
             try
             {
                 IntPtr queryVectorPtr = handle.AddrOfPinnedObject();
-                matches = checked((int)usearch_search(this._index, queryVectorPtr, scalarKind, (UIntPtr)count, keys, distances, out IntPtr error));
+                IntPtr error;
+                if (filter == null)
+                {
+                    matches = checked((int)usearch_search(this._index, queryVectorPtr, scalarKind, (UIntPtr)count, keys, distances, out error));
+                }
+                else
+                {
+                    matches = checked((int)usearch_filtered_search(this._index, queryVectorPtr, scalarKind, (UIntPtr)count, filter, IntPtr.Zero, keys, distances, out error));
+                }
                 HandleError(error);
             }
             finally
@@ -380,14 +389,14 @@ namespace Cloud.Unum.USearch
             return matches;
         }
 
-        public int Search(float[] queryVector, int count, out ulong[] keys, out float[] distances)
+        public int Search(float[] queryVector, int count, out ulong[] keys, out float[] distances, NativeMethodsHelpers.FilterCallback filter = null)
         {
-            return this.Search(queryVector, count, out keys, out distances, ScalarKind.Float32);
+            return this.Search(queryVector, count, out keys, out distances, ScalarKind.Float32, filter);
         }
 
-        public int Search(double[] queryVector, int count, out ulong[] keys, out float[] distances)
+        public int Search(double[] queryVector, int count, out ulong[] keys, out float[] distances, NativeMethodsHelpers.FilterCallback filter = null)
         {
-            return this.Search(queryVector, count, out keys, out distances, ScalarKind.Float64);
+            return this.Search(queryVector, count, out keys, out distances, ScalarKind.Float64, filter);
         }
 
         public int Remove(ulong key)
