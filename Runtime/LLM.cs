@@ -31,7 +31,7 @@ namespace LLMUnity
         [LLM] public int numGPULayers = 0;
         /// <summary> select to log the output of the LLM in the Unity Editor. </summary>
         [LLM] public bool debug = false;
-        /// <summary> number of prompts that can happen in parallel (-1 = number of LLMCharacter objects) </summary>
+        /// <summary> number of prompts that can happen in parallel (-1 = number of LLMCaller objects) </summary>
         [LLMAdvanced] public int parallelPrompts = -1;
         /// <summary> select to not destroy the LLM GameObject when loading a new Scene. </summary>
         [LLMAdvanced] public bool dontDestroyOnLoad = true;
@@ -40,7 +40,7 @@ namespace LLMUnity
         [ModelAdvanced] public int contextSize = 0;
         /// <summary> Batch size for prompt processing. </summary>
         [ModelAdvanced] public int batchSize = 512;
-        /// <summary> a base prompt to use as a base for all LLMCharacter objects </summary>
+        /// <summary> a base prompt to use as a base for all LLMCaller objects </summary>
         [TextArea(5, 10), ChatAdvanced] public string basePrompt = "";
         /// <summary> Boolean set to true if the server has started and is ready to receive requests, false otherwise. </summary>
         public bool started { get; protected set; } = false;
@@ -78,7 +78,7 @@ namespace LLMUnity
         /// \cond HIDE
 
         IntPtr LLMObject = IntPtr.Zero;
-        List<LLMCharacter> clients = new List<LLMCharacter>();
+        List<LLMCaller> clients = new List<LLMCaller>();
         LLMLib llmlib;
         StreamWrapper logStreamWrapper = null;
         Thread llmThread = null;
@@ -537,15 +537,15 @@ namespace LLMUnity
         }
 
         /// <summary>
-        /// Registers a local LLMCharacter object.
-        /// This allows to bind the LLMCharacter "client" to a specific slot of the LLM.
+        /// Registers a local LLMCaller object.
+        /// This allows to bind the LLMCaller "client" to a specific slot of the LLM.
         /// </summary>
-        /// <param name="llmCharacter"></param>
+        /// <param name="llmCaller"></param>
         /// <returns></returns>
-        public int Register(LLMCharacter llmCharacter)
+        public int Register(LLMCaller llmCaller)
         {
-            clients.Add(llmCharacter);
-            int index = clients.IndexOf(llmCharacter);
+            clients.Add(llmCaller);
+            int index = clients.IndexOf(llmCaller);
             if (parallelPrompts != -1) return index % parallelPrompts;
             return index;
         }
