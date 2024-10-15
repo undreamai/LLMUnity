@@ -1,10 +1,14 @@
 ### 🚀 Features
 
-- LlamaLib v1.1.12: SSL certificate & API key for server, Support more AMD GPUs (PR: #241)
-- Server security with API key and SSL (PR: #238)
-- Show server command for easier deployment (PR #239)
+- Add Phi-3.5 and Llama 3.2 models (PR: #255)
+- Speedup LLMCharacter warmup (PR: #257)
 
 ### 🐛 Fixes
 
-- Fix multiple LLM crash on Windows (PR: #242)
-- Exclude system prompt from saving of chat history (PR: #240)
+- Fix handling of incomplete requests (PR: #251)
+- Fix Unity locking of DLLs during cross-platform build (PR: #252)
+- Allow spaces in lora paths (PR: #254)
+
+### 📦 General
+
+- Set default context size to 8192 and allow to adjust with a UI slider (PR: #258)

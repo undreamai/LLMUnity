@@ -19,6 +19,7 @@ namespace LLMUnity
         static float actionColumnWidth = 20f;
         static int elementPadding = 10;
         static GUIContent trashIcon;
+        static List<string> modelNames;
         static List<string> modelOptions;
         static List<string> modelLicenses;
         static List<string> modelURLs;
@@ -131,14 +132,20 @@ namespace LLMUnity
             List<string> existingOptions = new List<string>();
             foreach (ModelEntry entry in LLMManager.modelEntries) existingOptions.Add(entry.url);
             modelOptions = new List<string>(){"Download model", "Custom URL"};
+            modelNames = new List<string>(){null, null};
             modelURLs = new List<string>(){null, null};
             modelLicenses = new List<string>(){null, null};
-            foreach ((string name, string url, string license) in LLMUnitySetup.modelOptions)
+            foreach (var entry in LLMUnitySetup.modelOptions)
             {
-                if (url != null && existingOptions.Contains(url)) continue;
-                modelOptions.Add(name);
-                modelURLs.Add(url);
-                modelLicenses.Add(license);
+                string category = entry.Key;
+                foreach ((string name, string url, string license) in entry.Value)
+                {
+                    if (url != null && existingOptions.Contains(url)) continue;
+                    modelOptions.Add(category + "/" + name);
+                    modelNames.Add(name);
+                    modelURLs.Add(url);
+                    modelLicenses.Add(license);
+                }
             }
         }
 
@@ -247,8 +254,8 @@ namespace LLMUnity
             }
             else if (modelIndex > 1)
             {
-                if (modelLicenses[modelIndex] != null) LLMUnitySetup.LogWarning($"The {modelOptions[modelIndex]} model is released under the following license: {modelLicenses[modelIndex]}. By using this model, you agree to the terms of the license.");
-                string filename = await LLMManager.DownloadModel(modelURLs[modelIndex], true, modelOptions[modelIndex]);
+                if (modelLicenses[modelIndex] != null) LLMUnitySetup.LogWarning($"The {modelNames[modelIndex]} model is released under the following license: {modelLicenses[modelIndex]}. By using this model, you agree to the terms of the license.");
+                string filename = await LLMManager.DownloadModel(modelURLs[modelIndex], true, modelNames[modelIndex]);
                 SetModelIfNone(filename, false);
                 UpdateModels(true);
             }

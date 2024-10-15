@@ -37,7 +37,7 @@ namespace LLMUnity
         [LLMAdvanced] public bool dontDestroyOnLoad = true;
         /// <summary> Size of the prompt context (0 = context size of the model).
         /// This is the number of tokens the model can take as input when generating responses. </summary>
-        [ModelAdvanced] public int contextSize = 0;
+        [DynamicRange("minContextLength", "maxContextLength", false), Model] public int contextSize = 8192;
         /// <summary> Batch size for prompt processing. </summary>
         [ModelAdvanced] public int batchSize = 512;
         /// <summary> a base prompt to use as a base for all LLMCharacter objects </summary>
@@ -76,6 +76,8 @@ namespace LLMUnity
         public string SSLKeyPath = "";
 
         /// \cond HIDE
+        public int minContextLength = 0;
+        public int maxContextLength = 0;
 
         IntPtr LLMObject = IntPtr.Zero;
         List<LLMCharacter> clients = new List<LLMCharacter>();
@@ -211,6 +213,9 @@ namespace LLMUnity
                 ModelEntry modelEntry = LLMManager.Get(model);
                 if (modelEntry == null) modelEntry = new ModelEntry(GetLLMManagerAssetRuntime(model));
                 SetTemplate(modelEntry.chatTemplate);
+
+                maxContextLength = modelEntry.contextLength;
+                if (contextSize > maxContextLength) contextSize = maxContextLength;
                 if (contextSize == 0 && modelEntry.contextLength > 32768)
                 {
                     LLMUnitySetup.LogWarning($"The model {path} has very large context size ({modelEntry.contextLength}), consider setting it to a smaller value (<=32768) to avoid filling up the RAM");
@@ -378,10 +383,11 @@ namespace LLMUnity
                 LLMUnitySetup.LogError($"File {modelPath} not found!");
                 return null;
             }
+
+            loraManager.FromStrings(lora, loraWeights);
             string loraArgument = "";
-            foreach (string lora in lora.Trim().Split(" "))
+            foreach (string lora in loraManager.GetLoras())
             {
-                if (lora == "") continue;
                 string loraPath = GetLLMManagerAssetRuntime(lora);
                 if (!File.Exists(loraPath))
                 {
@@ -390,7 +396,6 @@ namespace LLMUnity
                 }
                 loraArgument += $" --lora \"{loraPath}\"";
             }
-            loraManager.FromStrings(lora, loraWeights);
 
             int numThreadsToUse = numThreads;
             if (Application.platform == RuntimePlatform.Android && numThreads <= 0) numThreadsToUse = LLMUnitySetup.AndroidGetNumBigCores();
@@ -412,9 +417,9 @@ namespace LLMUnity
             if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer) serverCommand = "undreamai_server.exe";
             else serverCommand = "./undreamai_server";
             serverCommand += " " + arguments;
-            serverCommand += $" --template {chatTemplate}";
+            serverCommand += $" --template \"{chatTemplate}\"";
             if (remote && SSLCert != "" && SSLKey != "") serverCommand += $" --ssl-cert-file {SSLCertPath} --ssl-key-file {SSLKeyPath}";
-            LLMUnitySetup.Log($"Server command: {serverCommand}");
+            LLMUnitySetup.Log($"Deploy server command: {serverCommand}");
             return arguments;
         }
 

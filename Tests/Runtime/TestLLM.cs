@@ -28,8 +28,8 @@ namespace LLMUnityTests
 
             llm.AddLora(lora1);
             llm.AddLora(lora2);
-            Assert.AreEqual(llm.lora, lora1 + " " + lora2);
-            Assert.AreEqual(llm.loraWeights, "1 1");
+            Assert.AreEqual(llm.lora, lora1 + "," + lora2);
+            Assert.AreEqual(llm.loraWeights, "1,1");
 
             llm.RemoveLoras();
             Assert.AreEqual(llm.lora, "");
@@ -37,12 +37,12 @@ namespace LLMUnityTests
 
             llm.AddLora(lora1, 0.8f);
             llm.AddLora(lora2Rel, 0.9f);
-            Assert.AreEqual(llm.lora, lora1 + " " + lora2);
-            Assert.AreEqual(llm.loraWeights, "0.8 0.9");
+            Assert.AreEqual(llm.lora, lora1 + "," + lora2);
+            Assert.AreEqual(llm.loraWeights, "0.8,0.9");
 
             llm.SetLoraWeight(lora2Rel, 0.7f);
-            Assert.AreEqual(llm.lora, lora1 + " " + lora2);
-            Assert.AreEqual(llm.loraWeights, "0.8 0.7");
+            Assert.AreEqual(llm.lora, lora1 + "," + lora2);
+            Assert.AreEqual(llm.loraWeights, "0.8,0.7");
 
             llm.RemoveLora(lora2Rel);
             Assert.AreEqual(llm.lora, lora1);
@@ -50,19 +50,19 @@ namespace LLMUnityTests
 
             llm.AddLora(lora2Rel);
             llm.SetLoraWeight(lora2Rel, 0.5f);
-            Assert.AreEqual(llm.lora, lora1 + " " + lora2);
-            Assert.AreEqual(llm.loraWeights, "0.8 0.5");
+            Assert.AreEqual(llm.lora, lora1 + "," + lora2);
+            Assert.AreEqual(llm.loraWeights, "0.8,0.5");
 
             llm.SetLoraWeight(lora2, 0.1f);
-            Assert.AreEqual(llm.lora, lora1 + " " + lora2);
-            Assert.AreEqual(llm.loraWeights, "0.8 0.1");
+            Assert.AreEqual(llm.lora, lora1 + "," + lora2);
+            Assert.AreEqual(llm.loraWeights, "0.8,0.1");
 
             Dictionary<string, float> loraToWeight = new Dictionary<string, float>();
             loraToWeight[lora1] = 0;
             loraToWeight[lora2] = 0.2f;
             llm.SetLoraWeights(loraToWeight);
-            Assert.AreEqual(llm.lora, lora1 + " " + lora2);
-            Assert.AreEqual(llm.loraWeights, "0 0.2");
+            Assert.AreEqual(llm.lora, lora1 + "," + lora2);
+            Assert.AreEqual(llm.loraWeights, "0,0.2");
 
             File.Delete(lora1);
             File.Delete(lora2);

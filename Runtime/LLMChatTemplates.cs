@@ -43,6 +43,7 @@ namespace LLMUnity
                 new LLama3ChatTemplate(),
                 new LLama2ChatTemplate(),
                 new LLama2Template(),
+                new Phi3_5Template(),
                 new Phi3Template(),
                 new Phi2Template(),
                 new VicunaTemplate(),
@@ -448,7 +449,7 @@ namespace LLMUnity
 
     /// @ingroup template
     /// <summary>
-    /// Class implementing the Zephyr template
+    /// Class implementing the Phi-3 template
     /// </summary>
     public class Phi3Template : ChatTemplate
     {
@@ -481,6 +482,30 @@ namespace LLMUnity
             }
             return base.ComputePrompt(messagesSystemPrompt, playerName, AIName, endWithPrefix);
         }
+
+        public override string[] GetStop(string playerName, string AIName)
+        {
+            return AddStopNewlines(new string[] { "<|end|>", "<|user|>", "<|assistant|>" });
+        }
+    }
+
+    /// @ingroup template
+    /// <summary>
+    /// Class implementing the Phi-3.5 template
+    /// </summary>
+    public class Phi3_5Template : ChatTemplate
+    {
+        public override string GetName() { return "phi-3.5"; }
+        public override string GetDescription() { return "phi-3.5"; }
+        public override string[] GetNameMatches() { return new string[] {"phi-3.5"}; }
+        public override string[] GetChatTemplateMatches() { return new string[] {"{% for message in messages %}{% if message['role'] == 'system' and message['content'] %}{{'<|system|>\n' + message['content'] + '<|end|>\n'}}{% elif message['role'] == 'user' %}{{'<|user|>\n' + message['content'] + '<|end|>\n'}}{% elif message['role'] == 'assistant' %}{{'<|assistant|>\n' + message['content'] + '<|end|>\n'}}{% endif %}{% endfor %}{% if add_generation_prompt %}{{ '<|assistant|>\n' }}{% else %}{{ eos_token }}{% endif %}"};}
+
+        protected override string PlayerPrefix(string playerName) { return $"<|user|>\n"; }
+        protected override string AIPrefix(string AIName) { return $"<|assistant|>\n"; }
+        protected override string RequestSuffix() { return "<|end|>\n"; }
+        protected override string PairSuffix() { return "<|end|>\n"; }
+        protected override string SystemPrefix() { return "<|system|>\n"; }
+        protected override string SystemSuffix() { return "<|end|>\n"; }
 
         public override string[] GetStop(string playerName, string AIName)
         {
