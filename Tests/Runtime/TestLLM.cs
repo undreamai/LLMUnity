@@ -77,6 +77,7 @@ namespace LLMUnityTests
         protected GameObject gameObject;
         protected LLM llm;
         protected LLMCharacter llmCharacter;
+        protected LLMChatHistory llmChatHistory;
         protected Exception error = null;
         protected string prompt;
         protected string query;
@@ -233,29 +234,28 @@ namespace LLMUnityTests
         {
             await llmCharacter.Tokenize("I", TestTokens);
             await llmCharacter.Warmup();
-            TestInitParameters(tokens1, 1);
-            TestWarmup();
+            TestInitParameters(tokens1, 0);
             await llmCharacter.Chat(query, (string reply) => TestChat(reply, reply1));
-            TestPostChat(3);
-            llmCharacter.SetPrompt(llmCharacter.prompt);
+            TestPostChat(2);
+            await llmCharacter.SetPrompt(llmCharacter.prompt);
             llmCharacter.AIName = "False response";
             await llmCharacter.Chat(query, (string reply) => TestChat(reply, reply2));
-            TestPostChat(3);
+            TestPostChat(2);
             await llmCharacter.Chat("bye!");
-            TestPostChat(5);
+            TestPostChat(4);
             prompt = "How are you?";
-            llmCharacter.SetPrompt(prompt);
+            await llmCharacter.SetPrompt(prompt);
             await llmCharacter.Chat("hi");
-            TestInitParameters(tokens2, 3);
+            TestInitParameters(tokens2, 2);
             List<float> embeddings = await llmCharacter.Embeddings("hi how are you?");
             TestEmbeddings(embeddings);
         }
 
-        public void TestInitParameters(int nkeep, int chats)
+        public void TestInitParameters(int nKeep, int expectedMessageCount)
         {
-            Assert.AreEqual(llmCharacter.nKeep, nkeep);
+            Assert.AreEqual(llmCharacter.nKeep, nKeep);
             Assert.That(ChatTemplate.GetTemplate(llm.chatTemplate).GetStop(llmCharacter.playerName, llmCharacter.AIName).Length > 0);
-            Assert.AreEqual(llmCharacter.chat.Count, chats);
+            Assert.AreEqual(llmCharacter.chatHistory?.GetChatMessages().Result.Count, expectedMessageCount);
         }
 
         public void TestTokens(List<int> tokens)
@@ -263,20 +263,15 @@ namespace LLMUnityTests
             Assert.AreEqual(tokens, new List<int> {40});
         }
 
-        public void TestWarmup()
+        public void TestChat(string generatedReply, string expectedReply)
         {
-            Assert.That(llmCharacter.chat.Count == 1);
-        }
-
-        public void TestChat(string reply, string replyGT)
-        {
-            Debug.Log(reply.Trim());
-            Assert.That(reply.Trim() == replyGT);
+            Debug.Log(generatedReply.Trim());
+            Assert.That(generatedReply.Trim() == expectedReply);
         }
 
         public void TestPostChat(int num)
         {
-            Assert.That(llmCharacter.chat.Count == num);
+            Assert.AreEqual(num, llmCharacter.chatHistory.GetChatMessages().Result.Count);
         }
 
         public void TestEmbeddings(List<float> embeddings)
@@ -457,31 +452,14 @@ namespace LLMUnityTests
         public override async Task Tests()
         {
             await base.Tests();
-            TestSave();
+            TestSaveCache();
         }
 
-        public void TestSave()
+        public void TestSaveCache()
         {
-            string jsonPath = llmCharacter.GetJsonSavePath(saveName);
-            string cachePath = llmCharacter.GetCacheSavePath(saveName);
-            Assert.That(File.Exists(jsonPath));
+            string cachePath = llmCharacter.GetCacheSavePath();
             Assert.That(File.Exists(cachePath));
-            string json = File.ReadAllText(jsonPath);
-            File.Delete(jsonPath);
             File.Delete(cachePath);
-
-            List<ChatMessage> chatHistory = JsonUtility.FromJson<ChatListWrapper>(json).chat;
-            Assert.AreEqual(chatHistory.Count, 2);
-            Assert.AreEqual(chatHistory[0].role, llmCharacter.playerName);
-            Assert.AreEqual(chatHistory[0].content, "hi");
-            Assert.AreEqual(chatHistory[1].role, llmCharacter.AIName);
-
-            Assert.AreEqual(llmCharacter.chat.Count, chatHistory.Count + 1);
-            for (int i = 0; i < chatHistory.Count; i++)
-            {
-                Assert.AreEqual(chatHistory[i].role, llmCharacter.chat[i + 1].role);
-                Assert.AreEqual(chatHistory[i].content, llmCharacter.chat[i + 1].content);
-            }
         }
     }
 }
