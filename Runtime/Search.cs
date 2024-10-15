@@ -1,312 +1,74 @@
+using System;
 using System.Collections.Generic;
-using System.Linq;
+using Cloud.Unum.USearch;
 using System.Runtime.Serialization;
 using System.IO;
 using System.IO.Compression;
-using Cloud.Unum.USearch;
-using System.Threading.Tasks;
 using System.Runtime.Serialization.Json;
+using UnityEngine;
+using System.Threading.Tasks;
+using System.Linq;
 
 namespace LLMUnity
 {
     [DataContract]
-    public class Sentence
+    public class Search : LLMCaller
     {
-        [DataMember]
-        public int phraseId;
-        [DataMember]
-        public int startIndex;
-        [DataMember]
-        public int endIndex;
-
-        public Sentence(int phraseId, int startIndex, int endIndex)
+        public virtual int[] Search(float[] encoding, int k)
         {
-            this.phraseId = phraseId;
-            this.startIndex = startIndex;
-            this.endIndex = endIndex;
-        }
-    }
-
-    [DataContract]
-    public class Phrase
-    {
-        [DataMember]
-        public string text;
-        [DataMember]
-        public List<int> sentenceIds;
-
-        public Phrase(string text) : this(text, new List<int>()) {}
-
-        public Phrase(string text, List<int> sentenceIds)
-        {
-            this.text = text;
-            this.sentenceIds = sentenceIds;
-        }
-    }
-
-    [DataContract]
-    public class SentenceSplitter
-    {
-        public const string DefaultDelimiters = ".!:;?\n\r";
-        [DataMember]
-        string delimiters;
-
-        public SentenceSplitter(string delimiters = DefaultDelimiters)
-        {
-            this.delimiters = delimiters;
+            return Search(encoding, k, out float[] distances);
         }
 
-        public List<(int, int)> Split(string input)
+        public virtual async Task<int[]> Search(string queryString, int k)
         {
-            List<(int, int)> indices = new List<(int, int)>();
-            int startIndex = 0;
-            bool sawDelimiter = true;
-            for (int i = 0; i < input.Length; i++)
-            {
-                if (sawDelimiter)
-                {
-                    while (char.IsWhiteSpace(input[i]) && i < input.Length - 1) i++;
-                    startIndex = i;
-                    sawDelimiter = false;
-                }
-                if (delimiters.Contains(input[i]) || i == input.Length - 1)
-                {
-                    int endIndex = i;
-                    if (i == input.Length - 1)
-                    {
-                        while (char.IsWhiteSpace(input[endIndex]) && endIndex > startIndex) endIndex--;
-                    }
-                    if (endIndex > startIndex || (!char.IsWhiteSpace(input[startIndex]) && !delimiters.Contains(input[startIndex])))
-                    {
-                        indices.Add((startIndex, endIndex));
-                    }
-                    startIndex = i + 1;
-                    sawDelimiter = true;
-                }
-            }
-            return indices;
+            return Search((await Embeddings(queryString)).ToArray(), k, out float[] distances);
         }
 
-        public static string[] IndicesToSentences(string input, List<(int, int)> indices)
+        public virtual int[] Search(float[] encoding, int k, out float[] distances)
         {
-            string[] sentences = new string[indices.Count];
-            for (int i = 0; i < indices.Count; i++)
-            {
-                sentences[i] = input.Substring(indices[i].Item1, indices[i].Item2 - indices[i].Item1 + 1);
-            }
-            return sentences;
-        }
-    }
-
-    [DataContract]
-    public class SearchEngine
-    {
-        [DataMember]
-        SortedDictionary<int, Phrase> phrases;
-        [DataMember]
-        SortedDictionary<int, Sentence> sentences;
-        [DataMember]
-        int nextPhraseId = 0;
-        [DataMember]
-        int nextSentenceId = 0;
-        [DataMember]
-        SentenceSplitter sentenceSplitter;
-        SearchMethod searchMethod;
-
-        public SearchEngine(
-            LLM llm,
-            string delimiters = SentenceSplitter.DefaultDelimiters,
-            ScalarKind quantization = ScalarKind.Float16,
-            MetricKind metricKind = MetricKind.Cos,
-            ulong connectivity = 32,
-            ulong expansionAdd = 40,
-            ulong expansionSearch = 16
-        )
-        {
-            phrases = new SortedDictionary<int, Phrase>();
-            sentences = new SortedDictionary<int, Sentence>();
-            sentenceSplitter = delimiters == null ? null : new SentenceSplitter(delimiters);
-            searchMethod = new ANNModelSearch(llm);
+            LLMUnitySetup.LogError("Not implemented");
+            distances = default;
+            return default;
         }
 
-        public void SetSearchMethod(ANNModelSearch searchMethod)
+        public virtual async Task<float[]> Add(int key, string inputString)
         {
-            this.searchMethod = searchMethod;
+            LLMUnitySetup.LogError("Not implemented");
+            await Task.CompletedTask;
+            return default;
         }
 
-        public void SetLLM(LLM llm)
+        public virtual bool Remove(int key)
         {
-            searchMethod.SetLLM(llm);
+            LLMUnitySetup.LogError("Not implemented");
+            return default;
         }
 
-        public string GetPhrase(Sentence sentence)
+        public virtual int Count()
         {
-            return phrases[sentence.phraseId].text;
+            LLMUnitySetup.LogError("Not implemented");
+            return default;
         }
 
-        public string GetSentence(Sentence sentence)
-        {
-            return GetPhrase(sentence).Substring(sentence.startIndex, sentence.endIndex - sentence.startIndex + 1);
-        }
-
-        public async void Add(string text)
-        {
-            List<(int, int)> subindices;
-            if (sentenceSplitter == null) subindices = new List<(int, int)> { (0, text.Length - 1) };
-            else subindices = sentenceSplitter.Split(text);
-
-            int phraseId = nextPhraseId++;
-            Phrase phrase = new Phrase(text);
-            phrases[phraseId] = phrase;
-            foreach ((int startIndex, int endIndex) in subindices)
-            {
-                int sentenceId = nextSentenceId++;
-                Sentence sentence = new Sentence(phraseId, startIndex, endIndex);
-                sentences[sentenceId] = sentence;
-                phrase.sentenceIds.Add(sentenceId);
-                string sentenceText = GetSentence(sentence);
-                await searchMethod.Add(sentenceId, sentenceText);
-            }
-        }
-
-        public int Remove(string text)
-        {
-            List<int> removePhraseIds = new List<int>();
-            foreach (var phrasePair in phrases)
-            {
-                Phrase phrase = phrasePair.Value;
-                if (phrase.text == text)
-                {
-                    foreach (int sentenceId in phrase.sentenceIds)
-                    {
-                        sentences.Remove(sentenceId);
-                        searchMethod.Remove(sentenceId);
-                    }
-                    removePhraseIds.Add(phrasePair.Key);
-                }
-            }
-            foreach (int phraseId in removePhraseIds)
-            {
-                phrases.Remove(phraseId);
-            }
-            return removePhraseIds.Count;
-        }
-
-        public List<string> GetPhrases()
-        {
-            List<string> phraseTexts = new List<string>();
-            foreach (Phrase phrase in phrases.Values)
-            {
-                phraseTexts.Add(phrase.text);
-            }
-            return phraseTexts;
-        }
-
-        public List<string> GetSentences()
-        {
-            List<string> allSentences = new List<string>();
-            foreach (Sentence sentence in sentences.Values)
-            {
-                allSentences.Add(GetSentence(sentence));
-            }
-            return allSentences;
-        }
-
-//TODO
+        //TODO
 /*
-        public string[] Search(string queryString, int k, out float[] distances, bool returnSentences = false)
+        public int[] Search(string queryString, int k, out float[] distances)
         {
-            return Search(searchMethod.Encode(queryString), k, out distances, returnSentences);
-        }
-
-        public string[] Search(string queryString, int k = 1, bool returnSentences = false)
-        {
-            return Search(queryString, k, out float[] distances, returnSentences);
-        }
-        public string[] SearchPhrases(string queryString, int k, out float[] distances)
-        {
-            return Search(queryString, k, out distances, false);
-        }
-        public string[] SearchSentences(string queryString, int k, out float[] distances)
-        {
-            return Search(queryString, k, out distances, true);
+            return Search(Encode(queryString), k, out distances);
         }
 */
 
-        public async Task<string[]> Search(string queryString, int k, bool returnSentences = false)
+        public static string GetSearchTypePath(string dirname = "")
         {
-            return Search(await searchMethod.Encode(queryString), k, out float[] distances, returnSentences);
+            return Path.Combine(dirname, "SearchType.txt");
         }
 
-        public string[] Search(float[] encoding, int k, out float[] distances, bool returnSentences = false)
+        public static string GetSearchPath(string dirname = "")
         {
-            if (returnSentences)
-            {
-                int[] keys = searchMethod.Search(encoding, k, out distances);
-                string[] result = new string[keys.Length];
-                for (int i = 0; i < keys.Length; i++)
-                {
-                    Sentence sentence = sentences[keys[i]];
-                    result[i] = returnSentences ? GetSentence(sentence) : GetPhrase(sentence);
-                }
-                return result;
-            }
-            else
-            {
-                List<int> phraseKeys;
-                List<float> phraseDistances;
-                int currK = k;
-                do
-                {
-                    int[] keys = searchMethod.Search(encoding, currK, out float[] iterDistances);
-                    phraseDistances = new List<float>();
-                    phraseKeys = new List<int>();
-                    for (int i = 0; i < keys.Length; i++)
-                    {
-                        int phraseId = sentences[keys[i]].phraseId;
-                        if (phraseKeys.Contains(phraseId)) continue;
-                        phraseKeys.Add(phraseId);
-                        phraseDistances.Add(iterDistances[i]);
-                    }
-                    if (currK >= searchMethod.Count()) break;
-                    currK *= 2;
-                }
-                while (phraseKeys.Count() < k);
-
-                distances = phraseDistances.ToArray();
-                string[] result = new string[phraseKeys.Count];
-                for (int i = 0; i < phraseKeys.Count; i++)
-                    result[i] = phrases[phraseKeys[i]].text;
-                return result;
-            }
+            return Path.Combine(dirname, "Search.json");
         }
 
-        public string[] Search(float[] encoding, int k = 1, bool returnSentences = false)
-        {
-            return Search(encoding, k, out float[] distances, returnSentences);
-        }
-
-        public async Task<string[]> SearchPhrases(string queryString, int k = 1)
-        {
-            return await Search(queryString, k, false);
-        }
-
-        public async Task<string[]> SearchSentences(string queryString, int k = 1)
-        {
-            return await Search(queryString, k, true);
-        }
-
-        public int NumPhrases()
-        {
-            return phrases.Count;
-        }
-
-        public int NumSentences()
-        {
-            return sentences.Count;
-        }
-
-        public void Save(string filePath, string dirname = "")
+        public virtual void Save(string filePath, string dirname = "")
         {
             using (FileStream stream = new FileStream(filePath, FileMode.Create))
             using (ZipArchive archive = new ZipArchive(stream, ZipArchiveMode.Create))
@@ -315,23 +77,194 @@ namespace LLMUnity
             }
         }
 
-        public static string GetSearchPath(string dirname = "")
+        public virtual void Save(ZipArchive archive, string dirname = "")
         {
-            return Path.Combine(dirname, "SearchEngine.json");
-        }
+            ZipArchiveEntry typeEntry = archive.CreateEntry(GetSearchTypePath(dirname));
+            using (StreamWriter writer = new StreamWriter(typeEntry.Open()))
+            {
+                writer.Write(GetType().FullName);
+            }
 
-        public void Save(ZipArchive archive, string dirname = "")
-        {
             ZipArchiveEntry mainEntry = archive.CreateEntry(GetSearchPath(dirname));
             using (Stream entryStream = mainEntry.Open())
             {
                 DataContractJsonSerializer serializer = new DataContractJsonSerializer(GetType());
                 serializer.WriteObject(entryStream, this);
             }
-            searchMethod.Save(archive, dirname);
+
+            //TODO
+            // llm.SaveHashCode(archive, dirname);
         }
 
-        public static SearchEngine Load(LLM llm, string filePath, string dirname = "")
+        public static T Load<T>(LLM llm, string filePath, string dirname = "") where T : Search
+        {
+            using (FileStream stream = new FileStream(filePath, FileMode.Open))
+            using (ZipArchive archive = new ZipArchive(stream, ZipArchiveMode.Read))
+            {
+                return Load<T>(llm, archive, dirname);
+            }
+        }
+
+        public static T Load<T>(LLM llm, ZipArchive archive, string dirname = "") where T : Search
+        {
+            ZipArchiveEntry baseEntry = archive.GetEntry(GetSearchPath(dirname));
+            T search;
+            using (Stream entryStream = baseEntry.Open())
+            {
+                DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(T));
+                search = (T)serializer.ReadObject(entryStream);
+            }
+
+            // TODO
+            // int embedderHash = EmbeddingModel.LoadHashCode(archive, dirname);
+            // if (embedder.GetHashCode() != embedderHash)
+            //     throw new Exception($"The Search object uses different embedding model than the Search object stored");
+            // search.SetLLM(llm);
+
+            return search;
+        }
+    }
+
+    [DataContract]
+    public class BruteForceSearch : Search
+    {
+        [DataMember]
+        protected Dictionary<int, float[]> index = new Dictionary<int, float[]>();
+
+        public override async Task<float[]> Add(int key, string inputString)
+        {
+            float[] embedding = (await Embeddings(inputString)).ToArray();
+            index[key] = embedding;
+            return embedding;
+        }
+
+        public override bool Remove(int key)
+        {
+            return index.Remove(key);
+        }
+
+        public override int Count()
+        {
+            return index.Count;
+        }
+
+        public static float DotProduct(float[] vector1, float[] vector2)
+        {
+            if (vector1.Length != vector2.Length)
+            {
+                throw new ArgumentException("Vector lengths must be equal for dot product calculation");
+            }
+            float result = 0;
+            for (int i = 0; i < vector1.Length; i++)
+            {
+                result += vector1[i] * vector2[i];
+            }
+            return result;
+        }
+
+        public static float InverseDotProduct(float[] vector1, float[] vector2)
+        {
+            return 1 - DotProduct(vector1, vector2);
+        }
+
+        public static float[] InverseDotProduct(float[] vector1, float[][] vector2)
+        {
+            float[] results = new float[vector2.Length];
+            for (int i = 0; i < vector2.Length; i++)
+            {
+                results[i] = InverseDotProduct(vector1, vector2[i]);
+            }
+            return results;
+        }
+
+        public override int[] Search(float[] encoding, int k, out float[] distances)
+        {
+            float[] unsortedDistances = InverseDotProduct(encoding, index.Values.ToArray());
+
+            var sortedLists = index.Keys.Zip(unsortedDistances, (first, second) => new { First = first, Second = second })
+                .OrderBy(item => item.Second)
+                .ToList();
+            int kmax = k == -1 ? sortedLists.Count : Math.Min(k, sortedLists.Count);
+            int[] results = new int[kmax];
+            distances = new float[kmax];
+            for (int i = 0; i < kmax; i++)
+            {
+                results[i] = sortedLists[i].First;
+                distances[i] = sortedLists[i].Second;
+            }
+            return results;
+        }
+
+        public static BruteForceSearch Load(LLM llm, string filePath, string dirname = "")
+        {
+            return Load<BruteForceSearch>(llm, filePath, dirname);
+        }
+
+        public static BruteForceSearch Load(LLM llm, ZipArchive archive, string dirname = "")
+        {
+            return Load<BruteForceSearch>(llm, archive, dirname);
+        }
+    }
+
+    [DataContract]
+    public class ANNModelSearch : Search
+    {
+        USearchIndex index;
+        public ScalarKind quantization = ScalarKind.Float16;
+        public MetricKind metricKind = MetricKind.Cos;
+        public ulong connectivity = 32;
+        public ulong expansionAdd = 40;
+        public ulong expansionSearch = 16;
+
+        public override void Awake()
+        {
+            if (!enabled) return;
+            base.Awake();
+            index = new USearchIndex((ulong)llm.embeddingLength, metricKind, quantization, connectivity, expansionAdd, expansionSearch, false);
+        }
+
+        public void SetIndex(USearchIndex index)
+        {
+            this.index = index;
+        }
+
+        public override async Task<float[]> Add(int key, string inputString)
+        {
+            float[] embedding = (await Embeddings(inputString)).ToArray();
+            index.Add((ulong)key, embedding);
+            return embedding;
+        }
+
+        public override bool Remove(int key)
+        {
+            return index.Remove((ulong)key) > 0;
+        }
+
+        public override int Count()
+        {
+            return (int)index.Size();
+        }
+
+        public override int[] Search(float[] encoding, int k, out float[] distances)
+        {
+            index.Search(encoding, k, out ulong[] keys, out distances);
+            int[] intKeys = new int[keys.Length];
+            for (int i = 0; i < keys.Length; i++) intKeys[i] = (int)keys[i];
+            return intKeys;
+        }
+
+        public static string GetIndexPath(string dirname = "")
+        {
+            return Path.Combine(dirname, "USearch");
+        }
+
+        public override void Save(ZipArchive archive, string dirname = "")
+        {
+            base.Save(archive, dirname);
+            index.Save(archive, GetIndexPath(dirname));
+        }
+
+        public static ANNModelSearch Load(LLM llm, string filePath, string dirname = "")
         {
             using (FileStream stream = new FileStream(filePath, FileMode.Open))
             using (ZipArchive archive = new ZipArchive(stream, ZipArchiveMode.Read))
@@ -340,17 +273,11 @@ namespace LLMUnity
             }
         }
 
-        public static SearchEngine Load(LLM llm, ZipArchive archive, string dirname = "")
+        public static ANNModelSearch Load(LLM llm, ZipArchive archive, string dirname = "")
         {
-            SearchEngine search;
-            ZipArchiveEntry baseEntry = archive.GetEntry(GetSearchPath(dirname));
-            using (Stream entryStream = baseEntry.Open())
-            {
-                DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(SearchEngine));
-                search = (SearchEngine)serializer.ReadObject(entryStream);
-            }
-            ANNModelSearch searchMethod = ANNModelSearch.Load(llm, archive, dirname);
-            search.SetSearchMethod(searchMethod);
+            ANNModelSearch search = Load<ANNModelSearch>(llm, archive, dirname);
+            USearchIndex index = new USearchIndex(archive, GetIndexPath(dirname));
+            search.SetIndex(index);
             return search;
         }
     }
