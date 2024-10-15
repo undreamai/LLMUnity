@@ -273,7 +273,7 @@ namespace LLMUnity
             if (setNKeepToPrompt && nKeep == -1)
             {
                 if (!CheckTemplate()) return false;
-                string systemPrompt = template.ComputePrompt(new List<ChatMessage>(){GetSystemPromptMessage()}, playerName, AIName, false);
+                string systemPrompt = template.ComputePrompt(new List<ChatMessage>(){GetSystemPromptMessage()}, playerName, "", false);
                 List<int> tokens = await Tokenize(systemPrompt);
                 if (tokens == null) return false;
                 SetNKeep(tokens);
@@ -375,14 +375,19 @@ namespace LLMUnity
             return chatRequest;
         }
 
+        public async Task AddMessage(string role, string content)
+        {
+            await chatHistory.AddMessage(role, content);
+        }
+
         public async Task AddPlayerMessage(string content)
         {
-            await chatHistory.AddMessage(playerName, content);
+            await AddMessage(playerName, content);
         }
 
         public async Task AddAIMessage(string content)
         {
-            await chatHistory.AddMessage(AIName, content);
+            await AddMessage(AIName, content);
         }
 
         protected string ChatContent(ChatResult result)
@@ -466,7 +471,9 @@ namespace LLMUnity
             var playerMessage = new ChatMessage() { role = playerName, content = query };
 
             // Setup the full list of messages for the current request
-            List<ChatMessage> promptMessages = chatHistory ? chatHistory.GetChatMessages() : new List<ChatMessage>();
+            List<ChatMessage> promptMessages = chatHistory ?
+                await chatHistory.GetChatMessages() :
+                new List<ChatMessage>();
             promptMessages.Insert(0, GetSystemPromptMessage());
             promptMessages.Add(playerMessage);
 
@@ -480,8 +487,12 @@ namespace LLMUnity
             // Update our chat history if required
             if (addToHistory && result != null)
             {
-                await AddPlayerMessage(query);
-                await AddAIMessage(result);
+                await _chatHistory.AddMessages(
+                    new List<ChatMessage> {
+                        new ChatMessage { role = playerName, content = query },
+                        new ChatMessage { role = AIName, content = result }
+                    }
+                );
             }
 
             await SaveCache();
@@ -767,9 +778,11 @@ namespace LLMUnity
                     {
                         result = default;
                         error = request.error;
+                        if (request.responseCode == (int)System.Net.HttpStatusCode.Unauthorized) break;
                     }
                 }
                 tryNr--;
+                if (tryNr > 0) await Task.Delay(200 * (numRetries - tryNr));
             }
 
             if (error != null) LLMUnitySetup.LogError(error);
@@ -805,6 +818,12 @@ namespace LLMUnity
 
             save = filename;
             return await LoadCache();
+        }
+
+        [Obsolete]
+        public virtual string GetSavePath(string filename)
+        {
+            return _chatHistory.GetChatHistoryFilePath();
         }
 
         #endregion

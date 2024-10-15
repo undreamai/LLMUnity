@@ -46,7 +46,7 @@ namespace LLMUnityTests
 
             // 3. ASSERT
             // Validate the messages were loaded
-            List<ChatMessage> loadedMessages = _chatHistory.GetChatMessages();
+            List<ChatMessage> loadedMessages = await _chatHistory.GetChatMessages();
             Assert.AreEqual(loadedMessages.Count, 2);
             Assert.AreEqual(loadedMessages[0].role, "user");
             Assert.AreEqual(loadedMessages[0].content, "hello");

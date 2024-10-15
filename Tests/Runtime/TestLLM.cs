@@ -255,7 +255,7 @@ namespace LLMUnityTests
         {
             Assert.AreEqual(llmCharacter.nKeep, nKeep);
             Assert.That(ChatTemplate.GetTemplate(llm.chatTemplate).GetStop(llmCharacter.playerName, llmCharacter.AIName).Length > 0);
-            Assert.AreEqual(llmCharacter.chatHistory?.GetChatMessages().Count, expectedMessageCount);
+            Assert.AreEqual(llmCharacter.chatHistory?.GetChatMessages().Result.Count, expectedMessageCount);
         }
 
         public void TestTokens(List<int> tokens)
@@ -271,7 +271,7 @@ namespace LLMUnityTests
 
         public void TestPostChat(int num)
         {
-            Assert.AreEqual(num, llmCharacter.chatHistory.GetChatMessages().Count);
+            Assert.AreEqual(num, llmCharacter.chatHistory.GetChatMessages().Result.Count);
         }
 
         public void TestEmbeddings(List<float> embeddings)

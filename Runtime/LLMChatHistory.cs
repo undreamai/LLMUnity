@@ -34,7 +34,7 @@ namespace LLMUnity
         /// <summary>
         /// Ensures we're not trying to update the chat while saving or loading
         /// </summary>
-        protected SemaphoreSlim chatLock = new SemaphoreSlim(1, 1);
+        protected SemaphoreSlim _chatLock = new SemaphoreSlim(1, 1);
 
         /// <summary>
         /// The Unity Awake function that initializes the state before the application starts.
@@ -50,13 +50,10 @@ namespace LLMUnity
             }
         }
 
-        /// <summary>
-        /// Appends a new message to the end of this chat.
-        /// </summary>
-        public async Task AddMessage(string role, string content)
+        public async Task AddMessages(List<ChatMessage> messages)
         {
             await WithChatLock(async () => {
-                await Task.Run(() => _chatHistory.Add(new ChatMessage { role = role, content = content }));
+                await Task.Run(() => _chatHistory.AddRange(messages));
             });
 
             if (EnableAutoSave) {
@@ -64,8 +61,20 @@ namespace LLMUnity
             }
         }
 
-        public List<ChatMessage> GetChatMessages() {
-            return new List<ChatMessage>(_chatHistory);
+        public async Task AddMessage(string role, string content)
+        {
+            await AddMessages(new List<ChatMessage> { new ChatMessage { role = role, content = content } });
+        }
+
+        public async Task<List<ChatMessage>> GetChatMessages() {
+
+            List<ChatMessage> chatMessages = null;
+            
+            await WithChatLock(async () => {
+                await Task.Run(() => chatMessages = new List<ChatMessage>(_chatHistory));
+            });
+
+            return chatMessages;
         }
 
         /// <summary>
@@ -129,18 +138,18 @@ namespace LLMUnity
             return _chatHistory?.Count == 0;
         }
 
-        protected string GetChatHistoryFilePath()
+        public string GetChatHistoryFilePath()
         {
             return Path.Combine(Application.persistentDataPath, ChatHistoryFilename + ".json").Replace('\\', '/');
         }
 
         protected async Task WithChatLock(Func<Task> action) {
-            await chatLock.WaitAsync();
+            await _chatLock.WaitAsync();
             try {
                 await action();
             }
             finally {
-                chatLock.Release();
+                _chatLock.Release();
             }
         }
     }
