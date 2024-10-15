@@ -9,6 +9,12 @@ using void_ptr_t = System.IntPtr;
 
 namespace Cloud.Unum.USearch
 {
+    public static class NativeMethodsHelpers
+    {
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate int FilterCallback(int key, void_ptr_t filterState);
+    }
+
     internal static class NativeMethods
     {
         private const string LibraryName = "libusearch_c";
@@ -68,7 +74,7 @@ namespace Cloud.Unum.USearch
         );
 
         [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl)]
-        [return: MarshalAs(UnmanagedType.I1)]
+        [return : MarshalAs(UnmanagedType.I1)]
         public static extern bool usearch_contains(usearch_index_t index, usearch_key_t key, out usearch_error_t error);
 
         [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl)]
@@ -80,6 +86,19 @@ namespace Cloud.Unum.USearch
             void_ptr_t query_vector,
             ScalarKind query_kind,
             size_t count,
+            [Out] usearch_key_t[] found_keys,
+            [Out] usearch_distance_t[] found_distances,
+            out usearch_error_t error
+        );
+
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern size_t usearch_filtered_search(
+            usearch_index_t index,
+            void_ptr_t query_vector,
+            ScalarKind query_kind,
+            size_t count,
+            NativeMethodsHelpers.FilterCallback filter,
+            [In] void_ptr_t filterState,
             [Out] usearch_key_t[] found_keys,
             [Out] usearch_distance_t[] found_distances,
             out usearch_error_t error
