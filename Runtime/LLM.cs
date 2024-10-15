@@ -89,6 +89,8 @@ namespace LLMUnity
         public LoraManager loraManager = new LoraManager();
         string loraPre = "";
         string loraWeightsPre = "";
+        public bool embeddingsOnly = false;
+        public int embeddingLength = 0;
 
         /// \endcond
 
@@ -211,6 +213,7 @@ namespace LLMUnity
                 ModelEntry modelEntry = LLMManager.Get(model);
                 if (modelEntry == null) modelEntry = new ModelEntry(GetLLMManagerAssetRuntime(model));
                 SetTemplate(modelEntry.chatTemplate);
+                SetEmbeddings(modelEntry.embeddingLength, modelEntry.embeddingOnly);
                 if (contextSize == 0 && modelEntry.contextLength > 32768)
                 {
                     LLMUnitySetup.LogWarning($"The model {path} has very large context size ({modelEntry.contextLength}), consider setting it to a smaller value (<=32768) to avoid filling up the RAM");
@@ -314,6 +317,22 @@ namespace LLMUnity
 #endif
         }
 
+        /// <summary>
+        /// Set LLM Embedding parameters
+        /// </summary>
+        /// <param name="embeddingLength"> number of embedding dimensions </param>
+        /// <param name="embeddingsOnly"> if true, the LLM will be used only for embeddings </param>
+        public void SetEmbeddings(int embeddingLength, bool embeddingsOnly)
+        {
+            if (embeddingsOnly) LLMUnitySetup.LogWarning("This model can only be used for embeddings");
+            this.embeddingsOnly = embeddingsOnly;
+            this.embeddingLength = embeddingLength;
+            Debug.Log(embeddingLength + " " + embeddingsOnly);
+#if UNITY_EDITOR
+            if (!EditorApplication.isPlaying) EditorUtility.SetDirty(this);
+#endif
+        }
+
         /// \cond HIDE
 
         string ReadFileContents(string path)
@@ -397,15 +416,16 @@ namespace LLMUnity
 
             int slots = GetNumClients();
             string arguments = $"-m \"{modelPath}\" -c {contextSize} -b {batchSize} --log-disable -np {slots}";
+            if (embeddingsOnly) arguments += " --embedding";
+            if (numThreadsToUse > 0) arguments += $" -t {numThreadsToUse}";
+            arguments += loraArgument;
+            arguments += $" -ngl {numGPULayers}";
+            if (LLMUnitySetup.FullLlamaLib && flashAttention) arguments += $" --flash-attn";
             if (remote)
             {
                 arguments += $" --port {port} --host 0.0.0.0";
                 if (!String.IsNullOrEmpty(APIKey)) arguments += $" --api-key {APIKey}";
             }
-            if (numThreadsToUse > 0) arguments += $" -t {numThreadsToUse}";
-            arguments += loraArgument;
-            arguments += $" -ngl {numGPULayers}";
-            if (LLMUnitySetup.FullLlamaLib && flashAttention) arguments += $" --flash-attn";
 
             // the following is the equivalent for running from command line
             string serverCommand;
@@ -414,7 +434,7 @@ namespace LLMUnity
             serverCommand += " " + arguments;
             serverCommand += $" --template {chatTemplate}";
             if (remote && SSLCert != "" && SSLKey != "") serverCommand += $" --ssl-cert-file {SSLCertPath} --ssl-key-file {SSLKeyPath}";
-            LLMUnitySetup.Log($"Server command: {serverCommand}");
+            LLMUnitySetup.Log($"Server deployment command: {serverCommand}");
             return arguments;
         }
 
