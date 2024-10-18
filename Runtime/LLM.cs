@@ -327,7 +327,6 @@ namespace LLMUnity
             if (embeddingsOnly) LLMUnitySetup.LogWarning("This model can only be used for embeddings");
             this.embeddingsOnly = embeddingsOnly;
             this.embeddingLength = embeddingLength;
-            Debug.Log(embeddingLength + " " + embeddingsOnly);
 #if UNITY_EDITOR
             if (!EditorApplication.isPlaying) EditorUtility.SetDirty(this);
 #endif
