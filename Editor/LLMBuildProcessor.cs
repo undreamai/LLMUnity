@@ -51,8 +51,17 @@ namespace LLMUnity
 
         public void BuildCompleted()
         {
+#if UNITY_6000
+            // Delay the reset operation to ensure Unity is no longer in the build process
+            EditorApplication.delayCall += () =>
+            {
+                Application.logMessageReceived -= OnBuildError;
+                LLMBuilder.Reset();
+            };
+#else
             Application.logMessageReceived -= OnBuildError;
             LLMBuilder.Reset();
+#endif
         }
     }
 }
