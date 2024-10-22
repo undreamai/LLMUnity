@@ -30,11 +30,6 @@ namespace LLMUnity
         bool customURLFocus = false;
         bool expandedView = false;
 
-        protected override Type[] GetPropertyTypes()
-        {
-            return new Type[] { typeof(LLM) };
-        }
-
         public void AddSecuritySettings(SerializedObject llmScriptSO, LLM llmScript)
         {
             void AddSSLLoad(string type, Callback<string> setterCallback)
@@ -110,7 +105,7 @@ namespace LLMUnity
             if (downloadOnStart != LLMManager.downloadOnStart) LLMManager.SetDownloadOnStart(downloadOnStart);
         }
 
-        public void AddModelSettings(SerializedObject llmScriptSO)
+        public override void AddModelSettings(SerializedObject llmScriptSO)
         {
             List<Type> attributeClasses = new List<Type> { typeof(ModelAttribute) };
             if (llmScriptSO.FindProperty("advancedOptions").boolValue)
@@ -448,6 +443,22 @@ namespace LLMUnity
             TextEditor te = new TextEditor {text = text};
             te.SelectAll();
             te.Copy();
+        }
+
+        public void AddExtrasToggle()
+        {
+            if (ToggleButton("Use extras", LLMUnitySetup.FullLlamaLib)) LLMUnitySetup.SetFullLlamaLib(!LLMUnitySetup.FullLlamaLib);
+        }
+
+        public override void AddOptionsToggles(SerializedObject llmScriptSO)
+        {
+            AddDebugModeToggle();
+
+            EditorGUILayout.BeginHorizontal();
+            AddAdvancedOptionsToggle(llmScriptSO);
+            AddExtrasToggle();
+            EditorGUILayout.EndHorizontal();
+            Space();
         }
 
         public override void OnInspectorGUI()
