@@ -17,8 +17,6 @@ namespace LLMUnity
     /// </summary>
     public class LLMCharacter : LLMCaller
     {
-        /// <summary> toggle to show/hide advanced options in the GameObject </summary>
-        [HideInInspector] public bool advancedOptions = false;
         /// <summary> file to save the chat history.
         /// The file is saved only for Chat calls with addToHistory set to true.
         /// The file will be saved within the persistentDataPath directory (see https://docs.unity3d.com/ScriptReference/Application-persistentDataPath.html). </summary>
