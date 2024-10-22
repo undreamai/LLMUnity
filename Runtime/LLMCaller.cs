@@ -6,15 +6,18 @@ using UnityEngine.Networking;
 
 namespace LLMUnity
 {
+    [DefaultExecutionOrder(-2)]
     public class LLMCaller : MonoBehaviour
     {
+        /// <summary> toggle to show/hide advanced options in the GameObject </summary>
+        [HideInInspector] public bool advancedOptions = false;
         /// <summary> toggle to use remote LLM server or local LLM </summary>
         [LocalRemote] public bool remote = false;
         /// <summary> the LLM object to use </summary>
         [Local] public LLM llm;
         /// <summary> option to receive the reply from the model as it is produced (recommended!).
         /// If it is not selected, the full reply from the model is received in one go </summary>
-        [Model] public bool stream = true;
+        [Chat] public bool stream = true;
         /// <summary> allows to use a server with API key </summary>
         [Remote] public string APIKey;
         /// <summary> specify which slot of the server to use for computation (affects caching) </summary>
