@@ -1,41 +1,41 @@
 using System.Collections.Generic;
-using System.Runtime.Serialization;
 using System.IO;
 using System.IO.Compression;
-using System.Runtime.Serialization.Json;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace LLMUnity
 {
     public class ArchiveSaver
     {
-        public static void Save(object saveObject, string filePath, string name, FileMode mode = FileMode.Create)
+        public delegate void ArchiveSaverCallback(ZipArchive archive);
+
+        public static void Save(string filePath, ArchiveSaverCallback callback)
         {
-            using (FileStream stream = new FileStream(filePath, mode))
+            using (FileStream stream = new FileStream(filePath, FileMode.Create))
             using (ZipArchive archive = new ZipArchive(stream, ZipArchiveMode.Create))
             {
-                Save(saveObject, archive, name);
+                callback(archive);
             }
         }
 
-        public static void Save(object saveObject, ZipArchive archive, string name)
-        {
-            ZipArchiveEntry mainEntry = archive.CreateEntry(name);
-            using (Stream entryStream = mainEntry.Open())
-            {
-                DataContractJsonSerializer serializer = new DataContractJsonSerializer(saveObject.GetType());
-                serializer.WriteObject(entryStream, saveObject);
-            }
-        }
-
-        public static T Load<T>(string filePath, string name)
+        public static void Load(string filePath, ArchiveSaverCallback callback)
         {
             using (FileStream stream = new FileStream(filePath, FileMode.Open))
             using (ZipArchive archive = new ZipArchive(stream, ZipArchiveMode.Read))
             {
-                var loadMethod = typeof(T).GetMethod("Load", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public, null, new[] { typeof(ZipArchive), typeof(string) }, null);
-                if (loadMethod != null) return (T)loadMethod.Invoke(null, new object[] { archive, name });
-                return Load<T>(archive, name);
+                callback(archive);
+            }
+        }
+
+        public static void Save(ZipArchive archive, object saveObject, string name)
+        {
+            ZipArchiveEntry mainEntry = archive.CreateEntry(name);
+            using (Stream entryStream = mainEntry.Open())
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                formatter.Serialize(entryStream, saveObject);
             }
         }
 
@@ -44,8 +44,8 @@ namespace LLMUnity
             ZipArchiveEntry baseEntry = archive.GetEntry(name);
             using (Stream entryStream = baseEntry.Open())
             {
-                DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(T));
-                T obj = (T)serializer.ReadObject(entryStream);
+                BinaryFormatter formatter = new BinaryFormatter();
+                T obj = (T)formatter.Deserialize(entryStream);
                 return obj;
             }
         }
@@ -53,23 +53,26 @@ namespace LLMUnity
 
     public interface ISearchable
     {
-        public abstract string Get(int key);
-        public abstract Task<int> Add(string inputString);
-        public abstract int Remove(string inputString);
-        public abstract void Remove(int key);
-        public abstract int Count();
-        public abstract void Clear();
-        public abstract Task<string[]> Search(string queryString, int k);
-        public abstract void Save(string filePath, string dirname = "");
-        public abstract void Save(ZipArchive archive, string dirname = "");
+        public string Get(int key);
+        public Task<int> Add(string inputString);
+        public int Remove(string inputString);
+        public void Remove(int key);
+        public int Count();
+        public void Clear();
+        public Task<string[]> Search(string queryString, int k);
+        public void Save(string filePath);
+        public void Save(ZipArchive archive);
+        public void Load(string filePath);
+        public void Load(ZipArchive archive);
     }
 
-    [DataContract]
+    [DefaultExecutionOrder(-2)]
     public abstract class SearchMethod : LLMCaller, ISearchable
     {
-        [DataMember] protected int nextKey = 0;
-        [DataMember] protected SortedDictionary<int, string> data = new SortedDictionary<int, string>();
-        [DataMember] protected int nextIncrementalSearchKey = 0;
+        [HideInInspector, SerializeField] protected int nextKey = 0;
+        [HideInInspector, SerializeField] protected int nextIncrementalSearchKey = 0;
+
+        protected SortedDictionary<int, string> data = new SortedDictionary<int, string>();
 
         public abstract int IncrementalSearch(float[] embedding);
         public abstract (int[], bool) IncrementalFetchKeys(int fetchKey, int k);
@@ -78,6 +81,8 @@ namespace LLMUnity
         protected abstract void AddInternal(int key, float[] embedding);
         protected abstract void RemoveInternal(int key);
         protected abstract void ClearInternal();
+        protected abstract void SaveInternal(ZipArchive archive);
+        protected abstract void LoadInternal(ZipArchive archive);
 
         public virtual async Task<float[]> Encode(string inputString)
         {
@@ -92,8 +97,8 @@ namespace LLMUnity
         public virtual async Task<int> Add(string inputString)
         {
             int key = nextKey++;
-            data[key] = inputString;
             AddInternal(key, await Encode(inputString));
+            data[key] = inputString;
             return key;
         }
 
@@ -155,29 +160,65 @@ namespace LLMUnity
             return (results, completed);
         }
 
-        public static string GetSavePath(string dirname = "")
+        public virtual void Save(string filePath)
         {
-            return Path.Combine(dirname, "search.json");
+            ArchiveSaver.Save(filePath, Save);
         }
 
-        public virtual void Save(string filePath, string dirname = "")
+        public virtual void Load(string filePath)
         {
-            ArchiveSaver.Save(this, filePath, GetSavePath(dirname));
+            ArchiveSaver.Load(filePath, Load);
         }
 
-        public virtual void Save(ZipArchive archive, string dirname = "")
+        public virtual void Save(ZipArchive archive)
         {
-            ArchiveSaver.Save(this, archive, GetSavePath(dirname));
+            ArchiveSaver.Save(archive, JsonUtility.ToJson(this), "Search_object");
+            ArchiveSaver.Save(archive, data, "Search_data");
+            SaveInternal(archive);
         }
 
-        public static T Load<T>(string filePath, string dirname = "") where T : SearchMethod
+        public virtual void Load(ZipArchive archive)
         {
-            return ArchiveSaver.Load<T>(filePath, GetSavePath(dirname));
+            JsonUtility.FromJsonOverwrite(ArchiveSaver.Load<string>(archive, "Search_object"), this);
+            data = ArchiveSaver.Load<SortedDictionary<int, string>>(archive, "Search_data");
+            LoadInternal(archive);
+        }
+    }
+
+    public abstract class SearchPlugin : MonoBehaviour, ISearchable
+    {
+        public SearchMethod search;
+
+        public abstract string Get(int key);
+        public abstract Task<int> Add(string inputString);
+        public abstract int Remove(string inputString);
+        public abstract void Remove(int key);
+        public abstract int Count();
+        public abstract void Clear();
+        public abstract Task<string[]> Search(string queryString, int k);
+        protected abstract void SaveInternal(ZipArchive archive);
+        protected abstract void LoadInternal(ZipArchive archive);
+
+        public virtual void Save(string filePath)
+        {
+            ArchiveSaver.Save(filePath, Save);
         }
 
-        public static T Load<T>(ZipArchive archive, string dirname = "") where T : SearchMethod
+        public virtual void Load(string filePath)
         {
-            return ArchiveSaver.Load<T>(archive, GetSavePath(dirname));
+            ArchiveSaver.Load(filePath, Load);
+        }
+
+        public virtual void Save(ZipArchive archive)
+        {
+            ArchiveSaver.Save(archive, JsonUtility.ToJson(this, true), "SearchPlugin_object");
+            SaveInternal(archive);
+        }
+
+        public virtual void Load(ZipArchive archive)
+        {
+            JsonUtility.FromJsonOverwrite(ArchiveSaver.Load<string>(archive, "SearchPlugin_object"), this);
+            LoadInternal(archive);
         }
     }
 }
