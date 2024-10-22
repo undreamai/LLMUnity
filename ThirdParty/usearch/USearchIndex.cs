@@ -2,28 +2,29 @@ using System;
 using System.IO;
 using System.IO.Compression;
 using System.Runtime.InteropServices;
-using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 using static Cloud.Unum.USearch.NativeMethods;
 
 namespace Cloud.Unum.USearch
 {
+    /// <summary>
+    /// USearchIndex class provides a managed wrapper for the USearch library's index functionality.
+    /// </summary>
     public class USearchIndex : IDisposable
     {
         private IntPtr _index;
         private bool _disposedValue = false;
         private ulong _cachedDimensions;
-        private IndexOptions _indexOptions;
-
 
         public USearchIndex(
+            MetricKind metricKind,
+            ScalarKind quantization,
             ulong dimensions,
-            MetricKind metricKind = MetricKind.Cos,
-            ScalarKind quantization = ScalarKind.Float16,
-            ulong connectivity = 32,
-            ulong expansionAdd = 40,
-            ulong expansionSearch = 16,
+            ulong connectivity = 0,
+            ulong expansionAdd = 0,
+            ulong expansionSearch = 0,
             bool multi = false
+                //CustomDistanceFunction? customMetric = null
         )
         {
             IndexOptions initOptions = new()
@@ -37,160 +38,43 @@ namespace Cloud.Unum.USearch
                 expansion_search = expansionSearch,
                 multi = multi
             };
-            Init(initOptions);
+
+            this._index = usearch_init(ref initOptions, out IntPtr error);
+            HandleError(error);
+            this._cachedDimensions = dimensions;
         }
 
-        public USearchIndex(string path, string name = "")
+        public USearchIndex(IndexOptions options)
         {
-            Load(path, name);
-        }
-
-        public USearchIndex(ZipArchive zipArchive, string name = "")
-        {
-            Load(zipArchive, name);
-        }
-
-        public void Init(IndexOptions options)
-        {
-            _indexOptions = options;
             this._index = usearch_init(ref options, out IntPtr error);
             HandleError(error);
             this._cachedDimensions = options.dimensions;
         }
 
-        private static string GetIndexFilename(string name = "")
+        public USearchIndex(string path, bool view = false)
         {
-            return name == "" ? "index" : name + ".index";
-        }
-
-        private static string GetIndexOptionsFilename(string name = "")
-        {
-            return name == "" ? "indexOptions" : name + ".indexOptions";
-        }
-
-        public void Load(string path, string name = "")
-        {
-            using (FileStream zipFileStream = new FileStream(path, FileMode.Open))
-            using (ZipArchive zipArchive = new ZipArchive(zipFileStream, ZipArchiveMode.Read))
-            {
-                Load(zipArchive, name);
-            }
-        }
-
-        public void Load(ZipArchive zipArchive, string name = "")
-        {
-            try
-            {
-                var entry = zipArchive.GetEntry(GetIndexOptionsFilename(name));
-                using (Stream fileStream = entry.Open())
-                {
-                    LoadIndexOptions(fileStream);
-                }
-
-                entry = zipArchive.GetEntry(GetIndexFilename(name));
-                using (Stream entryStream = entry.Open())
-                using (MemoryStream memoryStream = new MemoryStream())
-                {
-                    entryStream.CopyTo(memoryStream);
-                    // Access the length and create a buffer
-                    byte[] managedBuffer = new byte[memoryStream.Length];
-                    memoryStream.Position = 0;  // Reset the position to the beginning
-                    memoryStream.Read(managedBuffer, 0, managedBuffer.Length);
-
-                    GCHandle handle = GCHandle.Alloc(managedBuffer, GCHandleType.Pinned);
-                    try
-                    {
-                        IntPtr unmanagedBuffer = handle.AddrOfPinnedObject();
-                        usearch_load_buffer(_index, unmanagedBuffer, (UIntPtr)managedBuffer.Length, out IntPtr error);
-                        HandleError(error);
-                    }
-                    finally
-                    {
-                        handle.Free();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError($"Error loading the search index: {ex.Message}");
-            }
-        }
-
-        public void Save(string path, string name = "", FileMode mode = FileMode.Create)
-        {
-            using (FileStream zipFileStream = new FileStream(path, mode))
-            using (ZipArchive zipArchive = new ZipArchive(zipFileStream, ZipArchiveMode.Create))
-            {
-                Save(zipArchive, name);
-            }
-        }
-
-        public void Save(ZipArchive zipArchive, string name = "")
-        {
-            string indexPath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-            string indexOptionsPath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-            usearch_save(_index, indexPath, out IntPtr error);
+            IndexOptions initOptions = new();
+            this._index = usearch_init(ref initOptions, out IntPtr error);
             HandleError(error);
-            SaveIndexOptions(indexOptionsPath);
-            try
+
+            if (view)
             {
-                zipArchive.CreateEntryFromFile(indexPath, GetIndexFilename(name));
-                zipArchive.CreateEntryFromFile(indexOptionsPath, GetIndexOptionsFilename(name));
+                usearch_view(this._index, path, out error);
             }
-            catch (Exception ex)
+            else
             {
-                Debug.LogError($"Error adding file to the zip archive: {ex.Message}");
+                usearch_load(this._index, path, out error);
             }
-            File.Delete(indexPath);
-            File.Delete(indexOptionsPath);
+
+            HandleError(error);
+
+            this._cachedDimensions = this.Dimensions();
         }
 
-        public IndexOptions GetIndexOptions()
+        public void Save(string path)
         {
-            return _indexOptions;
-        }
-
-        public void SaveIndexOptions(Stream fileStream)
-        {
-            BinaryFormatter formatter = new BinaryFormatter();
-            formatter.Serialize(fileStream, _indexOptions);
-        }
-
-        public void LoadIndexOptions(Stream fileStream)
-        {
-            BinaryFormatter formatter = new BinaryFormatter();
-            IndexOptions indexOptions = (IndexOptions)formatter.Deserialize(fileStream);
-            Init(indexOptions);
-        }
-
-        public void SaveIndexOptions(string path)
-        {
-            try
-            {
-                using (FileStream fileStream = new FileStream(path, FileMode.Create))
-                {
-                    SaveIndexOptions(fileStream);
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error serializing struct: {ex.Message}");
-            }
-        }
-
-        public void LoadIndexOptions(string path)
-        {
-            try
-            {
-                using (FileStream fileStream = new FileStream(path, FileMode.Open))
-                {
-                    LoadIndexOptions(fileStream);
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error deserializing struct: {ex.Message}");
-            }
+            usearch_save(this._index, path, out IntPtr error);
+            HandleError(error);
         }
 
         public ulong Size()
@@ -354,51 +238,6 @@ namespace Cloud.Unum.USearch
             return foundVectorsCount;
         }
 
-        private int Search<T>(T[] queryVector, int count, out ulong[] keys, out float[] distances, ScalarKind scalarKind, NativeMethodsHelpers.FilterCallback filter = null)
-        {
-            keys = new ulong[count];
-            distances = new float[count];
-
-            GCHandle handle = GCHandle.Alloc(queryVector, GCHandleType.Pinned);
-            int matches = 0;
-            try
-            {
-                IntPtr queryVectorPtr = handle.AddrOfPinnedObject();
-                IntPtr error;
-                if (filter == null)
-                {
-                    matches = checked((int)usearch_search(this._index, queryVectorPtr, scalarKind, (UIntPtr)count, keys, distances, out error));
-                }
-                else
-                {
-                    matches = checked((int)usearch_filtered_search(this._index, queryVectorPtr, scalarKind, (UIntPtr)count, filter, IntPtr.Zero, keys, distances, out error));
-                }
-                HandleError(error);
-            }
-            finally
-            {
-                handle.Free();
-            }
-
-            if (matches < count)
-            {
-                Array.Resize(ref keys, (int)matches);
-                Array.Resize(ref distances, (int)matches);
-            }
-
-            return matches;
-        }
-
-        public int Search(float[] queryVector, int count, out ulong[] keys, out float[] distances, NativeMethodsHelpers.FilterCallback filter = null)
-        {
-            return this.Search(queryVector, count, out keys, out distances, ScalarKind.Float32, filter);
-        }
-
-        public int Search(double[] queryVector, int count, out ulong[] keys, out float[] distances, NativeMethodsHelpers.FilterCallback filter = null)
-        {
-            return this.Search(queryVector, count, out keys, out distances, ScalarKind.Float64, filter);
-        }
-
         public int Remove(ulong key)
         {
             int removedCount = checked((int)usearch_remove(this._index, key, out IntPtr error));
@@ -447,5 +286,113 @@ namespace Cloud.Unum.USearch
         }
 
         ~USearchIndex() => this.Dispose(false);
+
+        //========================== Additional methods from LLMUnity ==========================//
+
+        private int Search<T>(T[] queryVector, int count, out ulong[] keys, out float[] distances, ScalarKind scalarKind, NativeMethodsHelpers.FilterCallback filter = null)
+        {
+            keys = new ulong[count];
+            distances = new float[count];
+
+            GCHandle handle = GCHandle.Alloc(queryVector, GCHandleType.Pinned);
+            int matches = 0;
+            try
+            {
+                IntPtr queryVectorPtr = handle.AddrOfPinnedObject();
+                IntPtr error;
+                if (filter == null)
+                {
+                    matches = checked((int)usearch_search(this._index, queryVectorPtr, scalarKind, (UIntPtr)count, keys, distances, out error));
+                }
+                else
+                {
+                    matches = checked((int)usearch_filtered_search(this._index, queryVectorPtr, scalarKind, (UIntPtr)count, filter, IntPtr.Zero, keys, distances, out error));
+                }
+
+                // matches = checked((int)usearch_search(this._index, queryVectorPtr, scalarKind, (UIntPtr)count, keys, distances, out IntPtr error));
+                HandleError(error);
+            }
+            finally
+            {
+                handle.Free();
+            }
+
+            if (matches < count)
+            {
+                Array.Resize(ref keys, (int)matches);
+                Array.Resize(ref distances, (int)matches);
+            }
+
+            return matches;
+        }
+
+        public int Search(float[] queryVector, int count, out ulong[] keys, out float[] distances, NativeMethodsHelpers.FilterCallback filter = null)
+        {
+            return this.Search(queryVector, count, out keys, out distances, ScalarKind.Float32, filter);
+        }
+
+        public int Search(double[] queryVector, int count, out ulong[] keys, out float[] distances, NativeMethodsHelpers.FilterCallback filter = null)
+        {
+            return this.Search(queryVector, count, out keys, out distances, ScalarKind.Float64, filter);
+        }
+
+        protected virtual string GetIndexFilename()
+        {
+            return "index";
+        }
+
+        public void Save(ZipArchive zipArchive)
+        {
+            string indexPath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            Save(indexPath);
+            try
+            {
+                zipArchive.CreateEntryFromFile(indexPath, GetIndexFilename());
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"Error adding file to the zip archive: {ex.Message}");
+            }
+            File.Delete(indexPath);
+        }
+
+        public void Load(ZipArchive zipArchive)
+        {
+            IndexOptions initOptions = new();
+            this._index = usearch_init(ref initOptions, out IntPtr error);
+            HandleError(error);
+
+            try
+            {
+                ZipArchiveEntry entry = zipArchive.GetEntry(GetIndexFilename());
+                using (Stream entryStream = entry.Open())
+                using (MemoryStream memoryStream = new MemoryStream())
+                {
+                    entryStream.CopyTo(memoryStream);
+                    // Access the length and create a buffer
+                    byte[] managedBuffer = new byte[memoryStream.Length];
+                    memoryStream.Position = 0;  // Reset the position to the beginning
+                    memoryStream.Read(managedBuffer, 0, managedBuffer.Length);
+
+                    GCHandle handle = GCHandle.Alloc(managedBuffer, GCHandleType.Pinned);
+                    try
+                    {
+                        IntPtr unmanagedBuffer = handle.AddrOfPinnedObject();
+                        usearch_load_buffer(_index, unmanagedBuffer, (UIntPtr)managedBuffer.Length, out error);
+                        HandleError(error);
+                    }
+                    finally
+                    {
+                        handle.Free();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"Error loading the search index: {ex.Message}");
+            }
+
+            this._cachedDimensions = this.Dimensions();
+        }
     }
 }
