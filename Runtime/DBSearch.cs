@@ -1,24 +1,20 @@
-
 using System;
 using System.Collections.Generic;
 using Cloud.Unum.USearch;
-using System.Runtime.Serialization;
-using System.IO;
 using System.IO.Compression;
-using System.Runtime.Serialization.Json;
-using System.Threading.Tasks;
+using UnityEngine;
 
 namespace LLMUnity
 {
-    [DataContract]
+    [DefaultExecutionOrder(-2)]
     public class DBSearch : SearchMethod
     {
-        USearchIndex index;
-        [DataMember] public ScalarKind quantization = ScalarKind.Float16;
-        [DataMember] public MetricKind metricKind = MetricKind.Cos;
-        [DataMember] public ulong connectivity = 32;
-        [DataMember] public ulong expansionAdd = 40;
-        [DataMember] public ulong expansionSearch = 16;
+        public USearchIndex index;
+        [ModelAdvanced] public ScalarKind quantization = ScalarKind.Float16;
+        [ModelAdvanced] public MetricKind metricKind = MetricKind.Cos;
+        [ModelAdvanced] public ulong connectivity = 32;
+        [ModelAdvanced] public ulong expansionAdd = 40;
+        [ModelAdvanced] public ulong expansionSearch = 16;
         private Dictionary<int, (float[], List<int>)> incrementalSearchCache = new Dictionary<int, (float[], List<int>)>();
 
         public override void Awake()
@@ -30,12 +26,7 @@ namespace LLMUnity
 
         public void InitIndex()
         {
-            index = new USearchIndex((ulong)llm.embeddingLength, metricKind, quantization, connectivity, expansionAdd, expansionSearch, false);
-        }
-
-        public void SetIndex(USearchIndex index)
-        {
-            this.index = index;
+            index = new USearchIndex(metricKind, quantization, (ulong)llm.embeddingLength, connectivity, expansionAdd, expansionSearch, false);
         }
 
         protected override void AddInternal(int key, float[] embedding)
@@ -85,28 +76,19 @@ namespace LLMUnity
             incrementalSearchCache.Remove(fetchKey);
         }
 
-        public static string GetIndexSavePath(string dirname = "")
+        protected override void SaveInternal(ZipArchive archive)
         {
-            return Path.Combine(dirname, "USearch");
+            index.Save(archive);
         }
 
-        public override void Save(ZipArchive archive, string dirname = "")
+        protected override void LoadInternal(ZipArchive archive)
         {
-            ((ISearchable)this).Save(archive, dirname);
-            index.Save(archive, GetIndexSavePath(dirname));
-        }
-
-        public static DBSearch Load(ZipArchive archive, string dirname = "")
-        {
-            DBSearch search = SearchMethod.Load<DBSearch>(archive, dirname);
-            USearchIndex index = new USearchIndex(archive, GetIndexSavePath(dirname));
-            search.SetIndex(index);
-            return search;
+            index.Load(archive);
         }
 
         protected override void ClearInternal()
         {
-            index.FreeIndex();
+            index.Dispose();
             InitIndex();
             incrementalSearchCache.Clear();
         }

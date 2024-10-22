@@ -1,15 +1,16 @@
 using System;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
 using System.Linq;
+using System.IO.Compression;
+using UnityEngine;
 
 namespace LLMUnity
 {
-    [DataContract]
+    [DefaultExecutionOrder(-2)]
     public class SimpleSearch : SearchMethod
     {
-        [DataMember] protected SortedDictionary<int, float[]> embeddings = new SortedDictionary<int, float[]>();
-        private Dictionary<int, List<(int, float)>> incrementalSearchCache = new Dictionary<int, List<(int, float)>>();
+        protected SortedDictionary<int, float[]> embeddings = new SortedDictionary<int, float[]>();
+        protected Dictionary<int, List<(int, float)>> incrementalSearchCache = new Dictionary<int, List<(int, float)>>();
 
         protected override void AddInternal(int key, float[] embedding)
         {
@@ -110,6 +111,18 @@ namespace LLMUnity
         {
             embeddings.Clear();
             incrementalSearchCache.Clear();
+        }
+
+        protected override void SaveInternal(ZipArchive archive)
+        {
+            ArchiveSaver.Save(archive, embeddings, "SimpleSearch_embeddings");
+            ArchiveSaver.Save(archive, incrementalSearchCache, "SimpleSearch_incrementalSearchCache");
+        }
+
+        protected override void LoadInternal(ZipArchive archive)
+        {
+            embeddings = ArchiveSaver.Load<SortedDictionary<int, float[]>>(archive, "SimpleSearch_embeddings");
+            incrementalSearchCache = ArchiveSaver.Load<Dictionary<int, List<(int, float)>>>(archive, "SimpleSearch_incrementalSearchCache");
         }
     }
 }
