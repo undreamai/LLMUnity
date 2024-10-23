@@ -9,7 +9,7 @@ namespace LLMUnity
     [DefaultExecutionOrder(-2)]
     public class DBSearch : SearchMethod
     {
-        public USearchIndex index;
+        protected USearchIndex index;
         [ModelAdvanced] public ScalarKind quantization = ScalarKind.Float16;
         [ModelAdvanced] public MetricKind metricKind = MetricKind.Cos;
         [ModelAdvanced] public ulong connectivity = 32;
