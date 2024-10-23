@@ -86,7 +86,7 @@ namespace LLMUnity
 
         public virtual async Task<float[]> Encode(string inputString)
         {
-            return (await Embeddings(inputString.Trim())).ToArray();
+            return (await Embeddings(inputString)).ToArray();
         }
 
         public virtual string Get(int key)
