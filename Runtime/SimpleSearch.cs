@@ -51,7 +51,7 @@ namespace LLMUnity
             return results;
         }
 
-        protected override int[] SearchInternal(float[] embedding, int k, out float[] distances)
+        protected override (int[], float[]) SearchInternal(float[] embedding, int k)
         {
             float[] unsortedDistances = InverseDotProduct(embedding, embeddings.Values.ToArray());
             var sortedLists = embeddings.Keys.Zip(unsortedDistances, (first, second) => new { First = first, Second = second })
@@ -59,13 +59,13 @@ namespace LLMUnity
                 .ToList();
             int kmax = k == -1 ? sortedLists.Count : Math.Min(k, sortedLists.Count);
             int[] results = new int[kmax];
-            distances = new float[kmax];
+            float[] distances = new float[kmax];
             for (int i = 0; i < kmax; i++)
             {
                 results[i] = sortedLists[i].First;
                 distances[i] = sortedLists[i].Second;
             }
-            return results;
+            return (results, distances);
         }
 
         public override int IncrementalSearch(float[] embedding)
@@ -78,7 +78,7 @@ namespace LLMUnity
             return key;
         }
 
-        public override (int[], bool) IncrementalFetchKeys(int fetchKey, int k)
+        public override (int[], float[], bool) IncrementalFetchKeys(int fetchKey, int k)
         {
             if (!incrementalSearchCache.ContainsKey(fetchKey)) throw new Exception($"There is no IncrementalSearch cached with this key: {fetchKey}");
 
@@ -97,9 +97,14 @@ namespace LLMUnity
             }
             if (completed) IncrementalSearchComplete(fetchKey);
 
-            List<int> results = new List<int>();
-            foreach ((int key, float distance) in sortedLists) results.Add(key);
-            return (results.ToArray(), completed);
+            int[] results = new int[sortedLists.Count];
+            float[] distances = new float[sortedLists.Count];
+            for (int i = 0; i < sortedLists.Count; i++)
+            {
+                results[i] = sortedLists[i].Item1;
+                distances[i] = sortedLists[i].Item2;
+            }
+            return (results.ToArray(), distances.ToArray(), completed);
         }
 
         public override void IncrementalSearchComplete(int fetchKey)

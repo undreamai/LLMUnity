@@ -112,7 +112,7 @@ namespace LLMUnity
             return phraseToSentences.Count;
         }
 
-        public override async Task<string[]> Search(string queryString, int k)
+        public override async Task<(string[], float[])> Search(string queryString, int k)
         {
             if (returnChunks)
             {
@@ -123,17 +123,20 @@ namespace LLMUnity
                 int searchKey = await search.IncrementalSearch(queryString);
                 List<int> phraseKeys = new List<int>();
                 List<string> phrases = new List<string>();
+                List<float> distancesList = new List<float>();
                 bool complete;
                 do
                 {
                     int[] resultKeys;
-                    (resultKeys, complete) = search.IncrementalFetchKeys(searchKey, k);
+                    float[] distancesIter;
+                    (resultKeys, distancesIter, complete) = search.IncrementalFetchKeys(searchKey, k);
                     for (int i = 0; i < resultKeys.Length; i++)
                     {
                         int phraseId = sentenceToPhrase[resultKeys[i]];
                         if (phraseKeys.Contains(phraseId)) continue;
                         phraseKeys.Add(phraseId);
                         phrases.Add(Get(phraseId));
+                        distancesList.Add(distancesIter[i]);
                         if (phraseKeys.Count() == k)
                         {
                             complete = true;
@@ -142,7 +145,7 @@ namespace LLMUnity
                     }
                 }
                 while (!complete);
-                return phrases.ToArray();
+                return (phrases.ToArray(), distancesList.ToArray());
             }
         }
 
