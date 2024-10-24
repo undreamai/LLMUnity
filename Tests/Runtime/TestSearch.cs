@@ -173,8 +173,15 @@ namespace LLMUnityTests
         }
     }
 
-    public abstract class TestSearchMethod : TestSearchable<SearchMethod>
+    public abstract class TestSearchMethod<T> : TestSearchable<T> where T : SearchMethod
     {
+        public override T CreateSearch()
+        {
+            T search = gameObject.AddComponent<T>();
+            search.llm = llm;
+            return search;
+        }
+
         public override async Task Tests()
         {
             await base.Tests();
@@ -240,44 +247,22 @@ namespace LLMUnityTests
         }
     }
 
-    public class TestSimpleSearch : TestSearchMethod
-    {
-        public override SearchMethod CreateSearch()
-        {
-            SimpleSearch search = gameObject.AddComponent<SimpleSearch>();
-            search.llm = llm;
-            return search;
-        }
-    }
+    public class TestSimpleSearch : TestSearchMethod<SimpleSearch> {}
 
-    public class TestDBSearch : TestSearchMethod
-    {
-        public override SearchMethod CreateSearch()
-        {
-            DBSearch search = gameObject.AddComponent<DBSearch>();
-            search.llm = llm;
-            return search;
-        }
-    }
+    public class TestDBSearch : TestSearchMethod<DBSearch> {}
 
-    public class TestSentenceSplitter : TestSearchable<SentenceSplitter>
+    public abstract class TestSplitter<T> : TestSearchable<T> where T : Chunking
     {
-        public override SentenceSplitter CreateSearch()
+        public override T CreateSearch()
         {
-            SentenceSplitter search = gameObject.AddComponent<SentenceSplitter>();
+            T search = gameObject.AddComponent<T>();
             DBSearch searchMethod = gameObject.AddComponent<DBSearch>();
             searchMethod.llm = llm;
             search.search = searchMethod;
             return search;
         }
 
-        public override async Task Tests()
-        {
-            await base.Tests();
-            await TestSplit();
-        }
-
-        public (string, List<(int, int)>) GenerateText(int length)
+        public static (string, List<(int, int)>) GenerateText(int length)
         {
             System.Random random = new System.Random();
             char[] characters = "abcdefghijklmnopqrstuvwxyz".ToCharArray();
@@ -292,7 +277,7 @@ namespace LLMUnityTests
                 int charType = random.Next(0, 20);
                 if (charType == 0)
                 {
-                    generatedText[i] = search.delimiters[random.Next(search.delimiters.Length)];
+                    generatedText[i] = SentenceSplitter.DefaultDelimiters[random.Next(SentenceSplitter.DefaultDelimiters.Length)];
                     delimited = seenChar && true;
                 }
                 else if (charType < 3)
@@ -315,11 +300,87 @@ namespace LLMUnityTests
             return (new string(generatedText), indices);
         }
 
+        public override async Task Tests()
+        {
+            await base.Tests();
+            await TestProperSplit();
+        }
+
+        public async Task TestProperSplit()
+        {
+            for (int length = 50; length <= 500; length += 50)
+            {
+                (string randomText, _) = GenerateText(length);
+                List<(int, int)> indices = await search.Split(randomText);
+                int currIndex = 0;
+                foreach ((int startIndex, int endIndex) in indices)
+                {
+                    Assert.AreEqual(currIndex, startIndex);
+                    currIndex = endIndex + 1;
+                }
+                Assert.AreEqual(currIndex, length);
+                int key = await search.Add(randomText);
+                Assert.AreEqual(search.Get(key), randomText);
+            }
+        }
+    }
+
+    public class TestWordSplitter : TestSplitter<WordSplitter>
+    {
+        public override async Task Tests()
+        {
+            await base.Tests();
+            await TestSplit();
+        }
+
         public async Task TestSplit()
         {
-            string[] SplitSentences(string text)
+            System.Random random = new System.Random();
+            char[] characters = "abcdefghijklmnopqrstuvwxyz".ToCharArray();
+            char[] boundary = "       .,!".ToCharArray();
+            int w = 0;
+            for (int numSplits = 0; numSplits < 10; numSplits++)
             {
-                List<(int, int)> indices = search.Split(text);
+                List<string> splits = new List<string> {};
+                for (int splitNr = 0; splitNr < numSplits; splitNr++)
+                {
+                    int numWords = search.numWords;
+                    if (splitNr == numSplits - 1) numWords -= random.Next(search.numWords);
+
+                    string split = "";
+                    for (int wi = 0; wi < search.numWords; wi++)
+                    {
+                        split += "w" + characters[w++ % characters.Length] + boundary[random.Next(boundary.Length)];
+                    }
+                    splits.Add(split.TrimEnd());
+                }
+
+                string text = String.Join(" ", splits);
+                List<(int, int)> indices = await search.Split(text);
+                for (int i = 0; i < indices.Count; i++)
+                {
+                    (int startIndex, int endIndex) = indices[i];
+                    string splitPred = text.Substring(startIndex, endIndex - startIndex + 1);
+                    if (i != indices.Count - 1) splitPred = splitPred.Substring(0, splitPred.Length - 1);
+                    Assert.AreEqual(splitPred, splits[i]);
+                }
+            }
+        }
+    }
+
+    public class TestSentenceSplitter : TestSplitter<SentenceSplitter>
+    {
+        public override async Task Tests()
+        {
+            await base.Tests();
+            await TestSplit();
+        }
+
+        public async Task TestSplit()
+        {
+            async Task<string[]> SplitSentences(string text)
+            {
+                List<(int, int)> indices = await search.Split(text);
                 List<string> sentences = new List<string>();
                 foreach ((int startIndex, int endIndex) in indices) sentences.Add(text.Substring(startIndex, endIndex - startIndex + 1));
                 return sentences.ToArray();
@@ -338,7 +399,7 @@ namespace LLMUnityTests
 
             sentencesGT = (string[])sentences.Clone();
             text = String.Join("", sentencesGT);
-            sentencesBack = SplitSentences(text);
+            sentencesBack = await SplitSentences(text);
             Assert.AreEqual(sentencesBack, sentencesGT);
             key = await search.Add(text);
             Assert.AreEqual(search.Get(key), text);
@@ -349,7 +410,7 @@ namespace LLMUnityTests
             sentencesGT[2] += "....  ";
             sentencesGT[3] += "  ?";
             text = String.Join("", sentencesGT);
-            sentencesBack = SplitSentences(text);
+            sentencesBack = await SplitSentences(text);
             Assert.AreEqual(sentencesBack, sentencesGT);
             key = await search.Add(text);
             Assert.AreEqual(search.Get(key), text);
@@ -357,7 +418,7 @@ namespace LLMUnityTests
             for (int length = 10; length <= 100; length += 10)
             {
                 (string randomText, List<(int, int)> indicesGT) = GenerateText(length);
-                List<(int, int)> indices = search.Split(randomText);
+                List<(int, int)> indices = await search.Split(randomText);
                 Assert.AreEqual(indices.Count, indicesGT.Count);
                 Assert.AreEqual(indices, indicesGT);
                 key = await search.Add(randomText);
