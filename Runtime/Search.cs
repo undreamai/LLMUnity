@@ -59,7 +59,7 @@ namespace LLMUnity
         public void Remove(int key);
         public int Count();
         public void Clear();
-        public Task<string[]> Search(string queryString, int k);
+        public Task<(string[], float[])> Search(string queryString, int k);
         public void Save(string filePath);
         public void Save(ZipArchive archive);
         public void Load(string filePath);
@@ -75,9 +75,9 @@ namespace LLMUnity
         protected SortedDictionary<int, string> data = new SortedDictionary<int, string>();
 
         public abstract int IncrementalSearch(float[] embedding);
-        public abstract (int[], bool) IncrementalFetchKeys(int fetchKey, int k);
+        public abstract (int[], float[], bool) IncrementalFetchKeys(int fetchKey, int k);
         public abstract void IncrementalSearchComplete(int fetchKey);
-        protected abstract int[] SearchInternal(float[] encoding, int k, out float[] distances);
+        protected abstract (int[], float[]) SearchInternal(float[] encoding, int k);
         protected abstract void AddInternal(int key, float[] embedding);
         protected abstract void RemoveInternal(int key);
         protected abstract void ClearInternal();
@@ -132,15 +132,15 @@ namespace LLMUnity
             return data.Count;
         }
 
-        public virtual string[] Search(float[] encoding, int k)
+        public virtual (string[], float[]) Search(float[] encoding, int k)
         {
-            int[] keys = SearchInternal(encoding, k, out float[] distances);
+            (int[] keys, float[] distances) = SearchInternal(encoding, k);
             string[] result = new string[keys.Length];
             for (int i = 0; i < keys.Length; i++) result[i] = Get(keys[i]);
-            return result;
+            return (result, distances);
         }
 
-        public virtual async Task<string[]> Search(string queryString, int k)
+        public virtual async Task<(string[], float[])> Search(string queryString, int k)
         {
             return Search(await Encode(queryString), k);
         }
@@ -150,14 +150,12 @@ namespace LLMUnity
             return IncrementalSearch(await Encode(queryString));
         }
 
-        public virtual (string[], bool) IncrementalFetch(int fetchKey, int k)
+        public virtual (string[], float[], bool) IncrementalFetch(int fetchKey, int k)
         {
-            int[] resultKeys;
-            bool completed;
-            (resultKeys, completed) = IncrementalFetchKeys(fetchKey, k);
+            (int[] resultKeys, float[] distances, bool completed) = IncrementalFetchKeys(fetchKey, k);
             string[] results = new string[resultKeys.Length];
             for (int i = 0; i < resultKeys.Length; i++) results[i] = Get(resultKeys[i]);
-            return (results, completed);
+            return (results, distances, completed);
         }
 
         public virtual void Save(string filePath)
@@ -195,7 +193,7 @@ namespace LLMUnity
         public abstract void Remove(int key);
         public abstract int Count();
         public abstract void Clear();
-        public abstract Task<string[]> Search(string queryString, int k);
+        public abstract Task<(string[], float[])> Search(string queryString, int k);
         protected abstract void SaveInternal(ZipArchive archive);
         protected abstract void LoadInternal(ZipArchive archive);
 

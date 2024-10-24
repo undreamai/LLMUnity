@@ -39,12 +39,17 @@ namespace LLMUnity
             index.Remove((ulong)key);
         }
 
-        protected override int[] SearchInternal(float[] embedding, int k, out float[] distances)
+        protected int[] UlongToInt(ulong[] keys)
         {
-            index.Search(embedding, k, out ulong[] keys, out distances);
             int[] intKeys = new int[keys.Length];
             for (int i = 0; i < keys.Length; i++) intKeys[i] = (int)keys[i];
             return intKeys;
+        }
+
+        protected override (int[], float[]) SearchInternal(float[] embedding, int k)
+        {
+            index.Search(embedding, k, out ulong[] keys, out float[] distances);
+            return (UlongToInt(keys), distances);
         }
 
         public override int IncrementalSearch(float[] embedding)
@@ -54,7 +59,7 @@ namespace LLMUnity
             return key;
         }
 
-        public override (int[], bool) IncrementalFetchKeys(int fetchKey, int k)
+        public override (int[], float[], bool) IncrementalFetchKeys(int fetchKey, int k)
         {
             if (!incrementalSearchCache.ContainsKey(fetchKey)) throw new Exception($"There is no IncrementalSearch cached with this key: {fetchKey}");
 
@@ -62,13 +67,12 @@ namespace LLMUnity
             List<int> seenKeys;
             (embedding, seenKeys) = incrementalSearchCache[fetchKey];
             int matches = index.Search(embedding, k, out ulong[] keys, out float[] distances, (int key, IntPtr state) => {return seenKeys.Contains(key) ? 0 : 1;});
-            int[] intKeys = new int[keys.Length];
-            for (int i = 0; i < keys.Length; i++) intKeys[i] = (int)keys[i];
+            int[] intKeys = UlongToInt(keys);
             incrementalSearchCache[fetchKey].Item2.AddRange(intKeys);
 
             bool completed = matches < k || seenKeys.Count == Count();
             if (completed) IncrementalSearchComplete(fetchKey);
-            return (intKeys, completed);
+            return (intKeys, distances, completed);
         }
 
         public override void IncrementalSearchComplete(int fetchKey)
