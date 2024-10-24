@@ -6,6 +6,7 @@ using LLMUnity;
 using System;
 using UnityEngine.TestTools;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace LLMUnityTests
 {
@@ -13,7 +14,7 @@ namespace LLMUnityTests
     {
         protected string weather = "how is the weather today?";
         protected string raining = "is it raining?";
-        protected string random = "something completely random";
+        protected string sometext = "something completely sometext";
 
         protected string modelNameLLManager;
 
@@ -113,7 +114,7 @@ namespace LLMUnityTests
             Assert.That(key == 1);
             key = await search.Add(raining);
             Assert.That(key == 2);
-            key = await search.Add(random);
+            key = await search.Add(sometext);
             Assert.That(key == 3);
             Assert.That(search.Count() == 3);
             search.Clear();
@@ -124,7 +125,7 @@ namespace LLMUnityTests
         {
             await search.Add(weather);
             await search.Add(raining);
-            await search.Add(random);
+            await search.Add(sometext);
 
             string[] result = await search.Search(weather, 2);
             Assert.AreEqual(result[0], weather);
@@ -143,7 +144,7 @@ namespace LLMUnityTests
 
             await search.Add(weather);
             await search.Add(raining);
-            await search.Add(random);
+            await search.Add(sometext);
             search.Save(path);
 
             search.Clear();
@@ -153,7 +154,7 @@ namespace LLMUnityTests
             Assert.That(search.Count() == 3);
             Assert.That(search.Get(0) == weather);
             Assert.That(search.Get(1) == raining);
-            Assert.That(search.Get(2) == random);
+            Assert.That(search.Get(2) == sometext);
 
             string[] result = await search.Search(raining, 2);
             Assert.AreEqual(result[0], raining);
@@ -195,7 +196,7 @@ namespace LLMUnityTests
         {
             await search.Add(weather);
             await search.Add(raining);
-            await search.Add(random);
+            await search.Add(sometext);
 
             int searchKey = await search.IncrementalSearch(weather);
             string[] results;
@@ -209,7 +210,7 @@ namespace LLMUnityTests
             (results, completed) = search.IncrementalFetch(searchKey, 2);
             Assert.That(results.Length == 2);
             Assert.AreEqual(results[0], raining);
-            Assert.AreEqual(results[1], random);
+            Assert.AreEqual(results[1], sometext);
             Assert.That(completed);
 
             searchKey = await search.IncrementalSearch(weather);
@@ -254,6 +255,102 @@ namespace LLMUnityTests
             searchMethod.llm = llm;
             search.search = searchMethod;
             return search;
+        }
+
+        public override async Task Tests()
+        {
+            await base.Tests();
+            await TestSplit();
+        }
+
+        public (string, List<(int, int)>) GenerateText(int length)
+        {
+            System.Random random = new System.Random();
+            char[] characters = "abcdefghijklmnopqrstuvwxyz".ToCharArray();
+
+            char[] generatedText = new char[length];
+            List<(int, int)> indices = new List<(int, int)>();
+            bool delimited = false;
+            bool seenChar = false;
+            int preI = 0;
+            for (int i = 0; i < length; i++)
+            {
+                int charType = random.Next(0, 20);
+                if (charType == 0)
+                {
+                    generatedText[i] = search.delimiters[random.Next(search.delimiters.Length)];
+                    delimited = seenChar && true;
+                }
+                else if (charType < 3)
+                {
+                    generatedText[i] = ' ';
+                }
+                else
+                {
+                    generatedText[i] = characters[random.Next(characters.Length)];
+                    if (delimited)
+                    {
+                        indices.Add((preI, i - 1));
+                        preI = i;
+                        delimited = false;
+                    }
+                    seenChar = true;
+                }
+            }
+            indices.Add((preI, length - 1));
+            return (new string(generatedText), indices);
+        }
+
+        public async Task TestSplit()
+        {
+            string[] SplitSentences(string text)
+            {
+                List<(int, int)> indices = search.Split(text);
+                List<string> sentences = new List<string>();
+                foreach ((int startIndex, int endIndex) in indices) sentences.Add(text.Substring(startIndex, endIndex - startIndex + 1));
+                return sentences.ToArray();
+            }
+
+            string[] sentences = new string[]
+            {
+                "hi.",
+                "how are you today?",
+                "the weather is nice!",
+                "perfect"
+            };
+            string text;
+            string[] sentencesBack, sentencesGT;
+            int key;
+
+            sentencesGT = (string[])sentences.Clone();
+            text = String.Join("", sentencesGT);
+            sentencesBack = SplitSentences(text);
+            Assert.AreEqual(sentencesBack, sentencesGT);
+            key = await search.Add(text);
+            Assert.AreEqual(search.Get(key), text);
+
+            sentencesGT = (string[])sentences.Clone();
+            sentencesGT[0] = "    " + sentencesGT[0] + "   ";
+            sentencesGT[1] += " ; ";
+            sentencesGT[2] += "....  ";
+            sentencesGT[3] += "  ?";
+            text = String.Join("", sentencesGT);
+            sentencesBack = SplitSentences(text);
+            Assert.AreEqual(sentencesBack, sentencesGT);
+            key = await search.Add(text);
+            Assert.AreEqual(search.Get(key), text);
+
+            for (int length = 10; length <= 100; length += 10)
+            {
+                (string randomText, List<(int, int)> indicesGT) = GenerateText(length);
+                List<(int, int)> indices = search.Split(randomText);
+                Assert.AreEqual(indices.Count, indicesGT.Count);
+                Assert.AreEqual(indices, indicesGT);
+                key = await search.Add(randomText);
+                Assert.AreEqual(search.Get(key), randomText);
+            }
+
+            search.Clear();
         }
     }
 }
