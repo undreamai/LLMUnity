@@ -76,6 +76,8 @@ namespace LLMUnity
         public override void Remove(int key)
         {
             if (!phraseToSentences.TryGetValue(key, out int[] sentenceIds)) return;
+            int hash = Get(key).GetHashCode();
+
             phraseToSentences.Remove(key); // phrase -> sentence
             foreach (int sentenceId in sentenceIds)
             {
@@ -83,7 +85,6 @@ namespace LLMUnity
                 sentenceToPhrase.Remove(sentenceId); // sentence -> phrase
             }
 
-            int hash = Get(key).GetHashCode();
             if (hexToPhrase.TryGetValue(hash, out int[] phraseIds))
             {
                 List<int> updatedIds = phraseIds.ToList();
