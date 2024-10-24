@@ -9,20 +9,20 @@ using System.Collections;
 
 namespace LLMUnityTests
 {
-    public class TestSimpleSearch
+    public abstract class TestSearchable<T> where T : ISearchable
     {
-        string weather = "how is the weather today?";
-        string raining = "is it raining?";
-        string random = "something completely random";
+        protected string weather = "how is the weather today?";
+        protected string raining = "is it raining?";
+        protected string random = "something completely random";
 
         protected string modelNameLLManager;
 
         protected GameObject gameObject;
         protected LLM llm;
-        public SearchMethod search;
+        public T search;
         protected Exception error = null;
 
-        public TestSimpleSearch()
+        public TestSearchable()
         {
             Task task = Init();
             task.Wait();
@@ -46,20 +46,14 @@ namespace LLMUnityTests
             return llm;
         }
 
-        public virtual SearchMethod CreateSearch()
-        {
-            SimpleSearch search = gameObject.AddComponent<SimpleSearch>();
-            search.llm = llm;
-            search.stream = false;
-            return search;
-        }
+        public abstract T CreateSearch();
 
         public virtual async Task DownloadModels()
         {
             modelNameLLManager = await LLMManager.DownloadModel(GetModelUrl());
         }
 
-        protected string GetModelUrl()
+        protected virtual string GetModelUrl()
         {
             return "https://huggingface.co/CompendiumLabs/bge-small-en-v1.5-gguf/resolve/main/bge-small-en-v1.5-f16.gguf";
         }
@@ -70,7 +64,7 @@ namespace LLMUnityTests
         }
 
         [UnityTest]
-        public IEnumerator RunTests()
+        public virtual IEnumerator RunTests()
         {
             Task task = RunTestsTask();
             while (!task.IsCompleted) yield return null;
@@ -82,7 +76,7 @@ namespace LLMUnityTests
             OnDestroy();
         }
 
-        public async Task RunTestsTask()
+        public virtual async Task RunTestsTask()
         {
             error = null;
             try
@@ -99,12 +93,83 @@ namespace LLMUnityTests
         public virtual void OnDestroy() {}
 
 
-        public async Task Tests()
+        public virtual async Task Tests()
         {
-            await TestEncode();
-            await TestSimilarity();
             await TestAdd();
             await TestSearch();
+            await TestSaveLoad();
+        }
+
+        public virtual async Task TestAdd()
+        {
+            int key = await search.Add(weather);
+            Assert.That(key == 0);
+            Assert.That(search.Get(key) == weather);
+            Assert.That(search.Count() == 1);
+            search.Remove(key);
+            Assert.That(search.Count() == 0);
+
+            key = await search.Add(weather);
+            Assert.That(key == 1);
+            key = await search.Add(raining);
+            Assert.That(key == 2);
+            key = await search.Add(random);
+            Assert.That(key == 3);
+            Assert.That(search.Count() == 3);
+            search.Clear();
+            Assert.That(search.Count() == 0);
+        }
+
+        public virtual async Task TestSearch()
+        {
+            await search.Add(weather);
+            await search.Add(raining);
+            await search.Add(random);
+
+            string[] result = await search.Search(weather, 2);
+            Assert.AreEqual(result[0], weather);
+            Assert.AreEqual(result[1], raining);
+
+            result = await search.Search(raining, 2);
+            Assert.AreEqual(result[0], raining);
+            Assert.AreEqual(result[1], weather);
+
+            search.Clear();
+        }
+
+        public virtual async Task TestSaveLoad()
+        {
+            string path = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+
+            await search.Add(weather);
+            await search.Add(raining);
+            await search.Add(random);
+            search.Save(path);
+
+            search.Clear();
+            search.Load(path);
+            File.Delete(path);
+
+            Assert.That(search.Count() == 3);
+            Assert.That(search.Get(0) == weather);
+            Assert.That(search.Get(1) == raining);
+            Assert.That(search.Get(2) == random);
+
+            string[] result = await search.Search(raining, 2);
+            Assert.AreEqual(result[0], raining);
+            Assert.AreEqual(result[1], weather);
+
+            search.Clear();
+        }
+    }
+
+    public abstract class TestSearchMethod : TestSearchable<SearchMethod>
+    {
+        public override async Task Tests()
+        {
+            await base.Tests();
+            await TestEncode();
+            await TestSimilarity();
             await TestIncrementalSearch();
         }
 
@@ -126,40 +191,6 @@ namespace LLMUnityTests
             Assert.That(ApproxEqual(distance, 1 - trueSimilarity));
         }
 
-        public async Task TestAdd()
-        {
-            int key = await search.Add(weather);
-            Assert.That(search.Get(key) == weather);
-            Assert.That(search.Count() == 1);
-            search.Remove(key);
-            Assert.That(search.Count() == 0);
-
-            await search.Add(weather);
-            await search.Add(raining);
-            await search.Add(random);
-            Assert.That(search.Count() == 3);
-            search.Clear();
-            Assert.That(search.Count() == 0);
-        }
-
-        public async Task TestSearch()
-        {
-            await search.Add(weather);
-            await search.Add(raining);
-            await search.Add(random);
-
-            string[] result = await search.Search(weather, 2);
-            Assert.AreEqual(result[0], weather);
-            Assert.AreEqual(result[1], raining);
-
-            float[] encoding = await search.Encode(weather);
-            result = search.Search(encoding, 2);
-            Assert.AreEqual(result[0], weather);
-            Assert.AreEqual(result[1], raining);
-
-            search.Clear();
-        }
-
         public async Task TestIncrementalSearch()
         {
             await search.Add(weather);
@@ -170,6 +201,7 @@ namespace LLMUnityTests
             string[] results;
             bool completed;
             (results, completed) = search.IncrementalFetch(searchKey, 1);
+            Assert.That(searchKey == 0);
             Assert.That(results.Length == 1);
             Assert.AreEqual(results[0], weather);
             Assert.That(!completed);
@@ -182,6 +214,7 @@ namespace LLMUnityTests
 
             searchKey = await search.IncrementalSearch(weather);
             (results, completed) = search.IncrementalFetch(searchKey, 2);
+            Assert.That(searchKey == 1);
             Assert.That(results.Length == 2);
             Assert.AreEqual(results[0], weather);
             Assert.AreEqual(results[1], raining);
@@ -190,25 +223,36 @@ namespace LLMUnityTests
             search.IncrementalSearchComplete(searchKey);
             search.Clear();
         }
+    }
 
-        public async Task TestSave()
+    public class TestSimpleSearch : TestSearchMethod
+    {
+        public override SearchMethod CreateSearch()
         {
-            string path = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-
-            await search.Add(weather);
-            await search.Add(raining);
-            await search.Add(random);
-            search.Save(path);
+            SimpleSearch search = gameObject.AddComponent<SimpleSearch>();
+            search.llm = llm;
+            return search;
         }
     }
 
-    public class TestDBSearch : TestSimpleSearch
+    public class TestDBSearch : TestSearchMethod
     {
         public override SearchMethod CreateSearch()
         {
             DBSearch search = gameObject.AddComponent<DBSearch>();
             search.llm = llm;
-            search.stream = false;
+            return search;
+        }
+    }
+
+    public class TestSentenceSplitter : TestSearchable<SentenceSplitter>
+    {
+        public override SentenceSplitter CreateSearch()
+        {
+            SentenceSplitter search = gameObject.AddComponent<SentenceSplitter>();
+            DBSearch searchMethod = gameObject.AddComponent<DBSearch>();
+            searchMethod.llm = llm;
+            search.search = searchMethod;
             return search;
         }
     }
