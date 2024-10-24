@@ -15,9 +15,10 @@ namespace LLMUnityTests
         protected string weather = "how is the weather today?";
         protected string raining = "is it raining?";
         protected string sometext = "something completely sometext";
+        protected float weatherRainingDiff = 0.2073563f;
+        protected float weatherSometextDiff = 0.4837922f;
 
         protected string modelNameLLManager;
-
         protected GameObject gameObject;
         protected LLM llm;
         public T search;
@@ -127,13 +128,19 @@ namespace LLMUnityTests
             await search.Add(raining);
             await search.Add(sometext);
 
-            string[] result = await search.Search(weather, 2);
+            string[] result;
+            float[] distances;
+            (result, distances) = await search.Search(weather, 2);
             Assert.AreEqual(result[0], weather);
             Assert.AreEqual(result[1], raining);
+            Assert.That(ApproxEqual(distances[0], 0));
+            Assert.That(ApproxEqual(distances[1], weatherRainingDiff));
 
-            result = await search.Search(raining, 2);
+            (result, distances) = await search.Search(raining, 2);
             Assert.AreEqual(result[0], raining);
             Assert.AreEqual(result[1], weather);
+            Assert.That(ApproxEqual(distances[0], 0));
+            Assert.That(ApproxEqual(distances[1], weatherRainingDiff));
 
             search.Clear();
         }
@@ -156,9 +163,11 @@ namespace LLMUnityTests
             Assert.That(search.Get(1) == raining);
             Assert.That(search.Get(2) == sometext);
 
-            string[] result = await search.Search(raining, 2);
+            (string[] result, float[] distances) = await search.Search(raining, 2);
             Assert.AreEqual(result[0], raining);
             Assert.AreEqual(result[1], weather);
+            Assert.That(ApproxEqual(distances[0], 0));
+            Assert.That(ApproxEqual(distances[1], weatherRainingDiff));
 
             search.Clear();
         }
@@ -185,11 +194,10 @@ namespace LLMUnityTests
         {
             float[] sentence1 = await search.Encode(weather);
             float[] sentence2 = await search.Encode(raining);
-            float trueSimilarity = 0.7926437f;
             float similarity = SimpleSearch.DotProduct(sentence1, sentence2);
             float distance = SimpleSearch.InverseDotProduct(sentence1, sentence2);
-            Assert.That(ApproxEqual(similarity, trueSimilarity));
-            Assert.That(ApproxEqual(distance, 1 - trueSimilarity));
+            Assert.That(ApproxEqual(similarity, 1 - weatherRainingDiff));
+            Assert.That(ApproxEqual(distance, weatherRainingDiff));
         }
 
         public async Task TestIncrementalSearch()
@@ -200,25 +208,31 @@ namespace LLMUnityTests
 
             int searchKey = await search.IncrementalSearch(weather);
             string[] results;
+            float[] distances;
             bool completed;
-            (results, completed) = search.IncrementalFetch(searchKey, 1);
+            (results, distances, completed) = search.IncrementalFetch(searchKey, 1);
             Assert.That(searchKey == 0);
             Assert.That(results.Length == 1);
             Assert.AreEqual(results[0], weather);
+            Assert.That(ApproxEqual(distances[0], 0));
             Assert.That(!completed);
 
-            (results, completed) = search.IncrementalFetch(searchKey, 2);
+            (results, distances, completed) = search.IncrementalFetch(searchKey, 2);
             Assert.That(results.Length == 2);
             Assert.AreEqual(results[0], raining);
             Assert.AreEqual(results[1], sometext);
+            Assert.That(ApproxEqual(distances[0], weatherRainingDiff));
+            Assert.That(ApproxEqual(distances[1], weatherSometextDiff));
             Assert.That(completed);
 
             searchKey = await search.IncrementalSearch(weather);
-            (results, completed) = search.IncrementalFetch(searchKey, 2);
+            (results, distances, completed) = search.IncrementalFetch(searchKey, 2);
             Assert.That(searchKey == 1);
             Assert.That(results.Length == 2);
             Assert.AreEqual(results[0], weather);
             Assert.AreEqual(results[1], raining);
+            Assert.That(ApproxEqual(distances[0], 0));
+            Assert.That(ApproxEqual(distances[1], weatherRainingDiff));
             Assert.That(!completed);
 
             search.IncrementalSearchComplete(searchKey);
