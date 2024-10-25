@@ -17,16 +17,15 @@ namespace LLMUnity
         [ModelAdvanced] public ulong expansionSearch = 16;
         private Dictionary<int, (float[], List<int>)> incrementalSearchCache = new Dictionary<int, (float[], List<int>)>();
 
-        public override void Awake()
+        public void Awake()
         {
             if (!enabled) return;
-            base.Awake();
             InitIndex();
         }
 
         public void InitIndex()
         {
-            index = new USearchIndex(metricKind, quantization, (ulong)llm.embeddingLength, connectivity, expansionAdd, expansionSearch, false);
+            index = new USearchIndex(metricKind, quantization, (ulong)llmCaller.llm.embeddingLength, connectivity, expansionAdd, expansionSearch, false);
         }
 
         protected override void AddInternal(int key, float[] embedding)

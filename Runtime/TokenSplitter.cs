@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using UnityEngine;
 
 namespace LLMUnity
 {
@@ -37,14 +36,14 @@ namespace LLMUnity
         public override async Task<List<(int, int)>> Split(string input)
         {
             List<(int, int)> indices = new List<(int, int)>();
-            List<int> tokens = await search.Tokenize(input);
+            List<int> tokens = await search.llmCaller.Tokenize(input);
             if (tokens.Count == 0) return indices;
 
             int startIndex = 0;
             for (int i = 0; i < tokens.Count; i += numTokens)
             {
                 int batchTokens = Math.Min(tokens.Count, i + numTokens) - i;
-                string detokenised = await search.Detokenize(tokens.GetRange(i, batchTokens));
+                string detokenised = await search.llmCaller.Detokenize(tokens.GetRange(i, batchTokens));
                 int endIndex = DetermineEndIndex(input, detokenised, startIndex);
                 indices.Add((startIndex, endIndex));
                 startIndex = endIndex + 1;
