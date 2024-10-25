@@ -22,7 +22,7 @@ namespace LLMUnity
         SentenceSplitter
     }
 
-    public class RAG : MonoBehaviour, ISearchable
+    public class RAG : Searchable
     {
         public LLMCaller llmCaller;
         public SearchMethods searchClass = SearchMethods.SimpleSearch;
@@ -39,6 +39,13 @@ namespace LLMUnity
             chunkingClass = chunkingMethod;
             this.llmCaller = llmCaller;
             UpdateGameObjects();
+        }
+
+        public void Initialize(SearchMethods searchMethod = SearchMethods.SimpleSearch, ChunkingMethods chunkingMethod = ChunkingMethods.NoChunking, LLM llm = null)
+        {
+            llmCaller = (LLMCaller)GetOrAddObject(typeof(LLMCaller));
+            llmCaller.llm = llm;
+            Initialize(searchMethod, chunkingMethod, llmCaller);
         }
 
         protected Component GetOrAddObject(Type type)
@@ -94,31 +101,34 @@ namespace LLMUnity
             }
         }
 
-        protected ISearchable GetSearcher()
+        protected Searchable GetSearcher()
         {
             if (chunking != null) return chunking;
             if (search != null) return search;
             throw new Exception("The search GameObject is null");
         }
 
-        public virtual string Get(int key) { return GetSearcher().Get(key); }
-        public virtual async Task<int> Add(string inputString) { return await GetSearcher().Add(inputString); }
-        public virtual int Remove(string inputString) { return GetSearcher().Remove(inputString); }
-        public virtual void Remove(int key) { GetSearcher().Remove(key); }
-        public virtual int Count() { return GetSearcher().Count(); }
-        public virtual void Clear() { GetSearcher().Clear(); }
-        public virtual async Task<(string[], float[])> Search(string queryString, int k) { return await GetSearcher().Search(queryString, k); }
+        public override string Get(int key) { return GetSearcher().Get(key); }
+        public override async Task<int> Add(string inputString) { return await GetSearcher().Add(inputString); }
+        public override int Remove(string inputString) { return GetSearcher().Remove(inputString); }
+        public override void Remove(int key) { GetSearcher().Remove(key); }
+        public override int Count() { return GetSearcher().Count(); }
+        public override void Clear() { GetSearcher().Clear(); }
+        public override async Task<(string[], float[])> Search(string queryString, int k) { return await GetSearcher().Search(queryString, k); }
+        public override async Task<int> IncrementalSearch(string queryString) { return await GetSearcher().IncrementalSearch(queryString);}
+        public override (int[], float[], bool) IncrementalFetchKeys(int fetchKey, int k) { return GetSearcher().IncrementalFetchKeys(fetchKey, k);}
+        public override void IncrementalSearchComplete(int fetchKey) { GetSearcher().IncrementalSearchComplete(fetchKey);}
 
-        public virtual void Save(string filePath) { ArchiveSaver.Save(filePath, Save); }
-        public virtual void Load(string filePath) { ArchiveSaver.Load(filePath, Load); }
+        public override void Save(string filePath) { ArchiveSaver.Save(filePath, Save); }
+        public override void Load(string filePath) { ArchiveSaver.Load(filePath, Load); }
 
-        public virtual void Save(ZipArchive archive)
+        public override void Save(ZipArchive archive)
         {
             ArchiveSaver.Save(archive, JsonUtility.ToJson(this, true), "RAG_object");
             GetSearcher().Save(archive);
         }
 
-        public virtual void Load(ZipArchive archive)
+        public override void Load(ZipArchive archive)
         {
             JsonUtility.FromJsonOverwrite(ArchiveSaver.Load<string>(archive, "RAG_object"), this);
             GetSearcher().Load(archive);

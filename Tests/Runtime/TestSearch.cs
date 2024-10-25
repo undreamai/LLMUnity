@@ -8,9 +8,9 @@ using UnityEngine.TestTools;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace LLMUnityTests
+namespace RAGTests
 {
-    public abstract class TestSearchable<T> where T : ISearchable
+    public abstract class TestSearchable<T> where T : Searchable
     {
         protected string weather = "how is the weather today?";
         protected string raining = "is it raining?";
@@ -75,7 +75,6 @@ namespace LLMUnityTests
                 Debug.LogError(error.ToString());
                 throw (error);
             }
-            OnDestroy();
         }
 
         public virtual async Task RunTestsTask()
@@ -92,13 +91,11 @@ namespace LLMUnityTests
             }
         }
 
-        public virtual void OnDestroy() {}
-
-
         public virtual async Task Tests()
         {
             await TestAdd();
             await TestSearch();
+            await TestIncrementalSearch();
             await TestSaveLoad();
         }
 
@@ -124,7 +121,6 @@ namespace LLMUnityTests
 
         public virtual async Task TestSearch()
         {
-            Debug.Log("TestSearch");
             await search.Add(weather);
             await search.Add(raining);
             await search.Add(sometext);
@@ -143,6 +139,45 @@ namespace LLMUnityTests
             Assert.That(ApproxEqual(distances[0], 0));
             Assert.That(ApproxEqual(distances[1], weatherRainingDiff));
 
+            search.Clear();
+        }
+
+        public async Task TestIncrementalSearch()
+        {
+            await search.Add(weather);
+            await search.Add(raining);
+            await search.Add(sometext);
+
+            int searchKey = await search.IncrementalSearch(weather);
+            string[] results;
+            float[] distances;
+            bool completed;
+            (results, distances, completed) = search.IncrementalFetch(searchKey, 1);
+            Assert.That(searchKey == 0);
+            Assert.That(results.Length == 1);
+            Assert.AreEqual(results[0], weather);
+            Assert.That(ApproxEqual(distances[0], 0));
+            Assert.That(!completed);
+
+            (results, distances, completed) = search.IncrementalFetch(searchKey, 2);
+            Assert.That(results.Length == 2);
+            Assert.AreEqual(results[0], raining);
+            Assert.AreEqual(results[1], sometext);
+            Assert.That(ApproxEqual(distances[0], weatherRainingDiff));
+            Assert.That(ApproxEqual(distances[1], weatherSometextDiff));
+            Assert.That(completed);
+
+            searchKey = await search.IncrementalSearch(weather);
+            (results, distances, completed) = search.IncrementalFetch(searchKey, 2);
+            Assert.That(searchKey == 1);
+            Assert.That(results.Length == 2);
+            Assert.AreEqual(results[0], weather);
+            Assert.AreEqual(results[1], raining);
+            Assert.That(ApproxEqual(distances[0], 0));
+            Assert.That(ApproxEqual(distances[1], weatherRainingDiff));
+            Assert.That(!completed);
+
+            search.IncrementalSearchComplete(searchKey);
             search.Clear();
         }
 
@@ -190,7 +225,6 @@ namespace LLMUnityTests
             await base.Tests();
             await TestEncode();
             await TestSimilarity();
-            await TestIncrementalSearch();
         }
 
         public async Task TestEncode()
@@ -208,45 +242,6 @@ namespace LLMUnityTests
             float distance = SimpleSearch.InverseDotProduct(sentence1, sentence2);
             Assert.That(ApproxEqual(similarity, 1 - weatherRainingDiff));
             Assert.That(ApproxEqual(distance, weatherRainingDiff));
-        }
-
-        public async Task TestIncrementalSearch()
-        {
-            await search.Add(weather);
-            await search.Add(raining);
-            await search.Add(sometext);
-
-            int searchKey = await search.IncrementalSearch(weather);
-            string[] results;
-            float[] distances;
-            bool completed;
-            (results, distances, completed) = search.IncrementalFetch(searchKey, 1);
-            Assert.That(searchKey == 0);
-            Assert.That(results.Length == 1);
-            Assert.AreEqual(results[0], weather);
-            Assert.That(ApproxEqual(distances[0], 0));
-            Assert.That(!completed);
-
-            (results, distances, completed) = search.IncrementalFetch(searchKey, 2);
-            Assert.That(results.Length == 2);
-            Assert.AreEqual(results[0], raining);
-            Assert.AreEqual(results[1], sometext);
-            Assert.That(ApproxEqual(distances[0], weatherRainingDiff));
-            Assert.That(ApproxEqual(distances[1], weatherSometextDiff));
-            Assert.That(completed);
-
-            searchKey = await search.IncrementalSearch(weather);
-            (results, distances, completed) = search.IncrementalFetch(searchKey, 2);
-            Assert.That(searchKey == 1);
-            Assert.That(results.Length == 2);
-            Assert.AreEqual(results[0], weather);
-            Assert.AreEqual(results[1], raining);
-            Assert.That(ApproxEqual(distances[0], 0));
-            Assert.That(ApproxEqual(distances[1], weatherRainingDiff));
-            Assert.That(!completed);
-
-            search.IncrementalSearchComplete(searchKey);
-            search.Clear();
         }
     }
 
@@ -441,7 +436,7 @@ namespace LLMUnityTests
         public override RAG CreateSearch()
         {
             RAG rag = gameObject.AddComponent<RAG>();
-            rag.Initialize(GetSearchMethod(), GetChunkingMethod());
+            rag.Initialize(GetSearchMethod(), GetChunkingMethod(), llm);
             return rag;
         }
 
