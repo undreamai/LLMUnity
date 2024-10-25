@@ -24,12 +24,6 @@ namespace LLMUnity
         }
     }
 
-    [CustomEditor(typeof(SearchMethod), true)]
-    public class SearchMethodEditor : LLMCallerEditor
-    {
-        public override void AddChatSettings(SerializedObject llmScriptSO) {}
-    }
-
     [CustomEditor(typeof(LLMCharacter), true)]
     public class LLMCharacterEditor : LLMCallerEditor
     {

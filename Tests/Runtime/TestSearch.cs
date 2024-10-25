@@ -124,6 +124,7 @@ namespace LLMUnityTests
 
         public virtual async Task TestSearch()
         {
+            Debug.Log("TestSearch");
             await search.Add(weather);
             await search.Add(raining);
             await search.Add(sometext);
@@ -178,7 +179,9 @@ namespace LLMUnityTests
         public override T CreateSearch()
         {
             T search = gameObject.AddComponent<T>();
-            search.llm = llm;
+            LLMCaller llmCaller = gameObject.AddComponent<LLMCaller>();
+            llmCaller.llm = llm;
+            search.llmCaller = llmCaller;
             return search;
         }
 
@@ -257,7 +260,9 @@ namespace LLMUnityTests
         {
             T search = gameObject.AddComponent<T>();
             DBSearch searchMethod = gameObject.AddComponent<DBSearch>();
-            searchMethod.llm = llm;
+            LLMCaller llmCaller = gameObject.AddComponent<LLMCaller>();
+            llmCaller.llm = llm;
+            searchMethod.llmCaller = llmCaller;
             search.search = searchMethod;
             return search;
         }
@@ -429,5 +434,48 @@ namespace LLMUnityTests
 
             search.Clear();
         }
+    }
+
+    public abstract class TestRAG : TestSearchable<RAG>
+    {
+        public override RAG CreateSearch()
+        {
+            RAG rag = gameObject.AddComponent<RAG>();
+            rag.Initialize(GetSearchMethod(), GetChunkingMethod());
+            return rag;
+        }
+
+        public abstract SearchMethods GetSearchMethod();
+        public abstract ChunkingMethods GetChunkingMethod();
+    }
+
+    public class TestRAG_SimpleSearch_NoChunking : TestRAG
+    {
+        public override SearchMethods GetSearchMethod() { return SearchMethods.SimpleSearch; }
+        public override ChunkingMethods GetChunkingMethod() { return ChunkingMethods.NoChunking; }
+    }
+
+    public class TestRAG_DBSearch_NoChunking : TestRAG
+    {
+        public override SearchMethods GetSearchMethod() { return SearchMethods.DBSearch; }
+        public override ChunkingMethods GetChunkingMethod() { return ChunkingMethods.NoChunking; }
+    }
+
+    public class TestRAG_SimpleSearch_WordSplitter : TestRAG
+    {
+        public override SearchMethods GetSearchMethod() { return SearchMethods.SimpleSearch; }
+        public override ChunkingMethods GetChunkingMethod() { return ChunkingMethods.TokenSplitter; }
+    }
+
+    public class TestRAG_DBSearch_TokenSplitter : TestRAG
+    {
+        public override SearchMethods GetSearchMethod() { return SearchMethods.DBSearch; }
+        public override ChunkingMethods GetChunkingMethod() { return ChunkingMethods.TokenSplitter; }
+    }
+
+    public class TestRAG_DBSearch_SentenceSplitter : TestRAG
+    {
+        public override SearchMethods GetSearchMethod() { return SearchMethods.DBSearch; }
+        public override ChunkingMethods GetChunkingMethod() { return ChunkingMethods.SentenceSplitter; }
     }
 }
