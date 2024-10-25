@@ -325,6 +325,8 @@ namespace LLMUnityTests
         }
     }
 
+    public class TestTokenSplitter : TestSplitter<TokenSplitter> {}
+
     public class TestWordSplitter : TestSplitter<WordSplitter>
     {
         public override async Task Tests()
