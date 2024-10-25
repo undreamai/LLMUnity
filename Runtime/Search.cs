@@ -7,50 +7,6 @@ using UnityEngine;
 
 namespace LLMUnity
 {
-    public class ArchiveSaver
-    {
-        public delegate void ArchiveSaverCallback(ZipArchive archive);
-
-        public static void Save(string filePath, ArchiveSaverCallback callback)
-        {
-            using (FileStream stream = new FileStream(filePath, FileMode.Create))
-            using (ZipArchive archive = new ZipArchive(stream, ZipArchiveMode.Create))
-            {
-                callback(archive);
-            }
-        }
-
-        public static void Load(string filePath, ArchiveSaverCallback callback)
-        {
-            using (FileStream stream = new FileStream(filePath, FileMode.Open))
-            using (ZipArchive archive = new ZipArchive(stream, ZipArchiveMode.Read))
-            {
-                callback(archive);
-            }
-        }
-
-        public static void Save(ZipArchive archive, object saveObject, string name)
-        {
-            ZipArchiveEntry mainEntry = archive.CreateEntry(name);
-            using (Stream entryStream = mainEntry.Open())
-            {
-                BinaryFormatter formatter = new BinaryFormatter();
-                formatter.Serialize(entryStream, saveObject);
-            }
-        }
-
-        public static T Load<T>(ZipArchive archive, string name)
-        {
-            ZipArchiveEntry baseEntry = archive.GetEntry(name);
-            using (Stream entryStream = baseEntry.Open())
-            {
-                BinaryFormatter formatter = new BinaryFormatter();
-                T obj = (T)formatter.Deserialize(entryStream);
-                return obj;
-            }
-        }
-    }
-
     public interface ISearchable
     {
         public string Get(int key);
@@ -67,8 +23,10 @@ namespace LLMUnity
     }
 
     [DefaultExecutionOrder(-2)]
-    public abstract class SearchMethod : LLMCaller, ISearchable
+    public abstract class SearchMethod : MonoBehaviour, ISearchable
     {
+        public LLMCaller llmCaller;
+
         [HideInInspector, SerializeField] protected int nextKey = 0;
         [HideInInspector, SerializeField] protected int nextIncrementalSearchKey = 0;
 
@@ -86,7 +44,7 @@ namespace LLMUnity
 
         public virtual async Task<float[]> Encode(string inputString)
         {
-            return (await Embeddings(inputString)).ToArray();
+            return (await llmCaller.Embeddings(inputString)).ToArray();
         }
 
         public virtual string Get(int key)
@@ -217,6 +175,50 @@ namespace LLMUnity
         {
             JsonUtility.FromJsonOverwrite(ArchiveSaver.Load<string>(archive, "SearchPlugin_object"), this);
             LoadInternal(archive);
+        }
+    }
+
+    public class ArchiveSaver
+    {
+        public delegate void ArchiveSaverCallback(ZipArchive archive);
+
+        public static void Save(string filePath, ArchiveSaverCallback callback)
+        {
+            using (FileStream stream = new FileStream(filePath, FileMode.Create))
+            using (ZipArchive archive = new ZipArchive(stream, ZipArchiveMode.Create))
+            {
+                callback(archive);
+            }
+        }
+
+        public static void Load(string filePath, ArchiveSaverCallback callback)
+        {
+            using (FileStream stream = new FileStream(filePath, FileMode.Open))
+            using (ZipArchive archive = new ZipArchive(stream, ZipArchiveMode.Read))
+            {
+                callback(archive);
+            }
+        }
+
+        public static void Save(ZipArchive archive, object saveObject, string name)
+        {
+            ZipArchiveEntry mainEntry = archive.CreateEntry(name);
+            using (Stream entryStream = mainEntry.Open())
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                formatter.Serialize(entryStream, saveObject);
+            }
+        }
+
+        public static T Load<T>(ZipArchive archive, string name)
+        {
+            ZipArchiveEntry baseEntry = archive.GetEntry(name);
+            using (Stream entryStream = baseEntry.Open())
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                T obj = (T)formatter.Deserialize(entryStream);
+                return obj;
+            }
         }
     }
 }
