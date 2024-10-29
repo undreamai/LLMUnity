@@ -212,7 +212,7 @@ namespace LLMUnity
         public static string GetAssetPath(string relPath = "")
         {
             // Path to store llm server binaries and models
-            string assetsDir = Application.platform == RuntimePlatform.Android ? Application.persistentDataPath : Application.streamingAssetsPath;
+            string assetsDir = Application.platform == RuntimePlatform.Android ? Application.persistentDataPath : Application.persistentDataPath;
             return Path.Combine(assetsDir, relPath).Replace('\\', '/');
         }
 
@@ -291,7 +291,15 @@ namespace LLMUnity
 
         public static async Task AndroidExtractFileOnce(string assetName, bool overwrite = false, bool log = true, int chunkSize = 1024*1024)
         {
+#if UNITY_ANDROID
             string source = "jar:file://" + Application.dataPath + "!/assets/" + assetName;
+#elif UNITY_IOS
+            string source = Path.Combine(Application.streamingAssetsPath, assetName);
+            if (!source.StartsWith("file://"))
+            {
+                source = "file://" + source;
+            }
+#endif
             string target = GetAssetPath(assetName);
             if (!overwrite && File.Exists(target))
             {
@@ -328,7 +336,7 @@ namespace LLMUnity
 
         public static async Task AndroidExtractAsset(string path, bool overwrite = false)
         {
-            if (Application.platform != RuntimePlatform.Android) return;
+            if (Application.platform != RuntimePlatform.Android || Application.platform != RuntimePlatform.IPhonePlayer) return;
             await AndroidExtractFile(Path.GetFileName(path), overwrite);
         }
 
@@ -409,7 +417,7 @@ namespace LLMUnity
 
                 // setup LlamaLib in StreamingAssets
                 await DownloadAndExtractInsideDirectory(LlamaLibURL, libraryPath, setupDir);
-
+#if UNITY_ANDROID
                 // setup LlamaLib in Plugins for Android
                 AssetDatabase.StartAssetEditing();
                 string androidDir = Path.Combine(libraryPath, "android");
@@ -423,7 +431,21 @@ namespace LLMUnity
                     if (File.Exists(androidDir + ".meta")) File.Delete(androidDir + ".meta");
                 }
                 AssetDatabase.StopAssetEditing();
-
+#elif UNITY_IOS
+                // setup LlamaLib in Plugins for iOS
+                AssetDatabase.StartAssetEditing();
+                string iosDir = Path.Combine(libraryPath, "ios");
+                if (Directory.Exists(iosDir))
+                {
+                    string iosPluginsDir = Path.Combine(Application.dataPath, "Plugins", "iOS");
+                    Directory.CreateDirectory(iosPluginsDir);
+                    string pluginDir = Path.Combine(iosPluginsDir, Path.GetFileName(libraryPath));
+                    if (Directory.Exists(pluginDir)) Directory.Delete(pluginDir, true);
+                    Directory.Move(iosDir, pluginDir);
+                    if (File.Exists(iosDir + ".meta")) File.Delete(iosDir + ".meta");
+                }
+                AssetDatabase.StopAssetEditing();
+#endif
                 // setup LlamaLib extras in StreamingAssets
                 if (FullLlamaLib) await DownloadAndExtractInsideDirectory(LlamaLibExtensionURL, libraryPath, setupDir);
             }
@@ -463,10 +485,10 @@ namespace LLMUnity
         }
 
 #endif
-        /// \endcond
+                /// \endcond
 
-        /// <summary> Add callback function to call for error logs </summary>
-        public static void AddErrorCallBack(Callback<string> callback)
+                /// <summary> Add callback function to call for error logs </summary>
+                public static void AddErrorCallBack(Callback<string> callback)
         {
             errorCallbacks.Add(callback);
         }
