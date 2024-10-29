@@ -141,6 +141,8 @@ namespace LLMUnity
                 handle = Mac.dlopen(libraryName);
             else if (Application.platform == RuntimePlatform.Android)
                 handle = Android.dlopen(libraryName);
+            else if (Application.platform == RuntimePlatform.IPhonePlayer)
+                handle = iOS.dlopen(libraryName);
             else
                 throw new PlatformNotSupportedException($"Current platform is unknown, unable to load library '{libraryName}'.");
 
@@ -167,6 +169,8 @@ namespace LLMUnity
                 handle = Mac.dlsym(library, symbolName);
             else if (Application.platform == RuntimePlatform.Android)
                 handle = Android.dlsym(library, symbolName);
+            else if (Application.platform == RuntimePlatform.IPhonePlayer)
+                handle = iOS.dlsym(library, symbolName);
             else
                 throw new PlatformNotSupportedException($"Current platform is unknown, unable to load symbol '{symbolName}' from library {library}.");
 
@@ -190,6 +194,8 @@ namespace LLMUnity
                 Mac.dlclose(library);
             else if (Application.platform == RuntimePlatform.Android)
                 Android.dlclose(library);
+            else if (Application.platform == RuntimePlatform.IPhonePlayer)
+                iOS.dlclose(library);
             else
                 throw new PlatformNotSupportedException($"Current platform is unknown, unable to close library '{library}'.");
         }
@@ -294,6 +300,41 @@ namespace LLMUnity
             [DllImport("__Internal")]
             public static extern IntPtr dlsym(IntPtr handle, string symbol);
 
+            [DllImport("__Internal")]
+            public static extern int dlclose(IntPtr handle);
+#else
+            public static IntPtr dlopen(string filename, int flags)
+            {
+                return default;
+            }
+
+            public static IntPtr dlsym(IntPtr handle, string symbol)
+            {
+                return default;
+            }
+
+            public static int dlclose(IntPtr handle)
+            {
+                return default;
+            }
+
+#endif
+        }
+
+        private static class iOS
+        {
+            public static IntPtr dlopen(string path) => dlopen(path, 1);
+
+#if UNITY_IOS
+            // LoadLibrary for iOS
+            [DllImport("__Internal")]
+            public static extern IntPtr dlopen(string filename, int flags);
+
+            // GetSymbol for iOS
+            [DllImport("__Internal")]
+            public static extern IntPtr dlsym(IntPtr handle, string symbol);
+
+            // FreeLibrary for iOS
             [DllImport("__Internal")]
             public static extern int dlclose(IntPtr handle);
 #else
@@ -459,6 +500,10 @@ namespace LLMUnity
             {
                 architectures.Add("android");
             }
+            else if (Application.platform == RuntimePlatform.IPhonePlayer)
+            {
+                architectures.Add("ios");
+            }
             else
             {
                 string error = "Unknown OS";
@@ -513,6 +558,10 @@ namespace LLMUnity
             else if (Application.platform == RuntimePlatform.Android)
             {
                 return "libundreamai_android.so";
+            }
+            else if (Application.platform == RuntimePlatform.IPhonePlayer)
+            {
+                return "libundreamai_iOS.dylib";
             }
             else
             {
