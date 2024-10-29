@@ -424,7 +424,7 @@ namespace LLMUnity
             }
 
             int numThreadsToUse = numThreads;
-            if (Application.platform == RuntimePlatform.Android && numThreads <= 0) numThreadsToUse = LLMUnitySetup.AndroidGetNumBigCores();
+            if ((Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer) && numThreads <= 0) numThreadsToUse = LLMUnitySetup.AndroidGetNumBigCores();
 
             int slots = GetNumClients();
             string arguments = $"-m \"{modelPath}\" -c {contextSize} -b {batchSize} --log-disable -np {slots}";
