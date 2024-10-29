@@ -7,16 +7,17 @@ using UnityEngine;
 
 namespace LLMUnity
 {
+    [DefaultExecutionOrder(-2)]
     public abstract class Searchable : MonoBehaviour
     {
         public abstract string Get(int key);
-        public abstract Task<int> Add(string inputString);
-        public abstract int Remove(string inputString);
+        public abstract Task<int> Add(string inputString, int id = 0);
+        public abstract int Remove(string inputString, int id = 0);
         public abstract void Remove(int key);
+        public abstract int Count(int id);
         public abstract int Count();
         public abstract void Clear();
-        public abstract Task<(string[], float[])> Search(string queryString, int k);
-        public abstract Task<int> IncrementalSearch(string queryString);
+        public abstract Task<int> IncrementalSearch(string queryString, int id = 0);
         public abstract (int[], float[], bool) IncrementalFetchKeys(int fetchKey, int k);
         public abstract void IncrementalSearchComplete(int fetchKey);
         public abstract void Save(ZipArchive archive);
@@ -32,6 +33,14 @@ namespace LLMUnity
             ArchiveSaver.Load(filePath, Load);
         }
 
+        public async Task<(string[], float[])> Search(string queryString, int k, int id = 0)
+        {
+            int fetchKey = await IncrementalSearch(queryString, id);
+            (string[] phrases, float[] distances, bool completed) = IncrementalFetch(fetchKey, k);
+            if (!completed) IncrementalSearchComplete(fetchKey);
+            return (phrases, distances);
+        }
+
         public virtual (string[], float[], bool) IncrementalFetch(int fetchKey, int k)
         {
             (int[] resultKeys, float[] distances, bool completed) = IncrementalFetchKeys(fetchKey, k);
@@ -41,7 +50,6 @@ namespace LLMUnity
         }
     }
 
-    [DefaultExecutionOrder(-2)]
     public abstract class SearchMethod : Searchable
     {
         public LLMCaller llmCaller;
@@ -50,12 +58,12 @@ namespace LLMUnity
         [HideInInspector, SerializeField] protected int nextIncrementalSearchKey = 0;
 
         protected SortedDictionary<int, string> data = new SortedDictionary<int, string>();
+        protected SortedDictionary<int, List<int>> dataSplits = new SortedDictionary<int, List<int>>();
 
-        protected abstract (int[], float[]) SearchInternal(float[] encoding, int k);
         protected abstract void AddInternal(int key, float[] embedding);
         protected abstract void RemoveInternal(int key);
         protected abstract void ClearInternal();
-        public abstract int IncrementalSearch(float[] embedding);
+        public abstract int IncrementalSearch(float[] embedding, int id = 0);
         protected abstract void SaveInternal(ZipArchive archive);
         protected abstract void LoadInternal(ZipArchive archive);
 
@@ -66,39 +74,57 @@ namespace LLMUnity
 
         public override string Get(int key)
         {
-            return data[key];
+            if (data.TryGetValue(key, out string result)) return result;
+            return null;
         }
 
-        public override async Task<int> Add(string inputString)
+        public override async Task<int> Add(string inputString, int id = 0)
         {
             int key = nextKey++;
             AddInternal(key, await Encode(inputString));
-            data[key] = inputString;
-            return key;
-        }
 
-        public override void Remove(int key)
-        {
-            data.Remove(key);
-            RemoveInternal(key);
+            data[key] = inputString;
+            if (!dataSplits.ContainsKey(id)) dataSplits[id] = new List<int>(){key};
+            else dataSplits[id].Add(key);
+            return key;
         }
 
         public override void Clear()
         {
             data.Clear();
+            dataSplits.Clear();
             ClearInternal();
             nextKey = 0;
             nextIncrementalSearchKey = 0;
         }
 
-        public override int Remove(string inputString)
+        protected bool RemoveEntry(int key)
         {
-            List<int> removeIds = new List<int>();
-            foreach (var entry in data)
+            bool removed = data.Remove(key);
+            if (removed) RemoveInternal(key);
+            return removed;
+        }
+
+        public override void Remove(int key)
+        {
+            if (RemoveEntry(key))
             {
-                if (entry.Value == inputString) removeIds.Add(entry.Key);
+                foreach (var dataSplit in dataSplits.Values) dataSplit.Remove(key);
             }
-            foreach (int id in removeIds) Remove(id);
+        }
+
+        public override int Remove(string inputString, int id = 0)
+        {
+            if (!dataSplits.TryGetValue(id, out List<int> dataSplit)) return 0;
+            List<int> removeIds = new List<int>();
+            foreach (int key in dataSplit)
+            {
+                if (Get(key) == inputString) removeIds.Add(key);
+            }
+            foreach (int key in removeIds)
+            {
+                if (RemoveEntry(key)) dataSplit.Remove(key);
+            }
             return removeIds.Count;
         }
 
@@ -107,28 +133,22 @@ namespace LLMUnity
             return data.Count;
         }
 
-        public virtual (string[], float[]) Search(float[] encoding, int k)
+        public override int Count(int id)
         {
-            (int[] keys, float[] distances) = SearchInternal(encoding, k);
-            string[] result = new string[keys.Length];
-            for (int i = 0; i < keys.Length; i++) result[i] = Get(keys[i]);
-            return (result, distances);
+            if (!dataSplits.TryGetValue(id, out List<int> dataSplit)) return 0;
+            return dataSplit.Count;
         }
 
-        public override async Task<(string[], float[])> Search(string queryString, int k)
+        public override async Task<int> IncrementalSearch(string queryString, int id = 0)
         {
-            return Search(await Encode(queryString), k);
-        }
-
-        public override async Task<int> IncrementalSearch(string queryString)
-        {
-            return IncrementalSearch(await Encode(queryString));
+            return IncrementalSearch(await Encode(queryString), id);
         }
 
         public override void Save(ZipArchive archive)
         {
             ArchiveSaver.Save(archive, JsonUtility.ToJson(this), "Search_object");
             ArchiveSaver.Save(archive, data, "Search_data");
+            ArchiveSaver.Save(archive, dataSplits, "Search_dataSplits");
             SaveInternal(archive);
         }
 
@@ -136,6 +156,7 @@ namespace LLMUnity
         {
             JsonUtility.FromJsonOverwrite(ArchiveSaver.Load<string>(archive, "Search_object"), this);
             data = ArchiveSaver.Load<SortedDictionary<int, string>>(archive, "Search_data");
+            dataSplits = ArchiveSaver.Load<SortedDictionary<int, List<int>>>(archive, "Search_dataSplits");
             LoadInternal(archive);
         }
     }
@@ -150,12 +171,14 @@ namespace LLMUnity
         public override void Save(ZipArchive archive)
         {
             ArchiveSaver.Save(archive, JsonUtility.ToJson(this, true), "SearchPlugin_object");
+            search.Save(archive);
             SaveInternal(archive);
         }
 
         public override void Load(ZipArchive archive)
         {
             JsonUtility.FromJsonOverwrite(ArchiveSaver.Load<string>(archive, "SearchPlugin_object"), this);
+            search.Load(archive);
             LoadInternal(archive);
         }
     }
