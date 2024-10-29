@@ -24,10 +24,8 @@ namespace LLMUnity
 
         public static float DotProduct(float[] vector1, float[] vector2)
         {
-            if (vector1.Length != vector2.Length)
-            {
-                throw new ArgumentException("Vector lengths must be equal for dot product calculation");
-            }
+            if (vector1 == null || vector2 == null) throw new ArgumentNullException("Vectors cannot be null");
+            if (vector1.Length != vector2.Length) throw new ArgumentException("Vector lengths must be equal for dot product calculation");
             float result = 0;
             for (int i = 0; i < vector1.Length; i++)
             {
@@ -51,30 +49,25 @@ namespace LLMUnity
             return results;
         }
 
-        protected override (int[], float[]) SearchInternal(float[] embedding, int k)
-        {
-            float[] unsortedDistances = InverseDotProduct(embedding, embeddings.Values.ToArray());
-            var sortedLists = embeddings.Keys.Zip(unsortedDistances, (first, second) => new { First = first, Second = second })
-                .OrderBy(item => item.Second)
-                .ToList();
-            int kmax = k == -1 ? sortedLists.Count : Math.Min(k, sortedLists.Count);
-            int[] results = new int[kmax];
-            float[] distances = new float[kmax];
-            for (int i = 0; i < kmax; i++)
-            {
-                results[i] = sortedLists[i].First;
-                distances[i] = sortedLists[i].Second;
-            }
-            return (results, distances);
-        }
-
-        public override int IncrementalSearch(float[] embedding)
+        public override int IncrementalSearch(float[] embedding, int id = 0)
         {
             int key = nextIncrementalSearchKey++;
-            float[] unsortedDistances = InverseDotProduct(embedding, embeddings.Values.ToArray());
-            incrementalSearchCache[key] = embeddings.Keys.Zip(unsortedDistances, (first, second) => (first, second))
-                .OrderBy(item => item.second)
-                .ToList();
+
+            List<(int, float)> sortedLists = new List<(int, float)>();
+            if (dataSplits.TryGetValue(id, out List<int> dataSplit))
+            {
+                if (dataSplit.Count >= 0)
+                {
+                    float[][] embeddingsSplit = new float[dataSplit.Count][];
+                    for (int i = 0; i < dataSplit.Count; i++) embeddingsSplit[i] = embeddings[dataSplit[i]];
+
+                    float[] unsortedDistances = InverseDotProduct(embedding, embeddingsSplit);
+                    sortedLists = dataSplit.Zip(unsortedDistances, (first, second) => (first, second))
+                        .OrderBy(item => item.Item2)
+                        .ToList();
+                }
+            }
+            incrementalSearchCache[key] = sortedLists;
             return key;
         }
 
