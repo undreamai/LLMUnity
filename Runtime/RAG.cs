@@ -22,6 +22,7 @@ namespace LLMUnity
         SentenceSplitter
     }
 
+    [Serializable]
     public class RAG : Searchable
     {
         public LLMCaller llmCaller;
