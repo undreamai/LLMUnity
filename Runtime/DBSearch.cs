@@ -15,7 +15,7 @@ namespace LLMUnity
         [ModelAdvanced] public ulong connectivity = 32;
         [ModelAdvanced] public ulong expansionAdd = 40;
         [ModelAdvanced] public ulong expansionSearch = 16;
-        private Dictionary<int, (float[], List<int>)> incrementalSearchCache = new Dictionary<int, (float[], List<int>)>();
+        private Dictionary<int, (float[], int, List<int>)> incrementalSearchCache = new Dictionary<int, (float[], int, List<int>)>();
 
         public void Awake()
         {
@@ -45,16 +45,10 @@ namespace LLMUnity
             return intKeys;
         }
 
-        protected override (int[], float[]) SearchInternal(float[] embedding, int k)
-        {
-            index.Search(embedding, k, out ulong[] keys, out float[] distances);
-            return (UlongToInt(keys), distances);
-        }
-
-        public override int IncrementalSearch(float[] embedding)
+        public override int IncrementalSearch(float[] embedding, int id = 0)
         {
             int key = nextIncrementalSearchKey++;
-            incrementalSearchCache[key] = (embedding, new List<int>());
+            incrementalSearchCache[key] = (embedding, id, new List<int>());
             return key;
         }
 
@@ -62,14 +56,19 @@ namespace LLMUnity
         {
             if (!incrementalSearchCache.ContainsKey(fetchKey)) throw new Exception($"There is no IncrementalSearch cached with this key: {fetchKey}");
 
-            float[] embedding;
-            List<int> seenKeys;
-            (embedding, seenKeys) = incrementalSearchCache[fetchKey];
-            int matches = index.Search(embedding, k, out ulong[] keys, out float[] distances, (int key, IntPtr state) => {return seenKeys.Contains(key) ? 0 : 1;});
-            int[] intKeys = UlongToInt(keys);
-            incrementalSearchCache[fetchKey].Item2.AddRange(intKeys);
+            (float[] embedding, int id, List<int> seenKeys) = incrementalSearchCache[fetchKey];
 
-            bool completed = matches < k || seenKeys.Count == Count();
+            if (!dataSplits.TryGetValue(id, out List<int> dataSplit)) return (new int[0], new float[0], true);
+            if (dataSplit.Count == 0) return (new int[0], new float[0], true);
+
+            index.Search(
+                embedding, k, out ulong[] keys, out float[] distances,
+                (int key, IntPtr state) => !dataSplit.Contains(key) || seenKeys.Contains(key) ? 0 : 1
+            );
+            int[] intKeys = UlongToInt(keys);
+            incrementalSearchCache[fetchKey].Item3.AddRange(intKeys);
+
+            bool completed = intKeys.Length < k || seenKeys.Count == Count(id);
             if (completed) IncrementalSearchComplete(fetchKey);
             return (intKeys, distances, completed);
         }

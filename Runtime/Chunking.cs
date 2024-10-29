@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO.Compression;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -11,6 +12,7 @@ namespace LLMUnity
     public abstract class Chunking : SearchPlugin
     {
         public bool returnChunks = false;
+        public Dictionary<int, List<int>> dataSplitToPhrases = new Dictionary<int, List<int>>();
         public Dictionary<int, int[]> phraseToSentences = new Dictionary<int, int[]>();
         public Dictionary<int, int> sentenceToPhrase = new Dictionary<int, int>();
         public Dictionary<int, int[]> hexToPhrase = new Dictionary<int, int[]>();
@@ -20,31 +22,41 @@ namespace LLMUnity
 
         public override string Get(int key)
         {
-            string phrase = "";
-            foreach (int sentenceId in phraseToSentences[key]) phrase += search.Get(sentenceId);
-            return phrase;
+            StringBuilder phraseBuilder = new StringBuilder();
+            foreach (int sentenceId in phraseToSentences[key])
+            {
+                phraseBuilder.Append(search.Get(sentenceId));
+            }
+            return phraseBuilder.ToString();
         }
 
-        public override async Task<int> Add(string inputString)
+        public override async Task<int> Add(string inputString, int id = 0)
         {
             int key = nextKey++;
+            // sentence -> phrase
             List<int> sentenceIds = new List<int>();
             foreach ((int startIndex, int endIndex) in await Split(inputString))
             {
                 string sentenceText = inputString.Substring(startIndex, endIndex - startIndex + 1);
-                int sentenceId = await search.Add(sentenceText);
+                int sentenceId = await search.Add(sentenceText, id);
                 sentenceIds.Add(sentenceId);
 
-                sentenceToPhrase[sentenceId] = key; // sentence -> phrase
+                sentenceToPhrase[sentenceId] = key;
             }
-            phraseToSentences[key] = sentenceIds.ToArray(); // phrase -> sentence
+            // phrase -> sentence
+            phraseToSentences[key] = sentenceIds.ToArray();
 
+            // data split -> phrase
+            if (dataSplitToPhrases.TryGetValue(id, out List<int> dataSplitPhrases)) dataSplitPhrases.Add(key);
+            else dataSplitToPhrases[id] = new List<int>(){key};
+
+            // hex -> phrase
             int hash = inputString.GetHashCode();
             if (!hexToPhrase.TryGetValue(hash, out int[] entries)) entries = new int[0];
             List<int> matchingHash = new List<int>(entries);
             matchingHash.Add(key);
 
-            hexToPhrase[hash] = matchingHash.ToArray(); // hex -> phrase
+            hexToPhrase[hash] = matchingHash.ToArray();
             return key;
         }
 
@@ -53,32 +65,38 @@ namespace LLMUnity
             if (!phraseToSentences.TryGetValue(key, out int[] sentenceIds)) return;
             int hash = Get(key).GetHashCode();
 
-            phraseToSentences.Remove(key); // phrase -> sentence
+            // phrase -> sentence
+            phraseToSentences.Remove(key);
             foreach (int sentenceId in sentenceIds)
             {
                 search.Remove(sentenceId);
-                sentenceToPhrase.Remove(sentenceId); // sentence -> phrase
+                // sentence -> phrase
+                sentenceToPhrase.Remove(sentenceId);
             }
 
+            // data split -> phrase
+            foreach (var dataSplitPhrases in dataSplitToPhrases.Values) dataSplitPhrases.Remove(key);
+
+            // hex -> phrase
             if (hexToPhrase.TryGetValue(hash, out int[] phraseIds))
             {
                 List<int> updatedIds = phraseIds.ToList();
                 updatedIds.Remove(key);
-                if (updatedIds.Count == 0) hexToPhrase.Remove(hash); // hex -> phrase
+                if (updatedIds.Count == 0) hexToPhrase.Remove(hash);
                 else hexToPhrase[hash] = updatedIds.ToArray();
             }
         }
 
-        public override int Remove(string inputString)
+        public override int Remove(string inputString, int id = 0)
         {
             int hash = inputString.GetHashCode();
             if (!hexToPhrase.TryGetValue(hash, out int[] entries)) return 0;
             List<int> removeIds = new List<int>();
             foreach (int key in entries)
             {
-                if (Get(key) == inputString) removeIds.Add(key);
+                if (dataSplitToPhrases[id].Contains(key) && Get(key) == inputString) removeIds.Add(key);
             }
-            foreach (int id in removeIds) Remove(id);
+            foreach (int removeId in removeIds) Remove(removeId);
             return removeIds.Count;
         }
 
@@ -87,9 +105,15 @@ namespace LLMUnity
             return phraseToSentences.Count;
         }
 
-        public override async Task<int> IncrementalSearch(string queryString)
+        public override int Count(int id)
         {
-            return await search.IncrementalSearch(queryString);
+            if (!dataSplitToPhrases.TryGetValue(id, out List<int> dataSplitPhrases)) return 0;
+            return dataSplitPhrases.Count;
+        }
+
+        public override async Task<int> IncrementalSearch(string queryString, int id = 0)
+        {
+            return await search.IncrementalSearch(queryString, id);
         }
 
         public override (int[], float[], bool) IncrementalFetchKeys(int fetchKey, int k)
@@ -132,21 +156,6 @@ namespace LLMUnity
         public override void IncrementalSearchComplete(int fetchKey)
         {
             search.IncrementalSearchComplete(fetchKey);
-        }
-
-        public override async Task<(string[], float[])> Search(string queryString, int k)
-        {
-            if (returnChunks)
-            {
-                return await search.Search(queryString, k);
-            }
-            else
-            {
-                int fetchKey = await search.IncrementalSearch(queryString);
-                (string[] phrases, float[] distances, bool completed) = IncrementalFetch(fetchKey, k);
-                if (!completed) IncrementalSearchComplete(fetchKey);
-                return (phrases, distances);
-            }
         }
 
         public override void Clear()
