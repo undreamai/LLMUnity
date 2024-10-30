@@ -2067,7 +2067,7 @@ MonoBehaviour:
   contextSize: 0
   batchSize: 512
   basePrompt: 
-  model: all-MiniLM-L12-v2.Q4_K_M.gguf
+  model: 
   chatTemplate: chatml
   lora: 
   loraWeights: 
@@ -4382,7 +4382,7 @@ MonoBehaviour:
   nKeep: -1
   stop: []
   playerName: Query
-  AIName: Answer
+  AIName: 
   prompt: 'You are a robot working at a house where a diamond was stolen.
 
     A
@@ -7587,19 +7587,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a50e3140c3ecaaf1c848dbf141cc2074, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  advancedOptions: 1
+  advancedOptions: 0
   remote: 0
   port: 13333
   numThreads: -1
-  numGPULayers: 25
+  numGPULayers: 0
   debug: 0
   parallelPrompts: -1
   dontDestroyOnLoad: 1
-  contextSize: 8192
+  contextSize: 0
   batchSize: 512
   basePrompt: 
-  model: Phi-3.5-mini-instruct-Q4_K_M.gguf
-  chatTemplate: phi-3
+  model: 
+  chatTemplate: chatml
   lora: 
   loraWeights: 
   flashAttention: 0
@@ -7611,7 +7611,7 @@ MonoBehaviour:
   minContextLength: 0
   maxContextLength: 0
   embeddingsOnly: 0
-  embeddingLength: 3072
+  embeddingLength: 0
 --- !u!4 &2142407557
 Transform:
   m_ObjectHideFlags: 0
