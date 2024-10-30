@@ -30,7 +30,7 @@ namespace LLMUnity
             return phraseBuilder.ToString();
         }
 
-        public override async Task<int> Add(string inputString, int id = 0)
+        public override async Task<int> Add(string inputString, int splitId = 0)
         {
             int key = nextKey++;
             // sentence -> phrase
@@ -38,7 +38,7 @@ namespace LLMUnity
             foreach ((int startIndex, int endIndex) in await Split(inputString))
             {
                 string sentenceText = inputString.Substring(startIndex, endIndex - startIndex + 1);
-                int sentenceId = await search.Add(sentenceText, id);
+                int sentenceId = await search.Add(sentenceText, splitId);
                 sentenceIds.Add(sentenceId);
 
                 sentenceToPhrase[sentenceId] = key;
@@ -47,8 +47,8 @@ namespace LLMUnity
             phraseToSentences[key] = sentenceIds.ToArray();
 
             // data split -> phrase
-            if (dataSplitToPhrases.TryGetValue(id, out List<int> dataSplitPhrases)) dataSplitPhrases.Add(key);
-            else dataSplitToPhrases[id] = new List<int>(){key};
+            if (!dataSplitToPhrases.ContainsKey(splitId)) dataSplitToPhrases[splitId] = new List<int>(){key};
+            else dataSplitToPhrases[splitId].Add(key);
 
             // hex -> phrase
             int hash = inputString.GetHashCode();
@@ -87,14 +87,14 @@ namespace LLMUnity
             }
         }
 
-        public override int Remove(string inputString, int id = 0)
+        public override int Remove(string inputString, int splitId = 0)
         {
             int hash = inputString.GetHashCode();
             if (!hexToPhrase.TryGetValue(hash, out int[] entries)) return 0;
             List<int> removeIds = new List<int>();
             foreach (int key in entries)
             {
-                if (dataSplitToPhrases[id].Contains(key) && Get(key) == inputString) removeIds.Add(key);
+                if (dataSplitToPhrases[splitId].Contains(key) && Get(key) == inputString) removeIds.Add(key);
             }
             foreach (int removeId in removeIds) Remove(removeId);
             return removeIds.Count;
@@ -105,15 +105,15 @@ namespace LLMUnity
             return phraseToSentences.Count;
         }
 
-        public override int Count(int id)
+        public override int Count(int splitId)
         {
-            if (!dataSplitToPhrases.TryGetValue(id, out List<int> dataSplitPhrases)) return 0;
+            if (!dataSplitToPhrases.TryGetValue(splitId, out List<int> dataSplitPhrases)) return 0;
             return dataSplitPhrases.Count;
         }
 
-        public override async Task<int> IncrementalSearch(string queryString, int id = 0)
+        public override async Task<int> IncrementalSearch(string queryString, int splitId = 0)
         {
-            return await search.IncrementalSearch(queryString, id);
+            return await search.IncrementalSearch(queryString, splitId);
         }
 
         public override (int[], float[], bool) IncrementalFetchKeys(int fetchKey, int k)
@@ -161,6 +161,7 @@ namespace LLMUnity
         public override void Clear()
         {
             nextKey = 0;
+            dataSplitToPhrases.Clear();
             phraseToSentences.Clear();
             sentenceToPhrase.Clear();
             hexToPhrase.Clear();
@@ -169,6 +170,7 @@ namespace LLMUnity
 
         protected override void SaveInternal(ZipArchive archive)
         {
+            ArchiveSaver.Save(archive, dataSplitToPhrases, "SentenceSplitter_dataSplitToPhrases");
             ArchiveSaver.Save(archive, phraseToSentences, "SentenceSplitter_phraseToSentences");
             ArchiveSaver.Save(archive, sentenceToPhrase, "SentenceSplitter_sentenceToPhrase");
             ArchiveSaver.Save(archive, hexToPhrase, "SentenceSplitter_hexToPhrase");
@@ -177,6 +179,7 @@ namespace LLMUnity
 
         protected override void LoadInternal(ZipArchive archive)
         {
+            dataSplitToPhrases = ArchiveSaver.Load<Dictionary<int, List<int>>>(archive, "SentenceSplitter_dataSplitToPhrases");
             phraseToSentences = ArchiveSaver.Load<Dictionary<int, int[]>>(archive, "SentenceSplitter_phraseToSentences");
             sentenceToPhrase = ArchiveSaver.Load<Dictionary<int, int>>(archive, "SentenceSplitter_sentenceToPhrase");
             hexToPhrase = ArchiveSaver.Load<Dictionary<int, int[]>>(archive, "SentenceSplitter_hexToPhrase");

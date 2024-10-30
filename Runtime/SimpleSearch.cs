@@ -49,12 +49,12 @@ namespace LLMUnity
             return results;
         }
 
-        public override int IncrementalSearch(float[] embedding, int id = 0)
+        public override int IncrementalSearch(float[] embedding, int splitId = 0)
         {
             int key = nextIncrementalSearchKey++;
 
             List<(int, float)> sortedLists = new List<(int, float)>();
-            if (dataSplits.TryGetValue(id, out List<int> dataSplit))
+            if (dataSplits.TryGetValue(splitId, out List<int> dataSplit))
             {
                 if (dataSplit.Count >= 0)
                 {
@@ -84,8 +84,9 @@ namespace LLMUnity
             }
             else
             {
-                sortedLists = incrementalSearchCache[fetchKey].GetRange(0, k);
-                incrementalSearchCache[fetchKey].RemoveRange(0, k);
+                int getK = Math.Min(k, incrementalSearchCache[fetchKey].Count);
+                sortedLists = incrementalSearchCache[fetchKey].GetRange(0, getK);
+                incrementalSearchCache[fetchKey].RemoveRange(0, getK);
                 completed = incrementalSearchCache[fetchKey].Count == 0;
             }
             if (completed) IncrementalSearchComplete(fetchKey);
