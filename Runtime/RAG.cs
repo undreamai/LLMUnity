@@ -110,13 +110,13 @@ namespace LLMUnity
         }
 
         public override string Get(int key) { return GetSearcher().Get(key); }
-        public override async Task<int> Add(string inputString, int id = 0) { return await GetSearcher().Add(inputString, id); }
-        public override int Remove(string inputString, int id = 0) { return GetSearcher().Remove(inputString, id); }
+        public override async Task<int> Add(string inputString, int splitId = 0) { return await GetSearcher().Add(inputString, splitId); }
+        public override int Remove(string inputString, int splitId = 0) { return GetSearcher().Remove(inputString, splitId); }
         public override void Remove(int key) { GetSearcher().Remove(key); }
         public override int Count() { return GetSearcher().Count(); }
-        public override int Count(int id) { return GetSearcher().Count(id); }
+        public override int Count(int splitId) { return GetSearcher().Count(splitId); }
         public override void Clear() { GetSearcher().Clear(); }
-        public override async Task<int> IncrementalSearch(string queryString, int id = 0) { return await GetSearcher().IncrementalSearch(queryString, id);}
+        public override async Task<int> IncrementalSearch(string queryString, int splitId = 0) { return await GetSearcher().IncrementalSearch(queryString, splitId);}
         public override (int[], float[], bool) IncrementalFetchKeys(int fetchKey, int k) { return GetSearcher().IncrementalFetchKeys(fetchKey, k);}
         public override void IncrementalSearchComplete(int fetchKey) { GetSearcher().IncrementalSearchComplete(fetchKey);}
 
