@@ -11,13 +11,13 @@ namespace LLMUnity
     public abstract class Searchable : MonoBehaviour
     {
         public abstract string Get(int key);
-        public abstract Task<int> Add(string inputString, int id = 0);
-        public abstract int Remove(string inputString, int id = 0);
+        public abstract Task<int> Add(string inputString, int splitId = 0);
+        public abstract int Remove(string inputString, int splitId = 0);
         public abstract void Remove(int key);
-        public abstract int Count(int id);
+        public abstract int Count(int splitId);
         public abstract int Count();
         public abstract void Clear();
-        public abstract Task<int> IncrementalSearch(string queryString, int id = 0);
+        public abstract Task<int> IncrementalSearch(string queryString, int splitId = 0);
         public abstract (int[], float[], bool) IncrementalFetchKeys(int fetchKey, int k);
         public abstract void IncrementalSearchComplete(int fetchKey);
         public abstract void Save(ZipArchive archive);
@@ -33,9 +33,9 @@ namespace LLMUnity
             ArchiveSaver.Load(filePath, Load);
         }
 
-        public async Task<(string[], float[])> Search(string queryString, int k, int id = 0)
+        public async Task<(string[], float[])> Search(string queryString, int k, int splitId = 0)
         {
-            int fetchKey = await IncrementalSearch(queryString, id);
+            int fetchKey = await IncrementalSearch(queryString, splitId);
             (string[] phrases, float[] distances, bool completed) = IncrementalFetch(fetchKey, k);
             if (!completed) IncrementalSearchComplete(fetchKey);
             return (phrases, distances);
@@ -63,7 +63,7 @@ namespace LLMUnity
         protected abstract void AddInternal(int key, float[] embedding);
         protected abstract void RemoveInternal(int key);
         protected abstract void ClearInternal();
-        public abstract int IncrementalSearch(float[] embedding, int id = 0);
+        public abstract int IncrementalSearch(float[] embedding, int splitId = 0);
         protected abstract void SaveInternal(ZipArchive archive);
         protected abstract void LoadInternal(ZipArchive archive);
 
@@ -78,14 +78,14 @@ namespace LLMUnity
             return null;
         }
 
-        public override async Task<int> Add(string inputString, int id = 0)
+        public override async Task<int> Add(string inputString, int splitId = 0)
         {
             int key = nextKey++;
             AddInternal(key, await Encode(inputString));
 
             data[key] = inputString;
-            if (!dataSplits.ContainsKey(id)) dataSplits[id] = new List<int>(){key};
-            else dataSplits[id].Add(key);
+            if (!dataSplits.ContainsKey(splitId)) dataSplits[splitId] = new List<int>(){key};
+            else dataSplits[splitId].Add(key);
             return key;
         }
 
@@ -113,9 +113,9 @@ namespace LLMUnity
             }
         }
 
-        public override int Remove(string inputString, int id = 0)
+        public override int Remove(string inputString, int splitId = 0)
         {
-            if (!dataSplits.TryGetValue(id, out List<int> dataSplit)) return 0;
+            if (!dataSplits.TryGetValue(splitId, out List<int> dataSplit)) return 0;
             List<int> removeIds = new List<int>();
             foreach (int key in dataSplit)
             {
@@ -133,15 +133,15 @@ namespace LLMUnity
             return data.Count;
         }
 
-        public override int Count(int id)
+        public override int Count(int splitId)
         {
-            if (!dataSplits.TryGetValue(id, out List<int> dataSplit)) return 0;
+            if (!dataSplits.TryGetValue(splitId, out List<int> dataSplit)) return 0;
             return dataSplit.Count;
         }
 
-        public override async Task<int> IncrementalSearch(string queryString, int id = 0)
+        public override async Task<int> IncrementalSearch(string queryString, int splitId = 0)
         {
-            return IncrementalSearch(await Encode(queryString), id);
+            return IncrementalSearch(await Encode(queryString), splitId);
         }
 
         public override void Save(ZipArchive archive)

@@ -45,10 +45,10 @@ namespace LLMUnity
             return intKeys;
         }
 
-        public override int IncrementalSearch(float[] embedding, int id = 0)
+        public override int IncrementalSearch(float[] embedding, int splitId = 0)
         {
             int key = nextIncrementalSearchKey++;
-            incrementalSearchCache[key] = (embedding, id, new List<int>());
+            incrementalSearchCache[key] = (embedding, splitId, new List<int>());
             return key;
         }
 
@@ -56,9 +56,9 @@ namespace LLMUnity
         {
             if (!incrementalSearchCache.ContainsKey(fetchKey)) throw new Exception($"There is no IncrementalSearch cached with this key: {fetchKey}");
 
-            (float[] embedding, int id, List<int> seenKeys) = incrementalSearchCache[fetchKey];
+            (float[] embedding, int splitId, List<int> seenKeys) = incrementalSearchCache[fetchKey];
 
-            if (!dataSplits.TryGetValue(id, out List<int> dataSplit)) return (new int[0], new float[0], true);
+            if (!dataSplits.TryGetValue(splitId, out List<int> dataSplit)) return (new int[0], new float[0], true);
             if (dataSplit.Count == 0) return (new int[0], new float[0], true);
 
             index.Search(
@@ -68,7 +68,7 @@ namespace LLMUnity
             int[] intKeys = UlongToInt(keys);
             incrementalSearchCache[fetchKey].Item3.AddRange(intKeys);
 
-            bool completed = intKeys.Length < k || seenKeys.Count == Count(id);
+            bool completed = intKeys.Length < k || seenKeys.Count == Count(splitId);
             if (completed) IncrementalSearchComplete(fetchKey);
             return (intKeys, distances, completed);
         }

@@ -7,6 +7,7 @@ using System;
 using UnityEngine.TestTools;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace RAGTests
 {
@@ -101,7 +102,19 @@ namespace RAGTests
 
         public virtual async Task TestAdd()
         {
-            int key = await search.Add(weather);
+            void CheckCount(int[] nums)
+            {
+                int sum = 0;
+                for (int i = 0; i < nums.Length; i++)
+                {
+                    Assert.That(search.Count(i) == nums[i]);
+                    sum += nums[i];
+                }
+                Assert.That(search.Count() == sum);
+            }
+
+            int key, num;
+            key = await search.Add(weather);
             Assert.That(key == 0);
             Assert.That(search.Get(key) == weather);
             Assert.That(search.Count() == 1);
@@ -117,50 +130,127 @@ namespace RAGTests
             Assert.That(search.Count() == 3);
             search.Clear();
             Assert.That(search.Count() == 0);
+
+            key = await search.Add(weather, 0);
+            Assert.That(key == 0);
+            key = await search.Add(raining, 0);
+            Assert.That(key == 1);
+            key = await search.Add(weather, 1);
+            Assert.That(key == 2);
+            key = await search.Add(sometext, 1);
+            Assert.That(key == 3);
+            key = await search.Add(sometext, 2);
+            Assert.That(key == 4);
+            CheckCount(new int[] {2, 2, 1});
+            num = search.Remove(weather);
+            Assert.That(num == 1);
+            CheckCount(new int[] {1, 2, 1});
+            num = search.Remove(weather, 1);
+            Assert.That(num == 1);
+            CheckCount(new int[] {1, 1, 1});
+            num = search.Remove(weather);
+            Assert.That(num == 0);
+            CheckCount(new int[] {1, 1, 1});
+            num = search.Remove(raining, 0);
+            Assert.That(num == 1);
+            CheckCount(new int[] {0, 1, 1});
+            num = search.Remove(sometext, 1);
+            Assert.That(num == 1);
+            CheckCount(new int[] {0, 0, 1});
+            num = search.Remove(sometext, 2);
+            Assert.That(num == 1);
+            CheckCount(new int[] {0, 0, 0});
+
+            search.Clear();
+            Assert.That(search.Count() == 0);
         }
 
         public virtual async Task TestSearch()
         {
+            string[] results;
+            float[] distances;
+
             await search.Add(weather);
             await search.Add(raining);
             await search.Add(sometext);
 
-            string[] result;
-            float[] distances;
-            (result, distances) = await search.Search(weather, 2);
-            Assert.AreEqual(result[0], weather);
-            Assert.AreEqual(result[1], raining);
+            (results, distances) = await search.Search(weather, 2);
+            Assert.AreEqual(results.Length, 2);
+            Assert.AreEqual(distances.Length, 2);
+            Assert.AreEqual(results[0], weather);
+            Assert.AreEqual(results[1], raining);
             Assert.That(ApproxEqual(distances[0], 0));
             Assert.That(ApproxEqual(distances[1], weatherRainingDiff));
 
-            (result, distances) = await search.Search(raining, 2);
-            Assert.AreEqual(result[0], raining);
-            Assert.AreEqual(result[1], weather);
+            (results, distances) = await search.Search(raining, 2);
+            Assert.AreEqual(results.Length, 2);
+            Assert.AreEqual(distances.Length, 2);
+            Assert.AreEqual(results[0], raining);
+            Assert.AreEqual(results[1], weather);
             Assert.That(ApproxEqual(distances[0], 0));
             Assert.That(ApproxEqual(distances[1], weatherRainingDiff));
 
+            search.Clear();
+
+            await search.Add(weather, 0);
+            await search.Add(raining, 1);
+            await search.Add(sometext, 0);
+            await search.Add(sometext, 1);
+
+            (results, distances) = await search.Search(weather, 2);
+            Assert.AreEqual(results.Length, 2);
+            Assert.AreEqual(distances.Length, 2);
+            Assert.AreEqual(results[0], weather);
+            Assert.AreEqual(results[1], sometext);
+            Assert.That(ApproxEqual(distances[0], 0));
+            Assert.That(ApproxEqual(distances[1], weatherSometextDiff));
+
+            (results, distances) = await search.Search(weather, 2, 0);
+            Assert.AreEqual(results.Length, 2);
+            Assert.AreEqual(distances.Length, 2);
+            Assert.AreEqual(results[0], weather);
+            Assert.AreEqual(results[1], sometext);
+            Assert.That(ApproxEqual(distances[0], 0));
+            Assert.That(ApproxEqual(distances[1], weatherSometextDiff));
+
+            (results, distances) = await search.Search(weather, 2, 1);
+            Assert.AreEqual(results.Length, 2);
+            Assert.AreEqual(distances.Length, 2);
+            Assert.AreEqual(results[0], raining);
+            Assert.AreEqual(results[1], sometext);
+            Assert.That(ApproxEqual(distances[1], weatherSometextDiff));
+
+            (results, distances) = await search.Search(weather, 3, 1);
+            Assert.AreEqual(results.Length, 2);
+            Assert.AreEqual(distances.Length, 2);
+            Assert.AreEqual(results[0], raining);
+            Assert.AreEqual(results[1], sometext);
+            Assert.That(ApproxEqual(distances[1], weatherSometextDiff));
             search.Clear();
         }
 
         public async Task TestIncrementalSearch()
         {
+            string[] results;
+            float[] distances;
+            bool completed;
+
             await search.Add(weather);
             await search.Add(raining);
             await search.Add(sometext);
 
             int searchKey = await search.IncrementalSearch(weather);
-            string[] results;
-            float[] distances;
-            bool completed;
             (results, distances, completed) = search.IncrementalFetch(searchKey, 1);
             Assert.That(searchKey == 0);
             Assert.That(results.Length == 1);
+            Assert.That(distances.Length == 1);
             Assert.AreEqual(results[0], weather);
             Assert.That(ApproxEqual(distances[0], 0));
             Assert.That(!completed);
 
             (results, distances, completed) = search.IncrementalFetch(searchKey, 2);
             Assert.That(results.Length == 2);
+            Assert.That(distances.Length == 2);
             Assert.AreEqual(results[0], raining);
             Assert.AreEqual(results[1], sometext);
             Assert.That(ApproxEqual(distances[0], weatherRainingDiff));
@@ -171,6 +261,7 @@ namespace RAGTests
             (results, distances, completed) = search.IncrementalFetch(searchKey, 2);
             Assert.That(searchKey == 1);
             Assert.That(results.Length == 2);
+            Assert.That(distances.Length == 2);
             Assert.AreEqual(results[0], weather);
             Assert.AreEqual(results[1], raining);
             Assert.That(ApproxEqual(distances[0], 0));
@@ -179,11 +270,66 @@ namespace RAGTests
 
             search.IncrementalSearchComplete(searchKey);
             search.Clear();
+
+            await search.Add(weather, 0);
+            await search.Add(raining, 1);
+            await search.Add(sometext, 0);
+            await search.Add(sometext, 1);
+
+            searchKey = await search.IncrementalSearch(weather);
+            (results, distances, completed) = search.IncrementalFetch(searchKey, 2);
+            Assert.That(searchKey == 0);
+            Assert.AreEqual(results.Length, 2);
+            Assert.AreEqual(distances.Length, 2);
+            Assert.AreEqual(results[0], weather);
+            Assert.AreEqual(results[1], sometext);
+            Assert.That(ApproxEqual(distances[0], 0));
+            Assert.That(ApproxEqual(distances[1], weatherSometextDiff));
+            Assert.That(completed);
+
+            searchKey = await search.IncrementalSearch(weather, 0);
+            (results, distances, completed) = search.IncrementalFetch(searchKey, 2);
+            Assert.That(searchKey == 1);
+            Assert.AreEqual(results.Length, 2);
+            Assert.AreEqual(distances.Length, 2);
+            Assert.AreEqual(results[0], weather);
+            Assert.AreEqual(results[1], sometext);
+            Assert.That(ApproxEqual(distances[0], 0));
+            Assert.That(ApproxEqual(distances[1], weatherSometextDiff));
+            Assert.That(completed);
+
+            searchKey = await search.IncrementalSearch(weather, 1);
+            (results, distances, completed) = search.IncrementalFetch(searchKey, 1);
+            Assert.That(searchKey == 2);
+            Assert.AreEqual(results.Length, 1);
+            Assert.AreEqual(distances.Length, 1);
+            Assert.AreEqual(results[0], raining);
+            Assert.That(!completed);
+
+            (results, distances, completed) = search.IncrementalFetch(searchKey, 1);
+            Assert.AreEqual(results.Length, 1);
+            Assert.AreEqual(distances.Length, 1);
+            Assert.AreEqual(results[0], sometext);
+            Assert.That(ApproxEqual(distances[0], weatherSometextDiff));
+            Assert.That(completed);
+
+            searchKey = await search.IncrementalSearch(weather, 1);
+            (results, distances, completed) = search.IncrementalFetch(searchKey, 3);
+            Assert.That(searchKey == 3);
+            Assert.AreEqual(results.Length, 2);
+            Assert.AreEqual(distances.Length, 2);
+            Assert.AreEqual(results[0], raining);
+            Assert.AreEqual(results[1], sometext);
+            Assert.That(ApproxEqual(distances[1], weatherSometextDiff));
+            Assert.That(completed);
+            search.Clear();
         }
 
         public virtual async Task TestSaveLoad()
         {
             string path = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            string[] results;
+            float[] distances;
 
             await search.Add(weather);
             await search.Add(raining);
@@ -199,11 +345,36 @@ namespace RAGTests
             Assert.That(search.Get(1) == raining);
             Assert.That(search.Get(2) == sometext);
 
-            (string[] result, float[] distances) = await search.Search(raining, 2);
-            Assert.AreEqual(result[0], raining);
-            Assert.AreEqual(result[1], weather);
+            (results, distances) = await search.Search(raining, 2);
+            Assert.AreEqual(results[0], raining);
+            Assert.AreEqual(results[1], weather);
             Assert.That(ApproxEqual(distances[0], 0));
             Assert.That(ApproxEqual(distances[1], weatherRainingDiff));
+
+            search.Clear();
+
+            await search.Add(weather, 0);
+            await search.Add(raining, 1);
+            await search.Add(sometext, 0);
+            await search.Add(sometext, 1);
+            search.Save(path);
+
+            search.Clear();
+            search.Load(path);
+            File.Delete(path);
+
+            Assert.That(search.Count() == 4);
+            Assert.That(search.Count(0) == 2);
+            Assert.That(search.Count(1) == 2);
+            Assert.That(search.Get(0) == weather);
+            Assert.That(search.Get(1) == raining);
+            Assert.That(search.Get(2) == sometext);
+            Assert.That(search.Get(3) == sometext);
+
+            (results, distances) = await search.Search(raining, 2);
+            Assert.AreEqual(results[0], weather);
+            Assert.AreEqual(results[1], sometext);
+            Assert.That(ApproxEqual(distances[0], weatherRainingDiff));
 
             search.Clear();
         }
