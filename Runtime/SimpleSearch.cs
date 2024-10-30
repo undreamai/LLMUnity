@@ -49,7 +49,7 @@ namespace LLMUnity
             return results;
         }
 
-        public override int IncrementalSearch(float[] embedding, int splitId = 0)
+        public override int IncrementalSearch(float[] embedding, string splitId = "")
         {
             int key = nextIncrementalSearchKey++;
 

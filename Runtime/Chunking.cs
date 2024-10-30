@@ -12,7 +12,7 @@ namespace LLMUnity
     public abstract class Chunking : SearchPlugin
     {
         public bool returnChunks = false;
-        public Dictionary<int, List<int>> dataSplitToPhrases = new Dictionary<int, List<int>>();
+        public Dictionary<string, List<int>> dataSplitToPhrases = new Dictionary<string, List<int>>();
         public Dictionary<int, int[]> phraseToSentences = new Dictionary<int, int[]>();
         public Dictionary<int, int> sentenceToPhrase = new Dictionary<int, int>();
         public Dictionary<int, int[]> hexToPhrase = new Dictionary<int, int[]>();
@@ -30,7 +30,7 @@ namespace LLMUnity
             return phraseBuilder.ToString();
         }
 
-        public override async Task<int> Add(string inputString, int splitId = 0)
+        public override async Task<int> Add(string inputString, string splitId = "")
         {
             int key = nextKey++;
             // sentence -> phrase
@@ -87,7 +87,7 @@ namespace LLMUnity
             }
         }
 
-        public override int Remove(string inputString, int splitId = 0)
+        public override int Remove(string inputString, string splitId = "")
         {
             int hash = inputString.GetHashCode();
             if (!hexToPhrase.TryGetValue(hash, out int[] entries)) return 0;
@@ -105,13 +105,13 @@ namespace LLMUnity
             return phraseToSentences.Count;
         }
 
-        public override int Count(int splitId)
+        public override int Count(string splitId)
         {
             if (!dataSplitToPhrases.TryGetValue(splitId, out List<int> dataSplitPhrases)) return 0;
             return dataSplitPhrases.Count;
         }
 
-        public override async Task<int> IncrementalSearch(string queryString, int splitId = 0)
+        public override async Task<int> IncrementalSearch(string queryString, string splitId = "")
         {
             return await search.IncrementalSearch(queryString, splitId);
         }
@@ -179,7 +179,7 @@ namespace LLMUnity
 
         protected override void LoadInternal(ZipArchive archive)
         {
-            dataSplitToPhrases = ArchiveSaver.Load<Dictionary<int, List<int>>>(archive, "SentenceSplitter_dataSplitToPhrases");
+            dataSplitToPhrases = ArchiveSaver.Load<Dictionary<string, List<int>>>(archive, "SentenceSplitter_dataSplitToPhrases");
             phraseToSentences = ArchiveSaver.Load<Dictionary<int, int[]>>(archive, "SentenceSplitter_phraseToSentences");
             sentenceToPhrase = ArchiveSaver.Load<Dictionary<int, int>>(archive, "SentenceSplitter_sentenceToPhrase");
             hexToPhrase = ArchiveSaver.Load<Dictionary<int, int[]>>(archive, "SentenceSplitter_hexToPhrase");

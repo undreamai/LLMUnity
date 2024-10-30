@@ -15,7 +15,7 @@ namespace LLMUnity
         [ModelAdvanced] public ulong connectivity = 32;
         [ModelAdvanced] public ulong expansionAdd = 40;
         [ModelAdvanced] public ulong expansionSearch = 16;
-        private Dictionary<int, (float[], int, List<int>)> incrementalSearchCache = new Dictionary<int, (float[], int, List<int>)>();
+        private Dictionary<int, (float[], string, List<int>)> incrementalSearchCache = new Dictionary<int, (float[], string, List<int>)>();
 
         public void Awake()
         {
@@ -45,7 +45,7 @@ namespace LLMUnity
             return intKeys;
         }
 
-        public override int IncrementalSearch(float[] embedding, int splitId = 0)
+        public override int IncrementalSearch(float[] embedding, string splitId = "")
         {
             int key = nextIncrementalSearchKey++;
             incrementalSearchCache[key] = (embedding, splitId, new List<int>());
@@ -56,7 +56,7 @@ namespace LLMUnity
         {
             if (!incrementalSearchCache.ContainsKey(fetchKey)) throw new Exception($"There is no IncrementalSearch cached with this key: {fetchKey}");
 
-            (float[] embedding, int splitId, List<int> seenKeys) = incrementalSearchCache[fetchKey];
+            (float[] embedding, string splitId, List<int> seenKeys) = incrementalSearchCache[fetchKey];
 
             if (!dataSplits.TryGetValue(splitId, out List<int> dataSplit)) return (new int[0], new float[0], true);
             if (dataSplit.Count == 0) return (new int[0], new float[0], true);
