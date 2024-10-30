@@ -119,20 +119,7 @@ namespace LLMUnity
         public override async Task<int> IncrementalSearch(string queryString, string splitId = "") { return await GetSearcher().IncrementalSearch(queryString, splitId);}
         public override (int[], float[], bool) IncrementalFetchKeys(int fetchKey, int k) { return GetSearcher().IncrementalFetchKeys(fetchKey, k);}
         public override void IncrementalSearchComplete(int fetchKey) { GetSearcher().IncrementalSearchComplete(fetchKey);}
-
-        public override void Save(string filePath) { ArchiveSaver.Save(filePath, Save); }
-        public override void Load(string filePath) { ArchiveSaver.Load(filePath, Load); }
-
-        public override void Save(ZipArchive archive)
-        {
-            ArchiveSaver.Save(archive, JsonUtility.ToJson(this, true), "RAG_object");
-            GetSearcher().Save(archive);
-        }
-
-        public override void Load(ZipArchive archive)
-        {
-            JsonUtility.FromJsonOverwrite(ArchiveSaver.Load<string>(archive, "RAG_object"), this);
-            GetSearcher().Load(archive);
-        }
+        public override void Save(ZipArchive archive) { GetSearcher().Save(archive); }
+        public override void Load(ZipArchive archive) { GetSearcher().Load(archive); }
     }
 }
