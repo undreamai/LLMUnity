@@ -13,8 +13,10 @@ namespace LLMUnitySamples
 {
     public class KnowledgeBaseGame : KnowledgeBaseGameUI
     {
+        [Header("Models")]
         public LLMCharacter llmCharacter;
         public RAG rag;
+        public int numRAGResults = 3;
 
         Dictionary<string, Dictionary<string, string>> botQuestionAnswers = new Dictionary<string, Dictionary<string, string>>();
         Dictionary<string, RawImage> botImages = new Dictionary<string, RawImage>();
@@ -100,8 +102,8 @@ namespace LLMUnitySamples
 
         public async Task<List<string>> Retrieval(string question)
         {
-            // find 3 similar questions for the current bot using the RAG
-            (string[] similarQuestions, _) = await rag.Search(question, 3, currentBotName);
+            // find similar questions for the current bot using the RAG
+            (string[] similarQuestions, _) = await rag.Search(question, numRAGResults, currentBotName);
             // get the answers of the similar questions
             List<string> similarAnswers = new List<string>();
             foreach (string similarQuestion in similarQuestions) similarAnswers.Add(botQuestionAnswers[currentBotName][similarQuestion]);
@@ -124,6 +126,7 @@ namespace LLMUnitySamples
         protected async override void OnInputFieldSubmit(string question)
         {
             PlayerText.interactable = false;
+            SetAIText("...");
             string prompt = await ConstructPrompt(question);
             _ = llmCharacter.Chat(prompt, SetAIText, AIReplyComplete);
         }
@@ -194,29 +197,34 @@ namespace LLMUnitySamples
 
     public class KnowledgeBaseGameUI : MonoBehaviour
     {
+        [Header("UI elements")]
         public Dropdown CharacterSelect;
         public InputField PlayerText;
         public Text AIText;
 
+        [Header("Bot texts")]
         public TextAsset ButlerText;
         public TextAsset MaidText;
         public TextAsset ChefText;
+
+        [Header("Bot images")]
         public RawImage ButlerImage;
         public RawImage MaidImage;
         public RawImage ChefImage;
 
+        [Header("Buttons")]
         public Button NotesButton;
         public Button MapButton;
         public Button SolveButton;
         public Button HelpButton;
+        public Button SubmitButton;
 
+        [Header("Panels")]
         public RawImage NotebookImage;
         public GameObject NotesPanel;
         public GameObject SolvePanel;
         public GameObject HelpPanel;
-
         public RawImage MapImage;
-        public Button SubmitButton;
         public RawImage SuccessImage;
         public Text FailText;
         public Dropdown Answer1;
