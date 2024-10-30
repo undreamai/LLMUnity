@@ -11,13 +11,13 @@ namespace LLMUnity
     public abstract class Searchable : MonoBehaviour
     {
         public abstract string Get(int key);
-        public abstract Task<int> Add(string inputString, int splitId = 0);
-        public abstract int Remove(string inputString, int splitId = 0);
+        public abstract Task<int> Add(string inputString, string splitId = "");
+        public abstract int Remove(string inputString, string splitId = "");
         public abstract void Remove(int key);
-        public abstract int Count(int splitId);
+        public abstract int Count(string splitId);
         public abstract int Count();
         public abstract void Clear();
-        public abstract Task<int> IncrementalSearch(string queryString, int splitId = 0);
+        public abstract Task<int> IncrementalSearch(string queryString, string splitId = "");
         public abstract (int[], float[], bool) IncrementalFetchKeys(int fetchKey, int k);
         public abstract void IncrementalSearchComplete(int fetchKey);
         public abstract void Save(ZipArchive archive);
@@ -33,7 +33,7 @@ namespace LLMUnity
             ArchiveSaver.Load(filePath, Load);
         }
 
-        public async Task<(string[], float[])> Search(string queryString, int k, int splitId = 0)
+        public async Task<(string[], float[])> Search(string queryString, int k, string splitId = "")
         {
             int fetchKey = await IncrementalSearch(queryString, splitId);
             (string[] phrases, float[] distances, bool completed) = IncrementalFetch(fetchKey, k);
@@ -58,12 +58,12 @@ namespace LLMUnity
         [HideInInspector, SerializeField] protected int nextIncrementalSearchKey = 0;
 
         protected SortedDictionary<int, string> data = new SortedDictionary<int, string>();
-        protected SortedDictionary<int, List<int>> dataSplits = new SortedDictionary<int, List<int>>();
+        protected SortedDictionary<string, List<int>> dataSplits = new SortedDictionary<string, List<int>>();
 
         protected abstract void AddInternal(int key, float[] embedding);
         protected abstract void RemoveInternal(int key);
         protected abstract void ClearInternal();
-        public abstract int IncrementalSearch(float[] embedding, int splitId = 0);
+        public abstract int IncrementalSearch(float[] embedding, string splitId = "");
         protected abstract void SaveInternal(ZipArchive archive);
         protected abstract void LoadInternal(ZipArchive archive);
 
@@ -78,7 +78,7 @@ namespace LLMUnity
             return null;
         }
 
-        public override async Task<int> Add(string inputString, int splitId = 0)
+        public override async Task<int> Add(string inputString, string splitId = "")
         {
             int key = nextKey++;
             AddInternal(key, await Encode(inputString));
@@ -113,7 +113,7 @@ namespace LLMUnity
             }
         }
 
-        public override int Remove(string inputString, int splitId = 0)
+        public override int Remove(string inputString, string splitId = "")
         {
             if (!dataSplits.TryGetValue(splitId, out List<int> dataSplit)) return 0;
             List<int> removeIds = new List<int>();
@@ -133,13 +133,13 @@ namespace LLMUnity
             return data.Count;
         }
 
-        public override int Count(int splitId)
+        public override int Count(string splitId)
         {
             if (!dataSplits.TryGetValue(splitId, out List<int> dataSplit)) return 0;
             return dataSplit.Count;
         }
 
-        public override async Task<int> IncrementalSearch(string queryString, int splitId = 0)
+        public override async Task<int> IncrementalSearch(string queryString, string splitId = "")
         {
             return IncrementalSearch(await Encode(queryString), splitId);
         }
@@ -156,7 +156,7 @@ namespace LLMUnity
         {
             JsonUtility.FromJsonOverwrite(ArchiveSaver.Load<string>(archive, "Search_object"), this);
             data = ArchiveSaver.Load<SortedDictionary<int, string>>(archive, "Search_data");
-            dataSplits = ArchiveSaver.Load<SortedDictionary<int, List<int>>>(archive, "Search_dataSplits");
+            dataSplits = ArchiveSaver.Load<SortedDictionary<string, List<int>>>(archive, "Search_dataSplits");
             LoadInternal(archive);
         }
     }
