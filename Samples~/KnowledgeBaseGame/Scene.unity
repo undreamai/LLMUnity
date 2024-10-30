@@ -1036,12 +1036,12 @@ MonoBehaviour:
   MapButton: {fileID: 692572909}
   SolveButton: {fileID: 1023571710}
   HelpButton: {fileID: 1696547302}
+  SubmitButton: {fileID: 964505547}
   NotebookImage: {fileID: 828313583}
   NotesPanel: {fileID: 1301879205}
   SolvePanel: {fileID: 1260794225}
   HelpPanel: {fileID: 1385587314}
   MapImage: {fileID: 964460963}
-  SubmitButton: {fileID: 964505547}
   SuccessImage: {fileID: 1723006218}
   FailText: {fileID: 1626244059}
   Answer1: {fileID: 1290124570}
@@ -1049,6 +1049,7 @@ MonoBehaviour:
   Answer3: {fileID: 1278063795}
   llmCharacter: {fileID: 1275496423}
   rag: {fileID: 1772403376}
+  numRAGResults: 3
 --- !u!1 &495835622
 GameObject:
   m_ObjectHideFlags: 0
@@ -2064,7 +2065,7 @@ MonoBehaviour:
   debug: 0
   parallelPrompts: -1
   dontDestroyOnLoad: 1
-  contextSize: 0
+  contextSize: 8192
   batchSize: 512
   basePrompt: 
   model: 
@@ -2077,8 +2078,10 @@ MonoBehaviour:
   SSLCertPath: 
   SSLKey: 
   SSLKeyPath: 
-  embeddingsOnly: 1
-  embeddingLength: 384
+  minContextLength: 0
+  maxContextLength: 0
+  embeddingsOnly: 0
+  embeddingLength: 0
 --- !u!4 &758599403
 Transform:
   m_ObjectHideFlags: 0
@@ -4353,13 +4356,11 @@ MonoBehaviour:
   host: localhost
   port: 13333
   numRetries: 10
-  APIKey: 
   save: 
   saveCache: 0
-  debugPrompt: 1
+  debugPrompt: 0
   grammar: 
   cachePrompt: 1
-  slot: -1
   seed: 0
   numPredict: 256
   temperature: 0.2
@@ -7595,7 +7596,7 @@ MonoBehaviour:
   debug: 0
   parallelPrompts: -1
   dontDestroyOnLoad: 1
-  contextSize: 0
+  contextSize: 8192
   batchSize: 512
   basePrompt: 
   model: 
