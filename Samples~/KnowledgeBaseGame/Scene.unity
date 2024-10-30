@@ -1025,7 +1025,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CharacterSelect: {fileID: 1821864875}
   PlayerText: {fileID: 283994679}
-  SetupText: {fileID: 2024418435}
   AIText: {fileID: 681685488}
   ButlerText: {fileID: 4900000, guid: c2c64001c142dfdbab3c68bbf78335ed, type: 3}
   MaidText: {fileID: 4900000, guid: 70839d4b753f9ff66a48a0d931db2629, type: 3}
@@ -1049,7 +1048,7 @@ MonoBehaviour:
   Answer2: {fileID: 504847329}
   Answer3: {fileID: 1278063795}
   llmCharacter: {fileID: 1275496423}
-  embedding: {fileID: 1772403371}
+  rag: {fileID: 1772403376}
 --- !u!1 &495835622
 GameObject:
   m_ObjectHideFlags: 0
@@ -2028,6 +2027,73 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 744895509}
   m_CullTransparentMesh: 1
+--- !u!1 &758599401
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 758599403}
+  - component: {fileID: 758599402}
+  m_Layer: 0
+  m_Name: LLMRAG
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &758599402
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 758599401}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a50e3140c3ecaaf1c848dbf141cc2074, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  advancedOptions: 0
+  remote: 0
+  port: 13333
+  numThreads: -1
+  numGPULayers: 0
+  debug: 0
+  parallelPrompts: -1
+  dontDestroyOnLoad: 1
+  contextSize: 0
+  batchSize: 512
+  basePrompt: 
+  model: all-MiniLM-L12-v2.Q4_K_M.gguf
+  chatTemplate: chatml
+  lora: 
+  loraWeights: 
+  flashAttention: 0
+  APIKey: 
+  SSLCert: 
+  SSLCertPath: 
+  SSLKey: 
+  SSLKeyPath: 
+  embeddingsOnly: 1
+  embeddingLength: 384
+--- !u!4 &758599403
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 758599401}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 887.5697, y: 599.9278, z: -4.22581}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &805977037
 GameObject:
   m_ObjectHideFlags: 0
@@ -2857,7 +2923,6 @@ RectTransform:
   - {fileID: 964460962}
   - {fileID: 1723006217}
   - {fileID: 1468962045}
-  - {fileID: 2024418434}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -4282,14 +4347,16 @@ MonoBehaviour:
   advancedOptions: 0
   remote: 0
   llm: {fileID: 2142407556}
+  stream: 1
+  APIKey: 
+  slot: -1
   host: localhost
   port: 13333
   numRetries: 10
   APIKey: 
   save: 
   saveCache: 0
-  debugPrompt: 0
-  stream: 1
+  debugPrompt: 1
   grammar: 
   cachePrompt: 1
   slot: -1
@@ -4314,16 +4381,22 @@ MonoBehaviour:
   ignoreEos: 0
   nKeep: -1
   stop: []
-  playerName: Detective
-  AIName: 
-  prompt: 'You are a robot working at a house where a diamond was stolen and a detective
-    asks you questions about the robbery.
+  playerName: Query
+  AIName: Answer
+  prompt: 'You are a robot working at a house where a diamond was stolen.
 
-    Answer the question provided at the
-    section "Question" based on the possible answers at the section "Answers".
+    A
+    detective asks you questions about the robbery and your goal is to answer them
+    based on the provided possible answers.
 
-    Rephrase
-    the answer, do not copy it directly.'
+    Answer the question by rephrasing
+    the most relevant answer from the possible answers.
+
+    Answer based only on
+    the provided answers, do not add any fictional information.
+
+    Provide only
+    the answer directly.'
   setNKeepToPrompt: 1
   chat: []
   grammarString: 
@@ -6248,28 +6321,17 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1772403372}
-  - component: {fileID: 1772403371}
+  - component: {fileID: 1772403376}
+  - component: {fileID: 1772403375}
+  - component: {fileID: 1772403374}
+  - component: {fileID: 1772403373}
   m_Layer: 0
-  m_Name: Embedding
+  m_Name: RAG
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1772403371
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1772403370}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a329c2b464600fb51a49b46dde889482, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SelectedOption: 0
-  downloadProgress: 1
 --- !u!4 &1772403372
 Transform:
   m_ObjectHideFlags: 0
@@ -6285,6 +6347,75 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1772403373
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1772403370}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 354c2418b0d6913efbfb73dccd540d23, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  search: {fileID: 1772403374}
+  returnChunks: 0
+  nextKey: 0
+  delimiters: 2e0021003a003b003f000a000d00
+--- !u!114 &1772403374
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1772403370}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5102d32385d84d87f98c64d376cbcc90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  llmCaller: {fileID: 1772403375}
+  nextKey: 0
+  nextIncrementalSearchKey: 0
+--- !u!114 &1772403375
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1772403370}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01594396c2699f0ecb48ead86a6b1bc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  advancedOptions: 0
+  remote: 0
+  llm: {fileID: 758599402}
+  stream: 1
+  APIKey: 
+  slot: -1
+  host: localhost
+  port: 13333
+  numRetries: 10
+--- !u!114 &1772403376
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1772403370}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2496546d1575771597fc8cbdd0d852d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  llmCaller: {fileID: 1772403375}
+  searchClass: 0
+  search: {fileID: 1772403374}
+  chunkingClass: 3
+  chunking: {fileID: 1772403373}
 --- !u!1 &1807881543
 GameObject:
   m_ObjectHideFlags: 0
@@ -7241,87 +7372,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2019606177}
   m_CullTransparentMesh: 1
---- !u!1 &2024418433
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2024418434}
-  - component: {fileID: 2024418436}
-  - component: {fileID: 2024418435}
-  m_Layer: 5
-  m_Name: SetupText
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &2024418434
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2024418433}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 898411689}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -65.892715, y: -447.78424}
-  m_SizeDelta: {x: 1154.2146, y: 70}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &2024418435
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2024418433}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 30
-    m_FontStyle: 0
-    m_BestFit: 0
-    m_MinSize: 2
-    m_MaxSize: 40
-    m_Alignment: 0
-    m_AlignByGeometry: 0
-    m_RichText: 1
-    m_HorizontalOverflow: 0
-    m_VerticalOverflow: 0
-    m_LineSpacing: 1
-  m_Text: 'The sample requires the RAGSearchUnity asset from:
-
-    https://github.com/undreamai/RAGSearchUnity'
---- !u!222 &2024418436
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2024418433}
-  m_CullTransparentMesh: 1
 --- !u!1 &2038337339
 GameObject:
   m_ObjectHideFlags: 0
@@ -7537,19 +7587,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a50e3140c3ecaaf1c848dbf141cc2074, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  advancedOptions: 0
+  advancedOptions: 1
   remote: 0
   port: 13333
   numThreads: -1
-  numGPULayers: 0
+  numGPULayers: 25
   debug: 0
   parallelPrompts: -1
   dontDestroyOnLoad: 1
   contextSize: 8192
   batchSize: 512
   basePrompt: 
-  model: 
-  chatTemplate: chatml
+  model: Phi-3.5-mini-instruct-Q4_K_M.gguf
+  chatTemplate: phi-3
   lora: 
   loraWeights: 
   flashAttention: 0
@@ -7560,6 +7610,8 @@ MonoBehaviour:
   SSLKeyPath: 
   minContextLength: 0
   maxContextLength: 0
+  embeddingsOnly: 0
+  embeddingLength: 3072
 --- !u!4 &2142407557
 Transform:
   m_ObjectHideFlags: 0
@@ -7666,5 +7718,6 @@ SceneRoots:
   - {fileID: 862588794}
   - {fileID: 1772403372}
   - {fileID: 2142407557}
+  - {fileID: 758599403}
   - {fileID: 1275496424}
   - {fileID: 489627713}

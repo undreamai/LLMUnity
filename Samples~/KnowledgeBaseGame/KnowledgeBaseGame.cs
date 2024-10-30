@@ -4,55 +4,93 @@ using System.IO;
 using System.Diagnostics;
 using Debug = UnityEngine.Debug;
 using UnityEngine.UI;
-using System.Collections;
 using LLMUnity;
 using System.Threading.Tasks;
+using System.Linq;
+using System;
 
 namespace LLMUnitySamples
 {
-    public class Bot
+    public class KnowledgeBaseGame : KnowledgeBaseGameUI
     {
-        Dictionary<string, string> dialogues;
-        SearchEngine search;
+        public LLMCharacter llmCharacter;
+        public RAG rag;
 
-        public Bot(string dialogueText, LLM llm, string embeddingsPath)
+        Dictionary<string, Dictionary<string, string>> botQuestionAnswers = new Dictionary<string, Dictionary<string, string>>();
+        Dictionary<string, RawImage> botImages = new Dictionary<string, RawImage>();
+        string currentBotName;
+
+        new async void Start()
         {
-            LoadDialogues(dialogueText);
-            CreateEmbeddings(llm, embeddingsPath);
+            base.Start();
+            CheckLLMs(false);
+            InitElements();
+            await InitRAG();
+            InitLLM();
         }
 
-        void LoadDialogues(string dialogueText)
+        void InitElements()
         {
-            dialogues = new Dictionary<string, string>();
-            foreach (string line in dialogueText.Split("\n"))
+            PlayerText.interactable = false;
+            botImages["Butler"] = ButlerImage;
+            botImages["Maid"] = MaidImage;
+            botImages["Chef"] = ChefImage;
+            botQuestionAnswers["Butler"] = LoadQuestionAnswers(ButlerText.text);
+            botQuestionAnswers["Maid"] = LoadQuestionAnswers(MaidText.text);
+            botQuestionAnswers["Chef"] = LoadQuestionAnswers(ChefText.text);
+        }
+
+        async Task InitRAG()
+        {
+            // create the embeddings
+            await CreateEmbeddings();
+            DropdownChange(CharacterSelect.value);
+        }
+
+        void InitLLM()
+        {
+            // warm-up the LLM
+            PlayerText.text += "Warming up the model...";
+            _ = llmCharacter.Warmup(AIReplyComplete);
+        }
+
+        public Dictionary<string, string> LoadQuestionAnswers(string questionAnswersText)
+        {
+            Dictionary<string, string> questionAnswers = new Dictionary<string, string>();
+            foreach (string line in questionAnswersText.Split("\n"))
             {
                 if (line == "") continue;
                 string[] lineParts = line.Split("|");
-                dialogues[lineParts[0]] = lineParts[1];
+                questionAnswers[lineParts[0]] = lineParts[1];
             }
+            return questionAnswers;
         }
 
-        void CreateEmbeddings(LLM llm, string embeddingsPath)
+        public async Task CreateEmbeddings()
         {
-            if (File.Exists(embeddingsPath))
+            string ragPath = Path.Combine(Application.streamingAssetsPath, "KnowledgeBaseGame.zip");
+            if (File.Exists(ragPath))
             {
                 // load the embeddings
-                search = SearchEngine.Load(llm, embeddingsPath);
+                PlayerText.text += $"Loading embeddings...\n";
+                rag.Load(ragPath);
             }
             else
             {
     #if UNITY_EDITOR
-                search = new SearchEngine(llm);
                 Stopwatch stopwatch = new Stopwatch();
-                stopwatch.Start();
                 // build the embeddings
-                foreach (string question in dialogues.Keys)
+                foreach ((string botName, Dictionary<string, string> botQuestionAnswers) in botQuestionAnswers)
                 {
-                    search.Add(question);
+                    PlayerText.text += $"Creating Embeddings for {botName} (only once)...\n";
+                    List<string> questions = botQuestionAnswers.Keys.ToList();
+                    stopwatch.Start();
+                    foreach (string question in questions) await rag.Add(question, botName);
+                    stopwatch.Stop();
+                    Debug.Log($"embedded {rag.Count()} phrases in {stopwatch.Elapsed.TotalMilliseconds / 1000f} secs");
                 }
-                Debug.Log($"embedded {search.NumPhrases()} phrases, {search.NumSentences()} sentences in {stopwatch.Elapsed.TotalMilliseconds / 1000f} secs");
                 // store the embeddings
-                search.Save(embeddingsPath);
+                rag.Save(ragPath);
     #else
                 // if in play mode throw an error
                 throw new System.Exception("The embeddings could not be found!");
@@ -62,86 +100,41 @@ namespace LLMUnitySamples
 
         public async Task<List<string>> Retrieval(string question)
         {
-            string[] similarQuestions = await search.Search(question, 3);
+            // find 3 similar questions for the current bot using the RAG
+            (string[] similarQuestions, _) = await rag.Search(question, 3, currentBotName);
+            // get the answers of the similar questions
             List<string> similarAnswers = new List<string>();
-            foreach (string similarQuestion in similarQuestions) similarAnswers.Add(dialogues[similarQuestion]);
+            foreach (string similarQuestion in similarQuestions) similarAnswers.Add(botQuestionAnswers[currentBotName][similarQuestion]);
             return similarAnswers;
         }
 
-        public int NumPhrases()
+        public async Task<string> ConstructPrompt(string question)
         {
-            return search.NumPhrases();
-        }
-    }
-
-    public class KnowledgeBaseGame : KnowledgeBaseGameUI
-    {
-        public LLMCharacter llmCharacter;
-        public LLM llmEmbedding;
-
-        Dictionary<string, Bot> bots = new Dictionary<string, Bot>();
-        Dictionary<string, RawImage> botImages = new Dictionary<string, RawImage>();
-        string currentBotName;
-        Bot currentBot;
-        RawImage currentImage;
-        List<(string botName, TextAsset asset, RawImage image)> botInfo;
-
-        new void Start()
-        {
-            base.Start();
-            botInfo = new List<(string botName, TextAsset asset, RawImage image)>()
-            {
-                ("Butler", ButlerText, ButlerImage),
-                ("Maid", MaidText, MaidImage),
-                ("Chef", ChefText, ChefImage)
-            };
-            StartCoroutine(InitModels());
-        }
-
-        IEnumerator InitModels()
-        {
-            PlayerText.interactable = false;
-            yield return null;
-            string outputDir = Path.Combine(Application.streamingAssetsPath, "KnowledgeBaseGame");
-            if (!Directory.Exists(outputDir)) Directory.CreateDirectory(outputDir);
-
-            // init the bots with the embeddings
-            if (llmEmbedding == null) throw new System.Exception("Please select a model in the Embedding GameObject!");
-            foreach ((string botName, TextAsset asset, RawImage image) in botInfo)
-            {
-                string embeddingsPath = Path.Combine(outputDir, botName + ".zip");
-                PlayerText.text += File.Exists(embeddingsPath) ? $"Loading {botName} dialogues...\n" : $"Creating Embeddings for {botName} (only once)...\n";
-                yield return null;
-                bots[botName] = new Bot(asset.text, llmEmbedding, embeddingsPath);
-                botImages[botName] = image;
-            }
-
-            // warm-up the LLM
-            PlayerText.text += "Warming up the model...";
-            _ = llmCharacter.Warmup(AIReplyComplete);
-
-            DropdownChange(CharacterSelect.value);
-            yield return null;
+            // get similar answers from the RAG
+            List<string> similarAnswers = await Retrieval(question);
+            // create the prompt using the user question and the similar answers
+            string answers = "";
+            foreach (string similarAnswer in similarAnswers) answers += $"\n- {similarAnswer}";
+            // string prompt = $"Robot: {currentBotName}\n\n";
+            string prompt = $"Question: {question}\n\n";
+            prompt += $"Possible Answers: {answers}";
+            return prompt;
         }
 
         protected async override void OnInputFieldSubmit(string question)
         {
             PlayerText.interactable = false;
-            List<string> similarAnswers = await currentBot.Retrieval(question);
-            string prompt = $"Question:\n{question}\n\nAnswers:\n";
-            foreach (string similarAnswer in similarAnswers) prompt += $"- {similarAnswer}\n";
+            string prompt = await ConstructPrompt(question);
             _ = llmCharacter.Chat(prompt, SetAIText, AIReplyComplete);
         }
 
         protected override void DropdownChange(int selection)
         {
             // select another character
+            if (!String.IsNullOrEmpty(currentBotName)) botImages[currentBotName].gameObject.SetActive(false);
             currentBotName = CharacterSelect.options[selection].text;
-            currentBot = bots[currentBotName];
-            if (currentImage != null) currentImage.gameObject.SetActive(false);
-            currentImage = botImages[currentBotName];
-            currentImage.gameObject.SetActive(true);
-            Debug.Log($"{currentBotName}: {currentBot.NumPhrases()} phrases available");
+            botImages[currentBotName].gameObject.SetActive(true);
+            Debug.Log($"{currentBotName}: {rag.Count(currentBotName)} phrases available");
 
             // set the LLMCharacter name
             llmCharacter.AIName = currentBotName;
@@ -162,6 +155,7 @@ namespace LLMUnitySamples
         public void CancelRequests()
         {
             llmCharacter.CancelRequests();
+            rag.llmCaller.CancelRequests();
             AIReplyComplete();
         }
 
@@ -171,13 +165,28 @@ namespace LLMUnitySamples
             Application.Quit();
         }
 
+        void CheckLLM(LLMCaller llmCaller, bool debug)
+        {
+            if (!llmCaller.remote && llmCaller.llm != null && llmCaller.llm.model == "")
+            {
+                string error = $"Please select a llm model in the {llmCaller.llm.gameObject.name} GameObject!";
+                if (debug) Debug.LogWarning(error);
+                else throw new System.Exception(error);
+            }
+        }
+
+        void CheckLLMs(bool debug)
+        {
+            CheckLLM(rag.llmCaller, debug);
+            CheckLLM(llmCharacter, debug);
+        }
+
         bool onValidateWarning = true;
         void OnValidate()
         {
             if (onValidateWarning)
             {
-                if (llmEmbedding == null) Debug.LogWarning($"Please select a llmEmbedding model in the {gameObject.name} GameObject!");
-                if (!llmCharacter.remote && llmCharacter.llm != null && llmCharacter.llm.model == "") Debug.LogWarning($"Please select a model in the {llmCharacter.llm.gameObject.name} GameObject!");
+                CheckLLMs(true);
                 onValidateWarning = false;
             }
         }
