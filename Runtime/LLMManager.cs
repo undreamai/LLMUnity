@@ -49,11 +49,14 @@ namespace LLMUnity
             if (!lora)
             {
                 GGUFReader reader = new GGUFReader(this.path);
-                chatTemplate = ChatTemplate.FromGGUF(reader, this.path);
                 string arch = reader.GetStringField("general.architecture");
-                if (arch != null) contextLength = reader.GetIntField($"{arch}.context_length");
-                if (arch != null) embeddingLength = reader.GetIntField($"{arch}.embedding_length");
                 embeddingOnly = embeddingOnlyArchs.Contains(arch);
+                chatTemplate = embeddingOnly ? default : ChatTemplate.FromGGUF(reader, this.path);
+                if (arch != null)
+                {
+                    contextLength = reader.GetIntField($"{arch}.context_length");
+                    embeddingLength = reader.GetIntField($"{arch}.embedding_length");
+                }
             }
         }
 
