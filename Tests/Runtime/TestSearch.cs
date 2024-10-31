@@ -614,7 +614,7 @@ namespace RAGTests
         public override RAG CreateSearch()
         {
             RAG rag = gameObject.AddComponent<RAG>();
-            rag.Initialize(GetSearchMethod(), GetChunkingMethod(), llm);
+            rag.Construct(GetSearchMethod(), GetChunkingMethod(), llm);
             return rag;
         }
 
