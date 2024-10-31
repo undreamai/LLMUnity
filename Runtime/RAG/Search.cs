@@ -3,6 +3,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
+using UnityEditor;
 using UnityEngine;
 
 namespace LLMUnity
@@ -48,6 +49,35 @@ namespace LLMUnity
             for (int i = 0; i < resultKeys.Length; i++) results[i] = Get(resultKeys[i]);
             return (results, distances, completed);
         }
+
+        protected static Component GetOrAddObject(GameObject gameObject, System.Type type)
+        {
+            Component component = gameObject.GetComponent(type);
+            if (component == null) component = gameObject.AddComponent(type);
+            return component;
+        }
+
+        public virtual void UpdateGameObjects() {}
+
+
+        public virtual void Awake()
+        {
+            UpdateGameObjects();
+        }
+
+        public virtual void Reset()
+        {
+#if UNITY_EDITOR
+            if (!Application.isPlaying) EditorApplication.update += UpdateGameObjects;
+#endif
+        }
+
+        public virtual void OnDestroy()
+        {
+#if UNITY_EDITOR
+            if (!Application.isPlaying) EditorApplication.update -= UpdateGameObjects;
+#endif
+        }
     }
 
     public abstract class SearchMethod : Searchable
@@ -59,6 +89,8 @@ namespace LLMUnity
         protected SortedDictionary<int, string> data = new SortedDictionary<int, string>();
         protected SortedDictionary<string, List<int>> dataSplits = new SortedDictionary<string, List<int>>();
 
+        private LLM llm;
+
         protected abstract void AddInternal(int key, float[] embedding);
         protected abstract void RemoveInternal(int key);
         protected abstract void ClearInternal();
@@ -66,9 +98,25 @@ namespace LLMUnity
         protected abstract void SaveInternal(ZipArchive archive);
         protected abstract void LoadInternal(ZipArchive archive);
 
+        public void SetLLM(LLM llm)
+        {
+            this.llm = llm;
+            if (llmEmbedder != null) llmEmbedder.llm = llm;
+        }
+
         public virtual async Task<float[]> Encode(string inputString)
         {
             return (await llmEmbedder.Embeddings(inputString)).ToArray();
+        }
+
+        public virtual async Task<List<int>> Tokenize(string query, Callback<List<int>> callback = null)
+        {
+            return await llmEmbedder.Tokenize(query, callback);
+        }
+
+        public async Task<string> Detokenize(List<int> tokens, Callback<string> callback = null)
+        {
+            return await llmEmbedder.Detokenize(tokens, callback);
         }
 
         public override string Get(int key)
@@ -159,6 +207,13 @@ namespace LLMUnity
             nextKey = ArchiveSaver.Load<int>(archive, "Search_nextKey");
             nextIncrementalSearchKey = ArchiveSaver.Load<int>(archive, "Search_nextIncrementalSearchKey");
             LoadInternal(archive);
+        }
+
+        public override void UpdateGameObjects()
+        {
+            if (this == null || llmEmbedder != null) return;
+            llmEmbedder = (LLMEmbedder)GetOrAddObject(gameObject, typeof(LLMEmbedder));
+            llmEmbedder.llm = llm;
         }
     }
 
