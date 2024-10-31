@@ -64,10 +64,8 @@ namespace LLMUnity
             if (!dataSplits.TryGetValue(splitId, out List<int> dataSplit)) return (new int[0], new float[0], true);
             if (dataSplit.Count == 0) return (new int[0], new float[0], true);
 
-            index.Search(
-                embedding, k, out ulong[] keys, out float[] distances,
-                (int key, IntPtr state) => !dataSplit.Contains(key) || seenKeys.Contains(key) ? 0 : 1
-            );
+            Func<int, int> filter = (int key) => !dataSplit.Contains(key) || seenKeys.Contains(key) ? 0 : 1;
+            index.Search(embedding, k, out ulong[] keys, out float[] distances, filter);
             int[] intKeys = UlongToInt(keys);
             incrementalSearchCache[fetchKey].Item3.AddRange(intKeys);
 
