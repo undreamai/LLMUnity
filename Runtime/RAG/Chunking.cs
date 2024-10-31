@@ -153,6 +153,18 @@ namespace LLMUnity
             }
         }
 
+        public override (string[], float[], bool) IncrementalFetch(int fetchKey, int k)
+        {
+            (int[] resultKeys, float[] distances, bool completed) = IncrementalFetchKeys(fetchKey, k);
+            string[] results = new string[resultKeys.Length];
+            for (int i = 0; i < resultKeys.Length; i++)
+            {
+                if (returnChunks) results[i] = search.Get(resultKeys[i]);
+                else results[i] = Get(resultKeys[i]);
+            }
+            return (results, distances, completed);
+        }
+
         public override void IncrementalSearchComplete(int fetchKey)
         {
             search.IncrementalSearchComplete(fetchKey);
