@@ -1,6 +1,7 @@
 using System;
 using System.IO.Compression;
 using System.Threading.Tasks;
+using UnityEditor;
 using UnityEngine;
 
 namespace LLMUnity
@@ -32,7 +33,7 @@ namespace LLMUnity
         SearchMethods preSearchClass;
         ChunkingMethods preChunkingClass;
 
-        public void Initialize(SearchMethods searchMethod = SearchMethods.SimpleSearch, ChunkingMethods chunkingMethod = ChunkingMethods.NoChunking, LLM llm = null)
+        public void Construct(SearchMethods searchMethod = SearchMethods.SimpleSearch, ChunkingMethods chunkingMethod = ChunkingMethods.NoChunking, LLM llm = null)
         {
             searchClass = searchMethod;
             chunkingClass = chunkingMethod;
@@ -84,12 +85,21 @@ namespace LLMUnity
         public override void UpdateGameObjects()
         {
             if (this == null) return;
-            if (search == null || preSearchClass != searchClass)
+            bool constructSearch = search == null;
+            bool constructChunking = chunking == null;
+#if UNITY_EDITOR
+            if (!EditorApplication.isPlaying)
+            {
+                constructSearch = constructSearch || preSearchClass != searchClass;
+                constructChunking = constructChunking || preChunkingClass != chunkingClass;
+            }
+#endif
+            if (constructSearch)
             {
                 ConstructSearch();
                 preSearchClass = searchClass;
             }
-            if (chunking == null || preChunkingClass != chunkingClass)
+            if (constructChunking)
             {
                 ConstructChunking();
                 preChunkingClass = chunkingClass;
