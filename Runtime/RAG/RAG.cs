@@ -25,7 +25,6 @@ namespace LLMUnity
     [Serializable]
     public class RAG : Searchable
     {
-        public LLMEmbedder llmEmbedder;
         public SearchMethods searchClass = SearchMethods.SimpleSearch;
         public SearchMethod search;
         public ChunkingMethods chunkingClass = ChunkingMethods.NoChunking;
@@ -34,52 +33,58 @@ namespace LLMUnity
         SearchMethods preSearchClass;
         ChunkingMethods preChunkingClass;
 
-        public void Initialize(SearchMethods searchMethod = SearchMethods.SimpleSearch, ChunkingMethods chunkingMethod = ChunkingMethods.NoChunking, LLMEmbedder llmEmbedder = null)
+        public void Initialize(SearchMethods searchMethod = SearchMethods.SimpleSearch, ChunkingMethods chunkingMethod = ChunkingMethods.NoChunking, LLM llm = null)
         {
             searchClass = searchMethod;
             chunkingClass = chunkingMethod;
-            this.llmEmbedder = llmEmbedder;
             UpdateGameObjects();
-        }
-
-        public void Initialize(SearchMethods searchMethod = SearchMethods.SimpleSearch, ChunkingMethods chunkingMethod = ChunkingMethods.NoChunking, LLM llm = null)
-        {
-            llmEmbedder = (LLMEmbedder)GetOrAddObject(typeof(LLMEmbedder));
-            llmEmbedder.llm = llm;
-            Initialize(searchMethod, chunkingMethod, llmEmbedder);
-        }
-
-        protected Component GetOrAddObject(Type type)
-        {
-            Component component = gameObject.GetComponent(type);
-            if (component == null) component = gameObject.AddComponent(type);
-            return component;
+            search.SetLLM(llm);
         }
 
         protected Component AddObjectFromEnum(Enum enumeration)
         {
             Type type = Type.GetType("LLMUnity." + enumeration.ToString());
-            return GetOrAddObject(type);
+            return GetOrAddObject(gameObject, type);
         }
 
         protected void ConstructSearch()
         {
-            if (search != null) DestroyImmediate(search);
-            search = (SearchMethod)AddObjectFromEnum(searchClass);
-            search.llmEmbedder = llmEmbedder;
+            SearchMethod newSearch = (SearchMethod)AddObjectFromEnum(searchClass);
+            newSearch.UpdateGameObjects();
+            if (search != null)
+            {
+#if UNITY_EDITOR
+                DestroyImmediate(search);
+#else
+                Destroy(search);
+#endif
+            }
+            search = newSearch;
         }
 
         protected void ConstructChunking()
         {
-            if (chunking != null) DestroyImmediate(chunking);
-            if (chunkingClass == ChunkingMethods.NoChunking) return;
-            chunking = (Chunking)AddObjectFromEnum(chunkingClass);
-            chunking.search = search;
+            Chunking newChunking = null;
+            if (chunkingClass != ChunkingMethods.NoChunking)
+            {
+                newChunking = (Chunking)AddObjectFromEnum(chunkingClass);
+                newChunking.UpdateGameObjects();
+                newChunking.search = search;
+            }
+            if (chunking != null)
+            {
+#if UNITY_EDITOR
+                DestroyImmediate(chunking);
+#else
+                Destroy(chunking);
+#endif
+            }
+            chunking = newChunking;
         }
 
-        void UpdateGameObjects()
+        public override void UpdateGameObjects()
         {
-            if (llmEmbedder == null) llmEmbedder = (LLMEmbedder)GetOrAddObject(typeof(LLMEmbedder));
+            if (this == null) return;
             if (search == null || preSearchClass != searchClass)
             {
                 ConstructSearch();
@@ -91,19 +96,6 @@ namespace LLMUnity
                 preChunkingClass = chunkingClass;
             }
         }
-
-#if UNITY_EDITOR
-        protected virtual void Reset()
-        {
-            if (!Application.isPlaying) EditorApplication.update += UpdateGameObjects;
-        }
-
-        public void OnDestroy()
-        {
-            if (!Application.isPlaying) EditorApplication.update -= UpdateGameObjects;
-        }
-
-#endif
 
         protected Searchable GetSearcher()
         {

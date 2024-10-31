@@ -17,8 +17,9 @@ namespace LLMUnity
         [ModelAdvanced] public ulong expansionSearch = 16;
         private Dictionary<int, (float[], string, List<int>)> incrementalSearchCache = new Dictionary<int, (float[], string, List<int>)>();
 
-        public void Awake()
+        public new void Awake()
         {
+            base.Awake();
             if (!enabled) return;
             InitIndex();
         }

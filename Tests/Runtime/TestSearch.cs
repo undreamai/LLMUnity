@@ -396,9 +396,7 @@ namespace RAGTests
         public override T CreateSearch()
         {
             T search = gameObject.AddComponent<T>();
-            LLMEmbedder llmEmbedder = gameObject.AddComponent<LLMEmbedder>();
-            llmEmbedder.llm = llm;
-            search.llmEmbedder = llmEmbedder;
+            search.SetLLM(llm);
             return search;
         }
 
@@ -437,9 +435,7 @@ namespace RAGTests
         {
             T search = gameObject.AddComponent<T>();
             DBSearch searchMethod = gameObject.AddComponent<DBSearch>();
-            LLMEmbedder llmEmbedder = gameObject.AddComponent<LLMEmbedder>();
-            llmEmbedder.llm = llm;
-            searchMethod.llmEmbedder = llmEmbedder;
+            searchMethod.SetLLM(llm);
             search.search = searchMethod;
             return search;
         }
