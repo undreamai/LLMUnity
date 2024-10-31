@@ -77,16 +77,6 @@ namespace LLMUnity
             chunking.search = search;
         }
 
-        protected virtual void Reset()
-        {
-            if (!Application.isPlaying) EditorApplication.update += UpdateGameObjects;
-        }
-
-        public void OnDestroy()
-        {
-            if (!Application.isPlaying) EditorApplication.update -= UpdateGameObjects;
-        }
-
         void UpdateGameObjects()
         {
             if (llmEmbedder == null) llmEmbedder = (LLMEmbedder)GetOrAddObject(typeof(LLMEmbedder));
@@ -101,6 +91,19 @@ namespace LLMUnity
                 preChunkingClass = chunkingClass;
             }
         }
+
+#if UNITY_EDITOR
+        protected virtual void Reset()
+        {
+            if (!Application.isPlaying) EditorApplication.update += UpdateGameObjects;
+        }
+
+        public void OnDestroy()
+        {
+            if (!Application.isPlaying) EditorApplication.update -= UpdateGameObjects;
+        }
+
+#endif
 
         protected Searchable GetSearcher()
         {

@@ -12,11 +12,11 @@ namespace LLMUnity
     public abstract class Chunking : SearchPlugin
     {
         public bool returnChunks = false;
-        public Dictionary<string, List<int>> dataSplitToPhrases = new Dictionary<string, List<int>>();
-        public Dictionary<int, int[]> phraseToSentences = new Dictionary<int, int[]>();
-        public Dictionary<int, int> sentenceToPhrase = new Dictionary<int, int>();
-        public Dictionary<int, int[]> hexToPhrase = new Dictionary<int, int[]>();
-        [HideInInspector, SerializeField] protected int nextKey = 0;
+        protected Dictionary<string, List<int>> dataSplitToPhrases = new Dictionary<string, List<int>>();
+        protected Dictionary<int, int[]> phraseToSentences = new Dictionary<int, int[]>();
+        protected Dictionary<int, int> sentenceToPhrase = new Dictionary<int, int>();
+        protected Dictionary<int, int[]> hexToPhrase = new Dictionary<int, int[]>();
+        protected int nextKey = 0;
 
         public abstract Task<List<(int, int)>> Split(string input);
 
@@ -174,6 +174,7 @@ namespace LLMUnity
             ArchiveSaver.Save(archive, phraseToSentences, "SentenceSplitter_phraseToSentences");
             ArchiveSaver.Save(archive, sentenceToPhrase, "SentenceSplitter_sentenceToPhrase");
             ArchiveSaver.Save(archive, hexToPhrase, "SentenceSplitter_hexToPhrase");
+            ArchiveSaver.Save(archive, nextKey, "SentenceSplitter_nextKey");
             search.Save(archive);
         }
 
@@ -183,6 +184,7 @@ namespace LLMUnity
             phraseToSentences = ArchiveSaver.Load<Dictionary<int, int[]>>(archive, "SentenceSplitter_phraseToSentences");
             sentenceToPhrase = ArchiveSaver.Load<Dictionary<int, int>>(archive, "SentenceSplitter_sentenceToPhrase");
             hexToPhrase = ArchiveSaver.Load<Dictionary<int, int[]>>(archive, "SentenceSplitter_hexToPhrase");
+            nextKey = ArchiveSaver.Load<int>(archive, "SentenceSplitter_nextKey");
             search.Load(archive);
         }
     }
