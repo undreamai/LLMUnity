@@ -50,13 +50,13 @@ namespace LLMUnity
             {
                 GGUFReader reader = new GGUFReader(this.path);
                 string arch = reader.GetStringField("general.architecture");
-                embeddingOnly = embeddingOnlyArchs.Contains(arch);
-                chatTemplate = embeddingOnly ? default : ChatTemplate.FromGGUF(reader, this.path);
                 if (arch != null)
                 {
                     contextLength = reader.GetIntField($"{arch}.context_length");
                     embeddingLength = reader.GetIntField($"{arch}.embedding_length");
                 }
+                embeddingOnly = embeddingOnlyArchs.Contains(arch);
+                chatTemplate = embeddingOnly ? default : ChatTemplate.FromGGUF(reader, this.path);
             }
         }
 

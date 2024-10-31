@@ -14,14 +14,16 @@ namespace LLMUnity
         /// <summary> toggle to use remote LLM server or local LLM </summary>
         [LocalRemote] public bool remote = false;
         /// <summary> the LLM object to use </summary>
-        [Local] public LLM llm;
-        /// <summary> option to receive the reply from the model as it is produced (recommended!).
-        /// If it is not selected, the full reply from the model is received in one go </summary>
-        [Chat] public bool stream = true;
+        // [Local] public LLM llm;
+        [Local, SerializeField] protected LLM _llm;
+        public LLM llm
+        {
+            get => _llm;//whatever
+            set => SetLLM(value);
+        }
+
         /// <summary> allows to use a server with API key </summary>
         [Remote] public string APIKey;
-        /// <summary> specify which slot of the server to use for computation (affects caching) </summary>
-        [ModelAdvanced] public int slot = -1;
 
         /// <summary> host to use for the LLM server </summary>
         [Remote] public string host = "localhost";
@@ -30,6 +32,7 @@ namespace LLMUnity
         /// <summary> number of retries to use for the LLM server requests (-1 = infinite) </summary>
         [Remote] public int numRetries = 10;
 
+        private LLM _prellm;
         private List<(string, string)> requestHeaders;
         private List<UnityWebRequest> WIPRequests = new List<UnityWebRequest>();
 
@@ -53,11 +56,10 @@ namespace LLMUnity
                 AssignLLM();
                 if (llm == null)
                 {
-                    LLMUnitySetup.LogError($"No LLM assigned or detected for LLMCharacter {name}!");
-                    return;
+                    string error = $"No LLM assigned or detected for LLMCharacter {name}!";
+                    LLMUnitySetup.LogError(error);
+                    throw new Exception(error);
                 }
-                int slotFromServer = llm.Register(this);
-                if (slot == -1) slot = slotFromServer;
             }
             else
             {
@@ -65,10 +67,36 @@ namespace LLMUnity
             }
         }
 
+        protected virtual void SetLLM(LLM llmSet)
+        {
+            if (llmSet != null && !IsValidLLM(llmSet))
+            {
+                LLMUnitySetup.LogError(NotValidLLMError());
+                llmSet = null;
+            }
+            _llm = llmSet;
+            _prellm = _llm;
+        }
+
+        public virtual bool IsValidLLM(LLM llmSet)
+        {
+            return true;
+        }
+
+        public virtual bool IsAutoAssignableLLM(LLM llmSet)
+        {
+            return true;
+        }
+
+        public virtual string NotValidLLMError()
+        {
+            return $"Can't set LLM {llm.name} to {name}";
+        }
+
         protected virtual void OnValidate()
         {
+            if (_llm != _prellm) SetLLM(_llm);
             AssignLLM();
-            if (llm != null && llm.parallelPrompts > -1 && (slot < -1 || slot >= llm.parallelPrompts)) LLMUnitySetup.LogError($"The slot needs to be between 0 and {llm.parallelPrompts-1}, or -1 to be automatically set");
         }
 
         protected virtual void Reset()
@@ -80,18 +108,22 @@ namespace LLMUnity
         {
             if (remote || llm != null) return;
 
-            LLM[] existingLLMs = FindObjectsOfType<LLM>();
-            if (existingLLMs.Length == 0) return;
+            List<LLM> validLLMs = new List<LLM>();
+            foreach (LLM foundllm in FindObjectsOfType<LLM>())
+            {
+                if (IsValidLLM(foundllm) && IsAutoAssignableLLM(foundllm)) validLLMs.Add(foundllm);
+            }
+            if (validLLMs.Count == 0) return;
 
-            SortBySceneAndHierarchy(existingLLMs);
-            llm = existingLLMs[0];
-            string msg = $"Assigning LLM {llm.name} to LLMCharacter {name}";
+            llm = SortLLMsByBestMatching(validLLMs.ToArray())[0];
+            string msg = $"Assigning LLM {llm.name} to {GetType()} {name}";
             if (llm.gameObject.scene != gameObject.scene) msg += $" from scene {llm.gameObject.scene}";
             LLMUnitySetup.Log(msg);
         }
 
-        protected virtual void SortBySceneAndHierarchy(LLM[] array)
+        protected virtual LLM[] SortLLMsByBestMatching(LLM[] arrayIn)
         {
+            LLM[] array = (LLM[])arrayIn.Clone();
             for (int i = 0; i < array.Length - 1; i++)
             {
                 bool swapped = false;
@@ -112,43 +144,7 @@ namespace LLMUnity
                 }
                 if (!swapped) break;
             }
-        }
-
-        protected string ChatContent(ChatResult result)
-        {
-            // get content from a chat result received from the endpoint
-            return result.content.Trim();
-        }
-
-        protected string MultiChatContent(MultiChatResult result)
-        {
-            // get content from a chat result received from the endpoint
-            string response = "";
-            foreach (ChatResult resultPart in result.data)
-            {
-                response += resultPart.content;
-            }
-            return response.Trim();
-        }
-
-        protected async Task<string> CompletionRequest(string json, Callback<string> callback = null)
-        {
-            string result = "";
-            if (stream)
-            {
-                result = await PostRequest<MultiChatResult, string>(json, "completion", MultiChatContent, callback);
-            }
-            else
-            {
-                result = await PostRequest<ChatResult, string>(json, "completion", ChatContent, callback);
-            }
-            return result;
-        }
-
-        protected string TemplateContent(TemplateResult result)
-        {
-            // get content from a char result received from the endpoint in open AI format
-            return result.template;
+            return array;
         }
 
         protected List<int> TokenizeContent(TokenizeResult result)
@@ -167,12 +163,6 @@ namespace LLMUnity
         {
             // get content from a chat result received from the endpoint
             return result.embedding;
-        }
-
-        protected string SlotContent(SlotResult result)
-        {
-            // get the tokens from a tokenize result received from the endpoint
-            return result.filename;
         }
 
         protected virtual Ret ConvertContent<Res, Ret>(string response, ContentCallback<Res, Ret> getContent = null)
@@ -194,10 +184,7 @@ namespace LLMUnity
             return getContent(JsonUtility.FromJson<Res>(response));
         }
 
-        protected virtual void CancelRequestsLocal()
-        {
-            if (slot >= 0) llm.CancelRequest(slot);
-        }
+        protected virtual void CancelRequestsLocal() {}
 
         protected virtual void CancelRequestsRemote()
         {
@@ -222,9 +209,8 @@ namespace LLMUnity
         {
             // send a post request to the server and call the relevant callbacks to convert the received content and handle it
             // this function has streaming functionality i.e. handles the answer while it is being received
-            string callResult = null;
-            bool callbackCalled = false;
             while (!llm.failed && !llm.started) await Task.Yield();
+            string callResult = null;
             switch (endpoint)
             {
                 case "tokenize":
@@ -239,36 +225,13 @@ namespace LLMUnity
                 case "slots":
                     callResult = await llm.Slot(json);
                     break;
-                case "completion":
-                    if (llm.embeddingsOnly) LLMUnitySetup.LogError("The LLM can't be used for completion, only for embeddings");
-                    else
-                    {
-                        Callback<string> callbackString = null;
-                        if (stream && callback != null)
-                        {
-                            if (typeof(Ret) == typeof(string))
-                            {
-                                callbackString = (strArg) =>
-                                {
-                                    callback(ConvertContent(strArg, getContent));
-                                };
-                            }
-                            else
-                            {
-                                LLMUnitySetup.LogError($"wrong callback type, should be string");
-                            }
-                            callbackCalled = true;
-                        }
-                        callResult = await llm.Completion(json, callbackString);
-                    }
-                    break;
                 default:
                     LLMUnitySetup.LogError($"Unknown endpoint {endpoint}");
                     break;
             }
 
             Ret result = ConvertContent(callResult, getContent);
-            if (!callbackCalled) callback?.Invoke(result);
+            callback?.Invoke(result);
             return result;
         }
 

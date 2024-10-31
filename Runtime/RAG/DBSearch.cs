@@ -25,7 +25,7 @@ namespace LLMUnity
 
         public void InitIndex()
         {
-            index = new USearchIndex(metricKind, quantization, (ulong)llmCaller.llm.embeddingLength, connectivity, expansionAdd, expansionSearch, false);
+            index = new USearchIndex(metricKind, quantization, (ulong)llmEmbedder.llm.embeddingLength, connectivity, expansionAdd, expansionSearch, false);
         }
 
         protected override void AddInternal(int key, float[] embedding)

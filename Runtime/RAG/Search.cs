@@ -52,7 +52,7 @@ namespace LLMUnity
 
     public abstract class SearchMethod : Searchable
     {
-        public LLMCaller llmCaller;
+        public LLMEmbedder llmEmbedder;
 
         [HideInInspector, SerializeField] protected int nextKey = 0;
         [HideInInspector, SerializeField] protected int nextIncrementalSearchKey = 0;
@@ -69,7 +69,7 @@ namespace LLMUnity
 
         public virtual async Task<float[]> Encode(string inputString)
         {
-            return (await llmCaller.Embeddings(inputString)).ToArray();
+            return (await llmEmbedder.Embeddings(inputString)).ToArray();
         }
 
         public override string Get(int key)
