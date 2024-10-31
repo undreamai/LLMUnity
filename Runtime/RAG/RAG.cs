@@ -121,6 +121,7 @@ namespace LLMUnity
         public override int Count(string splitId) { return GetSearcher().Count(splitId); }
         public override void Clear() { GetSearcher().Clear(); }
         public override async Task<int> IncrementalSearch(string queryString, string splitId = "") { return await GetSearcher().IncrementalSearch(queryString, splitId);}
+        public override (string[], float[], bool) IncrementalFetch(int fetchKey, int k) { return GetSearcher().IncrementalFetch(fetchKey, k);}
         public override (int[], float[], bool) IncrementalFetchKeys(int fetchKey, int k) { return GetSearcher().IncrementalFetchKeys(fetchKey, k);}
         public override void IncrementalSearchComplete(int fetchKey) { GetSearcher().IncrementalSearchComplete(fetchKey);}
         public override void Save(ZipArchive archive) { GetSearcher().Save(archive); }
