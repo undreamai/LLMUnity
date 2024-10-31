@@ -3,7 +3,6 @@ using UnityEditor;
 using UnityEngine;
 using System.Reflection;
 using System.Collections.Generic;
-using NUnit.Framework.Internal;
 
 namespace LLMUnity
 {

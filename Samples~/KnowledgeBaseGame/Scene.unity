@@ -4349,16 +4349,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   advancedOptions: 0
   remote: 0
-  llm: {fileID: 2142407556}
-  stream: 1
+  _llm: {fileID: 2142407556}
   APIKey: 
-  slot: -1
   host: localhost
   port: 13333
   numRetries: 10
   save: 
   saveCache: 0
   debugPrompt: 0
+  slot: -1
   grammar: 
   cachePrompt: 1
   seed: 0
@@ -4382,22 +4381,11 @@ MonoBehaviour:
   ignoreEos: 0
   nKeep: -1
   stop: []
-  playerName: Query
-  AIName: 
-  prompt: 'You are a robot working at a house where a diamond was stolen.
-
-    A
-    detective asks you questions about the robbery and your goal is to answer them
-    based on the provided possible answers.
-
-    Answer the question by rephrasing
-    the most relevant answer from the possible answers.
-
-    Answer based only on
-    the provided answers, do not add any fictional information.
-
-    Provide only
-    the answer directly.'
+  stream: 1
+  playerName: user
+  AIName: assistant
+  prompt: A chat between a curious human and an artificial intelligence assistant.
+    The assistant gives helpful, detailed, and polite answers to the human's questions.
   setNKeepToPrompt: 1
   chat: []
   grammarString: 
@@ -6323,9 +6311,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1772403372}
   - component: {fileID: 1772403376}
-  - component: {fileID: 1772403375}
-  - component: {fileID: 1772403374}
-  - component: {fileID: 1772403373}
+  - component: {fileID: 1772403378}
+  - component: {fileID: 1772403377}
   m_Layer: 0
   m_Name: RAG
   m_TagString: Untagged
@@ -6348,58 +6335,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1772403373
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1772403370}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 354c2418b0d6913efbfb73dccd540d23, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  search: {fileID: 1772403374}
-  returnChunks: 0
-  nextKey: 0
-  delimiters: 2e0021003a003b003f000a000d00
---- !u!114 &1772403374
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1772403370}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5102d32385d84d87f98c64d376cbcc90, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  llmCaller: {fileID: 1772403375}
-  nextKey: 0
-  nextIncrementalSearchKey: 0
---- !u!114 &1772403375
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1772403370}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 01594396c2699f0ecb48ead86a6b1bc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  advancedOptions: 0
-  remote: 0
-  llm: {fileID: 758599402}
-  stream: 1
-  APIKey: 
-  slot: -1
-  host: localhost
-  port: 13333
-  numRetries: 10
 --- !u!114 &1772403376
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6412,11 +6347,45 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2496546d1575771597fc8cbdd0d852d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  llmCaller: {fileID: 1772403375}
+  llmEmbedder: {fileID: 1772403378}
   searchClass: 0
-  search: {fileID: 1772403374}
-  chunkingClass: 3
-  chunking: {fileID: 1772403373}
+  search: {fileID: 1772403377}
+  chunkingClass: 0
+  chunking: {fileID: 0}
+--- !u!114 &1772403377
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1772403370}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5102d32385d84d87f98c64d376cbcc90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  llmEmbedder: {fileID: 1772403378}
+  nextKey: 0
+  nextIncrementalSearchKey: 0
+--- !u!114 &1772403378
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1772403370}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6856fbefac554a38a7b8a4b353fd43d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  advancedOptions: 0
+  remote: 0
+  _llm: {fileID: 758599402}
+  APIKey: 
+  host: localhost
+  port: 13333
+  numRetries: 10
 --- !u!1 &1807881543
 GameObject:
   m_ObjectHideFlags: 0
@@ -7717,8 +7686,8 @@ SceneRoots:
   - {fileID: 1535596278}
   - {fileID: 898411689}
   - {fileID: 862588794}
-  - {fileID: 1772403372}
   - {fileID: 2142407557}
   - {fileID: 758599403}
+  - {fileID: 1772403372}
   - {fileID: 1275496424}
   - {fileID: 489627713}

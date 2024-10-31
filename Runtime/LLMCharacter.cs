@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace LLMUnity
 {
@@ -25,6 +26,8 @@ namespace LLMUnity
         [LLM] public bool saveCache = false;
         /// <summary> select to log the constructed prompt the Unity Editor. </summary>
         [LLM] public bool debugPrompt = false;
+        /// <summary> specify which slot of the server to use for computation (affects caching) </summary>
+        [ModelAdvanced] public int slot = -1;
         /// <summary> grammar file used for the LLM in .cbnf format (relative to the Assets/StreamingAssets folder) </summary>
         [ModelAdvanced] public string grammar = null;
         /// <summary> option to cache the prompt as it is being created by the chat to avoid reprocessing the entire prompt every time (default: true) </summary>
@@ -92,6 +95,9 @@ namespace LLMUnity
         /// By providing a token ID and a positive or negative bias value, you can increase or decrease the probability of that token being generated. </summary>
         public Dictionary<int, string> logitBias = null;
 
+        /// <summary> option to receive the reply from the model as it is produced (recommended!).
+        /// If it is not selected, the full reply from the model is received in one go </summary>
+        [Chat] public bool stream = true;
         /// <summary> the name of the player </summary>
         [Chat] public string playerName = "user";
         /// <summary> the name of the AI </summary>
@@ -122,8 +128,29 @@ namespace LLMUnity
         {
             if (!enabled) return;
             base.Awake();
+            if (!remote)
+            {
+                int slotFromServer = llm.Register(this);
+                if (slot == -1) slot = slotFromServer;
+            }
             InitGrammar();
             InitHistory();
+        }
+
+        protected override void OnValidate()
+        {
+            base.OnValidate();
+            if (llm != null && llm.parallelPrompts > -1 && (slot < -1 || slot >= llm.parallelPrompts)) LLMUnitySetup.LogError($"The slot needs to be between 0 and {llm.parallelPrompts-1}, or -1 to be automatically set");
+        }
+
+        public override string NotValidLLMError()
+        {
+            return base.NotValidLLMError() + $", it is an embedding only model";
+        }
+
+        public override bool IsValidLLM(LLM llmSet)
+        {
+            return !llmSet.embeddingsOnly;
         }
 
         protected void InitHistory()
@@ -327,6 +354,49 @@ namespace LLMUnity
             AddMessage(AIName, content);
         }
 
+        protected string ChatContent(ChatResult result)
+        {
+            // get content from a chat result received from the endpoint
+            return result.content.Trim();
+        }
+
+        protected string MultiChatContent(MultiChatResult result)
+        {
+            // get content from a chat result received from the endpoint
+            string response = "";
+            foreach (ChatResult resultPart in result.data)
+            {
+                response += resultPart.content;
+            }
+            return response.Trim();
+        }
+
+        protected string SlotContent(SlotResult result)
+        {
+            // get the tokens from a tokenize result received from the endpoint
+            return result.filename;
+        }
+
+        protected string TemplateContent(TemplateResult result)
+        {
+            // get content from a char result received from the endpoint in open AI format
+            return result.template;
+        }
+
+        protected async Task<string> CompletionRequest(string json, Callback<string> callback = null)
+        {
+            string result = "";
+            if (stream)
+            {
+                result = await PostRequest<MultiChatResult, string>(json, "completion", MultiChatContent, callback);
+            }
+            else
+            {
+                result = await PostRequest<ChatResult, string>(json, "completion", ChatContent, callback);
+            }
+            return result;
+        }
+
         /// <summary>
         /// Chat functionality of the LLM.
         /// It calls the LLM completion based on the provided query including the previous chat history.
@@ -437,6 +507,11 @@ namespace LLMUnity
             return await PostRequest<TemplateResult, string>("{}", "template", TemplateContent);
         }
 
+        protected override void CancelRequestsLocal()
+        {
+            if (slot >= 0) llm.CancelRequest(slot);
+        }
+
         protected async Task<string> Slot(string filepath, string action)
         {
             SlotRequest slotRequest = new SlotRequest();
@@ -488,6 +563,41 @@ namespace LLMUnity
             string cachepath = GetCacheSavePath(filename);
             if (remote || !saveCache || !File.Exists(GetSavePath(cachepath))) return null;
             string result = await Slot(cachepath, "restore");
+            return result;
+        }
+
+        protected override async Task<Ret> PostRequestLocal<Res, Ret>(string json, string endpoint, ContentCallback<Res, Ret> getContent, Callback<Ret> callback = null)
+        {
+            if (endpoint != "completion") return await base.PostRequestLocal(json, endpoint, getContent, callback);
+
+            while (!llm.failed && !llm.started) await Task.Yield();
+
+            string callResult = null;
+            bool callbackCalled = false;
+            if (llm.embeddingsOnly) LLMUnitySetup.LogError("The LLM can't be used for completion, only for embeddings");
+            else
+            {
+                Callback<string> callbackString = null;
+                if (stream && callback != null)
+                {
+                    if (typeof(Ret) == typeof(string))
+                    {
+                        callbackString = (strArg) =>
+                        {
+                            callback(ConvertContent(strArg, getContent));
+                        };
+                    }
+                    else
+                    {
+                        LLMUnitySetup.LogError($"wrong callback type, should be string");
+                    }
+                    callbackCalled = true;
+                }
+                callResult = await llm.Completion(json, callbackString);
+            }
+
+            Ret result = ConvertContent(callResult, getContent);
+            if (!callbackCalled) callback?.Invoke(result);
             return result;
         }
     }

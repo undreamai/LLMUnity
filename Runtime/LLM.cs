@@ -329,7 +329,6 @@ namespace LLMUnity
         /// <param name="embeddingsOnly"> if true, the LLM will be used only for embeddings </param>
         public void SetEmbeddings(int embeddingLength, bool embeddingsOnly)
         {
-            if (embeddingsOnly) LLMUnitySetup.LogWarning("This model can only be used for embeddings");
             this.embeddingsOnly = embeddingsOnly;
             this.embeddingLength = embeddingLength;
 #if UNITY_EDITOR
