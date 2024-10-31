@@ -169,6 +169,10 @@ namespace RAGTests
             string[] results;
             float[] distances;
 
+            (results, distances) = await search.Search(weather, 1);
+            Assert.That(results.Length == 0);
+            Assert.That(distances.Length == 0);
+
             await search.Add(weather);
             await search.Add(raining);
             await search.Add(sometext);
@@ -234,11 +238,19 @@ namespace RAGTests
             float[] distances;
             bool completed;
 
+            int searchKey = await search.IncrementalSearch(weather);
+            (results, distances, completed) = search.IncrementalFetch(searchKey, 1);
+            Assert.That(searchKey == 0);
+            Assert.That(results.Length == 0);
+            Assert.That(distances.Length == 0);
+            Assert.That(completed);
+            search.Clear();
+
             await search.Add(weather);
             await search.Add(raining);
             await search.Add(sometext);
 
-            int searchKey = await search.IncrementalSearch(weather);
+            searchKey = await search.IncrementalSearch(weather);
             (results, distances, completed) = search.IncrementalFetch(searchKey, 1);
             Assert.That(searchKey == 0);
             Assert.That(results.Length == 1);
