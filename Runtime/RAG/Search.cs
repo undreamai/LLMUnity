@@ -54,9 +54,8 @@ namespace LLMUnity
     {
         public LLMEmbedder llmEmbedder;
 
-        [HideInInspector, SerializeField] protected int nextKey = 0;
-        [HideInInspector, SerializeField] protected int nextIncrementalSearchKey = 0;
-
+        protected int nextKey = 0;
+        protected int nextIncrementalSearchKey = 0;
         protected SortedDictionary<int, string> data = new SortedDictionary<int, string>();
         protected SortedDictionary<string, List<int>> dataSplits = new SortedDictionary<string, List<int>>();
 
@@ -146,17 +145,19 @@ namespace LLMUnity
 
         public override void Save(ZipArchive archive)
         {
-            ArchiveSaver.Save(archive, JsonUtility.ToJson(this), "Search_object");
             ArchiveSaver.Save(archive, data, "Search_data");
             ArchiveSaver.Save(archive, dataSplits, "Search_dataSplits");
+            ArchiveSaver.Save(archive, nextKey, "Search_nextKey");
+            ArchiveSaver.Save(archive, nextIncrementalSearchKey, "Search_nextIncrementalSearchKey");
             SaveInternal(archive);
         }
 
         public override void Load(ZipArchive archive)
         {
-            JsonUtility.FromJsonOverwrite(ArchiveSaver.Load<string>(archive, "Search_object"), this);
             data = ArchiveSaver.Load<SortedDictionary<int, string>>(archive, "Search_data");
             dataSplits = ArchiveSaver.Load<SortedDictionary<string, List<int>>>(archive, "Search_dataSplits");
+            nextKey = ArchiveSaver.Load<int>(archive, "Search_nextKey");
+            nextIncrementalSearchKey = ArchiveSaver.Load<int>(archive, "Search_nextIncrementalSearchKey");
             LoadInternal(archive);
         }
     }
@@ -170,14 +171,12 @@ namespace LLMUnity
 
         public override void Save(ZipArchive archive)
         {
-            ArchiveSaver.Save(archive, JsonUtility.ToJson(this, true), "SearchPlugin_object");
             search.Save(archive);
             SaveInternal(archive);
         }
 
         public override void Load(ZipArchive archive)
         {
-            JsonUtility.FromJsonOverwrite(ArchiveSaver.Load<string>(archive, "SearchPlugin_object"), this);
             search.Load(archive);
             LoadInternal(archive);
         }
