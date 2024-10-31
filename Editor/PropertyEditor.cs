@@ -26,7 +26,8 @@ namespace LLMUnity
         public virtual void AddSetupSettings(SerializedObject llmScriptSO)
         {
             List<Type> attributeClasses = new List<Type>(){typeof(LocalRemoteAttribute)};
-            attributeClasses.Add(llmScriptSO.FindProperty("remote").boolValue ? typeof(RemoteAttribute) : typeof(LocalAttribute));
+            SerializedProperty remoteProperty = llmScriptSO.FindProperty("remote");
+            if (remoteProperty != null) attributeClasses.Add(remoteProperty.boolValue ? typeof(RemoteAttribute) : typeof(LocalAttribute));
             attributeClasses.Add(typeof(LLMAttribute));
             if (llmScriptSO.FindProperty("advancedOptions").boolValue)
             {
@@ -62,6 +63,9 @@ namespace LLMUnity
 
         public void AddAdvancedOptionsToggle(SerializedObject llmScriptSO)
         {
+            List<SerializedProperty> properties = GetPropertiesOfClass(llmScriptSO, new List<Type>(){typeof(AdvancedAttribute)});
+            if (properties.Count == 0) return;
+
             SerializedProperty advancedOptionsProp = llmScriptSO.FindProperty("advancedOptions");
             string toggleText = (advancedOptionsProp.boolValue ? "Hide" : "Show") + " Advanced Options";
             if (ToggleButton(toggleText, advancedOptionsProp.boolValue)) advancedOptionsProp.boolValue = !advancedOptionsProp.boolValue;
@@ -69,7 +73,6 @@ namespace LLMUnity
 
         public virtual void AddOptionsToggles(SerializedObject llmScriptSO)
         {
-            AddDebugModeToggle();
             AddAdvancedOptionsToggle(llmScriptSO);
             Space();
         }
@@ -222,6 +225,20 @@ namespace LLMUnity
                 Repaint();
 
             scriptSO.ApplyModifiedProperties();
+        }
+
+        public override void OnInspectorGUI()
+        {
+            SerializedObject llmScriptSO = new SerializedObject(target);
+
+            OnInspectorGUIStart(llmScriptSO);
+            AddOptionsToggles(llmScriptSO);
+
+            AddSetupSettings(llmScriptSO);
+            AddChatSettings(llmScriptSO);
+            AddModelSettings(llmScriptSO);
+
+            OnInspectorGUIEnd(llmScriptSO);
         }
     }
 }
