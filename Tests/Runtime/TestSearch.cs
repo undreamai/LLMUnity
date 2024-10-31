@@ -646,9 +646,43 @@ namespace RAGTests
         public override ChunkingMethods GetChunkingMethod() { return ChunkingMethods.TokenSplitter; }
     }
 
-    public class TestRAG_DBSearch_SentenceSplitter : TestRAG
+    public abstract class TestRAG_Chunking : TestRAG
+    {
+        public override async Task TestSearch()
+        {
+            await base.TestSearch();
+
+            string[] results;
+            float[] distances;
+
+            await search.Add(weather + raining);
+            await search.Add(sometext);
+
+            search.chunking.returnChunks = false;
+            (results, distances) = await search.Search(weather, 1);
+            Assert.That(results.Length == 1);
+            Assert.That(distances.Length == 1);
+            Assert.AreEqual(results[0], weather + raining);
+
+            search.chunking.returnChunks = true;
+            (results, distances) = await search.Search(weather, 1);
+            Assert.That(results.Length == 1);
+            Assert.That(distances.Length == 1);
+            Debug.Log(results[0]);
+            Assert.AreEqual(results[0], weather);
+            search.Clear();
+        }
+    }
+
+    public class TestRAG_DBSearch_SentenceSplitter : TestRAG_Chunking
     {
         public override SearchMethods GetSearchMethod() { return SearchMethods.DBSearch; }
+        public override ChunkingMethods GetChunkingMethod() { return ChunkingMethods.SentenceSplitter; }
+    }
+
+    public class TestRAG_SimpleSearch_SentenceSplitter : TestRAG_Chunking
+    {
+        public override SearchMethods GetSearchMethod() { return SearchMethods.SimpleSearch; }
         public override ChunkingMethods GetChunkingMethod() { return ChunkingMethods.SentenceSplitter; }
     }
 }
