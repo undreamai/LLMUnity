@@ -1,7 +1,6 @@
 using System;
 using System.IO.Compression;
 using System.Threading.Tasks;
-using UnityEditor;
 using UnityEngine;
 
 namespace LLMUnity

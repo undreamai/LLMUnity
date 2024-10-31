@@ -10,6 +10,8 @@ namespace LLMUnity
     public class DBSearch : SearchMethod
     {
         protected USearchIndex index;
+        /// <summary> toggle to show/hide advanced options in the GameObject </summary>
+        [HideInInspector] public bool advancedOptions = false;
         [ModelAdvanced] public ScalarKind quantization = ScalarKind.Float16;
         [ModelAdvanced] public MetricKind metricKind = MetricKind.Cos;
         [ModelAdvanced] public ulong connectivity = 32;

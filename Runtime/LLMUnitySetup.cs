@@ -54,18 +54,18 @@ namespace LLMUnity
     }
 
     public class LLMAttribute : PropertyAttribute {}
-    public class LLMAdvancedAttribute : PropertyAttribute {}
     public class LocalRemoteAttribute : PropertyAttribute {}
     public class RemoteAttribute : PropertyAttribute {}
     public class LocalAttribute : PropertyAttribute {}
     public class ModelAttribute : PropertyAttribute {}
-    public class ModelDownloadAttribute : ModelAttribute {}
-    public class ModelDownloadAdvancedAttribute : ModelAdvancedAttribute {}
-    public class ModelAdvancedAttribute : PropertyAttribute {}
     public class ModelExtrasAttribute : PropertyAttribute {}
     public class ChatAttribute : PropertyAttribute {}
-    public class ChatAdvancedAttribute : PropertyAttribute {}
     public class LLMUnityAttribute : PropertyAttribute {}
+
+    public class AdvancedAttribute : PropertyAttribute {}
+    public class LLMAdvancedAttribute : AdvancedAttribute {}
+    public class ModelAdvancedAttribute : AdvancedAttribute {}
+    public class ChatAdvancedAttribute : AdvancedAttribute {}
 
     public class NotImplementedException : Exception
     {

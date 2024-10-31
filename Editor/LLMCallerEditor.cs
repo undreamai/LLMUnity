@@ -6,23 +6,7 @@ using System.Collections.Generic;
 namespace LLMUnity
 {
     [CustomEditor(typeof(LLMCaller), true)]
-    public class LLMCallerEditor : PropertyEditor
-    {
-        public override void OnInspectorGUI()
-        {
-            LLMCaller llmScript = (LLMCaller)target;
-            SerializedObject llmScriptSO = new SerializedObject(llmScript);
-
-            OnInspectorGUIStart(llmScriptSO);
-            AddOptionsToggles(llmScriptSO);
-
-            AddSetupSettings(llmScriptSO);
-            AddChatSettings(llmScriptSO);
-            AddModelSettings(llmScriptSO);
-
-            OnInspectorGUIEnd(llmScriptSO);
-        }
-    }
+    public class LLMCallerEditor : PropertyEditor {}
 
     [CustomEditor(typeof(LLMCharacter), true)]
     public class LLMCharacterEditor : LLMCallerEditor
@@ -60,4 +44,7 @@ namespace LLMUnity
 
     [CustomEditor(typeof(LLMClient))]
     public class LLMClientEditor : LLMCharacterEditor {}
+
+    [CustomEditor(typeof(DBSearch), true)]
+    public class DBSearchEditor : PropertyEditor {}
 }
