@@ -9,13 +9,7 @@ using usearch_distance_t = System.Single;
 
 namespace Cloud.Unum.USearch
 {
-    public static class NativeMethodsHelpers
-    {
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate int FilterCallback(int key, void_ptr_t filterState);
-    }
-
-    internal static class NativeMethods
+    public static class NativeMethods
     {
         private const string LibraryName = "libusearch_c";
 
@@ -136,6 +130,9 @@ namespace Cloud.Unum.USearch
 
         //========================== Additional methods from LLMUnity ==========================//
 
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate int FilterCallback(int key, void_ptr_t filterState);
+
         [DllImport(LibraryName, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public static extern void usearch_load_buffer(usearch_index_t index, void_ptr_t buffer, size_t length, out usearch_error_t error);
 
@@ -148,7 +145,7 @@ namespace Cloud.Unum.USearch
             void_ptr_t query_vector,
             ScalarKind query_kind,
             size_t count,
-            NativeMethodsHelpers.FilterCallback filter,
+            FilterCallback filter,
             void_ptr_t filterState,
             [Out] usearch_key_t[] found_keys,
             [Out] usearch_distance_t[] found_distances,

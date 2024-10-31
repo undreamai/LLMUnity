@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.IO.Compression;
 using System.Runtime.InteropServices;
+using AOT;
 using UnityEngine;
 using static Cloud.Unum.USearch.NativeMethods;
 
@@ -289,7 +290,18 @@ namespace Cloud.Unum.USearch
 
         //========================== Additional methods from LLMUnity ==========================//
 
-        private int Search<T>(T[] queryVector, int count, out ulong[] keys, out float[] distances, ScalarKind scalarKind, NativeMethodsHelpers.FilterCallback filter = null)
+        public static Func<int, int> FilterFunction;
+
+        private static readonly object filterLock = new object();
+
+        [MonoPInvokeCallback(typeof(NativeMethods.FilterCallback))]
+        public static int StaticFilter(int key, System.IntPtr filterState)
+        {
+            if (FilterFunction != null) return FilterFunction(key);
+            return 1;
+        }
+
+        private int Search<T>(T[] queryVector, int count, out ulong[] keys, out float[] distances, ScalarKind scalarKind, Func<int, int> filter = null)
         {
             keys = new ulong[count];
             distances = new float[count];
@@ -306,10 +318,16 @@ namespace Cloud.Unum.USearch
                 }
                 else
                 {
-                    matches = checked((int)usearch_filtered_search(this._index, queryVectorPtr, scalarKind, (UIntPtr)count, filter, IntPtr.Zero, keys, distances, out error));
+#if UNITY_ANDROID
+                    lock (filterLock)
+                    {
+                        FilterFunction = filter;
+                        matches = checked((int)usearch_filtered_search(this._index, queryVectorPtr, scalarKind, (UIntPtr)count, StaticFilter, IntPtr.Zero, keys, distances, out error));
+                    }
+#else
+                    matches = checked((int)usearch_filtered_search(this._index, queryVectorPtr, scalarKind, (UIntPtr)count, (int key, IntPtr state) => filter(key), IntPtr.Zero, keys, distances, out error));
+#endif
                 }
-
-                // matches = checked((int)usearch_search(this._index, queryVectorPtr, scalarKind, (UIntPtr)count, keys, distances, out IntPtr error));
                 HandleError(error);
             }
             finally
@@ -326,12 +344,12 @@ namespace Cloud.Unum.USearch
             return matches;
         }
 
-        public int Search(float[] queryVector, int count, out ulong[] keys, out float[] distances, NativeMethodsHelpers.FilterCallback filter = null)
+        public int Search(float[] queryVector, int count, out ulong[] keys, out float[] distances, Func<int, int> filter = null)
         {
             return this.Search(queryVector, count, out keys, out distances, ScalarKind.Float32, filter);
         }
 
-        public int Search(double[] queryVector, int count, out ulong[] keys, out float[] distances, NativeMethodsHelpers.FilterCallback filter = null)
+        public int Search(double[] queryVector, int count, out ulong[] keys, out float[] distances, Func<int, int> filter = null)
         {
             return this.Search(queryVector, count, out keys, out distances, ScalarKind.Float64, filter);
         }
