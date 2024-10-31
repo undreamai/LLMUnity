@@ -25,7 +25,7 @@ namespace LLMUnity
     [Serializable]
     public class RAG : Searchable
     {
-        public LLMCaller llmCaller;
+        public LLMEmbedder llmEmbedder;
         public SearchMethods searchClass = SearchMethods.SimpleSearch;
         public SearchMethod search;
         public ChunkingMethods chunkingClass = ChunkingMethods.NoChunking;
@@ -34,19 +34,19 @@ namespace LLMUnity
         SearchMethods preSearchClass;
         ChunkingMethods preChunkingClass;
 
-        public void Initialize(SearchMethods searchMethod = SearchMethods.SimpleSearch, ChunkingMethods chunkingMethod = ChunkingMethods.NoChunking, LLMCaller llmCaller = null)
+        public void Initialize(SearchMethods searchMethod = SearchMethods.SimpleSearch, ChunkingMethods chunkingMethod = ChunkingMethods.NoChunking, LLMEmbedder llmEmbedder = null)
         {
             searchClass = searchMethod;
             chunkingClass = chunkingMethod;
-            this.llmCaller = llmCaller;
+            this.llmEmbedder = llmEmbedder;
             UpdateGameObjects();
         }
 
         public void Initialize(SearchMethods searchMethod = SearchMethods.SimpleSearch, ChunkingMethods chunkingMethod = ChunkingMethods.NoChunking, LLM llm = null)
         {
-            llmCaller = (LLMCaller)GetOrAddObject(typeof(LLMCaller));
-            llmCaller.llm = llm;
-            Initialize(searchMethod, chunkingMethod, llmCaller);
+            llmEmbedder = (LLMEmbedder)GetOrAddObject(typeof(LLMEmbedder));
+            llmEmbedder.llm = llm;
+            Initialize(searchMethod, chunkingMethod, llmEmbedder);
         }
 
         protected Component GetOrAddObject(Type type)
@@ -66,7 +66,7 @@ namespace LLMUnity
         {
             if (search != null) DestroyImmediate(search);
             search = (SearchMethod)AddObjectFromEnum(searchClass);
-            search.llmCaller = llmCaller;
+            search.llmEmbedder = llmEmbedder;
         }
 
         protected void ConstructChunking()
@@ -89,7 +89,7 @@ namespace LLMUnity
 
         void UpdateGameObjects()
         {
-            if (llmCaller == null) llmCaller = (LLMCaller)GetOrAddObject(typeof(LLMCaller));
+            if (llmEmbedder == null) llmEmbedder = (LLMEmbedder)GetOrAddObject(typeof(LLMEmbedder));
             if (search == null || preSearchClass != searchClass)
             {
                 ConstructSearch();

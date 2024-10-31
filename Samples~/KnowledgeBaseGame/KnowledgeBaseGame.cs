@@ -158,7 +158,7 @@ namespace LLMUnitySamples
         public void CancelRequests()
         {
             llmCharacter.CancelRequests();
-            rag.llmCaller.CancelRequests();
+            rag.llmEmbedder.CancelRequests();
             AIReplyComplete();
         }
 
@@ -180,7 +180,7 @@ namespace LLMUnitySamples
 
         void CheckLLMs(bool debug)
         {
-            CheckLLM(rag.llmCaller, debug);
+            CheckLLM(rag.llmEmbedder, debug);
             CheckLLM(llmCharacter, debug);
         }
 
