@@ -17,6 +17,7 @@ namespace LLMUnitySamples
         public Text AIText;
         public TextAsset HamletText;
         List<string> phrases;
+        string ragPath = "RAGSample.zip";
 
         async void Start()
         {
@@ -35,14 +36,8 @@ namespace LLMUnitySamples
 
         public async Task CreateEmbeddings()
         {
-            string ragPath = Path.Combine(Application.streamingAssetsPath, "RAGSample.zip");
-            if (File.Exists(ragPath))
-            {
-                // load the embeddings
-                playerText.text += $"Loading embeddings...\n";
-                rag.Load(ragPath);
-            }
-            else
+            bool loaded = await rag.Load(ragPath);
+            if (!loaded)
             {
     #if UNITY_EDITOR
                 // build the embeddings
