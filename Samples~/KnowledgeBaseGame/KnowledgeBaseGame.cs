@@ -18,6 +18,7 @@ namespace LLMUnitySamples
         public RAG rag;
         public int numRAGResults = 3;
 
+        string ragPath = "KnowledgeBaseGame.zip";
         Dictionary<string, Dictionary<string, string>> botQuestionAnswers = new Dictionary<string, Dictionary<string, string>>();
         Dictionary<string, RawImage> botImages = new Dictionary<string, RawImage>();
         string currentBotName;
@@ -70,14 +71,8 @@ namespace LLMUnitySamples
 
         public async Task CreateEmbeddings()
         {
-            string ragPath = Path.Combine(Application.streamingAssetsPath, "KnowledgeBaseGame.zip");
-            if (File.Exists(ragPath))
-            {
-                // load the embeddings
-                PlayerText.text += $"Loading embeddings...\n";
-                rag.Load(ragPath);
-            }
-            else
+            bool loaded = await rag.Load(ragPath);
+            if (!loaded)
             {
     #if UNITY_EDITOR
                 Stopwatch stopwatch = new Stopwatch();
