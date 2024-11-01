@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
@@ -50,34 +51,61 @@ namespace LLMUnity
             return (results, distances, completed);
         }
 
-        protected static Component GetOrAddObject(GameObject gameObject, System.Type type)
-        {
-            Component component = gameObject.GetComponent(type);
-            if (component == null) component = gameObject.AddComponent(type);
-            return component;
-        }
-
         public virtual void UpdateGameObjects() {}
 
+        protected T ConstructComponent<T>(Type type, Action<T, T> copyAction = null) where T : Component
+        {
+            T Construct(Type type)
+            {
+                if (type == null) return null;
+                T newComponent = (T)gameObject.AddComponent(type);
+                if (newComponent is Searchable searchable) searchable.UpdateGameObjects();
+                return newComponent;
+            }
+
+            T component = (T)gameObject.GetComponent(typeof(T));
+            T newComponent;
+            if (component == null)
+            {
+                newComponent = Construct(type);
+            }
+            else
+            {
+                if (component.GetType() == type)
+                {
+                    newComponent = component;
+                }
+                else
+                {
+                    newComponent = Construct(type);
+                    if (type != null) copyAction?.Invoke(component, newComponent);
+#if UNITY_EDITOR
+                    DestroyImmediate(component);
+#else
+                    Destroy(component);
+#endif
+                }
+            }
+            return newComponent;
+        }
 
         public virtual void Awake()
         {
             UpdateGameObjects();
         }
 
+#if UNITY_EDITOR
         public virtual void Reset()
         {
-#if UNITY_EDITOR
             if (!Application.isPlaying) EditorApplication.update += UpdateGameObjects;
-#endif
         }
 
         public virtual void OnDestroy()
         {
-#if UNITY_EDITOR
             if (!Application.isPlaying) EditorApplication.update -= UpdateGameObjects;
-#endif
         }
+
+#endif
     }
 
     public abstract class SearchMethod : Searchable
@@ -212,8 +240,7 @@ namespace LLMUnity
         public override void UpdateGameObjects()
         {
             if (this == null || llmEmbedder != null) return;
-            llmEmbedder = (LLMEmbedder)GetOrAddObject(gameObject, typeof(LLMEmbedder));
-            llmEmbedder.llm = llm;
+            llmEmbedder = ConstructComponent<LLMEmbedder>(typeof(LLMEmbedder), (previous, current) => current.llm = previous.llm);
         }
     }
 
