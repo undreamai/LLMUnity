@@ -318,15 +318,18 @@ namespace Cloud.Unum.USearch
                 }
                 else
                 {
-#if UNITY_ANDROID
-                    lock (filterLock)
+                    if (Application.platform == RuntimePlatform.Android)
                     {
-                        FilterFunction = filter;
-                        matches = checked((int)usearch_filtered_search(this._index, queryVectorPtr, scalarKind, (UIntPtr)count, StaticFilter, IntPtr.Zero, keys, distances, out error));
+                        lock (filterLock)
+                        {
+                            FilterFunction = filter;
+                            matches = checked((int)usearch_filtered_search(this._index, queryVectorPtr, scalarKind, (UIntPtr)count, StaticFilter, IntPtr.Zero, keys, distances, out error));
+                        }
                     }
-#else
-                    matches = checked((int)usearch_filtered_search(this._index, queryVectorPtr, scalarKind, (UIntPtr)count, (int key, IntPtr state) => filter(key), IntPtr.Zero, keys, distances, out error));
-#endif
+                    else
+                    {
+                        matches = checked((int)usearch_filtered_search(this._index, queryVectorPtr, scalarKind, (UIntPtr)count, (int key, IntPtr state) => filter(key), IntPtr.Zero, keys, distances, out error));
+                    }
                 }
                 HandleError(error);
             }
