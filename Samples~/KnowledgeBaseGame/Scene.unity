@@ -4356,7 +4356,7 @@ MonoBehaviour:
   numRetries: 10
   save: 
   saveCache: 0
-  debugPrompt: 1
+  debugPrompt: 0
   slot: -1
   grammar: 
   cachePrompt: 1
@@ -5177,8 +5177,8 @@ GameObject:
   - component: {fileID: 1400265389}
   - component: {fileID: 1400265393}
   - component: {fileID: 1400265392}
-  - component: {fileID: 1400265391}
-  - component: {fileID: 1400265390}
+  - component: {fileID: 1400265395}
+  - component: {fileID: 1400265394}
   m_Layer: 0
   m_Name: RAG
   m_TagString: Untagged
@@ -5201,40 +5201,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1400265390
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1400265384}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 354c2418b0d6913efbfb73dccd540d23, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  search: {fileID: 1400265391}
-  returnChunks: 0
-  delimiters: 2e0021003a003b003f000a000d00
---- !u!114 &1400265391
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1400265384}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f8c6492f8c97ab9a09b0eb0f93a158da, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  llmEmbedder: {fileID: 1400265392}
-  advancedOptions: 0
-  quantization: 3
-  metricKind: 1
-  connectivity: 32
-  expansionAdd: 40
-  expansionSearch: 16
 --- !u!114 &1400265392
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5267,9 +5233,45 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   searchClass: 1
-  search: {fileID: 1400265391}
+  search: {fileID: 1400265395}
   chunkingClass: 3
-  chunking: {fileID: 1400265390}
+  chunking: {fileID: 1400265394}
+  preSearchClass: 0
+  preChunkingClass: 0
+--- !u!114 &1400265394
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1400265384}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 354c2418b0d6913efbfb73dccd540d23, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  search: {fileID: 1400265395}
+  returnChunks: 0
+  delimiters: 2e0021003a003b003f000a000d00
+--- !u!114 &1400265395
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1400265384}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8c6492f8c97ab9a09b0eb0f93a158da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  llmEmbedder: {fileID: 1400265392}
+  advancedOptions: 0
+  quantization: 3
+  metricKind: 1
+  connectivity: 32
+  expansionAdd: 40
+  expansionSearch: 16
 --- !u!1 &1468962044
 GameObject:
   m_ObjectHideFlags: 0
