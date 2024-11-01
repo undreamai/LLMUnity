@@ -37,7 +37,7 @@
     },
     {
       "displayName": "KnowledgeBaseGame",
-      "description": "Simple detective game using a knowledge base to provide information to the LLM.\n**Requires installation of the RAGSearchUnity package (from UndreamAI)**",
+      "description": "Simple detective game using a knowledge base to provide information to the LLM.",
       "path": "Samples~/KnowledgeBaseGame"
     },
     {
@@ -49,6 +49,11 @@
       "displayName": "AndroidDemo",
       "description": "Example Android app with an initial screen with model download progress",
       "path": "Samples~/AndroidDemo"
+    },
+    {
+      "displayName": "RAG",
+      "description": "Semantic search using a Retrieval Augmented Generation (RAG) system.\nAdditional example using a RAG to feed information to a LLM.",
+      "path": "Samples~/ChatBot"
     }
    ],
    "author": {
