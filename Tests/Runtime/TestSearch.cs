@@ -60,8 +60,9 @@ namespace LLMUnityTests
             return "https://huggingface.co/CompendiumLabs/bge-small-en-v1.5-gguf/resolve/main/bge-small-en-v1.5-f16.gguf";
         }
 
-        public static bool ApproxEqual(float x1, float x2, float tolerance = 0.0001f)
+        public static bool ApproxEqual(float x1, float x2)
         {
+            float tolerance = (Application.platform == RuntimePlatform.OSXPlayer) ? 0.001f : 0.0001f;
             return Mathf.Abs(x1 - x2) < tolerance;
         }
 

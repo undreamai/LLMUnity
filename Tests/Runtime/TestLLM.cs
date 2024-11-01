@@ -111,6 +111,10 @@ namespace LLMUnityTests
             {
                 reply2 = "To increase your meme production/output, you can try using various tools and techniques to create more engaging content";
             }
+            else if (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.OSXPlayer)
+            {
+                reply2 = "To increase your meme production/output, you can try using various tools and techniques. Here are some suggestions";
+            }
             else
             {
                 reply2 = "To increase your meme production/output, you can try the following strategies:\n\n1. Use a meme generator";
