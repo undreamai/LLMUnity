@@ -30,8 +30,8 @@ namespace LLMUnity
         public ChunkingMethods chunkingClass = ChunkingMethods.NoChunking;
         public Chunking chunking;
 
-        SearchMethods preSearchClass;
-        ChunkingMethods preChunkingClass;
+        [SerializeField, HideInInspector] SearchMethods preSearchClass;
+        [SerializeField, HideInInspector] ChunkingMethods preChunkingClass;
 
         public void Construct(SearchMethods searchMethod = SearchMethods.SimpleSearch, ChunkingMethods chunkingMethod = ChunkingMethods.NoChunking, LLM llm = null)
         {
@@ -41,69 +41,24 @@ namespace LLMUnity
             search.SetLLM(llm);
         }
 
-        protected Component AddObjectFromEnum(Enum enumeration)
-        {
-            Type type = Type.GetType("LLMUnity." + enumeration.ToString());
-            return GetOrAddObject(gameObject, type);
-        }
-
         protected void ConstructSearch()
         {
-            SearchMethod newSearch = (SearchMethod)AddObjectFromEnum(searchClass);
-            newSearch.UpdateGameObjects();
-            if (search != null)
-            {
-#if UNITY_EDITOR
-                DestroyImmediate(search);
-#else
-                Destroy(search);
-#endif
-            }
-            search = newSearch;
+            search = ConstructComponent<SearchMethod>(Type.GetType("LLMUnity." + searchClass.ToString()), (previous, current) => current.llmEmbedder.llm = previous.llmEmbedder.llm);
+            if (chunking != null) chunking.search = search;
         }
 
         protected void ConstructChunking()
         {
-            Chunking newChunking = null;
-            if (chunkingClass != ChunkingMethods.NoChunking)
-            {
-                newChunking = (Chunking)AddObjectFromEnum(chunkingClass);
-                newChunking.UpdateGameObjects();
-                newChunking.search = search;
-            }
-            if (chunking != null)
-            {
-#if UNITY_EDITOR
-                DestroyImmediate(chunking);
-#else
-                Destroy(chunking);
-#endif
-            }
-            chunking = newChunking;
+            Type type = null;
+            if (chunkingClass != ChunkingMethods.NoChunking) type = Type.GetType("LLMUnity." + chunkingClass.ToString());
+            chunking = ConstructComponent<Chunking>(type, (previous, current) => current.search = previous.search);
         }
 
         public override void UpdateGameObjects()
         {
             if (this == null) return;
-            bool constructSearch = search == null;
-            bool constructChunking = chunking == null;
-#if UNITY_EDITOR
-            if (!EditorApplication.isPlaying)
-            {
-                constructSearch = constructSearch || preSearchClass != searchClass;
-                constructChunking = constructChunking || preChunkingClass != chunkingClass;
-            }
-#endif
-            if (constructSearch)
-            {
-                ConstructSearch();
-                preSearchClass = searchClass;
-            }
-            if (constructChunking)
-            {
-                ConstructChunking();
-                preChunkingClass = chunkingClass;
-            }
+            ConstructSearch();
+            ConstructChunking();
         }
 
         protected Searchable GetSearcher()
@@ -112,6 +67,20 @@ namespace LLMUnity
             if (search != null) return search;
             throw new Exception("The search GameObject is null");
         }
+
+#if UNITY_EDITOR
+        private void OnValidateUpdate()
+        {
+            EditorApplication.delayCall -= OnValidateUpdate;
+            UpdateGameObjects();
+        }
+
+        public virtual void OnValidate()
+        {
+            if (!Application.isPlaying) EditorApplication.delayCall += OnValidateUpdate;
+        }
+
+#endif
 
         public override string Get(int key) { return GetSearcher().Get(key); }
         public override async Task<int> Add(string inputString, string splitId = "") { return await GetSearcher().Add(inputString, splitId); }
