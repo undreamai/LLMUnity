@@ -1,11 +1,14 @@
 /// @file
-/// @brief File implementing the LLMEmbedder.
-
+/// @brief File implementing the LLM embedder.
 using UnityEngine;
 
 namespace LLMUnity
 {
     [DefaultExecutionOrder(-2)]
+    /// @ingroup llm
+    /// <summary>
+    /// Class implementing the LLM embedder.
+    /// </summary>
     public class LLMEmbedder : LLMCaller
     {
         protected override void SetLLM(LLM llmSet)

@@ -112,7 +112,6 @@ namespace LLMUnity
 
         /// <summary>
         /// The Unity Awake function that starts the LLM server.
-        /// The server can be started asynchronously if the asynchronousStartup option is set.
         /// </summary>
         public async void Awake()
         {
@@ -138,11 +137,18 @@ namespace LLMUnity
             if (basePrompt != "") await SetBasePrompt(basePrompt);
         }
 
+        /// <summary>
+        /// Allows to wait until the LLM is ready
+        /// </summary>
         public async Task WaitUntilReady()
         {
             while (!started) await Task.Yield();
         }
 
+        /// <summary>
+        /// Allows to wait until the LLM models are downloaded and ready
+        /// </summary>
+        /// <param name="downloadProgressCallback">function to call with the download progress (float)</param>
         public static async Task<bool> WaitUntilModelSetup(Callback<float> downloadProgressCallback = null)
         {
             if (downloadProgressCallback != null) LLMManager.downloadProgressCallbacks.Add(downloadProgressCallback);
@@ -150,6 +156,7 @@ namespace LLMUnity
             return !modelSetupFailed;
         }
 
+        /// \cond HIDE
         public static string GetLLMManagerAsset(string path)
         {
 #if UNITY_EDITOR
@@ -200,6 +207,8 @@ namespace LLMUnity
             // give up
             return path;
         }
+
+        /// \endcond
 
         /// <summary>
         /// Allows to set the model used by the LLM.
