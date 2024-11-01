@@ -348,7 +348,7 @@ namespace LLMUnityTests
             search.Save(path);
 
             search.Clear();
-            search.Load(path);
+            await search.Load(path);
             File.Delete(path);
 
             Assert.That(search.Count() == 3);
@@ -371,7 +371,7 @@ namespace LLMUnityTests
             search.Save(path);
 
             search.Clear();
-            search.Load(path);
+            await search.Load(path);
             File.Delete(path);
 
             Assert.That(search.Count() == 4);
