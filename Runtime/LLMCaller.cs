@@ -1,3 +1,5 @@
+/// @file
+/// @brief File implementing the basic functionality for LLM callers.
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -7,6 +9,10 @@ using UnityEngine.Networking;
 namespace LLMUnity
 {
     [DefaultExecutionOrder(-2)]
+    /// @ingroup llm
+    /// <summary>
+    /// Class implementing calling of LLM functions (local and remote).
+    /// </summary>
     public class LLMCaller : MonoBehaviour
     {
         /// <summary> toggle to show/hide advanced options in the GameObject </summary>
@@ -14,7 +20,6 @@ namespace LLMUnity
         /// <summary> toggle to use remote LLM server or local LLM </summary>
         [LocalRemote] public bool remote = false;
         /// <summary> the LLM object to use </summary>
-        // [Local] public LLM llm;
         [Local, SerializeField] protected LLM _llm;
         public LLM llm
         {
@@ -32,9 +37,9 @@ namespace LLMUnity
         /// <summary> number of retries to use for the LLM server requests (-1 = infinite) </summary>
         [Remote] public int numRetries = 10;
 
-        private LLM _prellm;
-        private List<(string, string)> requestHeaders;
-        private List<UnityWebRequest> WIPRequests = new List<UnityWebRequest>();
+        protected LLM _prellm;
+        protected List<(string, string)> requestHeaders;
+        protected List<UnityWebRequest> WIPRequests = new List<UnityWebRequest>();
 
         /// <summary>
         /// The Unity Awake function that initializes the state before the application starts.
@@ -67,6 +72,10 @@ namespace LLMUnity
             }
         }
 
+        /// <summary>
+        /// Sets the LLM object of the LLMCaller
+        /// </summary>
+        /// <param name="llmSet">LLM object</param>
         protected virtual void SetLLM(LLM llmSet)
         {
             if (llmSet != null && !IsValidLLM(llmSet))
@@ -78,17 +87,27 @@ namespace LLMUnity
             _prellm = _llm;
         }
 
+        /// <summary>
+        /// Checks if a LLM is valid for the LLMCaller
+        /// </summary>
+        /// <param name="llmSet">LLM object</param>
+        /// <returns>bool specifying whether the LLM is valid</returns>
         public virtual bool IsValidLLM(LLM llmSet)
         {
             return true;
         }
 
+        /// <summary>
+        /// Checks if a LLM can be auto-assigned if the LLM of the LLMCaller is null
+        /// </summary>
+        /// <param name="llmSet"LLM object></param>
+        /// <returns>bool specifying whether the LLM can be auto-assigned</returns>
         public virtual bool IsAutoAssignableLLM(LLM llmSet)
         {
             return true;
         }
 
-        public virtual string NotValidLLMError()
+        protected virtual string NotValidLLMError()
         {
             return $"Can't set LLM {llm.name} to {name}";
         }
@@ -147,19 +166,19 @@ namespace LLMUnity
             return array;
         }
 
-        protected List<int> TokenizeContent(TokenizeResult result)
+        protected virtual List<int> TokenizeContent(TokenizeResult result)
         {
             // get the tokens from a tokenize result received from the endpoint
             return result.tokens;
         }
 
-        protected string DetokenizeContent(TokenizeRequest result)
+        protected virtual string DetokenizeContent(TokenizeRequest result)
         {
             // get content from a chat result received from the endpoint
             return result.content;
         }
 
-        protected List<float> EmbeddingsContent(EmbeddingsResult result)
+        protected virtual List<float> EmbeddingsContent(EmbeddingsResult result)
         {
             // get content from a chat result received from the endpoint
             return result.embedding;
@@ -199,7 +218,7 @@ namespace LLMUnity
         /// Cancel the ongoing requests e.g. Chat, Complete.
         /// </summary>
         // <summary>
-        public void CancelRequests()
+        public virtual void CancelRequests()
         {
             if (remote) CancelRequestsRemote();
             else CancelRequestsLocal();
@@ -315,7 +334,7 @@ namespace LLMUnity
         /// <param name="query">query to tokenise</param>
         /// <param name="callback">callback function called with the result tokens</param>
         /// <returns>list of the tokens</returns>
-        public async Task<List<int>> Tokenize(string query, Callback<List<int>> callback = null)
+        public virtual async Task<List<int>> Tokenize(string query, Callback<List<int>> callback = null)
         {
             // handle the tokenization of a message by the user
             TokenizeRequest tokenizeRequest = new TokenizeRequest();
@@ -330,7 +349,7 @@ namespace LLMUnity
         /// <param name="tokens">tokens to detokenise</param>
         /// <param name="callback">callback function called with the result string</param>
         /// <returns>the detokenised string</returns>
-        public async Task<string> Detokenize(List<int> tokens, Callback<string> callback = null)
+        public virtual async Task<string> Detokenize(List<int> tokens, Callback<string> callback = null)
         {
             // handle the detokenization of a message by the user
             TokenizeResult tokenizeRequest = new TokenizeResult();
@@ -345,7 +364,7 @@ namespace LLMUnity
         /// <param name="tokens">input to compute the embeddings for</param>
         /// <param name="callback">callback function called with the result string</param>
         /// <returns>the computed embeddings</returns>
-        public async Task<List<float>> Embeddings(string query, Callback<List<float>> callback = null)
+        public virtual async Task<List<float>> Embeddings(string query, Callback<List<float>> callback = null)
         {
             // handle the tokenization of a message by the user
             TokenizeRequest tokenizeRequest = new TokenizeRequest();

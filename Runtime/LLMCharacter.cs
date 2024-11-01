@@ -1,5 +1,5 @@
 /// @file
-/// @brief File implementing the LLMCharacter.
+/// @brief File implementing the LLM characters.
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -105,13 +105,15 @@ namespace LLMUnity
         [TextArea(5, 10), Chat] public string prompt = "A chat between a curious human and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the human's questions.";
         /// <summary> option to set the number of tokens to retain from the prompt (nKeep) based on the LLMCharacter system prompt </summary>
         public bool setNKeepToPrompt = true;
+        /// <summary> the chat history as list of chat messages </summary>
+        public List<ChatMessage> chat;
+        /// <summary> the grammar to use </summary>
+        public string grammarString;
 
         /// \cond HIDE
-        public List<ChatMessage> chat;
-        private SemaphoreSlim chatLock = new SemaphoreSlim(1, 1);
-        private string chatTemplate;
-        private ChatTemplate template = null;
-        public string grammarString;
+        protected SemaphoreSlim chatLock = new SemaphoreSlim(1, 1);
+        protected string chatTemplate;
+        protected ChatTemplate template = null;
         /// \endcond
 
         /// <summary>
@@ -142,23 +144,28 @@ namespace LLMUnity
             if (llm != null && llm.parallelPrompts > -1 && (slot < -1 || slot >= llm.parallelPrompts)) LLMUnitySetup.LogError($"The slot needs to be between 0 and {llm.parallelPrompts-1}, or -1 to be automatically set");
         }
 
-        public override string NotValidLLMError()
+        protected override string NotValidLLMError()
         {
             return base.NotValidLLMError() + $", it is an embedding only model";
         }
 
+        /// <summary>
+        /// Checks if a LLM is valid for the LLMCaller
+        /// </summary>
+        /// <param name="llmSet">LLM object</param>
+        /// <returns>bool specifying whether the LLM is valid</returns>
         public override bool IsValidLLM(LLM llmSet)
         {
             return !llmSet.embeddingsOnly;
         }
 
-        protected void InitHistory()
+        protected virtual void InitHistory()
         {
             InitPrompt();
             _ = LoadHistory();
         }
 
-        protected async Task LoadHistory()
+        protected virtual async Task LoadHistory()
         {
             if (save == "" || !File.Exists(GetJsonSavePath(save))) return;
             await chatLock.WaitAsync(); // Acquire the lock
@@ -172,22 +179,32 @@ namespace LLMUnity
             }
         }
 
-        public virtual string GetSavePath(string filename)
+        protected virtual string GetSavePath(string filename)
         {
             return Path.Combine(Application.persistentDataPath, filename).Replace('\\', '/');
         }
 
+        /// <summary>
+        /// Allows to get the save path of the chat history based on the provided filename or relative path.
+        /// </summary>
+        /// <param name="filename">filename or relative path used for the save</param>
+        /// <returns>save path</returns>
         public virtual string GetJsonSavePath(string filename)
         {
             return GetSavePath(filename + ".json");
         }
 
+        /// <summary>
+        /// Allows to get the save path of the LLM cache based on the provided filename or relative path.
+        /// </summary>
+        /// <param name="filename">filename or relative path used for the save</param>
+        /// <returns>save path</returns>
         public virtual string GetCacheSavePath(string filename)
         {
             return GetSavePath(filename + ".cache");
         }
 
-        private void InitPrompt(bool clearChat = true)
+        protected virtual void InitPrompt(bool clearChat = true)
         {
             if (chat != null)
             {
@@ -213,14 +230,14 @@ namespace LLMUnity
         /// </summary>
         /// <param name="newPrompt"> the system prompt </param>
         /// <param name="clearChat"> whether to clear (true) or keep (false) the current chat history on top of the system prompt. </param>
-        public void SetPrompt(string newPrompt, bool clearChat = true)
+        public virtual void SetPrompt(string newPrompt, bool clearChat = true)
         {
             prompt = newPrompt;
             nKeep = -1;
             InitPrompt(clearChat);
         }
 
-        private bool CheckTemplate()
+        protected virtual bool CheckTemplate()
         {
             if (template == null)
             {
@@ -230,7 +247,7 @@ namespace LLMUnity
             return true;
         }
 
-        private async Task<bool> InitNKeep()
+        protected virtual async Task<bool> InitNKeep()
         {
             if (setNKeepToPrompt && nKeep == -1)
             {
@@ -243,7 +260,7 @@ namespace LLMUnity
             return true;
         }
 
-        private void InitGrammar()
+        protected virtual void InitGrammar()
         {
             if (grammar != null && grammar != "")
             {
@@ -251,17 +268,17 @@ namespace LLMUnity
             }
         }
 
-        private void SetNKeep(List<int> tokens)
+        protected virtual void SetNKeep(List<int> tokens)
         {
             // set the tokens to keep
             nKeep = tokens.Count;
         }
 
         /// <summary>
-        /// Load the chat template of the LLMCharacter.
+        /// Loads the chat template of the LLMCharacter.
         /// </summary>
         /// <returns></returns>
-        public async Task LoadTemplate()
+        public virtual async Task LoadTemplate()
         {
             string llmTemplate;
             if (remote)
@@ -281,10 +298,10 @@ namespace LLMUnity
         }
 
         /// <summary>
-        /// Set the grammar file of the LLMCharacter
+        /// Sets the grammar file of the LLMCharacter
         /// </summary>
         /// <param name="path">path to the grammar file</param>
-        public async void SetGrammar(string path)
+        public virtual async void SetGrammar(string path)
         {
 #if UNITY_EDITOR
             if (!EditorApplication.isPlaying) path = LLMUnitySetup.AddAsset(path);
@@ -294,7 +311,7 @@ namespace LLMUnity
             InitGrammar();
         }
 
-        List<string> GetStopwords()
+        protected virtual List<string> GetStopwords()
         {
             if (!CheckTemplate()) return null;
             List<string> stopAll = new List<string>(template.GetStop(playerName, AIName));
@@ -302,7 +319,7 @@ namespace LLMUnity
             return stopAll;
         }
 
-        ChatRequest GenerateRequest(string prompt)
+        protected virtual ChatRequest GenerateRequest(string prompt)
         {
             // setup the request struct
             ChatRequest chatRequest = new ChatRequest();
@@ -337,29 +354,42 @@ namespace LLMUnity
             return chatRequest;
         }
 
-        public void AddMessage(string role, string content)
+        /// <summary>
+        /// Allows to add a message in the chat history.
+        /// </summary>
+        /// <param name="role">message role (e.g. playerName or AIName)</param>
+        /// <param name="content">message content</param>
+        public virtual void AddMessage(string role, string content)
         {
             // add the question / answer to the chat list, update prompt
             chat.Add(new ChatMessage { role = role, content = content });
         }
 
-        public void AddPlayerMessage(string content)
+        /// <summary>
+        /// Allows to add a player message in the chat history.
+        /// </summary>
+        /// <param name="content">message content</param>
+        public virtual void AddPlayerMessage(string content)
         {
             AddMessage(playerName, content);
         }
 
-        public void AddAIMessage(string content)
+        /// <summary>
+        /// Allows to add a AI message in the chat history.
+        /// </summary>
+        /// <param name="content">message content</param>
+        public virtual void AddAIMessage(string content)
         {
             AddMessage(AIName, content);
         }
 
-        protected string ChatContent(ChatResult result)
+        protected virtual string ChatContent(ChatResult result)
         {
             // get content from a chat result received from the endpoint
             return result.content.Trim();
         }
 
-        protected string MultiChatContent(MultiChatResult result)
+        protected virtual string MultiChatContent(MultiChatResult result)
         {
             // get content from a chat result received from the endpoint
             string response = "";
@@ -370,19 +400,19 @@ namespace LLMUnity
             return response.Trim();
         }
 
-        protected string SlotContent(SlotResult result)
+        protected virtual string SlotContent(SlotResult result)
         {
             // get the tokens from a tokenize result received from the endpoint
             return result.filename;
         }
 
-        protected string TemplateContent(TemplateResult result)
+        protected virtual string TemplateContent(TemplateResult result)
         {
             // get content from a char result received from the endpoint in open AI format
             return result.template;
         }
 
-        protected async Task<string> CompletionRequest(string json, Callback<string> callback = null)
+        protected virtual async Task<string> CompletionRequest(string json, Callback<string> callback = null)
         {
             string result = "";
             if (stream)
@@ -407,7 +437,7 @@ namespace LLMUnity
         /// <param name="completionCallback">callback function called when the full response has been received</param>
         /// <param name="addToHistory">whether to add the user query to the chat history</param>
         /// <returns>the LLM response</returns>
-        public async Task<string> Chat(string query, Callback<string> callback = null, EmptyCallback completionCallback = null, bool addToHistory = true)
+        public virtual async Task<string> Chat(string query, Callback<string> callback = null, EmptyCallback completionCallback = null, bool addToHistory = true)
         {
             // handle a chat message by the user
             // call the callback function while the answer is received
@@ -460,7 +490,7 @@ namespace LLMUnity
         /// <param name="callback">callback function that receives the response as string</param>
         /// <param name="completionCallback">callback function called when the full response has been received</param>
         /// <returns>the LLM response</returns>
-        public async Task<string> Complete(string prompt, Callback<string> callback = null, EmptyCallback completionCallback = null)
+        public virtual async Task<string> Complete(string prompt, Callback<string> callback = null, EmptyCallback completionCallback = null)
         {
             // handle a completion request by the user
             // call the callback function while the answer is received
@@ -483,7 +513,7 @@ namespace LLMUnity
         /// <param name="completionCallback">callback function called when the full response has been received</param>
         /// <param name="query">user prompt used during the initialisation (not added to history)</param>
         /// <returns>the LLM response</returns>
-        public async Task Warmup(EmptyCallback completionCallback = null)
+        public virtual async Task Warmup(EmptyCallback completionCallback = null)
         {
             await LoadTemplate();
             if (!CheckTemplate()) return;
@@ -501,7 +531,7 @@ namespace LLMUnity
         /// Asks the LLM for the chat template to use.
         /// </summary>
         /// <returns>the chat template of the LLM</returns>
-        public async Task<string> AskTemplate()
+        public virtual async Task<string> AskTemplate()
         {
             return await PostRequest<TemplateResult, string>("{}", "template", TemplateContent);
         }
@@ -511,7 +541,7 @@ namespace LLMUnity
             if (slot >= 0) llm.CancelRequest(slot);
         }
 
-        protected async Task<string> Slot(string filepath, string action)
+        protected virtual async Task<string> Slot(string filepath, string action)
         {
             SlotRequest slotRequest = new SlotRequest();
             slotRequest.id_slot = slot;
