@@ -52,8 +52,8 @@
     },
     {
       "displayName": "RAG",
-      "description": "Semantic search using a Retrieval Augmented Generation (RAG) system.\nAdditional example using a RAG to feed information to a LLM.",
-      "path": "Samples~/ChatBot"
+      "description": "Semantic search using a Retrieval Augmented Generation (RAG) system. Includes example using a RAG to feed information to a LLM.",
+      "path": "Samples~/RAG"
     }
    ],
    "author": {
