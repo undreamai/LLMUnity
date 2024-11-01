@@ -668,7 +668,6 @@ namespace LLMUnityTests
             (results, distances) = await search.Search(weather, 1);
             Assert.That(results.Length == 1);
             Assert.That(distances.Length == 1);
-            Debug.Log(results[0]);
             Assert.AreEqual(results[0], weather);
             search.Clear();
         }
