@@ -104,7 +104,6 @@ namespace LLMUnitySamples
         {
             // find similar questions for the current bot using the RAG
             (string[] similarQuestions, _) = await rag.Search(question, numRAGResults, currentBotName);
-            foreach (string q in similarQuestions) Debug.Log(q);
             // get the answers of the similar questions
             List<string> similarAnswers = new List<string>();
             foreach (string similarQuestion in similarQuestions) similarAnswers.Add(botQuestionAnswers[currentBotName][similarQuestion]);
