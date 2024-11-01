@@ -182,22 +182,20 @@ namespace LLMUnity
 
         protected override void SaveInternal(ZipArchive archive)
         {
-            ArchiveSaver.Save(archive, dataSplitToPhrases, "SentenceSplitter_dataSplitToPhrases");
-            ArchiveSaver.Save(archive, phraseToSentences, "SentenceSplitter_phraseToSentences");
-            ArchiveSaver.Save(archive, sentenceToPhrase, "SentenceSplitter_sentenceToPhrase");
-            ArchiveSaver.Save(archive, hexToPhrase, "SentenceSplitter_hexToPhrase");
-            ArchiveSaver.Save(archive, nextKey, "SentenceSplitter_nextKey");
-            search.Save(archive);
+            ArchiveSaver.Save(archive, dataSplitToPhrases, GetSavePath("dataSplitToPhrases"));
+            ArchiveSaver.Save(archive, phraseToSentences, GetSavePath("phraseToSentences"));
+            ArchiveSaver.Save(archive, sentenceToPhrase, GetSavePath("sentenceToPhrase"));
+            ArchiveSaver.Save(archive, hexToPhrase, GetSavePath("hexToPhrase"));
+            ArchiveSaver.Save(archive, nextKey, GetSavePath("nextKey"));
         }
 
         protected override void LoadInternal(ZipArchive archive)
         {
-            dataSplitToPhrases = ArchiveSaver.Load<Dictionary<string, List<int>>>(archive, "SentenceSplitter_dataSplitToPhrases");
-            phraseToSentences = ArchiveSaver.Load<Dictionary<int, int[]>>(archive, "SentenceSplitter_phraseToSentences");
-            sentenceToPhrase = ArchiveSaver.Load<Dictionary<int, int>>(archive, "SentenceSplitter_sentenceToPhrase");
-            hexToPhrase = ArchiveSaver.Load<Dictionary<int, int[]>>(archive, "SentenceSplitter_hexToPhrase");
-            nextKey = ArchiveSaver.Load<int>(archive, "SentenceSplitter_nextKey");
-            search.Load(archive);
+            dataSplitToPhrases = ArchiveSaver.Load<Dictionary<string, List<int>>>(archive, GetSavePath("dataSplitToPhrases"));
+            phraseToSentences = ArchiveSaver.Load<Dictionary<int, int[]>>(archive, GetSavePath("phraseToSentences"));
+            sentenceToPhrase = ArchiveSaver.Load<Dictionary<int, int>>(archive, GetSavePath("sentenceToPhrase"));
+            hexToPhrase = ArchiveSaver.Load<Dictionary<int, int[]>>(archive, GetSavePath("hexToPhrase"));
+            nextKey = ArchiveSaver.Load<int>(archive, GetSavePath("nextKey"));
         }
     }
 }

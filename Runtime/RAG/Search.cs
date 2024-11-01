@@ -25,14 +25,33 @@ namespace LLMUnity
         public abstract void Save(ZipArchive archive);
         public abstract void Load(ZipArchive archive);
 
-        public virtual void Save(string filePath)
+        public void Save(string filePath)
         {
-            ArchiveSaver.Save(filePath, Save);
+            try
+            {
+                ArchiveSaver.Save(filePath, Save);
+            }
+            catch (Exception e)
+            {
+                LLMUnitySetup.LogError($"File {filePath} could not be saved due to {e.GetType()}: {e.Message}");
+            }
         }
 
-        public virtual void Load(string filePath)
+        public void Load(string filePath)
         {
-            ArchiveSaver.Load(filePath, Load);
+            try
+            {
+                ArchiveSaver.Load(filePath, Load);
+            }
+            catch (Exception e)
+            {
+                LLMUnitySetup.LogError($"File {filePath} could not be loaded due to {e.GetType()}: {e.Message}");
+            }
+        }
+
+        public virtual string GetSavePath(string name)
+        {
+            return Path.Combine(GetType().Name, name);
         }
 
         public async Task<(string[], float[])> Search(string queryString, int k, string splitId = "")
@@ -221,19 +240,19 @@ namespace LLMUnity
 
         public override void Save(ZipArchive archive)
         {
-            ArchiveSaver.Save(archive, data, "Search_data");
-            ArchiveSaver.Save(archive, dataSplits, "Search_dataSplits");
-            ArchiveSaver.Save(archive, nextKey, "Search_nextKey");
-            ArchiveSaver.Save(archive, nextIncrementalSearchKey, "Search_nextIncrementalSearchKey");
+            ArchiveSaver.Save(archive, data, GetSavePath("data"));
+            ArchiveSaver.Save(archive, dataSplits, GetSavePath("dataSplits"));
+            ArchiveSaver.Save(archive, nextKey, GetSavePath("nextKey"));
+            ArchiveSaver.Save(archive, nextIncrementalSearchKey, GetSavePath("nextIncrementalSearchKey"));
             SaveInternal(archive);
         }
 
         public override void Load(ZipArchive archive)
         {
-            data = ArchiveSaver.Load<SortedDictionary<int, string>>(archive, "Search_data");
-            dataSplits = ArchiveSaver.Load<SortedDictionary<string, List<int>>>(archive, "Search_dataSplits");
-            nextKey = ArchiveSaver.Load<int>(archive, "Search_nextKey");
-            nextIncrementalSearchKey = ArchiveSaver.Load<int>(archive, "Search_nextIncrementalSearchKey");
+            data = ArchiveSaver.Load<SortedDictionary<int, string>>(archive, GetSavePath("data"));
+            dataSplits = ArchiveSaver.Load<SortedDictionary<string, List<int>>>(archive, GetSavePath("dataSplits"));
+            nextKey = ArchiveSaver.Load<int>(archive, GetSavePath("nextKey"));
+            nextIncrementalSearchKey = ArchiveSaver.Load<int>(archive, GetSavePath("nextIncrementalSearchKey"));
             LoadInternal(archive);
         }
 
@@ -299,11 +318,11 @@ namespace LLMUnity
         public static T Load<T>(ZipArchive archive, string name)
         {
             ZipArchiveEntry baseEntry = archive.GetEntry(name);
+            if (baseEntry == null) throw new Exception($"No entry with name {name} was found");
             using (Stream entryStream = baseEntry.Open())
             {
                 BinaryFormatter formatter = new BinaryFormatter();
-                T obj = (T)formatter.Deserialize(entryStream);
-                return obj;
+                return (T)formatter.Deserialize(entryStream);
             }
         }
     }
