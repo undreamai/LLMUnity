@@ -8,7 +8,7 @@ using UnityEngine.TestTools;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace RAGTests
+namespace LLMUnityTests
 {
     public abstract class TestSearchable<T> where T : Searchable
     {
