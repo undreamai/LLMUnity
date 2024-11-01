@@ -51,7 +51,8 @@ namespace LLMUnity
         {
             Type type = null;
             if (chunkingClass != ChunkingMethods.NoChunking) type = Type.GetType("LLMUnity." + chunkingClass.ToString());
-            chunking = ConstructComponent<Chunking>(type, (previous, current) => current.search = previous.search);
+            chunking = ConstructComponent<Chunking>(type);
+            if (chunking != null) chunking.search = search;
         }
 
         public override void UpdateGameObjects()

@@ -114,14 +114,14 @@ namespace LLMUnity
 
         protected override void SaveInternal(ZipArchive archive)
         {
-            ArchiveSaver.Save(archive, embeddings, "SimpleSearch_embeddings");
-            ArchiveSaver.Save(archive, incrementalSearchCache, "SimpleSearch_incrementalSearchCache");
+            ArchiveSaver.Save(archive, embeddings, GetSavePath("embeddings"));
+            ArchiveSaver.Save(archive, incrementalSearchCache, GetSavePath("incrementalSearchCache"));
         }
 
         protected override void LoadInternal(ZipArchive archive)
         {
-            embeddings = ArchiveSaver.Load<SortedDictionary<int, float[]>>(archive, "SimpleSearch_embeddings");
-            incrementalSearchCache = ArchiveSaver.Load<Dictionary<int, List<(int, float)>>>(archive, "SimpleSearch_incrementalSearchCache");
+            embeddings = ArchiveSaver.Load<SortedDictionary<int, float[]>>(archive, GetSavePath("embeddings"));
+            incrementalSearchCache = ArchiveSaver.Load<Dictionary<int, List<(int, float)>>>(archive, GetSavePath("incrementalSearchCache"));
         }
     }
 }

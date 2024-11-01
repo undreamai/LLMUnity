@@ -359,7 +359,7 @@ namespace Cloud.Unum.USearch
 
         protected virtual string GetIndexFilename()
         {
-            return "index";
+            return "usearch/index";
         }
 
         public void Save(ZipArchive zipArchive)
