@@ -29,7 +29,8 @@ namespace LLMUnity
         {
             try
             {
-                ArchiveSaver.Save(filePath, Save);
+                string path = LLMUnitySetup.GetAssetPath(filePath);
+                ArchiveSaver.Save(path, Save);
             }
             catch (Exception e)
             {
@@ -37,16 +38,21 @@ namespace LLMUnity
             }
         }
 
-        public void Load(string filePath)
+        public async Task<bool> Load(string filePath)
         {
             try
             {
-                ArchiveSaver.Load(filePath, Load);
+                await LLMUnitySetup.AndroidExtractAsset(filePath, true);
+                string path = LLMUnitySetup.GetAssetPath(filePath);
+                if (!File.Exists(path)) return false;
+                ArchiveSaver.Load(path, Load);
             }
             catch (Exception e)
             {
                 LLMUnitySetup.LogError($"File {filePath} could not be loaded due to {e.GetType()}: {e.Message}");
+                return false;
             }
+            return true;
         }
 
         public virtual string GetSavePath(string name)
