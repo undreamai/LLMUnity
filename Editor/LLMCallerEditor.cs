@@ -42,9 +42,6 @@ namespace LLMUnity
         }
     }
 
-    [CustomEditor(typeof(LLMClient))]
-    public class LLMClientEditor : LLMCharacterEditor {}
-
     [CustomEditor(typeof(DBSearch), true)]
     public class DBSearchEditor : PropertyEditor {}
 }
