@@ -19,7 +19,8 @@
 
 LLM for Unity enables seamless integration of Large Language Models (LLMs) within the Unity engine.<br>
 It allows to create intelligent characters that your players can interact with for an immersive experience.<br>
-LLM for Unity is built on top of the awesome [llama.cpp](https://github.com/ggerganov/llama.cpp) and [llamafile](https://github.com/Mozilla-Ocho/llamafile) libraries.
+The package also features a Retrieval-Augmented Generation (RAG) system that allows to performs semantic search across your data, which can be used to enhance the character's knowledge.
+LLM for Unity is built on top of the awesome [llama.cpp](https://github.com/ggerganov/llama.cpp) library.
 
 <sub>
 <a href="#at-a-glance" style="color: black">At a glance</a>&nbsp;&nbsp;•&nbsp;
@@ -27,15 +28,16 @@ LLM for Unity is built on top of the awesome [llama.cpp](https://github.com/gger
 <a href="#games-using-llm-for-unity" style=color: black>Games using LLM for Unity</a>&nbsp;&nbsp;•&nbsp;
 <a href="#setup" style=color: black>Setup</a>&nbsp;&nbsp;•&nbsp;
 <a href="#how-to-use" style=color: black>How to use</a>&nbsp;&nbsp;•&nbsp;
-<a href="#examples" style=color: black>Examples</a>&nbsp;&nbsp;•&nbsp;
+<a href="#semantic-search-with-a-retrieval-augmented-generation-(rag)-system" style=color: black>RAG</a>&nbsp;&nbsp;•&nbsp;
 <a href="#llm-model-management" style=color: black>LLM model management</a>&nbsp;&nbsp;•&nbsp;
+<a href="#examples" style=color: black>Examples</a>&nbsp;&nbsp;•&nbsp;
 <a href="#options" style=color: black>Options</a>&nbsp;&nbsp;•&nbsp;
 <a href="#license" style=color: black>License</a>
 </sub>
 
 ## At a glance
 - 💻 Cross-platform! Windows, Linux, macOS and Android
-- 🏠 Runs locally without internet access. No data ever leaves the game!
+- 🏠 Runs locally without internet access. No data ever leave the game!
 - ⚡ Blazing fast inference on CPU and GPU (Nvidia, AMD, Apple Metal)
 - 🤗 Supports all major LLM models
 - 🔧 Easy to setup, call with a single line of code
@@ -58,7 +60,6 @@ LLM for Unity is built on top of the awesome [llama.cpp](https://github.com/gger
 - [Murder in Aisle 4](https://roadedlich.itch.io/murder-in-aisle-4)
 - [Finicky Food Delivery AI](https://helixngc7293.itch.io/finicky-food-delivery-ai)
 - [AI Emotional Girlfriend](https://whynames.itch.io/aiemotionalgirlfriend)
-- [AI Speak](https://jdscogin.wixsite.com/aispeak)
 - [Case Closed](https://store.steampowered.com/app/2532160/Case_Closed)
 
 Contact us to add your project!
@@ -324,26 +325,84 @@ The `Embeddings` function can be used to obtain the emdeddings of a phrase:
 A <b>detailed documentation</b> on function level can be found here:
 <a href="https://undream.ai/LLMUnity"><img src="https://img.shields.io/badge/Documentation-white.svg?logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwEAYAAAAHkiXEAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEgAACxIB0t1+/AAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAATqSURBVHic7ZtbiE1RGMc349K4M5EwklwjzUhJCMmTJPJAYjQXJJcH8+Blkry4lPJA8aAoJbekDLmUS6E8SHJL5AW5JPf77eHv93C22Wfttc/ee+0zc/4vv+bMXvusvfZa3/q+b33H80oqqaSSSmqrKnPdgXjUvbvYq5f4+7f486eb/rRajRsn7t4tPngg/vol/vkj/vghXr0q7tghzpyZ//79+on79omXLombNondukXrd9GoSxdx8mSxqUm8eVNkgAvl0aPioEFip07i6dP52z15Ig4fbvVY2VVFhbhokXjrlogJiWvAg/jwoXjqVO73+leUny9eiFVV5mfMlLDRBw+KX76ISQ+0LZ8/F00v4uJFsWPHFh83O+rdWzx3TnQ9wCZ+/Sqyl5iux1RmTu3aiYcPi64H1pasALypoOv4/8SJXraEbXc9kLbECxo2TKyuFj9/zt9u+XIvG8LWv3wpuh5QW86f3/JznT+fv93s2S23C1Z72wbhtH692LdvMvdPSgzkhAkiJhT16ZO/PRPOmcr+Rda4aa5nclTeuZP7PDgRpr1g40bPrQYOFF0PYKHEC+raVVy8OFy7R49EArvURU4mrUAqaTY0iB8/2rXD+XCm5mbR9QAWylevorV7/VpkL0ld06eLpkiyWPj9u93179+LpFZwZ1PXtGnitWui64GMStPmG7SH1NSIJBNHjvTSFZvRvHlise0N9JcBtW1/44Y4dqx45IjnU0JxAGLpklPx+9VZFwPp/9v/eZDGjxcZh7dv4+mXtch+up7Rca+MsJvxiRNi6nvBhg25HWprZMaPGeOlqxEjxGKz+XGRTAAmyJnq6sR370TXA2NLW+8HNjZ62dLOnaLrAQ1r2zmqPH482n0mTfJCKmEvCJHUooNZE/369Elct06kqiKsONRfulTEFDsX8QDlIa5nup9374pE8IiZHPY+ly+LZE/37/cM6mC6IB6Vl4urV6fzfUG6d0/csyf37wsXRFInaM4ckTjGdPg+apTYs6dI3RIWwH//1DV1qkiuxNY2FzrTd+2y6y8z2HQU6efZs+KBAyJZ4v+V0h6ArlwROaQP0uPH4ooV4sqV8Xz/4MF211M2wwoOq1mzRAq5Pnywa5+4KDHE9mI7ly0TO3fOvZ6/eZCoKwB32HS0SMFV1DNtImBKHYstBROoQ4fEQk2RaS+qrxejmj5M7NatIhWARS82xUJfAKahzFcdPnq0GLYgy7Rnbd8e6rGKRyzpuNzPBQty709RcNSZf/KkuHCh2GpMDyKbGNcLYE+YMkVks336NFx7XhTZ3szXiBaqtWvFuAOxM2dEZiyH8UErgc8JLNun7E0aFffSI7RP6owZmz9kSO73HjsmXr8ukppYsybSYyQvBp5QfOjQ3M9tRR496pGgLf1JtLlzRZJzlFzGp4SWDnUxFCrdvy+uWiWa3DJe3N69oj8uSEq8CER88uaNOGBAOv2ILGY69TBBJoM8O0t72zaRoztXBzlLlrT8XARW/IQq82JTMv3mKmv0/9CC4mJMYPwrMSETxAyurRUxQVmXP1fEid7mzeK3b+n2Jzb16CFu2SIWmtNJiriVxANsyq0uoCJfTk4G9y4t24/bSQ0rTkP6gVTG3mz//uKMGSK/ucId5Xe9lZUi5eMMLGUgz56J5Hxu3xZ50Xg3RMIltVn9BRja26PYsBHgAAAAAElFTkSuQmCC"/></a>
 
-## Examples
-The [Samples~](Samples~) folder contains several examples of interaction 🤖:
-- [SimpleInteraction](Samples~/SimpleInteraction): Demonstrates a simple interaction with an AI character
-- [MultipleCharacters](Samples~/MultipleCharacters): Demonstrates a simple interaction using multiple AI characters
-- [KnowledgeBaseGame](Samples~/KnowledgeBaseGame): Simple detective game using a knowledge base to provide information to the LLM based on [google/mysteryofthreebots](https://github.com/google/mysteryofthreebots)
-- [ChatBot](Samples~/ChatBot): Demonstrates interaction between a player and a AI with a UI similar to a messaging app (see image below)
-- [AndroidDemo](Samples~/AndroidDemo): Example Android app with an initial screen with model download progress
-  
-<img width="400" src=".github/demo.gif">
+## Semantic search with a Retrieval-Augmented Generation (RAG) system
+LLM for Unity implements a super-fast similarity search functionality with a Retrieval-Augmented Generation (RAG) system.<br>
+It is based on the LLM functionality, and the Approximate Nearest Neighbors (ANN) search from the [usearch](https://github.com/unum-cloud/usearch) library.<br>
+Semantic search works as follows.
 
-To install a sample:
-- Open the Package Manager: `Window > Package Manager`
-- Select the `LLM for Unity` Package. From the `Samples` Tab, click `Import` next to the sample you want to install.
+**Building the data** You provide text inputs (a phrase, paragraph, document) to add to the data.<br>
+Each input is split into chunks (optional) and encoded into embeddings with a LLM.
 
-The samples can be run with the `Scene.unity` scene they contain inside their folder.<br>
-In the scene, select the `LLM` GameObject and click the `Download Model` button to download a default model or `Load model` to load your own model (see [LLM model management](#llm-model-management)).<br>
-Save the scene, run and enjoy!
+**Searching** You can then search for a query text input. <br>
+The input is again encoded and the most similar text inputs or chunks in the data are retrieved.
+
+To use semantic serch:
+- create a GameObject for the LLM as described above. Download one of the provided RAG models or load your own (good options can be found at the [MTEB leaderboard](https://huggingface.co/spaces/mteb/leaderboard)).
+- create an empty GameObject. In the GameObject Inspector click `Add Component` and select the `RAG` script.
+- In the Search Type dropdown of the RAG select your preferred search method. `SimpleSearch` is a simple brute-force search, while`DBSearch` is a fast ANN method that should be preferred in most cases.
+- In the Chunking Type dropdown of the RAG you can select a method for splitting the inputs into chunks. This is useful to have a more consistent meaning within each data part. Chunking methods for splitting according to tokens, words and sentences are provided.
+
+Alternatively, you can create the RAG from code (where llm is your LLM):
+``` c#
+  RAG rag = gameObject.AddComponent<RAG>();
+  rag.Init(SearchMethods.DBSearch, ChunkingMethods.SentenceSplitter, llm);
+```
+
+In your script you can then use it as follows :unicorn::
+``` c#
+using LLMUnity;
+
+public class MyScript : MonoBehaviour
+{
+  RAG rag;
+
+  async void Game(){
+    ...
+    string[] inputs = new string[]{
+      "Hi! I'm a search system.",
+      "the weather is nice. I like it.",
+      "I'm a RAG system"
+    };
+    // add the inputs to the RAG
+    foreach (string input in inputs) await rag.Add(input);
+    // get the 2 most similar inputs and their distance (dissimilarity) to the search query
+    (string[] results, float[] distances) = await rag.Search("hello!", 2);
+    // to get the most similar text parts (chnuks) you can enable the returnChunks option
+    rag.ReturnChunks(true);
+    (results, distances) = await rag.Search("hello!", 2);
+    ...
+  }
+}
+```
+
+You can save the RAG state (stored in the `Assets/StreamingAssets` folder):
+``` c#
+rag.Save("rag.zip");
+```
+and load it from disk:
+``` c#
+await rag.Load("rag.zip");
+```
+
+You can use the RAG to feed relevant data to the LLM based on a user message:
+``` c#
+  string message = "How is the weather?";
+  (string[] similarPhrases, float[] distances) = await rag.Search(message, 3);
+
+  string prompt = "Answer the user query based on the provided data.\n\n";
+  prompt += $"User query: {message}\n\n";
+  prompt += $"Data:\n";
+  foreach (string similarPhrase in similarPhrases) prompt += $"\n- {similarPhrase}";
+
+  _ = llmCharacter.Chat(prompt, HandleReply, ReplyCompleted);
+```
+
+The `RAG` sample includes an example RAG implementation as well as an example RAG-LLM integration.
+
+That's all :sparkles:!
 
 ## LLM model management
-LLM for Unity implements a model manager that allows to load or download LLMs and ship them directly in your game.<br>
+LLM for Unity uses a model manager that allows to load or download LLMs and ship them directly in your game.<br>
 The model manager can be found as part of the LLM GameObject:<br>
 <img width="360" src=".github/LLM_manager.png">
 
@@ -367,6 +426,25 @@ Using this option the models will be downloaded the first time the game starts i
 If you have loaded a model locally you need to set its URL through the expanded view, otherwise it will be copied in the build.<br>
 
 ❕ Before using any model make sure you **check their license** ❕
+
+## Examples
+The [Samples~](Samples~) folder contains several examples of interaction 🤖:
+- [SimpleInteraction](Samples~/SimpleInteraction): Demonstrates a simple interaction with an AI character
+- [MultipleCharacters](Samples~/MultipleCharacters): Demonstrates a simple interaction using multiple AI characters
+- [RAG](Samples~/RAG): RAG sample. Includes an example using the RAG to feed information to a LLM
+- [ChatBot](Samples~/ChatBot): Demonstrates interaction between a player and a AI with a UI similar to a messaging app (see image below)
+- [KnowledgeBaseGame](Samples~/KnowledgeBaseGame): Simple detective game using a knowledge base to provide information to the LLM based on [google/mysteryofthreebots](https://github.com/google/mysteryofthreebots)
+- [AndroidDemo](Samples~/AndroidDemo): Example Android app with an initial screen with model download progress
+  
+<img width="400" src=".github/demo.gif">
+
+To install a sample:
+- Open the Package Manager: `Window > Package Manager`
+- Select the `LLM for Unity` Package. From the `Samples` Tab, click `Import` next to the sample you want to install.
+
+The samples can be run with the `Scene.unity` scene they contain inside their folder.<br>
+In the scene, select the `LLM` GameObject and click the `Download Model` button to download a default model or `Load model` to load your own model (see [LLM model management](#llm-model-management)).<br>
+Save the scene, run and enjoy!
 
 ## Options
 
@@ -465,6 +543,7 @@ If the user's GPU is not supported, the LLM will fall back to the CPU
 #### 🤗 Model Settings
 - `Stream` select to receive the reply from the model as it is produced (recommended!).<br>
 If it is not selected, the full reply from the model is received in one go
+- <details><summary><code>Num Predict</code> maximum number of tokens to predict (default: 256, -1 = infinity, -2 = until context filled)</summary>This is the maximum amount of tokens the model will maximum predict. When N tokens are reached the model will stop generating. This means words / sentences might not get finished if this is too low. </details>
 
 - <details><summary>Advanced options</summary>
 
@@ -473,7 +552,6 @@ If it is not selected, the full reply from the model is received in one go
   - <details><summary><code>Cache Prompt</code> save the ongoing prompt from the chat (default: true)</summary> Saves the prompt while it is being created by the chat to avoid reprocessing the entire prompt every time</details>
   - `Slot` slot of the server to use for computation. Value can be set from 0 to `Parallel Prompts`-1 (default: -1 = new slot for each character)
   - `Seed` seed for reproducibility. For random results every time use -1
-  - <details><summary><code>Num Predict</code> maximum number of tokens to predict (default: 256, -1 = infinity, -2 = until context filled)</summary>This is the maximum amount of tokens the model will maximum predict. When N tokens are reached the model will stop generating. This means words / sentences might not get finished if this is too low. </details>
   - <details><summary><code>Temperature</code> LLM temperature, lower values give more deterministic answers (default: 0.2)</summary>The temperature setting adjusts how random the generated responses are. Turning it up makes the generated choices more varied and unpredictable. Turning it down makes the generated responses more predictable and focused on the most likely options.</details>
   - <details><summary><code>Top K</code> top-k sampling (default: 40, 0 = disabled)</summary>The top k value controls the top k most probable tokens at each step of generation. This value can help fine tune the output and make this adhere to specific patterns or constraints.</details>
   - <details><summary><code>Top P</code> top-p sampling (default: 0.9, 1.0 = disabled)</summary>The top p value controls the cumulative probability of generated tokens. The model will generate tokens until this theshold (p) is reached. By lowering this value you can shorten output & encourage / discourage more diverse outputs.</details>

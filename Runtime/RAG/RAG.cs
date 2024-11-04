@@ -13,8 +13,8 @@ namespace LLMUnity
     /// </summary>
     public enum SearchMethods
     {
-        SimpleSearch,
         DBSearch,
+        SimpleSearch,
     }
 
     public class NoChunking {}
@@ -37,13 +37,10 @@ namespace LLMUnity
     [Serializable]
     public class RAG : Searchable
     {
-        public SearchMethods searchClass = SearchMethods.SimpleSearch;
+        public SearchMethods searchType = SearchMethods.SimpleSearch;
         public SearchMethod search;
-        public ChunkingMethods chunkingClass = ChunkingMethods.NoChunking;
+        public ChunkingMethods chunkingType = ChunkingMethods.NoChunking;
         public Chunking chunking;
-
-        [SerializeField, HideInInspector] SearchMethods preSearchClass;
-        [SerializeField, HideInInspector] ChunkingMethods preChunkingClass;
 
         /// <summary>
         /// Constructs the Retrieval Augmented Generation (RAG) system based on the provided search and chunking method.
@@ -53,23 +50,32 @@ namespace LLMUnity
         /// <param name="llm">LLM to use for the search method</param>
         public void Init(SearchMethods searchMethod = SearchMethods.SimpleSearch, ChunkingMethods chunkingMethod = ChunkingMethods.NoChunking, LLM llm = null)
         {
-            searchClass = searchMethod;
-            chunkingClass = chunkingMethod;
+            searchType = searchMethod;
+            chunkingType = chunkingMethod;
             UpdateGameObjects();
             search.SetLLM(llm);
+        }
+
+        /// <summary>
+        /// Set to true to return chunks or the direct input with the Search function
+        /// </summary>
+        /// <param name="returnChunks">whether to return chunks</param>
+        public void ReturnChunks(bool returnChunks)
+        {
+            if (chunking != null) chunking.ReturnChunks(returnChunks);
         }
 
         /// \cond HIDE
         protected void ConstructSearch()
         {
-            search = ConstructComponent<SearchMethod>(Type.GetType("LLMUnity." + searchClass.ToString()), (previous, current) => current.llmEmbedder.llm = previous.llmEmbedder.llm);
+            search = ConstructComponent<SearchMethod>(Type.GetType("LLMUnity." + searchType.ToString()), (previous, current) => current.llmEmbedder.llm = previous.llmEmbedder.llm);
             if (chunking != null) chunking.SetSearch(search);
         }
 
         protected void ConstructChunking()
         {
             Type type = null;
-            if (chunkingClass != ChunkingMethods.NoChunking) type = Type.GetType("LLMUnity." + chunkingClass.ToString());
+            if (chunkingType != ChunkingMethods.NoChunking) type = Type.GetType("LLMUnity." + chunkingType.ToString());
             chunking = ConstructComponent<Chunking>(type);
             if (chunking != null) chunking.SetSearch(search);
         }
