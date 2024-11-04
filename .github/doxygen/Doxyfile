@@ -951,6 +951,7 @@ WARN_LOGFILE           =
 
 INPUT                  = README.md \
                          Runtime \
+                         Runtime/RAG \
                          .github \
                          LICENSE.md \
                          "Third Party Notices.md"

@@ -5,7 +5,10 @@ using System.Collections.Generic;
 
 namespace LLMUnity
 {
-    /// \cond HIDE
+    /// @ingroup utils
+    /// <summary>
+    /// Class implementing a basic LLM Exception
+    /// </summary>
     public class LLMException : Exception
     {
         public int ErrorCode { get; private set; }
@@ -16,8 +19,16 @@ namespace LLMUnity
         }
     }
 
+    /// @ingroup utils
+    /// <summary>
+    /// Class implementing a basic LLM Destroy Exception
+    /// </summary>
     public class DestroyException : Exception {}
 
+    /// @ingroup utils
+    /// <summary>
+    /// Class representing a LORA asset
+    /// </summary>
     public class LoraAsset
     {
         public string assetPath;
@@ -37,16 +48,28 @@ namespace LLMUnity
         }
     }
 
+    /// @ingroup utils
+    /// <summary>
+    /// Class representing the LORA manager allowing to convert and retrieve LORA assets to string (for serialisation)
+    /// </summary>
     public class LoraManager
     {
         List<LoraAsset> loras = new List<LoraAsset>();
         public string delimiter = ",";
 
+        /// <summary>
+        /// Clears the LORA assets
+        /// </summary>
         public void Clear()
         {
             loras.Clear();
         }
 
+        /// <summary>
+        /// Searches for a LORA based on the path
+        /// </summary>
+        /// <param name="path">LORA path</param>
+        /// <returns>LORA index</returns>
         public int IndexOf(string path)
         {
             string fullPath = LoraAsset.RuntimePath(path);
@@ -58,23 +81,42 @@ namespace LLMUnity
             return -1;
         }
 
+        /// <summary>
+        /// Checks if the provided LORA based on a path exists already in the LORA manager
+        /// </summary>
+        /// <param name="path">LORA path</param>
+        /// <returns>whether the LORA manager contains the LORA</returns>
         public bool Contains(string path)
         {
             return IndexOf(path) != -1;
         }
 
+        /// <summary>
+        /// Adds a LORA with the defined weight
+        /// </summary>
+        /// <param name="path">LORA path</param>
+        /// <param name="weight">LORA weight</param>
         public void Add(string path, float weight = 1)
         {
             if (Contains(path)) return;
             loras.Add(new LoraAsset(path, weight));
         }
 
+        /// <summary>
+        /// Removes a LORA based on its path
+        /// </summary>
+        /// <param name="path">LORA path</param>
         public void Remove(string path)
         {
             int index = IndexOf(path);
             if (index != -1) loras.RemoveAt(index);
         }
 
+        /// <summary>
+        /// Modifies the weight of a LORA
+        /// </summary>
+        /// <param name="path">LORA path</param>
+        /// <param name="weight">LORA weight</param>
         public void SetWeight(string path, float weight)
         {
             int index = IndexOf(path);
@@ -86,6 +128,11 @@ namespace LLMUnity
             loras[index].weight = weight;
         }
 
+        /// <summary>
+        /// Converts strings with the lora paths and weights to entries in the LORA manager
+        /// </summary>
+        /// <param name="loraString">lora paths</param>
+        /// <param name="loraWeightsString">lora weights</param>
         public void FromStrings(string loraString, string loraWeightsString)
         {
             if (string.IsNullOrEmpty(loraString) && string.IsNullOrEmpty(loraWeightsString))
@@ -110,6 +157,10 @@ namespace LLMUnity
             }
         }
 
+        /// <summary>
+        /// Converts the entries of the LORA manager to strings with the lora paths and weights
+        /// </summary>
+        /// <returns>strings with the lora paths and weights</returns>
         public (string, string) ToStrings()
         {
             string loraString = "";
@@ -127,6 +178,10 @@ namespace LLMUnity
             return (loraString, loraWeightsString);
         }
 
+        /// <summary>
+        /// Gets the weights of the LORAs in the manager
+        /// </summary>
+        /// <returns>LORA weights</returns>
         public float[] GetWeights()
         {
             float[] weights = new float[loras.Count];
@@ -134,6 +189,10 @@ namespace LLMUnity
             return weights;
         }
 
+        /// <summary>
+        /// Gets the paths of the LORAs in the manager
+        /// </summary>
+        /// <returns>LORA paths</returns>
         public string[] GetLoras()
         {
             string[] loraPaths = new string[loras.Count];

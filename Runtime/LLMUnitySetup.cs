@@ -54,18 +54,18 @@ namespace LLMUnity
     }
 
     public class LLMAttribute : PropertyAttribute {}
-    public class LLMAdvancedAttribute : PropertyAttribute {}
     public class LocalRemoteAttribute : PropertyAttribute {}
     public class RemoteAttribute : PropertyAttribute {}
     public class LocalAttribute : PropertyAttribute {}
     public class ModelAttribute : PropertyAttribute {}
-    public class ModelDownloadAttribute : ModelAttribute {}
-    public class ModelDownloadAdvancedAttribute : ModelAdvancedAttribute {}
-    public class ModelAdvancedAttribute : PropertyAttribute {}
     public class ModelExtrasAttribute : PropertyAttribute {}
     public class ChatAttribute : PropertyAttribute {}
-    public class ChatAdvancedAttribute : PropertyAttribute {}
     public class LLMUnityAttribute : PropertyAttribute {}
+
+    public class AdvancedAttribute : PropertyAttribute {}
+    public class LLMAdvancedAttribute : AdvancedAttribute {}
+    public class ModelAdvancedAttribute : AdvancedAttribute {}
+    public class ChatAdvancedAttribute : AdvancedAttribute {}
 
     public class NotImplementedException : Exception
     {
@@ -137,6 +137,13 @@ namespace LLMUnity
              {
                  ("Llama 3.2 1B", "https://huggingface.co/hugging-quants/Llama-3.2-1B-Instruct-Q4_K_M-GGUF/resolve/main/llama-3.2-1b-instruct-q4_k_m.gguf", null),
                  ("Qwen 2 0.5B", "https://huggingface.co/Qwen/Qwen2-0.5B-Instruct-GGUF/resolve/main/qwen2-0_5b-instruct-q4_k_m.gguf?download=true", null),
+             }},
+            {"RAG models", new(string, string, string)[]
+             {
+                 ("All MiniLM L12 v2", "https://huggingface.co/leliuga/all-MiniLM-L12-v2-GGUF/resolve/main/all-MiniLM-L12-v2.Q4_K_M.gguf", null),
+                 ("BGE large en v1.5", "https://huggingface.co/CompendiumLabs/bge-large-en-v1.5-gguf/resolve/main/bge-large-en-v1.5-q4_k_m.gguf", null),
+                 ("BGE base en v1.5", "https://huggingface.co/CompendiumLabs/bge-base-en-v1.5-gguf/resolve/main/bge-base-en-v1.5-q4_k_m.gguf", null),
+                 ("BGE small en v1.5", "https://huggingface.co/CompendiumLabs/bge-small-en-v1.5-gguf/resolve/main/bge-small-en-v1.5-q4_k_m.gguf", null),
              }},
         };
 

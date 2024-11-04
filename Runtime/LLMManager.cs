@@ -1,3 +1,5 @@
+/// @file
+/// @brief File implementing the LLM model manager
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,6 +10,10 @@ using UnityEngine;
 namespace LLMUnity
 {
     [Serializable]
+    /// @ingroup utils
+    /// <summary>
+    /// Class implementing a LLM model entry
+    /// </summary>
     public class ModelEntry
     {
         public string label;
@@ -16,9 +22,18 @@ namespace LLMUnity
         public bool lora;
         public string chatTemplate;
         public string url;
+        public bool embeddingOnly;
+        public int embeddingLength;
         public bool includeInBuild;
         public int contextLength;
 
+        static List<string> embeddingOnlyArchs = new List<string> {"bert", "nomic-bert", "jina-bert-v2", "t5", "t5encoder"};
+
+        /// <summary>
+        /// Returns the relative asset path if it is in the AssetPath folder (StreamingAssets or persistentPath), otherwise the filename.
+        /// </summary>
+        /// <param name="path">asset path</param>
+        /// <returns>relative asset path or filename</returns>
         public static string GetFilenameOrRelativeAssetPath(string path)
         {
             string assetPath = LLMUnitySetup.GetAssetPath(path); // Note: this will return the full path if a full path is passed
@@ -30,6 +45,13 @@ namespace LLMUnity
             return Path.GetFileName(path);
         }
 
+        /// <summary>
+        /// Constructs a LLM model entry
+        /// </summary>
+        /// <param name="path">model path</param>
+        /// <param name="lora">if it is a LORA or LLM</param>
+        /// <param name="label">label to show in the model manager in the Editor</param>
+        /// <param name="url">model url</param>
         public ModelEntry(string path, bool lora = false, string label = null, string url = null)
         {
             filename = GetFilenameOrRelativeAssetPath(path);
@@ -40,15 +62,26 @@ namespace LLMUnity
             includeInBuild = true;
             chatTemplate = null;
             contextLength = -1;
+            embeddingOnly = false;
+            embeddingLength = 0;
             if (!lora)
             {
                 GGUFReader reader = new GGUFReader(this.path);
-                chatTemplate = ChatTemplate.FromGGUF(reader, this.path);
                 string arch = reader.GetStringField("general.architecture");
-                if (arch != null) contextLength = reader.GetIntField($"{arch}.context_length");
+                if (arch != null)
+                {
+                    contextLength = reader.GetIntField($"{arch}.context_length");
+                    embeddingLength = reader.GetIntField($"{arch}.embedding_length");
+                }
+                embeddingOnly = embeddingOnlyArchs.Contains(arch);
+                chatTemplate = embeddingOnly ? default : ChatTemplate.FromGGUF(reader, this.path);
             }
         }
 
+        /// <summary>
+        /// Returns only the required fields for bundling the model in the build
+        /// </summary>
+        /// <returns>Adapted model entry</returns>
         public ModelEntry OnlyRequiredFields()
         {
             ModelEntry entry = (ModelEntry)MemberwiseClone();
@@ -58,14 +91,20 @@ namespace LLMUnity
         }
     }
 
+    /// \cond HIDE
     [Serializable]
     public class LLMManagerStore
     {
         public bool downloadOnStart;
         public List<ModelEntry> modelEntries;
     }
+    /// \endcond
 
     [DefaultExecutionOrder(-2)]
+    /// @ingroup utils
+    /// <summary>
+    /// Class implementing the LLM model manager
+    /// </summary>
     public class LLMManager
     {
         public static bool downloadOnStart = false;
@@ -80,12 +119,20 @@ namespace LLMUnity
         static long currFileSize;
         static long completedSize;
 
+        /// <summary>
+        /// Sets the model download progress in all registered callbacks
+        /// </summary>
+        /// <param name="progress">model download progress</param>
         public static void SetDownloadProgress(float progress)
         {
             downloadProgress = (completedSize + progress * currFileSize) / totalSize;
             foreach (Callback<float> downloadProgressCallback in downloadProgressCallbacks) downloadProgressCallback?.Invoke(downloadProgress);
         }
 
+        /// <summary>
+        /// Setup of the models
+        /// </summary>
+        /// <returns>bool specifying if the setup was successful</returns>
         public static Task<bool> Setup()
         {
             lock (lockObject)
@@ -95,6 +142,10 @@ namespace LLMUnity
             return SetupTask;
         }
 
+        /// <summary>
+        /// Task performing the setup of the models
+        /// </summary>
+        /// <returns>bool specifying if the setup was successful</returns>
         public static async Task<bool> SetupOnce()
         {
             await LLMUnitySetup.AndroidExtractAsset(LLMUnitySetup.LLMManagerPath, true);
@@ -152,11 +203,21 @@ namespace LLMUnity
             return true;
         }
 
+        /// <summary>
+        /// Sets the chat template for a model and distributes it to all LLMs using it
+        /// </summary>
+        /// <param name="filename">model path</param>
+        /// <param name="chatTemplate">chat template</param>
         public static void SetTemplate(string filename, string chatTemplate)
         {
             SetTemplate(Get(filename), chatTemplate);
         }
 
+        /// <summary>
+        /// Sets the chat template for a model and distributes it to all LLMs using it
+        /// </summary>
+        /// <param name="entry">model entry</param>
+        /// <param name="chatTemplate">chat template</param>
         public static void SetTemplate(ModelEntry entry, string chatTemplate)
         {
             if (entry == null) return;
@@ -170,6 +231,11 @@ namespace LLMUnity
 #endif
         }
 
+        /// <summary>
+        /// Gets the model entry for a model path
+        /// </summary>
+        /// <param name="path">model path</param>
+        /// <returns>model entry</returns>
         public static ModelEntry Get(string path)
         {
             string filename = Path.GetFileName(path);
@@ -181,6 +247,11 @@ namespace LLMUnity
             return null;
         }
 
+        /// <summary>
+        /// Gets the asset path based on whether the application runs locally in the editor or in a build
+        /// </summary>
+        /// <param name="filename">model filename or relative path</param>
+        /// <returns>asset path</returns>
         public static string GetAssetPath(string filename)
         {
             ModelEntry entry = Get(filename);
@@ -192,6 +263,11 @@ namespace LLMUnity
 #endif
         }
 
+        /// <summary>
+        /// Returns the number of LLM/LORA models
+        /// </summary>
+        /// <param name="lora">whether to return number of LORA or LLM models</param>
+        /// <returns>number of LLM/LORA models</returns>
         public static int Num(bool lora)
         {
             int num = 0;
@@ -202,26 +278,45 @@ namespace LLMUnity
             return num;
         }
 
+        /// <summary>
+        /// Returns the number of LLM models
+        /// </summary>
+        /// <returns>number of LLM models</returns>
         public static int NumModels()
         {
             return Num(false);
         }
 
+        /// <summary>
+        /// Returns the number of LORA models
+        /// </summary>
+        /// <returns>number of LORA models</returns>
         public static int NumLoras()
         {
             return Num(true);
         }
 
+        /// <summary>
+        /// Registers a LLM to the model manager
+        /// </summary>
+        /// <param name="llm">LLM</param>
         public static void Register(LLM llm)
         {
             llms.Add(llm);
         }
 
+        /// <summary>
+        /// Removes a LLM from the model manager
+        /// </summary>
+        /// <param name="llm">LLM</param>
         public static void Unregister(LLM llm)
         {
             llms.Remove(llm);
         }
 
+        /// <summary>
+        /// Loads the model manager from a file
+        /// </summary>
         public static void LoadFromDisk()
         {
             if (!File.Exists(LLMUnitySetup.LLMManagerPath)) return;
@@ -242,6 +337,11 @@ namespace LLMUnity
             Load();
         }
 
+        /// <summary>
+        /// Adds a model entry to the model manager
+        /// </summary>
+        /// <param name="entry">model entry</param>
+        /// <returns>model filename</returns>
         public static string AddEntry(ModelEntry entry)
         {
             int indexToInsert = modelEntries.Count;
@@ -265,11 +365,27 @@ namespace LLMUnity
             return entry.filename;
         }
 
+        /// <summary>
+        /// Creates and adds a model entry to the model manager
+        /// </summary>
+        /// <param name="path">model path</param>
+        /// <param name="lora">if it is a LORA or LLM</param>
+        /// <param name="label">label to show in the model manager in the Editor</param>
+        /// <param name="url">model url</param>
+        /// <returns>model filename</returns>
         public static string AddEntry(string path, bool lora = false, string label = null, string url = null)
         {
             return AddEntry(new ModelEntry(path, lora, label, url));
         }
 
+        /// <summary>
+        /// Downloads a model and adds a model entry to the model manager
+        /// </summary>
+        /// <param name="url">model url</param>
+        /// <param name="lora">if it is a LORA or LLM</param>
+        /// <param name="log">whether to log</param>
+        /// <param name="label">model label</param>
+        /// <returns>model filename</returns>
         public static async Task<string> Download(string url, bool lora = false, bool log = false, string label = null)
         {
             foreach (ModelEntry entry in modelEntries)
@@ -315,6 +431,14 @@ namespace LLMUnity
             return AddEntry(modelPath, lora, label, url);
         }
 
+        /// <summary>
+        /// Loads a model from disk and adds a model entry to the model manager
+        /// </summary>
+        /// <param name="path">model path</param>
+        /// <param name="lora">if it is a LORA or LLM</param>
+        /// <param name="log">whether to log</param>
+        /// <param name="label">model label</param>
+        /// <returns>model filename</returns>
         public static string Load(string path, bool lora = false, bool log = false, string label = null)
         {
             ModelEntry entry = Get(path);
@@ -326,31 +450,69 @@ namespace LLMUnity
             return AddEntry(path, lora, label);
         }
 
+        /// <summary>
+        /// Downloads a LLM model from disk and adds a model entry to the model manager
+        /// </summary>
+        /// <param name="url">model url</param>
+        /// <param name="log">whether to log</param>
+        /// <param name="label">model label</param>
+        /// <returns>model filename</returns>
         public static async Task<string> DownloadModel(string url, bool log = false, string label = null)
         {
             return await Download(url, false, log, label);
         }
 
+        /// <summary>
+        /// Downloads a Lora model from disk and adds a model entry to the model manager
+        /// </summary>
+        /// <param name="url">model url</param>
+        /// <param name="log">whether to log</param>
+        /// <param name="label">model label</param>
+        /// <returns>model filename</returns>
         public static async Task<string> DownloadLora(string url, bool log = false, string label = null)
         {
             return await Download(url, true, log, label);
         }
 
+        /// <summary>
+        /// Loads a LLM model from disk and adds a model entry to the model manager
+        /// </summary>
+        /// <param name="path">model path</param>
+        /// <param name="log">whether to log</param>
+        /// <param name="label">model label</param>
+        /// <returns>model filename</returns>
         public static string LoadModel(string path, bool log = false, string label = null)
         {
             return Load(path, false, log, label);
         }
 
+        /// <summary>
+        /// Loads a LORA model from disk and adds a model entry to the model manager
+        /// </summary>
+        /// <param name="path">model path</param>
+        /// <param name="log">whether to log</param>
+        /// <param name="label">model label</param>
+        /// <returns>model filename</returns>
         public static string LoadLora(string path, bool log = false, string label = null)
         {
             return Load(path, true, log, label);
         }
 
+        /// <summary>
+        /// Sets the URL for a model
+        /// </summary>
+        /// <param name="filename">model filename</param>
+        /// <param name="url">model URL</param>
         public static void SetURL(string filename, string url)
         {
             SetURL(Get(filename), url);
         }
 
+        /// <summary>
+        /// Sets the URL for a model
+        /// </summary>
+        /// <param name="entry">model entry</param>
+        /// <param name="url">model URL</param>
         public static void SetURL(ModelEntry entry, string url)
         {
             if (entry == null) return;
@@ -358,11 +520,21 @@ namespace LLMUnity
             Save();
         }
 
+        /// <summary>
+        /// Sets whether to include a model to the build
+        /// </summary>
+        /// <param name="filename">model filename</param>
+        /// <param name="includeInBuild">whether to include it</param>
         public static void SetIncludeInBuild(string filename, bool includeInBuild)
         {
             SetIncludeInBuild(Get(filename), includeInBuild);
         }
 
+        /// <summary>
+        /// Sets whether to include a model to the build
+        /// </summary>
+        /// <param name="entry">model entry</param>
+        /// <param name="includeInBuild">whether to include it</param>
         public static void SetIncludeInBuild(ModelEntry entry, bool includeInBuild)
         {
             if (entry == null) return;
@@ -370,6 +542,10 @@ namespace LLMUnity
             Save();
         }
 
+        /// <summary>
+        /// Sets whether to download files on start
+        /// </summary>
+        /// <param name="value">whether to download files</param>
         public static void SetDownloadOnStart(bool value)
         {
             downloadOnStart = value;
@@ -385,11 +561,19 @@ namespace LLMUnity
             Save();
         }
 
+        /// <summary>
+        /// Removes a model from the model manager
+        /// </summary>
+        /// <param name="filename">model filename</param>
         public static void Remove(string filename)
         {
             Remove(Get(filename));
         }
 
+        /// <summary>
+        /// Removes a model from the model manager
+        /// </summary>
+        /// <param name="filename">model entry</param>
         public static void Remove(ModelEntry entry)
         {
             if (entry == null) return;
@@ -402,16 +586,27 @@ namespace LLMUnity
             }
         }
 
+        /// <summary>
+        /// Sets the LLM download progress
+        /// </summary>
+        /// <param name="progress">download progress</param>
         public static void SetModelProgress(float progress)
         {
             modelProgress = progress;
         }
 
+        /// <summary>
+        /// Sets the LORA download progress
+        /// </summary>
+        /// <param name="progress">download progress</param>
         public static void SetLoraProgress(float progress)
         {
             loraProgress = progress;
         }
 
+        /// <summary>
+        /// Serialises and saves the model manager
+        /// </summary>
         public static void Save()
         {
             string json = JsonUtility.ToJson(new LLMManagerStore { modelEntries = modelEntries, downloadOnStart = downloadOnStart }, true);
@@ -419,6 +614,9 @@ namespace LLMUnity
             PlayerPrefs.Save();
         }
 
+        /// <summary>
+        /// Deserialises and loads the model manager
+        /// </summary>
         public static void Load()
         {
             string pref = PlayerPrefs.GetString(LLMManagerPref);
@@ -428,6 +626,9 @@ namespace LLMUnity
             modelEntries = store.modelEntries;
         }
 
+        /// <summary>
+        /// Saves the model manager to disk for the build
+        /// </summary>
         public static void SaveToDisk()
         {
             List<ModelEntry> modelEntriesBuild = new List<ModelEntry>();
@@ -440,6 +641,10 @@ namespace LLMUnity
             File.WriteAllText(LLMUnitySetup.LLMManagerPath, json);
         }
 
+        /// <summary>
+        /// Saves the model manager to disk along with models that are not (or can't) be downloaded for the build
+        /// </summary>
+        /// <param name="copyCallback">copy function</param>
         public static void Build(ActionCallback copyCallback)
         {
             SaveToDisk();

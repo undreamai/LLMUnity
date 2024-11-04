@@ -71,7 +71,6 @@ namespace LLMUnityTests
 
     public class TestLLM
     {
-        protected static string modelUrl = "https://huggingface.co/Qwen/Qwen2-0.5B-Instruct-GGUF/resolve/main/qwen2-0_5b-instruct-q4_k_m.gguf?download=true";
         protected string modelNameLLManager;
 
         protected GameObject gameObject;
@@ -112,6 +111,10 @@ namespace LLMUnityTests
             {
                 reply2 = "To increase your meme production/output, you can try using various tools and techniques to create more engaging content";
             }
+            else if (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.OSXPlayer)
+            {
+                reply2 = "To increase your meme production/output, you can try using various tools and techniques. Here are some suggestions";
+            }
             else
             {
                 reply2 = "To increase your meme production/output, you can try the following strategies:\n\n1. Use a meme generator";
@@ -120,9 +123,14 @@ namespace LLMUnityTests
             tokens2 = 9;
         }
 
+        protected virtual string GetModelUrl()
+        {
+            return "https://huggingface.co/Qwen/Qwen2-0.5B-Instruct-GGUF/resolve/main/qwen2-0_5b-instruct-q4_k_m.gguf?download=true";
+        }
+
         public virtual async Task DownloadModels()
         {
-            modelNameLLManager = await LLMManager.DownloadModel(modelUrl);
+            modelNameLLManager = await LLMManager.DownloadModel(GetModelUrl());
         }
 
         [Test]
@@ -292,7 +300,7 @@ namespace LLMUnityTests
         public override LLM CreateLLM()
         {
             LLM llm = gameObject.AddComponent<LLM>();
-            string filename = Path.GetFileName(modelUrl).Split("?")[0];
+            string filename = Path.GetFileName(GetModelUrl()).Split("?")[0];
             string sourcePath = Path.Combine(LLMUnitySetup.modelDownloadPath, filename);
             filename = LLMManager.LoadModel(sourcePath);
             llm.SetModel(filename);
@@ -308,7 +316,7 @@ namespace LLMUnityTests
         public override LLM CreateLLM()
         {
             LLM llm = gameObject.AddComponent<LLM>();
-            string filename = Path.GetFileName(modelUrl).Split("?")[0];
+            string filename = Path.GetFileName(GetModelUrl()).Split("?")[0];
             string sourcePath = Path.Combine(LLMUnitySetup.modelDownloadPath, filename);
             loadPath = LLMUnitySetup.GetAssetPath(filename);
             if (!File.Exists(loadPath)) File.Copy(sourcePath, loadPath);
@@ -328,7 +336,7 @@ namespace LLMUnityTests
         public override LLM CreateLLM()
         {
             LLM llm = gameObject.AddComponent<LLM>();
-            string filename = Path.GetFileName(modelUrl).Split("?")[0];
+            string filename = Path.GetFileName(GetModelUrl()).Split("?")[0];
             string loadPath = Path.Combine(LLMUnitySetup.modelDownloadPath, filename);
             llm.SetModel(loadPath);
             llm.parallelPrompts = 1;
@@ -400,7 +408,7 @@ namespace LLMUnityTests
 
         public void TestModelPaths()
         {
-            Assert.AreEqual(llm.model, Path.Combine(LLMUnitySetup.modelDownloadPath, Path.GetFileName(modelUrl).Split("?")[0]).Replace('\\', '/'));
+            Assert.AreEqual(llm.model, Path.Combine(LLMUnitySetup.modelDownloadPath, Path.GetFileName(GetModelUrl()).Split("?")[0]).Replace('\\', '/'));
             Assert.AreEqual(llm.lora, Path.Combine(LLMUnitySetup.modelDownloadPath, Path.GetFileName(loraUrl).Split("?")[0]).Replace('\\', '/'));
         }
 
