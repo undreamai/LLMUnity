@@ -27,33 +27,6 @@ namespace LLMUnity
             embeddings.Remove(key);
         }
 
-        public static float DotProduct(float[] vector1, float[] vector2)
-        {
-            if (vector1 == null || vector2 == null) throw new ArgumentNullException("Vectors cannot be null");
-            if (vector1.Length != vector2.Length) throw new ArgumentException("Vector lengths must be equal for dot product calculation");
-            float result = 0;
-            for (int i = 0; i < vector1.Length; i++)
-            {
-                result += vector1[i] * vector2[i];
-            }
-            return result;
-        }
-
-        public static float InverseDotProduct(float[] vector1, float[] vector2)
-        {
-            return 1 - DotProduct(vector1, vector2);
-        }
-
-        public static float[] InverseDotProduct(float[] vector1, float[][] vector2)
-        {
-            float[] results = new float[vector2.Length];
-            for (int i = 0; i < vector2.Length; i++)
-            {
-                results[i] = InverseDotProduct(vector1, vector2[i]);
-            }
-            return results;
-        }
-
         public override int IncrementalSearch(float[] embedding, string group = "")
         {
             int key = nextIncrementalSearchKey++;
@@ -76,7 +49,7 @@ namespace LLMUnity
             return key;
         }
 
-        public override (int[], float[], bool) IncrementalFetchKeys(int fetchKey, int k)
+        public override ValueTuple<int[], float[], bool> IncrementalFetchKeys(int fetchKey, int k)
         {
             if (!incrementalSearchCache.ContainsKey(fetchKey)) throw new Exception($"There is no IncrementalSearch cached with this key: {fetchKey}");
 
@@ -128,6 +101,7 @@ namespace LLMUnity
             embeddings = ArchiveSaver.Load<SortedDictionary<int, float[]>>(archive, GetSavePath("embeddings"));
             incrementalSearchCache = ArchiveSaver.Load<Dictionary<int, List<(int, float)>>>(archive, GetSavePath("incrementalSearchCache"));
         }
+
         /// \endcond
     }
 }

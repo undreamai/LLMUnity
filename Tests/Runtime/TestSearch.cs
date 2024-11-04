@@ -406,6 +406,7 @@ namespace LLMUnityTests
             await base.Tests();
             await TestEncode();
             await TestSimilarity();
+            await TestSearchFromList();
         }
 
         public async Task TestEncode()
@@ -423,6 +424,17 @@ namespace LLMUnityTests
             float distance = SimpleSearch.InverseDotProduct(sentence1, sentence2);
             Assert.That(ApproxEqual(similarity, 1 - weatherRainingDiff));
             Assert.That(ApproxEqual(distance, weatherRainingDiff));
+        }
+
+        public async Task TestSearchFromList()
+        {
+            (string[] results, float[] distances) = await search.SearchFromList(weather, new string[] {sometext, raining});
+            Assert.AreEqual(results.Length, 2);
+            Assert.AreEqual(distances.Length, 2);
+            Assert.AreEqual(results[0], raining);
+            Assert.AreEqual(results[1], sometext);
+            Assert.That(ApproxEqual(distances[0], weatherRainingDiff));
+            Assert.That(ApproxEqual(distances[1], weatherSometextDiff));
         }
     }
 

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
 using UnityEditor;
@@ -98,12 +99,19 @@ namespace LLMUnity
 
         /// <summary>
         /// Search for similar results to the provided query.
-        /// The most similar results and their keys and distances (dissimilarity) to the query are retrieved.
+        /// The most similar results and their distances (dissimilarity) to the query are retrieved.
         /// </summary>
         /// <param name="queryString">query</param>
         /// <param name="k">number of results to retrieve</param>
         /// <param name="group">data group to search in</param>
-        /// <returns>tuple of (retrieved results, distance of each result to the query)</returns>
+        /// <returns>
+        /// A tuple containing:
+        /// <list type="bullet">
+        /// <item><description>Array of retrieved results (`string[]`).</description></item>
+        /// <item><description>Array of distances for each result (`float[]`).</description></item>
+        /// <item><description>`bool` indicating if the search is exhausted.</description></item>
+        /// </list>
+        /// </returns>
         public async Task<(string[], float[])> Search(string queryString, int k, string group = "")
         {
             int fetchKey = await IncrementalSearch(queryString, group);
@@ -114,14 +122,14 @@ namespace LLMUnity
 
         /// <summary>
         /// Retrieves the most similar search results in batches (incremental search).
-        /// The most similar results and their keys and distances (dissimilarity) to the query are retrieved as well as a parameter that dictates whether the search is exhausted.
+        /// The most similar results and their distances (dissimilarity) to the query are retrieved as well as a parameter that dictates whether the search is exhausted.
         /// </summary>
         /// <param name="fetchKey">incremental search key</param>
         /// <param name="k">number of results to retrieve</param>
         /// <returns>
         /// A tuple containing:
         /// <list type="bullet">
-        /// <item><description>Array of retrieved keys (`int[]`).</description></item>
+        /// <item><description>Array of retrieved results (`string[]`).</description></item>
         /// <item><description>Array of distances for each result (`float[]`).</description></item>
         /// <item><description>`bool` indicating if the search is exhausted.</description></item>
         /// </list>
@@ -268,8 +276,69 @@ namespace LLMUnity
             this.llm = llm;
             if (llmEmbedder != null) llmEmbedder.llm = llm;
         }
+        
+        /// <summary>
+        /// Orders the entries in the searchList according to their similarity to the provided query.
+        /// The entries and distances (dissimilarity) to the query are returned in decreasing order of similarity.
+        /// </summary>
+        /// <param name="queryString">query</param>
+        /// <param name="searchList">entries to order based on similarity</param>
+        /// <returns>
+        /// A tuple containing:
+        /// <list type="bullet">
+        /// <item><description>Array of entries (`string[]`).</description></item>
+        /// <item><description>Array of distances for each result (`float[]`).</description></item>
+        /// </list>
+        /// </returns>
+        public async Task<(string[], float[])> SearchFromList(string query, string[] searchList)
+        {
+            float[] embedding = await Encode(query);
+            float[][] embeddingsList = new float[searchList.Length][];
+            for (int i = 0; i < searchList.Length; i++) embeddingsList[i] = await Encode(searchList[i]);
+
+            float[] unsortedDistances = InverseDotProduct(embedding, embeddingsList);
+            List<(string, float)> sortedLists = searchList.Zip(unsortedDistances, (first, second) => (first, second))
+                .OrderBy(item => item.Item2)
+                .ToList();
+
+            string[] results = new string[sortedLists.Count];
+            float[] distances = new float[sortedLists.Count];
+            for (int i = 0; i < sortedLists.Count; i++)
+            {
+                results[i] = sortedLists[i].Item1;
+                distances[i] = sortedLists[i].Item2;
+            }
+            return (results.ToArray(), distances.ToArray());
+        }
 
         /// \cond HIDE
+        public static float DotProduct(float[] vector1, float[] vector2)
+        {
+            if (vector1 == null || vector2 == null) throw new ArgumentNullException("Vectors cannot be null");
+            if (vector1.Length != vector2.Length) throw new ArgumentException("Vector lengths must be equal for dot product calculation");
+            float result = 0;
+            for (int i = 0; i < vector1.Length; i++)
+            {
+                result += vector1[i] * vector2[i];
+            }
+            return result;
+        }
+
+        public static float InverseDotProduct(float[] vector1, float[] vector2)
+        {
+            return 1 - DotProduct(vector1, vector2);
+        }
+
+        public static float[] InverseDotProduct(float[] vector1, float[][] vector2)
+        {
+            float[] results = new float[vector2.Length];
+            for (int i = 0; i < vector2.Length; i++)
+            {
+                results[i] = InverseDotProduct(vector1, vector2[i]);
+            }
+            return results;
+        }
+
         public virtual async Task<float[]> Encode(string inputString)
         {
             return (await llmEmbedder.Embeddings(inputString)).ToArray();
@@ -417,6 +486,7 @@ namespace LLMUnity
             search.Load(archive);
             LoadInternal(archive);
         }
+
         /// \endcond
     }
 
