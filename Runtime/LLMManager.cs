@@ -91,12 +91,14 @@ namespace LLMUnity
         }
     }
 
+    /// \cond HIDE
     [Serializable]
     public class LLMManagerStore
     {
         public bool downloadOnStart;
         public List<ModelEntry> modelEntries;
     }
+    /// \endcond
 
     [DefaultExecutionOrder(-2)]
     /// @ingroup utils

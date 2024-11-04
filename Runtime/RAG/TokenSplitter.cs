@@ -1,12 +1,19 @@
+/// @file
+/// @brief File implementing a token-based splitter
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace LLMUnity
 {
+    /// @ingroup rag
+    /// <summary>
+    /// Class implementing a token-based splitter
+    /// </summary>
     [Serializable]
     public class TokenSplitter : Chunking
     {
+        /// <summary> the number of tokens to split phrases into chunks </summary>
         public int numTokens = 10;
 
         protected int DetermineEndIndex(string input, string detokenised, int startIndex, int searchRange = 5, int charsFromEnd = 3)
@@ -33,6 +40,11 @@ namespace LLMUnity
             return endIndex;
         }
 
+        /// <summary>
+        /// Splits the provided phrase into chunks of a specific number of tokens (defined by the numTokens variable)
+        /// </summary>
+        /// <param name="input">phrase</param>
+        /// <returns>List of start/end indices of the split chunks</returns>
         public override async Task<List<(int, int)>> Split(string input)
         {
             List<(int, int)> indices = new List<(int, int)>();

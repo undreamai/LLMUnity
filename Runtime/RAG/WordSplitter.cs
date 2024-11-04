@@ -1,16 +1,26 @@
+/// @file
+/// @brief File implementing a word-based splitter
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using UnityEngine;
 
 namespace LLMUnity
 {
+    /// @ingroup rag
+    /// <summary>
+    /// Class implementing a word-based splitter
+    /// </summary>
     [Serializable]
     public class WordSplitter : Chunking
     {
+        /// <summary> the number of words to split phrases into chunks </summary>
         public int numWords = 10;
 
+        /// <summary>
+        /// Splits the provided phrase into chunks of a specific number of words (defined by the numWords variable)
+        /// </summary>
+        /// <param name="input">phrase</param>
+        /// <returns>List of start/end indices of the split chunks</returns>
         public override async Task<List<(int, int)>> Split(string input)
         {
             bool IsBoundary(char c)
