@@ -25,6 +25,11 @@ namespace LLMUnity
         [LLM] public bool saveCache = false;
         /// <summary> select to log the constructed prompt the Unity Editor. </summary>
         [LLM] public bool debugPrompt = false;
+        /// <summary> number of tokens to predict (-1 = infinity, -2 = until context filled).
+        /// This is the amount of tokens the model will maximum predict.
+        /// When N predict is reached the model will stop generating.
+        /// This means words / sentences might not get finished if this is too low. </summary>
+        [Model] public int numPredict = 256;
         /// <summary> specify which slot of the server to use for computation (affects caching) </summary>
         [ModelAdvanced] public int slot = -1;
         /// <summary> grammar file used for the LLM in .cbnf format (relative to the Assets/StreamingAssets folder) </summary>
@@ -33,11 +38,6 @@ namespace LLMUnity
         [ModelAdvanced] public bool cachePrompt = true;
         /// <summary> seed for reproducibility. For random results every time set to -1. </summary>
         [ModelAdvanced] public int seed = 0;
-        /// <summary> number of tokens to predict (-1 = infinity, -2 = until context filled).
-        /// This is the amount of tokens the model will maximum predict.
-        /// When N predict is reached the model will stop generating.
-        /// This means words / sentences might not get finished if this is too low. </summary>
-        [ModelAdvanced] public int numPredict = 256;
         /// <summary> LLM temperature, lower values give more deterministic answers.
         /// The temperature setting adjusts how random the generated responses are.
         /// Turning it up makes the generated choices more varied and unpredictable.

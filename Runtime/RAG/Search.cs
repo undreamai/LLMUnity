@@ -276,7 +276,7 @@ namespace LLMUnity
             this.llm = llm;
             if (llmEmbedder != null) llmEmbedder.llm = llm;
         }
-        
+
         /// <summary>
         /// Orders the entries in the searchList according to their similarity to the provided query.
         /// The entries and distances (dissimilarity) to the query are returned in decreasing order of similarity.

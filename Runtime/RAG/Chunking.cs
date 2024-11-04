@@ -16,14 +16,21 @@ namespace LLMUnity
     [Serializable]
     public abstract class Chunking : SearchPlugin
     {
-        /// <summary> variable specifying whether to return the chunks or the complete phrase with the Search function </summary>
-        public bool returnChunks = false;
-
+        protected bool returnChunks = false;
         protected Dictionary<string, List<int>> dataSplitToPhrases = new Dictionary<string, List<int>>();
         protected Dictionary<int, int[]> phraseToSentences = new Dictionary<int, int[]>();
         protected Dictionary<int, int> sentenceToPhrase = new Dictionary<int, int>();
         protected Dictionary<int, int[]> hexToPhrase = new Dictionary<int, int[]>();
         protected int nextKey = 0;
+
+        /// <summary>
+        /// Set to true to return chunks or the direct input with the Search function
+        /// </summary>
+        /// <param name="returnChunks">whether to return chunks</param>
+        public void ReturnChunks(bool returnChunks)
+        {
+            this.returnChunks = returnChunks;
+        }
 
         /// <summary>
         /// Splits the provided phrase into chunks
