@@ -1,3 +1,5 @@
+/// @file
+/// @brief File implementing the search functionality
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -7,24 +9,135 @@ using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 
+/// @defgroup rag RAG
 namespace LLMUnity
 {
+    /// @ingroup rag
+    /// <summary>
+    /// Class implementing the search template
+    /// </summary>
     [DefaultExecutionOrder(-2)]
     public abstract class Searchable : MonoBehaviour
     {
+        /// <summary>
+        /// Retrieves the phrase with the specific id
+        /// </summary>
+        /// <param name="key">phrase id</param>
+        /// <returns>phrase</returns>
         public abstract string Get(int key);
-        public abstract Task<int> Add(string inputString, string splitId = "");
-        public abstract int Remove(string inputString, string splitId = "");
-        public abstract void Remove(int key);
-        public abstract int Count(string splitId);
-        public abstract int Count();
-        public abstract void Clear();
-        public abstract Task<int> IncrementalSearch(string queryString, string splitId = "");
-        public abstract (int[], float[], bool) IncrementalFetchKeys(int fetchKey, int k);
-        public abstract void IncrementalSearchComplete(int fetchKey);
-        public abstract void Save(ZipArchive archive);
-        public abstract void Load(ZipArchive archive);
 
+        /// <summary>
+        /// Adds a phrase to the search.
+        /// </summary>
+        /// <param name="inputString">input phrase</param>
+        /// <param name="group">data group to add it to </param>
+        /// <returns>phrase id</returns>
+        public abstract Task<int> Add(string inputString, string group = "");
+
+        /// <summary>
+        /// Removes a phrase from the search.
+        /// </summary>
+        /// <param name="inputString">input phrase</param>
+        /// <param name="group">data group to remove it from </param>
+        /// <returns>number of removed entries/returns>
+        public abstract int Remove(string inputString, string group = "");
+
+        /// <summary>
+        /// Removes a phrase from the search.
+        /// </summary>
+        /// <param name="key">phrase id</param>
+        public abstract void Remove(int key);
+
+        /// <summary>
+        /// Returns a count of the phrases
+        /// </summary>
+        /// <returns>phrase count</returns>
+        public abstract int Count();
+
+        /// <summary>
+        /// Returns a count of the phrases in a specific data group
+        /// </summary>
+        /// <param name="group">data group</param>
+        /// <returns>phrase count</returns>
+        public abstract int Count(string group);
+
+        /// <summary>
+        /// Clears the search object
+        /// </summary>
+        public abstract void Clear();
+
+        /// <summary>
+        /// Allows to do search and retrieve results in batches (incremental search).
+        /// </summary>
+        /// <param name="queryString">search query</param>
+        /// <param name="group">data group to search in</param>
+        /// <returns>incremental search key</returns>
+        public abstract Task<int> IncrementalSearch(string queryString, string group = "");
+
+        /// <summary>
+        /// Retrieves the most similar search results in batches (incremental search).
+        /// The phrase keys and distances are retrieved, as well as a parameter that dictates whether the search is exhausted.
+        /// </summary>
+        /// <param name="fetchKey">incremental search key</param>
+        /// <param name="k">number of results to retrieve</param>
+        /// <returns>
+        /// A tuple containing:
+        /// <list type="bullet">
+        /// <item><description>Array of retrieved keys (`int[]`).</description></item>
+        /// <item><description>Array of distances for each result (`float[]`).</description></item>
+        /// <item><description>`bool` indicating if the search is exhausted.</description></item>
+        /// </list>
+        /// </returns>
+        public abstract ValueTuple<int[], float[], bool> IncrementalFetchKeys(int fetchKey, int k);
+
+        /// <summary>
+        /// Completes the search and clears the cached results for an incremental search
+        /// </summary>
+        /// <param name="fetchKey">incremental search key</param>
+        public abstract void IncrementalSearchComplete(int fetchKey);
+
+        /// <summary>
+        /// Search for similar results to the provided query.
+        /// The most similar results and their keys and distances (dissimilarity) to the query are retrieved.
+        /// </summary>
+        /// <param name="queryString">query</param>
+        /// <param name="k">number of results to retrieve</param>
+        /// <param name="group">data group to search in</param>
+        /// <returns>tuple of (retrieved results, distance of each result to the query)</returns>
+        public async Task<(string[], float[])> Search(string queryString, int k, string group = "")
+        {
+            int fetchKey = await IncrementalSearch(queryString, group);
+            (string[] phrases, float[] distances, bool completed) = IncrementalFetch(fetchKey, k);
+            if (!completed) IncrementalSearchComplete(fetchKey);
+            return (phrases, distances);
+        }
+
+        /// <summary>
+        /// Retrieves the most similar search results in batches (incremental search).
+        /// The most similar results and their keys and distances (dissimilarity) to the query are retrieved as well as a parameter that dictates whether the search is exhausted.
+        /// </summary>
+        /// <param name="fetchKey">incremental search key</param>
+        /// <param name="k">number of results to retrieve</param>
+        /// <returns>
+        /// A tuple containing:
+        /// <list type="bullet">
+        /// <item><description>Array of retrieved keys (`int[]`).</description></item>
+        /// <item><description>Array of distances for each result (`float[]`).</description></item>
+        /// <item><description>`bool` indicating if the search is exhausted.</description></item>
+        /// </list>
+        /// </returns>
+        public virtual ValueTuple<string[], float[], bool> IncrementalFetch(int fetchKey, int k)
+        {
+            (int[] resultKeys, float[] distances, bool completed) = IncrementalFetchKeys(fetchKey, k);
+            string[] results = new string[resultKeys.Length];
+            for (int i = 0; i < resultKeys.Length; i++) results[i] = Get(resultKeys[i]);
+            return (results, distances, completed);
+        }
+
+        /// <summary>
+        /// Saves the state of the search object.
+        /// </summary>
+        /// <param name="archive">file to save to</param>
         public void Save(string filePath)
         {
             try
@@ -38,6 +151,10 @@ namespace LLMUnity
             }
         }
 
+        /// <summary>
+        /// Loads the state of the search object.
+        /// </summary>
+        /// <param name="archive">file to load from</param>
         public async Task<bool> Load(string filePath)
         {
             try
@@ -55,25 +172,12 @@ namespace LLMUnity
             return true;
         }
 
+        /// \cond HIDE
+        public abstract void Save(ZipArchive archive);
+        public abstract void Load(ZipArchive archive);
         public virtual string GetSavePath(string name)
         {
             return Path.Combine(GetType().Name, name);
-        }
-
-        public async Task<(string[], float[])> Search(string queryString, int k, string splitId = "")
-        {
-            int fetchKey = await IncrementalSearch(queryString, splitId);
-            (string[] phrases, float[] distances, bool completed) = IncrementalFetch(fetchKey, k);
-            if (!completed) IncrementalSearchComplete(fetchKey);
-            return (phrases, distances);
-        }
-
-        public virtual (string[], float[], bool) IncrementalFetch(int fetchKey, int k)
-        {
-            (int[] resultKeys, float[] distances, bool completed) = IncrementalFetchKeys(fetchKey, k);
-            string[] results = new string[resultKeys.Length];
-            for (int i = 0; i < resultKeys.Length; i++) results[i] = Get(resultKeys[i]);
-            return (results, distances, completed);
         }
 
         public virtual void UpdateGameObjects() {}
@@ -131,8 +235,13 @@ namespace LLMUnity
         }
 
 #endif
+        /// \endcond
     }
 
+    /// @ingroup rag
+    /// <summary>
+    /// Class implementing the search method template
+    /// </summary>
     public abstract class SearchMethod : Searchable
     {
         public LLMEmbedder llmEmbedder;
@@ -142,21 +251,25 @@ namespace LLMUnity
         protected SortedDictionary<int, string> data = new SortedDictionary<int, string>();
         protected SortedDictionary<string, List<int>> dataSplits = new SortedDictionary<string, List<int>>();
 
-        private LLM llm;
+        protected LLM llm;
 
         protected abstract void AddInternal(int key, float[] embedding);
         protected abstract void RemoveInternal(int key);
         protected abstract void ClearInternal();
-        public abstract int IncrementalSearch(float[] embedding, string splitId = "");
         protected abstract void SaveInternal(ZipArchive archive);
         protected abstract void LoadInternal(ZipArchive archive);
 
+        /// <summary>
+        /// Sets the LLM for encoding the search entries
+        /// </summary>
+        /// <param name="llm"></param>
         public void SetLLM(LLM llm)
         {
             this.llm = llm;
             if (llmEmbedder != null) llmEmbedder.llm = llm;
         }
 
+        /// \cond HIDE
         public virtual async Task<float[]> Encode(string inputString)
         {
             return (await llmEmbedder.Embeddings(inputString)).ToArray();
@@ -178,14 +291,14 @@ namespace LLMUnity
             return null;
         }
 
-        public override async Task<int> Add(string inputString, string splitId = "")
+        public override async Task<int> Add(string inputString, string group = "")
         {
             int key = nextKey++;
             AddInternal(key, await Encode(inputString));
 
             data[key] = inputString;
-            if (!dataSplits.ContainsKey(splitId)) dataSplits[splitId] = new List<int>(){key};
-            else dataSplits[splitId].Add(key);
+            if (!dataSplits.ContainsKey(group)) dataSplits[group] = new List<int>(){key};
+            else dataSplits[group].Add(key);
             return key;
         }
 
@@ -213,9 +326,9 @@ namespace LLMUnity
             }
         }
 
-        public override int Remove(string inputString, string splitId = "")
+        public override int Remove(string inputString, string group = "")
         {
-            if (!dataSplits.TryGetValue(splitId, out List<int> dataSplit)) return 0;
+            if (!dataSplits.TryGetValue(group, out List<int> dataSplit)) return 0;
             List<int> removeIds = new List<int>();
             foreach (int key in dataSplit)
             {
@@ -233,15 +346,15 @@ namespace LLMUnity
             return data.Count;
         }
 
-        public override int Count(string splitId)
+        public override int Count(string group)
         {
-            if (!dataSplits.TryGetValue(splitId, out List<int> dataSplit)) return 0;
+            if (!dataSplits.TryGetValue(group, out List<int> dataSplit)) return 0;
             return dataSplit.Count;
         }
 
-        public override async Task<int> IncrementalSearch(string queryString, string splitId = "")
+        public override async Task<int> IncrementalSearch(string queryString, string group = "")
         {
-            return IncrementalSearch(await Encode(queryString), splitId);
+            return IncrementalSearch(await Encode(queryString), group);
         }
 
         public override void Save(ZipArchive archive)
@@ -267,12 +380,29 @@ namespace LLMUnity
             if (this == null || llmEmbedder != null) return;
             llmEmbedder = ConstructComponent<LLMEmbedder>(typeof(LLMEmbedder), (previous, current) => current.llm = previous.llm);
         }
+
+        public abstract int IncrementalSearch(float[] embedding, string group = "");
+        /// \endcond
     }
 
+    /// @ingroup rag
+    /// <summary>
+    /// Class implementing the search plugin template used e.g. in chunking
+    /// </summary>
     public abstract class SearchPlugin : Searchable
     {
-        public SearchMethod search;
+        protected SearchMethod search;
 
+        /// <summary>
+        /// Sets the search method of the plugin
+        /// </summary>
+        /// <param name="llm"></param>
+        public void SetSearch(SearchMethod search)
+        {
+            this.search = search;
+        }
+
+        /// \cond HIDE
         protected abstract void SaveInternal(ZipArchive archive);
         protected abstract void LoadInternal(ZipArchive archive);
 
@@ -287,8 +417,10 @@ namespace LLMUnity
             search.Load(archive);
             LoadInternal(archive);
         }
+        /// \endcond
     }
 
+    /// \cond HIDE
     public class ArchiveSaver
     {
         public delegate void ArchiveSaverCallback(ZipArchive archive);
@@ -332,4 +464,5 @@ namespace LLMUnity
             }
         }
     }
+    /// \endcond
 }

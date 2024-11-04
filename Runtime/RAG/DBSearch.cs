@@ -1,3 +1,5 @@
+/// @file
+/// @brief File implementing the vector database search.
 using System;
 using System.Collections.Generic;
 using Cloud.Unum.USearch;
@@ -6,19 +8,31 @@ using UnityEngine;
 
 namespace LLMUnity
 {
+    /// @ingroup rag
+    /// <summary>
+    /// Class implementing a search with a vector database.
+    /// The search results are retrieved with Approximate Nearest Neighbor (ANN) which is much faster that SimpleSearch.
+    /// </summary>
     [DefaultExecutionOrder(-2)]
     public class DBSearch : SearchMethod
     {
         protected USearchIndex index;
         /// <summary> toggle to show/hide advanced options in the GameObject </summary>
         [HideInInspector] public bool advancedOptions = false;
+        /// <summary> The quantisation type used for vector data during indexing. </summary>
         [ModelAdvanced] public ScalarKind quantization = ScalarKind.Float16;
+        /// <summary> The metric kind used for distance calculation between vectors. </summary>
         [ModelAdvanced] public MetricKind metricKind = MetricKind.Cos;
+        /// <summary> The connectivity parameter limits the connections-per-node in the graph. </summary>
         [ModelAdvanced] public ulong connectivity = 32;
+        /// <summary> The expansion factor used for index construction when adding vectors. </summary>
         [ModelAdvanced] public ulong expansionAdd = 40;
+        /// <summary> The expansion factor used for index construction during search operations. </summary>
         [ModelAdvanced] public ulong expansionSearch = 16;
+
         private Dictionary<int, (float[], string, List<int>)> incrementalSearchCache = new Dictionary<int, (float[], string, List<int>)>();
 
+        /// \cond HIDE
         public new void Awake()
         {
             base.Awake();
@@ -48,10 +62,10 @@ namespace LLMUnity
             return intKeys;
         }
 
-        public override int IncrementalSearch(float[] embedding, string splitId = "")
+        public override int IncrementalSearch(float[] embedding, string group = "")
         {
             int key = nextIncrementalSearchKey++;
-            incrementalSearchCache[key] = (embedding, splitId, new List<int>());
+            incrementalSearchCache[key] = (embedding, group, new List<int>());
             return key;
         }
 
@@ -59,9 +73,9 @@ namespace LLMUnity
         {
             if (!incrementalSearchCache.ContainsKey(fetchKey)) throw new Exception($"There is no IncrementalSearch cached with this key: {fetchKey}");
 
-            (float[] embedding, string splitId, List<int> seenKeys) = incrementalSearchCache[fetchKey];
+            (float[] embedding, string group, List<int> seenKeys) = incrementalSearchCache[fetchKey];
 
-            if (!dataSplits.TryGetValue(splitId, out List<int> dataSplit)) return (new int[0], new float[0], true);
+            if (!dataSplits.TryGetValue(group, out List<int> dataSplit)) return (new int[0], new float[0], true);
             if (dataSplit.Count == 0) return (new int[0], new float[0], true);
 
             Func<int, int> filter = (int key) => !dataSplit.Contains(key) || seenKeys.Contains(key) ? 0 : 1;
@@ -69,7 +83,7 @@ namespace LLMUnity
             int[] intKeys = UlongToInt(keys);
             incrementalSearchCache[fetchKey].Item3.AddRange(intKeys);
 
-            bool completed = intKeys.Length < k || seenKeys.Count == Count(splitId);
+            bool completed = intKeys.Length < k || seenKeys.Count == Count(group);
             if (completed) IncrementalSearchComplete(fetchKey);
             return (intKeys, distances, completed);
         }
@@ -95,5 +109,7 @@ namespace LLMUnity
             InitIndex();
             incrementalSearchCache.Clear();
         }
+
+        /// \endcond
     }
 }

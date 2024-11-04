@@ -6,9 +6,14 @@ using UnityEngine;
 
 namespace LLMUnity
 {
+    /// @ingroup rag
+    /// <summary>
+    /// Class implementing a simple search that compares the enconding of the search query with all the search entries (brute-force).
+    /// </summary>
     [DefaultExecutionOrder(-2)]
     public class SimpleSearch : SearchMethod
     {
+        /// \cond HIDE
         protected SortedDictionary<int, float[]> embeddings = new SortedDictionary<int, float[]>();
         protected Dictionary<int, List<(int, float)>> incrementalSearchCache = new Dictionary<int, List<(int, float)>>();
 
@@ -49,12 +54,12 @@ namespace LLMUnity
             return results;
         }
 
-        public override int IncrementalSearch(float[] embedding, string splitId = "")
+        public override int IncrementalSearch(float[] embedding, string group = "")
         {
             int key = nextIncrementalSearchKey++;
 
             List<(int, float)> sortedLists = new List<(int, float)>();
-            if (dataSplits.TryGetValue(splitId, out List<int> dataSplit))
+            if (dataSplits.TryGetValue(group, out List<int> dataSplit))
             {
                 if (dataSplit.Count >= 0)
                 {
@@ -123,5 +128,6 @@ namespace LLMUnity
             embeddings = ArchiveSaver.Load<SortedDictionary<int, float[]>>(archive, GetSavePath("embeddings"));
             incrementalSearchCache = ArchiveSaver.Load<Dictionary<int, List<(int, float)>>>(archive, GetSavePath("incrementalSearchCache"));
         }
+        /// \endcond
     }
 }

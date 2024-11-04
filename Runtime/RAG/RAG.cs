@@ -1,3 +1,5 @@
+/// @file
+/// @brief File implementing the Retrieval Augmented Generation (RAG) system.
 using System;
 using System.IO.Compression;
 using System.Threading.Tasks;
@@ -6,6 +8,9 @@ using UnityEngine;
 
 namespace LLMUnity
 {
+    /// <summary>
+    /// Search methods implemented in LLMUnity
+    /// </summary>
     public enum SearchMethods
     {
         SimpleSearch,
@@ -14,6 +19,9 @@ namespace LLMUnity
 
     public class NoChunking {}
 
+    /// <summary>
+    /// Chunking methods implemented in LLMUnity
+    /// </summary>
     public enum ChunkingMethods
     {
         NoChunking,
@@ -22,6 +30,10 @@ namespace LLMUnity
         SentenceSplitter
     }
 
+    /// @ingroup rag
+    /// <summary>
+    /// Class implementing a Retrieval Augmented Generation (RAG) system based on a search method and an optional chunking method.
+    /// </summary>
     [Serializable]
     public class RAG : Searchable
     {
@@ -33,7 +45,13 @@ namespace LLMUnity
         [SerializeField, HideInInspector] SearchMethods preSearchClass;
         [SerializeField, HideInInspector] ChunkingMethods preChunkingClass;
 
-        public void Construct(SearchMethods searchMethod = SearchMethods.SimpleSearch, ChunkingMethods chunkingMethod = ChunkingMethods.NoChunking, LLM llm = null)
+        /// <summary>
+        /// Constructs the Retrieval Augmented Generation (RAG) system based on the provided search and chunking method.
+        /// </summary>
+        /// <param name="searchMethod">search method</param>
+        /// <param name="chunkingMethod">chunking method for splitting the search entries</param>
+        /// <param name="llm">LLM to use for the search method</param>
+        public void Init(SearchMethods searchMethod = SearchMethods.SimpleSearch, ChunkingMethods chunkingMethod = ChunkingMethods.NoChunking, LLM llm = null)
         {
             searchClass = searchMethod;
             chunkingClass = chunkingMethod;
@@ -41,10 +59,11 @@ namespace LLMUnity
             search.SetLLM(llm);
         }
 
+        /// \cond HIDE
         protected void ConstructSearch()
         {
             search = ConstructComponent<SearchMethod>(Type.GetType("LLMUnity." + searchClass.ToString()), (previous, current) => current.llmEmbedder.llm = previous.llmEmbedder.llm);
-            if (chunking != null) chunking.search = search;
+            if (chunking != null) chunking.SetSearch(search);
         }
 
         protected void ConstructChunking()
@@ -52,7 +71,7 @@ namespace LLMUnity
             Type type = null;
             if (chunkingClass != ChunkingMethods.NoChunking) type = Type.GetType("LLMUnity." + chunkingClass.ToString());
             chunking = ConstructComponent<Chunking>(type);
-            if (chunking != null) chunking.search = search;
+            if (chunking != null) chunking.SetSearch(search);
         }
 
         public override void UpdateGameObjects()
@@ -84,17 +103,18 @@ namespace LLMUnity
 #endif
 
         public override string Get(int key) { return GetSearcher().Get(key); }
-        public override async Task<int> Add(string inputString, string splitId = "") { return await GetSearcher().Add(inputString, splitId); }
-        public override int Remove(string inputString, string splitId = "") { return GetSearcher().Remove(inputString, splitId); }
+        public override async Task<int> Add(string inputString, string group = "") { return await GetSearcher().Add(inputString, group); }
+        public override int Remove(string inputString, string group = "") { return GetSearcher().Remove(inputString, group); }
         public override void Remove(int key) { GetSearcher().Remove(key); }
         public override int Count() { return GetSearcher().Count(); }
-        public override int Count(string splitId) { return GetSearcher().Count(splitId); }
+        public override int Count(string group) { return GetSearcher().Count(group); }
         public override void Clear() { GetSearcher().Clear(); }
-        public override async Task<int> IncrementalSearch(string queryString, string splitId = "") { return await GetSearcher().IncrementalSearch(queryString, splitId);}
+        public override async Task<int> IncrementalSearch(string queryString, string group = "") { return await GetSearcher().IncrementalSearch(queryString, group);}
         public override (string[], float[], bool) IncrementalFetch(int fetchKey, int k) { return GetSearcher().IncrementalFetch(fetchKey, k);}
         public override (int[], float[], bool) IncrementalFetchKeys(int fetchKey, int k) { return GetSearcher().IncrementalFetchKeys(fetchKey, k);}
         public override void IncrementalSearchComplete(int fetchKey) { GetSearcher().IncrementalSearchComplete(fetchKey);}
         public override void Save(ZipArchive archive) { GetSearcher().Save(archive); }
         public override void Load(ZipArchive archive) { GetSearcher().Load(archive); }
+        /// \endcond
     }
 }

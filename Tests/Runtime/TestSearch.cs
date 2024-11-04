@@ -437,7 +437,7 @@ namespace LLMUnityTests
             T search = gameObject.AddComponent<T>();
             DBSearch searchMethod = gameObject.AddComponent<DBSearch>();
             searchMethod.SetLLM(llm);
-            search.search = searchMethod;
+            search.SetSearch(searchMethod);
             return search;
         }
 
@@ -615,7 +615,7 @@ namespace LLMUnityTests
         public override RAG CreateSearch()
         {
             RAG rag = gameObject.AddComponent<RAG>();
-            rag.Construct(GetSearchMethod(), GetChunkingMethod(), llm);
+            rag.Init(GetSearchMethod(), GetChunkingMethod(), llm);
             return rag;
         }
 
