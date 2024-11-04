@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['tokenize_0',['Tokenize',['../classLLMUnity_1_1LLM.html#ab8cad787f0751fa2ed7e3b2ccede3083',1,'LLMUnity.LLM.Tokenize()'],['../classLLMUnity_1_1LLMCharacter.html#acfb6b52acb34a4507720eddd466a6a13',1,'LLMUnity.LLMCharacter.Tokenize()']]]
+  ['modelentry_0',['ModelEntry',['../classLLMUnity_1_1ModelEntry.html#a5ec75ad312519e5d4877fe5b24fc96b4',1,'LLMUnity::ModelEntry']]],
+  ['movepath_1',['MovePath',['../classLLMUnity_1_1LLMBuilder.html#a0c6b9eefaa0ed67e30e6bba0b4bc5096',1,'LLMUnity::LLMBuilder']]]
 ];

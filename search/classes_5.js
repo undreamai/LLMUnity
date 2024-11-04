@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['phi2template_0',['Phi2Template',['../classLLMUnity_1_1Phi2Template.html',1,'LLMUnity']]],
-  ['phi3_5f5template_1',['Phi3_5Template',['../classLLMUnity_1_1Phi3__5Template.html',1,'LLMUnity']]],
-  ['phi3template_2',['Phi3Template',['../classLLMUnity_1_1Phi3Template.html',1,'LLMUnity']]]
+  ['mistralchattemplate_0',['MistralChatTemplate',['../classLLMUnity_1_1MistralChatTemplate.html',1,'LLMUnity']]],
+  ['mistralinstructtemplate_1',['MistralInstructTemplate',['../classLLMUnity_1_1MistralInstructTemplate.html',1,'LLMUnity']]],
+  ['modelentry_2',['ModelEntry',['../classLLMUnity_1_1ModelEntry.html',1,'LLMUnity']]]
 ];

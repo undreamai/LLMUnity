@@ -33,7 +33,8 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"classLLMUnity_1_1AlpacaTemplate.html"
+"classLLMUnity_1_1AlpacaTemplate.html",
+"classLLMUnity_1_1Searchable.html#ad22824dc550d30f1c2d222df5fcd60b9"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

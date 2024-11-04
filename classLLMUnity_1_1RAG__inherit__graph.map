@@ -1,0 +1,7 @@
+<map id="LLMUnity.RAG" name="LLMUnity.RAG">
+<area shape="rect" id="Node000001" title="Class implementing a Retrieval Augmented Generation (RAG) system based on a search method and an opti..." alt="" coords="11,152,124,177"/>
+<area shape="rect" id="Node000002" href="$classLLMUnity_1_1Searchable.html" title="Class implementing the search template." alt="" coords="20,79,115,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="70,118,70,152,65,152,65,118"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,5,129,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="70,44,70,79,65,79,65,44"/>
+</map>

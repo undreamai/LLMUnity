@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['gemmatemplate_0',['GemmaTemplate',['../classLLMUnity_1_1GemmaTemplate.html',1,'LLMUnity']]],
-  ['ggufreader_1',['GGUFReader',['../classLLMUnity_1_1GGUFReader.html',1,'LLMUnity']]]
+  ['dbsearch_0',['DBSearch',['../classLLMUnity_1_1DBSearch.html',1,'LLMUnity']]],
+  ['destroyexception_1',['DestroyException',['../classLLMUnity_1_1DestroyException.html',1,'LLMUnity']]]
 ];

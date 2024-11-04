@@ -1,0 +1,11 @@
+<map id="LLMUnity.WordSplitter" name="LLMUnity.WordSplitter">
+<area shape="rect" id="Node000001" title="Class implementing a word&#45;based splitter." alt="" coords="5,299,171,324"/>
+<area shape="rect" id="Node000002" href="$classLLMUnity_1_1Chunking.html" title="Class implementing the chunking functionality." alt="" coords="47,225,129,251"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="91,264,91,299,85,299,85,264"/>
+<area shape="rect" id="Node000003" href="$classLLMUnity_1_1SearchPlugin.html" title="Class implementing the search plugin template used e.g. in chunking." alt="" coords="35,152,141,177"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="91,191,91,225,85,225,85,191"/>
+<area shape="rect" id="Node000004" href="$classLLMUnity_1_1Searchable.html" title="Class implementing the search template." alt="" coords="41,79,135,104"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="91,118,91,152,85,152,85,118"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="26,5,150,31"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="91,44,91,79,85,79,85,44"/>
+</map>

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.10.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>LLM for Unity: Runtime/LLMClient.cs Source File</title>
+<title>LLM for Unity: Member List</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link rel="shortcut icon" href="logo_tiny.png" type="image/png">
 <script type="text/javascript" src="jquery.js"></script>
@@ -47,7 +47,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_tiny.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">LLM for Unity
-   &#160;<span id="projectnumber">v2.2.5</span>
+   &#160;<span id="projectnumber">v2.3.0</span>
    </div>
    <div id="projectbrief">Create characters in Unity with LLMs!</div>
   </td>
@@ -73,11 +73,6 @@ $(function() {
 /* @license-end */
 </script>
 <div id="main-nav"></div>
-<script type="text/javascript">
-/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function() { codefold.init(0); });
-/* @license-end */
-</script>
 </div><!-- top -->
 <div id="side-nav" class="ui-resizable side-nav-resizable">
   <div id="nav-tree">
@@ -91,7 +86,7 @@ $(function() { codefold.init(0); });
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){initNavTree('LLMClient_8cs_source.html',''); initResizable(); });
+$(function(){initNavTree('classLLMUnity_1_1LLMEmbedder.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -117,33 +112,31 @@ $(function(){initNavTree('LLMClient_8cs_source.html',''); initResizable(); });
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">LLMClient.cs</div></div>
+  <div class="headertitle"><div class="title">LLMUnity.LLMEmbedder Member List</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="keyword">using </span>UnityEngine;</div>
-<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceLLMUnity.html">LLMUnity</a></div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span>{</div>
-<div class="foldopen" id="foldopen00005" data-start="{" data-end="};">
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno"><a class="line" href="classLLMUnity_1_1LLMClient.html">    5</a></span>    <span class="keyword">public</span> <span class="keyword">class </span><a class="code hl_class" href="classLLMUnity_1_1LLMClient.html">LLMClient</a> : <a class="code hl_class" href="classLLMUnity_1_1LLMCharacter.html">LLMCharacter</a></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span>    {</div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span>        <span class="keyword">public</span> <a class="code hl_class" href="classLLMUnity_1_1LLMClient.html">LLMClient</a>()</div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span>        {</div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span>            <a class="code hl_variable" href="classLLMUnity_1_1LLMCharacter.html#a0a946ac2956e5b3800f68a34a3a93609">Debug</a>.LogWarning(<span class="stringliteral">&quot;LLMClient is deprecated and will be removed from future versions. Please Use LLMCharacter instead.&quot;</span>);</div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>        }</div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>    }</div>
-</div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>}</div>
-<div class="ttc" id="aclassLLMUnity_1_1LLMCharacter_html"><div class="ttname"><a href="classLLMUnity_1_1LLMCharacter.html">LLMUnity.LLMCharacter</a></div><div class="ttdoc">Class implementing the LLM characters.</div><div class="ttdef"><b>Definition</b> <a href="LLMCharacter_8cs_source.html#l00019">LLMCharacter.cs:20</a></div></div>
-<div class="ttc" id="aclassLLMUnity_1_1LLMCharacter_html_a0a946ac2956e5b3800f68a34a3a93609"><div class="ttname"><a href="classLLMUnity_1_1LLMCharacter.html#a0a946ac2956e5b3800f68a34a3a93609">LLMUnity.LLMCharacter.slot</a></div><div class="ttdeci">int slot</div><div class="ttdoc">specify which slot of the server to use for computation (affects caching)</div><div class="ttdef"><b>Definition</b> <a href="LLMCharacter_8cs_source.html#l00051">LLMCharacter.cs:51</a></div></div>
-<div class="ttc" id="aclassLLMUnity_1_1LLMClient_html"><div class="ttname"><a href="classLLMUnity_1_1LLMClient.html">LLMUnity.LLMClient</a></div><div class="ttdef"><b>Definition</b> <a href="#l00005">LLMClient.cs:6</a></div></div>
-<div class="ttc" id="anamespaceLLMUnity_html"><div class="ttname"><a href="namespaceLLMUnity.html">LLMUnity</a></div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00011">LLM.cs:12</a></div></div>
-</div><!-- fragment --></div><!-- contents -->
+
+<p>This is the complete list of members for <a class="el" href="classLLMUnity_1_1LLMEmbedder.html">LLMUnity.LLMEmbedder</a>, including all inherited members.</p>
+<table class="directory">
+  <tr class="even"><td class="entry"><a class="el" href="classLLMUnity_1_1LLMCaller.html#a9e88926976ee58c23a10904cd1fe3283">advancedOptions</a></td><td class="entry"><a class="el" href="classLLMUnity_1_1LLMCaller.html">LLMUnity.LLMCaller</a></td><td class="entry"></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="classLLMUnity_1_1LLMCaller.html#ac884093a82d0b59e8b8b2573913bea79">APIKey</a></td><td class="entry"><a class="el" href="classLLMUnity_1_1LLMCaller.html">LLMUnity.LLMCaller</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classLLMUnity_1_1LLMCaller.html#a2daf7c8535df9200720b75c4a007aaf8">Awake</a>()</td><td class="entry"><a class="el" href="classLLMUnity_1_1LLMCaller.html">LLMUnity.LLMCaller</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="classLLMUnity_1_1LLMCaller.html#a5914034b6b799e018380152c0136b511">CancelRequests</a>()</td><td class="entry"><a class="el" href="classLLMUnity_1_1LLMCaller.html">LLMUnity.LLMCaller</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classLLMUnity_1_1LLMCaller.html#a5b7af360853ea9b233782ff6e71e313f">Detokenize</a>(List&lt; int &gt; tokens, Callback&lt; string &gt; callback=null)</td><td class="entry"><a class="el" href="classLLMUnity_1_1LLMCaller.html">LLMUnity.LLMCaller</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="classLLMUnity_1_1LLMCaller.html#a2344c568eafd2918a33fe418841d5481">Embeddings</a>(string query, Callback&lt; List&lt; float &gt; &gt; callback=null)</td><td class="entry"><a class="el" href="classLLMUnity_1_1LLMCaller.html">LLMUnity.LLMCaller</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classLLMUnity_1_1LLMCaller.html#a47607562078b546b5ad3f614d35a9c4b">host</a></td><td class="entry"><a class="el" href="classLLMUnity_1_1LLMCaller.html">LLMUnity.LLMCaller</a></td><td class="entry"></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="classLLMUnity_1_1LLMEmbedder.html#abc43672f7545950fa43ae49409a33555">IsAutoAssignableLLM</a>(LLM llmSet)</td><td class="entry"><a class="el" href="classLLMUnity_1_1LLMEmbedder.html">LLMUnity.LLMEmbedder</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classLLMUnity_1_1LLMCaller.html#a11c235d4ba6a611262feead83bff7d34">IsValidLLM</a>(LLM llmSet)</td><td class="entry"><a class="el" href="classLLMUnity_1_1LLMCaller.html">LLMUnity.LLMCaller</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
+  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>llm</b> (defined in <a class="el" href="classLLMUnity_1_1LLMCaller.html">LLMUnity.LLMCaller</a>)</td><td class="entry"><a class="el" href="classLLMUnity_1_1LLMCaller.html">LLMUnity.LLMCaller</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classLLMUnity_1_1LLMCaller.html#a2dbdfc292fec059103fc3cca43e888c3">numRetries</a></td><td class="entry"><a class="el" href="classLLMUnity_1_1LLMCaller.html">LLMUnity.LLMCaller</a></td><td class="entry"></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="classLLMUnity_1_1LLMCaller.html#a366e9990e647017081c0903e7b7840e1">port</a></td><td class="entry"><a class="el" href="classLLMUnity_1_1LLMCaller.html">LLMUnity.LLMCaller</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classLLMUnity_1_1LLMCaller.html#a88d5732340d7eaee28cd82b968bbb3d4">remote</a></td><td class="entry"><a class="el" href="classLLMUnity_1_1LLMCaller.html">LLMUnity.LLMCaller</a></td><td class="entry"></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="classLLMUnity_1_1LLMCaller.html#a018e0cabb84a07c5dd5b8d893ab57f0f">Tokenize</a>(string query, Callback&lt; List&lt; int &gt; &gt; callback=null)</td><td class="entry"><a class="el" href="classLLMUnity_1_1LLMCaller.html">LLMUnity.LLMCaller</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
+</table></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_4f6666a8f2ab10bc970eb7559668f031.html">Runtime</a></li><li class="navelem"><b>LLMClient.cs</b></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.10.0 </li>
   </ul>
 </div>

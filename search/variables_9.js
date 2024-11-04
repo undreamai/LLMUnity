@@ -1,10 +1,13 @@
 var searchData=
 [
-  ['minp_0',['minP',['../classLLMUnity_1_1LLMCharacter.html#a5d0749bd21c64551f012b4727d271d7c',1,'LLMUnity::LLMCharacter']]],
-  ['mirostat_1',['mirostat',['../classLLMUnity_1_1LLMCharacter.html#aaad55a736e0031f591bb6acce4e56815',1,'LLMUnity::LLMCharacter']]],
-  ['mirostateta_2',['mirostatEta',['../classLLMUnity_1_1LLMCharacter.html#a564fd3e6d28e4c7ac7ae52f8a08099c0',1,'LLMUnity::LLMCharacter']]],
-  ['mirostattau_3',['mirostatTau',['../classLLMUnity_1_1LLMCharacter.html#a3a8acb7acee431a152d47f64fcbe15a8',1,'LLMUnity::LLMCharacter']]],
-  ['model_4',['model',['../classLLMUnity_1_1LLM.html#ab3feb52deeee0c441322c81628c065cd',1,'LLMUnity::LLM']]],
-  ['modeldownloadpath_5',['modelDownloadPath',['../classLLMUnity_1_1LLMUnitySetup.html#a8ba1f072d5bbe4c6ba7041b86b13c4ed',1,'LLMUnity::LLMUnitySetup']]],
-  ['modeloptions_6',['modelOptions',['../classLLMUnity_1_1LLMUnitySetup.html#ac4af339cd489ce2d440386596ca177a5',1,'LLMUnity::LLMUnitySetup']]]
+  ['librarypath_0',['libraryPath',['../classLLMUnity_1_1LLMUnitySetup.html#a4fbf1bc2995c0267c45395e6532002a8',1,'LLMUnity::LLMUnitySetup']]],
+  ['llamalibextensionurl_1',['LlamaLibExtensionURL',['../classLLMUnity_1_1LLMUnitySetup.html#ae153fb6895025bd684c8dabab12ec14d',1,'LLMUnity::LLMUnitySetup']]],
+  ['llamalibreleaseurl_2',['LlamaLibReleaseURL',['../classLLMUnity_1_1LLMUnitySetup.html#a4cd55e5c095d9f275aa760dfa662ba40',1,'LLMUnity::LLMUnitySetup']]],
+  ['llamaliburl_3',['LlamaLibURL',['../classLLMUnity_1_1LLMUnitySetup.html#ae298a065eafff77f499f05f5f4447427',1,'LLMUnity::LLMUnitySetup']]],
+  ['llamalibversion_4',['LlamaLibVersion',['../classLLMUnity_1_1LLMUnitySetup.html#a8c890a623cf474c4515ae64698c3f236',1,'LLMUnity::LLMUnitySetup']]],
+  ['llmmanagerpath_5',['LLMManagerPath',['../classLLMUnity_1_1LLMUnitySetup.html#a457f4ce48c2d305d2e1ba1c891c2c751',1,'LLMUnity::LLMUnitySetup']]],
+  ['llmunitystore_6',['LLMUnityStore',['../classLLMUnity_1_1LLMUnitySetup.html#acc4cf4e81898fc852f1c22ac754b10e2',1,'LLMUnity::LLMUnitySetup']]],
+  ['logitbias_7',['logitBias',['../classLLMUnity_1_1LLMCharacter.html#adf3a8f027b25a2b53106c5184bcbdaa5',1,'LLMUnity::LLMCharacter']]],
+  ['lora_8',['lora',['../classLLMUnity_1_1LLM.html#a80c81993fcc33ee253ffec2f3d1302fd',1,'LLMUnity::LLM']]],
+  ['loraweights_9',['loraWeights',['../classLLMUnity_1_1LLM.html#ae1093ec1e0baaab9620276c7a628649a',1,'LLMUnity::LLM']]]
 ];

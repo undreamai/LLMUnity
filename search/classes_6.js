@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['resumingwebclient_0',['ResumingWebClient',['../classLLMUnity_1_1ResumingWebClient.html',1,'LLMUnity']]]
+  ['nochunking_0',['NoChunking',['../classLLMUnity_1_1NoChunking.html',1,'LLMUnity']]]
 ];

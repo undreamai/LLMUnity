@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['templates_0',['Chat Templates',['../group__template.html',1,'']]]
+  ['rag_0',['RAG',['../group__rag.html',1,'']]]
 ];

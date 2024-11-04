@@ -1,0 +1,23 @@
+<map id="LLMUnity.Searchable" name="LLMUnity.Searchable">
+<area shape="rect" id="Node000001" title="Class implementing the search template." alt="" coords="179,79,337,104"/>
+<area shape="rect" id="Node000003" href="$classLLMUnity_1_1RAG.html" title="Class implementing a Retrieval Augmented Generation (RAG) system based on a search method and an opti..." alt="" coords="31,152,144,177"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="219,112,116,154,114,149,217,107"/>
+<area shape="rect" id="Node000004" href="$classLLMUnity_1_1SearchMethod.html" title="Class implementing the search method template." alt="" coords="169,152,347,177"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="261,118,261,152,255,152,255,118"/>
+<area shape="rect" id="Node000007" href="$classLLMUnity_1_1SearchPlugin.html" title="Class implementing the search plugin template used e.g. in chunking." alt="" coords="372,152,541,177"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="304,106,425,149,423,154,302,111"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="196,5,320,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="261,44,261,79,255,79,255,44"/>
+<area shape="rect" id="Node000005" href="$classLLMUnity_1_1DBSearch.html" title="Class implementing a search with a vector database. The search results are retrieved with Approximate..." alt="" coords="5,225,153,251"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="218,185,110,228,108,223,216,180"/>
+<area shape="rect" id="Node000006" href="$classLLMUnity_1_1SimpleSearch.html" title="Class implementing a simple search that compares the enconding of the search query with all the searc..." alt="" coords="177,225,352,251"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="263,191,266,225,261,225,258,191"/>
+<area shape="rect" id="Node000008" href="$classLLMUnity_1_1Chunking.html" title="Class implementing the chunking functionality." alt="" coords="383,225,530,251"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="459,191,459,225,454,225,454,191"/>
+<area shape="rect" id="Node000009" href="$classLLMUnity_1_1SentenceSplitter.html" title="Class implementing a sentence&#45;based splitter." alt="" coords="155,299,347,324"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="412,258,285,301,284,296,410,253"/>
+<area shape="rect" id="Node000010" href="$classLLMUnity_1_1TokenSplitter.html" title="Class implementing a token&#45;based splitter." alt="" coords="372,299,541,324"/>
+<area shape="poly" id="edge9_Node000008_Node000010" title=" " alt="" coords="459,264,459,299,454,299,454,264"/>
+<area shape="rect" id="Node000011" href="$classLLMUnity_1_1WordSplitter.html" title="Class implementing a word&#45;based splitter." alt="" coords="566,299,731,324"/>
+<area shape="poly" id="edge10_Node000008_Node000011" title=" " alt="" coords="501,253,618,296,616,301,500,258"/>
+</map>

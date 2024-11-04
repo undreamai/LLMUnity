@@ -47,7 +47,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_tiny.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">LLM for Unity
-   &#160;<span id="projectnumber">v2.2.5</span>
+   &#160;<span id="projectnumber">v2.3.0</span>
    </div>
    <div id="projectbrief">Create characters in Unity with LLMs!</div>
   </td>
@@ -116,79 +116,116 @@ $(function(){initNavTree('classLLMUnity_1_1LLMManager.html',''); initResizable()
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="classLLMUnity_1_1LLMManager-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">LLMUnity.LLMManager Class Reference</div></div>
+  <div class="headertitle"><div class="title">LLMUnity.LLMManager Class Reference<div class="ingroups"><a class="el" href="group__utils.html">Utils</a></div></div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Class implementing the LLM model manager.  
+ <a href="#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:ad0b0b0465263b7def58cfa7397661c3e" id="r_ad0b0b0465263b7def58cfa7397661c3e"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad0b0b0465263b7def58cfa7397661c3e">SetDownloadProgress</a> (float progress)</td></tr>
+<tr class="memdesc:ad0b0b0465263b7def58cfa7397661c3e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the model download progress in all registered callbacks.  <br /></td></tr>
 <tr class="separator:ad0b0b0465263b7def58cfa7397661c3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a685beeeaaea04e8d22e25206da055224" id="r_a685beeeaaea04e8d22e25206da055224"><td class="memItemLeft" align="right" valign="top">static Task&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a685beeeaaea04e8d22e25206da055224">Setup</a> ()</td></tr>
+<tr class="memdesc:a685beeeaaea04e8d22e25206da055224"><td class="mdescLeft">&#160;</td><td class="mdescRight">Setup of the models.  <br /></td></tr>
 <tr class="separator:a685beeeaaea04e8d22e25206da055224"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ade50d9ef22b0d72c9a20c9399089bc35" id="r_ade50d9ef22b0d72c9a20c9399089bc35"><td class="memItemLeft" align="right" valign="top">static async Task&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ade50d9ef22b0d72c9a20c9399089bc35">SetupOnce</a> ()</td></tr>
+<tr class="memdesc:ade50d9ef22b0d72c9a20c9399089bc35"><td class="mdescLeft">&#160;</td><td class="mdescRight">Task performing the setup of the models.  <br /></td></tr>
 <tr class="separator:ade50d9ef22b0d72c9a20c9399089bc35"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac28337aa781cbb2476f3c744d4c40ca8" id="r_ac28337aa781cbb2476f3c744d4c40ca8"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac28337aa781cbb2476f3c744d4c40ca8">SetTemplate</a> (string filename, string chatTemplate)</td></tr>
+<tr class="memdesc:ac28337aa781cbb2476f3c744d4c40ca8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the chat template for a model and distributes it to all LLMs using it.  <br /></td></tr>
 <tr class="separator:ac28337aa781cbb2476f3c744d4c40ca8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a008ba453476f14727ea2d109bbb209b5" id="r_a008ba453476f14727ea2d109bbb209b5"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a008ba453476f14727ea2d109bbb209b5">SetTemplate</a> (<a class="el" href="classLLMUnity_1_1ModelEntry.html">ModelEntry</a> entry, string chatTemplate)</td></tr>
+<tr class="memdesc:a008ba453476f14727ea2d109bbb209b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the chat template for a model and distributes it to all LLMs using it.  <br /></td></tr>
 <tr class="separator:a008ba453476f14727ea2d109bbb209b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4ce9c8c366573e96eb9d00ceab43b8ba" id="r_a4ce9c8c366573e96eb9d00ceab43b8ba"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classLLMUnity_1_1ModelEntry.html">ModelEntry</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4ce9c8c366573e96eb9d00ceab43b8ba">Get</a> (string path)</td></tr>
+<tr class="memdesc:a4ce9c8c366573e96eb9d00ceab43b8ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the model entry for a model path.  <br /></td></tr>
 <tr class="separator:a4ce9c8c366573e96eb9d00ceab43b8ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3836942213b5135cc88bde19a527fc4b" id="r_a3836942213b5135cc88bde19a527fc4b"><td class="memItemLeft" align="right" valign="top">static string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3836942213b5135cc88bde19a527fc4b">GetAssetPath</a> (string filename)</td></tr>
+<tr class="memdesc:a3836942213b5135cc88bde19a527fc4b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the asset path based on whether the application runs locally in the editor or in a build.  <br /></td></tr>
 <tr class="separator:a3836942213b5135cc88bde19a527fc4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a717b3f3ddf1917062ba3f9fd147f8b08" id="r_a717b3f3ddf1917062ba3f9fd147f8b08"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a717b3f3ddf1917062ba3f9fd147f8b08">Num</a> (bool lora)</td></tr>
+<tr class="memdesc:a717b3f3ddf1917062ba3f9fd147f8b08"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the number of LLM/LORA models.  <br /></td></tr>
 <tr class="separator:a717b3f3ddf1917062ba3f9fd147f8b08"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a46f58f585c1facf9343f65a4deb127c4" id="r_a46f58f585c1facf9343f65a4deb127c4"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a46f58f585c1facf9343f65a4deb127c4">NumModels</a> ()</td></tr>
+<tr class="memdesc:a46f58f585c1facf9343f65a4deb127c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the number of LLM models.  <br /></td></tr>
 <tr class="separator:a46f58f585c1facf9343f65a4deb127c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab77b07a951600be6ad83934b90c411bf" id="r_ab77b07a951600be6ad83934b90c411bf"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab77b07a951600be6ad83934b90c411bf">NumLoras</a> ()</td></tr>
+<tr class="memdesc:ab77b07a951600be6ad83934b90c411bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the number of LORA models.  <br /></td></tr>
 <tr class="separator:ab77b07a951600be6ad83934b90c411bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7d112a4abdebcf53262f1f1c7326dcd8" id="r_a7d112a4abdebcf53262f1f1c7326dcd8"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7d112a4abdebcf53262f1f1c7326dcd8">Register</a> (<a class="el" href="classLLMUnity_1_1LLM.html">LLM</a> llm)</td></tr>
+<tr class="memdesc:a7d112a4abdebcf53262f1f1c7326dcd8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers a LLM to the model manager.  <br /></td></tr>
 <tr class="separator:a7d112a4abdebcf53262f1f1c7326dcd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2a8c7192abb0972464557bd9c825d773" id="r_a2a8c7192abb0972464557bd9c825d773"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2a8c7192abb0972464557bd9c825d773">Unregister</a> (<a class="el" href="classLLMUnity_1_1LLM.html">LLM</a> llm)</td></tr>
+<tr class="memdesc:a2a8c7192abb0972464557bd9c825d773"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes a LLM from the model manager.  <br /></td></tr>
 <tr class="separator:a2a8c7192abb0972464557bd9c825d773"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acd863788e48dc9e46de5687b57069530" id="r_acd863788e48dc9e46de5687b57069530"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acd863788e48dc9e46de5687b57069530">LoadFromDisk</a> ()</td></tr>
+<tr class="memdesc:acd863788e48dc9e46de5687b57069530"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads the model manager from a file.  <br /></td></tr>
 <tr class="separator:acd863788e48dc9e46de5687b57069530"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ade1fd2084aec2e7dc92d615779706ce4" id="r_ade1fd2084aec2e7dc92d615779706ce4"><td class="memItemLeft" align="right" valign="top">static string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ade1fd2084aec2e7dc92d615779706ce4">AddEntry</a> (<a class="el" href="classLLMUnity_1_1ModelEntry.html">ModelEntry</a> entry)</td></tr>
+<tr class="memdesc:ade1fd2084aec2e7dc92d615779706ce4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a model entry to the model manager.  <br /></td></tr>
 <tr class="separator:ade1fd2084aec2e7dc92d615779706ce4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a96e147c144d00bc7355e251b39d38afd" id="r_a96e147c144d00bc7355e251b39d38afd"><td class="memItemLeft" align="right" valign="top">static string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a96e147c144d00bc7355e251b39d38afd">AddEntry</a> (string path, bool lora=false, string label=null, string url=null)</td></tr>
+<tr class="memdesc:a96e147c144d00bc7355e251b39d38afd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates and adds a model entry to the model manager.  <br /></td></tr>
 <tr class="separator:a96e147c144d00bc7355e251b39d38afd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a329a1fae4360d91badf54a0b3d09a16d" id="r_a329a1fae4360d91badf54a0b3d09a16d"><td class="memItemLeft" align="right" valign="top">static async Task&lt; string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a329a1fae4360d91badf54a0b3d09a16d">Download</a> (string url, bool lora=false, bool log=false, string label=null)</td></tr>
+<tr class="memdesc:a329a1fae4360d91badf54a0b3d09a16d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Downloads a model and adds a model entry to the model manager.  <br /></td></tr>
 <tr class="separator:a329a1fae4360d91badf54a0b3d09a16d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad1e3508ea5e4ada3588c2a8e4b352a11" id="r_ad1e3508ea5e4ada3588c2a8e4b352a11"><td class="memItemLeft" align="right" valign="top">static string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad1e3508ea5e4ada3588c2a8e4b352a11">Load</a> (string path, bool lora=false, bool log=false, string label=null)</td></tr>
+<tr class="memdesc:ad1e3508ea5e4ada3588c2a8e4b352a11"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads a model from disk and adds a model entry to the model manager.  <br /></td></tr>
 <tr class="separator:ad1e3508ea5e4ada3588c2a8e4b352a11"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab82f501a8037acc93387b10fb2de765b" id="r_ab82f501a8037acc93387b10fb2de765b"><td class="memItemLeft" align="right" valign="top">static async Task&lt; string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab82f501a8037acc93387b10fb2de765b">DownloadModel</a> (string url, bool log=false, string label=null)</td></tr>
+<tr class="memdesc:ab82f501a8037acc93387b10fb2de765b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Downloads a LLM model from disk and adds a model entry to the model manager.  <br /></td></tr>
 <tr class="separator:ab82f501a8037acc93387b10fb2de765b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adfa8342b065a11a96b3f383b2ac4bc0b" id="r_adfa8342b065a11a96b3f383b2ac4bc0b"><td class="memItemLeft" align="right" valign="top">static async Task&lt; string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adfa8342b065a11a96b3f383b2ac4bc0b">DownloadLora</a> (string url, bool log=false, string label=null)</td></tr>
+<tr class="memdesc:adfa8342b065a11a96b3f383b2ac4bc0b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Downloads a Lora model from disk and adds a model entry to the model manager.  <br /></td></tr>
 <tr class="separator:adfa8342b065a11a96b3f383b2ac4bc0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abad06dca4bc6421496adfe083e777943" id="r_abad06dca4bc6421496adfe083e777943"><td class="memItemLeft" align="right" valign="top">static string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abad06dca4bc6421496adfe083e777943">LoadModel</a> (string path, bool log=false, string label=null)</td></tr>
+<tr class="memdesc:abad06dca4bc6421496adfe083e777943"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads a LLM model from disk and adds a model entry to the model manager.  <br /></td></tr>
 <tr class="separator:abad06dca4bc6421496adfe083e777943"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae3d4250dbe4247348980f9a86f2be020" id="r_ae3d4250dbe4247348980f9a86f2be020"><td class="memItemLeft" align="right" valign="top">static string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae3d4250dbe4247348980f9a86f2be020">LoadLora</a> (string path, bool log=false, string label=null)</td></tr>
+<tr class="memdesc:ae3d4250dbe4247348980f9a86f2be020"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads a LORA model from disk and adds a model entry to the model manager.  <br /></td></tr>
 <tr class="separator:ae3d4250dbe4247348980f9a86f2be020"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8ca621896e13bac2da3ce9100591847a" id="r_a8ca621896e13bac2da3ce9100591847a"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8ca621896e13bac2da3ce9100591847a">SetURL</a> (string filename, string url)</td></tr>
+<tr class="memdesc:a8ca621896e13bac2da3ce9100591847a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the URL for a model.  <br /></td></tr>
 <tr class="separator:a8ca621896e13bac2da3ce9100591847a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af198a425cde4753e9d530ce41d41f3de" id="r_af198a425cde4753e9d530ce41d41f3de"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af198a425cde4753e9d530ce41d41f3de">SetURL</a> (<a class="el" href="classLLMUnity_1_1ModelEntry.html">ModelEntry</a> entry, string url)</td></tr>
+<tr class="memdesc:af198a425cde4753e9d530ce41d41f3de"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the URL for a model.  <br /></td></tr>
 <tr class="separator:af198a425cde4753e9d530ce41d41f3de"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab4eeb882ca4f473926b9b8603d8d695d" id="r_ab4eeb882ca4f473926b9b8603d8d695d"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab4eeb882ca4f473926b9b8603d8d695d">SetIncludeInBuild</a> (string filename, bool includeInBuild)</td></tr>
+<tr class="memdesc:ab4eeb882ca4f473926b9b8603d8d695d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets whether to include a model to the build.  <br /></td></tr>
 <tr class="separator:ab4eeb882ca4f473926b9b8603d8d695d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a10fea94c8a35a01f0b3275b7ac777583" id="r_a10fea94c8a35a01f0b3275b7ac777583"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a10fea94c8a35a01f0b3275b7ac777583">SetIncludeInBuild</a> (<a class="el" href="classLLMUnity_1_1ModelEntry.html">ModelEntry</a> entry, bool includeInBuild)</td></tr>
+<tr class="memdesc:a10fea94c8a35a01f0b3275b7ac777583"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets whether to include a model to the build.  <br /></td></tr>
 <tr class="separator:a10fea94c8a35a01f0b3275b7ac777583"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aafdb9d2fe53990ad8d9129958aa76258" id="r_aafdb9d2fe53990ad8d9129958aa76258"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aafdb9d2fe53990ad8d9129958aa76258">SetDownloadOnStart</a> (bool value)</td></tr>
+<tr class="memdesc:aafdb9d2fe53990ad8d9129958aa76258"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets whether to download files on start.  <br /></td></tr>
 <tr class="separator:aafdb9d2fe53990ad8d9129958aa76258"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac2dbb3876f9b65cf6290fc5348d5a89d" id="r_ac2dbb3876f9b65cf6290fc5348d5a89d"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac2dbb3876f9b65cf6290fc5348d5a89d">Remove</a> (string filename)</td></tr>
+<tr class="memdesc:ac2dbb3876f9b65cf6290fc5348d5a89d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes a model from the model manager.  <br /></td></tr>
 <tr class="separator:ac2dbb3876f9b65cf6290fc5348d5a89d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae01487df0886500aaa26da71389ee562" id="r_ae01487df0886500aaa26da71389ee562"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae01487df0886500aaa26da71389ee562">Remove</a> (<a class="el" href="classLLMUnity_1_1ModelEntry.html">ModelEntry</a> entry)</td></tr>
+<tr class="memdesc:ae01487df0886500aaa26da71389ee562"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes a model from the model manager.  <br /></td></tr>
 <tr class="separator:ae01487df0886500aaa26da71389ee562"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8f2dda9ac3b3c44017fb63b208e37578" id="r_a8f2dda9ac3b3c44017fb63b208e37578"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8f2dda9ac3b3c44017fb63b208e37578">SetModelProgress</a> (float progress)</td></tr>
+<tr class="memdesc:a8f2dda9ac3b3c44017fb63b208e37578"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the LLM download progress.  <br /></td></tr>
 <tr class="separator:a8f2dda9ac3b3c44017fb63b208e37578"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a263fc41dc097ee834ca252e4e2947320" id="r_a263fc41dc097ee834ca252e4e2947320"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a263fc41dc097ee834ca252e4e2947320">SetLoraProgress</a> (float progress)</td></tr>
+<tr class="memdesc:a263fc41dc097ee834ca252e4e2947320"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the LORA download progress.  <br /></td></tr>
 <tr class="separator:a263fc41dc097ee834ca252e4e2947320"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a966727ae26510d3987ebb03ffa180c6b" id="r_a966727ae26510d3987ebb03ffa180c6b"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a966727ae26510d3987ebb03ffa180c6b">Save</a> ()</td></tr>
+<tr class="memdesc:a966727ae26510d3987ebb03ffa180c6b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Serialises and saves the model manager.  <br /></td></tr>
 <tr class="separator:a966727ae26510d3987ebb03ffa180c6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a98e0702e442d282acd0b7d064b782194" id="r_a98e0702e442d282acd0b7d064b782194"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a98e0702e442d282acd0b7d064b782194">Load</a> ()</td></tr>
+<tr class="memdesc:a98e0702e442d282acd0b7d064b782194"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deserialises and loads the model manager.  <br /></td></tr>
 <tr class="separator:a98e0702e442d282acd0b7d064b782194"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a02f1f4900b433e8d44682d4375da80ca" id="r_a02f1f4900b433e8d44682d4375da80ca"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a02f1f4900b433e8d44682d4375da80ca">SaveToDisk</a> ()</td></tr>
+<tr class="memdesc:a02f1f4900b433e8d44682d4375da80ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Saves the model manager to disk for the build.  <br /></td></tr>
 <tr class="separator:a02f1f4900b433e8d44682d4375da80ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a91519408988162cd6fd6a2c1f3be6e3e" id="r_a91519408988162cd6fd6a2c1f3be6e3e"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a91519408988162cd6fd6a2c1f3be6e3e">Build</a> (ActionCallback copyCallback)</td></tr>
+<tr class="memdesc:a91519408988162cd6fd6a2c1f3be6e3e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Saves the model manager to disk along with models that are not (or can't) be downloaded for the build.  <br /></td></tr>
 <tr class="separator:a91519408988162cd6fd6a2c1f3be6e3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
@@ -207,8 +244,9 @@ Static Public Attributes</h2></td></tr>
 <tr class="separator:a9a2abb8b958d3cdd1f75e017cabecea3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock">
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00069">69</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<div class="textblock"><p>Class implementing the LLM model manager. </p>
+
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00108">108</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="ade1fd2084aec2e7dc92d615779706ce4" name="ade1fd2084aec2e7dc92d615779706ce4"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ade1fd2084aec2e7dc92d615779706ce4">&#9670;&#160;</a></span>AddEntry() <span class="overload">[1/2]</span></h2>
@@ -233,7 +271,16 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00245">245</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p>Adds a model entry to the model manager. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">entry</td><td>model entry</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>model filename</dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00345">345</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>
@@ -274,7 +321,19 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00268">268</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p>Creates and adds a model entry to the model manager. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">path</td><td>model path</td></tr>
+    <tr><td class="paramname">lora</td><td>if it is a LORA or LLM</td></tr>
+    <tr><td class="paramname">label</td><td>label to show in the model manager in the Editor</td></tr>
+    <tr><td class="paramname">url</td><td>model url</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>model filename</dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00376">376</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>
@@ -301,7 +360,15 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00443">443</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p>Saves the model manager to disk along with models that are not (or can't) be downloaded for the build. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">copyCallback</td><td>copy function</td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00648">648</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>
@@ -342,7 +409,19 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00273">273</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p>Downloads a model and adds a model entry to the model manager. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">url</td><td>model url</td></tr>
+    <tr><td class="paramname">lora</td><td>if it is a LORA or LLM</td></tr>
+    <tr><td class="paramname">log</td><td>whether to log</td></tr>
+    <tr><td class="paramname">label</td><td>model label</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>model filename</dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00389">389</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>
@@ -378,7 +457,18 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00334">334</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p>Downloads a Lora model from disk and adds a model entry to the model manager. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">url</td><td>model url</td></tr>
+    <tr><td class="paramname">log</td><td>whether to log</td></tr>
+    <tr><td class="paramname">label</td><td>model label</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>model filename</dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00472">472</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>
@@ -414,7 +504,18 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00329">329</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p>Downloads a LLM model from disk and adds a model entry to the model manager. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">url</td><td>model url</td></tr>
+    <tr><td class="paramname">log</td><td>whether to log</td></tr>
+    <tr><td class="paramname">label</td><td>model label</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>model filename</dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00460">460</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>
@@ -441,7 +542,16 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00173">173</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p>Gets the model entry for a model path. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">path</td><td>model path</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>model entry</dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00239">239</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>
@@ -468,7 +578,16 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00184">184</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p>Gets the asset path based on whether the application runs locally in the editor or in a build. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">filename</td><td>model filename or relative path</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>asset path</dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00255">255</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>
@@ -495,7 +614,9 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00422">422</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p>Deserialises and loads the model manager. </p>
+
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00620">620</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>
@@ -536,7 +657,19 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00318">318</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p>Loads a model from disk and adds a model entry to the model manager. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">path</td><td>model path</td></tr>
+    <tr><td class="paramname">lora</td><td>if it is a LORA or LLM</td></tr>
+    <tr><td class="paramname">log</td><td>whether to log</td></tr>
+    <tr><td class="paramname">label</td><td>model label</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>model filename</dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00442">442</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>
@@ -563,7 +696,9 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00225">225</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p>Loads the model manager from a file. </p>
+
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00320">320</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>
@@ -599,7 +734,18 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00344">344</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p>Loads a LORA model from disk and adds a model entry to the model manager. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">path</td><td>model path</td></tr>
+    <tr><td class="paramname">log</td><td>whether to log</td></tr>
+    <tr><td class="paramname">label</td><td>model label</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>model filename</dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00496">496</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>
@@ -635,7 +781,18 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00339">339</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p>Loads a LLM model from disk and adds a model entry to the model manager. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">path</td><td>model path</td></tr>
+    <tr><td class="paramname">log</td><td>whether to log</td></tr>
+    <tr><td class="paramname">label</td><td>model label</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>model filename</dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00484">484</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>
@@ -662,7 +819,16 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00195">195</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p>Returns the number of LLM/LORA models. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">lora</td><td>whether to return number of LORA or LLM models</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>number of LLM/LORA models</dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00271">271</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>
@@ -689,7 +855,10 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00210">210</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p>Returns the number of LORA models. </p>
+<dl class="section return"><dt>Returns</dt><dd>number of LORA models</dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00294">294</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>
@@ -716,7 +885,10 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00205">205</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p>Returns the number of LLM models. </p>
+<dl class="section return"><dt>Returns</dt><dd>number of LLM models</dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00285">285</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>
@@ -743,7 +915,15 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00215">215</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p>Registers a LLM to the model manager. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">llm</td><td>LLM</td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00303">303</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>
@@ -770,7 +950,15 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00393">393</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p>Removes a model from the model manager. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">filename</td><td>model entry</td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00577">577</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>
@@ -797,7 +985,15 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00388">388</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p>Removes a model from the model manager. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">filename</td><td>model filename</td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00568">568</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>
@@ -824,7 +1020,9 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00415">415</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p>Serialises and saves the model manager. </p>
+
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00610">610</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>
@@ -851,7 +1049,9 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00431">431</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p>Saves the model manager to disk for the build. </p>
+
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00632">632</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>
@@ -878,7 +1078,15 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00373">373</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p>Sets whether to download files on start. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">value</td><td>whether to download files</td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00549">549</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>
@@ -905,7 +1113,15 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00083">83</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p>Sets the model download progress in all registered callbacks. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">progress</td><td>model download progress</td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00126">126</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>
@@ -936,7 +1152,16 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00366">366</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p>Sets whether to include a model to the build. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">entry</td><td>model entry</td></tr>
+    <tr><td class="paramname">includeInBuild</td><td>whether to include it</td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00538">538</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>
@@ -967,7 +1192,16 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00361">361</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p>Sets whether to include a model to the build. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">filename</td><td>model filename</td></tr>
+    <tr><td class="paramname">includeInBuild</td><td>whether to include it</td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00528">528</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>
@@ -994,7 +1228,15 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00410">410</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p>Sets the LORA download progress. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">progress</td><td>download progress</td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00602">602</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>
@@ -1021,7 +1263,15 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00405">405</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p>Sets the LLM download progress. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">progress</td><td>download progress</td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00593">593</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>
@@ -1052,7 +1302,16 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00160">160</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p>Sets the chat template for a model and distributes it to all LLMs using it. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">entry</td><td>model entry</td></tr>
+    <tr><td class="paramname">chatTemplate</td><td>chat template</td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00221">221</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>
@@ -1083,7 +1342,16 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00155">155</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p>Sets the chat template for a model and distributes it to all LLMs using it. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">filename</td><td>model path</td></tr>
+    <tr><td class="paramname">chatTemplate</td><td>chat template</td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00211">211</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>
@@ -1110,7 +1378,10 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00089">89</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p>Setup of the models. </p>
+<dl class="section return"><dt>Returns</dt><dd>bool specifying if the setup was successful</dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00136">136</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>
@@ -1137,7 +1408,10 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00098">98</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p>Task performing the setup of the models. </p>
+<dl class="section return"><dt>Returns</dt><dd>bool specifying if the setup was successful</dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00149">149</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>
@@ -1168,7 +1442,16 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00354">354</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p>Sets the URL for a model. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">entry</td><td>model entry</td></tr>
+    <tr><td class="paramname">url</td><td>model URL</td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00516">516</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>
@@ -1199,7 +1482,16 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00349">349</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p>Sets the URL for a model. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">filename</td><td>model filename</td></tr>
+    <tr><td class="paramname">url</td><td>model URL</td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00506">506</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>
@@ -1226,7 +1518,15 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00220">220</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p>Removes a LLM from the model manager. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">llm</td><td>LLM</td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00312">312</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>
@@ -1251,7 +1551,7 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00071">71</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00110">110</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>
@@ -1275,7 +1575,7 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00075">75</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00114">114</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>
@@ -1299,7 +1599,7 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00076">76</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00115">115</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>
@@ -1323,7 +1623,7 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00237">237</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00332">332</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>
@@ -1347,7 +1647,7 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00072">72</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00111">111</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>
@@ -1371,7 +1671,7 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00236">236</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00331">331</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>

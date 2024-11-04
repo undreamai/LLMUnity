@@ -47,7 +47,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_tiny.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">LLM for Unity
-   &#160;<span id="projectnumber">v2.2.5</span>
+   &#160;<span id="projectnumber">v2.3.0</span>
    </div>
    <div id="projectbrief">Create characters in Unity with LLMs!</div>
   </td>
@@ -113,7 +113,8 @@ $(function(){initNavTree('namespaceLLMUnity.html',''); initResizable(); });
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a>  </div>
+<a href="#nested-classes">Classes</a> &#124;
+<a href="#enum-members">Enumerations</a>  </div>
   <div class="headertitle"><div class="title">LLMUnity Namespace Reference</div></div>
 </div><!--header-->
 <div class="contents">
@@ -128,6 +129,15 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1ChatTemplate.html">ChatTemplate</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class implementing the skeleton of a chat template.  <a href="classLLMUnity_1_1ChatTemplate.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1Chunking.html">Chunking</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class implementing the chunking functionality.  <a href="classLLMUnity_1_1Chunking.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1DBSearch.html">DBSearch</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class implementing a search with a vector database. The search results are retrieved with Approximate Nearest Neighbor (ANN) which is much faster that SimpleSearch.  <a href="classLLMUnity_1_1DBSearch.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1DestroyException.html">DestroyException</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class implementing a basic LLM Destroy Exception.  <a href="classLLMUnity_1_1DestroyException.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1GemmaTemplate.html">GemmaTemplate</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class implementing the Gemma template.  <a href="classLLMUnity_1_1GemmaTemplate.html#details">More...</a><br /></td></tr>
@@ -148,18 +158,31 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class implementing the LLM server.  <a href="classLLMUnity_1_1LLM.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMBuilder.html">LLMBuilder</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class implementing the <a class="el" href="namespaceLLMUnity.html">LLMUnity</a> builder.  <a href="classLLMUnity_1_1LLMBuilder.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMCaller.html">LLMCaller</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class implementing calling of LLM functions (local and remote).  <a href="classLLMUnity_1_1LLMCaller.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMCharacter.html">LLMCharacter</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class implementing the LLM characters.  <a href="classLLMUnity_1_1LLMCharacter.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html">LLMClient</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMEmbedder.html">LLMEmbedder</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class implementing the LLM embedder.  <a href="classLLMUnity_1_1LLMEmbedder.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMException.html">LLMException</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class implementing a basic LLM Exception.  <a href="classLLMUnity_1_1LLMException.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMManager.html">LLMManager</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMManagerStore.html">LLMManagerStore</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class implementing the LLM model manager.  <a href="classLLMUnity_1_1LLMManager.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMUnitySetup.html">LLMUnitySetup</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class implementing helper functions for setup and process management.  <a href="classLLMUnity_1_1LLMUnitySetup.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LoraAsset.html">LoraAsset</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class representing a LORA asset.  <a href="classLLMUnity_1_1LoraAsset.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LoraManager.html">LoraManager</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class representing the LORA manager allowing to convert and retrieve LORA assets to string (for serialisation)  <a href="classLLMUnity_1_1LoraManager.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1MistralChatTemplate.html">MistralChatTemplate</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class implementing a modified version of the Mistral Instruct template for chat.  <a href="classLLMUnity_1_1MistralChatTemplate.html#details">More...</a><br /></td></tr>
@@ -168,6 +191,9 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class implementing the Mistral Instruct template.  <a href="classLLMUnity_1_1MistralInstructTemplate.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1ModelEntry.html">ModelEntry</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class implementing a LLM model entry.  <a href="classLLMUnity_1_1ModelEntry.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1NoChunking.html">NoChunking</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1Phi2Template.html">Phi2Template</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class implementing the Phi-2 template.  <a href="classLLMUnity_1_1Phi2Template.html#details">More...</a><br /></td></tr>
@@ -178,15 +204,92 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1Phi3Template.html">Phi3Template</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class implementing the Phi-3 template.  <a href="classLLMUnity_1_1Phi3Template.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1RAG.html">RAG</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class implementing a Retrieval Augmented Generation (RAG) system based on a search method and an optional chunking method.  <a href="classLLMUnity_1_1RAG.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1ResumingWebClient.html">ResumingWebClient</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class implementing a resumable Web client.  <a href="classLLMUnity_1_1ResumingWebClient.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1Searchable.html">Searchable</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class implementing the search template.  <a href="classLLMUnity_1_1Searchable.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1SearchMethod.html">SearchMethod</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class implementing the search method template.  <a href="classLLMUnity_1_1SearchMethod.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1SearchPlugin.html">SearchPlugin</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class implementing the search plugin template used e.g. in chunking.  <a href="classLLMUnity_1_1SearchPlugin.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1SentenceSplitter.html">SentenceSplitter</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class implementing a sentence-based splitter.  <a href="classLLMUnity_1_1SentenceSplitter.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1SimpleSearch.html">SimpleSearch</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class implementing a simple search that compares the enconding of the search query with all the search entries (brute-force).  <a href="classLLMUnity_1_1SimpleSearch.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1TokenSplitter.html">TokenSplitter</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class implementing a token-based splitter.  <a href="classLLMUnity_1_1TokenSplitter.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1VicunaTemplate.html">VicunaTemplate</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class implementing the Vicuna template.  <a href="classLLMUnity_1_1VicunaTemplate.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1WordSplitter.html">WordSplitter</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class implementing a word-based splitter.  <a href="classLLMUnity_1_1WordSplitter.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1ZephyrTemplate.html">ZephyrTemplate</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class implementing the Zephyr template.  <a href="classLLMUnity_1_1ZephyrTemplate.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:a57c2884128df2e335455f2ba44e84e46" id="r_a57c2884128df2e335455f2ba44e84e46"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a57c2884128df2e335455f2ba44e84e46">SearchMethods</a> { <b>DBSearch</b>
+, <b>SimpleSearch</b>
+ }</td></tr>
+<tr class="memdesc:a57c2884128df2e335455f2ba44e84e46"><td class="mdescLeft">&#160;</td><td class="mdescRight">Search methods implemented in <a class="el" href="namespaceLLMUnity.html">LLMUnity</a>.  <a href="#a57c2884128df2e335455f2ba44e84e46">More...</a><br /></td></tr>
+<tr class="separator:a57c2884128df2e335455f2ba44e84e46"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8901dc84125a5c569f32e9991e846818" id="r_a8901dc84125a5c569f32e9991e846818"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8901dc84125a5c569f32e9991e846818">ChunkingMethods</a> { <b>NoChunking</b>
+, <b>TokenSplitter</b>
+, <b>WordSplitter</b>
+, <b>SentenceSplitter</b>
+ }</td></tr>
+<tr class="memdesc:a8901dc84125a5c569f32e9991e846818"><td class="mdescLeft">&#160;</td><td class="mdescRight">Chunking methods implemented in <a class="el" href="namespaceLLMUnity.html">LLMUnity</a>.  <a href="#a8901dc84125a5c569f32e9991e846818">More...</a><br /></td></tr>
+<tr class="separator:a8901dc84125a5c569f32e9991e846818"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Enumeration Type Documentation</h2>
+<a id="a8901dc84125a5c569f32e9991e846818" name="a8901dc84125a5c569f32e9991e846818"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8901dc84125a5c569f32e9991e846818">&#9670;&#160;</a></span>ChunkingMethods</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="#a8901dc84125a5c569f32e9991e846818">LLMUnity.ChunkingMethods</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><a class="el" href="classLLMUnity_1_1Chunking.html" title="Class implementing the chunking functionality.">Chunking</a> methods implemented in <a class="el" href="namespaceLLMUnity.html">LLMUnity</a>. </p>
+
+<p class="definition">Definition at line <a class="el" href="RAG_8cs_source.html#l00025">25</a> of file <a class="el" href="RAG_8cs_source.html">RAG.cs</a>.</p>
+
+</div>
+</div>
+<a id="a57c2884128df2e335455f2ba44e84e46" name="a57c2884128df2e335455f2ba44e84e46"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a57c2884128df2e335455f2ba44e84e46">&#9670;&#160;</a></span>SearchMethods</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="#a57c2884128df2e335455f2ba44e84e46">LLMUnity.SearchMethods</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Search methods implemented in <a class="el" href="namespaceLLMUnity.html">LLMUnity</a>. </p>
+
+<p class="definition">Definition at line <a class="el" href="RAG_8cs_source.html#l00014">14</a> of file <a class="el" href="RAG_8cs_source.html">RAG.cs</a>.</p>
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

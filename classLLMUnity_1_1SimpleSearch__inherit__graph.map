@@ -1,0 +1,9 @@
+<map id="LLMUnity.SimpleSearch" name="LLMUnity.SimpleSearch">
+<area shape="rect" id="Node000001" title="Class implementing a simple search that compares the enconding of the search query with all the searc..." alt="" coords="5,225,180,251"/>
+<area shape="rect" id="Node000002" href="$classLLMUnity_1_1SearchMethod.html" title="Class implementing the search method template." alt="" coords="35,152,150,177"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="95,191,95,225,90,225,90,191"/>
+<area shape="rect" id="Node000003" href="$classLLMUnity_1_1Searchable.html" title="Class implementing the search template." alt="" coords="45,79,140,104"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="95,118,95,152,90,152,90,118"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="31,5,155,31"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="95,44,95,79,90,79,90,44"/>
+</map>

@@ -1,0 +1,11 @@
+<map id="LLMUnity.SearchMethod" name="LLMUnity.SearchMethod">
+<area shape="rect" id="Node000001" title="Class implementing the search method template." alt="" coords="82,152,261,177"/>
+<area shape="rect" id="Node000004" href="$classLLMUnity_1_1DBSearch.html" title="Class implementing a search with a vector database. The search results are retrieved with Approximate..." alt="" coords="5,225,153,251"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="148,188,96,227,93,223,144,183"/>
+<area shape="rect" id="Node000005" href="$classLLMUnity_1_1SimpleSearch.html" title="Class implementing a simple search that compares the enconding of the search query with all the searc..." alt="" coords="177,225,352,251"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="199,183,251,223,248,227,195,188"/>
+<area shape="rect" id="Node000002" href="$classLLMUnity_1_1Searchable.html" title="Class implementing the search template." alt="" coords="124,79,219,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="174,118,174,152,169,152,169,118"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="109,5,233,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="174,44,174,79,169,79,169,44"/>
+</map>

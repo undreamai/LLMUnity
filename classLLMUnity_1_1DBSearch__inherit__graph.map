@@ -1,0 +1,9 @@
+<map id="LLMUnity.DBSearch" name="LLMUnity.DBSearch">
+<area shape="rect" id="Node000001" title="Class implementing a search with a vector database. The search results are retrieved with Approximate..." alt="" coords="5,225,153,251"/>
+<area shape="rect" id="Node000002" href="$classLLMUnity_1_1SearchMethod.html" title="Class implementing the search method template." alt="" coords="22,152,137,177"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="82,191,82,225,77,225,77,191"/>
+<area shape="rect" id="Node000003" href="$classLLMUnity_1_1Searchable.html" title="Class implementing the search template." alt="" coords="32,79,127,104"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="82,118,82,152,77,152,77,118"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="17,5,141,31"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="82,44,82,79,77,79,77,44"/>
+</map>

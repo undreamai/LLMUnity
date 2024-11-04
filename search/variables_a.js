@@ -1,9 +1,11 @@
 var searchData=
 [
-  ['nkeep_0',['nKeep',['../classLLMUnity_1_1LLMCharacter.html#a60102bd472078fd82f1acaee0d46e3ba',1,'LLMUnity::LLMCharacter']]],
-  ['nprobs_1',['nProbs',['../classLLMUnity_1_1LLMCharacter.html#a241b11cd2ed333f0516c6d0f7a7dc52f',1,'LLMUnity::LLMCharacter']]],
-  ['numgpulayers_2',['numGPULayers',['../classLLMUnity_1_1LLM.html#a0cd82e3728d77575d4f453c5ae443cb9',1,'LLMUnity::LLM']]],
-  ['numpredict_3',['numPredict',['../classLLMUnity_1_1LLMCharacter.html#a4284bba2e077a4a168caf479a32c03b7',1,'LLMUnity::LLMCharacter']]],
-  ['numretries_4',['numRetries',['../classLLMUnity_1_1LLMCharacter.html#a46872a74a6f62503a28bba4929621c42',1,'LLMUnity::LLMCharacter']]],
-  ['numthreads_5',['numThreads',['../classLLMUnity_1_1LLM.html#a9afb1e3370f988ac5ae6bc8bb442bc95',1,'LLMUnity::LLM']]]
+  ['metrickind_0',['metricKind',['../classLLMUnity_1_1DBSearch.html#a1d65634ffb89fdd4c645f93e40357e46',1,'LLMUnity::DBSearch']]],
+  ['minp_1',['minP',['../classLLMUnity_1_1LLMCharacter.html#a5d0749bd21c64551f012b4727d271d7c',1,'LLMUnity::LLMCharacter']]],
+  ['mirostat_2',['mirostat',['../classLLMUnity_1_1LLMCharacter.html#aaad55a736e0031f591bb6acce4e56815',1,'LLMUnity::LLMCharacter']]],
+  ['mirostateta_3',['mirostatEta',['../classLLMUnity_1_1LLMCharacter.html#a564fd3e6d28e4c7ac7ae52f8a08099c0',1,'LLMUnity::LLMCharacter']]],
+  ['mirostattau_4',['mirostatTau',['../classLLMUnity_1_1LLMCharacter.html#a3a8acb7acee431a152d47f64fcbe15a8',1,'LLMUnity::LLMCharacter']]],
+  ['model_5',['model',['../classLLMUnity_1_1LLM.html#ab3feb52deeee0c441322c81628c065cd',1,'LLMUnity::LLM']]],
+  ['modeldownloadpath_6',['modelDownloadPath',['../classLLMUnity_1_1LLMUnitySetup.html#a8ba1f072d5bbe4c6ba7041b86b13c4ed',1,'LLMUnity::LLMUnitySetup']]],
+  ['modeloptions_7',['modelOptions',['../classLLMUnity_1_1LLMUnitySetup.html#ac4af339cd489ce2d440386596ca177a5',1,'LLMUnity::LLMUnitySetup']]]
 ];

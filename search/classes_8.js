@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['zephyrtemplate_0',['ZephyrTemplate',['../classLLMUnity_1_1ZephyrTemplate.html',1,'LLMUnity']]]
+  ['rag_0',['RAG',['../classLLMUnity_1_1RAG.html',1,'LLMUnity']]],
+  ['resumingwebclient_1',['ResumingWebClient',['../classLLMUnity_1_1ResumingWebClient.html',1,'LLMUnity']]]
 ];

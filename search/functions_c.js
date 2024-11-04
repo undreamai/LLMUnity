@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['warmup_0',['Warmup',['../classLLMUnity_1_1LLMCharacter.html#a55f17930fb1f4ce352a29e247597babb',1,'LLMUnity::LLMCharacter']]]
+  ['ondestroy_0',['OnDestroy',['../classLLMUnity_1_1LLM.html#a52ae6076746695d25592f8355a18414e',1,'LLMUnity::LLM']]],
+  ['onlyrequiredfields_1',['OnlyRequiredFields',['../classLLMUnity_1_1ModelEntry.html#af361ecc0b83af2434a3abf14d2a54018',1,'LLMUnity::ModelEntry']]]
 ];

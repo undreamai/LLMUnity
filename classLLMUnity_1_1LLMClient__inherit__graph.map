@@ -1,7 +1,0 @@
-<map id="LLMUnity.LLMClient" name="LLMUnity.LLMClient">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,152,155,177"/>
-<area shape="rect" id="Node000002" href="$classLLMUnity_1_1LLMCharacter.html" title="Class implementing the LLM characters." alt="" coords="25,79,135,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="83,118,83,152,77,152,77,118"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="18,5,142,31"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="83,44,83,79,77,79,77,44"/>
-</map>
