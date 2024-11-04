@@ -671,13 +671,13 @@ namespace LLMUnityTests
             await search.Add(weather + raining);
             await search.Add(sometext);
 
-            search.chunking.returnChunks = false;
+            search.ReturnChunks(false);
             (results, distances) = await search.Search(weather, 1);
             Assert.That(results.Length == 1);
             Assert.That(distances.Length == 1);
             Assert.AreEqual(results[0], weather + raining);
 
-            search.chunking.returnChunks = true;
+            search.ReturnChunks(true);
             (results, distances) = await search.Search(weather, 1);
             Assert.That(results.Length == 1);
             Assert.That(distances.Length == 1);
