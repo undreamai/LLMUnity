@@ -20,6 +20,14 @@ Origin: [link](https://github.com/Mozilla-Ocho/llamafile)<br>
 License Type: "Apache 2.0"<br>
 License: [link](https://github.com/Mozilla-Ocho/llamafile/blob/main/LICENSE)
 
+### USearch
+
+Developer: Unum Cloud<br>
+Origin: [link](https://github.com/unum-cloud/usearch)<br>
+License Type: "Apache 2.0"<br>
+License: [link](https://github.com/unum-cloud/usearch/blob/main/LICENSE)<br>
+Modifications: [link](ThirdParty/usearch/README.md)
+
 ---
 
 ## Models
@@ -161,19 +169,3 @@ Developer: Leliuga<br>
 Origin: [link](https://huggingface.co/leliuga/all-MiniLM-L12-v2-GGUF)<br>
 License Type: "Apache 2.0"<br>
 License: [link](https://huggingface.co/leliuga/all-MiniLM-L12-v2-GGUF)
-
-<br>
-
----
-
-## Testing
-
-The following model is used for testing purposes:
-
-### BEE-spoke-data/smol_llama-220M-openhermes
-
-Developer: BEEspoke Data<br>
-Origin: [link](https://huggingface.co/BEE-spoke-data/smol_llama-220M-openhermes)<br>
-Quantization: [link](https://huggingface.co/afrideva/smol_llama-220M-openhermes-GGUF)<br>
-License Type: "Apache 2.0"<br>
-License: [link](https://huggingface.co/BEE-spoke-data/smol_llama-220M-openhermes)
