@@ -212,7 +212,7 @@ namespace LLMUnity
         public static string GetAssetPath(string relPath = "")
         {
             // Path to store llm server binaries and models
-            string assetsDir = Application.platform == RuntimePlatform.Android ? Application.persistentDataPath : Application.persistentDataPath;
+            string assetsDir = Application.platform == RuntimePlatform.Android? Application.persistentDataPath : Application.streamingAssetsPath;
             return Path.Combine(assetsDir, relPath).Replace('\\', '/');
         }
 
@@ -282,7 +282,11 @@ namespace LLMUnity
             {
                 if (!androidExtractTasks.TryGetValue(assetName, out extractionTask))
                 {
+#if UNITY_ANDROID || UNITY_ANDROID
                     extractionTask = AndroidExtractFileOnce(assetName, overwrite, log, chunkSize);
+#else
+                    extractionTask = Task.CompletedTask;
+#endif
                     androidExtractTasks[assetName] = extractionTask;
                 }
             }
@@ -291,10 +295,11 @@ namespace LLMUnity
 
         public static async Task AndroidExtractFileOnce(string assetName, bool overwrite = false, bool log = true, int chunkSize = 1024*1024)
         {
+            string source = "";
 #if UNITY_ANDROID
-            string source = "jar:file://" + Application.dataPath + "!/assets/" + assetName;
+            source = "jar:file://" + Application.dataPath + "!/assets/" + assetName;
 #elif UNITY_IOS
-            string source = Path.Combine(Application.streamingAssetsPath, assetName);
+            source = Path.Combine(Application.streamingAssetsPath, assetName);
             if (!source.StartsWith("file://"))
             {
                 source = "file://" + source;
@@ -336,7 +341,7 @@ namespace LLMUnity
 
         public static async Task AndroidExtractAsset(string path, bool overwrite = false)
         {
-            if (Application.platform != RuntimePlatform.Android || Application.platform != RuntimePlatform.IPhonePlayer) return;
+            if (Application.platform != RuntimePlatform.Android && Application.platform != RuntimePlatform.IPhonePlayer) return;
             await AndroidExtractFile(Path.GetFileName(path), overwrite);
         }
 
