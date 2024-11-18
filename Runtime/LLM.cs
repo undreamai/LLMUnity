@@ -81,7 +81,6 @@ namespace LLMUnity
 
         IntPtr LLMObject = IntPtr.Zero;
         List<LLMCaller> clients = new List<LLMCaller>();
-        LLMLib llmlib;
         StreamWrapper logStreamWrapper = null;
         Thread llmThread = null;
         List<StreamWrapper> streamWrappers = new List<StreamWrapper>();
@@ -93,6 +92,7 @@ namespace LLMUnity
         string loraWeightsPre = "";
         public bool embeddingsOnly = false;
         public int embeddingLength = 0;
+        public Callback<string> debugCallback = null;
 
         /// \endcond
 
@@ -115,10 +115,12 @@ namespace LLMUnity
         /// </summary>
         public async void Awake()
         {
+            CallLog("Awake 1");
             if (!enabled) return;
 #if !UNITY_EDITOR
             modelSetupFailed = !await LLMManager.Setup();
 #endif
+            CallLog("Awake 2");
             modelSetupComplete = true;
             if (modelSetupFailed)
             {
@@ -126,15 +128,33 @@ namespace LLMUnity
                 return;
             }
             string arguments = GetLlamaccpArguments();
+            CallLog("Awake 3");
             if (arguments == null)
             {
                 failed = true;
                 return;
             }
             await Task.Run(() => StartLLMServer(arguments));
+            CallLog("Awake 4");
             if (!started) return;
             if (dontDestroyOnLoad) DontDestroyOnLoad(transform.root.gameObject);
             if (basePrompt != "") await SetBasePrompt(basePrompt);
+            CallLog("Awake 5");
+        }
+
+        public void CallLog(string message)
+        {
+            debugCallback?.Invoke("LLMUnity Log: " + message);
+        }
+
+        public void CallLogError(string message)
+        {
+            debugCallback?.Invoke("LLMUnity Error: " + message);
+        }
+
+        public void CallLogWarning(string message)
+        {
+            debugCallback?.Invoke("LLMUnity Warning: " + message);
         }
 
         /// <summary>
@@ -230,7 +250,7 @@ namespace LLMUnity
                 SetEmbeddings(modelEntry.embeddingLength, modelEntry.embeddingOnly);
                 if (contextSize == 0 && modelEntry.contextLength > 32768)
                 {
-                    LLMUnitySetup.LogWarning($"The model {path} has very large context size ({modelEntry.contextLength}), consider setting it to a smaller value (<=32768) to avoid filling up the RAM");
+                    CallLogWarning($"The model {path} has very large context size ({modelEntry.contextLength}), consider setting it to a smaller value (<=32768) to avoid filling up the RAM");
                 }
             }
 #if UNITY_EDITOR
@@ -325,7 +345,7 @@ namespace LLMUnity
         public void SetTemplate(string templateName, bool setDirty = true)
         {
             chatTemplate = templateName;
-            if (started) llmlib?.LLM_SetTemplate(LLMObject, chatTemplate);
+            if (started) LLMLib.LLM_SetTemplate(LLMObject, chatTemplate);
 #if UNITY_EDITOR
             if (setDirty && !EditorApplication.isPlaying) EditorUtility.SetDirty(this);
 #endif
@@ -352,7 +372,7 @@ namespace LLMUnity
             if (String.IsNullOrEmpty(path)) return "";
             else if (!File.Exists(path))
             {
-                LLMUnitySetup.LogError($"File {path} not found!");
+                CallLogError($"File {path} not found!");
                 return "";
             }
             return File.ReadAllText(path);
@@ -394,19 +414,19 @@ namespace LLMUnity
             // Start the LLM server in a cross-platform way
             if ((SSLCert != "" && SSLKey == "") || (SSLCert == "" && SSLKey != ""))
             {
-                LLMUnitySetup.LogError($"Both SSL certificate and key need to be provided!");
+                CallLogError($"Both SSL certificate and key need to be provided!");
                 return null;
             }
 
             if (model == "")
             {
-                LLMUnitySetup.LogError("No model file provided!");
+                CallLogError("No model file provided!");
                 return null;
             }
             string modelPath = GetLLMManagerAssetRuntime(model);
             if (!File.Exists(modelPath))
             {
-                LLMUnitySetup.LogError($"File {modelPath} not found!");
+                CallLogError($"File {modelPath} not found!");
                 return null;
             }
 
@@ -417,7 +437,7 @@ namespace LLMUnity
                 string loraPath = GetLLMManagerAssetRuntime(lora);
                 if (!File.Exists(loraPath))
                 {
-                    LLMUnitySetup.LogError($"File {loraPath} not found!");
+                    CallLogError($"File {loraPath} not found!");
                     return null;
                 }
                 loraArgument += $" --lora \"{loraPath}\"";
@@ -446,20 +466,20 @@ namespace LLMUnity
             serverCommand += " " + arguments;
             serverCommand += $" --template \"{chatTemplate}\"";
             if (remote && SSLCert != "" && SSLKey != "") serverCommand += $" --ssl-cert-file {SSLCertPath} --ssl-key-file {SSLKeyPath}";
-            LLMUnitySetup.Log($"Deploy server command: {serverCommand}");
+            CallLog($"Deploy server command: {serverCommand}");
             return arguments;
         }
 
         private void SetupLogging()
         {
-            logStreamWrapper = ConstructStreamWrapper(LLMUnitySetup.LogWarning, true);
-            llmlib?.Logging(logStreamWrapper.GetStringWrapper());
+            logStreamWrapper = ConstructStreamWrapper(CallLogWarning, true);
+            LLMLib.Logging(logStreamWrapper.GetStringWrapper());
         }
 
         private void StopLogging()
         {
             if (logStreamWrapper == null) return;
-            llmlib?.StopLogging();
+            LLMLib.StopLogging();
             DestroyStreamWrapper(logStreamWrapper);
         }
 
@@ -469,52 +489,26 @@ namespace LLMUnity
             failed = false;
             bool useGPU = numGPULayers > 0;
 
-            foreach (string arch in LLMLib.PossibleArchitectures(useGPU))
+            CallLog($"StartLLMServer");
+            try
             {
-                string error;
-                try
-                {
-                    InitLib(arch);
-                    InitService(arguments);
-                    LLMUnitySetup.Log($"Using architecture: {arch}");
-                    break;
-                }
-                catch (LLMException e)
-                {
-                    error = e.Message;
-                    Destroy();
-                }
-                catch (DestroyException)
-                {
-                    break;
-                }
-                catch (Exception e)
-                {
-                    error = $"{e.GetType()}: {e.Message}";
-                }
-                LLMUnitySetup.Log($"Tried architecture: {arch}, " + error);
+                InitService(arguments);
+                CallLog($"StartLLMServer InitService");
             }
-            if (llmlib == null)
+            catch (Exception)
             {
-                LLMUnitySetup.LogError("LLM service couldn't be created");
+                CallLogError("LLM service couldn't be created");
                 failed = true;
                 return;
             }
             CallWithLock(StartService);
-            LLMUnitySetup.Log("LLM service created");
-        }
-
-        private void InitLib(string arch)
-        {
-            llmlib = new LLMLib(arch);
-            CheckLLMStatus(false);
+            CallLog("LLM service created");
         }
 
         void CallWithLock(EmptyCallback fn)
         {
             lock (startLock)
             {
-                if (llmlib == null) throw new DestroyException();
                 fn();
             }
         }
@@ -524,26 +518,32 @@ namespace LLMUnity
             lock (staticLock)
             {
                 if (debug) CallWithLock(SetupLogging);
-                CallWithLock(() => { LLMObject = llmlib.LLM_Construct(arguments); });
-                CallWithLock(() => llmlib.LLM_SetTemplate(LLMObject, chatTemplate));
+
+                CallLog($"SetupLogging");
+                CallLog("LLM_Test: " + LLMLib.LLM_Test());
+                CallWithLock(() => { LLMObject = LLMLib.LLM_Construct(arguments); });
+                CallLog($"LLM_Construct");
+                CallWithLock(() => LLMLib.LLM_SetTemplate(LLMObject, chatTemplate));
+                CallLog($"LLM_SetTemplate");
                 if (remote)
                 {
                     if (SSLCert != "" && SSLKey != "")
                     {
-                        LLMUnitySetup.Log("Using SSL");
-                        CallWithLock(() => llmlib.LLM_SetSSL(LLMObject, SSLCert, SSLKey));
+                        CallLog("Using SSL");
+                        CallWithLock(() => LLMLib.LLM_SetSSL(LLMObject, SSLCert, SSLKey));
                     }
-                    CallWithLock(() => llmlib.LLM_StartServer(LLMObject));
+                    CallWithLock(() => LLMLib.LLM_StartServer(LLMObject));
                 }
                 CallWithLock(() => CheckLLMStatus(false));
+                CallLog($"CheckLLMStatus");
             }
         }
 
         private void StartService()
         {
-            llmThread = new Thread(() => llmlib.LLM_Start(LLMObject));
+            llmThread = new Thread(() => LLMLib.LLM_Start(LLMObject));
             llmThread.Start();
-            while (!llmlib.LLM_Started(LLMObject)) {}
+            while (!LLMLib.LLM_Started(LLMObject)) {}
             ApplyLoras();
             started = true;
         }
@@ -575,7 +575,7 @@ namespace LLMUnity
 
         StreamWrapper ConstructStreamWrapper(Callback<string> streamCallback = null, bool clearOnUpdate = false)
         {
-            StreamWrapper streamWrapper = new StreamWrapper(llmlib, streamCallback, clearOnUpdate);
+            StreamWrapper streamWrapper = new StreamWrapper(streamCallback, clearOnUpdate);
             streamWrappers.Add(streamWrapper);
             return streamWrapper;
         }
@@ -600,7 +600,7 @@ namespace LLMUnity
             else if (!started) error = "LLM service not started";
             if (error != null)
             {
-                LLMUnitySetup.LogError(error);
+                CallLogError(error);
                 throw new Exception(error);
             }
         }
@@ -610,37 +610,36 @@ namespace LLMUnity
             if (started)
             {
                 string error = "This method can't be called when the LLM has started";
-                LLMUnitySetup.LogError(error);
+                CallLogError(error);
                 throw new Exception(error);
             }
         }
 
         void CheckLLMStatus(bool log = true)
         {
-            if (llmlib == null) { return; }
-            IntPtr stringWrapper = llmlib.StringWrapper_Construct();
-            int status = llmlib.LLM_Status(LLMObject, stringWrapper);
-            string result = llmlib.GetStringWrapperResult(stringWrapper);
-            llmlib.StringWrapper_Delete(stringWrapper);
+            IntPtr stringWrapper = LLMLib.StringWrapper_Construct();
+            int status = LLMLib.LLM_Status(LLMObject, stringWrapper);
+            string result = LLMLib.GetStringWrapperResult(stringWrapper);
+            LLMLib.StringWrapper_Delete(stringWrapper);
             string message = $"LLM {status}: {result}";
             if (status > 0)
             {
-                if (log) LLMUnitySetup.LogError(message);
+                if (log) CallLogError(message);
                 throw new LLMException(message, status);
             }
             else if (status < 0)
             {
-                if (log) LLMUnitySetup.LogWarning(message);
+                if (log) CallLogWarning(message);
             }
         }
 
         async Task<string> LLMNoInputReply(LLMNoInputReplyCallback callback)
         {
             AssertStarted();
-            IntPtr stringWrapper = llmlib.StringWrapper_Construct();
+            IntPtr stringWrapper = LLMLib.StringWrapper_Construct();
             await Task.Run(() => callback(LLMObject, stringWrapper));
-            string result = llmlib?.GetStringWrapperResult(stringWrapper);
-            llmlib?.StringWrapper_Delete(stringWrapper);
+            string result = LLMLib.GetStringWrapperResult(stringWrapper);
+            LLMLib.StringWrapper_Delete(stringWrapper);
             CheckLLMStatus();
             return result;
         }
@@ -648,10 +647,10 @@ namespace LLMUnity
         async Task<string> LLMReply(LLMReplyCallback callback, string json)
         {
             AssertStarted();
-            IntPtr stringWrapper = llmlib.StringWrapper_Construct();
+            IntPtr stringWrapper = LLMLib.StringWrapper_Construct();
             await Task.Run(() => callback(LLMObject, json, stringWrapper));
-            string result = llmlib?.GetStringWrapperResult(stringWrapper);
-            llmlib?.StringWrapper_Delete(stringWrapper);
+            string result = LLMLib.GetStringWrapperResult(stringWrapper);
+            LLMLib.StringWrapper_Delete(stringWrapper);
             CheckLLMStatus();
             return result;
         }
@@ -666,7 +665,7 @@ namespace LLMUnity
             AssertStarted();
             LLMReplyCallback callback = (IntPtr LLMObject, string jsonData, IntPtr strWrapper) =>
             {
-                llmlib.LLM_Tokenize(LLMObject, jsonData, strWrapper);
+                LLMLib.LLM_Tokenize(LLMObject, jsonData, strWrapper);
             };
             return await LLMReply(callback, json);
         }
@@ -681,7 +680,7 @@ namespace LLMUnity
             AssertStarted();
             LLMReplyCallback callback = (IntPtr LLMObject, string jsonData, IntPtr strWrapper) =>
             {
-                llmlib.LLM_Detokenize(LLMObject, jsonData, strWrapper);
+                LLMLib.LLM_Detokenize(LLMObject, jsonData, strWrapper);
             };
             return await LLMReply(callback, json);
         }
@@ -696,7 +695,7 @@ namespace LLMUnity
             AssertStarted();
             LLMReplyCallback callback = (IntPtr LLMObject, string jsonData, IntPtr strWrapper) =>
             {
-                llmlib.LLM_Embeddings(LLMObject, jsonData, strWrapper);
+                LLMLib.LLM_Embeddings(LLMObject, jsonData, strWrapper);
             };
             return await LLMReply(callback, json);
         }
@@ -720,9 +719,9 @@ namespace LLMUnity
             int endIndex = json.LastIndexOf("]") + 1;
             json = json.Substring(startIndex, endIndex - startIndex);
 
-            IntPtr stringWrapper = llmlib.StringWrapper_Construct();
-            llmlib.LLM_Lora_Weight(LLMObject, json, stringWrapper);
-            llmlib.StringWrapper_Delete(stringWrapper);
+            IntPtr stringWrapper = LLMLib.StringWrapper_Construct();
+            LLMLib.LLM_Lora_Weight(LLMObject, json, stringWrapper);
+            LLMLib.StringWrapper_Delete(stringWrapper);
         }
 
         /// <summary>
@@ -734,7 +733,7 @@ namespace LLMUnity
             AssertStarted();
             LLMNoInputReplyCallback callback = (IntPtr LLMObject, IntPtr strWrapper) =>
             {
-                llmlib.LLM_LoraList(LLMObject, strWrapper);
+                LLMLib.LLM_LoraList(LLMObject, strWrapper);
             };
             string json = await LLMNoInputReply(callback);
             if (String.IsNullOrEmpty(json)) return null;
@@ -752,7 +751,7 @@ namespace LLMUnity
             AssertStarted();
             LLMReplyCallback callback = (IntPtr LLMObject, string jsonData, IntPtr strWrapper) =>
             {
-                llmlib.LLM_Slot(LLMObject, jsonData, strWrapper);
+                LLMLib.LLM_Slot(LLMObject, jsonData, strWrapper);
             };
             return await LLMReply(callback, json);
         }
@@ -768,7 +767,7 @@ namespace LLMUnity
             AssertStarted();
             if (streamCallback == null) streamCallback = (string s) => {};
             StreamWrapper streamWrapper = ConstructStreamWrapper(streamCallback);
-            await Task.Run(() => llmlib.LLM_Completion(LLMObject, json, streamWrapper.GetStringWrapper()));
+            await Task.Run(() => LLMLib.LLM_Completion(LLMObject, json, streamWrapper.GetStringWrapper()));
             if (!started) return null;
             streamWrapper.Update();
             string result = streamWrapper.GetString();
@@ -791,7 +790,7 @@ namespace LLMUnity
         public void CancelRequest(int id_slot)
         {
             AssertStarted();
-            llmlib?.LLM_Cancel(LLMObject, id_slot);
+            LLMLib.LLM_Cancel(LLMObject, id_slot);
             CheckLLMStatus();
         }
 
@@ -805,26 +804,21 @@ namespace LLMUnity
                 {
                     try
                     {
-                        if (llmlib != null)
+                        if (LLMObject != IntPtr.Zero)
                         {
-                            if (LLMObject != IntPtr.Zero)
-                            {
-                                llmlib.LLM_Stop(LLMObject);
-                                if (remote) llmlib.LLM_StopServer(LLMObject);
-                                StopLogging();
-                                llmThread?.Join();
-                                llmlib.LLM_Delete(LLMObject);
-                                LLMObject = IntPtr.Zero;
-                            }
-                            llmlib.Destroy();
-                            llmlib = null;
+                            LLMLib.LLM_Stop(LLMObject);
+                            if (remote) LLMLib.LLM_StopServer(LLMObject);
+                            StopLogging();
+                            llmThread?.Join();
+                            LLMLib.LLM_Delete(LLMObject);
+                            LLMObject = IntPtr.Zero;
                         }
                         started = false;
                         failed = false;
                     }
                     catch (Exception e)
                     {
-                        LLMUnitySetup.LogError(e.Message);
+                        CallLogError(e.Message);
                     }
                 }
         }
