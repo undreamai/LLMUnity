@@ -492,7 +492,7 @@ namespace LLMUnity
                 {
                     error = $"{e.GetType()}: {e.Message}";
                 }
-                LLMUnitySetup.Log($"Tried architecture: {arch}, " + error);
+                LLMUnitySetup.Log($"Tried architecture: {arch}, error: " + error);
             }
             if (llmlib == null)
             {
@@ -710,6 +710,7 @@ namespace LLMUnity
             LoraWeightRequestList loraWeightRequest = new LoraWeightRequestList();
             loraWeightRequest.loraWeights = new List<LoraWeightRequest>();
             float[] weights = loraManager.GetWeights();
+            if (weights.Length == 0) return;
             for (int i = 0; i < weights.Length; i++)
             {
                 loraWeightRequest.loraWeights.Add(new LoraWeightRequest() { id = i, scale = weights[i] });
