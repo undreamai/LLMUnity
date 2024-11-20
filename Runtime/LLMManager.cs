@@ -164,6 +164,7 @@ namespace LLMUnity
                 }
                 else
                 {
+                    target = LLMUnitySetup.GetDownloadAssetPath(modelEntry.filename);
                     downloads.Add(new StringPair {source = modelEntry.url, target = target});
                 }
             }
