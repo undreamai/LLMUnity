@@ -561,7 +561,7 @@ namespace LLMUnity
             }
             else if (Application.platform == RuntimePlatform.IPhonePlayer)
             {
-                return "libundreamai_iOS.dylib";
+                filename = "iOS/libundreamai_iOS.dylib";
             }
             else
             {
