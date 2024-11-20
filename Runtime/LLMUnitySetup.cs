@@ -211,8 +211,13 @@ namespace LLMUnity
 
         public static string GetAssetPath(string relPath = "")
         {
-            // Path to store llm server binaries and models
             string assetsDir = Application.platform == RuntimePlatform.Android? Application.persistentDataPath : Application.streamingAssetsPath;
+            return Path.Combine(assetsDir, relPath).Replace('\\', '/');
+        }
+
+        public static string GetDownloadAssetPath(string relPath = "")
+        {
+            string assetsDir = (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer)? Application.persistentDataPath : Application.streamingAssetsPath;
             return Path.Combine(assetsDir, relPath).Replace('\\', '/');
         }
 
