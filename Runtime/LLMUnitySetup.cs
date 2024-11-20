@@ -102,7 +102,7 @@ namespace LLMUnity
         /// <summary> LLM for Unity version </summary>
         public static string Version = "v2.3.0";
         /// <summary> LlamaLib version </summary>
-        public static string LlamaLibVersion = "v1.1.12";
+        public static string LlamaLibVersion = "v1.1.13";
         /// <summary> LlamaLib release url </summary>
         public static string LlamaLibReleaseURL = $"https://github.com/undreamai/LlamaLib/releases/download/{LlamaLibVersion}";
         /// <summary> LlamaLib url </summary>
