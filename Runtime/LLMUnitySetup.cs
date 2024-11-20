@@ -282,7 +282,7 @@ namespace LLMUnity
             {
                 if (!androidExtractTasks.TryGetValue(assetName, out extractionTask))
                 {
-#if UNITY_ANDROID || UNITY_ANDROID
+#if UNITY_ANDROID
                     extractionTask = AndroidExtractFileOnce(assetName, overwrite, log, chunkSize);
 #else
                     extractionTask = Task.CompletedTask;
@@ -295,16 +295,7 @@ namespace LLMUnity
 
         public static async Task AndroidExtractFileOnce(string assetName, bool overwrite = false, bool log = true, int chunkSize = 1024*1024)
         {
-            string source = "";
-#if UNITY_ANDROID
-            source = "jar:file://" + Application.dataPath + "!/assets/" + assetName;
-#elif UNITY_IOS
-            source = Path.Combine(Application.streamingAssetsPath, assetName);
-            if (!source.StartsWith("file://"))
-            {
-                source = "file://" + source;
-            }
-#endif
+            string source = "jar:file://" + Application.dataPath + "!/assets/" + assetName;
             string target = GetAssetPath(assetName);
             if (!overwrite && File.Exists(target))
             {
@@ -341,7 +332,7 @@ namespace LLMUnity
 
         public static async Task AndroidExtractAsset(string path, bool overwrite = false)
         {
-            if (Application.platform != RuntimePlatform.Android && Application.platform != RuntimePlatform.IPhonePlayer) return;
+            if (Application.platform != RuntimePlatform.Android) return;
             await AndroidExtractFile(Path.GetFileName(path), overwrite);
         }
 
@@ -422,7 +413,7 @@ namespace LLMUnity
 
                 // setup LlamaLib in StreamingAssets
                 await DownloadAndExtractInsideDirectory(LlamaLibURL, libraryPath, setupDir);
-#if UNITY_ANDROID
+
                 // setup LlamaLib in Plugins for Android
                 AssetDatabase.StartAssetEditing();
                 string androidDir = Path.Combine(libraryPath, "android");
@@ -436,7 +427,7 @@ namespace LLMUnity
                     if (File.Exists(androidDir + ".meta")) File.Delete(androidDir + ".meta");
                 }
                 AssetDatabase.StopAssetEditing();
-#endif
+
                 // setup LlamaLib extras in StreamingAssets
                 if (FullLlamaLib) await DownloadAndExtractInsideDirectory(LlamaLibExtensionURL, libraryPath, setupDir);
             }
@@ -476,10 +467,10 @@ namespace LLMUnity
         }
 
 #endif
-                /// \endcond
+        /// \endcond
 
-                /// <summary> Add callback function to call for error logs </summary>
-                public static void AddErrorCallBack(Callback<string> callback)
+        /// <summary> Add callback function to call for error logs </summary>
+        public static void AddErrorCallBack(Callback<string> callback)
         {
             errorCallbacks.Add(callback);
         }
