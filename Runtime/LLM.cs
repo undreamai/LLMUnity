@@ -204,6 +204,9 @@ namespace LLMUnity
             // StreamingAssets
             string assetPath = LLMUnitySetup.GetAssetPath(path);
             if (File.Exists(assetPath)) return assetPath;
+            // download path
+            assetPath = LLMUnitySetup.GetDownloadAssetPath(path);
+            if (File.Exists(assetPath)) return assetPath;
             // give up
             return path;
         }
