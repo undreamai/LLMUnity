@@ -436,20 +436,6 @@ namespace LLMUnity
                     if (File.Exists(androidDir + ".meta")) File.Delete(androidDir + ".meta");
                 }
                 AssetDatabase.StopAssetEditing();
-#elif UNITY_IOS
-                // setup LlamaLib in Plugins for iOS
-                AssetDatabase.StartAssetEditing();
-                string iosDir = Path.Combine(libraryPath, "ios");
-                if (Directory.Exists(iosDir))
-                {
-                    string iosPluginsDir = Path.Combine(Application.dataPath, "Plugins", "iOS");
-                    Directory.CreateDirectory(iosPluginsDir);
-                    string pluginDir = Path.Combine(iosPluginsDir, Path.GetFileName(libraryPath));
-                    if (Directory.Exists(pluginDir)) Directory.Delete(pluginDir, true);
-                    Directory.Move(iosDir, pluginDir);
-                    if (File.Exists(iosDir + ".meta")) File.Delete(iosDir + ".meta");
-                }
-                AssetDatabase.StopAssetEditing();
 #endif
                 // setup LlamaLib extras in StreamingAssets
                 if (FullLlamaLib) await DownloadAndExtractInsideDirectory(LlamaLibExtensionURL, libraryPath, setupDir);
