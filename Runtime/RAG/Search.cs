@@ -506,7 +506,7 @@ namespace LLMUnity
 
         public static void Load(string filePath, ArchiveSaverCallback callback)
         {
-            using (FileStream stream = new FileStream(filePath, FileMode.Open))
+            using (FileStream stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
             using (ZipArchive archive = new ZipArchive(stream, ZipArchiveMode.Read))
             {
                 callback(archive);
