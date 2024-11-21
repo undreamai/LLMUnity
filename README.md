@@ -36,7 +36,7 @@ LLM for Unity is built on top of the awesome [llama.cpp](https://github.com/gger
 </sub>
 
 ## At a glance
-- 💻 Cross-platform! Windows, Linux, macOS and Android
+- 💻 Cross-platform! Windows, Linux, macOS, iOS and Android
 - 🏠 Runs locally without internet access. No data ever leave the game!
 - ⚡ Blazing fast inference on CPU and GPU (Nvidia, AMD, Apple Metal)
 - 🤗 Supports all major LLM models
@@ -140,14 +140,33 @@ That's all ✨!
 You can also:
 
 <details>
-<summary>Build a mobile app on Android</summary>
+<summary>Build a mobile app</summary>
 
-To build an Android app you need to specify the `IL2CPP` scripting backend and the `ARM64` as the target architecture in the player settings.<br>
+**iOS**
+iOS can be built with the default player settings.
+
+**Android**
+On Android you need to specify the `IL2CPP` scripting backend and the `ARM64` as the target architecture in the player settings.<br>
 These settings can be accessed from the `Edit > Project Settings` menu within the `Player > Other Settings` section.<br>
-
 <img width="400" src=".github/android.png">
 
-It is also a good idea to enable the `Download on Build` option in the LLM GameObject to download the model on launch in order to keep the app size small.
+Since mobile app sizes are typically small, you can download the LLM models the first time the app launches.
+This functionality can be enabled with the `Download on Build` option.
+In your project you can wait until the model download is complete with:
+``` c#
+await LLM.WaitUntilModelSetup();
+```
+You can also receive calls during the download with the download progress:
+``` c#
+await LLM.WaitUntilModelSetup(SetProgress);
+
+void SetProgress(float progress){
+  string progressPercent = ((int)(progress * 100)).ToString() + "%";
+  Debug.Log($"Download progress: {progressPercent}");
+}
+```
+This is useful to present a progress bar or something similar.
+The [MobileDemo](Samples~/MobileDemo) is an example application for Android / iOS.
 
 </details>
 <details>
@@ -434,7 +453,7 @@ The [Samples~](Samples~) folder contains several examples of interaction 🤖:
 - [RAG](Samples~/RAG): RAG sample. Includes an example using the RAG to feed information to a LLM
 - [ChatBot](Samples~/ChatBot): Demonstrates interaction between a player and a AI with a UI similar to a messaging app (see image below)
 - [KnowledgeBaseGame](Samples~/KnowledgeBaseGame): Simple detective game using a knowledge base to provide information to the LLM based on [google/mysteryofthreebots](https://github.com/google/mysteryofthreebots)
-- [AndroidDemo](Samples~/AndroidDemo): Example Android app with an initial screen with model download progress
+- [MobileDemo](Samples~/MobileDemo): Example mobile app for Android / iOS with an initial screen displaying the model download progress
   
 <img width="400" src=".github/demo.gif">
 
