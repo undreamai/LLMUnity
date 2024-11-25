@@ -1,3 +1,9 @@
+## v2.4.0
+#### 🚀 Features
+
+- iOS deployment (PR: #267)
+
+
 ## v2.3.0
 #### 🚀 Features
 
