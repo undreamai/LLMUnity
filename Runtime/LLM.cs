@@ -204,6 +204,9 @@ namespace LLMUnity
             // StreamingAssets
             string assetPath = LLMUnitySetup.GetAssetPath(path);
             if (File.Exists(assetPath)) return assetPath;
+            // download path
+            assetPath = LLMUnitySetup.GetDownloadAssetPath(path);
+            if (File.Exists(assetPath)) return assetPath;
             // give up
             return path;
         }
@@ -492,7 +495,7 @@ namespace LLMUnity
                 {
                     error = $"{e.GetType()}: {e.Message}";
                 }
-                LLMUnitySetup.Log($"Tried architecture: {arch}, " + error);
+                LLMUnitySetup.Log($"Tried architecture: {arch}, error: " + error);
             }
             if (llmlib == null)
             {
@@ -710,6 +713,7 @@ namespace LLMUnity
             LoraWeightRequestList loraWeightRequest = new LoraWeightRequestList();
             loraWeightRequest.loraWeights = new List<LoraWeightRequest>();
             float[] weights = loraManager.GetWeights();
+            if (weights.Length == 0) return;
             for (int i = 0; i < weights.Length; i++)
             {
                 loraWeightRequest.loraWeights.Add(new LoraWeightRequest() { id = i, scale = weights[i] });

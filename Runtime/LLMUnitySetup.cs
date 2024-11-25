@@ -102,7 +102,7 @@ namespace LLMUnity
         /// <summary> LLM for Unity version </summary>
         public static string Version = "v2.3.0";
         /// <summary> LlamaLib version </summary>
-        public static string LlamaLibVersion = "v1.1.12";
+        public static string LlamaLibVersion = "v1.1.13";
         /// <summary> LlamaLib release url </summary>
         public static string LlamaLibReleaseURL = $"https://github.com/undreamai/LlamaLib/releases/download/{LlamaLibVersion}";
         /// <summary> LlamaLib url </summary>
@@ -211,8 +211,13 @@ namespace LLMUnity
 
         public static string GetAssetPath(string relPath = "")
         {
-            // Path to store llm server binaries and models
-            string assetsDir = Application.platform == RuntimePlatform.Android ? Application.persistentDataPath : Application.streamingAssetsPath;
+            string assetsDir = Application.platform == RuntimePlatform.Android? Application.persistentDataPath : Application.streamingAssetsPath;
+            return Path.Combine(assetsDir, relPath).Replace('\\', '/');
+        }
+
+        public static string GetDownloadAssetPath(string relPath = "")
+        {
+            string assetsDir = (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer)? Application.persistentDataPath : Application.streamingAssetsPath;
             return Path.Combine(assetsDir, relPath).Replace('\\', '/');
         }
 
@@ -282,7 +287,11 @@ namespace LLMUnity
             {
                 if (!androidExtractTasks.TryGetValue(assetName, out extractionTask))
                 {
+#if UNITY_ANDROID
                     extractionTask = AndroidExtractFileOnce(assetName, overwrite, log, chunkSize);
+#else
+                    extractionTask = Task.CompletedTask;
+#endif
                     androidExtractTasks[assetName] = extractionTask;
                 }
             }
