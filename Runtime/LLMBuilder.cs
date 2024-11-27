@@ -183,6 +183,7 @@ namespace LLMUnity
         /// </summary>
         public static void Build(string platform)
         {
+            DeletePath(BuildTempDir);
             Directory.CreateDirectory(BuildTempDir);
             HideLibraryPlatforms(platform);
             BuildModels();
