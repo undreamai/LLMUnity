@@ -106,7 +106,7 @@ namespace LLMUnity
         /// <summary> option to set the number of tokens to retain from the prompt (nKeep) based on the LLMCharacter system prompt </summary>
         public bool setNKeepToPrompt = true;
         /// <summary> the chat history as list of chat messages </summary>
-        public List<ChatMessage> chat;
+        public List<ChatMessage> chat = new List<ChatMessage>();
         /// <summary> the grammar to use </summary>
         public string grammarString;
 
@@ -161,7 +161,7 @@ namespace LLMUnity
 
         protected virtual void InitHistory()
         {
-            InitPrompt();
+            ClearChat();
             _ = LoadHistory();
         }
 
@@ -204,25 +204,14 @@ namespace LLMUnity
             return GetSavePath(filename + ".cache");
         }
 
-        protected virtual void InitPrompt(bool clearChat = true)
+        /// <summary>
+        /// Clear the chat of the LLMCharacter.
+        /// </summary>
+        public virtual void ClearChat()
         {
-            if (chat != null)
-            {
-                if (clearChat) chat.Clear();
-            }
-            else
-            {
-                chat = new List<ChatMessage>();
-            }
+            chat.Clear();
             ChatMessage promptMessage = new ChatMessage { role = "system", content = prompt };
-            if (chat.Count == 0)
-            {
-                chat.Add(promptMessage);
-            }
-            else
-            {
-                chat[0] = promptMessage;
-            }
+            chat.Add(promptMessage);
         }
 
         /// <summary>
@@ -234,7 +223,8 @@ namespace LLMUnity
         {
             prompt = newPrompt;
             nKeep = -1;
-            InitPrompt(clearChat);
+            if (clearChat) ClearChat();
+            else chat[0] = new ChatMessage { role = "system", content = prompt };
         }
 
         protected virtual bool CheckTemplate()
@@ -585,7 +575,7 @@ namespace LLMUnity
             }
             string json = File.ReadAllText(filepath);
             List<ChatMessage> chatHistory = JsonUtility.FromJson<ChatListWrapper>(json).chat;
-            InitPrompt(true);
+            ClearChat();
             chat.AddRange(chatHistory);
             LLMUnitySetup.Log($"Loaded {filepath}");
 
