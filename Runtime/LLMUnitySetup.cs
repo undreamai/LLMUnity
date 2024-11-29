@@ -8,6 +8,7 @@ using System;
 using System.IO.Compression;
 using System.Collections.Generic;
 using UnityEngine.Networking;
+using System.Text.RegularExpressions;
 
 /// @defgroup llm LLM
 /// @defgroup template Chat Templates
@@ -105,14 +106,14 @@ namespace LLMUnity
         public static string LlamaLibVersion = "v1.1.13";
         /// <summary> LlamaLib release url </summary>
         public static string LlamaLibReleaseURL = $"https://github.com/undreamai/LlamaLib/releases/download/{LlamaLibVersion}";
-        /// <summary> LlamaLib url </summary>
-        public static string LlamaLibURL = $"{LlamaLibReleaseURL}/undreamai-{LlamaLibVersion}-llamacpp.zip";
-        /// <summary> LlamaLib extension url </summary>
-        public static string LlamaLibExtensionURL = $"{LlamaLibReleaseURL}/undreamai-{LlamaLibVersion}-llamacpp-full.zip";
         /// <summary> LlamaLib name </summary>
-        public static string libraryName = Path.GetFileName(LlamaLibURL).Replace(".zip", "");
+        public static string libraryName = GetLibraryName(LlamaLibVersion);
         /// <summary> LlamaLib path </summary>
         public static string libraryPath = GetAssetPath(libraryName);
+        /// <summary> LlamaLib url </summary>
+        public static string LlamaLibURL = $"{LlamaLibReleaseURL}/{libraryName}.zip";
+        /// <summary> LlamaLib extension url </summary>
+        public static string LlamaLibExtensionURL = $"{LlamaLibReleaseURL}/{libraryName}-full.zip";
         /// <summary> LLMnity store path </summary>
         public static string LLMUnityStore = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "LLMUnity");
         /// <summary> Model download path </summary>
@@ -210,6 +211,11 @@ namespace LLMUnity
         }
 
 #endif
+
+        public static string GetLibraryName(string version)
+        {
+            return $"undreamai-{version}-llamacpp";
+        }
 
         public static string GetAssetPath(string relPath = "")
         {
@@ -408,6 +414,30 @@ namespace LLMUnity
             File.Delete(zipPath);
         }
 
+
+        static void DeleteEarlierVersions()
+        {
+            List<string> assetPathSubDirs = new List<string>();
+            assetPathSubDirs.AddRange(Directory.GetDirectories(GetAssetPath()));
+            assetPathSubDirs.AddRange(Directory.GetDirectories(Path.Combine(Application.dataPath, "Plugins", "Android")));
+
+            Regex regex = new Regex(GetLibraryName("(.+)"));
+            foreach (string assetPathSubDir in assetPathSubDirs)
+            {
+                Match match = regex.Match(Path.GetFileName(assetPathSubDir));
+                if (match.Success)
+                {
+                    string version = match.Groups[1].Value;
+                    if (version != LlamaLibVersion)
+                    {
+                        Debug.Log($"Deleting other LLMUnity version folder: {assetPathSubDir}");
+                        Directory.Delete(assetPathSubDir, true);
+                        if (File.Exists(assetPathSubDir + ".meta")) File.Delete(assetPathSubDir + ".meta");
+                    }
+                }
+            }
+        }
+
         static async Task DownloadLibrary()
         {
             if (libraryProgress < 1) return;
@@ -415,6 +445,8 @@ namespace LLMUnity
 
             try
             {
+                DeleteEarlierVersions();
+
                 string setupDir = Path.Combine(libraryPath, "setup");
                 Directory.CreateDirectory(setupDir);
 
