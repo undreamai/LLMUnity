@@ -16,6 +16,7 @@ namespace LLMUnity
     {
         static List<StringPair> movedPairs = new List<StringPair>();
         public static string BuildTempDir = Path.Combine(Application.temporaryCachePath, "LLMUnityBuild");
+        public static string androidPluginDir = Path.Combine(Application.dataPath, "Plugins", "Android", "LLMUnity");
         static string movedCache = Path.Combine(BuildTempDir, "moved.json");
 
         [InitializeOnLoadMethod]
@@ -86,7 +87,10 @@ namespace LLMUnity
         /// <param name="path">path</param>
         public static bool DeletePath(string path)
         {
-            if (!LLMUnitySetup.IsSubPath(path, LLMUnitySetup.GetAssetPath()) && !LLMUnitySetup.IsSubPath(path, BuildTempDir))
+            string[] allowedDirs = new string[] { LLMUnitySetup.GetAssetPath(), BuildTempDir, androidPluginDir};
+            bool deleteOK = false;
+            foreach (string allowedDir in allowedDirs) deleteOK = deleteOK || LLMUnitySetup.IsSubPath(path, allowedDir);
+            if (!deleteOK)
             {
                 LLMUnitySetup.LogError($"Safeguard: {path} will not be deleted because it may not be safe");
                 return false;
@@ -166,6 +170,15 @@ namespace LLMUnity
                         MoveAction(source + ".meta", target + ".meta");
                     }
                 }
+            }
+
+            if (platform == "android")
+            {
+                string source = Path.Combine(LLMUnitySetup.libraryPath, "android");
+                string target = Path.Combine(androidPluginDir, LLMUnitySetup.libraryName);
+                MoveAction(source, target);
+                MoveAction(source + ".meta", target + ".meta");
+                AddActionAddMeta(androidPluginDir);
             }
         }
 

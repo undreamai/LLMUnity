@@ -109,8 +109,10 @@ namespace LLMUnity
         public static string LlamaLibURL = $"{LlamaLibReleaseURL}/undreamai-{LlamaLibVersion}-llamacpp.zip";
         /// <summary> LlamaLib extension url </summary>
         public static string LlamaLibExtensionURL = $"{LlamaLibReleaseURL}/undreamai-{LlamaLibVersion}-llamacpp-full.zip";
+        /// <summary> LlamaLib name </summary>
+        public static string libraryName = Path.GetFileName(LlamaLibURL).Replace(".zip", "");
         /// <summary> LlamaLib path </summary>
-        public static string libraryPath = GetAssetPath(Path.GetFileName(LlamaLibURL).Replace(".zip", ""));
+        public static string libraryPath = GetAssetPath(libraryName);
         /// <summary> LLMnity store path </summary>
         public static string LLMUnityStore = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "LLMUnity");
         /// <summary> Model download path </summary>
@@ -418,20 +420,6 @@ namespace LLMUnity
 
                 // setup LlamaLib in StreamingAssets
                 await DownloadAndExtractInsideDirectory(LlamaLibURL, libraryPath, setupDir);
-
-                // setup LlamaLib in Plugins for Android
-                AssetDatabase.StartAssetEditing();
-                string androidDir = Path.Combine(libraryPath, "android");
-                if (Directory.Exists(androidDir))
-                {
-                    string androidPluginsDir = Path.Combine(Application.dataPath, "Plugins", "Android");
-                    Directory.CreateDirectory(androidPluginsDir);
-                    string pluginDir = Path.Combine(androidPluginsDir, Path.GetFileName(libraryPath));
-                    if (Directory.Exists(pluginDir)) Directory.Delete(pluginDir, true);
-                    Directory.Move(androidDir, pluginDir);
-                    if (File.Exists(androidDir + ".meta")) File.Delete(androidDir + ".meta");
-                }
-                AssetDatabase.StopAssetEditing();
 
                 // setup LlamaLib extras in StreamingAssets
                 if (FullLlamaLib) await DownloadAndExtractInsideDirectory(LlamaLibExtensionURL, libraryPath, setupDir);
