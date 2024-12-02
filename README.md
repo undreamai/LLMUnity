@@ -450,10 +450,11 @@ If you have loaded a model locally you need to set its URL through the expanded 
 The [Samples~](Samples~) folder contains several examples of interaction 🤖:
 - [SimpleInteraction](Samples~/SimpleInteraction): Demonstrates a simple interaction with an AI character
 - [MultipleCharacters](Samples~/MultipleCharacters): Demonstrates a simple interaction using multiple AI characters
+- [FunctionCalling](Samples~/FunctionCalling): Function calling sample with structured output from the LLM
 - [RAG](Samples~/RAG): RAG sample. Includes an example using the RAG to feed information to a LLM
+- [MobileDemo](Samples~/MobileDemo): Example mobile app for Android / iOS with an initial screen displaying the model download progress
 - [ChatBot](Samples~/ChatBot): Demonstrates interaction between a player and a AI with a UI similar to a messaging app (see image below)
 - [KnowledgeBaseGame](Samples~/KnowledgeBaseGame): Simple detective game using a knowledge base to provide information to the LLM based on [google/mysteryofthreebots](https://github.com/google/mysteryofthreebots)
-- [MobileDemo](Samples~/MobileDemo): Example mobile app for Android / iOS with an initial screen displaying the model download progress
   
 <img width="400" src=".github/demo.gif">
 
