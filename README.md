@@ -414,6 +414,14 @@ public class MyScript : MonoBehaviour
 }
 ```
 
+You can also add / search text inputs for groups of data e.g. for a specific character or scene:
+``` c#
+    // add the inputs to the RAG for a group of data e.g. an orc character
+    foreach (string input in inputs) await rag.Add(input, "orc");
+    // get the 2 most similar inputs for the group of data e.g. the orc character
+    (string[] results, float[] distances) = await rag.Search("how do you feel?", 2, "orc");
+...
+
 You can save the RAG state (stored in the `Assets/StreamingAssets` folder):
 ``` c#
 rag.Save("rag.zip");
