@@ -109,7 +109,7 @@ namespace LLMUnityTests
             reply1 = "To increase your meme production output, you might consider using more modern tools and techniques to generate memes.";
             if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer)
             {
-                reply2 = "To increase your meme production/output, you can try using various tools and techniques to create more engaging content";
+                reply2 = "To increase your meme production output, you could consider using more advanced tools and techniques to generate memes faster";
             }
             else if (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.OSXPlayer)
             {
@@ -386,8 +386,8 @@ namespace LLMUnityTests
             query = "кто ты?";
             if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer)
             {
-                reply1 = "Я - искусственный интеллект, создан для помощи и общения с людьми.";
-                reply2 = "Я - искусственный интеллект";
+                reply1 = "Я - искусственный интеллект, создан для общения с людьми и выполнять";
+                reply2 = "Я - искусственный интеллект, создан для помощи и общения.";
             }
             else
             {
