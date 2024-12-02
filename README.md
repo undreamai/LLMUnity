@@ -28,7 +28,7 @@ LLM for Unity is built on top of the awesome [llama.cpp](https://github.com/gger
 <a href="#games-using-llm-for-unity" style=color: black>Games using LLM for Unity</a>&nbsp;&nbsp;•&nbsp;
 <a href="#setup" style=color: black>Setup</a>&nbsp;&nbsp;•&nbsp;
 <a href="#how-to-use" style=color: black>How to use</a>&nbsp;&nbsp;•&nbsp;
-<a href="#semantic-search-with-a-retrieval-augmented-generation-(rag)-system" style=color: black>RAG</a>&nbsp;&nbsp;•&nbsp;
+<a href="#semantic-search-with-a-retrieval-augmented-generation-rag-system" style=color: black>RAG</a>&nbsp;&nbsp;•&nbsp;
 <a href="#llm-model-management" style=color: black>LLM model management</a>&nbsp;&nbsp;•&nbsp;
 <a href="#examples" style=color: black>Examples</a>&nbsp;&nbsp;•&nbsp;
 <a href="#options" style=color: black>Options</a>&nbsp;&nbsp;•&nbsp;
