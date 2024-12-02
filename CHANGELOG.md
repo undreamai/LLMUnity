@@ -13,6 +13,7 @@
 #### 📦 General
 
 - Remove support for extras (flash attention, iQ quants) (PR: #284)
+- remove support for LLM base prompt (PR: #285)
 
 
 ## v2.3.0
