@@ -47,7 +47,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_tiny.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">LLM for Unity
-   &#160;<span id="projectnumber">v2.3.0</span>
+   &#160;<span id="projectnumber">v2.4.0</span>
    </div>
    <div id="projectbrief">Create characters in Unity with LLMs!</div>
   </td>
@@ -125,14 +125,14 @@ $(function(){initNavTree('index.html',''); initResizable(); });
 <h1><a class="anchor" id="autotoc_md1"></a>
 At a glance</h1>
 <ul>
-<li>💻 Cross-platform! Windows, Linux, macOS and Android</li>
+<li>💻 Cross-platform! Windows, Linux, macOS, iOS and Android</li>
 <li>🏠 Runs locally without internet access. No data ever leave the game!</li>
 <li>⚡ Blazing fast inference on CPU and GPU (Nvidia, AMD, Apple Metal)</li>
 <li>🤗 Supports all major LLM models</li>
 <li>🔧 Easy to setup, call with a single line of code</li>
 <li>💰 Free to use for both personal and commercial purposes</li>
 </ul>
-<p>🧪 Tested on Unity: 2021 LTS, 2022 LTS, 2023<br  />
+<p>🧪 Tested on Unity: 2021 LTS, 2022 LTS, 2023, Unity 6<br  />
  🚦 <a href="https://github.com/orgs/undreamai/projects/2/views/10">Upcoming Releases</a></p>
 <h1><a class="anchor" id="autotoc_md2"></a>
 How to help</h1>
@@ -202,7 +202,7 @@ In the GameObject Inspector click <code>Add Component</code> and select the LLMC
 <div class="line">  }</div>
 <div class="line">}</div>
 <div class="ttc" id="aclassLLMUnity_1_1LLMCharacter_html"><div class="ttname"><a href="classLLMUnity_1_1LLMCharacter.html">LLMUnity.LLMCharacter</a></div><div class="ttdoc">Class implementing the LLM characters.</div><div class="ttdef"><b>Definition</b> <a href="LLMCharacter_8cs_source.html#l00018">LLMCharacter.cs:19</a></div></div>
-<div class="ttc" id="aclassLLMUnity_1_1LLMCharacter_html_a1367eb182ec0efe9322a3102ea22952e"><div class="ttname"><a href="classLLMUnity_1_1LLMCharacter.html#a1367eb182ec0efe9322a3102ea22952e">LLMUnity.LLMCharacter.Chat</a></div><div class="ttdeci">virtual async Task&lt; string &gt; Chat(string query, Callback&lt; string &gt; callback=null, EmptyCallback completionCallback=null, bool addToHistory=true)</div><div class="ttdoc">Chat functionality of the LLM. It calls the LLM completion based on the provided query including the ...</div><div class="ttdef"><b>Definition</b> <a href="LLMCharacter_8cs_source.html#l00440">LLMCharacter.cs:440</a></div></div>
+<div class="ttc" id="aclassLLMUnity_1_1LLMCharacter_html_a1367eb182ec0efe9322a3102ea22952e"><div class="ttname"><a href="classLLMUnity_1_1LLMCharacter.html#a1367eb182ec0efe9322a3102ea22952e">LLMUnity.LLMCharacter.Chat</a></div><div class="ttdeci">virtual async Task&lt; string &gt; Chat(string query, Callback&lt; string &gt; callback=null, EmptyCallback completionCallback=null, bool addToHistory=true)</div><div class="ttdoc">Chat functionality of the LLM. It calls the LLM completion based on the provided query including the ...</div><div class="ttdef"><b>Definition</b> <a href="LLMCharacter_8cs_source.html#l00430">LLMCharacter.cs:430</a></div></div>
 <div class="ttc" id="anamespaceLLMUnity_html"><div class="ttname"><a href="namespaceLLMUnity.html">LLMUnity</a></div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00011">LLM.cs:12</a></div></div>
 </div><!-- fragment --><p> You can also specify a function to call when the model reply has been completed.<br  />
  This is useful if the <code>Stream</code> option is enabled for continuous output from the model (default behaviour): </p><div class="fragment"><div class="line"><span class="keywordtype">void</span> ReplyCompleted(){</div>
@@ -227,24 +227,50 @@ In the GameObject Inspector click <code>Add Component</code> and select the LLMC
  You can also:</p>
 <details >
 <summary >
-Build a mobile app on Android</summary>
+Build a mobile app</summary>
 <p></p>
-<p>To build an Android app you need to specify the <code>IL2CPP</code> scripting backend and the <code>ARM64</code> as the target architecture in the player settings.<br  />
+<p><b>iOS</b> iOS can be built with the default player settings.</p>
+<p><b>Android</b> On Android you need to specify the <code>IL2CPP</code> scripting backend and the <code>ARM64</code> as the target architecture in the player settings.<br  />
  These settings can be accessed from the <code>Edit &gt; Project Settings</code> menu within the <code>Player &gt; Other Settings</code> section.<br  />
-</p>
-<p><img src="images/android.png" alt="" width="400" class="inline"/></p>
-<p>It is also a good idea to enable the <code>Download on Build</code> option in the LLM GameObject to download the model on launch in order to keep the app size small.</p>
+ <img src="images/android.png" alt="" width="400" class="inline"/></p>
+<p>Since mobile app sizes are typically small, you can download the LLM models the first time the app launches. This functionality can be enabled with the <code>Download on Build</code> option. In your project you can wait until the model download is complete with: </p><div class="fragment"><div class="line">await <a class="code hl_class" href="classLLMUnity_1_1LLM.html">LLM</a>.<a class="code hl_function" href="classLLMUnity_1_1LLM.html#a1f41b07eb274fd6194f0e97eea4ca331">WaitUntilModelSetup</a>();</div>
+<div class="ttc" id="aclassLLMUnity_1_1LLM_html"><div class="ttname"><a href="classLLMUnity_1_1LLM.html">LLMUnity.LLM</a></div><div class="ttdoc">Class implementing the LLM server.</div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00018">LLM.cs:19</a></div></div>
+<div class="ttc" id="aclassLLMUnity_1_1LLM_html_a1f41b07eb274fd6194f0e97eea4ca331"><div class="ttname"><a href="classLLMUnity_1_1LLM.html#a1f41b07eb274fd6194f0e97eea4ca331">LLMUnity.LLM.WaitUntilModelSetup</a></div><div class="ttdeci">static async Task&lt; bool &gt; WaitUntilModelSetup(Callback&lt; float &gt; downloadProgressCallback=null)</div><div class="ttdoc">Allows to wait until the LLM models are downloaded and ready.</div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00147">LLM.cs:147</a></div></div>
+</div><!-- fragment --><p> You can also receive calls during the download with the download progress: </p><div class="fragment"><div class="line">await <a class="code hl_class" href="classLLMUnity_1_1LLM.html">LLM</a>.<a class="code hl_function" href="classLLMUnity_1_1LLM.html#a1f41b07eb274fd6194f0e97eea4ca331">WaitUntilModelSetup</a>(SetProgress);</div>
+<div class="line"> </div>
+<div class="line"><span class="keywordtype">void</span> SetProgress(<span class="keywordtype">float</span> progress){</div>
+<div class="line">  <span class="keywordtype">string</span> progressPercent = ((int)(progress * 100)).ToString() + <span class="stringliteral">&quot;%&quot;</span>;</div>
+<div class="line">  Debug.Log($<span class="stringliteral">&quot;Download progress: {progressPercent}&quot;</span>);</div>
+<div class="line">}</div>
+</div><!-- fragment --><p> This is useful to present a progress bar or something similar. The <a href="https://github.com/undreamai/LLMUnity/tree/main/Samples~/MobileDemo">MobileDemo</a> is an example application for Android / iOS.</p>
 <p></p>
 </details>
 <details >
 <summary >
-Save / Load your chat history</summary>
+Restrict the output of the LLM / Function calling</summary>
 <p></p>
+<p>To restrict the output of the LLM you can use a GBNF grammar, read more <a href="https://github.com/ggerganov/llama.cpp/tree/master/grammars">here</a>.<br  />
+ The grammar can be saved in a .gbnf file and loaded at the LLMCharacter with the <code>Load Grammar</code> button (Advanced options).<br  />
+ For instance to receive replies in json format you can use the <a href="https://github.com/ggerganov/llama.cpp/blob/b4218/grammars/json.gbnf">json.gbnf</a> grammar.<br  />
+</p>
+<p>Alternatively you can set the grammar directly with code: </p><div class="fragment"><div class="line">llmCharacter.grammarString = <span class="stringliteral">&quot;your grammar here&quot;</span>;</div>
+</div><!-- fragment --><p>For function calling you can define similarly a grammar that allows only the function names as output, and then call the respective function.<br  />
+ You can look into the <a href="https://github.com/undreamai/LLMUnity/tree/main/Samples~/FunctionCalling">FunctionCalling</a> sample for an example implementation.</p>
+<p></p>
+</details>
+<details >
+<summary >
+Access / Save / Load your chat history</summary>
+<p>The chat history of a <code>LLMCharacter</code> is retained in the <code>chat</code> variable that is a list of <code>ChatMessage</code> objects.<br  />
+ The ChatMessage is a struct that defines the <code>role</code> of the message and the <code>content</code>.<br  />
+ The first element of the list is always the system prompt and then alternating messages with the player prompt and the AI reply.<br  />
+ You can modify the chat history directly in this list.<br  />
+</p>
 <p>To automatically save / load your chat history, you can specify the <code>Save</code> parameter of the LLMCharacter to the filename (or relative path) of your choice. The file is saved in the <a href="https://docs.unity3d.com/ScriptReference/Application-persistentDataPath.html">persistentDataPath folder of Unity</a>. This also saves the state of the LLM which means that the previously cached prompt does not need to be recomputed.</p>
 <p>To manually save your chat history, you can use: </p><div class="fragment"><div class="line">llmCharacter.<a class="code hl_function" href="classLLMUnity_1_1LLMCharacter.html#a8777cf02ab4ecf5a967ade7e93925108">Save</a>(<span class="stringliteral">&quot;filename&quot;</span>);</div>
-<div class="ttc" id="aclassLLMUnity_1_1LLMCharacter_html_a8777cf02ab4ecf5a967ade7e93925108"><div class="ttname"><a href="classLLMUnity_1_1LLMCharacter.html#a8777cf02ab4ecf5a967ade7e93925108">LLMUnity.LLMCharacter.Save</a></div><div class="ttdeci">virtual async Task&lt; string &gt; Save(string filename)</div><div class="ttdoc">Saves the chat history and cache to the provided filename / relative path.</div><div class="ttdef"><b>Definition</b> <a href="LLMCharacter_8cs_source.html#l00559">LLMCharacter.cs:559</a></div></div>
+<div class="ttc" id="aclassLLMUnity_1_1LLMCharacter_html_a8777cf02ab4ecf5a967ade7e93925108"><div class="ttname"><a href="classLLMUnity_1_1LLMCharacter.html#a8777cf02ab4ecf5a967ade7e93925108">LLMUnity.LLMCharacter.Save</a></div><div class="ttdeci">virtual async Task&lt; string &gt; Save(string filename)</div><div class="ttdoc">Saves the chat history and cache to the provided filename / relative path.</div><div class="ttdef"><b>Definition</b> <a href="LLMCharacter_8cs_source.html#l00549">LLMCharacter.cs:549</a></div></div>
 </div><!-- fragment --><p> and to load the history: </p><div class="fragment"><div class="line">llmCharacter.<a class="code hl_function" href="classLLMUnity_1_1LLMCharacter.html#a5fcf385a45c9cd71e2428b7442a163a3">Load</a>(<span class="stringliteral">&quot;filename&quot;</span>);</div>
-<div class="ttc" id="aclassLLMUnity_1_1LLMCharacter_html_a5fcf385a45c9cd71e2428b7442a163a3"><div class="ttname"><a href="classLLMUnity_1_1LLMCharacter.html#a5fcf385a45c9cd71e2428b7442a163a3">LLMUnity.LLMCharacter.Load</a></div><div class="ttdeci">virtual async Task&lt; string &gt; Load(string filename)</div><div class="ttdoc">Load the chat history and cache from the provided filename / relative path.</div><div class="ttdef"><b>Definition</b> <a href="LLMCharacter_8cs_source.html#l00578">LLMCharacter.cs:578</a></div></div>
+<div class="ttc" id="aclassLLMUnity_1_1LLMCharacter_html_a5fcf385a45c9cd71e2428b7442a163a3"><div class="ttname"><a href="classLLMUnity_1_1LLMCharacter.html#a5fcf385a45c9cd71e2428b7442a163a3">LLMUnity.LLMCharacter.Load</a></div><div class="ttdeci">virtual async Task&lt; string &gt; Load(string filename)</div><div class="ttdoc">Load the chat history and cache from the provided filename / relative path.</div><div class="ttdef"><b>Definition</b> <a href="LLMCharacter_8cs_source.html#l00568">LLMCharacter.cs:568</a></div></div>
 </div><!-- fragment --><p> where filename the filename or relative path of your choice.</p>
 <p></p>
 </details>
@@ -263,7 +289,7 @@ Process the prompt at the beginning of your app for faster initial processing ti
 <div class="line">  _ = llmCharacter.<a class="code hl_function" href="classLLMUnity_1_1LLMCharacter.html#aa582248b495a4aa8dac46803e2412bb4">Warmup</a>(WarmupCompleted);</div>
 <div class="line">  ...</div>
 <div class="line">}</div>
-<div class="ttc" id="aclassLLMUnity_1_1LLMCharacter_html_aa582248b495a4aa8dac46803e2412bb4"><div class="ttname"><a href="classLLMUnity_1_1LLMCharacter.html#aa582248b495a4aa8dac46803e2412bb4">LLMUnity.LLMCharacter.Warmup</a></div><div class="ttdeci">virtual async Task Warmup(EmptyCallback completionCallback=null)</div><div class="ttdoc">Allow to warm-up a model by processing the prompt. The prompt processing will be cached (if cacheProm...</div><div class="ttdef"><b>Definition</b> <a href="LLMCharacter_8cs_source.html#l00516">LLMCharacter.cs:516</a></div></div>
+<div class="ttc" id="aclassLLMUnity_1_1LLMCharacter_html_aa582248b495a4aa8dac46803e2412bb4"><div class="ttname"><a href="classLLMUnity_1_1LLMCharacter.html#aa582248b495a4aa8dac46803e2412bb4">LLMUnity.LLMCharacter.Warmup</a></div><div class="ttdeci">virtual async Task Warmup(EmptyCallback completionCallback=null)</div><div class="ttdoc">Allow to warm-up a model by processing the prompt. The prompt processing will be cached (if cacheProm...</div><div class="ttdef"><b>Definition</b> <a href="LLMCharacter_8cs_source.html#l00506">LLMCharacter.cs:506</a></div></div>
 </div><!-- fragment --><p></p>
 </details>
 <details >
@@ -290,7 +316,7 @@ Use pure text completion</summary>
 <div class="line">  _ = llmCharacter.<a class="code hl_function" href="classLLMUnity_1_1LLMCharacter.html#adf9cc5ead56e07d72f7cf9a79acd4128">Complete</a>(message, HandleReply, ReplyCompleted);</div>
 <div class="line">  ...</div>
 <div class="line">}</div>
-<div class="ttc" id="aclassLLMUnity_1_1LLMCharacter_html_adf9cc5ead56e07d72f7cf9a79acd4128"><div class="ttname"><a href="classLLMUnity_1_1LLMCharacter.html#adf9cc5ead56e07d72f7cf9a79acd4128">LLMUnity.LLMCharacter.Complete</a></div><div class="ttdeci">virtual async Task&lt; string &gt; Complete(string prompt, Callback&lt; string &gt; callback=null, EmptyCallback completionCallback=null)</div><div class="ttdoc">Pure completion functionality of the LLM. It calls the LLM completion based solely on the provided pr...</div><div class="ttdef"><b>Definition</b> <a href="LLMCharacter_8cs_source.html#l00493">LLMCharacter.cs:493</a></div></div>
+<div class="ttc" id="aclassLLMUnity_1_1LLMCharacter_html_adf9cc5ead56e07d72f7cf9a79acd4128"><div class="ttname"><a href="classLLMUnity_1_1LLMCharacter.html#adf9cc5ead56e07d72f7cf9a79acd4128">LLMUnity.LLMCharacter.Complete</a></div><div class="ttdeci">virtual async Task&lt; string &gt; Complete(string prompt, Callback&lt; string &gt; callback=null, EmptyCallback completionCallback=null)</div><div class="ttdoc">Pure completion functionality of the LLM. It calls the LLM completion based solely on the provided pr...</div><div class="ttdef"><b>Definition</b> <a href="LLMCharacter_8cs_source.html#l00483">LLMCharacter.cs:483</a></div></div>
 </div><!-- fragment --><p></p>
 </details>
 <details >
@@ -363,12 +389,11 @@ Add a LLM / LLMCharacter component programmatically</summary>
 <div class="line">        gameObject.SetActive(<span class="keyword">true</span>);</div>
 <div class="line">    }</div>
 <div class="line">}</div>
-<div class="ttc" id="aclassLLMUnity_1_1LLMCharacter_html_affc13b3416002473688130217f1b42df"><div class="ttname"><a href="classLLMUnity_1_1LLMCharacter.html#affc13b3416002473688130217f1b42df">LLMUnity.LLMCharacter.SetPrompt</a></div><div class="ttdeci">virtual void SetPrompt(string newPrompt, bool clearChat=true)</div><div class="ttdoc">Set the system prompt for the LLMCharacter.</div><div class="ttdef"><b>Definition</b> <a href="LLMCharacter_8cs_source.html#l00233">LLMCharacter.cs:233</a></div></div>
-<div class="ttc" id="aclassLLMUnity_1_1LLM_html"><div class="ttname"><a href="classLLMUnity_1_1LLM.html">LLMUnity.LLM</a></div><div class="ttdoc">Class implementing the LLM server.</div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00018">LLM.cs:19</a></div></div>
-<div class="ttc" id="aclassLLMUnity_1_1LLM_html_a26e01ce3a14c30da752cf216acfbb3ff"><div class="ttname"><a href="classLLMUnity_1_1LLM.html#a26e01ce3a14c30da752cf216acfbb3ff">LLMUnity.LLM.SetLoraWeight</a></div><div class="ttdeci">void SetLoraWeight(string path, float weight)</div><div class="ttdoc">Allows to change the weight (scale) of a LORA model in the LLM.</div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00294">LLM.cs:294</a></div></div>
-<div class="ttc" id="aclassLLMUnity_1_1LLM_html_a5c4cd1f8b959b1f36c8c50d08ee114c4"><div class="ttname"><a href="classLLMUnity_1_1LLM.html#a5c4cd1f8b959b1f36c8c50d08ee114c4">LLMUnity.LLM.AddLora</a></div><div class="ttdeci">void AddLora(string path, float weight=1)</div><div class="ttdoc">Allows to add a LORA model to use in the LLM. The model provided is copied to the Assets/StreamingAss...</div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00260">LLM.cs:260</a></div></div>
-<div class="ttc" id="aclassLLMUnity_1_1LLM_html_a9cdc4850537724d94bf88e7b78372883"><div class="ttname"><a href="classLLMUnity_1_1LLM.html#a9cdc4850537724d94bf88e7b78372883">LLMUnity.LLM.SetModel</a></div><div class="ttdeci">void SetModel(string path)</div><div class="ttdoc">Allows to set the model used by the LLM. The model provided is copied to the Assets/StreamingAssets f...</div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00219">LLM.cs:219</a></div></div>
-<div class="ttc" id="aclassLLMUnity_1_1LLM_html_ad4c7250286a33527cb211bd980f1c307"><div class="ttname"><a href="classLLMUnity_1_1LLM.html#ad4c7250286a33527cb211bd980f1c307">LLMUnity.LLM.SetTemplate</a></div><div class="ttdeci">void SetTemplate(string templateName, bool setDirty=true)</div><div class="ttdoc">Set the chat template for the LLM.</div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00325">LLM.cs:325</a></div></div>
+<div class="ttc" id="aclassLLMUnity_1_1LLMCharacter_html_affc13b3416002473688130217f1b42df"><div class="ttname"><a href="classLLMUnity_1_1LLMCharacter.html#affc13b3416002473688130217f1b42df">LLMUnity.LLMCharacter.SetPrompt</a></div><div class="ttdeci">virtual void SetPrompt(string newPrompt, bool clearChat=true)</div><div class="ttdoc">Set the system prompt for the LLMCharacter.</div><div class="ttdef"><b>Definition</b> <a href="LLMCharacter_8cs_source.html#l00222">LLMCharacter.cs:222</a></div></div>
+<div class="ttc" id="aclassLLMUnity_1_1LLM_html_a26e01ce3a14c30da752cf216acfbb3ff"><div class="ttname"><a href="classLLMUnity_1_1LLM.html#a26e01ce3a14c30da752cf216acfbb3ff">LLMUnity.LLM.SetLoraWeight</a></div><div class="ttdeci">void SetLoraWeight(string path, float weight)</div><div class="ttdoc">Allows to change the weight (scale) of a LORA model in the LLM.</div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00292">LLM.cs:292</a></div></div>
+<div class="ttc" id="aclassLLMUnity_1_1LLM_html_a5c4cd1f8b959b1f36c8c50d08ee114c4"><div class="ttname"><a href="classLLMUnity_1_1LLM.html#a5c4cd1f8b959b1f36c8c50d08ee114c4">LLMUnity.LLM.AddLora</a></div><div class="ttdeci">void AddLora(string path, float weight=1)</div><div class="ttdoc">Allows to add a LORA model to use in the LLM. The model provided is copied to the Assets/StreamingAss...</div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00258">LLM.cs:258</a></div></div>
+<div class="ttc" id="aclassLLMUnity_1_1LLM_html_a9cdc4850537724d94bf88e7b78372883"><div class="ttname"><a href="classLLMUnity_1_1LLM.html#a9cdc4850537724d94bf88e7b78372883">LLMUnity.LLM.SetModel</a></div><div class="ttdeci">void SetModel(string path)</div><div class="ttdoc">Allows to set the model used by the LLM. The model provided is copied to the Assets/StreamingAssets f...</div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00217">LLM.cs:217</a></div></div>
+<div class="ttc" id="aclassLLMUnity_1_1LLM_html_ad4c7250286a33527cb211bd980f1c307"><div class="ttname"><a href="classLLMUnity_1_1LLM.html#ad4c7250286a33527cb211bd980f1c307">LLMUnity.LLM.SetTemplate</a></div><div class="ttdeci">void SetTemplate(string templateName, bool setDirty=true)</div><div class="ttdoc">Set the chat template for the LLM.</div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00323">LLM.cs:323</a></div></div>
 </div><!-- fragment --><p></p>
 </details>
 <details >
@@ -449,26 +474,25 @@ Semantic search with a Retrieval-Augmented Generation (RAG) system</h1>
 <div class="ttc" id="aclassLLMUnity_1_1RAG_html_ac1082e5fb0cd8c98032ec02165c3ce26"><div class="ttname"><a href="classLLMUnity_1_1RAG.html#ac1082e5fb0cd8c98032ec02165c3ce26">LLMUnity.RAG.ReturnChunks</a></div><div class="ttdeci">void ReturnChunks(bool returnChunks)</div><div class="ttdoc">Set to true to return chunks or the direct input with the Search function.</div><div class="ttdef"><b>Definition</b> <a href="RAG_8cs_source.html#l00063">RAG.cs:63</a></div></div>
 <div class="ttc" id="aclassLLMUnity_1_1Searchable_html_a2bae1bf1901381972408c63f4ee7d9dc"><div class="ttname"><a href="classLLMUnity_1_1Searchable.html#a2bae1bf1901381972408c63f4ee7d9dc">LLMUnity.Searchable.Search</a></div><div class="ttdeci">async Task&lt;(string[], float[])&gt; Search(string queryString, int k, string group=&quot;&quot;)</div><div class="ttdoc">Search for similar results to the provided query. The most similar results and their distances (dissi...</div><div class="ttdef"><b>Definition</b> <a href="Search_8cs_source.html#l00115">Search.cs:115</a></div></div>
 <div class="ttc" id="aclassLLMUnity_1_1Searchable_html_a5b3409ff27d91f45a77f5bf1e3249161"><div class="ttname"><a href="classLLMUnity_1_1Searchable.html#a5b3409ff27d91f45a77f5bf1e3249161">LLMUnity.Searchable.Add</a></div><div class="ttdeci">Task&lt; int &gt; Add(string inputString, string group=&quot;&quot;)</div><div class="ttdoc">Adds a phrase to the search.</div></div>
-</div><!-- fragment --><p>You can save the RAG state (stored in the <code>Assets/StreamingAssets</code> folder): </p><div class="fragment"><div class="line">rag.<a class="code hl_function" href="classLLMUnity_1_1Searchable.html#acefe00cbe46e2222bc45afc4a5380af1">Save</a>(<span class="stringliteral">&quot;rag.zip&quot;</span>);</div>
-<div class="ttc" id="aclassLLMUnity_1_1Searchable_html_acefe00cbe46e2222bc45afc4a5380af1"><div class="ttname"><a href="classLLMUnity_1_1Searchable.html#acefe00cbe46e2222bc45afc4a5380af1">LLMUnity.Searchable.Save</a></div><div class="ttdeci">void Save(string filePath)</div><div class="ttdoc">Saves the state of the search object.</div><div class="ttdef"><b>Definition</b> <a href="Search_8cs_source.html#l00149">Search.cs:149</a></div></div>
-</div><!-- fragment --><p> and load it from disk: </p><div class="fragment"><div class="line">await rag.<a class="code hl_function" href="classLLMUnity_1_1Searchable.html#adcb2f27a2a48af619d7d2bfb35bb27ec">Load</a>(<span class="stringliteral">&quot;rag.zip&quot;</span>);</div>
-<div class="ttc" id="aclassLLMUnity_1_1Searchable_html_adcb2f27a2a48af619d7d2bfb35bb27ec"><div class="ttname"><a href="classLLMUnity_1_1Searchable.html#adcb2f27a2a48af619d7d2bfb35bb27ec">LLMUnity.Searchable.Load</a></div><div class="ttdeci">async Task&lt; bool &gt; Load(string filePath)</div><div class="ttdoc">Loads the state of the search object.</div><div class="ttdef"><b>Definition</b> <a href="Search_8cs_source.html#l00166">Search.cs:166</a></div></div>
-</div><!-- fragment --><p>You can use the RAG to feed relevant data to the LLM based on a user message: </p><div class="fragment"><div class="line">  <span class="keywordtype">string</span> message = <span class="stringliteral">&quot;How is the weather?&quot;</span>;</div>
-<div class="line">  (<span class="keywordtype">string</span>[] similarPhrases, <span class="keywordtype">float</span>[] distances) = await rag.<a class="code hl_function" href="classLLMUnity_1_1Searchable.html#a2bae1bf1901381972408c63f4ee7d9dc">Search</a>(message, 3);</div>
+</div><!-- fragment --><p>You can also add / search text inputs for groups of data e.g. for a specific character or scene: </p><div class="fragment"><div class="line">    <span class="comment">// add the inputs to the RAG for a group of data e.g. an orc character</span></div>
+<div class="line">    <span class="keywordflow">foreach</span> (<span class="keywordtype">string</span> input <span class="keywordflow">in</span> inputs) await rag.<a class="code hl_function" href="classLLMUnity_1_1Searchable.html#a5b3409ff27d91f45a77f5bf1e3249161">Add</a>(input, <span class="stringliteral">&quot;orc&quot;</span>);</div>
+<div class="line">    <span class="comment">// get the 2 most similar inputs for the group of data e.g. the orc character</span></div>
+<div class="line">    (<span class="keywordtype">string</span>[] results, <span class="keywordtype">float</span>[] distances) = await rag.<a class="code hl_function" href="classLLMUnity_1_1Searchable.html#a2bae1bf1901381972408c63f4ee7d9dc">Search</a>(<span class="stringliteral">&quot;how do you feel?&quot;</span>, 2, <span class="stringliteral">&quot;orc&quot;</span>);</div>
+<div class="line">...</div>
 <div class="line"> </div>
-<div class="line">  <span class="keywordtype">string</span> prompt = <span class="stringliteral">&quot;Answer the user query based on the provided data.</span></div>
-<div class="line"><span class="stringliteral"></span> </div>
-<div class="line"><span class="stringliteral">&quot;</span>;</div>
-<div class="line">  prompt += $<span class="stringliteral">&quot;User query: {message}</span></div>
-<div class="line"><span class="stringliteral"></span> </div>
-<div class="line"><span class="stringliteral">&quot;</span>;</div>
-<div class="line">  prompt += $<span class="stringliteral">&quot;Data:</span></div>
-<div class="line"><span class="stringliteral">&quot;</span>;</div>
-<div class="line">  <span class="keywordflow">foreach</span> (<span class="keywordtype">string</span> similarPhrase <span class="keywordflow">in</span> similarPhrases) prompt += $<span class="stringliteral">&quot;</span></div>
-<div class="line"><span class="stringliteral">- {similarPhrase}&quot;</span>;</div>
-<div class="line"> </div>
-<div class="line">  _ = llmCharacter.<a class="code hl_function" href="classLLMUnity_1_1LLMCharacter.html#a1367eb182ec0efe9322a3102ea22952e">Chat</a>(prompt, HandleReply, ReplyCompleted);</div>
-</div><!-- fragment --><p>The <code>RAG</code> sample includes an example RAG implementation as well as an example RAG-LLM integration.</p>
+<div class="line">You can save the <a class="code hl_class" href="classLLMUnity_1_1RAG.html">RAG</a> state (stored in the `Assets/StreamingAssets` folder):</div>
+</div><!-- fragment --><p> {.cs} rag.Save("rag.zip"); </p><div class="fragment"><div class="line">and load it from disk:</div>
+</div><!-- fragment --><p> {.cs} await rag.Load("rag.zip"); </p><div class="fragment"><div class="line">You can use the RAG to feed relevant data to the LLM based on a user message:</div>
+</div><!-- fragment --><p> {.cs} string message = "How is the weather?"; (string[] similarPhrases, float[] distances) = await rag.Search(message, 3);</p>
+<p>string prompt = "Answer the user query based on the provided data.
+
+"; prompt += $"User query: {message}
+
+"; prompt += $"Data:
+"; foreach (string similarPhrase in similarPhrases) prompt += $"
+- {similarPhrase}";</p>
+<p>_ = llmCharacter.Chat(prompt, HandleReply, ReplyCompleted); ```</p>
+<p>The <code>RAG</code> sample includes an example RAG implementation as well as an example RAG-LLM integration.</p>
 <p>That's all :sparkles:!</p>
 <h1><a class="anchor" id="autotoc_md7"></a>
 LLM model management</h1>
@@ -497,12 +521,13 @@ LLM model management</h1>
 <h1><a class="anchor" id="autotoc_md8"></a>
 Examples</h1>
 <p>The <a href="https://github.com/undreamai/LLMUnity/tree/main/Samples~">Samples~</a> folder contains several examples of interaction 🤖:</p><ul>
-<li><a href="https://github.com/undreamai/LLMUnity/tree/main/Samples~/SimpleInteraction">SimpleInteraction</a>: Demonstrates a simple interaction with an AI character</li>
-<li><a href="https://github.com/undreamai/LLMUnity/tree/main/Samples~/MultipleCharacters">MultipleCharacters</a>: Demonstrates a simple interaction using multiple AI characters</li>
-<li><a href="https://github.com/undreamai/LLMUnity/tree/main/Samples~/RAG">RAG</a>: RAG sample. Includes an example using the RAG to feed information to a LLM</li>
-<li><a href="https://github.com/undreamai/LLMUnity/tree/main/Samples~/ChatBot">ChatBot</a>: Demonstrates interaction between a player and a AI with a UI similar to a messaging app (see image below)</li>
+<li><a href="https://github.com/undreamai/LLMUnity/tree/main/Samples~/SimpleInteraction">SimpleInteraction</a>: Simple interaction with an AI character</li>
+<li><a href="https://github.com/undreamai/LLMUnity/tree/main/Samples~/MultipleCharacters">MultipleCharacters</a>: Simple interaction using multiple AI characters</li>
+<li><a href="https://github.com/undreamai/LLMUnity/tree/main/Samples~/FunctionCalling">FunctionCalling</a>: Function calling sample with structured output from the LLM</li>
+<li><a href="https://github.com/undreamai/LLMUnity/tree/main/Samples~/RAG">RAG</a>: Semantic search using a Retrieval Augmented Generation (RAG) system. Includes example using a RAG to feed information to a LLM</li>
+<li><a href="https://github.com/undreamai/LLMUnity/tree/main/Samples~/MobileDemo">MobileDemo</a>: Example mobile app for Android / iOS with an initial screen displaying the model download progress</li>
+<li><a href="https://github.com/undreamai/LLMUnity/tree/main/Samples~/ChatBot">ChatBot</a>: Interaction between a player and a AI with a UI similar to a messaging app (see image below)</li>
 <li><a href="https://github.com/undreamai/LLMUnity/tree/main/Samples~/KnowledgeBaseGame">KnowledgeBaseGame</a>: Simple detective game using a knowledge base to provide information to the LLM based on <a href="https://github.com/google/mysteryofthreebots">google/mysteryofthreebots</a></li>
-<li><a href="https://github.com/undreamai/LLMUnity/tree/main/Samples~/AndroidDemo">AndroidDemo</a>: Example Android app with an initial screen with model download progress</li>
 </ul>
 <p><img src="images/demo.gif" alt="" width="400" class="inline"/></p>
 <p>To install a sample:</p><ul>
@@ -518,8 +543,7 @@ Options</h1>
 LLM Settings</h2>
 <ul>
 <li><code>Show/Hide Advanced Options</code> Toggle to show/hide advanced options from below</li>
-<li><code>Log Level</code> select how verbose the log messages are</li>
-<li><code>Use extras</code> select to install and allow the use of extra features (flash attention and IQ quants)</li>
+<li><code>Log Level</code> select how verbose the log messages arequants)</li>
 </ul>
 <h3><a class="anchor" id="autotoc_md11"></a>
 💻 Setup Settings</h3>
@@ -585,31 +609,18 @@ Advanced options</summary>
 <li><code>Chat Template</code> the chat template being used for the LLM</li>
 <li><code>Lora</code> the path of the LoRAs being used (relative to the Assets/StreamingAssets folder)</li>
 <li><code>Lora Weights</code> the weights of the LoRAs being used</li>
-<li><code>Flash Attention</code> click to use flash attention in the model (if <code>Use extras</code> is enabled)</li>
 </ul>
 <p></p>
 </details>
 </li>
 </ul>
-<h3><a class="anchor" id="autotoc_md14"></a>
-🗨️ Chat Settings</h3>
-<ul>
-<li><details >
-<summary >
-Advanced options</summary>
-<p></p>
-</details>
-</li>
-<li><code>Base Prompt</code> a common base prompt to use across all LLMCharacter objects using the LLM</li>
-</ul>
-<h2><a class="anchor" id="autotoc_md15"></a>
+<h2><a class="anchor" id="autotoc_md14"></a>
 LLMCharacter Settings</h2>
 <ul>
 <li><code>Show/Hide Advanced Options</code> Toggle to show/hide advanced options from below</li>
 <li><code>Log Level</code> select how verbose the log messages are</li>
-<li><code>Use extras</code> select to install and allow the use of extra features (flash attention and IQ quants)</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md16"></a>
+<h3><a class="anchor" id="autotoc_md15"></a>
 💻 Setup Settings</h3>
 <div> <img src="images/LLMCharacter_GameObject.png" alt="" width="300" align="right" class="inline"/> </div><ul>
 <li><code>Remote</code> whether the LLM used is remote or local</li>
@@ -629,14 +640,14 @@ LLMCharacter Settings</h2>
 <li><code>Save Cache</code> select to save the LLM state along with the chat history. The LLM state is typically around 100MB+.</li>
 <li><code>Debug Prompt</code> select to log the constructed prompts in the Unity Editor</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md17"></a>
+<h3><a class="anchor" id="autotoc_md16"></a>
 🗨️ Chat Settings</h3>
 <ul>
 <li><code>Player Name</code> the name of the player</li>
 <li><code>AI Name</code> the name of the AI</li>
 <li><code>Prompt</code> description of the AI role</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md18"></a>
+<h3><a class="anchor" id="autotoc_md17"></a>
 🤗 Model Settings</h3>
 <ul>
 <li><code>Stream</code> select to receive the reply from the model as it is produced (recommended!).<br  />
@@ -718,7 +729,7 @@ Advanced options</summary>
 </details>
 </li>
 </ul>
-<h1><a class="anchor" id="autotoc_md19"></a>
+<h1><a class="anchor" id="autotoc_md18"></a>
 License</h1>
 <p>The license of LLM for Unity is MIT (<a class="el" href="md_LICENSE.html">LICENSE.md</a>) and uses third-party software with MIT and Apache licenses. Some models included in the asset define their own license terms, please review them before using each model. Third-party licenses can be found in the (<a class="el" href="md_Third_01Party_01Notices.html">Third Party Notices.md</a>). </p>
 </div></div><!-- PageDoc -->

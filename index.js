@@ -13,14 +13,13 @@ var index =
         [ "💻 Setup Settings", "index.html#autotoc_md11", null ]
       ] ],
       [ "Server Security Settings", "index.html#autotoc_md12", [
-        [ "🤗 Model Settings", "index.html#autotoc_md13", null ],
-        [ "🗨️ Chat Settings", "index.html#autotoc_md14", null ]
+        [ "🤗 Model Settings", "index.html#autotoc_md13", null ]
       ] ],
-      [ "LLMCharacter Settings", "index.html#autotoc_md15", [
-        [ "💻 Setup Settings", "index.html#autotoc_md16", null ],
-        [ "🗨️ Chat Settings", "index.html#autotoc_md17", null ],
-        [ "🤗 Model Settings", "index.html#autotoc_md18", null ]
+      [ "LLMCharacter Settings", "index.html#autotoc_md14", [
+        [ "💻 Setup Settings", "index.html#autotoc_md15", null ],
+        [ "🗨️ Chat Settings", "index.html#autotoc_md16", null ],
+        [ "🤗 Model Settings", "index.html#autotoc_md17", null ]
       ] ]
     ] ],
-    [ "License", "index.html#autotoc_md19", null ]
+    [ "License", "index.html#autotoc_md18", null ]
 ];

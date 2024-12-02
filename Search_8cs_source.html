@@ -47,7 +47,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_tiny.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">LLM for Unity
-   &#160;<span id="projectnumber">v2.3.0</span>
+   &#160;<span id="projectnumber">v2.4.0</span>
    </div>
    <div id="projectbrief">Create characters in Unity with LLMs!</div>
   </td>
@@ -512,7 +512,7 @@ $(function(){initNavTree('Search_8cs_source.html',''); initResizable(); });
 <div class="line"><a id="l00506" name="l00506"></a><span class="lineno">  506</span> </div>
 <div class="line"><a id="l00507" name="l00507"></a><span class="lineno">  507</span>        <span class="keyword">public</span> <span class="keyword">static</span> <span class="keywordtype">void</span> Load(<span class="keywordtype">string</span> filePath, ArchiveSaverCallback callback)</div>
 <div class="line"><a id="l00508" name="l00508"></a><span class="lineno">  508</span>        {</div>
-<div class="line"><a id="l00509" name="l00509"></a><span class="lineno">  509</span>            <span class="keyword">using</span> (FileStream stream = <span class="keyword">new</span> FileStream(filePath, FileMode.Open))</div>
+<div class="line"><a id="l00509" name="l00509"></a><span class="lineno">  509</span>            <span class="keyword">using</span> (FileStream stream = <span class="keyword">new</span> FileStream(filePath, FileMode.Open, FileAccess.Read))</div>
 <div class="line"><a id="l00510" name="l00510"></a><span class="lineno">  510</span>            <span class="keyword">using</span> (ZipArchive archive = <span class="keyword">new</span> ZipArchive(stream, ZipArchiveMode.Read))</div>
 <div class="line"><a id="l00511" name="l00511"></a><span class="lineno">  511</span>            {</div>
 <div class="line"><a id="l00512" name="l00512"></a><span class="lineno">  512</span>                callback(archive);</div>

@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['librarypath_0',['libraryPath',['../classLLMUnity_1_1LLMUnitySetup.html#a4fbf1bc2995c0267c45395e6532002a8',1,'LLMUnity::LLMUnitySetup']]],
-  ['llamalibextensionurl_1',['LlamaLibExtensionURL',['../classLLMUnity_1_1LLMUnitySetup.html#ae153fb6895025bd684c8dabab12ec14d',1,'LLMUnity::LLMUnitySetup']]],
+  ['libraryname_0',['libraryName',['../classLLMUnity_1_1LLMUnitySetup.html#ab2cadc2d024515a9be03eeac09a024a4',1,'LLMUnity::LLMUnitySetup']]],
+  ['librarypath_1',['libraryPath',['../classLLMUnity_1_1LLMUnitySetup.html#a4fbf1bc2995c0267c45395e6532002a8',1,'LLMUnity::LLMUnitySetup']]],
   ['llamalibreleaseurl_2',['LlamaLibReleaseURL',['../classLLMUnity_1_1LLMUnitySetup.html#a4cd55e5c095d9f275aa760dfa662ba40',1,'LLMUnity::LLMUnitySetup']]],
   ['llamaliburl_3',['LlamaLibURL',['../classLLMUnity_1_1LLMUnitySetup.html#ae298a065eafff77f499f05f5f4447427',1,'LLMUnity::LLMUnitySetup']]],
   ['llamalibversion_4',['LlamaLibVersion',['../classLLMUnity_1_1LLMUnitySetup.html#a8c890a623cf474c4515ae64698c3f236',1,'LLMUnity::LLMUnitySetup']]],

@@ -47,7 +47,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_tiny.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">LLM for Unity
-   &#160;<span id="projectnumber">v2.3.0</span>
+   &#160;<span id="projectnumber">v2.4.0</span>
    </div>
    <div id="projectbrief">Create characters in Unity with LLMs!</div>
   </td>
@@ -142,6 +142,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a558b84cb596733cfee1cebc3761c9782" id="r_a558b84cb596733cfee1cebc3761c9782"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">virtual</a> string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a558b84cb596733cfee1cebc3761c9782">GetCacheSavePath</a> (string filename)</td></tr>
 <tr class="memdesc:a558b84cb596733cfee1cebc3761c9782"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allows to get the save path of the LLM cache based on the provided filename or relative path.  <br /></td></tr>
 <tr class="separator:a558b84cb596733cfee1cebc3761c9782"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae6de51a720e86a3d18c6a3db827a58e0" id="r_ae6de51a720e86a3d18c6a3db827a58e0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">virtual</a> <a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae6de51a720e86a3d18c6a3db827a58e0">ClearChat</a> ()</td></tr>
+<tr class="memdesc:ae6de51a720e86a3d18c6a3db827a58e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clear the chat of the LLMCharacter.  <br /></td></tr>
+<tr class="separator:ae6de51a720e86a3d18c6a3db827a58e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:affc13b3416002473688130217f1b42df" id="r_affc13b3416002473688130217f1b42df"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">virtual</a> <a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#affc13b3416002473688130217f1b42df">SetPrompt</a> (string <a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">newPrompt</a>, <a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">bool</a> <a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">clearChat</a>=<a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">true</a>)</td></tr>
 <tr class="memdesc:affc13b3416002473688130217f1b42df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the system prompt for the LLMCharacter.  <br /></td></tr>
 <tr class="separator:affc13b3416002473688130217f1b42df"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -296,7 +299,7 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:aba1febf8ee339fd76351655b05d07a69" id="r_aba1febf8ee339fd76351655b05d07a69"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aba1febf8ee339fd76351655b05d07a69">setNKeepToPrompt</a> = <a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">true</a></td></tr>
 <tr class="memdesc:aba1febf8ee339fd76351655b05d07a69"><td class="mdescLeft">&#160;</td><td class="mdescRight">option to set the number of tokens to retain from the prompt (nKeep) based on the LLMCharacter system prompt  <br /></td></tr>
 <tr class="separator:aba1febf8ee339fd76351655b05d07a69"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af27b4d3cebcd4d5ebee7c50827330203" id="r_af27b4d3cebcd4d5ebee7c50827330203"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">List</a>&lt; <a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">ChatMessage</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af27b4d3cebcd4d5ebee7c50827330203">chat</a></td></tr>
+<tr class="memitem:af27b4d3cebcd4d5ebee7c50827330203" id="r_af27b4d3cebcd4d5ebee7c50827330203"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">List</a>&lt; <a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">ChatMessage</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af27b4d3cebcd4d5ebee7c50827330203">chat</a> = <a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">new</a> <a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">List</a>&lt;<a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">ChatMessage</a>&gt;()</td></tr>
 <tr class="memdesc:af27b4d3cebcd4d5ebee7c50827330203"><td class="mdescLeft">&#160;</td><td class="mdescRight">the chat history as list of chat messages  <br /></td></tr>
 <tr class="separator:af27b4d3cebcd4d5ebee7c50827330203"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad06b60fc9fae2d1dce4aee23961f33b4" id="r_ad06b60fc9fae2d1dce4aee23961f33b4"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad06b60fc9fae2d1dce4aee23961f33b4">grammarString</a></td></tr>
@@ -364,7 +367,7 @@ Additional Inherited Members</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00381">381</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00371">371</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -404,7 +407,7 @@ Additional Inherited Members</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00362">362</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00352">352</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -439,7 +442,7 @@ Additional Inherited Members</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00372">372</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00362">362</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -469,7 +472,7 @@ Additional Inherited Members</h2></td></tr>
 <p>Asks the LLM for the chat template to use. </p>
 <dl class="section return"><dt>Returns</dt><dd>the chat template of the LLM</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00534">534</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00524">524</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -560,7 +563,36 @@ Additional Inherited Members</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the LLM response</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00440">440</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00430">430</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+
+</div>
+</div>
+<a id="ae6de51a720e86a3d18c6a3db827a58e0" name="ae6de51a720e86a3d18c6a3db827a58e0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae6de51a720e86a3d18c6a3db827a58e0">&#9670;&#160;</a></span>ClearChat()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">virtual</a> <a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">void</a> LLMUnity.LLMCharacter.ClearChat </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Clear the chat of the LLMCharacter. </p>
+
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00210">210</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -607,7 +639,7 @@ Additional Inherited Members</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the LLM response</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00493">493</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00483">483</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -753,7 +785,7 @@ Additional Inherited Members</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00578">578</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00568">568</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -783,7 +815,7 @@ Additional Inherited Members</h2></td></tr>
 <p>Loads the chat template of the LLMCharacter. </p>
 <dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00281">281</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00271">271</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -819,7 +851,7 @@ Additional Inherited Members</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00559">559</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00549">549</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -854,7 +886,7 @@ Additional Inherited Members</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00304">304</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00294">294</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -894,7 +926,7 @@ Additional Inherited Members</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00233">233</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00222">222</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -932,7 +964,7 @@ Additional Inherited Members</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the LLM response</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00516">516</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00506">506</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -980,7 +1012,7 @@ Additional Inherited Members</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">List</a>&lt;<a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">ChatMessage</a>&gt; LLMUnity.LLMCharacter.chat</td>
+          <td class="memname"><a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">List</a>&lt;<a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">ChatMessage</a>&gt; LLMUnity.LLMCharacter.chat = <a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">new</a> <a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">List</a>&lt;<a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">ChatMessage</a>&gt;()</td>
         </tr>
       </table>
 </div><div class="memdoc">

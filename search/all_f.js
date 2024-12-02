@@ -1,7 +1,7 @@
 var searchData=
 [
   ['games_20using_20llm_20for_20unity_0',['Games using LLM for Unity',['../index.html#autotoc_md3',1,'']]],
-  ['gemma_202_209b_20it_1',['google/gemma-2-9b-it',['../md_Third_01Party_01Notices.html#autotoc_md30',1,'']]],
+  ['gemma_202_209b_20it_1',['google/gemma-2-9b-it',['../md_Third_01Party_01Notices.html#autotoc_md29',1,'']]],
   ['gemmatemplate_2',['GemmaTemplate',['../classLLMUnity_1_1GemmaTemplate.html',1,'LLMUnity']]],
   ['generation_20rag_20system_3',['Semantic search with a Retrieval-Augmented Generation (RAG) system',['../index.html#autotoc_md6',1,'']]],
   ['get_4',['Get',['../classLLMUnity_1_1LLMManager.html#a4ce9c8c366573e96eb9d00ceab43b8ba',1,'LLMUnity.LLMManager.Get()'],['../classLLMUnity_1_1Chunking.html#a50209a070bd3ede5993aa188011727e7',1,'LLMUnity.Chunking.Get()'],['../classLLMUnity_1_1Searchable.html#abaa9835f5b5302649ca6f453299f7990',1,'LLMUnity.Searchable.Get()']]],
@@ -21,11 +21,11 @@ var searchData=
   ['getstringfield_18',['GetStringField',['../classLLMUnity_1_1GGUFReader.html#ad2355ac7292bda7f4e2168ada895c6d9',1,'LLMUnity::GGUFReader']]],
   ['gettemplate_19',['GetTemplate',['../classLLMUnity_1_1LLM.html#a2615c48420fd97bf210ca02c0f44156d',1,'LLMUnity.LLM.GetTemplate()'],['../classLLMUnity_1_1ChatTemplate.html#abc33937939b4e8ba857a44af187aee19',1,'LLMUnity.ChatTemplate.GetTemplate()']]],
   ['getweights_20',['GetWeights',['../classLLMUnity_1_1LoraManager.html#a10719b4c70a12180a611f8a0fd02abb1',1,'LLMUnity::LoraManager']]],
-  ['gguf_21',['Gguf',['../md_Third_01Party_01Notices.html#autotoc_md32',1,'microsoft/Phi-3-mini-4k-instruct-gguf'],['../md_Third_01Party_01Notices.html#autotoc_md38',1,'modified by: CompendiumLabs/bge-base-en-v1.5-gguf'],['../md_Third_01Party_01Notices.html#autotoc_md36',1,'modified by: CompendiumLabs/bge-large-en-v1.5-gguf'],['../md_Third_01Party_01Notices.html#autotoc_md40',1,'modified by: CompendiumLabs/bge-small-en-v1.5-gguf']]],
-  ['gguf_22',['GGUF',['../md_Third_01Party_01Notices.html#autotoc_md42',1,'modified by: leliuga/all-MiniLM-L12-v2-GGUF'],['../md_Third_01Party_01Notices.html#autotoc_md34',1,'Qwen/Qwen2-0.5B-Instruct-GGUF']]],
+  ['gguf_21',['Gguf',['../md_Third_01Party_01Notices.html#autotoc_md31',1,'microsoft/Phi-3-mini-4k-instruct-gguf'],['../md_Third_01Party_01Notices.html#autotoc_md37',1,'modified by: CompendiumLabs/bge-base-en-v1.5-gguf'],['../md_Third_01Party_01Notices.html#autotoc_md35',1,'modified by: CompendiumLabs/bge-large-en-v1.5-gguf'],['../md_Third_01Party_01Notices.html#autotoc_md39',1,'modified by: CompendiumLabs/bge-small-en-v1.5-gguf']]],
+  ['gguf_22',['GGUF',['../md_Third_01Party_01Notices.html#autotoc_md41',1,'modified by: leliuga/all-MiniLM-L12-v2-GGUF'],['../md_Third_01Party_01Notices.html#autotoc_md33',1,'Qwen/Qwen2-0.5B-Instruct-GGUF']]],
   ['ggufreader_23',['GGUFReader',['../classLLMUnity_1_1GGUFReader.html',1,'LLMUnity.GGUFReader'],['../classLLMUnity_1_1GGUFReader.html#a6373fc9f2577137c2e7f1e05b0e20d92',1,'LLMUnity.GGUFReader.GGUFReader()']]],
   ['glance_24',['At a glance',['../index.html#autotoc_md1',1,'']]],
-  ['google_20gemma_202_209b_20it_25',['google/gemma-2-9b-it',['../md_Third_01Party_01Notices.html#autotoc_md30',1,'']]],
+  ['google_20gemma_202_209b_20it_25',['google/gemma-2-9b-it',['../md_Third_01Party_01Notices.html#autotoc_md29',1,'']]],
   ['grammar_26',['grammar',['../classLLMUnity_1_1LLMCharacter.html#a82d37004f6fd65178140bd566dc2e66c',1,'LLMUnity::LLMCharacter']]],
   ['grammarstring_27',['grammarString',['../classLLMUnity_1_1LLMCharacter.html#ad06b60fc9fae2d1dce4aee23961f33b4',1,'LLMUnity::LLMCharacter']]]
 ];
