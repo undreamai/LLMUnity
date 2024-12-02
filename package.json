@@ -36,9 +36,19 @@
       "path": "Samples~/MultipleCharacters"
     },
     {
-      "displayName": "KnowledgeBaseGame",
-      "description": "Simple detective game using a knowledge base to provide information to the LLM.",
-      "path": "Samples~/KnowledgeBaseGame"
+      "displayName": "FunctionCalling",
+      "description": "Function calling sample with structured output from the LLM",
+      "path": "Samples~/FunctionCalling"
+    },
+    {
+      "displayName": "RAG",
+      "description": "Semantic search using a Retrieval Augmented Generation (RAG) system. Includes example using a RAG to feed information to a LLM",
+      "path": "Samples~/RAG"
+    },
+    {
+      "displayName": "MobileDemo",
+      "description": "Example mobile app with an initial screen with model download progress",
+      "path": "Samples~/MobileDemo"
     },
     {
       "displayName": "ChatBot",
@@ -46,14 +56,9 @@
       "path": "Samples~/ChatBot"
     },
     {
-      "displayName": "AndroidDemo",
-      "description": "Example Android app with an initial screen with model download progress",
-      "path": "Samples~/AndroidDemo"
-    },
-    {
-      "displayName": "RAG",
-      "description": "Semantic search using a Retrieval Augmented Generation (RAG) system. Includes example using a RAG to feed information to a LLM.",
-      "path": "Samples~/RAG"
+      "displayName": "KnowledgeBaseGame",
+      "description": "Simple detective game using a knowledge base to provide information to the LLM.",
+      "path": "Samples~/KnowledgeBaseGame"
     }
    ],
    "author": {
