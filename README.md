@@ -43,7 +43,7 @@ LLM for Unity is built on top of the awesome [llama.cpp](https://github.com/gger
 - 🔧 Easy to setup, call with a single line of code
 - 💰 Free to use for both personal and commercial purposes
 
-🧪 Tested on Unity: 2021 LTS, 2022 LTS, 2023<br>
+🧪 Tested on Unity: 2021 LTS, 2022 LTS, 2023, Unity 6<br>
 🚦 [Upcoming Releases](https://github.com/orgs/undreamai/projects/2/views/10)
 
 ## How to help
