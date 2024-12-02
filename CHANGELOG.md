@@ -10,6 +10,10 @@
 
 - Clear temp build directory before building (PR: #278)
 
+#### 📦 General
+
+- Remove support for extras (flash attention, iQ quants) (PR: #284)
+
 
 ## v2.3.0
 #### 🚀 Features
