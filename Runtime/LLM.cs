@@ -61,8 +61,6 @@ namespace LLMUnity
         [ModelAdvanced] public string lora = "";
         /// <summary> the weights of the LORA models being used.</summary>
         [ModelAdvanced] public string loraWeights = "";
-        /// <summary> enable use of flash attention </summary>
-        [ModelExtras] public bool flashAttention = false;
 
         /// <summary> API key to use for the server (optional) </summary>
         public string APIKey;
@@ -435,7 +433,6 @@ namespace LLMUnity
             if (numThreadsToUse > 0) arguments += $" -t {numThreadsToUse}";
             arguments += loraArgument;
             arguments += $" -ngl {numGPULayers}";
-            if (LLMUnitySetup.FullLlamaLib && flashAttention) arguments += $" --flash-attn";
             if (remote)
             {
                 arguments += $" --port {port} --host 0.0.0.0";
