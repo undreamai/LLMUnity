@@ -40,8 +40,6 @@ namespace LLMUnity
         [DynamicRange("minContextLength", "maxContextLength", false), Model] public int contextSize = 8192;
         /// <summary> Batch size for prompt processing. </summary>
         [ModelAdvanced] public int batchSize = 512;
-        /// <summary> a base prompt to use as a base for all LLMCaller objects </summary>
-        [TextArea(5, 10), ChatAdvanced] public string basePrompt = "";
         /// <summary> Boolean set to true if the server has started and is ready to receive requests, false otherwise. </summary>
         public bool started { get; protected set; } = false;
         /// <summary> Boolean set to true if the server has failed to start. </summary>
@@ -132,7 +130,6 @@ namespace LLMUnity
             await Task.Run(() => StartLLMServer(arguments));
             if (!started) return;
             if (dontDestroyOnLoad) DontDestroyOnLoad(transform.root.gameObject);
-            if (basePrompt != "") await SetBasePrompt(basePrompt);
         }
 
         /// <summary>
@@ -776,13 +773,6 @@ namespace LLMUnity
             DestroyStreamWrapper(streamWrapper);
             CheckLLMStatus();
             return result;
-        }
-
-        public async Task SetBasePrompt(string base_prompt)
-        {
-            AssertStarted();
-            SystemPromptRequest request = new SystemPromptRequest() { system_prompt = base_prompt, prompt = " ", n_predict = 0 };
-            await Completion(JsonUtility.ToJson(request));
         }
 
         /// <summary>
