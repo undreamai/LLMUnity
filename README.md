@@ -170,6 +170,22 @@ The [MobileDemo](Samples~/MobileDemo) is an example application for Android / iO
 
 </details>
 <details>
+<summary>Restrict the output of the LLM / Function calling</summary>
+
+To restrict the output of the LLM you can use a GBNF grammar, read more [here](https://github.com/ggerganov/llama.cpp/tree/master/grammars).<br>
+The grammar can be saved in a .gbnf file and loaded at the LLMCharacter with the `Load Grammar` button (Advanced options).<br>
+For instance to receive replies in json format you can use the [json.gbnf](https://github.com/ggerganov/llama.cpp/blob/b4218/grammars/json.gbnf) grammar.<br>
+
+Alternatively you can set the grammar directly with code:
+``` c#
+llmCharacter.grammarString = "your grammar here";
+```
+
+For function calling you can define similarly a grammar that allows only the function names as output, and then call the respective function.<br>
+You can look into the [FunctionCalling](Samples~/FunctionCalling) sample for an example implementation.
+
+</details>
+<details>
 <summary>Save / Load your chat history</summary>
 
 To automatically save / load your chat history, you can specify the `Save` parameter of the LLMCharacter to the filename (or relative path) of your choice.
@@ -448,12 +464,12 @@ If you have loaded a model locally you need to set its URL through the expanded 
 
 ## Examples
 The [Samples~](Samples~) folder contains several examples of interaction 🤖:
-- [SimpleInteraction](Samples~/SimpleInteraction): Demonstrates a simple interaction with an AI character
-- [MultipleCharacters](Samples~/MultipleCharacters): Demonstrates a simple interaction using multiple AI characters
+- [SimpleInteraction](Samples~/SimpleInteraction): Simple interaction with an AI character
+- [MultipleCharacters](Samples~/MultipleCharacters): Simple interaction using multiple AI characters
 - [FunctionCalling](Samples~/FunctionCalling): Function calling sample with structured output from the LLM
-- [RAG](Samples~/RAG): RAG sample. Includes an example using the RAG to feed information to a LLM
+- [RAG](Samples~/RAG): Semantic search using a Retrieval Augmented Generation (RAG) system. Includes example using a RAG to feed information to a LLM
 - [MobileDemo](Samples~/MobileDemo): Example mobile app for Android / iOS with an initial screen displaying the model download progress
-- [ChatBot](Samples~/ChatBot): Demonstrates interaction between a player and a AI with a UI similar to a messaging app (see image below)
+- [ChatBot](Samples~/ChatBot): Interaction between a player and a AI with a UI similar to a messaging app (see image below)
 - [KnowledgeBaseGame](Samples~/KnowledgeBaseGame): Simple detective game using a knowledge base to provide information to the LLM based on [google/mysteryofthreebots](https://github.com/google/mysteryofthreebots)
   
 <img width="400" src=".github/demo.gif">
