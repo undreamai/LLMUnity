@@ -47,7 +47,7 @@
     },
     {
       "displayName": "MobileDemo",
-      "description": "Example mobile app with an initial screen with model download progress",
+      "description": "Example mobile app for Android / iOS with an initial screen displaying the model download progress",
       "path": "Samples~/MobileDemo"
     },
     {
