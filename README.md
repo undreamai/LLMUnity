@@ -186,7 +186,11 @@ You can look into the [FunctionCalling](Samples~/FunctionCalling) sample for an 
 
 </details>
 <details>
-<summary>Save / Load your chat history</summary>
+<summary>Access / Save / Load your chat history</summary>
+The chat history of a `LLMCharacter` is retained in the `chat` variable that is a list of `ChatMessage` objects.<br>
+The ChatMessage is a struct that defines the `role` of the message and the `content`.<br>
+The first element of the list is always the system prompt and then alternating messages with the player prompt and the AI reply.<br>
+You can modify the chat history directly in this list.<br>
 
 To automatically save / load your chat history, you can specify the `Save` parameter of the LLMCharacter to the filename (or relative path) of your choice.
 The file is saved in the [persistentDataPath folder of Unity](https://docs.unity3d.com/ScriptReference/Application-persistentDataPath.html).
