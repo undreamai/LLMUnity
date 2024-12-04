@@ -400,8 +400,10 @@ namespace LLMUnity
         static void DeleteEarlierVersions()
         {
             List<string> assetPathSubDirs = new List<string>();
-            assetPathSubDirs.AddRange(Directory.GetDirectories(GetAssetPath()));
-            assetPathSubDirs.AddRange(Directory.GetDirectories(Path.Combine(Application.dataPath, "Plugins", "Android")));
+            foreach (string dir in new string[]{GetAssetPath(), Path.Combine(Application.dataPath, "Plugins", "Android")})
+            {
+                if(Directory.Exists(dir)) assetPathSubDirs.AddRange(Directory.GetDirectories(dir));
+            }
 
             Regex regex = new Regex(GetLibraryName("(.+)"));
             foreach (string assetPathSubDir in assetPathSubDirs)
