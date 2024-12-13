@@ -719,7 +719,7 @@ namespace LLMUnity
             json = json.Substring(startIndex, endIndex - startIndex);
 
             IntPtr stringWrapper = llmlib.StringWrapper_Construct();
-            llmlib.LLM_Lora_Weight(LLMObject, json, stringWrapper);
+            llmlib.LLM_LoraWeight(LLMObject, json, stringWrapper);
             llmlib.StringWrapper_Delete(stringWrapper);
         }
 
