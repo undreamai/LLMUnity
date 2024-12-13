@@ -364,11 +364,94 @@ namespace LLMUnity
     public class LLMLib
     {
         IntPtr libraryHandle = IntPtr.Zero;
-        static readonly object staticLock = new object();
         static bool has_avx = false;
         static bool has_avx2 = false;
         static bool has_avx512 = false;
+
+#if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
+
+        public LLMLib(string arch){}
+
+        public const string LibraryName = "libundreamai";
+
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint="Logging")]
+        public static extern void LoggingStatic(IntPtr stringWrapper);
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint="StopLogging")]
+        public static extern void StopLoggingStatic();
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint="LLM_Construct")]
+        public static extern IntPtr LLM_ConstructStatic(string command);
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint="LLM_Delete")]
+        public static extern void LLM_DeleteStatic(IntPtr LLMObject);
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint="LLM_StartServer")]
+        public static extern void LLM_StartServerStatic(IntPtr LLMObject);
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint="LLM_StopServer")]
+        public static extern void LLM_StopServerStatic(IntPtr LLMObject);
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint="LLM_Start")]
+        public static extern void LLM_StartStatic(IntPtr LLMObject);
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint="LLM_Started")]
+        public static extern bool LLM_StartedStatic(IntPtr LLMObject);
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint="LLM_Stop")]
+        public static extern void LLM_StopStatic(IntPtr LLMObject);
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint="LLM_SetTemplate")]
+        public static extern void LLM_SetTemplateStatic(IntPtr LLMObject, string chatTemplate);
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint="LLM_SetSSL")]
+        public static extern void LLM_SetSSLStatic(IntPtr LLMObject, string SSLCert, string SSLKey);
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint="LLM_Tokenize")]
+        public static extern void LLM_TokenizeStatic(IntPtr LLMObject, string jsonData, IntPtr stringWrapper);
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint="LLM_Detokenize")]
+        public static extern void LLM_DetokenizeStatic(IntPtr LLMObject, string jsonData, IntPtr stringWrapper);
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint="LLM_Embeddings")]
+        public static extern void LLM_EmbeddingsStatic(IntPtr LLMObject, string jsonData, IntPtr stringWrapper);
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint="LLM_Lora_Weight")]
+        public static extern void LLM_LoraWeightStatic(IntPtr LLMObject, string jsonData, IntPtr stringWrapper);
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint="LLM_Lora_List")]
+        public static extern void LLM_LoraListStatic(IntPtr LLMObject, IntPtr stringWrapper);
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint="LLM_Completion")]
+        public static extern void LLM_CompletionStatic(IntPtr LLMObject, string jsonData, IntPtr stringWrapper);
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint="LLM_Slot")]
+        public static extern void LLM_SlotStatic(IntPtr LLMObject, string jsonData, IntPtr stringWrapper);
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint="LLM_Cancel")]
+        public static extern void LLM_CancelStatic(IntPtr LLMObject, int idSlot);
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint="LLM_Status")]
+        public static extern int LLM_StatusStatic(IntPtr LLMObject, IntPtr stringWrapper);
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint="StringWrapper_Construct")]
+        public static extern IntPtr StringWrapper_ConstructStatic();
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint="StringWrapper_Delete")]
+        public static extern void StringWrapper_DeleteStatic(IntPtr instance);
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint="StringWrapper_GetStringSize")]
+        public static extern int StringWrapper_GetStringSizeStatic(IntPtr instance);
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint="StringWrapper_GetString")]
+        public static extern void StringWrapper_GetStringStatic(IntPtr instance, IntPtr buffer, int bufferSize, bool clear = false);
+
+        public void Logging(IntPtr stringWrapper){ LoggingStatic(stringWrapper); }
+        public void StopLogging(){ StopLoggingStatic(); }
+        public IntPtr LLM_Construct(string command){ return LLM_ConstructStatic(command); }
+        public void LLM_Delete(IntPtr LLMObject){ LLM_DeleteStatic(LLMObject); }
+        public void LLM_StartServer(IntPtr LLMObject){ LLM_StartServerStatic(LLMObject); }
+        public void LLM_StopServer(IntPtr LLMObject){ LLM_StopServerStatic(LLMObject); }
+        public void LLM_Start(IntPtr LLMObject){ LLM_StartStatic(LLMObject); }
+        public bool LLM_Started(IntPtr LLMObject){ return LLM_StartedStatic(LLMObject); }
+        public void LLM_Stop(IntPtr LLMObject){ LLM_StopStatic(LLMObject); }
+        public void LLM_SetTemplate(IntPtr LLMObject, string chatTemplate){ LLM_SetTemplateStatic(LLMObject, chatTemplate); }
+        public void LLM_SetSSL(IntPtr LLMObject, string SSLCert, string SSLKey){ LLM_SetSSLStatic(LLMObject, SSLCert, SSLKey); }
+        public void LLM_Tokenize(IntPtr LLMObject, string jsonData, IntPtr stringWrapper){ LLM_TokenizeStatic(LLMObject, jsonData, stringWrapper); }
+        public void LLM_Detokenize(IntPtr LLMObject, string jsonData, IntPtr stringWrapper){ LLM_DetokenizeStatic(LLMObject, jsonData, stringWrapper); }
+        public void LLM_Embeddings(IntPtr LLMObject, string jsonData, IntPtr stringWrapper){ LLM_EmbeddingsStatic(LLMObject, jsonData, stringWrapper); }
+        public void LLM_LoraWeight(IntPtr LLMObject, string jsonData, IntPtr stringWrapper){ LLM_LoraWeightStatic(LLMObject, jsonData, stringWrapper); }
+        public void LLM_LoraList(IntPtr LLMObject, IntPtr stringWrapper){ LLM_LoraListStatic(LLMObject, stringWrapper); }
+        public void LLM_Completion(IntPtr LLMObject, string jsonData, IntPtr stringWrapper){ LLM_CompletionStatic(LLMObject, jsonData, stringWrapper); }
+        public void LLM_Slot(IntPtr LLMObject, string jsonData, IntPtr stringWrapper){ LLM_SlotStatic(LLMObject, jsonData, stringWrapper); }
+        public void LLM_Cancel(IntPtr LLMObject, int idSlot){ LLM_CancelStatic(LLMObject, idSlot); }
+        public int LLM_Status(IntPtr LLMObject, IntPtr stringWrapper){ return LLM_StatusStatic(LLMObject, stringWrapper); }
+        public IntPtr StringWrapper_Construct(){ return StringWrapper_ConstructStatic(); }
+        public void StringWrapper_Delete(IntPtr instance){ StringWrapper_DeleteStatic(instance); }
+        public int StringWrapper_GetStringSize(IntPtr instance){ return StringWrapper_GetStringSizeStatic(instance); }
+        public void StringWrapper_GetString(IntPtr instance, IntPtr buffer, int bufferSize, bool clear = false){ StringWrapper_GetStringStatic(instance, buffer, bufferSize, clear); }
+
+#else
+
         static bool has_avx_set = false;
+        static readonly object staticLock = new object();
 
         static LLMLib()
         {
@@ -427,7 +510,7 @@ namespace LLMUnity
             LLM_Tokenize = LibraryLoader.GetSymbolDelegate<LLM_TokenizeDelegate>(libraryHandle, "LLM_Tokenize");
             LLM_Detokenize = LibraryLoader.GetSymbolDelegate<LLM_DetokenizeDelegate>(libraryHandle, "LLM_Detokenize");
             LLM_Embeddings = LibraryLoader.GetSymbolDelegate<LLM_EmbeddingsDelegate>(libraryHandle, "LLM_Embeddings");
-            LLM_Lora_Weight = LibraryLoader.GetSymbolDelegate<LLM_LoraWeightDelegate>(libraryHandle, "LLM_Lora_Weight");
+            LLM_LoraWeight = LibraryLoader.GetSymbolDelegate<LLM_LoraWeightDelegate>(libraryHandle, "LLM_Lora_Weight");
             LLM_LoraList = LibraryLoader.GetSymbolDelegate<LLM_LoraListDelegate>(libraryHandle, "LLM_Lora_List");
             LLM_Completion = LibraryLoader.GetSymbolDelegate<LLM_CompletionDelegate>(libraryHandle, "LLM_Completion");
             LLM_Slot = LibraryLoader.GetSymbolDelegate<LLM_SlotDelegate>(libraryHandle, "LLM_Slot");
@@ -442,12 +525,108 @@ namespace LLMUnity
         }
 
         /// <summary>
-        /// Destroys the LLM library
+        /// Gets the path of a library that allows to detect the underlying CPU (Windows / Linux).
         /// </summary>
-        public void Destroy()
+        /// <returns>architecture checker library path</returns>
+        public static string GetArchitectureCheckerPath()
         {
-            if (libraryHandle != IntPtr.Zero) LibraryLoader.FreeLibrary(libraryHandle);
+            string filename;
+            if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsServer)
+            {
+                filename = $"windows-archchecker/archchecker.dll";
+            }
+            else if (Application.platform == RuntimePlatform.LinuxEditor || Application.platform == RuntimePlatform.LinuxPlayer || Application.platform == RuntimePlatform.LinuxServer)
+            {
+                filename = $"linux-archchecker/libarchchecker.so";
+            }
+            else
+            {
+                return null;
+            }
+            return Path.Combine(LLMUnitySetup.libraryPath, filename);
         }
+
+        /// <summary>
+        /// Gets the path of the llama.cpp library for the specified architecture.
+        /// </summary>
+        /// <param name="arch">architecture</param>
+        /// <returns>llama.cpp library path</returns>
+        public static string GetArchitecturePath(string arch)
+        {
+            string filename;
+            if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsServer)
+            {
+                filename = $"windows-{arch}/undreamai_windows-{arch}.dll";
+            }
+            else if (Application.platform == RuntimePlatform.LinuxEditor || Application.platform == RuntimePlatform.LinuxPlayer || Application.platform == RuntimePlatform.LinuxServer)
+            {
+                filename = $"linux-{arch}/libundreamai_linux-{arch}.so";
+            }
+            else if (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.OSXPlayer || Application.platform == RuntimePlatform.OSXServer)
+            {
+                filename = $"macos-{arch}/libundreamai_macos-{arch}.dylib";
+            }
+            else
+            {
+                string error = "Unknown OS";
+                LLMUnitySetup.LogError(error);
+                throw new Exception(error);
+            }
+            return Path.Combine(LLMUnitySetup.libraryPath, filename);
+        }
+
+        public delegate bool HasArchDelegate();
+        public delegate void LoggingDelegate(IntPtr stringWrapper);
+        public delegate void StopLoggingDelegate();
+        public delegate IntPtr LLM_ConstructDelegate(string command);
+        public delegate void LLM_DeleteDelegate(IntPtr LLMObject);
+        public delegate void LLM_StartServerDelegate(IntPtr LLMObject);
+        public delegate void LLM_StopServerDelegate(IntPtr LLMObject);
+        public delegate void LLM_StartDelegate(IntPtr LLMObject);
+        public delegate bool LLM_StartedDelegate(IntPtr LLMObject);
+        public delegate void LLM_StopDelegate(IntPtr LLMObject);
+        public delegate void LLM_SetTemplateDelegate(IntPtr LLMObject, string chatTemplate);
+        public delegate void LLM_SetSSLDelegate(IntPtr LLMObject, string SSLCert, string SSLKey);
+        public delegate void LLM_TokenizeDelegate(IntPtr LLMObject, string jsonData, IntPtr stringWrapper);
+        public delegate void LLM_DetokenizeDelegate(IntPtr LLMObject, string jsonData, IntPtr stringWrapper);
+        public delegate void LLM_EmbeddingsDelegate(IntPtr LLMObject, string jsonData, IntPtr stringWrapper);
+        public delegate void LLM_LoraWeightDelegate(IntPtr LLMObject, string jsonData, IntPtr stringWrapper);
+        public delegate void LLM_LoraListDelegate(IntPtr LLMObject, IntPtr stringWrapper);
+        public delegate void LLM_CompletionDelegate(IntPtr LLMObject, string jsonData, IntPtr stringWrapper);
+        public delegate void LLM_SlotDelegate(IntPtr LLMObject, string jsonData, IntPtr stringWrapper);
+        public delegate void LLM_CancelDelegate(IntPtr LLMObject, int idSlot);
+        public delegate int LLM_StatusDelegate(IntPtr LLMObject, IntPtr stringWrapper);
+        public delegate IntPtr StringWrapper_ConstructDelegate();
+        public delegate void StringWrapper_DeleteDelegate(IntPtr instance);
+        public delegate int StringWrapper_GetStringSizeDelegate(IntPtr instance);
+        public delegate void StringWrapper_GetStringDelegate(IntPtr instance, IntPtr buffer, int bufferSize, bool clear = false);
+
+        public LoggingDelegate Logging;
+        public StopLoggingDelegate StopLogging;
+        public LLM_ConstructDelegate LLM_Construct;
+        public LLM_DeleteDelegate LLM_Delete;
+        public LLM_StartServerDelegate LLM_StartServer;
+        public LLM_StopServerDelegate LLM_StopServer;
+        public LLM_StartDelegate LLM_Start;
+        public LLM_StartedDelegate LLM_Started;
+        public LLM_StopDelegate LLM_Stop;
+        public LLM_SetTemplateDelegate LLM_SetTemplate;
+        public LLM_SetSSLDelegate LLM_SetSSL;
+        public LLM_TokenizeDelegate LLM_Tokenize;
+        public LLM_DetokenizeDelegate LLM_Detokenize;
+        public LLM_CompletionDelegate LLM_Completion;
+        public LLM_EmbeddingsDelegate LLM_Embeddings;
+        public LLM_LoraWeightDelegate LLM_LoraWeight;
+        public LLM_LoraListDelegate LLM_LoraList;
+        public LLM_SlotDelegate LLM_Slot;
+        public LLM_CancelDelegate LLM_Cancel;
+        public LLM_StatusDelegate LLM_Status;
+        public StringWrapper_ConstructDelegate StringWrapper_Construct;
+        public StringWrapper_DeleteDelegate StringWrapper_Delete;
+        public StringWrapper_GetStringSizeDelegate StringWrapper_GetStringSize;
+        public StringWrapper_GetStringDelegate StringWrapper_GetString;
+
+#endif
 
         /// <summary>
         /// Identifies the possible architectures that we can use based on the OS and GPU usage
@@ -503,66 +682,7 @@ namespace LLMUnity
             }
             return architectures;
         }
-
-        /// <summary>
-        /// Gets the path of a library that allows to detect the underlying CPU (Windows / Linux).
-        /// </summary>
-        /// <returns>architecture checker library path</returns>
-        public static string GetArchitectureCheckerPath()
-        {
-            string filename;
-            if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsServer)
-            {
-                filename = $"windows-archchecker/archchecker.dll";
-            }
-            else if (Application.platform == RuntimePlatform.LinuxEditor || Application.platform == RuntimePlatform.LinuxPlayer || Application.platform == RuntimePlatform.LinuxServer)
-            {
-                filename = $"linux-archchecker/libarchchecker.so";
-            }
-            else
-            {
-                return null;
-            }
-            return Path.Combine(LLMUnitySetup.libraryPath, filename);
-        }
-
-        /// <summary>
-        /// Gets the path of the llama.cpp library for the specified architecture.
-        /// </summary>
-        /// <param name="arch">architecture</param>
-        /// <returns>llama.cpp library path</returns>
-        public static string GetArchitecturePath(string arch)
-        {
-            string filename;
-            if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsServer)
-            {
-                filename = $"windows-{arch}/undreamai_windows-{arch}.dll";
-            }
-            else if (Application.platform == RuntimePlatform.LinuxEditor || Application.platform == RuntimePlatform.LinuxPlayer || Application.platform == RuntimePlatform.LinuxServer)
-            {
-                filename = $"linux-{arch}/libundreamai_linux-{arch}.so";
-            }
-            else if (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.OSXPlayer || Application.platform == RuntimePlatform.OSXServer)
-            {
-                filename = $"macos-{arch}/libundreamai_macos-{arch}.dylib";
-            }
-            else if (Application.platform == RuntimePlatform.Android)
-            {
-                return "libundreamai_android.so";
-            }
-            else if (Application.platform == RuntimePlatform.IPhonePlayer)
-            {
-                filename = "iOS/libundreamai_iOS.dylib";
-            }
-            else
-            {
-                string error = "Unknown OS";
-                LLMUnitySetup.LogError(error);
-                throw new Exception(error);
-            }
-            return Path.Combine(LLMUnitySetup.libraryPath, filename);
-        }
-
+    
         /// <summary>
         /// Allows to retrieve a string from the library (Unity only allows marshalling of chars)
         /// </summary>
@@ -588,56 +708,14 @@ namespace LLMUnity
             return result;
         }
 
-        public delegate bool HasArchDelegate();
-        public delegate void LoggingDelegate(IntPtr stringWrapper);
-        public delegate void StopLoggingDelegate();
-        public delegate IntPtr LLM_ConstructDelegate(string command);
-        public delegate void LLM_DeleteDelegate(IntPtr LLMObject);
-        public delegate void LLM_StartServerDelegate(IntPtr LLMObject);
-        public delegate void LLM_StopServerDelegate(IntPtr LLMObject);
-        public delegate void LLM_StartDelegate(IntPtr LLMObject);
-        public delegate bool LLM_StartedDelegate(IntPtr LLMObject);
-        public delegate void LLM_StopDelegate(IntPtr LLMObject);
-        public delegate void LLM_SetTemplateDelegate(IntPtr LLMObject, string chatTemplate);
-        public delegate void LLM_SetSSLDelegate(IntPtr LLMObject, string SSLCert, string SSLKey);
-        public delegate void LLM_TokenizeDelegate(IntPtr LLMObject, string jsonData, IntPtr stringWrapper);
-        public delegate void LLM_DetokenizeDelegate(IntPtr LLMObject, string jsonData, IntPtr stringWrapper);
-        public delegate void LLM_EmbeddingsDelegate(IntPtr LLMObject, string jsonData, IntPtr stringWrapper);
-        public delegate void LLM_LoraWeightDelegate(IntPtr LLMObject, string jsonData, IntPtr stringWrapper);
-        public delegate void LLM_LoraListDelegate(IntPtr LLMObject, IntPtr stringWrapper);
-        public delegate void LLM_CompletionDelegate(IntPtr LLMObject, string jsonData, IntPtr stringWrapper);
-        public delegate void LLM_SlotDelegate(IntPtr LLMObject, string jsonData, IntPtr stringWrapper);
-        public delegate void LLM_CancelDelegate(IntPtr LLMObject, int idSlot);
-        public delegate int LLM_StatusDelegate(IntPtr LLMObject, IntPtr stringWrapper);
-        public delegate IntPtr StringWrapper_ConstructDelegate();
-        public delegate void StringWrapper_DeleteDelegate(IntPtr instance);
-        public delegate int StringWrapper_GetStringSizeDelegate(IntPtr instance);
-        public delegate void StringWrapper_GetStringDelegate(IntPtr instance, IntPtr buffer, int bufferSize, bool clear = false);
-
-        public LoggingDelegate Logging;
-        public StopLoggingDelegate StopLogging;
-        public LLM_ConstructDelegate LLM_Construct;
-        public LLM_DeleteDelegate LLM_Delete;
-        public LLM_StartServerDelegate LLM_StartServer;
-        public LLM_StopServerDelegate LLM_StopServer;
-        public LLM_StartDelegate LLM_Start;
-        public LLM_StartedDelegate LLM_Started;
-        public LLM_StopDelegate LLM_Stop;
-        public LLM_SetTemplateDelegate LLM_SetTemplate;
-        public LLM_SetSSLDelegate LLM_SetSSL;
-        public LLM_TokenizeDelegate LLM_Tokenize;
-        public LLM_DetokenizeDelegate LLM_Detokenize;
-        public LLM_CompletionDelegate LLM_Completion;
-        public LLM_EmbeddingsDelegate LLM_Embeddings;
-        public LLM_LoraWeightDelegate LLM_Lora_Weight;
-        public LLM_LoraListDelegate LLM_LoraList;
-        public LLM_SlotDelegate LLM_Slot;
-        public LLM_CancelDelegate LLM_Cancel;
-        public LLM_StatusDelegate LLM_Status;
-        public StringWrapper_ConstructDelegate StringWrapper_Construct;
-        public StringWrapper_DeleteDelegate StringWrapper_Delete;
-        public StringWrapper_GetStringSizeDelegate StringWrapper_GetStringSize;
-        public StringWrapper_GetStringDelegate StringWrapper_GetString;
+        /// <summary>
+        /// Destroys the LLM library
+        /// </summary>
+        public void Destroy()
+        {
+            if (libraryHandle != IntPtr.Zero) LibraryLoader.FreeLibrary(libraryHandle);
+        }
     }
+
 }
 /// \endcond
