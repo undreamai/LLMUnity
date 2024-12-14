@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace LLMUnitySamples
 {
-    public class AndroidDemo : MonoBehaviour
+    public class MobileDemo : MonoBehaviour
     {
         public LLMCharacter llmCharacter;
 

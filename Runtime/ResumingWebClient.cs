@@ -1,3 +1,5 @@
+/// @file
+/// @brief File implementing a resumable Web client
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,6 +10,7 @@ using System.Threading.Tasks;
 namespace LLMUnity
 {
     public class ResumingWebClient
+
     {
         private const int timeoutMs = 30 * 1000;
         private SynchronizationContext _context;

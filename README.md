@@ -19,7 +19,8 @@
 
 LLM for Unity enables seamless integration of Large Language Models (LLMs) within the Unity engine.<br>
 It allows to create intelligent characters that your players can interact with for an immersive experience.<br>
-LLM for Unity is built on top of the awesome [llama.cpp](https://github.com/ggerganov/llama.cpp) and [llamafile](https://github.com/Mozilla-Ocho/llamafile) libraries.
+The package also features a Retrieval-Augmented Generation (RAG) system that allows to performs semantic search across your data, which can be used to enhance the character's knowledge.
+LLM for Unity is built on top of the awesome [llama.cpp](https://github.com/ggerganov/llama.cpp) library.
 
 <sub>
 <a href="#at-a-glance" style="color: black">At a glance</a>&nbsp;&nbsp;•&nbsp;
@@ -27,21 +28,22 @@ LLM for Unity is built on top of the awesome [llama.cpp](https://github.com/gger
 <a href="#games-using-llm-for-unity" style=color: black>Games using LLM for Unity</a>&nbsp;&nbsp;•&nbsp;
 <a href="#setup" style=color: black>Setup</a>&nbsp;&nbsp;•&nbsp;
 <a href="#how-to-use" style=color: black>How to use</a>&nbsp;&nbsp;•&nbsp;
-<a href="#examples" style=color: black>Examples</a>&nbsp;&nbsp;•&nbsp;
+<a href="#semantic-search-with-a-retrieval-augmented-generation-rag-system" style=color: black>RAG</a>&nbsp;&nbsp;•&nbsp;
 <a href="#llm-model-management" style=color: black>LLM model management</a>&nbsp;&nbsp;•&nbsp;
+<a href="#examples" style=color: black>Examples</a>&nbsp;&nbsp;•&nbsp;
 <a href="#options" style=color: black>Options</a>&nbsp;&nbsp;•&nbsp;
 <a href="#license" style=color: black>License</a>
 </sub>
 
 ## At a glance
-- 💻 Cross-platform! Windows, Linux, macOS and Android
-- 🏠 Runs locally without internet access. No data ever leaves the game!
+- 💻 Cross-platform! Windows, Linux, macOS, iOS and Android
+- 🏠 Runs locally without internet access. No data ever leave the game!
 - ⚡ Blazing fast inference on CPU and GPU (Nvidia, AMD, Apple Metal)
 - 🤗 Supports all major LLM models
 - 🔧 Easy to setup, call with a single line of code
 - 💰 Free to use for both personal and commercial purposes
 
-🧪 Tested on Unity: 2021 LTS, 2022 LTS, 2023<br>
+🧪 Tested on Unity: 2021 LTS, 2022 LTS, 2023, Unity 6<br>
 🚦 [Upcoming Releases](https://github.com/orgs/undreamai/projects/2/views/10)
 
 ## How to help
@@ -58,7 +60,6 @@ LLM for Unity is built on top of the awesome [llama.cpp](https://github.com/gger
 - [Murder in Aisle 4](https://roadedlich.itch.io/murder-in-aisle-4)
 - [Finicky Food Delivery AI](https://helixngc7293.itch.io/finicky-food-delivery-ai)
 - [AI Emotional Girlfriend](https://whynames.itch.io/aiemotionalgirlfriend)
-- [AI Speak](https://jdscogin.wixsite.com/aispeak)
 - [Case Closed](https://store.steampowered.com/app/2532160/Case_Closed)
 
 Contact us to add your project!
@@ -139,18 +140,57 @@ That's all ✨!
 You can also:
 
 <details>
-<summary>Build a mobile app on Android</summary>
+<summary>Build a mobile app</summary>
 
-To build an Android app you need to specify the `IL2CPP` scripting backend and the `ARM64` as the target architecture in the player settings.<br>
+**iOS**
+iOS can be built with the default player settings.
+
+**Android**
+On Android you need to specify the `IL2CPP` scripting backend and the `ARM64` as the target architecture in the player settings.<br>
 These settings can be accessed from the `Edit > Project Settings` menu within the `Player > Other Settings` section.<br>
-
 <img width="400" src=".github/android.png">
 
-It is also a good idea to enable the `Download on Build` option in the LLM GameObject to download the model on launch in order to keep the app size small.
+Since mobile app sizes are typically small, you can download the LLM models the first time the app launches.
+This functionality can be enabled with the `Download on Build` option.
+In your project you can wait until the model download is complete with:
+``` c#
+await LLM.WaitUntilModelSetup();
+```
+You can also receive calls during the download with the download progress:
+``` c#
+await LLM.WaitUntilModelSetup(SetProgress);
+
+void SetProgress(float progress){
+  string progressPercent = ((int)(progress * 100)).ToString() + "%";
+  Debug.Log($"Download progress: {progressPercent}");
+}
+```
+This is useful to present a progress bar or something similar.
+The [MobileDemo](Samples~/MobileDemo) is an example application for Android / iOS.
 
 </details>
 <details>
-<summary>Save / Load your chat history</summary>
+<summary>Restrict the output of the LLM / Function calling</summary>
+
+To restrict the output of the LLM you can use a GBNF grammar, read more [here](https://github.com/ggerganov/llama.cpp/tree/master/grammars).<br>
+The grammar can be saved in a .gbnf file and loaded at the LLMCharacter with the `Load Grammar` button (Advanced options).<br>
+For instance to receive replies in json format you can use the [json.gbnf](https://github.com/ggerganov/llama.cpp/blob/b4218/grammars/json.gbnf) grammar.<br>
+
+Alternatively you can set the grammar directly with code:
+``` c#
+llmCharacter.grammarString = "your grammar here";
+```
+
+For function calling you can define similarly a grammar that allows only the function names as output, and then call the respective function.<br>
+You can look into the [FunctionCalling](Samples~/FunctionCalling) sample for an example implementation.
+
+</details>
+<details>
+<summary>Access / Save / Load your chat history</summary>
+The chat history of a `LLMCharacter` is retained in the `chat` variable that is a list of `ChatMessage` objects.<br>
+The ChatMessage is a struct that defines the `role` of the message and the `content`.<br>
+The first element of the list is always the system prompt and then alternating messages with the player prompt and the AI reply.<br>
+You can modify the chat history directly in this list.<br>
 
 To automatically save / load your chat history, you can specify the `Save` parameter of the LLMCharacter to the filename (or relative path) of your choice.
 The file is saved in the [persistentDataPath folder of Unity](https://docs.unity3d.com/ScriptReference/Application-persistentDataPath.html).
@@ -324,26 +364,92 @@ The `Embeddings` function can be used to obtain the emdeddings of a phrase:
 A <b>detailed documentation</b> on function level can be found here:
 <a href="https://undream.ai/LLMUnity"><img src="https://img.shields.io/badge/Documentation-white.svg?logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwEAYAAAAHkiXEAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEgAACxIB0t1+/AAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAATqSURBVHic7ZtbiE1RGMc349K4M5EwklwjzUhJCMmTJPJAYjQXJJcH8+Blkry4lPJA8aAoJbekDLmUS6E8SHJL5AW5JPf77eHv93C22Wfttc/ee+0zc/4vv+bMXvusvfZa3/q+b33H80oqqaSSSmqrKnPdgXjUvbvYq5f4+7f486eb/rRajRsn7t4tPngg/vol/vkj/vghXr0q7tghzpyZ//79+on79omXLombNondukXrd9GoSxdx8mSxqUm8eVNkgAvl0aPioEFip07i6dP52z15Ig4fbvVY2VVFhbhokXjrlogJiWvAg/jwoXjqVO73+leUny9eiFVV5mfMlLDRBw+KX76ISQ+0LZ8/F00v4uJFsWPHFh83O+rdWzx3TnQ9wCZ+/Sqyl5iux1RmTu3aiYcPi64H1pasALypoOv4/8SJXraEbXc9kLbECxo2TKyuFj9/zt9u+XIvG8LWv3wpuh5QW86f3/JznT+fv93s2S23C1Z72wbhtH692LdvMvdPSgzkhAkiJhT16ZO/PRPOmcr+Rda4aa5nclTeuZP7PDgRpr1g40bPrQYOFF0PYKHEC+raVVy8OFy7R49EArvURU4mrUAqaTY0iB8/2rXD+XCm5mbR9QAWylevorV7/VpkL0ld06eLpkiyWPj9u93179+LpFZwZ1PXtGnitWui64GMStPmG7SH1NSIJBNHjvTSFZvRvHlise0N9JcBtW1/44Y4dqx45IjnU0JxAGLpklPx+9VZFwPp/9v/eZDGjxcZh7dv4+mXtch+up7Rca+MsJvxiRNi6nvBhg25HWprZMaPGeOlqxEjxGKz+XGRTAAmyJnq6sR370TXA2NLW+8HNjZ62dLOnaLrAQ1r2zmqPH482n0mTfJCKmEvCJHUooNZE/369Elct06kqiKsONRfulTEFDsX8QDlIa5nup9374pE8IiZHPY+ly+LZE/37/cM6mC6IB6Vl4urV6fzfUG6d0/csyf37wsXRFInaM4ckTjGdPg+apTYs6dI3RIWwH//1DV1qkiuxNY2FzrTd+2y6y8z2HQU6efZs+KBAyJZ4v+V0h6ArlwROaQP0uPH4ooV4sqV8Xz/4MF211M2wwoOq1mzRAq5Pnywa5+4KDHE9mI7ly0TO3fOvZ6/eZCoKwB32HS0SMFV1DNtImBKHYstBROoQ4fEQk2RaS+qrxejmj5M7NatIhWARS82xUJfAKahzFcdPnq0GLYgy7Rnbd8e6rGKRyzpuNzPBQty709RcNSZf/KkuHCh2GpMDyKbGNcLYE+YMkVks336NFx7XhTZ3szXiBaqtWvFuAOxM2dEZiyH8UErgc8JLNun7E0aFffSI7RP6owZmz9kSO73HjsmXr8ukppYsybSYyQvBp5QfOjQ3M9tRR496pGgLf1JtLlzRZJzlFzGp4SWDnUxFCrdvy+uWiWa3DJe3N69oj8uSEq8CER88uaNOGBAOv2ILGY69TBBJoM8O0t72zaRoztXBzlLlrT8XARW/IQq82JTMv3mKmv0/9CC4mJMYPwrMSETxAyurRUxQVmXP1fEid7mzeK3b+n2Jzb16CFu2SIWmtNJiriVxANsyq0uoCJfTk4G9y4t24/bSQ0rTkP6gVTG3mz//uKMGSK/ucId5Xe9lZUi5eMMLGUgz56J5Hxu3xZ50Xg3RMIltVn9BRja26PYsBHgAAAAAElFTkSuQmCC"/></a>
 
-## Examples
-The [Samples~](Samples~) folder contains several examples of interaction 🤖:
-- [SimpleInteraction](Samples~/SimpleInteraction): Demonstrates a simple interaction with an AI character
-- [MultipleCharacters](Samples~/MultipleCharacters): Demonstrates a simple interaction using multiple AI characters
-- [KnowledgeBaseGame](Samples~/KnowledgeBaseGame): Simple detective game using a knowledge base to provide information to the LLM based on [google/mysteryofthreebots](https://github.com/google/mysteryofthreebots)
-- [ChatBot](Samples~/ChatBot): Demonstrates interaction between a player and a AI with a UI similar to a messaging app (see image below)
-- [AndroidDemo](Samples~/AndroidDemo): Example Android app with an initial screen with model download progress
-  
-<img width="400" src=".github/demo.gif">
+## Semantic search with a Retrieval-Augmented Generation (RAG) system
+LLM for Unity implements a super-fast similarity search functionality with a Retrieval-Augmented Generation (RAG) system.<br>
+It is based on the LLM functionality, and the Approximate Nearest Neighbors (ANN) search from the [usearch](https://github.com/unum-cloud/usearch) library.<br>
+Semantic search works as follows.
 
-To install a sample:
-- Open the Package Manager: `Window > Package Manager`
-- Select the `LLM for Unity` Package. From the `Samples` Tab, click `Import` next to the sample you want to install.
+**Building the data** You provide text inputs (a phrase, paragraph, document) to add to the data.<br>
+Each input is split into chunks (optional) and encoded into embeddings with a LLM.
 
-The samples can be run with the `Scene.unity` scene they contain inside their folder.<br>
-In the scene, select the `LLM` GameObject and click the `Download Model` button to download a default model or `Load model` to load your own model (see [LLM model management](#llm-model-management)).<br>
-Save the scene, run and enjoy!
+**Searching** You can then search for a query text input. <br>
+The input is again encoded and the most similar text inputs or chunks in the data are retrieved.
+
+To use semantic serch:
+- create a GameObject for the LLM as described above. Download one of the provided RAG models or load your own (good options can be found at the [MTEB leaderboard](https://huggingface.co/spaces/mteb/leaderboard)).
+- create an empty GameObject. In the GameObject Inspector click `Add Component` and select the `RAG` script.
+- In the Search Type dropdown of the RAG select your preferred search method. `SimpleSearch` is a simple brute-force search, while`DBSearch` is a fast ANN method that should be preferred in most cases.
+- In the Chunking Type dropdown of the RAG you can select a method for splitting the inputs into chunks. This is useful to have a more consistent meaning within each data part. Chunking methods for splitting according to tokens, words and sentences are provided.
+
+Alternatively, you can create the RAG from code (where llm is your LLM):
+``` c#
+  RAG rag = gameObject.AddComponent<RAG>();
+  rag.Init(SearchMethods.DBSearch, ChunkingMethods.SentenceSplitter, llm);
+```
+
+In your script you can then use it as follows :unicorn::
+``` c#
+using LLMUnity;
+
+public class MyScript : MonoBehaviour
+{
+  RAG rag;
+
+  async void Game(){
+    ...
+    string[] inputs = new string[]{
+      "Hi! I'm a search system.",
+      "the weather is nice. I like it.",
+      "I'm a RAG system"
+    };
+    // add the inputs to the RAG
+    foreach (string input in inputs) await rag.Add(input);
+    // get the 2 most similar inputs and their distance (dissimilarity) to the search query
+    (string[] results, float[] distances) = await rag.Search("hello!", 2);
+    // to get the most similar text parts (chnuks) you can enable the returnChunks option
+    rag.ReturnChunks(true);
+    (results, distances) = await rag.Search("hello!", 2);
+    ...
+  }
+}
+```
+
+You can also add / search text inputs for groups of data e.g. for a specific character or scene:
+``` c#
+    // add the inputs to the RAG for a group of data e.g. an orc character
+    foreach (string input in inputs) await rag.Add(input, "orc");
+    // get the 2 most similar inputs for the group of data e.g. the orc character
+    (string[] results, float[] distances) = await rag.Search("how do you feel?", 2, "orc");
+...
+
+You can save the RAG state (stored in the `Assets/StreamingAssets` folder):
+``` c#
+rag.Save("rag.zip");
+```
+and load it from disk:
+``` c#
+await rag.Load("rag.zip");
+```
+
+You can use the RAG to feed relevant data to the LLM based on a user message:
+``` c#
+  string message = "How is the weather?";
+  (string[] similarPhrases, float[] distances) = await rag.Search(message, 3);
+
+  string prompt = "Answer the user query based on the provided data.\n\n";
+  prompt += $"User query: {message}\n\n";
+  prompt += $"Data:\n";
+  foreach (string similarPhrase in similarPhrases) prompt += $"\n- {similarPhrase}";
+
+  _ = llmCharacter.Chat(prompt, HandleReply, ReplyCompleted);
+```
+
+The `RAG` sample includes an example RAG implementation as well as an example RAG-LLM integration.
+
+That's all :sparkles:!
 
 ## LLM model management
-LLM for Unity implements a model manager that allows to load or download LLMs and ship them directly in your game.<br>
+LLM for Unity uses a model manager that allows to load or download LLMs and ship them directly in your game.<br>
 The model manager can be found as part of the LLM GameObject:<br>
 <img width="360" src=".github/LLM_manager.png">
 
@@ -368,13 +474,32 @@ If you have loaded a model locally you need to set its URL through the expanded 
 
 ❕ Before using any model make sure you **check their license** ❕
 
+## Examples
+The [Samples~](Samples~) folder contains several examples of interaction 🤖:
+- [SimpleInteraction](Samples~/SimpleInteraction): Simple interaction with an AI character
+- [MultipleCharacters](Samples~/MultipleCharacters): Simple interaction using multiple AI characters
+- [FunctionCalling](Samples~/FunctionCalling): Function calling sample with structured output from the LLM
+- [RAG](Samples~/RAG): Semantic search using a Retrieval Augmented Generation (RAG) system. Includes example using a RAG to feed information to a LLM
+- [MobileDemo](Samples~/MobileDemo): Example mobile app for Android / iOS with an initial screen displaying the model download progress
+- [ChatBot](Samples~/ChatBot): Interaction between a player and a AI with a UI similar to a messaging app (see image below)
+- [KnowledgeBaseGame](Samples~/KnowledgeBaseGame): Simple detective game using a knowledge base to provide information to the LLM based on [google/mysteryofthreebots](https://github.com/google/mysteryofthreebots)
+  
+<img width="400" src=".github/demo.gif">
+
+To install a sample:
+- Open the Package Manager: `Window > Package Manager`
+- Select the `LLM for Unity` Package. From the `Samples` Tab, click `Import` next to the sample you want to install.
+
+The samples can be run with the `Scene.unity` scene they contain inside their folder.<br>
+In the scene, select the `LLM` GameObject and click the `Download Model` button to download a default model or `Load model` to load your own model (see [LLM model management](#llm-model-management)).<br>
+Save the scene, run and enjoy!
+
 ## Options
 
 ### LLM Settings
 
 - `Show/Hide Advanced Options` Toggle to show/hide advanced options from below
-- `Log Level` select how verbose the log messages are
-- `Use extras` select to install and allow the use of extra features (flash attention and IQ quants)
+- `Log Level` select how verbose the log messages arequants)
 
 #### 💻 Setup Settings
 
@@ -425,14 +550,6 @@ If the user's GPU is not supported, the LLM will fall back to the CPU
   - `Chat Template` the chat template being used for the LLM
   - `Lora` the path of the LoRAs being used (relative to the Assets/StreamingAssets folder)
   - `Lora Weights` the weights of the LoRAs being used
-  - `Flash Attention` click to use flash attention in the model (if `Use extras` is enabled)
-
-</details>
-
-#### 🗨️ Chat Settings
-- <details><summary>Advanced options</summary>
-
-- `Base Prompt` a common base prompt to use across all LLMCharacter objects using the LLM
 
 </details>
 
@@ -440,7 +557,6 @@ If the user's GPU is not supported, the LLM will fall back to the CPU
 
 - `Show/Hide Advanced Options` Toggle to show/hide advanced options from below
 - `Log Level` select how verbose the log messages are
-- `Use extras` select to install and allow the use of extra features (flash attention and IQ quants)
 
 #### 💻 Setup Settings
 <div>
@@ -465,6 +581,7 @@ If the user's GPU is not supported, the LLM will fall back to the CPU
 #### 🤗 Model Settings
 - `Stream` select to receive the reply from the model as it is produced (recommended!).<br>
 If it is not selected, the full reply from the model is received in one go
+- <details><summary><code>Num Predict</code> maximum number of tokens to predict (default: 256, -1 = infinity, -2 = until context filled)</summary>This is the maximum amount of tokens the model will maximum predict. When N tokens are reached the model will stop generating. This means words / sentences might not get finished if this is too low. </details>
 
 - <details><summary>Advanced options</summary>
 
@@ -473,7 +590,6 @@ If it is not selected, the full reply from the model is received in one go
   - <details><summary><code>Cache Prompt</code> save the ongoing prompt from the chat (default: true)</summary> Saves the prompt while it is being created by the chat to avoid reprocessing the entire prompt every time</details>
   - `Slot` slot of the server to use for computation. Value can be set from 0 to `Parallel Prompts`-1 (default: -1 = new slot for each character)
   - `Seed` seed for reproducibility. For random results every time use -1
-  - <details><summary><code>Num Predict</code> maximum number of tokens to predict (default: 256, -1 = infinity, -2 = until context filled)</summary>This is the maximum amount of tokens the model will maximum predict. When N tokens are reached the model will stop generating. This means words / sentences might not get finished if this is too low. </details>
   - <details><summary><code>Temperature</code> LLM temperature, lower values give more deterministic answers (default: 0.2)</summary>The temperature setting adjusts how random the generated responses are. Turning it up makes the generated choices more varied and unpredictable. Turning it down makes the generated responses more predictable and focused on the most likely options.</details>
   - <details><summary><code>Top K</code> top-k sampling (default: 40, 0 = disabled)</summary>The top k value controls the top k most probable tokens at each step of generation. This value can help fine tune the output and make this adhere to specific patterns or constraints.</details>
   - <details><summary><code>Top P</code> top-p sampling (default: 0.9, 1.0 = disabled)</summary>The top p value controls the cumulative probability of generated tokens. The model will generate tokens until this theshold (p) is reached. By lowering this value you can shorten output & encourage / discourage more diverse outputs.</details>

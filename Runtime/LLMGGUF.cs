@@ -125,6 +125,11 @@ namespace LLMUnity
             return null;
         }
 
+        /// <summary>
+        /// Allows to retrieve a single-valued GGUF field.
+        /// </summary>
+        /// <param name="key"> GGUF field to retrieve </param>
+        /// <returns> Retrieved location info as ReaderField </returns>
         public byte[] GetGenericField(string key)
         {
             ReaderField field = GetField(key);

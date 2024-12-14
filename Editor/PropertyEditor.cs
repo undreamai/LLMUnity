@@ -10,23 +10,24 @@ namespace LLMUnity
     {
         public static int buttonWidth = 150;
 
-        public void AddScript(SerializedObject llmScriptSO)
+        public virtual void AddScript(SerializedObject llmScriptSO)
         {
             var scriptProp = llmScriptSO.FindProperty("m_Script");
             EditorGUILayout.PropertyField(scriptProp);
         }
 
-        public bool ToggleButton(string text, bool activated)
+        public virtual bool ToggleButton(string text, bool activated)
         {
             GUIStyle style = new GUIStyle("Button");
             if (activated) style.normal = new GUIStyleState() { background = Texture2D.grayTexture };
             return GUILayout.Button(text, style, GUILayout.Width(buttonWidth));
         }
 
-        public void AddSetupSettings(SerializedObject llmScriptSO)
+        public virtual void AddSetupSettings(SerializedObject llmScriptSO)
         {
             List<Type> attributeClasses = new List<Type>(){typeof(LocalRemoteAttribute)};
-            attributeClasses.Add(llmScriptSO.FindProperty("remote").boolValue ? typeof(RemoteAttribute) : typeof(LocalAttribute));
+            SerializedProperty remoteProperty = llmScriptSO.FindProperty("remote");
+            if (remoteProperty != null) attributeClasses.Add(remoteProperty.boolValue ? typeof(RemoteAttribute) : typeof(LocalAttribute));
             attributeClasses.Add(typeof(LLMAttribute));
             if (llmScriptSO.FindProperty("advancedOptions").boolValue)
             {
@@ -35,37 +36,64 @@ namespace LLMUnity
             ShowPropertiesOfClass("Setup Settings", llmScriptSO, attributeClasses, true);
         }
 
-        public void AddChatSettings(SerializedObject llmScriptSO)
+        public virtual void AddModelSettings(SerializedObject llmScriptSO)
+        {
+            List<Type> attributeClasses = new List<Type>(){typeof(ModelAttribute)};
+            if (llmScriptSO.FindProperty("advancedOptions").boolValue)
+            {
+                attributeClasses.Add(typeof(ModelAdvancedAttribute));
+            }
+            ShowPropertiesOfClass("Model Settings", llmScriptSO, attributeClasses, true);
+        }
+
+        public virtual void AddChatSettings(SerializedObject llmScriptSO)
         {
             List<Type> attributeClasses = new List<Type>(){typeof(ChatAttribute)};
             if (llmScriptSO.FindProperty("advancedOptions").boolValue)
             {
                 attributeClasses.Add(typeof(ChatAdvancedAttribute));
             }
-            ShowPropertiesOfClass("Chat Settings", llmScriptSO, attributeClasses, false);
+            ShowPropertiesOfClass("Chat Settings", llmScriptSO, attributeClasses, true);
         }
 
-        public void AddOptionsToggles(SerializedObject llmScriptSO)
+        public void AddDebugModeToggle()
         {
             LLMUnitySetup.SetDebugMode((LLMUnitySetup.DebugModeType)EditorGUILayout.EnumPopup("Log Level", LLMUnitySetup.DebugMode));
+        }
 
-            EditorGUILayout.BeginHorizontal();
+        public void AddAdvancedOptionsToggle(SerializedObject llmScriptSO)
+        {
+            List<SerializedProperty> properties = GetPropertiesOfClass(llmScriptSO, new List<Type>(){typeof(AdvancedAttribute)});
+            if (properties.Count == 0) return;
+
             SerializedProperty advancedOptionsProp = llmScriptSO.FindProperty("advancedOptions");
             string toggleText = (advancedOptionsProp.boolValue ? "Hide" : "Show") + " Advanced Options";
             if (ToggleButton(toggleText, advancedOptionsProp.boolValue)) advancedOptionsProp.boolValue = !advancedOptionsProp.boolValue;
-            if (ToggleButton("Use extras", LLMUnitySetup.FullLlamaLib)) LLMUnitySetup.SetFullLlamaLib(!LLMUnitySetup.FullLlamaLib);
-            EditorGUILayout.EndHorizontal();
+        }
+
+        public virtual void AddOptionsToggles(SerializedObject llmScriptSO)
+        {
+            AddAdvancedOptionsToggle(llmScriptSO);
             Space();
         }
 
-        public void Space()
+        public virtual void Space()
         {
             EditorGUILayout.Space((int)EditorGUIUtility.singleLineHeight / 2);
         }
 
         protected virtual Type[] GetPropertyTypes()
         {
-            return new Type[] {};
+            List<Type> types = new List<Type>();
+            Type currentType = target.GetType();
+            while (currentType != null)
+            {
+                types.Add(currentType);
+                currentType = currentType.BaseType;
+                if (currentType == typeof(MonoBehaviour)) break;
+            }
+            types.Reverse();
+            return types.ToArray();
         }
 
         public List<SerializedProperty> GetPropertiesOfClass(SerializedObject so, List<Type> attributeClasses)
@@ -92,7 +120,7 @@ namespace LLMUnity
             return properties;
         }
 
-        public void ShowPropertiesOfClass(string title, SerializedObject so, List<Type> attributeClasses, bool addSpace = true, List<Type> excludeAttributeClasses = null)
+        public bool ShowPropertiesOfClass(string title, SerializedObject so, List<Type> attributeClasses, bool addSpace = true, List<Type> excludeAttributeClasses = null)
         {
             // display a property if it belongs to a certain class and/or has a specific attribute class
             List<SerializedProperty> properties = GetPropertiesOfClass(so, attributeClasses);
@@ -109,7 +137,7 @@ namespace LLMUnity
                 }
                 foreach (SerializedProperty prop in removeProperties) properties.Remove(prop);
             }
-            if (properties.Count == 0) return;
+            if (properties.Count == 0) return false;
             if (title != "") EditorGUILayout.LabelField(title, EditorStyles.boldLabel);
             foreach (SerializedProperty prop in properties)
             {
@@ -148,6 +176,7 @@ namespace LLMUnity
                 }
             }
             if (addSpace) Space();
+            return true;
         }
 
         public bool PropertyInClass(SerializedProperty prop, Type targetClass, Type attributeClass = null)
@@ -181,7 +210,7 @@ namespace LLMUnity
             return null;
         }
 
-        public void OnInspectorGUIStart(SerializedObject scriptSO)
+        public virtual void OnInspectorGUIStart(SerializedObject scriptSO)
         {
             scriptSO.Update();
             GUI.enabled = false;
@@ -190,12 +219,26 @@ namespace LLMUnity
             EditorGUI.BeginChangeCheck();
         }
 
-        public void OnInspectorGUIEnd(SerializedObject scriptSO)
+        public virtual void OnInspectorGUIEnd(SerializedObject scriptSO)
         {
             if (EditorGUI.EndChangeCheck())
                 Repaint();
 
             scriptSO.ApplyModifiedProperties();
+        }
+
+        public override void OnInspectorGUI()
+        {
+            SerializedObject llmScriptSO = new SerializedObject(target);
+
+            OnInspectorGUIStart(llmScriptSO);
+            AddOptionsToggles(llmScriptSO);
+
+            AddSetupSettings(llmScriptSO);
+            AddChatSettings(llmScriptSO);
+            AddModelSettings(llmScriptSO);
+
+            OnInspectorGUIEnd(llmScriptSO);
         }
     }
 }

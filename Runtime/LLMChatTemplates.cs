@@ -1,9 +1,7 @@
 /// @file
 /// @brief File implementing the chat templates.
-using System;
 using System.Collections.Generic;
 using System.IO;
-using UnityEngine;
 
 namespace LLMUnity
 {

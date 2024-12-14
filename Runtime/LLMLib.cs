@@ -9,6 +9,10 @@ using UnityEngine;
 
 namespace LLMUnity
 {
+    /// @ingroup utils
+    /// <summary>
+    /// Class implementing a wrapper for a communication stream between Unity and the llama.cpp library (mainly for completion calls and logging).
+    /// </summary>
     public class StreamWrapper
     {
         LLMLib llmlib;
@@ -27,6 +31,11 @@ namespace LLMUnity
             stringWrapper = (llmlib?.StringWrapper_Construct()).GetValueOrDefault();
         }
 
+        /// <summary>
+        /// Retrieves the content of the stream
+        /// </summary>
+        /// <param name="clear">whether to clear the stream after retrieving the content</param>
+        /// <returns>stream content</returns>
         public string GetString(bool clear = false)
         {
             string result;
@@ -57,6 +66,9 @@ namespace LLMUnity
             return result;
         }
 
+        /// <summary>
+        /// Unity Update implementation that retrieves the content and calls the callback if it has changed.
+        /// </summary>
         public void Update()
         {
             if (stringWrapper == IntPtr.Zero) return;
@@ -68,21 +80,39 @@ namespace LLMUnity
             }
         }
 
+        /// <summary>
+        /// Gets the stringWrapper object to pass to the library.
+        /// </summary>
+        /// <returns>stringWrapper object</returns>
         public IntPtr GetStringWrapper()
         {
             return stringWrapper;
         }
 
+        /// <summary>
+        /// Deletes the stringWrapper object.
+        /// </summary>
         public void Destroy()
         {
             if (stringWrapper != IntPtr.Zero) llmlib?.StringWrapper_Delete(stringWrapper);
         }
     }
 
+    /// @ingroup utils
+    /// <summary>
+    /// Class implementing a library loader for Unity.
+    /// Adapted from SkiaForUnity:
+    /// https://github.com/ammariqais/SkiaForUnity/blob/f43322218c736d1c41f3a3df9355b90db4259a07/SkiaUnity/Assets/SkiaSharp/SkiaSharp-Bindings/SkiaSharp.HarfBuzz.Shared/HarfBuzzSharp.Shared/LibraryLoader.cs
+    /// </summary>
     static class LibraryLoader
     {
-        // LibraryLoader is adapted from SkiaForUnity:
-        // https://github.com/ammariqais/SkiaForUnity/blob/f43322218c736d1c41f3a3df9355b90db4259a07/SkiaUnity/Assets/SkiaSharp/SkiaSharp-Bindings/SkiaSharp.HarfBuzz.Shared/HarfBuzzSharp.Shared/LibraryLoader.cs
+        /// <summary>
+        /// Allows to retrieve a function delegate for the library
+        /// </summary>
+        /// <typeparam name="T">type to cast the function</typeparam>
+        /// <param name="library">library handle</param>
+        /// <param name="name">function name</param>
+        /// <returns>function delegate</returns>
         public static T GetSymbolDelegate<T>(IntPtr library, string name) where T : Delegate
         {
             var symbol = GetSymbol(library, name);
@@ -92,59 +122,80 @@ namespace LLMUnity
             return Marshal.GetDelegateForFunctionPointer<T>(symbol);
         }
 
+        /// <summary>
+        /// Loads the provided library in a cross-platform manner
+        /// </summary>
+        /// <param name="libraryName">library path</param>
+        /// <returns>library handle</returns>
         public static IntPtr LoadLibrary(string libraryName)
         {
             if (string.IsNullOrEmpty(libraryName))
                 throw new ArgumentNullException(nameof(libraryName));
 
             IntPtr handle;
-            if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer)
+            if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsServer)
                 handle = Win32.LoadLibrary(libraryName);
-            else if (Application.platform == RuntimePlatform.LinuxEditor || Application.platform == RuntimePlatform.LinuxPlayer)
+            else if (Application.platform == RuntimePlatform.LinuxEditor || Application.platform == RuntimePlatform.LinuxPlayer || Application.platform == RuntimePlatform.LinuxServer)
                 handle = Linux.dlopen(libraryName);
-            else if (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.OSXPlayer)
+            else if (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.OSXPlayer || Application.platform == RuntimePlatform.OSXServer)
                 handle = Mac.dlopen(libraryName);
             else if (Application.platform == RuntimePlatform.Android)
                 handle = Android.dlopen(libraryName);
+            else if (Application.platform == RuntimePlatform.IPhonePlayer)
+                handle = iOS.dlopen(libraryName);
             else
                 throw new PlatformNotSupportedException($"Current platform is unknown, unable to load library '{libraryName}'.");
 
             return handle;
         }
 
+        /// <summary>
+        /// Retrieve a function delegate for the library in a cross-platform manner
+        /// </summary>
+        /// <param name="library">library handle</param>
+        /// <param name="symbolName">function name</param>
+        /// <returns>function handle</returns>
         public static IntPtr GetSymbol(IntPtr library, string symbolName)
         {
             if (string.IsNullOrEmpty(symbolName))
                 throw new ArgumentNullException(nameof(symbolName));
 
             IntPtr handle;
-            if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer)
+            if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsServer)
                 handle = Win32.GetProcAddress(library, symbolName);
-            else if (Application.platform == RuntimePlatform.LinuxEditor || Application.platform == RuntimePlatform.LinuxPlayer)
+            else if (Application.platform == RuntimePlatform.LinuxEditor || Application.platform == RuntimePlatform.LinuxPlayer || Application.platform == RuntimePlatform.LinuxServer)
                 handle = Linux.dlsym(library, symbolName);
-            else if (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.OSXPlayer)
+            else if (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.OSXPlayer || Application.platform == RuntimePlatform.OSXServer)
                 handle = Mac.dlsym(library, symbolName);
             else if (Application.platform == RuntimePlatform.Android)
                 handle = Android.dlsym(library, symbolName);
+            else if (Application.platform == RuntimePlatform.IPhonePlayer)
+                handle = iOS.dlsym(library, symbolName);
             else
                 throw new PlatformNotSupportedException($"Current platform is unknown, unable to load symbol '{symbolName}' from library {library}.");
 
             return handle;
         }
 
+        /// <summary>
+        /// Frees up the library
+        /// </summary>
+        /// <param name="library">library handle</param>
         public static void FreeLibrary(IntPtr library)
         {
             if (library == IntPtr.Zero)
                 return;
 
-            if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer)
+            if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsServer)
                 Win32.FreeLibrary(library);
-            else if (Application.platform == RuntimePlatform.LinuxEditor || Application.platform == RuntimePlatform.LinuxPlayer)
+            else if (Application.platform == RuntimePlatform.LinuxEditor || Application.platform == RuntimePlatform.LinuxPlayer || Application.platform == RuntimePlatform.LinuxServer)
                 Linux.dlclose(library);
-            else if (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.OSXPlayer)
+            else if (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.OSXPlayer || Application.platform == RuntimePlatform.OSXServer)
                 Mac.dlclose(library);
             else if (Application.platform == RuntimePlatform.Android)
                 Android.dlclose(library);
+            else if (Application.platform == RuntimePlatform.IPhonePlayer)
+                iOS.dlclose(library);
             else
                 throw new PlatformNotSupportedException($"Current platform is unknown, unable to close library '{library}'.");
         }
@@ -243,15 +294,47 @@ namespace LLMUnity
             public static IntPtr dlopen(string path) => dlopen(path, 1);
 
 #if UNITY_ANDROID
-            // LoadLibrary for Android
             [DllImport("__Internal")]
             public static extern IntPtr dlopen(string filename, int flags);
 
-            // GetSymbol for Android
             [DllImport("__Internal")]
             public static extern IntPtr dlsym(IntPtr handle, string symbol);
 
-            // FreeLibrary for Android
+            [DllImport("__Internal")]
+            public static extern int dlclose(IntPtr handle);
+#else
+            public static IntPtr dlopen(string filename, int flags)
+            {
+                return default;
+            }
+
+            public static IntPtr dlsym(IntPtr handle, string symbol)
+            {
+                return default;
+            }
+
+            public static int dlclose(IntPtr handle)
+            {
+                return default;
+            }
+
+#endif
+        }
+
+        private static class iOS
+        {
+            public static IntPtr dlopen(string path) => dlopen(path, 1);
+
+#if UNITY_IOS
+            // LoadLibrary for iOS
+            [DllImport("__Internal")]
+            public static extern IntPtr dlopen(string filename, int flags);
+
+            // GetSymbol for iOS
+            [DllImport("__Internal")]
+            public static extern IntPtr dlsym(IntPtr handle, string symbol);
+
+            // FreeLibrary for iOS
             [DllImport("__Internal")]
             public static extern int dlclose(IntPtr handle);
 #else
@@ -274,6 +357,10 @@ namespace LLMUnity
         }
     }
 
+    /// @ingroup utils
+    /// <summary>
+    /// Class implementing the LLM library handling
+    /// </summary>
     public class LLMLib
     {
         IntPtr libraryHandle = IntPtr.Zero;
@@ -315,6 +402,11 @@ namespace LLMUnity
             }
         }
 
+        /// <summary>
+        /// Loads the library and function handles for the defined architecture
+        /// </summary>
+        /// <param name="arch">archtecture</param>
+        /// <exception cref="Exception"></exception>
         public LLMLib(string arch)
         {
             libraryHandle = LibraryLoader.LoadLibrary(GetArchitecturePath(arch));
@@ -349,31 +441,30 @@ namespace LLMUnity
             StopLogging = LibraryLoader.GetSymbolDelegate<StopLoggingDelegate>(libraryHandle, "StopLogging");
         }
 
+        /// <summary>
+        /// Destroys the LLM library
+        /// </summary>
         public void Destroy()
         {
             if (libraryHandle != IntPtr.Zero) LibraryLoader.FreeLibrary(libraryHandle);
         }
 
+        /// <summary>
+        /// Identifies the possible architectures that we can use based on the OS and GPU usage
+        /// </summary>
+        /// <param name="gpu">whether to allow GPU architectures</param>
+        /// <returns>possible architectures</returns>
         public static List<string> PossibleArchitectures(bool gpu = false)
         {
             List<string> architectures = new List<string>();
-            if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer ||
-                Application.platform == RuntimePlatform.LinuxEditor || Application.platform == RuntimePlatform.LinuxPlayer)
+            if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsServer ||
+                Application.platform == RuntimePlatform.LinuxEditor || Application.platform == RuntimePlatform.LinuxPlayer || Application.platform == RuntimePlatform.LinuxServer)
             {
                 if (gpu)
                 {
-                    if (LLMUnitySetup.FullLlamaLib)
-                    {
-                        architectures.Add("cuda-cu12.2.0-full");
-                        architectures.Add("cuda-cu11.7.1-full");
-                        architectures.Add("hip-full");
-                    }
-                    else
-                    {
-                        architectures.Add("cuda-cu12.2.0");
-                        architectures.Add("cuda-cu11.7.1");
-                        architectures.Add("hip");
-                    }
+                    architectures.Add("cuda-cu12.2.0");
+                    architectures.Add("cuda-cu11.7.1");
+                    architectures.Add("hip");
                     architectures.Add("vulkan");
                 }
                 if (has_avx512) architectures.Add("avx512");
@@ -400,6 +491,10 @@ namespace LLMUnity
             {
                 architectures.Add("android");
             }
+            else if (Application.platform == RuntimePlatform.IPhonePlayer)
+            {
+                architectures.Add("ios");
+            }
             else
             {
                 string error = "Unknown OS";
@@ -409,14 +504,18 @@ namespace LLMUnity
             return architectures;
         }
 
+        /// <summary>
+        /// Gets the path of a library that allows to detect the underlying CPU (Windows / Linux).
+        /// </summary>
+        /// <returns>architecture checker library path</returns>
         public static string GetArchitectureCheckerPath()
         {
             string filename;
-            if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer)
+            if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsServer)
             {
                 filename = $"windows-archchecker/archchecker.dll";
             }
-            else if (Application.platform == RuntimePlatform.LinuxEditor || Application.platform == RuntimePlatform.LinuxPlayer)
+            else if (Application.platform == RuntimePlatform.LinuxEditor || Application.platform == RuntimePlatform.LinuxPlayer || Application.platform == RuntimePlatform.LinuxServer)
             {
                 filename = $"linux-archchecker/libarchchecker.so";
             }
@@ -427,24 +526,33 @@ namespace LLMUnity
             return Path.Combine(LLMUnitySetup.libraryPath, filename);
         }
 
+        /// <summary>
+        /// Gets the path of the llama.cpp library for the specified architecture.
+        /// </summary>
+        /// <param name="arch">architecture</param>
+        /// <returns>llama.cpp library path</returns>
         public static string GetArchitecturePath(string arch)
         {
             string filename;
-            if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer)
+            if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsServer)
             {
                 filename = $"windows-{arch}/undreamai_windows-{arch}.dll";
             }
-            else if (Application.platform == RuntimePlatform.LinuxEditor || Application.platform == RuntimePlatform.LinuxPlayer)
+            else if (Application.platform == RuntimePlatform.LinuxEditor || Application.platform == RuntimePlatform.LinuxPlayer || Application.platform == RuntimePlatform.LinuxServer)
             {
                 filename = $"linux-{arch}/libundreamai_linux-{arch}.so";
             }
-            else if (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.OSXPlayer)
+            else if (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.OSXPlayer || Application.platform == RuntimePlatform.OSXServer)
             {
                 filename = $"macos-{arch}/libundreamai_macos-{arch}.dylib";
             }
             else if (Application.platform == RuntimePlatform.Android)
             {
                 return "libundreamai_android.so";
+            }
+            else if (Application.platform == RuntimePlatform.IPhonePlayer)
+            {
+                filename = "iOS/libundreamai_iOS.dylib";
             }
             else
             {
@@ -455,6 +563,11 @@ namespace LLMUnity
             return Path.Combine(LLMUnitySetup.libraryPath, filename);
         }
 
+        /// <summary>
+        /// Allows to retrieve a string from the library (Unity only allows marshalling of chars)
+        /// </summary>
+        /// <param name="stringWrapper">string wrapper pointer</param>
+        /// <returns>retrieved string</returns>
         public string GetStringWrapperResult(IntPtr stringWrapper)
         {
             string result = "";

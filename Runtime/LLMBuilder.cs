@@ -1,3 +1,5 @@
+/// @file
+/// @brief File implementing the LLMUnity builder.
 using UnityEditor;
 using UnityEngine;
 using System.IO;
@@ -6,10 +8,15 @@ using System.Collections.Generic;
 #if UNITY_EDITOR
 namespace LLMUnity
 {
+    /// @ingroup utils
+    /// <summary>
+    /// Class implementing the LLMUnity builder.
+    /// </summary>
     public class LLMBuilder
     {
         static List<StringPair> movedPairs = new List<StringPair>();
         public static string BuildTempDir = Path.Combine(Application.temporaryCachePath, "LLMUnityBuild");
+        public static string androidPluginDir = Path.Combine(Application.dataPath, "Plugins", "Android", "LLMUnity");
         static string movedCache = Path.Combine(BuildTempDir, "moved.json");
 
         [InitializeOnLoadMethod]
@@ -18,6 +25,12 @@ namespace LLMUnity
             Reset();
         }
 
+        /// <summary>
+        /// Performs an action for a file or a directory recursively
+        /// </summary>
+        /// <param name="source">source file/directory</param>
+        /// <param name="target">targer file/directory</param>
+        /// <param name="actionCallback">action</param>
         public static void HandleActionFileRecursive(string source, string target, ActionCallback actionCallback)
         {
             if (File.Exists(source))
@@ -37,25 +50,47 @@ namespace LLMUnity
             }
         }
 
+        /// <summary>
+        /// Overwrites a target file based on the source file
+        /// </summary>
+        /// <param name="source">source file</param>
+        /// <param name="target">target file</param>
         public static void CopyWithOverwrite(string source, string target)
         {
             File.Copy(source, target, true);
         }
 
+        /// <summary>
+        /// Copies a source file to a target file
+        /// </summary>
+        /// <param name="source">source file</param>
+        /// <param name="target">target file</param>
         public static void CopyPath(string source, string target)
         {
             HandleActionFileRecursive(source, target, CopyWithOverwrite);
         }
 
+        /// <summary>
+        /// Moves a source file to a target file
+        /// </summary>
+        /// <param name="source">source file</param>
+        /// <param name="target">target file</param>
         public static void MovePath(string source, string target)
         {
             HandleActionFileRecursive(source, target, File.Move);
             DeletePath(source);
         }
 
+        /// <summary>
+        /// Deletes a path after checking if we are allowed to
+        /// </summary>
+        /// <param name="path">path</param>
         public static bool DeletePath(string path)
         {
-            if (!LLMUnitySetup.IsSubPath(path, LLMUnitySetup.GetAssetPath()) && !LLMUnitySetup.IsSubPath(path, BuildTempDir))
+            string[] allowedDirs = new string[] { LLMUnitySetup.GetAssetPath(), BuildTempDir, androidPluginDir};
+            bool deleteOK = false;
+            foreach (string allowedDir in allowedDirs) deleteOK = deleteOK || LLMUnitySetup.IsSubPath(path, allowedDir);
+            if (!deleteOK)
             {
                 LLMUnitySetup.LogError($"Safeguard: {path} will not be deleted because it may not be safe");
                 return false;
@@ -112,6 +147,10 @@ namespace LLMUnity
             AddTargetPair(target + ".meta");
         }
 
+        /// <summary>
+        /// Hides all the library platforms apart from the target platform by moving out their library folders outside of StreamingAssets
+        /// </summary>
+        /// <param name="platform">target platform</param>
         public static void HideLibraryPlatforms(string platform)
         {
             List<string> platforms = new List<string>(){ "windows", "macos", "linux", "android", "ios", "setup" };
@@ -122,8 +161,6 @@ namespace LLMUnity
                 foreach (string platformPrefix in platforms)
                 {
                     bool move = sourceName.StartsWith(platformPrefix);
-                    move = move || (sourceName.Contains("cuda") && !sourceName.Contains("full") && LLMUnitySetup.FullLlamaLib);
-                    move = move || (sourceName.Contains("cuda") && sourceName.Contains("full") && !LLMUnitySetup.FullLlamaLib);
                     if (move)
                     {
                         string target = Path.Combine(BuildTempDir, sourceName);
@@ -132,21 +169,40 @@ namespace LLMUnity
                     }
                 }
             }
+
+            if (platform == "android")
+            {
+                string source = Path.Combine(LLMUnitySetup.libraryPath, "android");
+                string target = Path.Combine(androidPluginDir, LLMUnitySetup.libraryName);
+                MoveAction(source, target);
+                MoveAction(source + ".meta", target + ".meta");
+                AddActionAddMeta(androidPluginDir);
+            }
         }
 
+        /// <summary>
+        /// Bundles the model information
+        /// </summary>
         public static void BuildModels()
         {
             LLMManager.Build(CopyActionAddMeta);
             if (File.Exists(LLMUnitySetup.LLMManagerPath)) AddActionAddMeta(LLMUnitySetup.LLMManagerPath);
         }
 
+        /// <summary>
+        /// Bundles the models and libraries
+        /// </summary>
         public static void Build(string platform)
         {
+            DeletePath(BuildTempDir);
             Directory.CreateDirectory(BuildTempDir);
             HideLibraryPlatforms(platform);
             BuildModels();
         }
 
+        /// <summary>
+        /// Resets the libraries back to their original state
+        /// </summary>
         public static void Reset()
         {
             if (!File.Exists(movedCache)) return;

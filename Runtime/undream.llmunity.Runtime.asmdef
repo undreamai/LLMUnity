@@ -1,3 +1,6 @@
 {
-    "name": "undream.llmunity.Runtime"
+    "name": "undream.llmunity.Runtime",
+    "references": [
+        "Cloud.Unum.USearch"
+    ]
 }

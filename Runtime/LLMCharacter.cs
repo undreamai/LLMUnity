@@ -1,5 +1,5 @@
 /// @file
-/// @brief File implementing the LLMCharacter.
+/// @brief File implementing the LLM characters.
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -7,7 +7,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Networking;
 
 namespace LLMUnity
 {
@@ -16,22 +15,8 @@ namespace LLMUnity
     /// <summary>
     /// Class implementing the LLM characters.
     /// </summary>
-    public class LLMCharacter : MonoBehaviour
+    public class LLMCharacter : LLMCaller
     {
-        /// <summary> toggle to show/hide advanced options in the GameObject </summary>
-        [HideInInspector] public bool advancedOptions = false;
-        /// <summary> toggle to use remote LLM server or local LLM </summary>
-        [LocalRemote] public bool remote = false;
-        /// <summary> the LLM object to use </summary>
-        [Local] public LLM llm;
-        /// <summary> host to use for the LLM server </summary>
-        [Remote] public string host = "localhost";
-        /// <summary> port to use for the LLM server </summary>
-        [Remote] public int port = 13333;
-        /// <summary> number of retries to use for the LLM server requests (-1 = infinite) </summary>
-        [Remote] public int numRetries = 10;
-        /// <summary> allows to use a server with API key </summary>
-        [Remote] public string APIKey;
         /// <summary> file to save the chat history.
         /// The file is saved only for Chat calls with addToHistory set to true.
         /// The file will be saved within the persistentDataPath directory (see https://docs.unity3d.com/ScriptReference/Application-persistentDataPath.html). </summary>
@@ -40,22 +25,19 @@ namespace LLMUnity
         [LLM] public bool saveCache = false;
         /// <summary> select to log the constructed prompt the Unity Editor. </summary>
         [LLM] public bool debugPrompt = false;
-        /// <summary> option to receive the reply from the model as it is produced (recommended!).
-        /// If it is not selected, the full reply from the model is received in one go </summary>
-        [Model] public bool stream = true;
-        /// <summary> grammar file used for the LLM in .cbnf format (relative to the Assets/StreamingAssets folder) </summary>
-        [ModelAdvanced] public string grammar = null;
-        /// <summary> option to cache the prompt as it is being created by the chat to avoid reprocessing the entire prompt every time (default: true) </summary>
-        [ModelAdvanced] public bool cachePrompt = true;
-        /// <summary> specify which slot of the server to use for computation (affects caching) </summary>
-        [ModelAdvanced] public int slot = -1;
-        /// <summary> seed for reproducibility. For random results every time set to -1. </summary>
-        [ModelAdvanced] public int seed = 0;
         /// <summary> number of tokens to predict (-1 = infinity, -2 = until context filled).
         /// This is the amount of tokens the model will maximum predict.
         /// When N predict is reached the model will stop generating.
         /// This means words / sentences might not get finished if this is too low. </summary>
-        [ModelAdvanced] public int numPredict = 256;
+        [Model] public int numPredict = 256;
+        /// <summary> specify which slot of the server to use for computation (affects caching) </summary>
+        [ModelAdvanced] public int slot = -1;
+        /// <summary> grammar file used for the LLM in .cbnf format (relative to the Assets/StreamingAssets folder) </summary>
+        [ModelAdvanced] public string grammar = null;
+        /// <summary> option to cache the prompt as it is being created by the chat to avoid reprocessing the entire prompt every time (default: true) </summary>
+        [ModelAdvanced] public bool cachePrompt = true;
+        /// <summary> seed for reproducibility. For random results every time set to -1. </summary>
+        [ModelAdvanced] public int seed = 0;
         /// <summary> LLM temperature, lower values give more deterministic answers.
         /// The temperature setting adjusts how random the generated responses are.
         /// Turning it up makes the generated choices more varied and unpredictable.
@@ -112,6 +94,9 @@ namespace LLMUnity
         /// By providing a token ID and a positive or negative bias value, you can increase or decrease the probability of that token being generated. </summary>
         public Dictionary<int, string> logitBias = null;
 
+        /// <summary> option to receive the reply from the model as it is produced (recommended!).
+        /// If it is not selected, the full reply from the model is received in one go </summary>
+        [Chat] public bool stream = true;
         /// <summary> the name of the player </summary>
         [Chat] public string playerName = "user";
         /// <summary> the name of the AI </summary>
@@ -120,15 +105,15 @@ namespace LLMUnity
         [TextArea(5, 10), Chat] public string prompt = "A chat between a curious human and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the human's questions.";
         /// <summary> option to set the number of tokens to retain from the prompt (nKeep) based on the LLMCharacter system prompt </summary>
         public bool setNKeepToPrompt = true;
+        /// <summary> the chat history as list of chat messages </summary>
+        public List<ChatMessage> chat = new List<ChatMessage>();
+        /// <summary> the grammar to use </summary>
+        public string grammarString;
 
         /// \cond HIDE
-        public List<ChatMessage> chat;
-        private SemaphoreSlim chatLock = new SemaphoreSlim(1, 1);
-        private string chatTemplate;
-        private ChatTemplate template = null;
-        public string grammarString;
-        private List<(string, string)> requestHeaders;
-        private List<UnityWebRequest> WIPRequests = new List<UnityWebRequest>();
+        protected SemaphoreSlim chatLock = new SemaphoreSlim(1, 1);
+        protected string chatTemplate;
+        protected ChatTemplate template = null;
         /// \endcond
 
         /// <summary>
@@ -140,88 +125,47 @@ namespace LLMUnity
         /// - the chat template is constructed
         /// - the number of tokens to keep are based on the system prompt (if setNKeepToPrompt=true)
         /// </summary>
-        public void Awake()
+        public override void Awake()
         {
-            // Start the LLM server in a cross-platform way
             if (!enabled) return;
-
-            requestHeaders = new List<(string, string)> { ("Content-Type", "application/json") };
+            base.Awake();
             if (!remote)
             {
-                AssignLLM();
-                if (llm == null)
-                {
-                    LLMUnitySetup.LogError($"No LLM assigned or detected for LLMCharacter {name}!");
-                    return;
-                }
                 int slotFromServer = llm.Register(this);
                 if (slot == -1) slot = slotFromServer;
             }
-            else
-            {
-                if (!String.IsNullOrEmpty(APIKey)) requestHeaders.Add(("Authorization", "Bearer " + APIKey));
-            }
-
             InitGrammar();
             InitHistory();
         }
 
-        void OnValidate()
+        protected override void OnValidate()
         {
-            AssignLLM();
+            base.OnValidate();
             if (llm != null && llm.parallelPrompts > -1 && (slot < -1 || slot >= llm.parallelPrompts)) LLMUnitySetup.LogError($"The slot needs to be between 0 and {llm.parallelPrompts-1}, or -1 to be automatically set");
         }
 
-        void Reset()
+        protected override string NotValidLLMError()
         {
-            AssignLLM();
+            return base.NotValidLLMError() + $", it is an embedding only model";
         }
 
-        void AssignLLM()
+        /// <summary>
+        /// Checks if a LLM is valid for the LLMCaller
+        /// </summary>
+        /// <param name="llmSet">LLM object</param>
+        /// <returns>bool specifying whether the LLM is valid</returns>
+        public override bool IsValidLLM(LLM llmSet)
         {
-            if (remote || llm != null) return;
-
-            LLM[] existingLLMs = FindObjectsOfType<LLM>();
-            if (existingLLMs.Length == 0) return;
-
-            SortBySceneAndHierarchy(existingLLMs);
-            llm = existingLLMs[0];
-            string msg = $"Assigning LLM {llm.name} to LLMCharacter {name}";
-            if (llm.gameObject.scene != gameObject.scene) msg += $" from scene {llm.gameObject.scene}";
-            LLMUnitySetup.Log(msg);
+            return !llmSet.embeddingsOnly;
         }
 
-        void SortBySceneAndHierarchy(LLM[] array)
+        protected virtual void InitHistory()
         {
-            for (int i = 0; i < array.Length - 1; i++)
-            {
-                bool swapped = false;
-                for (int j = 0; j < array.Length - i - 1; j++)
-                {
-                    bool sameScene = array[j].gameObject.scene == array[j + 1].gameObject.scene;
-                    bool swap = (
-                        (!sameScene && array[j + 1].gameObject.scene == gameObject.scene) ||
-                        (sameScene && array[j].transform.GetSiblingIndex() > array[j + 1].transform.GetSiblingIndex())
-                    );
-                    if (swap)
-                    {
-                        LLM temp = array[j];
-                        array[j] = array[j + 1];
-                        array[j + 1] = temp;
-                        swapped = true;
-                    }
-                }
-                if (!swapped) break;
-            }
-        }
-
-        protected void InitHistory()
-        {
-            InitPrompt();
+            ClearChat();
             _ = LoadHistory();
         }
 
-        protected async Task LoadHistory()
+        protected virtual async Task LoadHistory()
         {
             if (save == "" || !File.Exists(GetJsonSavePath(save))) return;
             await chatLock.WaitAsync(); // Acquire the lock
@@ -235,40 +179,39 @@ namespace LLMUnity
             }
         }
 
-        public virtual string GetSavePath(string filename)
+        protected virtual string GetSavePath(string filename)
         {
             return Path.Combine(Application.persistentDataPath, filename).Replace('\\', '/');
         }
 
+        /// <summary>
+        /// Allows to get the save path of the chat history based on the provided filename or relative path.
+        /// </summary>
+        /// <param name="filename">filename or relative path used for the save</param>
+        /// <returns>save path</returns>
         public virtual string GetJsonSavePath(string filename)
         {
             return GetSavePath(filename + ".json");
         }
 
+        /// <summary>
+        /// Allows to get the save path of the LLM cache based on the provided filename or relative path.
+        /// </summary>
+        /// <param name="filename">filename or relative path used for the save</param>
+        /// <returns>save path</returns>
         public virtual string GetCacheSavePath(string filename)
         {
             return GetSavePath(filename + ".cache");
         }
 
-        private void InitPrompt(bool clearChat = true)
+        /// <summary>
+        /// Clear the chat of the LLMCharacter.
+        /// </summary>
+        public virtual void ClearChat()
         {
-            if (chat != null)
-            {
-                if (clearChat) chat.Clear();
-            }
-            else
-            {
-                chat = new List<ChatMessage>();
-            }
+            chat.Clear();
             ChatMessage promptMessage = new ChatMessage { role = "system", content = prompt };
-            if (chat.Count == 0)
-            {
-                chat.Add(promptMessage);
-            }
-            else
-            {
-                chat[0] = promptMessage;
-            }
+            chat.Add(promptMessage);
         }
 
         /// <summary>
@@ -276,14 +219,15 @@ namespace LLMUnity
         /// </summary>
         /// <param name="newPrompt"> the system prompt </param>
         /// <param name="clearChat"> whether to clear (true) or keep (false) the current chat history on top of the system prompt. </param>
-        public void SetPrompt(string newPrompt, bool clearChat = true)
+        public virtual void SetPrompt(string newPrompt, bool clearChat = true)
         {
             prompt = newPrompt;
             nKeep = -1;
-            InitPrompt(clearChat);
+            if (clearChat) ClearChat();
+            else chat[0] = new ChatMessage { role = "system", content = prompt };
         }
 
-        private bool CheckTemplate()
+        protected virtual bool CheckTemplate()
         {
             if (template == null)
             {
@@ -293,7 +237,7 @@ namespace LLMUnity
             return true;
         }
 
-        private async Task<bool> InitNKeep()
+        protected virtual async Task<bool> InitNKeep()
         {
             if (setNKeepToPrompt && nKeep == -1)
             {
@@ -306,7 +250,7 @@ namespace LLMUnity
             return true;
         }
 
-        private void InitGrammar()
+        protected virtual void InitGrammar()
         {
             if (grammar != null && grammar != "")
             {
@@ -314,17 +258,17 @@ namespace LLMUnity
             }
         }
 
-        private void SetNKeep(List<int> tokens)
+        protected virtual void SetNKeep(List<int> tokens)
         {
             // set the tokens to keep
             nKeep = tokens.Count;
         }
 
         /// <summary>
-        /// Load the chat template of the LLMCharacter.
+        /// Loads the chat template of the LLMCharacter.
         /// </summary>
         /// <returns></returns>
-        public async Task LoadTemplate()
+        public virtual async Task LoadTemplate()
         {
             string llmTemplate;
             if (remote)
@@ -344,10 +288,10 @@ namespace LLMUnity
         }
 
         /// <summary>
-        /// Set the grammar file of the LLMCharacter
+        /// Sets the grammar file of the LLMCharacter
         /// </summary>
         /// <param name="path">path to the grammar file</param>
-        public async void SetGrammar(string path)
+        public virtual async void SetGrammar(string path)
         {
 #if UNITY_EDITOR
             if (!EditorApplication.isPlaying) path = LLMUnitySetup.AddAsset(path);
@@ -357,7 +301,7 @@ namespace LLMUnity
             InitGrammar();
         }
 
-        List<string> GetStopwords()
+        protected virtual List<string> GetStopwords()
         {
             if (!CheckTemplate()) return null;
             List<string> stopAll = new List<string>(template.GetStop(playerName, AIName));
@@ -365,7 +309,7 @@ namespace LLMUnity
             return stopAll;
         }
 
-        ChatRequest GenerateRequest(string prompt)
+        protected virtual ChatRequest GenerateRequest(string prompt)
         {
             // setup the request struct
             ChatRequest chatRequest = new ChatRequest();
@@ -400,29 +344,42 @@ namespace LLMUnity
             return chatRequest;
         }
 
-        public void AddMessage(string role, string content)
+        /// <summary>
+        /// Allows to add a message in the chat history.
+        /// </summary>
+        /// <param name="role">message role (e.g. playerName or AIName)</param>
+        /// <param name="content">message content</param>
+        public virtual void AddMessage(string role, string content)
         {
             // add the question / answer to the chat list, update prompt
             chat.Add(new ChatMessage { role = role, content = content });
         }
 
-        public void AddPlayerMessage(string content)
+        /// <summary>
+        /// Allows to add a player message in the chat history.
+        /// </summary>
+        /// <param name="content">message content</param>
+        public virtual void AddPlayerMessage(string content)
         {
             AddMessage(playerName, content);
         }
 
-        public void AddAIMessage(string content)
+        /// <summary>
+        /// Allows to add a AI message in the chat history.
+        /// </summary>
+        /// <param name="content">message content</param>
+        public virtual void AddAIMessage(string content)
         {
             AddMessage(AIName, content);
         }
 
-        protected string ChatContent(ChatResult result)
+        protected virtual string ChatContent(ChatResult result)
         {
             // get content from a chat result received from the endpoint
             return result.content.Trim();
         }
 
-        protected string MultiChatContent(MultiChatResult result)
+        protected virtual string MultiChatContent(MultiChatResult result)
         {
             // get content from a chat result received from the endpoint
             string response = "";
@@ -433,7 +390,19 @@ namespace LLMUnity
             return response.Trim();
         }
 
-        async Task<string> CompletionRequest(string json, Callback<string> callback = null)
+        protected virtual string SlotContent(SlotResult result)
+        {
+            // get the tokens from a tokenize result received from the endpoint
+            return result.filename;
+        }
+
+        protected virtual string TemplateContent(TemplateResult result)
+        {
+            // get content from a char result received from the endpoint in open AI format
+            return result.template;
+        }
+
+        protected virtual async Task<string> CompletionRequest(string json, Callback<string> callback = null)
         {
             string result = "";
             if (stream)
@@ -447,36 +416,6 @@ namespace LLMUnity
             return result;
         }
 
-        protected string TemplateContent(TemplateResult result)
-        {
-            // get content from a char result received from the endpoint in open AI format
-            return result.template;
-        }
-
-        protected List<int> TokenizeContent(TokenizeResult result)
-        {
-            // get the tokens from a tokenize result received from the endpoint
-            return result.tokens;
-        }
-
-        protected string DetokenizeContent(TokenizeRequest result)
-        {
-            // get content from a chat result received from the endpoint
-            return result.content;
-        }
-
-        protected List<float> EmbeddingsContent(EmbeddingsResult result)
-        {
-            // get content from a chat result received from the endpoint
-            return result.embedding;
-        }
-
-        protected string SlotContent(SlotResult result)
-        {
-            // get the tokens from a tokenize result received from the endpoint
-            return result.filename;
-        }
-
         /// <summary>
         /// Chat functionality of the LLM.
         /// It calls the LLM completion based on the provided query including the previous chat history.
@@ -488,7 +427,7 @@ namespace LLMUnity
         /// <param name="completionCallback">callback function called when the full response has been received</param>
         /// <param name="addToHistory">whether to add the user query to the chat history</param>
         /// <returns>the LLM response</returns>
-        public async Task<string> Chat(string query, Callback<string> callback = null, EmptyCallback completionCallback = null, bool addToHistory = true)
+        public virtual async Task<string> Chat(string query, Callback<string> callback = null, EmptyCallback completionCallback = null, bool addToHistory = true)
         {
             // handle a chat message by the user
             // call the callback function while the answer is received
@@ -541,7 +480,7 @@ namespace LLMUnity
         /// <param name="callback">callback function that receives the response as string</param>
         /// <param name="completionCallback">callback function called when the full response has been received</param>
         /// <returns>the LLM response</returns>
-        public async Task<string> Complete(string prompt, Callback<string> callback = null, EmptyCallback completionCallback = null)
+        public virtual async Task<string> Complete(string prompt, Callback<string> callback = null, EmptyCallback completionCallback = null)
         {
             // handle a completion request by the user
             // call the callback function while the answer is received
@@ -564,7 +503,7 @@ namespace LLMUnity
         /// <param name="completionCallback">callback function called when the full response has been received</param>
         /// <param name="query">user prompt used during the initialisation (not added to history)</param>
         /// <returns>the LLM response</returns>
-        public async Task Warmup(EmptyCallback completionCallback = null)
+        public virtual async Task Warmup(EmptyCallback completionCallback = null)
         {
             await LoadTemplate();
             if (!CheckTemplate()) return;
@@ -582,57 +521,17 @@ namespace LLMUnity
         /// Asks the LLM for the chat template to use.
         /// </summary>
         /// <returns>the chat template of the LLM</returns>
-        public async Task<string> AskTemplate()
+        public virtual async Task<string> AskTemplate()
         {
             return await PostRequest<TemplateResult, string>("{}", "template", TemplateContent);
         }
 
-        /// <summary>
-        /// Tokenises the provided query.
-        /// </summary>
-        /// <param name="query">query to tokenise</param>
-        /// <param name="callback">callback function called with the result tokens</param>
-        /// <returns>list of the tokens</returns>
-        public async Task<List<int>> Tokenize(string query, Callback<List<int>> callback = null)
+        protected override void CancelRequestsLocal()
         {
-            // handle the tokenization of a message by the user
-            TokenizeRequest tokenizeRequest = new TokenizeRequest();
-            tokenizeRequest.content = query;
-            string json = JsonUtility.ToJson(tokenizeRequest);
-            return await PostRequest<TokenizeResult, List<int>>(json, "tokenize", TokenizeContent, callback);
+            if (slot >= 0) llm.CancelRequest(slot);
         }
 
-        /// <summary>
-        /// Detokenises the provided tokens to a string.
-        /// </summary>
-        /// <param name="tokens">tokens to detokenise</param>
-        /// <param name="callback">callback function called with the result string</param>
-        /// <returns>the detokenised string</returns>
-        public async Task<string> Detokenize(List<int> tokens, Callback<string> callback = null)
-        {
-            // handle the detokenization of a message by the user
-            TokenizeResult tokenizeRequest = new TokenizeResult();
-            tokenizeRequest.tokens = tokens;
-            string json = JsonUtility.ToJson(tokenizeRequest);
-            return await PostRequest<TokenizeRequest, string>(json, "detokenize", DetokenizeContent, callback);
-        }
-
-        /// <summary>
-        /// Computes the embeddings of the provided input.
-        /// </summary>
-        /// <param name="tokens">input to compute the embeddings for</param>
-        /// <param name="callback">callback function called with the result string</param>
-        /// <returns>the computed embeddings</returns>
-        public async Task<List<float>> Embeddings(string query, Callback<List<float>> callback = null)
-        {
-            // handle the tokenization of a message by the user
-            TokenizeRequest tokenizeRequest = new TokenizeRequest();
-            tokenizeRequest.content = query;
-            string json = JsonUtility.ToJson(tokenizeRequest);
-            return await PostRequest<EmbeddingsResult, List<float>>(json, "embeddings", EmbeddingsContent, callback);
-        }
-
-        protected async Task<string> Slot(string filepath, string action)
+        protected virtual async Task<string> Slot(string filepath, string action)
         {
             SlotRequest slotRequest = new SlotRequest();
             slotRequest.id_slot = slot;
@@ -676,7 +575,7 @@ namespace LLMUnity
             }
             string json = File.ReadAllText(filepath);
             List<ChatMessage> chatHistory = JsonUtility.FromJson<ChatListWrapper>(json).chat;
-            InitPrompt(true);
+            ClearChat();
             chat.AddRange(chatHistory);
             LLMUnitySetup.Log($"Loaded {filepath}");
 
@@ -686,175 +585,39 @@ namespace LLMUnity
             return result;
         }
 
-        protected Ret ConvertContent<Res, Ret>(string response, ContentCallback<Res, Ret> getContent = null)
+        protected override async Task<Ret> PostRequestLocal<Res, Ret>(string json, string endpoint, ContentCallback<Res, Ret> getContent, Callback<Ret> callback = null)
         {
-            // template function to convert the json received and get the content
-            if (response == null) return default;
-            response = response.Trim();
-            if (response.StartsWith("data: "))
-            {
-                string responseArray = "";
-                foreach (string responsePart in response.Replace("\n\n", "").Split("data: "))
-                {
-                    if (responsePart == "") continue;
-                    if (responseArray != "") responseArray += ",\n";
-                    responseArray += responsePart;
-                }
-                response = $"{{\"data\": [{responseArray}]}}";
-            }
-            return getContent(JsonUtility.FromJson<Res>(response));
-        }
+            if (endpoint != "completion") return await base.PostRequestLocal(json, endpoint, getContent, callback);
 
-        protected void CancelRequestsLocal()
-        {
-            if (slot >= 0) llm.CancelRequest(slot);
-        }
+            while (!llm.failed && !llm.started) await Task.Yield();
 
-        protected void CancelRequestsRemote()
-        {
-            foreach (UnityWebRequest request in WIPRequests)
-            {
-                request.Abort();
-            }
-            WIPRequests.Clear();
-        }
-
-        /// <summary>
-        /// Cancel the ongoing requests e.g. Chat, Complete.
-        /// </summary>
-        // <summary>
-        public void CancelRequests()
-        {
-            if (remote) CancelRequestsRemote();
-            else CancelRequestsLocal();
-        }
-
-        protected async Task<Ret> PostRequestLocal<Res, Ret>(string json, string endpoint, ContentCallback<Res, Ret> getContent, Callback<Ret> callback = null)
-        {
-            // send a post request to the server and call the relevant callbacks to convert the received content and handle it
-            // this function has streaming functionality i.e. handles the answer while it is being received
             string callResult = null;
             bool callbackCalled = false;
-            while (!llm.failed && !llm.started) await Task.Yield();
-            switch (endpoint)
+            if (llm.embeddingsOnly) LLMUnitySetup.LogError("The LLM can't be used for completion, only for embeddings");
+            else
             {
-                case "tokenize":
-                    callResult = await llm.Tokenize(json);
-                    break;
-                case "detokenize":
-                    callResult = await llm.Detokenize(json);
-                    break;
-                case "embeddings":
-                    callResult = await llm.Embeddings(json);
-                    break;
-                case "slots":
-                    callResult = await llm.Slot(json);
-                    break;
-                case "completion":
-                    Callback<string> callbackString = null;
-                    if (stream && callback != null)
+                Callback<string> callbackString = null;
+                if (stream && callback != null)
+                {
+                    if (typeof(Ret) == typeof(string))
                     {
-                        if (typeof(Ret) == typeof(string))
+                        callbackString = (strArg) =>
                         {
-                            callbackString = (strArg) =>
-                            {
-                                callback(ConvertContent(strArg, getContent));
-                            };
-                        }
-                        else
-                        {
-                            LLMUnitySetup.LogError($"wrong callback type, should be string");
-                        }
-                        callbackCalled = true;
+                            callback(ConvertContent(strArg, getContent));
+                        };
                     }
-                    callResult = await llm.Completion(json, callbackString);
-                    break;
-                default:
-                    LLMUnitySetup.LogError($"Unknown endpoint {endpoint}");
-                    break;
+                    else
+                    {
+                        LLMUnitySetup.LogError($"wrong callback type, should be string");
+                    }
+                    callbackCalled = true;
+                }
+                callResult = await llm.Completion(json, callbackString);
             }
 
             Ret result = ConvertContent(callResult, getContent);
             if (!callbackCalled) callback?.Invoke(result);
             return result;
-        }
-
-        protected async Task<Ret> PostRequestRemote<Res, Ret>(string json, string endpoint, ContentCallback<Res, Ret> getContent, Callback<Ret> callback = null)
-        {
-            // send a post request to the server and call the relevant callbacks to convert the received content and handle it
-            // this function has streaming functionality i.e. handles the answer while it is being received
-            if (endpoint == "slots")
-            {
-                LLMUnitySetup.LogError("Saving and loading is not currently supported in remote setting");
-                return default;
-            }
-
-            Ret result = default;
-            byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(json);
-            UnityWebRequest request = null;
-            string error = null;
-            int tryNr = numRetries;
-
-            while (tryNr != 0)
-            {
-                using (request = UnityWebRequest.Put($"{host}:{port}/{endpoint}", jsonToSend))
-                {
-                    WIPRequests.Add(request);
-
-                    request.method = "POST";
-                    if (requestHeaders != null)
-                    {
-                        for (int i = 0; i < requestHeaders.Count; i++)
-                            request.SetRequestHeader(requestHeaders[i].Item1, requestHeaders[i].Item2);
-                    }
-
-                    // Start the request asynchronously
-                    var asyncOperation = request.SendWebRequest();
-                    float lastProgress = 0f;
-                    // Continue updating progress until the request is completed
-                    while (!asyncOperation.isDone)
-                    {
-                        float currentProgress = request.downloadProgress;
-                        // Check if progress has changed
-                        if (currentProgress != lastProgress && callback != null)
-                        {
-                            try
-                            {
-                                callback?.Invoke(ConvertContent(request.downloadHandler.text, getContent));
-                            }
-                            catch (Exception) {}
-                            lastProgress = currentProgress;
-                        }
-                        // Wait for the next frame
-                        await Task.Yield();
-                    }
-                    WIPRequests.Remove(request);
-                    if (request.result == UnityWebRequest.Result.Success)
-                    {
-                        result = ConvertContent(request.downloadHandler.text, getContent);
-                        error = null;
-                        break;
-                    }
-                    else
-                    {
-                        result = default;
-                        error = request.error;
-                        if (request.responseCode == (int)System.Net.HttpStatusCode.Unauthorized) break;
-                    }
-                }
-                tryNr--;
-                if (tryNr > 0) await Task.Delay(200 * (numRetries - tryNr));
-            }
-
-            if (error != null) LLMUnitySetup.LogError(error);
-            callback?.Invoke(result);
-            return result;
-        }
-
-        protected async Task<Ret> PostRequest<Res, Ret>(string json, string endpoint, ContentCallback<Res, Ret> getContent, Callback<Ret> callback = null)
-        {
-            if (remote) return await PostRequestRemote(json, endpoint, getContent, callback);
-            return await PostRequestLocal(json, endpoint, getContent, callback);
         }
     }
 

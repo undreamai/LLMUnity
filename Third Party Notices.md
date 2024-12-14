@@ -20,6 +20,14 @@ Origin: [link](https://github.com/Mozilla-Ocho/llamafile)<br>
 License Type: "Apache 2.0"<br>
 License: [link](https://github.com/Mozilla-Ocho/llamafile/blob/main/LICENSE)
 
+### USearch
+
+Developer: Unum Cloud<br>
+Origin: [link](https://github.com/unum-cloud/usearch)<br>
+License Type: "Apache 2.0"<br>
+License: [link](https://github.com/unum-cloud/usearch/blob/main/LICENSE)<br>
+Modifications: [link](ThirdParty/usearch/README.md)
+
 ---
 
 ## Models
@@ -98,16 +106,66 @@ Quantization: [link](https://huggingface.co/Qwen/Qwen2-0.5B-Instruct-GGUF)<br>
 License Type: "Apache 2.0"<br>
 License: [link](https://huggingface.co/Qwen/Qwen2-0.5B-Instruct-GGUF/blob/main/LICENSE)
 
----
+<br>
 
-## Testing
+### BAAI/bge-large-en-v1.5
 
-The following model is used for testing purposes:
+Developer: BAAI<br>
+Origin: [link](https://huggingface.co/BAAI/bge-large-en-v1.5)<br>
+License Type: "MIT"<br>
+License: [link](https://huggingface.co/BAAI/bge-large-en-v1.5)
 
-### BEE-spoke-data/smol_llama-220M-openhermes
+##### modified by: CompendiumLabs/bge-large-en-v1.5-gguf
 
-Developer: BEEspoke Data<br>
-Origin: [link](https://huggingface.co/BEE-spoke-data/smol_llama-220M-openhermes)<br>
-Quantization: [link](https://huggingface.co/afrideva/smol_llama-220M-openhermes-GGUF)<br>
+Developer: Compendium Labs<br>
+Origin: [link](https://huggingface.co/CompendiumLabs/bge-large-en-v1.5-gguf)<br>
+License Type: "MIT"<br>
+License: [link](https://huggingface.co/CompendiumLabs/bge-large-en-v1.5-gguf)
+
+<br>
+
+### BAAI/bge-base-en-v1.5
+
+Developer: BAAI<br>
+Origin: [link](https://huggingface.co/BAAI/bge-base-en-v1.5)<br>
+License Type: "MIT"<br>
+License: [link](https://huggingface.co/BAAI/bge-base-en-v1.5)
+
+##### modified by: CompendiumLabs/bge-base-en-v1.5-gguf
+
+Developer: Compendium Labs<br>
+Origin: [link](https://huggingface.co/CompendiumLabs/bge-base-en-v1.5-gguf)<br>
+License Type: "MIT"<br>
+License: [link](https://huggingface.co/CompendiumLabs/bge-base-en-v1.5-gguf)
+
+<br>
+
+### BAAI/bge-small-en-v1.5
+
+Developer: BAAI<br>
+Origin: [link](https://huggingface.co/BAAI/bge-small-en-v1.5)<br>
+License Type: "MIT"<br>
+License: [link](https://huggingface.co/BAAI/bge-small-en-v1.5)
+
+##### modified by: CompendiumLabs/bge-small-en-v1.5-gguf
+
+Developer: Compendium Labs<br>
+Origin: [link](https://huggingface.co/CompendiumLabs/bge-small-en-v1.5-gguf)<br>
+License Type: "MIT"<br>
+License: [link](https://huggingface.co/CompendiumLabs/bge-small-en-v1.5-gguf)
+
+<br>
+
+### sentence-transformers/all-MiniLM-L12-v2
+
+Developer: Sentence Transformers<br>
+Origin: [link](https://huggingface.co/sentence-transformers/all-MiniLM-L12-v2)<br>
 License Type: "Apache 2.0"<br>
-License: [link](https://huggingface.co/BEE-spoke-data/smol_llama-220M-openhermes)
+License: [link](https://huggingface.co/sentence-transformers/all-MiniLM-L12-v2)
+
+##### modified by: leliuga/all-MiniLM-L12-v2-GGUF
+
+Developer: Leliuga<br>
+Origin: [link](https://huggingface.co/leliuga/all-MiniLM-L12-v2-GGUF)<br>
+License Type: "Apache 2.0"<br>
+License: [link](https://huggingface.co/leliuga/all-MiniLM-L12-v2-GGUF)

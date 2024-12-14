@@ -1,3 +1,31 @@
+## v2.4.0
+#### 🚀 Features
+
+- iOS deployment (PR: #267)
+- Improve building process (PR: #282)
+- Add structured output / function calling sample (PR: #281)
+- Update LlamaLib to v1.2.0 (llama.cpp b4218) (PR: #283)
+
+#### 🐛 Fixes
+
+- Clear temp build directory before building (PR: #278)
+
+#### 📦 General
+
+- Remove support for extras (flash attention, iQ quants) (PR: #284)
+- remove support for LLM base prompt (PR: #285)
+
+
+## v2.3.0
+#### 🚀 Features
+
+- Implement Retrieval Augmented Generation (RAG) in LLMUnity (PR: #246)
+
+#### 🐛 Fixes
+
+- Fixed build conflict, endless import of resources. (PR: #266)
+
+
 ## v2.2.4
 #### 🚀 Features
 

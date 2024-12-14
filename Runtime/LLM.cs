@@ -31,7 +31,7 @@ namespace LLMUnity
         [LLM] public int numGPULayers = 0;
         /// <summary> select to log the output of the LLM in the Unity Editor. </summary>
         [LLM] public bool debug = false;
-        /// <summary> number of prompts that can happen in parallel (-1 = number of LLMCharacter objects) </summary>
+        /// <summary> number of prompts that can happen in parallel (-1 = number of LLMCaller objects) </summary>
         [LLMAdvanced] public int parallelPrompts = -1;
         /// <summary> select to not destroy the LLM GameObject when loading a new Scene. </summary>
         [LLMAdvanced] public bool dontDestroyOnLoad = true;
@@ -40,8 +40,6 @@ namespace LLMUnity
         [DynamicRange("minContextLength", "maxContextLength", false), Model] public int contextSize = 8192;
         /// <summary> Batch size for prompt processing. </summary>
         [ModelAdvanced] public int batchSize = 512;
-        /// <summary> a base prompt to use as a base for all LLMCharacter objects </summary>
-        [TextArea(5, 10), ChatAdvanced] public string basePrompt = "";
         /// <summary> Boolean set to true if the server has started and is ready to receive requests, false otherwise. </summary>
         public bool started { get; protected set; } = false;
         /// <summary> Boolean set to true if the server has failed to start. </summary>
@@ -61,8 +59,6 @@ namespace LLMUnity
         [ModelAdvanced] public string lora = "";
         /// <summary> the weights of the LORA models being used.</summary>
         [ModelAdvanced] public string loraWeights = "";
-        /// <summary> enable use of flash attention </summary>
-        [ModelExtras] public bool flashAttention = false;
 
         /// <summary> API key to use for the server (optional) </summary>
         public string APIKey;
@@ -80,7 +76,7 @@ namespace LLMUnity
         public int maxContextLength = 0;
 
         IntPtr LLMObject = IntPtr.Zero;
-        List<LLMCharacter> clients = new List<LLMCharacter>();
+        List<LLMCaller> clients = new List<LLMCaller>();
         LLMLib llmlib;
         StreamWrapper logStreamWrapper = null;
         Thread llmThread = null;
@@ -91,6 +87,8 @@ namespace LLMUnity
         public LoraManager loraManager = new LoraManager();
         string loraPre = "";
         string loraWeightsPre = "";
+        public bool embeddingsOnly = false;
+        public int embeddingLength = 0;
 
         /// \endcond
 
@@ -110,7 +108,6 @@ namespace LLMUnity
 
         /// <summary>
         /// The Unity Awake function that starts the LLM server.
-        /// The server can be started asynchronously if the asynchronousStartup option is set.
         /// </summary>
         public async void Awake()
         {
@@ -133,14 +130,20 @@ namespace LLMUnity
             await Task.Run(() => StartLLMServer(arguments));
             if (!started) return;
             if (dontDestroyOnLoad) DontDestroyOnLoad(transform.root.gameObject);
-            if (basePrompt != "") await SetBasePrompt(basePrompt);
         }
 
+        /// <summary>
+        /// Allows to wait until the LLM is ready
+        /// </summary>
         public async Task WaitUntilReady()
         {
             while (!started) await Task.Yield();
         }
 
+        /// <summary>
+        /// Allows to wait until the LLM models are downloaded and ready
+        /// </summary>
+        /// <param name="downloadProgressCallback">function to call with the download progress (float)</param>
         public static async Task<bool> WaitUntilModelSetup(Callback<float> downloadProgressCallback = null)
         {
             if (downloadProgressCallback != null) LLMManager.downloadProgressCallbacks.Add(downloadProgressCallback);
@@ -148,6 +151,7 @@ namespace LLMUnity
             return !modelSetupFailed;
         }
 
+        /// \cond HIDE
         public static string GetLLMManagerAsset(string path)
         {
 #if UNITY_EDITOR
@@ -195,9 +199,14 @@ namespace LLMUnity
             // StreamingAssets
             string assetPath = LLMUnitySetup.GetAssetPath(path);
             if (File.Exists(assetPath)) return assetPath;
+            // download path
+            assetPath = LLMUnitySetup.GetDownloadAssetPath(path);
+            if (File.Exists(assetPath)) return assetPath;
             // give up
             return path;
         }
+
+        /// \endcond
 
         /// <summary>
         /// Allows to set the model used by the LLM.
@@ -216,6 +225,7 @@ namespace LLMUnity
 
                 maxContextLength = modelEntry.contextLength;
                 if (contextSize > maxContextLength) contextSize = maxContextLength;
+                SetEmbeddings(modelEntry.embeddingLength, modelEntry.embeddingOnly);
                 if (contextSize == 0 && modelEntry.contextLength > 32768)
                 {
                     LLMUnitySetup.LogWarning($"The model {path} has very large context size ({modelEntry.contextLength}), consider setting it to a smaller value (<=32768) to avoid filling up the RAM");
@@ -319,6 +329,20 @@ namespace LLMUnity
 #endif
         }
 
+        /// <summary>
+        /// Set LLM Embedding parameters
+        /// </summary>
+        /// <param name="embeddingLength"> number of embedding dimensions </param>
+        /// <param name="embeddingsOnly"> if true, the LLM will be used only for embeddings </param>
+        public void SetEmbeddings(int embeddingLength, bool embeddingsOnly)
+        {
+            this.embeddingsOnly = embeddingsOnly;
+            this.embeddingLength = embeddingLength;
+#if UNITY_EDITOR
+            if (!EditorApplication.isPlaying) EditorUtility.SetDirty(this);
+#endif
+        }
+
         /// \cond HIDE
 
         string ReadFileContents(string path)
@@ -402,15 +426,15 @@ namespace LLMUnity
 
             int slots = GetNumClients();
             string arguments = $"-m \"{modelPath}\" -c {contextSize} -b {batchSize} --log-disable -np {slots}";
+            if (embeddingsOnly) arguments += " --embedding";
+            if (numThreadsToUse > 0) arguments += $" -t {numThreadsToUse}";
+            arguments += loraArgument;
+            arguments += $" -ngl {numGPULayers}";
             if (remote)
             {
                 arguments += $" --port {port} --host 0.0.0.0";
                 if (!String.IsNullOrEmpty(APIKey)) arguments += $" --api-key {APIKey}";
             }
-            if (numThreadsToUse > 0) arguments += $" -t {numThreadsToUse}";
-            arguments += loraArgument;
-            arguments += $" -ngl {numGPULayers}";
-            if (LLMUnitySetup.FullLlamaLib && flashAttention) arguments += $" --flash-attn";
 
             // the following is the equivalent for running from command line
             string serverCommand;
@@ -465,7 +489,7 @@ namespace LLMUnity
                 {
                     error = $"{e.GetType()}: {e.Message}";
                 }
-                LLMUnitySetup.Log($"Tried architecture: {arch}, " + error);
+                LLMUnitySetup.Log($"Tried architecture: {arch}, error: " + error);
             }
             if (llmlib == null)
             {
@@ -522,15 +546,15 @@ namespace LLMUnity
         }
 
         /// <summary>
-        /// Registers a local LLMCharacter object.
-        /// This allows to bind the LLMCharacter "client" to a specific slot of the LLM.
+        /// Registers a local LLMCaller object.
+        /// This allows to bind the LLMCaller "client" to a specific slot of the LLM.
         /// </summary>
-        /// <param name="llmCharacter"></param>
+        /// <param name="llmCaller"></param>
         /// <returns></returns>
-        public int Register(LLMCharacter llmCharacter)
+        public int Register(LLMCaller llmCaller)
         {
-            clients.Add(llmCharacter);
-            int index = clients.IndexOf(llmCharacter);
+            clients.Add(llmCaller);
+            int index = clients.IndexOf(llmCaller);
             if (parallelPrompts != -1) return index % parallelPrompts;
             return index;
         }
@@ -683,6 +707,7 @@ namespace LLMUnity
             LoraWeightRequestList loraWeightRequest = new LoraWeightRequestList();
             loraWeightRequest.loraWeights = new List<LoraWeightRequest>();
             float[] weights = loraManager.GetWeights();
+            if (weights.Length == 0) return;
             for (int i = 0; i < weights.Length; i++)
             {
                 loraWeightRequest.loraWeights.Add(new LoraWeightRequest() { id = i, scale = weights[i] });
@@ -748,13 +773,6 @@ namespace LLMUnity
             DestroyStreamWrapper(streamWrapper);
             CheckLLMStatus();
             return result;
-        }
-
-        public async Task SetBasePrompt(string base_prompt)
-        {
-            AssertStarted();
-            SystemPromptRequest request = new SystemPromptRequest() { system_prompt = base_prompt, prompt = " ", n_predict = 0 };
-            await Completion(JsonUtility.ToJson(request));
         }
 
         /// <summary>
