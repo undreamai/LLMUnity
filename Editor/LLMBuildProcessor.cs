@@ -1,6 +1,7 @@
 using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
+using UnityEditor.iOS.Xcode;
 using UnityEngine;
 
 namespace LLMUnity
@@ -43,9 +44,23 @@ namespace LLMUnity
             if (type == LogType.Error) BuildCompleted();
         }
 
+        /// <summary>
+        /// Adds the Accelerate framework (for ios)
+        /// </summary>
+        public static void AddAccelerate(string outputPath)
+        {
+            string projPath = PBXProject.GetPBXProjectPath(outputPath);
+            PBXProject proj = new PBXProject();
+            proj.ReadFromFile(projPath);
+            proj.AddFrameworkToProject(proj.GetUnityMainTargetGuid(), "Accelerate.framework", false);
+            proj.AddFrameworkToProject(proj.GetUnityFrameworkTargetGuid(), "Accelerate.framework", false);
+            proj.WriteToFile(projPath);
+        }
+
         // called after the build
         public void OnPostprocessBuild(BuildReport report)
         {
+            if (report.summary.platform == BuildTarget.iOS) AddAccelerate(report.summary.outputPath);
             BuildCompleted();
         }
 
