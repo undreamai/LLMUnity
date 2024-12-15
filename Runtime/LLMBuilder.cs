@@ -17,6 +17,7 @@ namespace LLMUnity
         static List<StringPair> movedPairs = new List<StringPair>();
         public static string BuildTempDir = Path.Combine(Application.temporaryCachePath, "LLMUnityBuild");
         public static string androidPluginDir = Path.Combine(Application.dataPath, "Plugins", "Android", "LLMUnity");
+        public static string iOSPluginDir = Path.Combine(Application.dataPath, "Plugins", "iOS", "LLMUnity");
         static string movedCache = Path.Combine(BuildTempDir, "moved.json");
 
         [InitializeOnLoadMethod]
@@ -87,7 +88,7 @@ namespace LLMUnity
         /// <param name="path">path</param>
         public static bool DeletePath(string path)
         {
-            string[] allowedDirs = new string[] { LLMUnitySetup.GetAssetPath(), BuildTempDir, androidPluginDir};
+            string[] allowedDirs = new string[] { LLMUnitySetup.GetAssetPath(), BuildTempDir, androidPluginDir, iOSPluginDir};
             bool deleteOK = false;
             foreach (string allowedDir in allowedDirs) deleteOK = deleteOK || LLMUnitySetup.IsSubPath(path, allowedDir);
             if (!deleteOK)
@@ -148,10 +149,10 @@ namespace LLMUnity
         }
 
         /// <summary>
-        /// Hides all the library platforms apart from the target platform by moving out their library folders outside of StreamingAssets
+        /// Moves libraries in the correct place for building
         /// </summary>
         /// <param name="platform">target platform</param>
-        public static void HideLibraryPlatforms(string platform)
+        public static void BuildLibraryPlatforms(string platform)
         {
             List<string> platforms = new List<string>(){ "windows", "macos", "linux", "android", "ios", "setup" };
             platforms.Remove(platform);
@@ -170,13 +171,14 @@ namespace LLMUnity
                 }
             }
 
-            if (platform == "android")
+            if (platform == "android" || platform == "ios")
             {
-                string source = Path.Combine(LLMUnitySetup.libraryPath, "android");
-                string target = Path.Combine(androidPluginDir, LLMUnitySetup.libraryName);
+                string pluginDir = platform == "android"? androidPluginDir: iOSPluginDir;
+                string source = Path.Combine(LLMUnitySetup.libraryPath, platform);
+                string target = Path.Combine(pluginDir, LLMUnitySetup.libraryName);
                 MoveAction(source, target);
                 MoveAction(source + ".meta", target + ".meta");
-                AddActionAddMeta(androidPluginDir);
+                AddActionAddMeta(pluginDir);
             }
         }
 
@@ -196,7 +198,7 @@ namespace LLMUnity
         {
             DeletePath(BuildTempDir);
             Directory.CreateDirectory(BuildTempDir);
-            HideLibraryPlatforms(platform);
+            BuildLibraryPlatforms(platform);
             BuildModels();
         }
 
