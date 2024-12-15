@@ -372,7 +372,11 @@ namespace LLMUnity
 
         public LLMLib(string arch){}
 
-        public const string LibraryName = "libundreamai";
+#if UNITY_ANDROID
+        public const string LibraryName = "libundreamai_android";
+#else
+        public const string LibraryName = "__Internal";
+#endif
 
         [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint="Logging")]
         public static extern void LoggingStatic(IntPtr stringWrapper);
