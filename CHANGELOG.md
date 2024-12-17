@@ -1,3 +1,9 @@
+## v2.4.1
+#### 🚀 Features
+
+- Static library linking on mobile (fixes iOS signing) (PR: #289)
+
+
 ## v2.4.0
 #### 🚀 Features
 
