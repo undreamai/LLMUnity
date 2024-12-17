@@ -162,6 +162,8 @@ namespace LLMUnity
                 foreach (string platformPrefix in platforms)
                 {
                     bool move = sourceName.StartsWith(platformPrefix);
+                    move = move || (sourceName.Contains("cuda") && !sourceName.Contains("full") && LLMUnitySetup.FullLlamaLib);
+                    move = move || (sourceName.Contains("cuda") && sourceName.Contains("full") && !LLMUnitySetup.FullLlamaLib);
                     if (move)
                     {
                         string target = Path.Combine(BuildTempDir, sourceName);

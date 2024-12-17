@@ -499,7 +499,8 @@ Save the scene, run and enjoy!
 ### LLM Settings
 
 - `Show/Hide Advanced Options` Toggle to show/hide advanced options from below
-- `Log Level` select how verbose the log messages arequants)
+- `Log Level` select how verbose the log messages are
+- `Use extras` select to install and allow the use of extra features (flash attention and IQ quants)
 
 #### 💻 Setup Settings
 
@@ -550,6 +551,7 @@ If the user's GPU is not supported, the LLM will fall back to the CPU
   - `Chat Template` the chat template being used for the LLM
   - `Lora` the path of the LoRAs being used (relative to the Assets/StreamingAssets folder)
   - `Lora Weights` the weights of the LoRAs being used
+  - `Flash Attention` click to use flash attention in the model (if `Use extras` is enabled)
 
 </details>
 
@@ -557,6 +559,7 @@ If the user's GPU is not supported, the LLM will fall back to the CPU
 
 - `Show/Hide Advanced Options` Toggle to show/hide advanced options from below
 - `Log Level` select how verbose the log messages are
+- `Use extras` select to install and allow the use of extra features (flash attention and IQ quants)
 
 #### 💻 Setup Settings
 <div>

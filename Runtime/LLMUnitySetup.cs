@@ -59,6 +59,7 @@ namespace LLMUnity
     public class RemoteAttribute : PropertyAttribute {}
     public class LocalAttribute : PropertyAttribute {}
     public class ModelAttribute : PropertyAttribute {}
+    public class ModelExtrasAttribute : PropertyAttribute {}
     public class ChatAttribute : PropertyAttribute {}
     public class LLMUnityAttribute : PropertyAttribute {}
 
@@ -111,6 +112,8 @@ namespace LLMUnity
         public static string libraryPath = GetAssetPath(libraryName);
         /// <summary> LlamaLib url </summary>
         public static string LlamaLibURL = $"{LlamaLibReleaseURL}/{libraryName}.zip";
+        /// <summary> LlamaLib extension url </summary>
+        public static string LlamaLibExtensionURL = $"{LlamaLibReleaseURL}/{libraryName}-full.zip";
         /// <summary> LLMnity store path </summary>
         public static string LLMUnityStore = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "LLMUnity");
         /// <summary> Model download path </summary>
@@ -150,6 +153,8 @@ namespace LLMUnity
         /// \cond HIDE
         [LLMUnity] public static DebugModeType DebugMode = DebugModeType.All;
         static string DebugModeKey = "DebugMode";
+        public static bool FullLlamaLib = false;
+        static string FullLlamaLibKey = "FullLlamaLib";
         static List<Callback<string>> errorCallbacks = new List<Callback<string>>();
         static readonly object lockObject = new object();
         static Dictionary<string, Task> androidExtractTasks = new Dictionary<string, Task>();
@@ -184,6 +189,7 @@ namespace LLMUnity
         static void LoadPlayerPrefs()
         {
             DebugMode = (DebugModeType)PlayerPrefs.GetInt(DebugModeKey, (int)DebugModeType.All);
+            FullLlamaLib = PlayerPrefs.GetInt(FullLlamaLibKey, 0) == 1;
         }
 
         public static void SetDebugMode(DebugModeType newDebugMode)
@@ -193,6 +199,18 @@ namespace LLMUnity
             PlayerPrefs.SetInt(DebugModeKey, (int)DebugMode);
             PlayerPrefs.Save();
         }
+
+#if UNITY_EDITOR
+        public static void SetFullLlamaLib(bool value)
+        {
+            if (FullLlamaLib == value) return;
+            FullLlamaLib = value;
+            PlayerPrefs.SetInt(FullLlamaLibKey, value ? 1 : 0);
+            PlayerPrefs.Save();
+            _ = DownloadLibrary();
+        }
+
+#endif
 
         public static string GetLibraryName(string version)
         {
@@ -436,6 +454,9 @@ namespace LLMUnity
 
                 // setup LlamaLib in StreamingAssets
                 await DownloadAndExtractInsideDirectory(LlamaLibURL, libraryPath, setupDir);
+
+                // setup LlamaLib extras in StreamingAssets
+                if (FullLlamaLib) await DownloadAndExtractInsideDirectory(LlamaLibExtensionURL, libraryPath, setupDir);
             }
             catch (Exception e)
             {
