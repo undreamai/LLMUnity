@@ -111,6 +111,7 @@ namespace LLMUnity
             if (llmScriptSO.FindProperty("advancedOptions").boolValue)
             {
                 attributeClasses.Add(typeof(ModelAdvancedAttribute));
+                if (LLMUnitySetup.FullLlamaLib) attributeClasses.Add(typeof(ModelExtrasAttribute));
             }
             ShowPropertiesOfClass("", llmScriptSO, attributeClasses, false);
             Space();
@@ -444,12 +445,18 @@ namespace LLMUnity
             te.Copy();
         }
 
+        public void AddExtrasToggle()
+        {
+            if (ToggleButton("Use extras", LLMUnitySetup.FullLlamaLib)) LLMUnitySetup.SetFullLlamaLib(!LLMUnitySetup.FullLlamaLib);
+        }
+
         public override void AddOptionsToggles(SerializedObject llmScriptSO)
         {
             AddDebugModeToggle();
 
             EditorGUILayout.BeginHorizontal();
             AddAdvancedOptionsToggle(llmScriptSO);
+            AddExtrasToggle();
             EditorGUILayout.EndHorizontal();
             Space();
         }
