@@ -649,14 +649,13 @@ namespace LLMUnity
                     {
                         architectures.Add("cuda-cu12.2.0-full");
                         architectures.Add("cuda-cu11.7.1-full");
-                        architectures.Add("hip-full");
                     }
                     else
                     {
                         architectures.Add("cuda-cu12.2.0");
                         architectures.Add("cuda-cu11.7.1");
-                        architectures.Add("hip");
                     }
+                    architectures.Add("hip");
                     architectures.Add("vulkan");
                 }
                 if (has_avx512) architectures.Add("avx512");
