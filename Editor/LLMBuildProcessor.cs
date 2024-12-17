@@ -1,8 +1,10 @@
 using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
-using UnityEditor.iOS.Xcode;
 using UnityEngine;
+#if UNITY_IOS
+using UnityEditor.iOS.Xcode;
+#endif
 
 namespace LLMUnity
 {
@@ -44,6 +46,7 @@ namespace LLMUnity
             if (type == LogType.Error) BuildCompleted();
         }
 
+#if UNITY_IOS
         /// <summary>
         /// Adds the Accelerate framework (for ios)
         /// </summary>
@@ -56,11 +59,14 @@ namespace LLMUnity
             proj.AddFrameworkToProject(proj.GetUnityFrameworkTargetGuid(), "Accelerate.framework", false);
             proj.WriteToFile(projPath);
         }
+#endif
 
         // called after the build
         public void OnPostprocessBuild(BuildReport report)
         {
-            if (report.summary.platform == BuildTarget.iOS) AddAccelerate(report.summary.outputPath);
+#if UNITY_IOS
+            AddAccelerate(report.summary.outputPath);
+#endif
             BuildCompleted();
         }
 
