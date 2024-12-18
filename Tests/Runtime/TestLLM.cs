@@ -24,14 +24,15 @@ namespace LLMUnityTests
 
     public class TestRunCallbacks : ICallbacks
     {
-        public void RunStarted(ITestAdaptor testsToRun){}
+        public void RunStarted(ITestAdaptor testsToRun) { }
 
         public void RunFinished(ITestResultAdaptor result)
         {
             LLMUnitySetup.FullLlamaLib = false;
         }
 
-        public void TestStarted(ITestAdaptor test) {
+        public void TestStarted(ITestAdaptor test)
+        {
             LLMUnitySetup.FullLlamaLib = test.FullName.Contains("CUDA_full");
         }
 
@@ -262,7 +263,7 @@ namespace LLMUnityTests
                 await Tests();
                 llm.OnDestroy();
             }
-            catch  (Exception e)
+            catch (Exception e)
             {
                 error = e;
             }
@@ -299,7 +300,7 @@ namespace LLMUnityTests
 
         public void TestTokens(List<int> tokens)
         {
-            Assert.AreEqual(tokens, new List<int> {40});
+            Assert.AreEqual(tokens, new List<int> { 40 });
         }
 
         public void TestWarmup()
@@ -323,7 +324,7 @@ namespace LLMUnityTests
             Assert.That(embeddings.Count == 896);
         }
 
-        public virtual void OnDestroy() {}
+        public virtual void OnDestroy() { }
     }
 
     public class TestLLM_LLMManager_Load : TestLLM
@@ -543,12 +544,20 @@ namespace LLMUnityTests
         public override void SetParameters()
         {
             base.SetParameters();
-            reply1 = "To increase your meme production output, you might consider using more advanced tools and techniques to generate memes faster";
-            reply2 = "To increase your meme production output, you might consider using more advanced tools and techniques to generate memes faster";
+            if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer)
+            {
+                reply1 = "To increase your meme production output, you might consider using more modern tools and techniques to generate memes.";
+                reply2 = "To increase your meme production output, you can try using various tools and techniques to generate more content quickly";
+            }
+            else
+            {
+                reply1 = "To increase your meme production output, you might consider using more advanced tools and techniques to generate memes faster";
+                reply2 = "To increase your meme production output, you might consider using more advanced tools and techniques to generate memes faster";
+            }
         }
     }
 
-    public class TestLLM_CUDA_full_attention : TestLLM_CUDA
+    public class TestLLM_CUDA_full_attention : TestLLM_CUDA_full
     {
         public override LLM CreateLLM()
         {
@@ -560,8 +569,10 @@ namespace LLMUnityTests
         public override void SetParameters()
         {
             base.SetParameters();
-            reply1 = "To increase your meme production output, you might consider using more advanced tools and techniques to generate memes faster";
-            reply2 = "To increase your meme production output, you can try using various tools and techniques to generate more memes.";
+            if (Application.platform == RuntimePlatform.LinuxEditor || Application.platform == RuntimePlatform.LinuxPlayer)
+            {
+                reply2 = "To increase your meme production output, you can try using various tools and techniques to generate more memes.";
+            }
         }
     }
 }
