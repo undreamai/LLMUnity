@@ -7,9 +7,40 @@ using System;
 using System.Collections;
 using System.IO;
 using UnityEngine.TestTools;
+using UnityEditor;
+using UnityEditor.TestTools.TestRunner.Api;
 
 namespace LLMUnityTests
 {
+    [InitializeOnLoad]
+    public static class TestRunListener
+    {
+        static TestRunListener()
+        {
+            var api = ScriptableObject.CreateInstance<TestRunnerApi>();
+            api.RegisterCallbacks(new TestRunCallbacks());
+        }
+    }
+
+    public class TestRunCallbacks : ICallbacks
+    {
+        public void RunStarted(ITestAdaptor testsToRun){}
+
+        public void RunFinished(ITestResultAdaptor result)
+        {
+            LLMUnitySetup.FullLlamaLib = false;
+        }
+
+        public void TestStarted(ITestAdaptor test) {
+            LLMUnitySetup.FullLlamaLib = test.FullName.Contains("CUDA_full");
+        }
+
+        public void TestFinished(ITestResultAdaptor result)
+        {
+            LLMUnitySetup.FullLlamaLib = false;
+        }
+    }
+
     public class TestLLMLoraAssignment
     {
         [Test]
@@ -459,6 +490,10 @@ namespace LLMUnityTests
             LLMCharacter llmCharacter = base.CreateLLMCharacter();
             llmCharacter.save = saveName;
             llmCharacter.saveCache = true;
+            foreach (string filename in new string[]{
+                llmCharacter.GetJsonSavePath(saveName),
+                llmCharacter.GetCacheSavePath(saveName)
+            }) if (File.Exists(filename)) File.Delete(filename);
             return llmCharacter;
         }
 
@@ -490,6 +525,43 @@ namespace LLMUnityTests
                 Assert.AreEqual(chatHistory[i].role, llmCharacter.chat[i + 1].role);
                 Assert.AreEqual(chatHistory[i].content, llmCharacter.chat[i + 1].content);
             }
+        }
+    }
+
+    public class TestLLM_CUDA : TestLLM
+    {
+        public override LLM CreateLLM()
+        {
+            LLM llm = base.CreateLLM();
+            llm.numGPULayers = 10;
+            return llm;
+        }
+    }
+
+    public class TestLLM_CUDA_full : TestLLM_CUDA
+    {
+        public override void SetParameters()
+        {
+            base.SetParameters();
+            reply1 = "To increase your meme production output, you might consider using more advanced tools and techniques to generate memes faster";
+            reply2 = "To increase your meme production output, you might consider using more advanced tools and techniques to generate memes faster";
+        }
+    }
+
+    public class TestLLM_CUDA_full_attention : TestLLM_CUDA
+    {
+        public override LLM CreateLLM()
+        {
+            LLM llm = base.CreateLLM();
+            llm.flashAttention = true;
+            return llm;
+        }
+
+        public override void SetParameters()
+        {
+            base.SetParameters();
+            reply1 = "To increase your meme production output, you might consider using more advanced tools and techniques to generate memes faster";
+            reply2 = "To increase your meme production output, you can try using various tools and techniques to generate more memes.";
         }
     }
 }
