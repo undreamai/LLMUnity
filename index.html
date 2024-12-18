@@ -47,7 +47,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_tiny.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">LLM for Unity
-   &#160;<span id="projectnumber">v2.4.0</span>
+   &#160;<span id="projectnumber">v2.4.1</span>
    </div>
    <div id="projectbrief">Create characters in Unity with LLMs!</div>
   </td>
@@ -218,7 +218,7 @@ In the GameObject Inspector click <code>Add Component</code> and select the LLMC
 <div class="line">  ...</div>
 <div class="line">}</div>
 </div><!-- fragment --><p>To stop the chat without waiting for its completion you can use: </p><div class="fragment"><div class="line">llmCharacter.<a class="code hl_function" href="classLLMUnity_1_1LLMCaller.html#a5914034b6b799e018380152c0136b511">CancelRequests</a>();</div>
-<div class="ttc" id="aclassLLMUnity_1_1LLMCaller_html_a5914034b6b799e018380152c0136b511"><div class="ttname"><a href="classLLMUnity_1_1LLMCaller.html#a5914034b6b799e018380152c0136b511">LLMUnity.LLMCaller.CancelRequests</a></div><div class="ttdeci">virtual void CancelRequests()</div><div class="ttdoc">Cancel the ongoing requests e.g. Chat, Complete.</div><div class="ttdef"><b>Definition</b> <a href="LLMCaller_8cs_source.html#l00221">LLMCaller.cs:221</a></div></div>
+<div class="ttc" id="aclassLLMUnity_1_1LLMCaller_html_a5914034b6b799e018380152c0136b511"><div class="ttname"><a href="classLLMUnity_1_1LLMCaller.html#a5914034b6b799e018380152c0136b511">LLMUnity.LLMCaller.CancelRequests</a></div><div class="ttdeci">virtual void CancelRequests()</div><div class="ttdoc">Cancel the ongoing requests e.g. Chat, Complete.</div><div class="ttdef"><b>Definition</b> <a href="LLMCaller_8cs_source.html#l00225">LLMCaller.cs:225</a></div></div>
 </div><!-- fragment --><ul>
 <li>Finally, in the Inspector of the GameObject of your script, select the LLMCharacter GameObject created above as the llmCharacter property.</li>
 </ul>
@@ -235,7 +235,7 @@ Build a mobile app</summary>
  <img src="images/android.png" alt="" width="400" class="inline"/></p>
 <p>Since mobile app sizes are typically small, you can download the LLM models the first time the app launches. This functionality can be enabled with the <code>Download on Build</code> option. In your project you can wait until the model download is complete with: </p><div class="fragment"><div class="line">await <a class="code hl_class" href="classLLMUnity_1_1LLM.html">LLM</a>.<a class="code hl_function" href="classLLMUnity_1_1LLM.html#a1f41b07eb274fd6194f0e97eea4ca331">WaitUntilModelSetup</a>();</div>
 <div class="ttc" id="aclassLLMUnity_1_1LLM_html"><div class="ttname"><a href="classLLMUnity_1_1LLM.html">LLMUnity.LLM</a></div><div class="ttdoc">Class implementing the LLM server.</div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00018">LLM.cs:19</a></div></div>
-<div class="ttc" id="aclassLLMUnity_1_1LLM_html_a1f41b07eb274fd6194f0e97eea4ca331"><div class="ttname"><a href="classLLMUnity_1_1LLM.html#a1f41b07eb274fd6194f0e97eea4ca331">LLMUnity.LLM.WaitUntilModelSetup</a></div><div class="ttdeci">static async Task&lt; bool &gt; WaitUntilModelSetup(Callback&lt; float &gt; downloadProgressCallback=null)</div><div class="ttdoc">Allows to wait until the LLM models are downloaded and ready.</div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00147">LLM.cs:147</a></div></div>
+<div class="ttc" id="aclassLLMUnity_1_1LLM_html_a1f41b07eb274fd6194f0e97eea4ca331"><div class="ttname"><a href="classLLMUnity_1_1LLM.html#a1f41b07eb274fd6194f0e97eea4ca331">LLMUnity.LLM.WaitUntilModelSetup</a></div><div class="ttdeci">static async Task&lt; bool &gt; WaitUntilModelSetup(Callback&lt; float &gt; downloadProgressCallback=null)</div><div class="ttdoc">Allows to wait until the LLM models are downloaded and ready.</div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00149">LLM.cs:149</a></div></div>
 </div><!-- fragment --><p> You can also receive calls during the download with the download progress: </p><div class="fragment"><div class="line">await <a class="code hl_class" href="classLLMUnity_1_1LLM.html">LLM</a>.<a class="code hl_function" href="classLLMUnity_1_1LLM.html#a1f41b07eb274fd6194f0e97eea4ca331">WaitUntilModelSetup</a>(SetProgress);</div>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">void</span> SetProgress(<span class="keywordtype">float</span> progress){</div>
@@ -390,10 +390,10 @@ Add a LLM / LLMCharacter component programmatically</summary>
 <div class="line">    }</div>
 <div class="line">}</div>
 <div class="ttc" id="aclassLLMUnity_1_1LLMCharacter_html_affc13b3416002473688130217f1b42df"><div class="ttname"><a href="classLLMUnity_1_1LLMCharacter.html#affc13b3416002473688130217f1b42df">LLMUnity.LLMCharacter.SetPrompt</a></div><div class="ttdeci">virtual void SetPrompt(string newPrompt, bool clearChat=true)</div><div class="ttdoc">Set the system prompt for the LLMCharacter.</div><div class="ttdef"><b>Definition</b> <a href="LLMCharacter_8cs_source.html#l00222">LLMCharacter.cs:222</a></div></div>
-<div class="ttc" id="aclassLLMUnity_1_1LLM_html_a26e01ce3a14c30da752cf216acfbb3ff"><div class="ttname"><a href="classLLMUnity_1_1LLM.html#a26e01ce3a14c30da752cf216acfbb3ff">LLMUnity.LLM.SetLoraWeight</a></div><div class="ttdeci">void SetLoraWeight(string path, float weight)</div><div class="ttdoc">Allows to change the weight (scale) of a LORA model in the LLM.</div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00292">LLM.cs:292</a></div></div>
-<div class="ttc" id="aclassLLMUnity_1_1LLM_html_a5c4cd1f8b959b1f36c8c50d08ee114c4"><div class="ttname"><a href="classLLMUnity_1_1LLM.html#a5c4cd1f8b959b1f36c8c50d08ee114c4">LLMUnity.LLM.AddLora</a></div><div class="ttdeci">void AddLora(string path, float weight=1)</div><div class="ttdoc">Allows to add a LORA model to use in the LLM. The model provided is copied to the Assets/StreamingAss...</div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00258">LLM.cs:258</a></div></div>
-<div class="ttc" id="aclassLLMUnity_1_1LLM_html_a9cdc4850537724d94bf88e7b78372883"><div class="ttname"><a href="classLLMUnity_1_1LLM.html#a9cdc4850537724d94bf88e7b78372883">LLMUnity.LLM.SetModel</a></div><div class="ttdeci">void SetModel(string path)</div><div class="ttdoc">Allows to set the model used by the LLM. The model provided is copied to the Assets/StreamingAssets f...</div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00217">LLM.cs:217</a></div></div>
-<div class="ttc" id="aclassLLMUnity_1_1LLM_html_ad4c7250286a33527cb211bd980f1c307"><div class="ttname"><a href="classLLMUnity_1_1LLM.html#ad4c7250286a33527cb211bd980f1c307">LLMUnity.LLM.SetTemplate</a></div><div class="ttdeci">void SetTemplate(string templateName, bool setDirty=true)</div><div class="ttdoc">Set the chat template for the LLM.</div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00323">LLM.cs:323</a></div></div>
+<div class="ttc" id="aclassLLMUnity_1_1LLM_html_a26e01ce3a14c30da752cf216acfbb3ff"><div class="ttname"><a href="classLLMUnity_1_1LLM.html#a26e01ce3a14c30da752cf216acfbb3ff">LLMUnity.LLM.SetLoraWeight</a></div><div class="ttdeci">void SetLoraWeight(string path, float weight)</div><div class="ttdoc">Allows to change the weight (scale) of a LORA model in the LLM.</div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00294">LLM.cs:294</a></div></div>
+<div class="ttc" id="aclassLLMUnity_1_1LLM_html_a5c4cd1f8b959b1f36c8c50d08ee114c4"><div class="ttname"><a href="classLLMUnity_1_1LLM.html#a5c4cd1f8b959b1f36c8c50d08ee114c4">LLMUnity.LLM.AddLora</a></div><div class="ttdeci">void AddLora(string path, float weight=1)</div><div class="ttdoc">Allows to add a LORA model to use in the LLM. The model provided is copied to the Assets/StreamingAss...</div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00260">LLM.cs:260</a></div></div>
+<div class="ttc" id="aclassLLMUnity_1_1LLM_html_a9cdc4850537724d94bf88e7b78372883"><div class="ttname"><a href="classLLMUnity_1_1LLM.html#a9cdc4850537724d94bf88e7b78372883">LLMUnity.LLM.SetModel</a></div><div class="ttdeci">void SetModel(string path)</div><div class="ttdoc">Allows to set the model used by the LLM. The model provided is copied to the Assets/StreamingAssets f...</div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00219">LLM.cs:219</a></div></div>
+<div class="ttc" id="aclassLLMUnity_1_1LLM_html_ad4c7250286a33527cb211bd980f1c307"><div class="ttname"><a href="classLLMUnity_1_1LLM.html#ad4c7250286a33527cb211bd980f1c307">LLMUnity.LLM.SetTemplate</a></div><div class="ttdeci">void SetTemplate(string templateName, bool setDirty=true)</div><div class="ttdoc">Set the chat template for the LLM.</div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00325">LLM.cs:325</a></div></div>
 </div><!-- fragment --><p></p>
 </details>
 <details >
@@ -423,7 +423,7 @@ You can also check the architecture that works for your system from the Debug me
 Compute embeddings using a LLM</summary>
 <p></p>
 <p>The <code>Embeddings</code> function can be used to obtain the emdeddings of a phrase: </p><div class="fragment"><div class="line">List&lt;float&gt; embeddings = await llmCharacter.<a class="code hl_function" href="classLLMUnity_1_1LLMCaller.html#a2344c568eafd2918a33fe418841d5481">Embeddings</a>(<span class="stringliteral">&quot;hi, how are you?&quot;</span>);</div>
-<div class="ttc" id="aclassLLMUnity_1_1LLMCaller_html_a2344c568eafd2918a33fe418841d5481"><div class="ttname"><a href="classLLMUnity_1_1LLMCaller.html#a2344c568eafd2918a33fe418841d5481">LLMUnity.LLMCaller.Embeddings</a></div><div class="ttdeci">virtual async Task&lt; List&lt; float &gt; &gt; Embeddings(string query, Callback&lt; List&lt; float &gt; &gt; callback=null)</div><div class="ttdoc">Computes the embeddings of the provided input.</div><div class="ttdef"><b>Definition</b> <a href="LLMCaller_8cs_source.html#l00367">LLMCaller.cs:367</a></div></div>
+<div class="ttc" id="aclassLLMUnity_1_1LLMCaller_html_a2344c568eafd2918a33fe418841d5481"><div class="ttname"><a href="classLLMUnity_1_1LLMCaller.html#a2344c568eafd2918a33fe418841d5481">LLMUnity.LLMCaller.Embeddings</a></div><div class="ttdeci">virtual async Task&lt; List&lt; float &gt; &gt; Embeddings(string query, Callback&lt; List&lt; float &gt; &gt; callback=null)</div><div class="ttdoc">Computes the embeddings of the provided input.</div><div class="ttdef"><b>Definition</b> <a href="LLMCaller_8cs_source.html#l00373">LLMCaller.cs:373</a></div></div>
 </div><!-- fragment --><p></p>
 </details>
 <p>A <b>detailed documentation</b> on function level can be found here: <a href="https://undream.ai/LLMUnity"><img src="https://img.shields.io/badge/Documentation-white.svg?logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwEAYAAAAHkiXEAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEgAACxIB0t1+/AAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAATqSURBVHic7ZtbiE1RGMc349K4M5EwklwjzUhJCMmTJPJAYjQXJJcH8+Blkry4lPJA8aAoJbekDLmUS6E8SHJL5AW5JPf77eHv93C22Wfttc/ee+0zc/4vv+bMXvusvfZa3/q+b33H80oqqaSSSmqrKnPdgXjUvbvYq5f4+7f486eb/rRajRsn7t4tPngg/vol/vkj/vghXr0q7tghzpyZ//79+on79omXLombNondukXrd9GoSxdx8mSxqUm8eVNkgAvl0aPioEFip07i6dP52z15Ig4fbvVY2VVFhbhokXjrlogJiWvAg/jwoXjqVO73+leUny9eiFVV5mfMlLDRBw+KX76ISQ+0LZ8/F00v4uJFsWPHFh83O+rdWzx3TnQ9wCZ+/Sqyl5iux1RmTu3aiYcPi64H1pasALypoOv4/8SJXraEbXc9kLbECxo2TKyuFj9/zt9u+XIvG8LWv3wpuh5QW86f3/JznT+fv93s2S23C1Z72wbhtH692LdvMvdPSgzkhAkiJhT16ZO/PRPOmcr+Rda4aa5nclTeuZP7PDgRpr1g40bPrQYOFF0PYKHEC+raVVy8OFy7R49EArvURU4mrUAqaTY0iB8/2rXD+XCm5mbR9QAWylevorV7/VpkL0ld06eLpkiyWPj9u93179+LpFZwZ1PXtGnitWui64GMStPmG7SH1NSIJBNHjvTSFZvRvHlise0N9JcBtW1/44Y4dqx45IjnU0JxAGLpklPx+9VZFwPp/9v/eZDGjxcZh7dv4+mXtch+up7Rca+MsJvxiRNi6nvBhg25HWprZMaPGeOlqxEjxGKz+XGRTAAmyJnq6sR370TXA2NLW+8HNjZ62dLOnaLrAQ1r2zmqPH482n0mTfJCKmEvCJHUooNZE/369Elct06kqiKsONRfulTEFDsX8QDlIa5nup9374pE8IiZHPY+ly+LZE/37/cM6mC6IB6Vl4urV6fzfUG6d0/csyf37wsXRFInaM4ckTjGdPg+apTYs6dI3RIWwH//1DV1qkiuxNY2FzrTd+2y6y8z2HQU6efZs+KBAyJZ4v+V0h6ArlwROaQP0uPH4ooV4sqV8Xz/4MF211M2wwoOq1mzRAq5Pnywa5+4KDHE9mI7ly0TO3fOvZ6/eZCoKwB32HS0SMFV1DNtImBKHYstBROoQ4fEQk2RaS+qrxejmj5M7NatIhWARS82xUJfAKahzFcdPnq0GLYgy7Rnbd8e6rGKRyzpuNzPBQty709RcNSZf/KkuHCh2GpMDyKbGNcLYE+YMkVks336NFx7XhTZ3szXiBaqtWvFuAOxM2dEZiyH8UErgc8JLNun7E0aFffSI7RP6owZmz9kSO73HjsmXr8ukppYsybSYyQvBp5QfOjQ3M9tRR496pGgLf1JtLlzRZJzlFzGp4SWDnUxFCrdvy+uWiWa3DJe3N69oj8uSEq8CER88uaNOGBAOv2ILGY69TBBJoM8O0t72zaRoztXBzlLlrT8XARW/IQq82JTMv3mKmv0/9CC4mJMYPwrMSETxAyurRUxQVmXP1fEid7mzeK3b+n2Jzb16CFu2SIWmtNJiriVxANsyq0uoCJfTk4G9y4t24/bSQ0rTkP6gVTG3mz//uKMGSK/ucId5Xe9lZUi5eMMLGUgz56J5Hxu3xZ50Xg3RMIltVn9BRja26PYsBHgAAAAAElFTkSuQmCC" alt="" style="pointer-events: none;" class="inline"/></a></p>
@@ -543,7 +543,8 @@ Options</h1>
 LLM Settings</h2>
 <ul>
 <li><code>Show/Hide Advanced Options</code> Toggle to show/hide advanced options from below</li>
-<li><code>Log Level</code> select how verbose the log messages arequants)</li>
+<li><code>Log Level</code> select how verbose the log messages are</li>
+<li><code>Use extras</code> select to install and allow the use of extra features (flash attention and IQ quants)</li>
 </ul>
 <h3><a class="anchor" id="autotoc_md11"></a>
 💻 Setup Settings</h3>
@@ -609,6 +610,7 @@ Advanced options</summary>
 <li><code>Chat Template</code> the chat template being used for the LLM</li>
 <li><code>Lora</code> the path of the LoRAs being used (relative to the Assets/StreamingAssets folder)</li>
 <li><code>Lora Weights</code> the weights of the LoRAs being used</li>
+<li><code>Flash Attention</code> click to use flash attention in the model (if <code>Use extras</code> is enabled)</li>
 </ul>
 <p></p>
 </details>
@@ -619,6 +621,7 @@ LLMCharacter Settings</h2>
 <ul>
 <li><code>Show/Hide Advanced Options</code> Toggle to show/hide advanced options from below</li>
 <li><code>Log Level</code> select how verbose the log messages are</li>
+<li><code>Use extras</code> select to install and allow the use of extra features (flash attention and IQ quants)</li>
 </ul>
 <h3><a class="anchor" id="autotoc_md15"></a>
 💻 Setup Settings</h3>

@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['save_0',['save',['../classLLMUnity_1_1LLMCharacter.html#af5d8f07cad7066700b19689a0b493d38',1,'LLMUnity::LLMCharacter']]],
-  ['save_1',['Save',['../classLLMUnity_1_1LLMCharacter.html#a8777cf02ab4ecf5a967ade7e93925108',1,'LLMUnity.LLMCharacter.Save()'],['../classLLMUnity_1_1LLMManager.html#a966727ae26510d3987ebb03ffa180c6b',1,'LLMUnity.LLMManager.Save()'],['../classLLMUnity_1_1Searchable.html#acefe00cbe46e2222bc45afc4a5380af1',1,'LLMUnity.Searchable.Save()']]],
+  ['save_0',['Save',['../classLLMUnity_1_1LLMCharacter.html#a8777cf02ab4ecf5a967ade7e93925108',1,'LLMUnity.LLMCharacter.Save()'],['../classLLMUnity_1_1LLMManager.html#a966727ae26510d3987ebb03ffa180c6b',1,'LLMUnity.LLMManager.Save()'],['../classLLMUnity_1_1Searchable.html#acefe00cbe46e2222bc45afc4a5380af1',1,'LLMUnity.Searchable.Save()']]],
+  ['save_1',['save',['../classLLMUnity_1_1LLMCharacter.html#af5d8f07cad7066700b19689a0b493d38',1,'LLMUnity::LLMCharacter']]],
   ['savecache_2',['saveCache',['../classLLMUnity_1_1LLMCharacter.html#a796c05dab6ed5c3cebb6f67353535164',1,'LLMUnity::LLMCharacter']]],
   ['savetodisk_3',['SaveToDisk',['../classLLMUnity_1_1LLMManager.html#a02f1f4900b433e8d44682d4375da80ca',1,'LLMUnity::LLMManager']]],
   ['search_4',['Search',['../classLLMUnity_1_1Searchable.html#a2bae1bf1901381972408c63f4ee7d9dc',1,'LLMUnity::Searchable']]],

@@ -34,6 +34,7 @@ var group__llm =
       [ "contextSize", "classLLMUnity_1_1LLM.html#a8e358f7a834e6ede3cc19aa7142e67e8", null ],
       [ "debug", "classLLMUnity_1_1LLM.html#a415905d972e2922dd99b289ceaf56a5c", null ],
       [ "dontDestroyOnLoad", "classLLMUnity_1_1LLM.html#ab1cd3fa19215c0ccc3c9cea09fe4b669", null ],
+      [ "flashAttention", "classLLMUnity_1_1LLM.html#ac4cd7573f92b344e8171a6c88bbf0da3", null ],
       [ "lora", "classLLMUnity_1_1LLM.html#a80c81993fcc33ee253ffec2f3d1302fd", null ],
       [ "loraWeights", "classLLMUnity_1_1LLM.html#ae1093ec1e0baaab9620276c7a628649a", null ],
       [ "model", "classLLMUnity_1_1LLM.html#ab3feb52deeee0c441322c81628c065cd", null ],
