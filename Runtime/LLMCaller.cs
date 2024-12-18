@@ -288,7 +288,9 @@ namespace LLMUnity
                     }
 
                     // Start the request asynchronously
-                    var asyncOperation = request.SendWebRequest();
+                    UnityWebRequestAsyncOperation asyncOperation = request.SendWebRequest();
+                    await Task.Yield(); // Wait for the next frame so that asyncOperation is properly registered (especially if not in main thread)
+
                     float lastProgress = 0f;
                     // Continue updating progress until the request is completed
                     while (!asyncOperation.isDone)
