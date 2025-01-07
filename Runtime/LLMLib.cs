@@ -141,7 +141,7 @@ namespace LLMUnity
                 handle = Mac.dlopen(libraryName);
             else if (Application.platform == RuntimePlatform.Android)
                 handle = Android.dlopen(libraryName);
-            else if (Application.platform == RuntimePlatform.IPhonePlayer)
+            else if (Application.platform == RuntimePlatform.IPhonePlayer || Application.platform == RuntimePlatform.VisionOS)
                 handle = iOS.dlopen(libraryName);
             else
                 throw new PlatformNotSupportedException($"Current platform is unknown, unable to load library '{libraryName}'.");
@@ -169,7 +169,7 @@ namespace LLMUnity
                 handle = Mac.dlsym(library, symbolName);
             else if (Application.platform == RuntimePlatform.Android)
                 handle = Android.dlsym(library, symbolName);
-            else if (Application.platform == RuntimePlatform.IPhonePlayer)
+            else if (Application.platform == RuntimePlatform.IPhonePlayer || Application.platform == RuntimePlatform.VisionOS)
                 handle = iOS.dlsym(library, symbolName);
             else
                 throw new PlatformNotSupportedException($"Current platform is unknown, unable to load symbol '{symbolName}' from library {library}.");
@@ -194,7 +194,7 @@ namespace LLMUnity
                 Mac.dlclose(library);
             else if (Application.platform == RuntimePlatform.Android)
                 Android.dlclose(library);
-            else if (Application.platform == RuntimePlatform.IPhonePlayer)
+            else if (Application.platform == RuntimePlatform.IPhonePlayer || Application.platform == RuntimePlatform.VisionOS)
                 iOS.dlclose(library);
             else
                 throw new PlatformNotSupportedException($"Current platform is unknown, unable to close library '{library}'.");
@@ -716,7 +716,7 @@ namespace LLMUnity
             {
                 architectures.Add("android");
             }
-            else if (Application.platform == RuntimePlatform.IPhonePlayer)
+            else if (Application.platform == RuntimePlatform.IPhonePlayer || Application.platform == RuntimePlatform.VisionOS)
             {
                 architectures.Add("ios");
             }
