@@ -16,14 +16,24 @@ namespace LLMUnity
     {
         static List<StringPair> movedPairs = new List<StringPair>();
         public static string BuildTempDir = Path.Combine(Application.temporaryCachePath, "LLMUnityBuild");
-        public static string androidPluginDir = Path.Combine(Application.dataPath, "Plugins", "Android", "LLMUnity");
-        public static string iOSPluginDir = Path.Combine(Application.dataPath, "Plugins", "iOS", "LLMUnity");
         static string movedCache = Path.Combine(BuildTempDir, "moved.json");
 
         [InitializeOnLoadMethod]
         private static void InitializeOnLoad()
         {
             Reset();
+        }
+
+        public static string PluginDir(string platform, bool relative = false)
+        {
+            string pluginDir = Path.Combine("Plugins", platform, "LLMUnity");
+            if (!relative) pluginDir = Path.Combine(Application.dataPath, pluginDir);
+            return pluginDir;
+        }
+
+        public static string PluginLibraryDir(string platform, bool relative = false)
+        {
+            return Path.Combine(PluginDir(platform, relative), LLMUnitySetup.libraryName);
         }
 
         /// <summary>
@@ -88,7 +98,7 @@ namespace LLMUnity
         /// <param name="path">path</param>
         public static bool DeletePath(string path)
         {
-            string[] allowedDirs = new string[] { LLMUnitySetup.GetAssetPath(), BuildTempDir, androidPluginDir, iOSPluginDir};
+            string[] allowedDirs = new string[] { LLMUnitySetup.GetAssetPath(), BuildTempDir, PluginDir("Android"), PluginDir("iOS")};
             bool deleteOK = false;
             foreach (string allowedDir in allowedDirs) deleteOK = deleteOK || LLMUnitySetup.IsSubPath(path, allowedDir);
             if (!deleteOK)
@@ -175,9 +185,10 @@ namespace LLMUnity
 
             if (platform == "android" || platform == "ios")
             {
-                string pluginDir = platform == "android"? androidPluginDir: iOSPluginDir;
+                string pluginPlatform = platform == "android" ? "Android" : "iOS";
                 string source = Path.Combine(LLMUnitySetup.libraryPath, platform);
-                string target = Path.Combine(pluginDir, LLMUnitySetup.libraryName);
+                string target = PluginLibraryDir(pluginPlatform);
+                string pluginDir = PluginDir(pluginPlatform);
                 MoveAction(source, target);
                 MoveAction(source + ".meta", target + ".meta");
                 AddActionAddMeta(pluginDir);
