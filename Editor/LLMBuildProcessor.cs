@@ -48,24 +48,40 @@ namespace LLMUnity
 
 #if UNITY_IOS
         /// <summary>
-        /// Adds the Accelerate framework (for ios)
+        /// Postprocess the iOS Build
         /// </summary>
-        public static void AddAccelerate(string outputPath)
+        public static void PostprocessIOSBuild(string outputPath)
         {
             string projPath = PBXProject.GetPBXProjectPath(outputPath);
-            PBXProject proj = new PBXProject();
-            proj.ReadFromFile(projPath);
-            proj.AddFrameworkToProject(proj.GetUnityMainTargetGuid(), "Accelerate.framework", false);
-            proj.AddFrameworkToProject(proj.GetUnityFrameworkTargetGuid(), "Accelerate.framework", false);
-            proj.WriteToFile(projPath);
+            PBXProject project = new PBXProject();
+            project.ReadFromFile(projPath);
+
+            string targetGuid = project.GetUnityFrameworkTargetGuid();
+            string frameworkTargetGuid = project.GetUnityFrameworkTargetGuid();
+            string unityMainTargetGuid = project.GetUnityMainTargetGuid();
+            string embedFrameworksGuid = project.GetResourcesBuildPhaseByTarget(frameworkTargetGuid);
+
+            // Add Accelerate framework
+            project.AddFrameworkToProject(unityMainTargetGuid, "Accelerate.framework", false);
+            project.AddFrameworkToProject(targetGuid, "Accelerate.framework", false);
+
+            // Remove libundreamai_ios.a from Embed Frameworks
+            string libraryFile = "libundreamai_ios.a";
+            string fileGuid = project.FindFileGuidByProjectPath(libraryFile);
+
+            if (string.IsNullOrEmpty(fileGuid)) Debug.LogError("Library file {libraryFile} not found in project");
+            else project.RemoveFileFromBuild(embedFrameworksGuid, fileGuid);
+
+            project.WriteToFile(projPath);
         }
+
 #endif
 
         // called after the build
         public void OnPostprocessBuild(BuildReport report)
         {
 #if UNITY_IOS
-            AddAccelerate(report.summary.outputPath);
+            PostprocessIOSBuild(report.summary.outputPath);
 #endif
             BuildCompleted();
         }
