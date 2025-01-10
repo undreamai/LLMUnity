@@ -2,6 +2,8 @@ using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
+using System.IO;
+
 #if UNITY_IOS
 using UnityEditor.iOS.Xcode;
 #endif
@@ -66,10 +68,10 @@ namespace LLMUnity
             project.AddFrameworkToProject(targetGuid, "Accelerate.framework", false);
 
             // Remove libundreamai_ios.a from Embed Frameworks
-            string libraryFile = "libundreamai_ios.a";
+            string libraryFile = Path.Combine("Libraries", LLMBuilder.PluginLibraryDir("iOS", true), "libundreamai_ios.a");
             string fileGuid = project.FindFileGuidByProjectPath(libraryFile);
 
-            if (string.IsNullOrEmpty(fileGuid)) Debug.LogError("Library file {libraryFile} not found in project");
+            if (string.IsNullOrEmpty(fileGuid)) Debug.LogError($"Library file {libraryFile} not found in project");
             else project.RemoveFileFromBuild(embedFrameworksGuid, fileGuid);
 
             project.WriteToFile(projPath);
