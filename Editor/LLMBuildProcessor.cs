@@ -70,9 +70,19 @@ namespace LLMUnity
             // Remove libundreamai_ios.a from Embed Frameworks
             string libraryFile = Path.Combine("Libraries", LLMBuilder.PluginLibraryDir("iOS", true), "libundreamai_ios.a");
             string fileGuid = project.FindFileGuidByProjectPath(libraryFile);
-
             if (string.IsNullOrEmpty(fileGuid)) Debug.LogError($"Library file {libraryFile} not found in project");
-            else project.RemoveFileFromBuild(embedFrameworksGuid, fileGuid);
+            else
+            {
+                foreach (var phaseGuid in project.GetAllBuildPhasesForTarget(unityMainTargetGuid))
+                {
+                    if (project.GetBuildPhaseName(phaseGuid) == "Embed Frameworks")
+                    {
+                        project.RemoveFileFromBuild(phaseGuid, fileGuid);
+                        break;
+                    }
+                }
+                project.RemoveFileFromBuild(unityMainTargetGuid, fileGuid);
+            }
 
             project.WriteToFile(projPath);
         }
