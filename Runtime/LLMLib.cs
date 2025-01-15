@@ -139,10 +139,8 @@ namespace LLMUnity
                 handle = Linux.dlopen(libraryName);
             else if (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.OSXPlayer || Application.platform == RuntimePlatform.OSXServer)
                 handle = Mac.dlopen(libraryName);
-            else if (Application.platform == RuntimePlatform.Android)
-                handle = Android.dlopen(libraryName);
-            else if (Application.platform == RuntimePlatform.IPhonePlayer || Application.platform == RuntimePlatform.VisionOS)
-                handle = iOS.dlopen(libraryName);
+            else if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer || Application.platform == RuntimePlatform.VisionOS)
+                handle = Mobile.dlopen(libraryName);
             else
                 throw new PlatformNotSupportedException($"Current platform is unknown, unable to load library '{libraryName}'.");
 
@@ -167,10 +165,8 @@ namespace LLMUnity
                 handle = Linux.dlsym(library, symbolName);
             else if (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.OSXPlayer || Application.platform == RuntimePlatform.OSXServer)
                 handle = Mac.dlsym(library, symbolName);
-            else if (Application.platform == RuntimePlatform.Android)
-                handle = Android.dlsym(library, symbolName);
-            else if (Application.platform == RuntimePlatform.IPhonePlayer || Application.platform == RuntimePlatform.VisionOS)
-                handle = iOS.dlsym(library, symbolName);
+            else if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer || Application.platform == RuntimePlatform.VisionOS)
+                handle = Mobile.dlsym(library, symbolName);
             else
                 throw new PlatformNotSupportedException($"Current platform is unknown, unable to load symbol '{symbolName}' from library {library}.");
 
@@ -192,10 +188,8 @@ namespace LLMUnity
                 Linux.dlclose(library);
             else if (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.OSXPlayer || Application.platform == RuntimePlatform.OSXServer)
                 Mac.dlclose(library);
-            else if (Application.platform == RuntimePlatform.Android)
-                Android.dlclose(library);
-            else if (Application.platform == RuntimePlatform.IPhonePlayer || Application.platform == RuntimePlatform.VisionOS)
-                iOS.dlclose(library);
+            else if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer || Application.platform == RuntimePlatform.VisionOS)
+                Mobile.dlclose(library);
             else
                 throw new PlatformNotSupportedException($"Current platform is unknown, unable to close library '{library}'.");
         }
@@ -289,52 +283,17 @@ namespace LLMUnity
             public static extern void FreeLibrary(IntPtr hModule);
         }
 
-        private static class Android
+        private static class Mobile
         {
             public static IntPtr dlopen(string path) => dlopen(path, 1);
 
-#if UNITY_ANDROID
+#if UNITY_ANDROID || UNITY_IOS || UNITY_VISIONOS
             [DllImport("__Internal")]
             public static extern IntPtr dlopen(string filename, int flags);
 
             [DllImport("__Internal")]
             public static extern IntPtr dlsym(IntPtr handle, string symbol);
 
-            [DllImport("__Internal")]
-            public static extern int dlclose(IntPtr handle);
-#else
-            public static IntPtr dlopen(string filename, int flags)
-            {
-                return default;
-            }
-
-            public static IntPtr dlsym(IntPtr handle, string symbol)
-            {
-                return default;
-            }
-
-            public static int dlclose(IntPtr handle)
-            {
-                return default;
-            }
-
-#endif
-        }
-
-        private static class iOS
-        {
-            public static IntPtr dlopen(string path) => dlopen(path, 1);
-
-#if UNITY_IOS
-            // LoadLibrary for iOS
-            [DllImport("__Internal")]
-            public static extern IntPtr dlopen(string filename, int flags);
-
-            // GetSymbol for iOS
-            [DllImport("__Internal")]
-            public static extern IntPtr dlsym(IntPtr handle, string symbol);
-
-            // FreeLibrary for iOS
             [DllImport("__Internal")]
             public static extern int dlclose(IntPtr handle);
 #else
@@ -368,9 +327,9 @@ namespace LLMUnity
         static bool has_avx2 = false;
         static bool has_avx512 = false;
 
-#if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
+#if (UNITY_ANDROID || UNITY_IOS || UNITY_VISIONOS) && !UNITY_EDITOR
 
-        public LLMLib(string arch){}
+        public LLMLib(string arch) {}
 
 #if UNITY_ANDROID
         public const string LibraryName = "libundreamai_android";
@@ -378,79 +337,79 @@ namespace LLMUnity
         public const string LibraryName = "__Internal";
 #endif
 
-        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint="Logging")]
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "Logging")]
         public static extern void LoggingStatic(IntPtr stringWrapper);
-        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint="StopLogging")]
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "StopLogging")]
         public static extern void StopLoggingStatic();
-        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint="LLM_Construct")]
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Construct")]
         public static extern IntPtr LLM_ConstructStatic(string command);
-        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint="LLM_Delete")]
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Delete")]
         public static extern void LLM_DeleteStatic(IntPtr LLMObject);
-        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint="LLM_StartServer")]
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_StartServer")]
         public static extern void LLM_StartServerStatic(IntPtr LLMObject);
-        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint="LLM_StopServer")]
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_StopServer")]
         public static extern void LLM_StopServerStatic(IntPtr LLMObject);
-        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint="LLM_Start")]
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Start")]
         public static extern void LLM_StartStatic(IntPtr LLMObject);
-        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint="LLM_Started")]
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Started")]
         public static extern bool LLM_StartedStatic(IntPtr LLMObject);
-        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint="LLM_Stop")]
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Stop")]
         public static extern void LLM_StopStatic(IntPtr LLMObject);
-        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint="LLM_SetTemplate")]
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_SetTemplate")]
         public static extern void LLM_SetTemplateStatic(IntPtr LLMObject, string chatTemplate);
-        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint="LLM_SetSSL")]
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_SetSSL")]
         public static extern void LLM_SetSSLStatic(IntPtr LLMObject, string SSLCert, string SSLKey);
-        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint="LLM_Tokenize")]
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Tokenize")]
         public static extern void LLM_TokenizeStatic(IntPtr LLMObject, string jsonData, IntPtr stringWrapper);
-        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint="LLM_Detokenize")]
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Detokenize")]
         public static extern void LLM_DetokenizeStatic(IntPtr LLMObject, string jsonData, IntPtr stringWrapper);
-        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint="LLM_Embeddings")]
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Embeddings")]
         public static extern void LLM_EmbeddingsStatic(IntPtr LLMObject, string jsonData, IntPtr stringWrapper);
-        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint="LLM_Lora_Weight")]
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Lora_Weight")]
         public static extern void LLM_LoraWeightStatic(IntPtr LLMObject, string jsonData, IntPtr stringWrapper);
-        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint="LLM_Lora_List")]
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Lora_List")]
         public static extern void LLM_LoraListStatic(IntPtr LLMObject, IntPtr stringWrapper);
-        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint="LLM_Completion")]
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Completion")]
         public static extern void LLM_CompletionStatic(IntPtr LLMObject, string jsonData, IntPtr stringWrapper);
-        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint="LLM_Slot")]
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Slot")]
         public static extern void LLM_SlotStatic(IntPtr LLMObject, string jsonData, IntPtr stringWrapper);
-        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint="LLM_Cancel")]
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Cancel")]
         public static extern void LLM_CancelStatic(IntPtr LLMObject, int idSlot);
-        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint="LLM_Status")]
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Status")]
         public static extern int LLM_StatusStatic(IntPtr LLMObject, IntPtr stringWrapper);
-        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint="StringWrapper_Construct")]
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "StringWrapper_Construct")]
         public static extern IntPtr StringWrapper_ConstructStatic();
-        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint="StringWrapper_Delete")]
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "StringWrapper_Delete")]
         public static extern void StringWrapper_DeleteStatic(IntPtr instance);
-        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint="StringWrapper_GetStringSize")]
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "StringWrapper_GetStringSize")]
         public static extern int StringWrapper_GetStringSizeStatic(IntPtr instance);
-        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint="StringWrapper_GetString")]
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "StringWrapper_GetString")]
         public static extern void StringWrapper_GetStringStatic(IntPtr instance, IntPtr buffer, int bufferSize, bool clear = false);
 
-        public void Logging(IntPtr stringWrapper){ LoggingStatic(stringWrapper); }
-        public void StopLogging(){ StopLoggingStatic(); }
-        public IntPtr LLM_Construct(string command){ return LLM_ConstructStatic(command); }
-        public void LLM_Delete(IntPtr LLMObject){ LLM_DeleteStatic(LLMObject); }
-        public void LLM_StartServer(IntPtr LLMObject){ LLM_StartServerStatic(LLMObject); }
-        public void LLM_StopServer(IntPtr LLMObject){ LLM_StopServerStatic(LLMObject); }
-        public void LLM_Start(IntPtr LLMObject){ LLM_StartStatic(LLMObject); }
-        public bool LLM_Started(IntPtr LLMObject){ return LLM_StartedStatic(LLMObject); }
-        public void LLM_Stop(IntPtr LLMObject){ LLM_StopStatic(LLMObject); }
-        public void LLM_SetTemplate(IntPtr LLMObject, string chatTemplate){ LLM_SetTemplateStatic(LLMObject, chatTemplate); }
-        public void LLM_SetSSL(IntPtr LLMObject, string SSLCert, string SSLKey){ LLM_SetSSLStatic(LLMObject, SSLCert, SSLKey); }
-        public void LLM_Tokenize(IntPtr LLMObject, string jsonData, IntPtr stringWrapper){ LLM_TokenizeStatic(LLMObject, jsonData, stringWrapper); }
-        public void LLM_Detokenize(IntPtr LLMObject, string jsonData, IntPtr stringWrapper){ LLM_DetokenizeStatic(LLMObject, jsonData, stringWrapper); }
-        public void LLM_Embeddings(IntPtr LLMObject, string jsonData, IntPtr stringWrapper){ LLM_EmbeddingsStatic(LLMObject, jsonData, stringWrapper); }
-        public void LLM_LoraWeight(IntPtr LLMObject, string jsonData, IntPtr stringWrapper){ LLM_LoraWeightStatic(LLMObject, jsonData, stringWrapper); }
-        public void LLM_LoraList(IntPtr LLMObject, IntPtr stringWrapper){ LLM_LoraListStatic(LLMObject, stringWrapper); }
-        public void LLM_Completion(IntPtr LLMObject, string jsonData, IntPtr stringWrapper){ LLM_CompletionStatic(LLMObject, jsonData, stringWrapper); }
-        public void LLM_Slot(IntPtr LLMObject, string jsonData, IntPtr stringWrapper){ LLM_SlotStatic(LLMObject, jsonData, stringWrapper); }
-        public void LLM_Cancel(IntPtr LLMObject, int idSlot){ LLM_CancelStatic(LLMObject, idSlot); }
-        public int LLM_Status(IntPtr LLMObject, IntPtr stringWrapper){ return LLM_StatusStatic(LLMObject, stringWrapper); }
-        public IntPtr StringWrapper_Construct(){ return StringWrapper_ConstructStatic(); }
-        public void StringWrapper_Delete(IntPtr instance){ StringWrapper_DeleteStatic(instance); }
-        public int StringWrapper_GetStringSize(IntPtr instance){ return StringWrapper_GetStringSizeStatic(instance); }
-        public void StringWrapper_GetString(IntPtr instance, IntPtr buffer, int bufferSize, bool clear = false){ StringWrapper_GetStringStatic(instance, buffer, bufferSize, clear); }
+        public void Logging(IntPtr stringWrapper) { LoggingStatic(stringWrapper); }
+        public void StopLogging() { StopLoggingStatic(); }
+        public IntPtr LLM_Construct(string command) { return LLM_ConstructStatic(command); }
+        public void LLM_Delete(IntPtr LLMObject) { LLM_DeleteStatic(LLMObject); }
+        public void LLM_StartServer(IntPtr LLMObject) { LLM_StartServerStatic(LLMObject); }
+        public void LLM_StopServer(IntPtr LLMObject) { LLM_StopServerStatic(LLMObject); }
+        public void LLM_Start(IntPtr LLMObject) { LLM_StartStatic(LLMObject); }
+        public bool LLM_Started(IntPtr LLMObject) { return LLM_StartedStatic(LLMObject); }
+        public void LLM_Stop(IntPtr LLMObject) { LLM_StopStatic(LLMObject); }
+        public void LLM_SetTemplate(IntPtr LLMObject, string chatTemplate) { LLM_SetTemplateStatic(LLMObject, chatTemplate); }
+        public void LLM_SetSSL(IntPtr LLMObject, string SSLCert, string SSLKey) { LLM_SetSSLStatic(LLMObject, SSLCert, SSLKey); }
+        public void LLM_Tokenize(IntPtr LLMObject, string jsonData, IntPtr stringWrapper) { LLM_TokenizeStatic(LLMObject, jsonData, stringWrapper); }
+        public void LLM_Detokenize(IntPtr LLMObject, string jsonData, IntPtr stringWrapper) { LLM_DetokenizeStatic(LLMObject, jsonData, stringWrapper); }
+        public void LLM_Embeddings(IntPtr LLMObject, string jsonData, IntPtr stringWrapper) { LLM_EmbeddingsStatic(LLMObject, jsonData, stringWrapper); }
+        public void LLM_LoraWeight(IntPtr LLMObject, string jsonData, IntPtr stringWrapper) { LLM_LoraWeightStatic(LLMObject, jsonData, stringWrapper); }
+        public void LLM_LoraList(IntPtr LLMObject, IntPtr stringWrapper) { LLM_LoraListStatic(LLMObject, stringWrapper); }
+        public void LLM_Completion(IntPtr LLMObject, string jsonData, IntPtr stringWrapper) { LLM_CompletionStatic(LLMObject, jsonData, stringWrapper); }
+        public void LLM_Slot(IntPtr LLMObject, string jsonData, IntPtr stringWrapper) { LLM_SlotStatic(LLMObject, jsonData, stringWrapper); }
+        public void LLM_Cancel(IntPtr LLMObject, int idSlot) { LLM_CancelStatic(LLMObject, idSlot); }
+        public int LLM_Status(IntPtr LLMObject, IntPtr stringWrapper) { return LLM_StatusStatic(LLMObject, stringWrapper); }
+        public IntPtr StringWrapper_Construct() { return StringWrapper_ConstructStatic(); }
+        public void StringWrapper_Delete(IntPtr instance) { StringWrapper_DeleteStatic(instance); }
+        public int StringWrapper_GetStringSize(IntPtr instance) { return StringWrapper_GetStringSizeStatic(instance); }
+        public void StringWrapper_GetString(IntPtr instance, IntPtr buffer, int bufferSize, bool clear = false) { StringWrapper_GetStringStatic(instance, buffer, bufferSize, clear); }
 
 #else
 
@@ -682,9 +641,13 @@ namespace LLMUnity
             {
                 architectures.Add("android");
             }
-            else if (Application.platform == RuntimePlatform.IPhonePlayer || Application.platform == RuntimePlatform.VisionOS)
+            else if (Application.platform == RuntimePlatform.IPhonePlayer)
             {
                 architectures.Add("ios");
+            }
+            else if (Application.platform == RuntimePlatform.VisionOS)
+            {
+                architectures.Add("visionos");
             }
             else
             {
@@ -694,7 +657,7 @@ namespace LLMUnity
             }
             return architectures;
         }
-    
+
         /// <summary>
         /// Allows to retrieve a string from the library (Unity only allows marshalling of chars)
         /// </summary>
@@ -728,6 +691,5 @@ namespace LLMUnity
             if (libraryHandle != IntPtr.Zero) LibraryLoader.FreeLibrary(libraryHandle);
         }
     }
-
 }
 /// \endcond
