@@ -16,27 +16,7 @@ namespace LLMUnity
         public void OnPreprocessBuild(BuildReport report)
         {
             Application.logMessageReceived += OnBuildError;
-            string platform = null;
-            switch (report.summary.platform)
-            {
-                case BuildTarget.StandaloneWindows:
-                case BuildTarget.StandaloneWindows64:
-                    platform = "windows";
-                    break;
-                case BuildTarget.StandaloneLinux64:
-                    platform = "linux";
-                    break;
-                case BuildTarget.StandaloneOSX:
-                    platform = "macos";
-                    break;
-                case BuildTarget.Android:
-                    platform = "android";
-                    break;
-                case BuildTarget.iOS:
-                    platform = "ios";
-                    break;
-            }
-            LLMBuilder.Build(platform);
+            LLMBuilder.Build(report.summary.platform);
             AssetDatabase.Refresh();
         }
 
@@ -46,7 +26,7 @@ namespace LLMUnity
             if (type == LogType.Error) BuildCompleted();
         }
 
-#if UNITY_IOS
+#if UNITY_IOS || UNITY_VISIONOS
         /// <summary>
         /// Adds the Accelerate framework (for ios)
         /// </summary>
@@ -59,12 +39,13 @@ namespace LLMUnity
             proj.AddFrameworkToProject(proj.GetUnityFrameworkTargetGuid(), "Accelerate.framework", false);
             proj.WriteToFile(projPath);
         }
+
 #endif
 
         // called after the build
         public void OnPostprocessBuild(BuildReport report)
         {
-#if UNITY_IOS
+#if UNITY_IOS || UNITY_VISIONOS
             AddAccelerate(report.summary.outputPath);
 #endif
             BuildCompleted();

@@ -219,13 +219,13 @@ namespace LLMUnity
 
         public static string GetAssetPath(string relPath = "")
         {
-            string assetsDir = Application.platform == RuntimePlatform.Android? Application.persistentDataPath : Application.streamingAssetsPath;
+            string assetsDir = Application.platform == RuntimePlatform.Android ? Application.persistentDataPath : Application.streamingAssetsPath;
             return Path.Combine(assetsDir, relPath).Replace('\\', '/');
         }
 
         public static string GetDownloadAssetPath(string relPath = "")
         {
-            string assetsDir = (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer || Application.platform == RuntimePlatform.VisionOS)? Application.persistentDataPath : Application.streamingAssetsPath;
+            string assetsDir = (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer || Application.platform == RuntimePlatform.VisionOS) ? Application.persistentDataPath : Application.streamingAssetsPath;
             return Path.Combine(assetsDir, relPath).Replace('\\', '/');
         }
 
@@ -414,13 +414,12 @@ namespace LLMUnity
             File.Delete(zipPath);
         }
 
-
         static void DeleteEarlierVersions()
         {
             List<string> assetPathSubDirs = new List<string>();
-            foreach (string dir in new string[]{GetAssetPath(), Path.Combine(Application.dataPath, "Plugins", "Android")})
+            foreach (string dir in new string[] {GetAssetPath(), Path.Combine(Application.dataPath, "Plugins", "Android")})
             {
-                if(Directory.Exists(dir)) assetPathSubDirs.AddRange(Directory.GetDirectories(dir));
+                if (Directory.Exists(dir)) assetPathSubDirs.AddRange(Directory.GetDirectories(dir));
             }
 
             Regex regex = new Regex(GetLibraryName("(.+)"));

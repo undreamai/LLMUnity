@@ -18,6 +18,7 @@ namespace LLMUnity
         public static string BuildTempDir = Path.Combine(Application.temporaryCachePath, "LLMUnityBuild");
         public static string androidPluginDir = Path.Combine(Application.dataPath, "Plugins", "Android", "LLMUnity");
         public static string iOSPluginDir = Path.Combine(Application.dataPath, "Plugins", "iOS", "LLMUnity");
+        public static string visionOSPluginDir = Path.Combine(Application.dataPath, "Plugins", "VisionOS", "LLMUnity");
         static string movedCache = Path.Combine(BuildTempDir, "moved.json");
 
         [InitializeOnLoadMethod]
@@ -88,7 +89,7 @@ namespace LLMUnity
         /// <param name="path">path</param>
         public static bool DeletePath(string path)
         {
-            string[] allowedDirs = new string[] { LLMUnitySetup.GetAssetPath(), BuildTempDir, androidPluginDir, iOSPluginDir};
+            string[] allowedDirs = new string[] { LLMUnitySetup.GetAssetPath(), BuildTempDir, androidPluginDir, iOSPluginDir, visionOSPluginDir};
             bool deleteOK = false;
             foreach (string allowedDir in allowedDirs) deleteOK = deleteOK || LLMUnitySetup.IsSubPath(path, allowedDir);
             if (!deleteOK)
@@ -152,30 +153,52 @@ namespace LLMUnity
         /// Moves libraries in the correct place for building
         /// </summary>
         /// <param name="platform">target platform</param>
-        public static void BuildLibraryPlatforms(string platform)
+        public static void BuildLibraryPlatforms(BuildTarget buildTarget)
         {
-            List<string> platforms = new List<string>(){ "windows", "macos", "linux", "android", "ios", "setup" };
-            platforms.Remove(platform);
+            string platform = "";
+            string pluginDir = "";
+            switch (buildTarget)
+            {
+                case BuildTarget.StandaloneWindows:
+                case BuildTarget.StandaloneWindows64:
+                    platform = "windows";
+                    break;
+                case BuildTarget.StandaloneLinux64:
+                    platform = "linux";
+                    break;
+                case BuildTarget.StandaloneOSX:
+                    platform = "macos";
+                    break;
+                case BuildTarget.Android:
+                    platform = "android";
+                    pluginDir = androidPluginDir;
+                    break;
+                case BuildTarget.iOS:
+                    platform = "ios";
+                    pluginDir = iOSPluginDir;
+                    break;
+                case BuildTarget.VisionOS:
+                    platform = "visionos";
+                    pluginDir = visionOSPluginDir;
+                    break;
+            }
+
             foreach (string source in Directory.GetDirectories(LLMUnitySetup.libraryPath))
             {
                 string sourceName = Path.GetFileName(source);
-                foreach (string platformPrefix in platforms)
+                bool move = !sourceName.StartsWith(platform);
+                move = move || (sourceName.Contains("cuda") && !sourceName.Contains("full") && LLMUnitySetup.FullLlamaLib);
+                move = move || (sourceName.Contains("cuda") && sourceName.Contains("full") && !LLMUnitySetup.FullLlamaLib);
+                if (move)
                 {
-                    bool move = sourceName.StartsWith(platformPrefix);
-                    move = move || (sourceName.Contains("cuda") && !sourceName.Contains("full") && LLMUnitySetup.FullLlamaLib);
-                    move = move || (sourceName.Contains("cuda") && sourceName.Contains("full") && !LLMUnitySetup.FullLlamaLib);
-                    if (move)
-                    {
-                        string target = Path.Combine(BuildTempDir, sourceName);
-                        MoveAction(source, target);
-                        MoveAction(source + ".meta", target + ".meta");
-                    }
+                    string target = Path.Combine(BuildTempDir, sourceName);
+                    MoveAction(source, target);
+                    MoveAction(source + ".meta", target + ".meta");
                 }
             }
 
-            if (platform == "android" || platform == "ios")
+            if (pluginDir != "")
             {
-                string pluginDir = platform == "android"? androidPluginDir: iOSPluginDir;
                 string source = Path.Combine(LLMUnitySetup.libraryPath, platform);
                 string target = Path.Combine(pluginDir, LLMUnitySetup.libraryName);
                 MoveAction(source, target);
@@ -196,11 +219,11 @@ namespace LLMUnity
         /// <summary>
         /// Bundles the models and libraries
         /// </summary>
-        public static void Build(string platform)
+        public static void Build(BuildTarget buildTarget)
         {
             DeletePath(BuildTempDir);
             Directory.CreateDirectory(BuildTempDir);
-            BuildLibraryPlatforms(platform);
+            BuildLibraryPlatforms(buildTarget);
             BuildModels();
         }
 
