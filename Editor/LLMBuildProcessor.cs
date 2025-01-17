@@ -33,6 +33,9 @@ namespace LLMUnity
         public static void AddAccelerate(string outputPath)
         {
             string projPath = PBXProject.GetPBXProjectPath(outputPath);
+#if UNITY_VISIONOS
+            projPath = projPath.Replace("Unity-iPhone", "Unity-VisionOS");
+#endif
             PBXProject proj = new PBXProject();
             proj.ReadFromFile(projPath);
             proj.AddFrameworkToProject(proj.GetUnityMainTargetGuid(), "Accelerate.framework", false);
