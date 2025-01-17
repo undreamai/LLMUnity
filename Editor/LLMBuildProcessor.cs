@@ -30,9 +30,12 @@ namespace LLMUnity
         /// <summary>
         /// Postprocess the iOS Build
         /// </summary>
-        public static void PostprocessIOSBuild(string outputPath)
+        public static void PostprocessIOSBuild(BuildTarget buildTarget, string outputPath)
         {
             string projPath = PBXProject.GetPBXProjectPath(outputPath);
+#if UNITY_VISIONOS
+            projPath = projPath.Replace("Unity-iPhone", "Unity-VisionOS");
+#endif
             PBXProject project = new PBXProject();
             project.ReadFromFile(projPath);
 
@@ -46,7 +49,7 @@ namespace LLMUnity
             project.AddFrameworkToProject(targetGuid, "Accelerate.framework", false);
 
             // Remove libundreamai_ios.a from Embed Frameworks
-            string libraryFile = Path.Combine("Libraries", LLMBuilder.PluginLibraryDir("iOS", true), "libundreamai_ios.a");
+            string libraryFile = Path.Combine("Libraries", LLMBuilder.PluginLibraryDir(buildTarget.ToString(), true), $"libundreamai_{buildTarget.ToString().ToLower()}.a");
             string fileGuid = project.FindFileGuidByProjectPath(libraryFile);
             if (string.IsNullOrEmpty(fileGuid)) Debug.LogError($"Library file {libraryFile} not found in project");
             else
@@ -71,7 +74,7 @@ namespace LLMUnity
         public void OnPostprocessBuild(BuildReport report)
         {
 #if UNITY_IOS || UNITY_VISIONOS
-            AddAccelerate(report.summary.outputPath);
+            PostprocessIOSBuild(report.summary.platform, report.summary.outputPath);
 #endif
             BuildCompleted();
         }
