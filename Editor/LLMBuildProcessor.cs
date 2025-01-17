@@ -3,6 +3,7 @@ using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
 #if UNITY_IOS || UNITY_VISIONOS
+using System.IO;
 using UnityEditor.iOS.Xcode;
 #endif
 
