@@ -380,6 +380,19 @@ namespace LLMUnity
             return relativePath;
         }
 
+        public static string SearchDirectory(string directory, string targetFileName)
+        {
+            string[] files = Directory.GetFiles(directory, targetFileName);
+            if (files.Length > 0) return files[0];
+            string[] subdirectories = Directory.GetDirectories(directory);
+            foreach (var subdirectory in subdirectories)
+            {
+                string result = SearchDirectory(subdirectory, targetFileName);
+                if (result != null) return result;
+            }
+            return null;
+        }
+
 #if UNITY_EDITOR
 
         [HideInInspector] public static float libraryProgress = 1;
