@@ -105,7 +105,6 @@ Next Steps
 
 Contributors:
 
-    Nileneb
     Special thanks to UndreamAI for the LLMforUnity asset.
 
 Links:
