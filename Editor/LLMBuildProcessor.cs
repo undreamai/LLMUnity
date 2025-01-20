@@ -73,10 +73,13 @@ namespace LLMUnity
         // called after the build
         public void OnPostprocessBuild(BuildReport report)
         {
+            EditorApplication.delayCall += () =>
+            {
 #if UNITY_IOS || UNITY_VISIONOS
-            PostprocessIOSBuild(report.summary.platform, report.summary.outputPath);
+                PostprocessIOSBuild(report.summary.platform, report.summary.outputPath);
 #endif
-            BuildCompleted();
+                BuildCompleted();
+            };
         }
 
         public void BuildCompleted()
