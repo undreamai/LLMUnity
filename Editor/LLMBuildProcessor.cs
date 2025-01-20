@@ -49,8 +49,7 @@ namespace LLMUnity
             project.AddFrameworkToProject(unityMainTargetGuid, "Accelerate.framework", false);
             project.AddFrameworkToProject(targetGuid, "Accelerate.framework", false);
 
-            // Remove libundreamai_ios.a from Embed Frameworks
-            string libraryFile = Path.Combine("Libraries", LLMBuilder.PluginLibraryDir(buildTarget.ToString(), true), $"libundreamai_{buildTarget.ToString().ToLower()}.a");
+            string libraryFile = LLMUnitySetup.RelativePath(LLMUnitySetup.SearchDirectory(outputPath, $"libundreamai_{buildTarget.ToString().ToLower()}.a"), outputPath);
             string fileGuid = project.FindFileGuidByProjectPath(libraryFile);
             if (string.IsNullOrEmpty(fileGuid)) Debug.LogError($"Library file {libraryFile} not found in project");
             else
