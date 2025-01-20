@@ -12,7 +12,7 @@ namespace LLMUnity
     /// <summary>
     /// Class implementing the LLMUnity builder.
     /// </summary>
-    public class LLMBuilder
+    public class LLMBuilder : AssetPostprocessor
     {
         static List<StringPair> movedPairs = new List<StringPair>();
         public static string BuildTempDir = Path.Combine(Application.temporaryCachePath, "LLMUnityBuild");
@@ -210,6 +210,24 @@ namespace LLMUnity
                 MoveAction(source, target);
                 MoveAction(source + ".meta", target + ".meta");
                 AddActionAddMeta(pluginDir);
+            }
+        }
+
+
+        static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths, bool didDomainReload)
+        {
+            string pathToPlugin = Path.Combine("Assets", PluginLibraryDir(BuildTarget.VisionOS.ToString(), true), "libundreamai_visionos.a");
+            for (int i = 0; i < movedAssets.Length; i++)
+            {
+                if(movedAssets[i] == pathToPlugin)
+                {
+                    var importer = AssetImporter.GetAtPath(pathToPlugin) as PluginImporter;
+                    if (importer != null && importer.isNativePlugin) {
+                        importer.SetCompatibleWithPlatform(BuildTarget.VisionOS, true);
+                        importer.SetPlatformData(BuildTarget.VisionOS, "CPU", "ARM64");
+                        AssetDatabase.ImportAsset(pathToPlugin);
+                    }
+                }
             }
         }
 
