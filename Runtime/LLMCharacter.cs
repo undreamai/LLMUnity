@@ -416,6 +416,24 @@ namespace LLMUnity
             return result;
         }
 
+        protected async Task<ChatRequest> PromptWithQuery(string query)
+        {
+            ChatRequest result = default;
+            await chatLock.WaitAsync();
+            try
+            {
+                AddPlayerMessage(query);
+                string prompt = template.ComputePrompt(chat, playerName, AIName);
+                result = GenerateRequest(prompt);
+                chat.RemoveAt(chat.Count - 1);
+            }
+            finally
+            {
+                chatLock.Release();
+            }
+            return result;
+        }
+
         /// <summary>
         /// Chat functionality of the LLM.
         /// It calls the LLM completion based on the provided query including the previous chat history.
@@ -436,20 +454,7 @@ namespace LLMUnity
             if (!CheckTemplate()) return null;
             if (!await InitNKeep()) return null;
 
-            string json;
-            await chatLock.WaitAsync();
-            try
-            {
-                AddPlayerMessage(query);
-                string prompt = template.ComputePrompt(chat, playerName, AIName);
-                json = JsonUtility.ToJson(GenerateRequest(prompt));
-                chat.RemoveAt(chat.Count - 1);
-            }
-            finally
-            {
-                chatLock.Release();
-            }
-
+            string json = JsonUtility.ToJson(await PromptWithQuery(query));
             string result = await CompletionRequest(json, callback);
 
             if (addToHistory && result != null)
@@ -494,23 +499,43 @@ namespace LLMUnity
         }
 
         /// <summary>
-        /// Allow to warm-up a model by processing the prompt.
+        /// Allow to warm-up a model by processing the system prompt.
         /// The prompt processing will be cached (if cachePrompt=true) allowing for faster initialisation.
-        /// The function allows callback for when the prompt is processed and the response received.
-        ///
-        /// The function calls the Chat function with a predefined query without adding it to history.
+        /// The function allows a callback function for when the prompt is processed and the response received.
         /// </summary>
         /// <param name="completionCallback">callback function called when the full response has been received</param>
-        /// <param name="query">user prompt used during the initialisation (not added to history)</param>
         /// <returns>the LLM response</returns>
         public virtual async Task Warmup(EmptyCallback completionCallback = null)
+        {
+            await Warmup(null, completionCallback);
+        }
+
+        /// <summary>
+        /// Allow to warm-up a model by processing the provided prompt without adding it to history.
+        /// The prompt processing will be cached (if cachePrompt=true) allowing for faster initialisation.
+        /// The function allows a callback function for when the prompt is processed and the response received.
+        ///
+        /// </summary>
+        /// <param name="query">user prompt used during the initialisation (not added to history)</param>
+        /// <param name="completionCallback">callback function called when the full response has been received</param>
+        /// <returns>the LLM response</returns>
+        public virtual async Task Warmup(string query, EmptyCallback completionCallback = null)
         {
             await LoadTemplate();
             if (!CheckTemplate()) return;
             if (!await InitNKeep()) return;
 
-            string prompt = template.ComputePrompt(chat, playerName, AIName);
-            ChatRequest request = GenerateRequest(prompt);
+            ChatRequest request;
+            if (String.IsNullOrEmpty(query))
+            {
+                string prompt = template.ComputePrompt(chat, playerName, AIName);
+                request = GenerateRequest(prompt);
+            }
+            else
+            {
+                request = await PromptWithQuery(query);
+            }
+
             request.n_predict = 0;
             string json = JsonUtility.ToJson(request);
             await CompletionRequest(json);
