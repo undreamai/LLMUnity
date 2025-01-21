@@ -17,17 +17,23 @@ namespace LLMUnity
     public class DBSearch : SearchMethod
     {
         protected USearchIndex index;
-        /// <summary> toggle to show/hide advanced options in the GameObject </summary>
+        /// <summary> show/hide advanced options in the GameObject </summary>
+        [Tooltip("show/hide advanced options in the GameObject")]
         [HideInInspector] public bool advancedOptions = false;
         /// <summary> The quantisation type used for vector data during indexing. </summary>
+        [Tooltip("The quantisation type used for vector data during indexing.")]
         [ModelAdvanced] public ScalarKind quantization = ScalarKind.Float16;
         /// <summary> The metric kind used for distance calculation between vectors. </summary>
+        [Tooltip("The metric kind used for distance calculation between vectors.")]
         [ModelAdvanced] public MetricKind metricKind = MetricKind.Cos;
         /// <summary> The connectivity parameter limits the connections-per-node in the graph. </summary>
+        [Tooltip("The connectivity parameter limits the connections-per-node in the graph.")]
         [ModelAdvanced] public ulong connectivity = 32;
         /// <summary> The expansion factor used for index construction when adding vectors. </summary>
+        [Tooltip("The expansion factor used for index construction when adding vectors.")]
         [ModelAdvanced] public ulong expansionAdd = 40;
         /// <summary> The expansion factor used for index construction during search operations. </summary>
+        [Tooltip("The expansion factor used for index construction during search operations.")]
         [ModelAdvanced] public ulong expansionSearch = 16;
 
         private Dictionary<int, (float[], string, List<int>)> incrementalSearchCache = new Dictionary<int, (float[], string, List<int>)>();
