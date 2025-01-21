@@ -31,6 +31,12 @@ jobs:
             git add package.json
             git add Runtime/LLMUnitySetup.cs
             git add .github/doxygen/Doxyfile
+
+            llamalibVersion=`cat Runtime/LLMUnitySetup.cs | grep LlamaLibVersion | grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+'`
+            sed -Ei "s:https\://github.com/undreamai/LlamaLib/releases/download/v[0-9]+\.[0-9]+\.[0-9]+/undreamai-v[0-9]+\.[0-9]+\.[0-9]+:https\://github.com/undreamai/LlamaLib/releases/download/$llamalibVersion/undreamai-$llamalibVersion:g" README.md
+            
+            git add README.md
+
             git commit -m "update VERSION"
   
       - name: Push changes
