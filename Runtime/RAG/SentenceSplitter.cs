@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
+using UnityEngine;
 
 namespace LLMUnity
 {
@@ -16,6 +17,7 @@ namespace LLMUnity
     {
         public const string DefaultDelimiters = ".!:;?\n\r";
         /// <summary> delimiters used to split the phrases </summary>
+        [Tooltip("delimiters used to split the phrases")]
         public char[] delimiters = DefaultDelimiters.ToCharArray();
 
         /// <summary>
