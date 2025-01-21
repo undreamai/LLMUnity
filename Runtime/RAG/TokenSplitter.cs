@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace LLMUnity
 {
@@ -13,7 +14,8 @@ namespace LLMUnity
     [Serializable]
     public class TokenSplitter : Chunking
     {
-        /// <summary> the number of tokens to split phrases into chunks </summary>
+        /// <summary> number of tokens by which to split phrases into chunks </summary>
+        [Tooltip("number of tokens by which to split phrases into chunks")]
         public int numTokens = 10;
 
         protected int DetermineEndIndex(string input, string detokenised, int startIndex, int searchRange = 5, int charsFromEnd = 3)

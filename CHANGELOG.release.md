@@ -1,8 +1,8 @@
 ### 🚀 Features
 
-- Static library linking on mobile (fixes iOS signing) (PR: #289)
+- Add warm-up function for provided prompt (PR: #301)
 
 ### 🐛 Fixes
 
-- Fix support for extras (flash attention, iQ quants)  (PR: #292)
+- Fix code signing on iOS (PR: #298)
 

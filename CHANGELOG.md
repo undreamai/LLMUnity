@@ -1,3 +1,13 @@
+## v2.4.2
+#### 🚀 Features
+
+- Add warm-up function for provided prompt (PR: #301)
+
+#### 🐛 Fixes
+
+- Fix code signing on iOS (PR: #298)
+
+
 ## v2.4.1
 #### 🚀 Features
 

@@ -37,9 +37,17 @@ namespace LLMUnity
     [Serializable]
     public class RAG : Searchable
     {
+        /// <summary> Search method type to use for RAG. SimpleSearch is a simple brute-force search, while DBSearch is a fast Approximate Nearest Neighbor (ANN) method (recommended!). </summary>
+        [Tooltip("Search method type to use for RAG. SimpleSearch is a simple brute-force search, while DBSearch is a fast Approximate Nearest Neighbor (ANN) method (recommended!).")]
         public SearchMethods searchType = SearchMethods.SimpleSearch;
+        /// <summary> Search method GameObject. </summary>
+        [Tooltip("Search method GameObject.")]
         public SearchMethod search;
+        /// <summary> Chunking method type to use for RAG for splitting the inputs into chunks. This is useful to have a more consistent meaning within each data part. </summary>
+        [Tooltip("Chunking method type to use for RAG for splitting the inputs into chunks. This is useful to have a more consistent meaning within each data part.")]
         public ChunkingMethods chunkingType = ChunkingMethods.NoChunking;
+        /// <summary> Chunking method GameObject. </summary>
+        [Tooltip("Chunking method GameObject.")]
         public Chunking chunking;
 
         /// <summary>

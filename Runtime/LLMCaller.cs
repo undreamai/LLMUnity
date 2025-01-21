@@ -15,26 +15,30 @@ namespace LLMUnity
     /// </summary>
     public class LLMCaller : MonoBehaviour
     {
-        /// <summary> toggle to show/hide advanced options in the GameObject </summary>
+        /// <summary> show/hide advanced options in the GameObject </summary>
+        [Tooltip("show/hide advanced options in the GameObject")]
         [HideInInspector] public bool advancedOptions = false;
-        /// <summary> toggle to use remote LLM server or local LLM </summary>
+        /// <summary> use remote LLM server </summary>
+        [Tooltip("use remote LLM server")]
         [LocalRemote] public bool remote = false;
-        /// <summary> the LLM object to use </summary>
+        /// <summary> LLM GameObject to use </summary>
         [Local, SerializeField] protected LLM _llm;
         public LLM llm
         {
             get => _llm;//whatever
             set => SetLLM(value);
         }
-
-        /// <summary> allows to use a server with API key </summary>
+        /// <summary> API key for the remote server </summary>
+        [Tooltip("API key for the remote server")]
         [Remote] public string APIKey;
-
-        /// <summary> host to use for the LLM server </summary>
+        /// <summary> host of the remote LLM server </summary>
+        [Tooltip("host of the remote LLM server")]
         [Remote] public string host = "localhost";
-        /// <summary> port to use for the LLM server </summary>
+        /// <summary> port of the remote LLM server </summary>
+        [Tooltip("port of the remote LLM server")]
         [Remote] public int port = 13333;
-        /// <summary> number of retries to use for the LLM server requests (-1 = infinite) </summary>
+        /// <summary> number of retries to use for the remote LLM server requests (-1 = infinite) </summary>
+        [Tooltip("number of retries to use for the remote LLM server requests (-1 = infinite)")]
         [Remote] public int numRetries = 10;
 
         protected LLM _prellm;
