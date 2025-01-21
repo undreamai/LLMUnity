@@ -346,6 +346,8 @@ Alternatively you can use a server binary for easier deployment:
 - Find the architecture you are interested in from the folder above e.g. for Windows and CUDA use the `windows-cuda-cu12.2.0`.<br>You can also check the architecture that works for your system from the Debug messages (starting with "Using architecture").
 - From command line change directory to the architecture folder selected and start the server by running the command copied from above.
 
+In both cases you'll need to enable 'Allow Downloads Over HTTP' in the project settings.
+
 **Create the characters**<br>
 Create a second project with the game characters using the `LLMCharacter` script as described above.
 Enable the `Remote` option and configure the host with the IP address (starting with "http://") and port of the server.
