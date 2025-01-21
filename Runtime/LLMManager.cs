@@ -97,6 +97,8 @@ namespace LLMUnity
     {
         public bool downloadOnStart;
         public List<ModelEntry> modelEntries;
+        public int debugMode;
+        public bool fullLlamaLib;
     }
     /// \endcond
 
@@ -324,6 +326,8 @@ namespace LLMUnity
             LLMManagerStore store = JsonUtility.FromJson<LLMManagerStore>(File.ReadAllText(LLMUnitySetup.LLMManagerPath));
             downloadOnStart = store.downloadOnStart;
             modelEntries = store.modelEntries;
+            LLMUnitySetup.DebugMode = (LLMUnitySetup.DebugModeType)store.debugMode;
+            LLMUnitySetup.FullLlamaLib = store.fullLlamaLib;
         }
 
 #if UNITY_EDITOR
@@ -610,7 +614,11 @@ namespace LLMUnity
         /// </summary>
         public static void Save()
         {
-            string json = JsonUtility.ToJson(new LLMManagerStore { modelEntries = modelEntries, downloadOnStart = downloadOnStart }, true);
+            string json = JsonUtility.ToJson(new LLMManagerStore
+            {
+                modelEntries = modelEntries,
+                downloadOnStart = downloadOnStart,
+            }, true);
             PlayerPrefs.SetString(LLMManagerPref, json);
             PlayerPrefs.Save();
         }
@@ -638,7 +646,13 @@ namespace LLMUnity
                 if (!modelEntry.includeInBuild) continue;
                 modelEntriesBuild.Add(modelEntry.OnlyRequiredFields());
             }
-            string json = JsonUtility.ToJson(new LLMManagerStore { modelEntries = modelEntriesBuild, downloadOnStart = downloadOnStart }, true);
+            string json = JsonUtility.ToJson(new LLMManagerStore
+            {
+                modelEntries = modelEntriesBuild,
+                downloadOnStart = downloadOnStart,
+                debugMode = (int)LLMUnitySetup.DebugMode,
+                fullLlamaLib = LLMUnitySetup.FullLlamaLib
+            }, true);
             File.WriteAllText(LLMUnitySetup.LLMManagerPath, json);
         }
 
