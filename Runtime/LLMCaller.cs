@@ -22,7 +22,6 @@ namespace LLMUnity
         [Tooltip("use remote LLM server")]
         [LocalRemote] public bool remote = false;
         /// <summary> LLM GameObject to use </summary>
-        [Tooltip("LLM GameObject to use")]
         [Local, SerializeField] protected LLM _llm;
         public LLM llm
         {
