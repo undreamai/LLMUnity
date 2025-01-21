@@ -600,7 +600,6 @@ If it is not selected, the full reply from the model is received in one go
   - <details><summary><code>Repeat Penalty</code> control the repetition of token sequences in the generated text (default: 1.1)</summary>The penalty is applied to repeated tokens.</details>
   - <details><summary><code>Presence Penalty</code> repeated token presence penalty (default: 0.0, 0.0 = disabled)</summary> Positive values penalize new tokens based on whether they appear in the text so far, increasing the model's likelihood to talk about new topics.</details>
   - <details><summary><code>Frequency Penalty</code> repeated token frequency penalty (default: 0.0, 0.0 = disabled)</summary> Positive values penalize new tokens based on their existing frequency in the text so far, decreasing the model's likelihood to repeat the same line verbatim.</details>
-  - `Tfs_z`: enable tail free sampling with parameter z (default: 1.0, 1.0 = disabled).
   - `Typical P`: enable locally typical sampling with parameter p (default: 1.0, 1.0 = disabled).
   - `Repeat Last N`: last N tokens to consider for penalizing repetition (default: 64, 0 = disabled, -1 = ctx-size).
   - `Penalize Nl`: penalize newline tokens when applying the repeat penalty (default: true).
