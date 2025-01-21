@@ -64,9 +64,8 @@ def add_tooltips_to_unity_file(file_path, allowed_classes):
                 in_summary = False
 
             if 'Tooltip' in stripped_line:
-                # in_summary = False
-                # summary_text = ''
-                continue
+                if ('Tooltip: ignore' not in stripped_line):
+                    continue
 
             include_terms = ['public', ';']
             exclude_terms = ['{', 'static', 'abstract']
