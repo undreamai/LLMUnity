@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace LLMUnity
 {
@@ -13,7 +14,8 @@ namespace LLMUnity
     [Serializable]
     public class WordSplitter : Chunking
     {
-        /// <summary> the number of words to split phrases into chunks </summary>
+        /// <summary> number of words by which to split phrases into chunks </summary>
+        [Tooltip("number of words by which to split phrases into chunks")]
         public int numWords = 10;
 
         /// <summary>

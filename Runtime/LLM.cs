@@ -17,28 +17,37 @@ namespace LLMUnity
     /// </summary>
     public class LLM : MonoBehaviour
     {
-        /// <summary> toggle to show/hide advanced options in the GameObject </summary>
+        /// <summary> show/hide advanced options in the GameObject </summary>
+        [Tooltip("show/hide advanced options in the GameObject")]
         [HideInInspector] public bool advancedOptions = false;
-        /// <summary> toggle to enable remote server functionality </summary>
+        /// <summary> enable remote server functionality </summary>
+        [Tooltip("enable remote server functionality")]
         [LocalRemote] public bool remote = false;
-        /// <summary> port to use for the LLM server </summary>
+        /// <summary> port to use for the remote LLM server </summary>
+        [Tooltip("port to use for the remote LLM server")]
         [Remote] public int port = 13333;
         /// <summary> number of threads to use (-1 = all) </summary>
+        [Tooltip("number of threads to use (-1 = all)")]
         [LLM] public int numThreads = -1;
         /// <summary> number of model layers to offload to the GPU (0 = GPU not used).
-        /// Use a large number i.e. >30 to utilise the GPU as much as possible.
         /// If the user's GPU is not supported, the LLM will fall back to the CPU </summary>
+        [Tooltip("number of model layers to offload to the GPU (0 = GPU not used). If the user's GPU is not supported, the LLM will fall back to the CPU")]
         [LLM] public int numGPULayers = 0;
-        /// <summary> select to log the output of the LLM in the Unity Editor. </summary>
+        /// <summary> log the output of the LLM in the Unity Editor. </summary>
+        [Tooltip("log the output of the LLM in the Unity Editor.")]
         [LLM] public bool debug = false;
         /// <summary> number of prompts that can happen in parallel (-1 = number of LLMCaller objects) </summary>
+        [Tooltip("number of prompts that can happen in parallel (-1 = number of LLMCaller objects)")]
         [LLMAdvanced] public int parallelPrompts = -1;
-        /// <summary> select to not destroy the LLM GameObject when loading a new Scene. </summary>
+        /// <summary> do not destroy the LLM GameObject when loading a new Scene. </summary>
+        [Tooltip("do not destroy the LLM GameObject when loading a new Scene.")]
         [LLMAdvanced] public bool dontDestroyOnLoad = true;
         /// <summary> Size of the prompt context (0 = context size of the model).
         /// This is the number of tokens the model can take as input when generating responses. </summary>
+        [Tooltip("Size of the prompt context (0 = context size of the model). This is the number of tokens the model can take as input when generating responses.")]
         [DynamicRange("minContextLength", "maxContextLength", false), Model] public int contextSize = 8192;
         /// <summary> Batch size for prompt processing. </summary>
+        [Tooltip("Batch size for prompt processing.")]
         [ModelAdvanced] public int batchSize = 512;
         /// <summary> Boolean set to true if the server has started and is ready to receive requests, false otherwise. </summary>
         public bool started { get; protected set; } = false;
@@ -48,22 +57,25 @@ namespace LLMUnity
         public static bool modelSetupFailed { get; protected set; } = false;
         /// <summary> Boolean set to true if the server has started and is ready to receive requests, false otherwise. </summary>
         public static bool modelSetupComplete { get; protected set; } = false;
-
-        /// <summary> the LLM model to use.
-        /// Models with .gguf format are allowed.</summary>
+        /// <summary> LLM model to use (.gguf format) </summary>
+        [Tooltip("LLM model to use (.gguf format)")]
         [ModelAdvanced] public string model = "";
-        /// <summary> Chat template used for the model </summary>
+        /// <summary> Chat template for the model </summary>
+        [Tooltip("Chat template for the model")]
         [ModelAdvanced] public string chatTemplate = ChatTemplate.DefaultTemplate;
-        /// <summary> the paths of the LORA models being used (relative to the Assets/StreamingAssets folder).
-        /// Models with .gguf format are allowed.</summary>
+        /// <summary> LORA models to use (.gguf format) </summary>
+        [Tooltip("LORA models to use (.gguf format)")]
         [ModelAdvanced] public string lora = "";
         /// <summary> the weights of the LORA models being used.</summary>
+        [Tooltip("the weights of the LORA models being used.")]
         [ModelAdvanced] public string loraWeights = "";
         /// <summary> enable use of flash attention </summary>
+        [Tooltip("enable use of flash attention")]
         [ModelExtras] public bool flashAttention = false;
-
-        /// <summary> API key to use for the server (optional) </summary>
+        /// <summary> API key to use for the server </summary>
+        [Tooltip("API key to use for the server")]
         public string APIKey;
+
         // SSL certificate
         [SerializeField]
         private string SSLCert = "";
