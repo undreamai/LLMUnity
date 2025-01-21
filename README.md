@@ -25,7 +25,7 @@ LLM for Unity is built on top of the awesome [llama.cpp](https://github.com/gger
 <sub>
 <a href="#at-a-glance" style="color: black">At a glance</a>&nbsp;&nbsp;•&nbsp;
 <a href="#how-to-help" style=color: black>How to help</a>&nbsp;&nbsp;•&nbsp;
-<a href="#games-using-llm-for-unity" style=color: black>Games using LLM for Unity</a>&nbsp;&nbsp;•&nbsp;
+<a href="#games--projects-using-llm-for-unity" style=color: black>Games / Projects using LLM for Unity</a>&nbsp;&nbsp;•&nbsp;
 <a href="#setup" style=color: black>Setup</a>&nbsp;&nbsp;•&nbsp;
 <a href="#how-to-use" style=color: black>How to use</a>&nbsp;&nbsp;•&nbsp;
 <a href="#semantic-search-with-a-retrieval-augmented-generation-rag-system" style=color: black>RAG</a>&nbsp;&nbsp;•&nbsp;
@@ -53,7 +53,7 @@ LLM for Unity is built on top of the awesome [llama.cpp](https://github.com/gger
 - [![](https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&color=%23fe8e86)](https://github.com/sponsors/amakropoulos) this work to allow even cooler features!
 
 
-## Games using LLM for Unity
+## Games / Projects using LLM for Unity
 - [Verbal Verdict](https://store.steampowered.com/app/2778780/Verbal_Verdict/)
 - [I, Chatbot: AISYLUM](https://store.epicgames.com/de/p/i-chatbot-aisylum-83b2b5)
 - [Nameless Souls of the Void](https://unicorninteractive.itch.io/nameless-souls-of-the-void)
@@ -61,6 +61,7 @@ LLM for Unity is built on top of the awesome [llama.cpp](https://github.com/gger
 - [Finicky Food Delivery AI](https://helixngc7293.itch.io/finicky-food-delivery-ai)
 - [AI Emotional Girlfriend](https://whynames.itch.io/aiemotionalgirlfriend)
 - [Case Closed](https://store.steampowered.com/app/2532160/Case_Closed)
+- [MaiMai AI Agent System](https://github.com/IhateCreatingUserNames2/MaiMai)
 
 Contact us to add your project!
 
