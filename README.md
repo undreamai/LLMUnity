@@ -342,7 +342,7 @@ To create the server:
 
 Alternatively you can use a server binary for easier deployment:
 - Run the above scene from the Editor and copy the command from the Debug messages (starting with "Server command:")
-- Download the [server binaries](https://github.com/undreamai/LlamaLib/releases/download/v1.1.12/undreamai-v1.1.12-server.zip) and [DLLs](https://github.com/undreamai/LlamaLib/releases/download/v1.1.12/undreamai-v1.1.12-llamacpp-full.zip) and extract them into the same folder
+- Download the [server binaries](https://github.com/undreamai/LlamaLib/releases/download/v1.2.1/undreamai-v1.2.1-server.zip) and [DLLs](https://github.com/undreamai/LlamaLib/releases/download/v1.2.1/undreamai-v1.2.1-llamacpp-full.zip) and extract them into the same folder
 - Find the architecture you are interested in from the folder above e.g. for Windows and CUDA use the `windows-cuda-cu12.2.0`.<br>You can also check the architecture that works for your system from the Debug messages (starting with "Using architecture").
 - From command line change directory to the architecture folder selected and start the server by running the command copied from above.
 
