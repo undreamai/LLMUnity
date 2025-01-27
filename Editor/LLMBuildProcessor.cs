@@ -62,7 +62,9 @@ namespace LLMUnity
                         break;
                     }
                 }
-                project.RemoveFileFromBuild(unityMainTargetGuid, fileGuid);
+
+                project.AddFileToBuild(unityMainTargetGuid, fileGuid);
+                project.AddFileToBuild(targetGuid, fileGuid);
             }
 
             project.WriteToFile(projPath);
