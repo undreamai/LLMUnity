@@ -648,12 +648,10 @@ namespace LLMUnity
                     if (LLMUnitySetup.FullLlamaLib)
                     {
                         architectures.Add("cuda-cu12.2.0-full");
-                        architectures.Add("cuda-cu11.7.1-full");
                     }
                     else
                     {
                         architectures.Add("cuda-cu12.2.0");
-                        architectures.Add("cuda-cu11.7.1");
                     }
                     architectures.Add("hip");
                     architectures.Add("vulkan");
