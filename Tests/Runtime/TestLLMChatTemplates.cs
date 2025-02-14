@@ -133,5 +133,32 @@ namespace LLMUnityTests
                 "<|system|>\nyou are a bot</s>\n<|user|>\nHello, how are you?</s>\n<|assistant|>\nI'm doing great. How can I help you today?</s>\n<|user|>\nI'd like to show off how chat templating works!</s>\n<|assistant|>\nchat template is awesome</s>\n<|user|>\ndo you think so?</s>\n<|assistant|>\n"
             );
         }
+
+        [Test]
+        public void TestDeepSeekV2()
+        {
+            Assert.AreEqual(
+                new DeepSeekV2Template().ComputePrompt(messages, "user", "assistant"),
+                "<|begin▁of▁sentence|>User: you are a bot\n\nHello, how are you?\n\nAssistant: I'm doing great. How can I help you today?<|end▁of▁sentence|>User: I'd like to show off how chat templating works!\n\nAssistant: chat template is awesome<|end▁of▁sentence|>User: do you think so?\n\nAssistant: "
+            );
+        }
+
+        [Test]
+        public void TestDeepSeekV3()
+        {
+            Assert.AreEqual(
+                new DeepSeekV3Template().ComputePrompt(messages, "user", "assistant"),
+                "<|begin▁of▁sentence|><|User|>you are a bot\n\nHello, how are you?<|Assistant|>I'm doing great. How can I help you today?<|end▁of▁sentence|><|User|>I'd like to show off how chat templating works!<|Assistant|>chat template is awesome<|end▁of▁sentence|><|User|>do you think so?<|Assistant|>"
+            );
+        }
+
+        [Test]
+        public void TestDeepSeekR1()
+        {
+            Assert.AreEqual(
+                new DeepSeekR1Template().ComputePrompt(messages, "user", "assistant"),
+                "<|begin▁of▁sentence|><|User|>you are a bot\n\nHello, how are you?<|Assistant|>I'm doing great. How can I help you today?<|end▁of▁sentence|><|User|>I'd like to show off how chat templating works!<|Assistant|>chat template is awesome<|end▁of▁sentence|><|User|>do you think so?<|Assistant|><think>\n"
+            );
+        }
     }
 }
