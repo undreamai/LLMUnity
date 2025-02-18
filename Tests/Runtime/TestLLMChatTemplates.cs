@@ -139,7 +139,7 @@ namespace LLMUnityTests
         {
             Assert.AreEqual(
                 new DeepSeekV2Template().ComputePrompt(messages, "user", "assistant"),
-                "<|begin▁of▁sentence|>User: you are a bot\n\nHello, how are you?\n\nAssistant: I'm doing great. How can I help you today?<|end▁of▁sentence|>User: I'd like to show off how chat templating works!\n\nAssistant: chat template is awesome<|end▁of▁sentence|>User: do you think so?\n\nAssistant: "
+                "<｜begin▁of▁sentence｜>you are a bot\n\nUser: Hello, how are you?\n\nAssistant: I'm doing great. How can I help you today?<｜end▁of▁sentence｜>User: I'd like to show off how chat templating works!\n\nAssistant: chat template is awesome<｜end▁of▁sentence｜>User: do you think so?\n\nAssistant:"
             );
         }
 
@@ -148,7 +148,7 @@ namespace LLMUnityTests
         {
             Assert.AreEqual(
                 new DeepSeekV3Template().ComputePrompt(messages, "user", "assistant"),
-                "<|begin▁of▁sentence|><|User|>you are a bot\n\nHello, how are you?<|Assistant|>I'm doing great. How can I help you today?<|end▁of▁sentence|><|User|>I'd like to show off how chat templating works!<|Assistant|>chat template is awesome<|end▁of▁sentence|><|User|>do you think so?<|Assistant|>"
+                "<｜begin▁of▁sentence｜>you are a bot\n\n<｜User｜>Hello, how are you?<｜Assistant｜>I'm doing great. How can I help you today?<｜end▁of▁sentence｜><｜User｜>I'd like to show off how chat templating works!<｜Assistant｜>chat template is awesome<｜end▁of▁sentence｜><｜User｜>do you think so?<｜Assistant｜>"
             );
         }
 
@@ -157,7 +157,7 @@ namespace LLMUnityTests
         {
             Assert.AreEqual(
                 new DeepSeekR1Template().ComputePrompt(messages, "user", "assistant"),
-                "<|begin▁of▁sentence|><|User|>you are a bot\n\nHello, how are you?<|Assistant|>I'm doing great. How can I help you today?<|end▁of▁sentence|><|User|>I'd like to show off how chat templating works!<|Assistant|>chat template is awesome<|end▁of▁sentence|><|User|>do you think so?<|Assistant|><think>\n"
+                "<｜begin▁of▁sentence｜>you are a bot\n\n<｜User｜>Hello, how are you?<｜Assistant｜>I'm doing great. How can I help you today?<｜end▁of▁sentence｜><｜User｜>I'd like to show off how chat templating works!<｜Assistant｜>chat template is awesome<｜end▁of▁sentence｜><｜User｜>do you think so?<｜Assistant｜><think>\n\n</think>\n\n"
             );
         }
     }
