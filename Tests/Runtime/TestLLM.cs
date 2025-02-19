@@ -394,21 +394,12 @@ namespace LLMUnityTests
             llm.AddLora(loraNameLLManager, loraWeight);
             return llm;
         }
-
         public override void SetParameters()
         {
             prompt = "";
             query = "кто ты?";
-            if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer)
-            {
-                reply1 = "Я - искусственный интеллект, создан для общения с людьми и выполнять";
-                reply2 = "Я - искусственный интеллект, создан для помощи и общения.";
-            }
-            else
-            {
-                reply1 = "Я - искусственный интеллект, создан для общения с людьми и выполнять";
-                reply2 = "Идиот";
-            }
+            reply1 = "Я - искусственный интеллект, создан для общения с людьми и выполнять";
+            reply2 = "Идиот";
             tokens1 = 5;
             tokens2 = 9;
             loraWeight = 0.9f;
@@ -570,7 +561,7 @@ namespace LLMUnityTests
             if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer)
             {
                 reply1 = "To increase your meme production output, you might consider using more modern tools and techniques to generate memes.";
-                reply2 = "To increase your meme production output, you can try using various tools and techniques to generate more content quickly";
+                reply2 = "To increase your meme production output, you could consider using more advanced tools and techniques to generate memes faster";
             }
             else
             {
