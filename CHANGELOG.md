@@ -3,6 +3,7 @@
 
 - Add warm-up function for provided prompt (PR: #301)
 - Add documentation in Unity tooltips (PR: #302)
+- Update LlamaLib to v1.2.3 (llama.cpp b4688) (PR: #312)
 
 #### 🐛 Fixes
 
