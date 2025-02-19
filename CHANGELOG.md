@@ -9,6 +9,7 @@
 
 - Fix code signing on iOS (PR: #298)
 - Persist debug mode and use of extras to the build (PR: #304)
+- Fix dependency resolution for full CUDA and vulkan architectures (PR: #313)
 
 
 ## v2.4.1
