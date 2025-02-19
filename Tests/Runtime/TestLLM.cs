@@ -574,8 +574,8 @@ namespace LLMUnityTests
             }
             else
             {
-                reply1 = "To increase your meme production output, you might consider using more modern tools and techniques to generate memes.";
-                reply2 = "To increase your meme production output, you could consider using more advanced tools and techniques to generate memes faster";
+                reply1 = "To increase your meme production output, you might consider using more advanced tools and techniques to generate memes faster";
+                reply2 = "To increase your meme production output, you can consider using various tools and techniques to generate content more efficiently";
             }
         }
     }
@@ -595,7 +595,7 @@ namespace LLMUnityTests
             if (Application.platform == RuntimePlatform.LinuxEditor || Application.platform == RuntimePlatform.LinuxPlayer)
             {
                 reply1 = "To increase your meme production output, you might consider using more advanced tools and techniques to generate memes faster";
-                reply2 = "To increase your meme production output, you could consider using more advanced tools and techniques to generate memes faster";
+                reply2 = "To increase your meme production output, you can try using various tools and techniques to generate more content quickly";
             }
         }
     }
