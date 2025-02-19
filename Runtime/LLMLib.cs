@@ -367,6 +367,7 @@ namespace LLMUnity
         static bool has_avx = false;
         static bool has_avx2 = false;
         static bool has_avx512 = false;
+        List<IntPtr> dependencyHandles = new List<IntPtr>();
 
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
 
@@ -498,8 +499,8 @@ namespace LLMUnity
         {
             foreach (string dependency in GetArchitectureDependencies(arch))
             {
-                Debug.Log($"loading {dependency}");
-                LibraryLoader.LoadLibrary(dependency);
+                LLMUnitySetup.Log($"Loading {dependency}");
+                dependencyHandles.Add(LibraryLoader.LoadLibrary(dependency));
             }
 
             libraryHandle = LibraryLoader.LoadLibrary(GetArchitecturePath(arch));
@@ -759,6 +760,7 @@ namespace LLMUnity
         public void Destroy()
         {
             if (libraryHandle != IntPtr.Zero) LibraryLoader.FreeLibrary(libraryHandle);
+            foreach (IntPtr dependencyHandle in dependencyHandles) LibraryLoader.FreeLibrary(dependencyHandle);
         }
     }
 }
