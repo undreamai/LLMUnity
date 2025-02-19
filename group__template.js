@@ -1,7 +1,7 @@
 var group__template =
 [
     [ "LLMUnity.ChatTemplate", "classLLMUnity_1_1ChatTemplate.html", [
-      [ "ComputePrompt", "classLLMUnity_1_1ChatTemplate.html#acb15dfd2a970f019f18ecaa83cf03d01", null ],
+      [ "ComputePrompt", "classLLMUnity_1_1ChatTemplate.html#a6d13f8b7f5f1ef59058bb345fdbbbeb7", null ],
       [ "GetChatTemplateMatches", "classLLMUnity_1_1ChatTemplate.html#a503d59c8232b18f0b9ad139f438d186f", null ],
       [ "GetDescription", "classLLMUnity_1_1ChatTemplate.html#af073ef07917d61eefd6f2d861657fd38", null ],
       [ "GetName", "classLLMUnity_1_1ChatTemplate.html#aea386f3fcdd35a4a48aa701a9e31f12c", null ],
@@ -46,7 +46,6 @@ var group__template =
       [ "GetStop", "classLLMUnity_1_1MistralChatTemplate.html#a798b015a67969d291ab0a3fa0cea1b77", null ]
     ] ],
     [ "LLMUnity.GemmaTemplate", "classLLMUnity_1_1GemmaTemplate.html", [
-      [ "ComputePrompt", "classLLMUnity_1_1GemmaTemplate.html#aa5db7c82bc3d646998d7acb631061165", null ],
       [ "GetDescription", "classLLMUnity_1_1GemmaTemplate.html#a9fff6e483dc025fdbab654119c5c49e0", null ],
       [ "GetName", "classLLMUnity_1_1GemmaTemplate.html#ab48ecf4939938f28163ccd183de7c34a", null ],
       [ "GetNameMatches", "classLLMUnity_1_1GemmaTemplate.html#a168e4535570168d6268e45287b11f2ae", null ],
@@ -72,7 +71,6 @@ var group__template =
       [ "GetStop", "classLLMUnity_1_1Phi2Template.html#ac6c6a719728bafded61b57547bc16fa0", null ]
     ] ],
     [ "LLMUnity.Phi3Template", "classLLMUnity_1_1Phi3Template.html", [
-      [ "ComputePrompt", "classLLMUnity_1_1Phi3Template.html#aeedd597d07a95311fd6a80324b139c2a", null ],
       [ "GetChatTemplateMatches", "classLLMUnity_1_1Phi3Template.html#acce2995beebab19eb00fe973ab21c49f", null ],
       [ "GetDescription", "classLLMUnity_1_1Phi3Template.html#a034efcf3a452e4f5f2fa1155b215a034", null ],
       [ "GetName", "classLLMUnity_1_1Phi3Template.html#ab5b68651d20623e0650a0e5282aefc27", null ],
@@ -92,5 +90,27 @@ var group__template =
       [ "GetName", "classLLMUnity_1_1ZephyrTemplate.html#a1f545fb682114931644a3ba9e031db21", null ],
       [ "GetNameMatches", "classLLMUnity_1_1ZephyrTemplate.html#ab2f104285e1141a9163b0b0db450aeb2", null ],
       [ "GetStop", "classLLMUnity_1_1ZephyrTemplate.html#a298cc6658f437ee19b984bcdd6af864c", null ]
+    ] ],
+    [ "LLMUnity.DeepSeekV2Template", "classLLMUnity_1_1DeepSeekV2Template.html", [
+      [ "GetChatTemplateMatches", "classLLMUnity_1_1DeepSeekV2Template.html#acf3483b759d38caf0f41bb2c8e690eb9", null ],
+      [ "GetDescription", "classLLMUnity_1_1DeepSeekV2Template.html#ae473813d8d5fa5626e026d31befb4de2", null ],
+      [ "GetName", "classLLMUnity_1_1DeepSeekV2Template.html#afa4c2fd5535aa8210abed93c6aa3b2e9", null ],
+      [ "GetNameMatches", "classLLMUnity_1_1DeepSeekV2Template.html#ae137d906e65773079b15d8d2c60f20a4", null ],
+      [ "GetStop", "classLLMUnity_1_1DeepSeekV2Template.html#a0fe6bd2532509d45f2a1b16c5e2e7864", null ]
+    ] ],
+    [ "LLMUnity.DeepSeekV3Template", "classLLMUnity_1_1DeepSeekV3Template.html", [
+      [ "GetChatTemplateMatches", "classLLMUnity_1_1DeepSeekV3Template.html#a3db0bb3b1a42dd05d4716617eb516235", null ],
+      [ "GetDescription", "classLLMUnity_1_1DeepSeekV3Template.html#a015d66287626bb861e2860e384e45a12", null ],
+      [ "GetName", "classLLMUnity_1_1DeepSeekV3Template.html#a12c29ae5ce3e75939a6ad05f318ae9b9", null ],
+      [ "GetNameMatches", "classLLMUnity_1_1DeepSeekV3Template.html#af6e4a53dd8093d6ac4ba0a808268bbf7", null ],
+      [ "GetStop", "classLLMUnity_1_1DeepSeekV3Template.html#af9853b7ae9de181d6f32a034a2f9e168", null ]
+    ] ],
+    [ "LLMUnity.DeepSeekR1Template", "classLLMUnity_1_1DeepSeekR1Template.html", [
+      [ "ComputePrompt", "classLLMUnity_1_1DeepSeekR1Template.html#a23eacd0ba8c3506946865859e070f2fb", null ],
+      [ "GetChatTemplateMatches", "classLLMUnity_1_1DeepSeekR1Template.html#ae37533288f261da4f7e4498c4e81d939", null ],
+      [ "GetDescription", "classLLMUnity_1_1DeepSeekR1Template.html#a78001746ede20d932efaa489f01cb860", null ],
+      [ "GetName", "classLLMUnity_1_1DeepSeekR1Template.html#a2788f15ad9d56264de299641ef664b94", null ],
+      [ "GetNameMatches", "classLLMUnity_1_1DeepSeekR1Template.html#a5b3f76ea9378b8763833081621d95c0c", null ],
+      [ "GetStop", "classLLMUnity_1_1DeepSeekR1Template.html#ae3569e08ad809dbedead689ee7cd43b9", null ]
     ] ]
 ];

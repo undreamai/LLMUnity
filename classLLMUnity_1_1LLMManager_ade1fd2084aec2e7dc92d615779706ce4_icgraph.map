@@ -1,0 +1,13 @@
+<map id="LLMUnity.LLMManager.AddEntry" name="LLMUnity.LLMManager.AddEntry">
+<area shape="rect" id="Node000001" title="Adds a model entry to the model manager." alt="" coords="601,55,832,80"/>
+<area shape="rect" id="Node000002" href="$classLLMUnity_1_1LLMManager.html#a96e147c144d00bc7355e251b39d38afd" title="Creates and adds a model entry to the model manager." alt="" coords="320,5,551,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="630,55,508,33,509,28,631,50"/>
+<area shape="rect" id="Node000003" href="$classLLMUnity_1_1LLMManager.html#a329a1fae4360d91badf54a0b3d09a16d" title="Downloads a model and adds a model entry to the model manager." alt="" coords="317,55,553,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="588,70,553,70,553,65,588,65"/>
+<area shape="rect" id="Node000006" href="$classLLMUnity_1_1LLMManager.html#ad1e3508ea5e4ada3588c2a8e4b352a11" title="Loads a model from disk and adds a model entry to the model manager." alt="" coords="334,104,537,129"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="631,85,509,107,508,101,630,80"/>
+<area shape="rect" id="Node000004" href="$classLLMUnity_1_1LLMManager.html#adfa8342b065a11a96b3f383b2ac4bc0b" title="Downloads a Lora model from disk and adds a model entry to the model manager." alt="" coords="5,25,269,51"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="304,57,266,53,266,48,304,52"/>
+<area shape="rect" id="Node000005" href="$classLLMUnity_1_1LLMManager.html#ab82f501a8037acc93387b10fb2de765b" title="Downloads a LLM model from disk and adds a model entry to the model manager." alt="" coords="19,75,255,115"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="304,82,256,87,255,82,304,77"/>
+</map>

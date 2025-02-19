@@ -1,0 +1,23 @@
+<map id="LLMUnity.LoraManager.IndexOf" name="LLMUnity.LoraManager.IndexOf">
+<area shape="rect" id="Node000001" title="Searches for a LORA based on the path." alt="" coords="1033,55,1257,80"/>
+<area shape="rect" id="Node000002" href="$classLLMUnity_1_1LoraManager.html#aa80edfe89989c078c31069ee90fbf355" title="Checks if the provided LORA based on a path exists already in the LORA manager." alt="" coords="755,5,985,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1060,55,941,33,942,28,1061,50"/>
+<area shape="rect" id="Node000006" href="$classLLMUnity_1_1LoraManager.html#a1ea418187b8e0256404d44da45357b89" title="Removes a LORA based on its path." alt="" coords="757,55,983,80"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="1020,70,983,70,983,65,1020,65"/>
+<area shape="rect" id="Node000009" href="$classLLMUnity_1_1LoraManager.html#a5eb7c712a8a74a8d81d312ec94fa4705" title="Modifies the weight of a LORA." alt="" coords="773,105,967,145"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="1071,85,967,107,966,102,1070,80"/>
+<area shape="rect" id="Node000003" href="$classLLMUnity_1_1LoraManager.html#a14d29996fded52370f7621b86b208aea" title="Adds a LORA with the defined weight." alt="" coords="499,5,698,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="741,21,698,21,698,15,741,15"/>
+<area shape="rect" id="Node000004" href="$classLLMUnity_1_1LLM.html#a5c4cd1f8b959b1f36c8c50d08ee114c4" title="Allows to add a LORA model to use in the LLM. The model provided is copied to the Assets/StreamingAss..." alt="" coords="246,5,414,31"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="485,21,414,21,414,15,485,15"/>
+<area shape="rect" id="Node000005" href="$classLLMUnity_1_1LLM.html#a5605295ba173a06f26099125681753c6" title="Allows to set a LORA model to use in the LLM. The model provided is copied to the Assets/StreamingAss..." alt="" coords="5,5,169,31"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="232,21,170,21,170,15,232,15"/>
+<area shape="rect" id="Node000007" href="$classLLMUnity_1_1LLM.html#a716e19a5161ca61b2ba4e64da3e4cac2" title="Allows to remove a LORA model from the LLM. Models supported are in .gguf format." alt="" coords="500,55,697,80"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="743,70,697,70,697,65,743,65"/>
+<area shape="rect" id="Node000008" href="$classLLMUnity_1_1LLMManager.html#ae01487df0886500aaa26da71389ee562" title="Removes a model from the model manager." alt="" coords="217,55,443,80"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="486,70,443,70,443,65,486,65"/>
+<area shape="rect" id="Node000010" href="$classLLMUnity_1_1LLM.html#a26e01ce3a14c30da752cf216acfbb3ff" title="Allows to change the weight (scale) of a LORA model in the LLM." alt="" coords="494,108,703,133"/>
+<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="759,126,704,125,704,120,759,120"/>
+<area shape="rect" id="Node000011" href="$classLLMUnity_1_1LLM.html#a1bd7e0bc45826dba87990fa088a32bf9" title="Allows to change the weights (scale) of the LORA models in the LLM." alt="" coords="491,157,707,183"/>
+<area shape="poly" id="edge10_Node000009_Node000011" title=" " alt="" coords="760,146,676,160,675,155,759,141"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="LLMUnity.Searchable.IncrementalSearch" name="LLMUnity.Searchable.IncrementalSearch">
+<area shape="rect" id="Node000001" title="Allows to do search and retrieve results in batches (incremental search)." alt="" coords="259,5,497,45"/>
+<area shape="rect" id="Node000002" href="$classLLMUnity_1_1Searchable.html#a2bae1bf1901381972408c63f4ee7d9dc" title="Search for similar results to the provided query. The most similar results and their distances (dissi..." alt="" coords="5,13,211,38"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="245,28,211,28,211,23,245,23"/>
+</map>

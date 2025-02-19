@@ -1,0 +1,7 @@
+<map id="LLMUnity.Chunking.IncrementalSearchComplete" name="LLMUnity.Chunking.IncrementalSearchComplete">
+<area shape="rect" id="Node000001" title="Completes the search and clears the cached results for an incremental search." alt="" coords="557,5,785,45"/>
+<area shape="rect" id="Node000002" href="$classLLMUnity_1_1Chunking.html#a5e929ad4b3abf7603c17c93a0424a25f" title="Retrieves the most similar search results in batches (incremental search). The phrase/chunk keys and ..." alt="" coords="281,5,509,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="544,28,510,28,510,23,544,23"/>
+<area shape="rect" id="Node000003" href="$classLLMUnity_1_1Chunking.html#af1691a2ef6488ae3e1ae742dc38d6390" title="Retrieves the most similar search results in batches (incremental search). The phrases/chunks and the..." alt="" coords="5,5,233,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="268,28,234,28,234,23,268,23"/>
+</map>

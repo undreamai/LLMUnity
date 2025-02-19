@@ -79,6 +79,7 @@ var group__llm =
       [ "SetGrammar", "classLLMUnity_1_1LLMCharacter.html#a6023c261b1f4afce9e74a148d6811844", null ],
       [ "SetPrompt", "classLLMUnity_1_1LLMCharacter.html#affc13b3416002473688130217f1b42df", null ],
       [ "Warmup", "classLLMUnity_1_1LLMCharacter.html#aa582248b495a4aa8dac46803e2412bb4", null ],
+      [ "Warmup", "classLLMUnity_1_1LLMCharacter.html#ae1008c34881505943fbe9dc04433fd97", null ],
       [ "AIName", "classLLMUnity_1_1LLMCharacter.html#a232035352610374224b6e2dc3da297da", null ],
       [ "cachePrompt", "classLLMUnity_1_1LLMCharacter.html#a03d3a1dff711f98d27726a190fe1a215", null ],
       [ "chat", "classLLMUnity_1_1LLMCharacter.html#af27b4d3cebcd4d5ebee7c50827330203", null ],
@@ -110,7 +111,6 @@ var group__llm =
       [ "stop", "classLLMUnity_1_1LLMCharacter.html#a1f52b3ca2ac0bee954bf5171742c9a5e", null ],
       [ "stream", "classLLMUnity_1_1LLMCharacter.html#a99a58a6ef8c6bc48036403df0fe7c139", null ],
       [ "temperature", "classLLMUnity_1_1LLMCharacter.html#a47c420043ce02024e2ac9a1a5802a3b3", null ],
-      [ "tfsZ", "classLLMUnity_1_1LLMCharacter.html#ac914b7660223b3276842f5e9fc130fb2", null ],
       [ "topK", "classLLMUnity_1_1LLMCharacter.html#a7a5b8e94c906ae154f9d2eaa9803d190", null ],
       [ "topP", "classLLMUnity_1_1LLMCharacter.html#a1fd8d8479f214db4cbfcdbe778963992", null ],
       [ "typicalP", "classLLMUnity_1_1LLMCharacter.html#a5d27c21bb995afbb9af3c0254891d6c3", null ]

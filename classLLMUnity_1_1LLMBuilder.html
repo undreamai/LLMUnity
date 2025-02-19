@@ -47,7 +47,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_tiny.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">LLM for Unity
-   &#160;<span id="projectnumber">v2.4.1</span>
+   &#160;<span id="projectnumber">v2.4.2</span>
    </div>
    <div id="projectbrief">Create characters in Unity with LLMs!</div>
   </td>
@@ -125,6 +125,10 @@ $(function(){initNavTree('classLLMUnity_1_1LLMBuilder.html',''); initResizable()
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
+<tr class="memitem:acf02909e337a0e103a75f2c82d58b3db" id="r_acf02909e337a0e103a75f2c82d58b3db"><td class="memItemLeft" align="right" valign="top">static string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acf02909e337a0e103a75f2c82d58b3db">PluginDir</a> (string platform, bool relative=false)</td></tr>
+<tr class="separator:acf02909e337a0e103a75f2c82d58b3db"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a403007a9b21e587a5ae11f6ae56c874c" id="r_a403007a9b21e587a5ae11f6ae56c874c"><td class="memItemLeft" align="right" valign="top">static string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a403007a9b21e587a5ae11f6ae56c874c">PluginLibraryDir</a> (string platform, bool relative=false)</td></tr>
+<tr class="separator:a403007a9b21e587a5ae11f6ae56c874c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae4221fc0f83f70bae590742cb7e996fc" id="r_ae4221fc0f83f70bae590742cb7e996fc"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae4221fc0f83f70bae590742cb7e996fc">HandleActionFileRecursive</a> (string source, string target, ActionCallback actionCallback)</td></tr>
 <tr class="memdesc:ae4221fc0f83f70bae590742cb7e996fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs an action for a file or a directory recursively.  <br /></td></tr>
 <tr class="separator:ae4221fc0f83f70bae590742cb7e996fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -157,10 +161,6 @@ Static Public Member Functions</h2></td></tr>
 Static Public Attributes</h2></td></tr>
 <tr class="memitem:a9415e63d1447f5762ae43474293e3d2b" id="r_a9415e63d1447f5762ae43474293e3d2b"><td class="memItemLeft" align="right" valign="top">static string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9415e63d1447f5762ae43474293e3d2b">BuildTempDir</a> = Path.Combine(Application.temporaryCachePath, &quot;LLMUnityBuild&quot;)</td></tr>
 <tr class="separator:a9415e63d1447f5762ae43474293e3d2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4f27bbf05be443bafdc6dcad7e11fb38" id="r_a4f27bbf05be443bafdc6dcad7e11fb38"><td class="memItemLeft" align="right" valign="top">static string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4f27bbf05be443bafdc6dcad7e11fb38">androidPluginDir</a> = Path.Combine(Application.dataPath, &quot;Plugins&quot;, &quot;Android&quot;, &quot;LLMUnity&quot;)</td></tr>
-<tr class="separator:a4f27bbf05be443bafdc6dcad7e11fb38"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1b93b7a4646b5d634235b38fc794ceea" id="r_a1b93b7a4646b5d634235b38fc794ceea"><td class="memItemLeft" align="right" valign="top">static string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1b93b7a4646b5d634235b38fc794ceea">iOSPluginDir</a> = Path.Combine(Application.dataPath, &quot;Plugins&quot;, &quot;iOS&quot;, &quot;LLMUnity&quot;)</td></tr>
-<tr class="separator:a1b93b7a4646b5d634235b38fc794ceea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class implementing the <a class="el" href="namespaceLLMUnity.html">LLMUnity</a> builder. </p>
@@ -192,7 +192,7 @@ Static Public Attributes</h2></td></tr>
 
 <p>Bundles the models and libraries. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMBuilder_8cs_source.html#l00199">199</a> of file <a class="el" href="LLMBuilder_8cs_source.html">LLMBuilder.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMBuilder_8cs_source.html#l00210">210</a> of file <a class="el" href="LLMBuilder_8cs_source.html">LLMBuilder.cs</a>.</p>
 
 </div>
 </div>
@@ -227,7 +227,12 @@ Static Public Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMBuilder_8cs_source.html#l00155">155</a> of file <a class="el" href="LLMBuilder_8cs_source.html">LLMBuilder.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMBuilder_8cs_source.html#l00165">165</a> of file <a class="el" href="LLMBuilder_8cs_source.html">LLMBuilder.cs</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="classLLMUnity_1_1LLMBuilder_a51b318c76b428ae1f83b1595b1555bc4_icgraph.svg" width="446" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 
 </div>
 </div>
@@ -256,7 +261,12 @@ Static Public Attributes</h2></td></tr>
 
 <p>Bundles the model information. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMBuilder_8cs_source.html#l00190">190</a> of file <a class="el" href="LLMBuilder_8cs_source.html">LLMBuilder.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMBuilder_8cs_source.html#l00201">201</a> of file <a class="el" href="LLMBuilder_8cs_source.html">LLMBuilder.cs</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="classLLMUnity_1_1LLMBuilder_a4dd148ad9bc393191ab5c0b2d65c543a_icgraph.svg" width="446" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 
 </div>
 </div>
@@ -296,7 +306,7 @@ Static Public Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMBuilder_8cs_source.html#l00069">69</a> of file <a class="el" href="LLMBuilder_8cs_source.html">LLMBuilder.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMBuilder_8cs_source.html#l00079">79</a> of file <a class="el" href="LLMBuilder_8cs_source.html">LLMBuilder.cs</a>.</p>
 
 </div>
 </div>
@@ -336,7 +346,12 @@ Static Public Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMBuilder_8cs_source.html#l00059">59</a> of file <a class="el" href="LLMBuilder_8cs_source.html">LLMBuilder.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMBuilder_8cs_source.html#l00069">69</a> of file <a class="el" href="LLMBuilder_8cs_source.html">LLMBuilder.cs</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="classLLMUnity_1_1LLMBuilder_aebe7a9cb705ce02ba6409218f19d639f_icgraph.svg" width="474" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 
 </div>
 </div>
@@ -371,7 +386,12 @@ Static Public Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMBuilder_8cs_source.html#l00089">89</a> of file <a class="el" href="LLMBuilder_8cs_source.html">LLMBuilder.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMBuilder_8cs_source.html#l00099">99</a> of file <a class="el" href="LLMBuilder_8cs_source.html">LLMBuilder.cs</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="classLLMUnity_1_1LLMBuilder_a1c403328e50b3cf6691b67f9223f60a3_icgraph.svg" width="514" height="135"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 
 </div>
 </div>
@@ -417,7 +437,12 @@ Static Public Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMBuilder_8cs_source.html#l00035">35</a> of file <a class="el" href="LLMBuilder_8cs_source.html">LLMBuilder.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMBuilder_8cs_source.html#l00045">45</a> of file <a class="el" href="LLMBuilder_8cs_source.html">LLMBuilder.cs</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="classLLMUnity_1_1LLMBuilder_ae4221fc0f83f70bae590742cb7e996fc_icgraph.svg" width="490" height="92"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 
 </div>
 </div>
@@ -457,7 +482,69 @@ Static Public Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMBuilder_8cs_source.html#l00079">79</a> of file <a class="el" href="LLMBuilder_8cs_source.html">LLMBuilder.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMBuilder_8cs_source.html#l00089">89</a> of file <a class="el" href="LLMBuilder_8cs_source.html">LLMBuilder.cs</a>.</p>
+
+</div>
+</div>
+<a id="acf02909e337a0e103a75f2c82d58b3db" name="acf02909e337a0e103a75f2c82d58b3db"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acf02909e337a0e103a75f2c82d58b3db">&#9670;&#160;</a></span>PluginDir()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static string LLMUnity.LLMBuilder.PluginDir </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>platform</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>relative</em><span class="paramdefsep"> = </span><span class="paramdefval">false</span></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="LLMBuilder_8cs_source.html#l00027">27</a> of file <a class="el" href="LLMBuilder_8cs_source.html">LLMBuilder.cs</a>.</p>
+
+</div>
+</div>
+<a id="a403007a9b21e587a5ae11f6ae56c874c" name="a403007a9b21e587a5ae11f6ae56c874c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a403007a9b21e587a5ae11f6ae56c874c">&#9670;&#160;</a></span>PluginLibraryDir()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static string LLMUnity.LLMBuilder.PluginLibraryDir </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>platform</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>relative</em><span class="paramdefsep"> = </span><span class="paramdefval">false</span></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="LLMBuilder_8cs_source.html#l00034">34</a> of file <a class="el" href="LLMBuilder_8cs_source.html">LLMBuilder.cs</a>.</p>
 
 </div>
 </div>
@@ -486,35 +573,11 @@ Static Public Attributes</h2></td></tr>
 
 <p>Resets the libraries back to their original state. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMBuilder_8cs_source.html#l00210">210</a> of file <a class="el" href="LLMBuilder_8cs_source.html">LLMBuilder.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMBuilder_8cs_source.html#l00221">221</a> of file <a class="el" href="LLMBuilder_8cs_source.html">LLMBuilder.cs</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="a4f27bbf05be443bafdc6dcad7e11fb38" name="a4f27bbf05be443bafdc6dcad7e11fb38"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4f27bbf05be443bafdc6dcad7e11fb38">&#9670;&#160;</a></span>androidPluginDir</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">string LLMUnity.LLMBuilder.androidPluginDir = Path.Combine(Application.dataPath, &quot;Plugins&quot;, &quot;Android&quot;, &quot;LLMUnity&quot;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="LLMBuilder_8cs_source.html#l00019">19</a> of file <a class="el" href="LLMBuilder_8cs_source.html">LLMBuilder.cs</a>.</p>
-
-</div>
-</div>
 <a id="a9415e63d1447f5762ae43474293e3d2b" name="a9415e63d1447f5762ae43474293e3d2b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9415e63d1447f5762ae43474293e3d2b">&#9670;&#160;</a></span>BuildTempDir</h2>
 
@@ -536,30 +599,6 @@ Static Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="LLMBuilder_8cs_source.html#l00018">18</a> of file <a class="el" href="LLMBuilder_8cs_source.html">LLMBuilder.cs</a>.</p>
-
-</div>
-</div>
-<a id="a1b93b7a4646b5d634235b38fc794ceea" name="a1b93b7a4646b5d634235b38fc794ceea"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1b93b7a4646b5d634235b38fc794ceea">&#9670;&#160;</a></span>iOSPluginDir</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">string LLMUnity.LLMBuilder.iOSPluginDir = Path.Combine(Application.dataPath, &quot;Plugins&quot;, &quot;iOS&quot;, &quot;LLMUnity&quot;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="LLMBuilder_8cs_source.html#l00020">20</a> of file <a class="el" href="LLMBuilder_8cs_source.html">LLMBuilder.cs</a>.</p>
 
 </div>
 </div>

@@ -1,0 +1,7 @@
+<map id="LLMUnity.LLMManager.Load" name="LLMUnity.LLMManager.Load">
+<area shape="rect" id="Node000001" title="Deserialises and loads the model manager." alt="" coords="284,35,487,60"/>
+<area shape="rect" id="Node000002" href="$classLLMUnity_1_1LLMManager.html#ae3d4250dbe4247348980f9a86f2be020" title="Loads a LORA model from disk and adds a model entry to the model manager." alt="" coords="5,5,236,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="270,37,235,33,236,28,271,32"/>
+<area shape="rect" id="Node000003" href="$classLLMUnity_1_1LLMManager.html#abad06dca4bc6421496adfe083e777943" title="Loads a LLM model from disk and adds a model entry to the model manager." alt="" coords="19,55,222,95"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="271,62,222,67,222,62,270,57"/>
+</map>

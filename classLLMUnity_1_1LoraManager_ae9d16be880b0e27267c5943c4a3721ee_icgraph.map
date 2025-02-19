@@ -1,0 +1,9 @@
+<map id="LLMUnity.LoraManager.Clear" name="LLMUnity.LoraManager.Clear">
+<area shape="rect" id="Node000001" title="Clears the LORA assets." alt="" coords="260,70,467,95"/>
+<area shape="rect" id="Node000002" href="$classLLMUnity_1_1LoraManager.html#a9a22a86fc6a836005fe6c64b7d629993" title="Converts strings with the lora paths and weights to entries in the LORA manager." alt="" coords="5,5,212,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="292,70,197,48,199,43,294,64"/>
+<area shape="rect" id="Node000003" href="$classLLMUnity_1_1LLM.html#ab02fa0f6e97b8c7cbe85806885727200" title="Allows to remove all LORA models from the LLM." alt="" coords="7,70,211,95"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="246,85,211,85,211,80,246,80"/>
+<area shape="rect" id="Node000004" href="$classLLMUnity_1_1LLM.html#a5605295ba173a06f26099125681753c6" title="Allows to set a LORA model to use in the LLM. The model provided is copied to the Assets/StreamingAss..." alt="" coords="27,119,191,145"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="284,101,176,122,175,117,283,95"/>
+</map>

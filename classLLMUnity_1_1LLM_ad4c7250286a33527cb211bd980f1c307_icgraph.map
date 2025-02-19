@@ -1,0 +1,7 @@
+<map id="LLMUnity.LLM.SetTemplate" name="LLMUnity.LLM.SetTemplate">
+<area shape="rect" id="Node000001" title="Set the chat template for the LLM." alt="" coords="305,31,501,56"/>
+<area shape="rect" id="Node000002" href="$classLLMUnity_1_1LLM.html#a9cdc4850537724d94bf88e7b78372883" title="Allows to set the model used by the LLM. The model provided is copied to the Assets/StreamingAssets f..." alt="" coords="43,5,219,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="291,36,219,29,220,24,292,30"/>
+<area shape="rect" id="Node000003" href="$classLLMUnity_1_1LLMManager.html#a008ba453476f14727ea2d109bbb209b5" title="Sets the chat template for a model and distributes it to all LLMs using it." alt="" coords="5,55,257,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="292,56,258,59,258,54,291,51"/>
+</map>

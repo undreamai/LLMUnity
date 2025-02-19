@@ -1,0 +1,7 @@
+<map id="LLMUnity.LLMManager.Num" name="LLMUnity.LLMManager.Num">
+<area shape="rect" id="Node000001" title="Returns the number of LLM/LORA models." alt="" coords="303,31,505,56"/>
+<area shape="rect" id="Node000002" href="$classLLMUnity_1_1LLMManager.html#ab77b07a951600be6ad83934b90c411bf" title="Returns the number of LORA models." alt="" coords="11,5,249,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="289,35,249,32,249,26,289,30"/>
+<area shape="rect" id="Node000003" href="$classLLMUnity_1_1LLMManager.html#a46f58f585c1facf9343f65a4deb127c4" title="Returns the number of LLM models." alt="" coords="5,55,255,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="289,56,255,59,255,54,289,51"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="LLMUnity.LLMCharacter.ClearChat" name="LLMUnity.LLMCharacter.ClearChat">
+<area shape="rect" id="Node000001" title="Clear the chat of the LLMCharacter." alt="" coords="261,35,503,60"/>
+<area shape="rect" id="Node000002" href="$classLLMUnity_1_1LLMCharacter.html#a5fcf385a45c9cd71e2428b7442a163a3" title="Load the chat history and cache from the provided filename / relative path." alt="" coords="5,5,213,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="250,36,213,32,214,27,251,31"/>
+<area shape="rect" id="Node000003" href="$classLLMUnity_1_1LLMCharacter.html#affc13b3416002473688130217f1b42df" title="Set the system prompt for the LLMCharacter." alt="" coords="10,55,209,95"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="248,64,209,68,208,63,247,58"/>
+</map>

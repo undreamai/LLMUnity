@@ -1,0 +1,16 @@
+<map id="LLMUnity.ChatTemplate.FromGGUF" name="LLMUnity.ChatTemplate.FromGGUF">
+<area shape="rect" id="Node000001" title="Determines the chat template name from a GGUF file. It reads the GGUF file and then determines the ch..." alt="" coords="1479,29,1729,55"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="1653,20,1650,16,1642,12,1604,8,1575,10,1559,15,1556,20,1564,27,1560,31,1551,21,1556,11,1574,5,1604,3,1643,7,1654,12,1657,18"/>
+<area shape="rect" id="Node000002" href="$classLLMUnity_1_1ModelEntry.html#a5ec75ad312519e5d4877fe5b24fc96b4" title="Constructs a LLM model entry." alt="" coords="1229,22,1431,62"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="1465,45,1431,45,1431,39,1465,39"/>
+<area shape="rect" id="Node000003" href="$classLLMUnity_1_1ModelEntry.html#af361ecc0b83af2434a3abf14d2a54018" title="Returns only the required fields for bundling the model in the build." alt="" coords="991,22,1181,62"/>
+<area shape="poly" id="edge3_Node000002_Node000003" title=" " alt="" coords="1216,45,1182,45,1182,39,1216,39"/>
+<area shape="rect" id="Node000004" href="$classLLMUnity_1_1LLMManager.html#a02f1f4900b433e8d44682d4375da80ca" title="Saves the model manager to disk for the build." alt="" coords="740,22,943,62"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="977,45,943,45,943,39,977,39"/>
+<area shape="rect" id="Node000005" href="$classLLMUnity_1_1LLMManager.html#a91519408988162cd6fd6a2c1f3be6e3e" title="Saves the model manager to disk along with models that are not (or can&#39;t) be downloaded for the build..." alt="" coords="488,29,692,55"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="727,45,692,45,692,39,727,39"/>
+<area shape="rect" id="Node000006" href="$classLLMUnity_1_1LLMBuilder.html#a4dd148ad9bc393191ab5c0b2d65c543a" title="Bundles the model information." alt="" coords="247,22,440,62"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="474,45,440,45,440,39,474,39"/>
+<area shape="rect" id="Node000007" href="$classLLMUnity_1_1LLMBuilder.html#ae03713b73d6f4cd4b942b1ba8ed0e9c9" title="Bundles the models and libraries." alt="" coords="5,29,199,55"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="233,45,199,45,199,39,233,39"/>
+</map>

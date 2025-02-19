@@ -1,0 +1,9 @@
+<map id="LLMUnity.LLMCharacter.LoadTemplate" name="LLMUnity.LLMCharacter.LoadTemplate">
+<area shape="rect" id="Node000001" title="Loads the chat template of the LLMCharacter." alt="" coords="293,47,501,87"/>
+<area shape="rect" id="Node000002" href="$classLLMUnity_1_1LLMCharacter.html#a1367eb182ec0efe9322a3102ea22952e" title="Chat functionality of the LLM. It calls the LLM completion based on the provided query including the ..." alt="" coords="22,5,229,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="279,49,196,33,197,28,280,43"/>
+<area shape="rect" id="Node000003" href="$classLLMUnity_1_1LLMCharacter.html#adf9cc5ead56e07d72f7cf9a79acd4128" title="Pure completion functionality of the LLM. It calls the LLM completion based solely on the provided pr..." alt="" coords="5,55,245,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="279,70,245,70,245,65,279,65"/>
+<area shape="rect" id="Node000004" href="$classLLMUnity_1_1LLMCharacter.html#ae1008c34881505943fbe9dc04433fd97" title="Allow to warm&#45;up a model by processing the provided prompt without adding it to history...." alt="" coords="10,104,241,129"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="280,91,197,107,196,101,279,86"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="LLMUnity.LoraManager.Add" name="LLMUnity.LoraManager.Add">
+<area shape="rect" id="Node000001" title="Adds a LORA with the defined weight." alt="" coords="433,5,632,31"/>
+<area shape="rect" id="Node000002" href="$classLLMUnity_1_1LLM.html#a5c4cd1f8b959b1f36c8c50d08ee114c4" title="Allows to add a LORA model to use in the LLM. The model provided is copied to the Assets/StreamingAss..." alt="" coords="217,5,385,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="420,21,385,21,385,15,420,15"/>
+<area shape="rect" id="Node000003" href="$classLLMUnity_1_1LLM.html#a5605295ba173a06f26099125681753c6" title="Allows to set a LORA model to use in the LLM. The model provided is copied to the Assets/StreamingAss..." alt="" coords="5,5,169,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="203,21,170,21,170,15,203,15"/>
+</map>

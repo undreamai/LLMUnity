@@ -1,0 +1,10 @@
+<map id="LLMUnity.Chunking.Get" name="LLMUnity.Chunking.Get">
+<area shape="rect" id="Node000001" title="Retrieves the phrase with the specific id." alt="" coords="533,70,707,95"/>
+<area shape="rect" id="Node000002" href="$classLLMUnity_1_1Chunking.html#af1691a2ef6488ae3e1ae742dc38d6390" title="Retrieves the most similar search results in batches (incremental search). The phrases/chunks and the..." alt="" coords="257,5,485,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="550,69,458,48,459,43,552,64"/>
+<area shape="rect" id="Node000003" href="$classLLMUnity_1_1Chunking.html#a569afcd4c0b94a5ac914bdb7dad22ec9" title="Removes a phrase and the phrase chunks from the search." alt="" coords="269,70,473,95"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="520,85,474,85,474,80,520,80"/>
+<area shape="rect" id="Node000004" href="$classLLMUnity_1_1Chunking.html#aa75c9b327f13d6ddb69801843a95596b" title="Removes a phrase and the phrase chunks from the search." alt="" coords="5,95,209,121"/>
+<area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="547,101,486,109,341,116,210,115,210,110,341,111,485,104,547,95"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="256,96,210,101,209,96,255,91"/>
+</map>

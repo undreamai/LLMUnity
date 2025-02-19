@@ -1,0 +1,7 @@
+<map id="LLMUnity.Searchable.Get" name="LLMUnity.Searchable.Get">
+<area shape="rect" id="Node000001" title="Retrieves the phrase with the specific id." alt="" coords="545,13,729,38"/>
+<area shape="rect" id="Node000002" href="$classLLMUnity_1_1Searchable.html#aad80a5b26cf4e94402a35a2241df582d" title="Retrieves the most similar search results in batches (incremental search). The most similar results a..." alt="" coords="259,5,497,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="532,28,497,28,497,23,532,23"/>
+<area shape="rect" id="Node000003" href="$classLLMUnity_1_1Searchable.html#a2bae1bf1901381972408c63f4ee7d9dc" title="Search for similar results to the provided query. The most similar results and their distances (dissi..." alt="" coords="5,13,211,38"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="245,28,211,28,211,23,245,23"/>
+</map>

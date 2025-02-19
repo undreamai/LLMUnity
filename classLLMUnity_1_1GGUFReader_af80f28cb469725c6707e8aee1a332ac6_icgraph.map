@@ -1,0 +1,22 @@
+<map id="LLMUnity.GGUFReader.GetField" name="LLMUnity.GGUFReader.GetField">
+<area shape="rect" id="Node000001" title="Allows to retrieve location info for a GGUF field." alt="" coords="2053,45,2280,70"/>
+<area shape="rect" id="Node000002" href="$classLLMUnity_1_1GGUFReader.html#a0df398e396896320ae8006d475f554a5" title="Allows to retrieve a single&#45;valued GGUF field." alt="" coords="1760,37,2005,77"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="2039,60,2005,60,2005,55,2039,55"/>
+<area shape="rect" id="Node000003" href="$classLLMUnity_1_1GGUFReader.html#aceb694bcba141427638f39e96c34226e" title="Allows to retrieve an integer GGUF field." alt="" coords="1489,5,1701,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="1746,45,1701,40,1702,34,1746,39"/>
+<area shape="rect" id="Node000010" href="$classLLMUnity_1_1GGUFReader.html#ad2355ac7292bda7f4e2168ada895c6d9" title="Allows to retrieve a string GGUF field." alt="" coords="1479,69,1712,109"/>
+<area shape="poly" id="edge9_Node000002_Node000010" title=" " alt="" coords="1747,75,1713,79,1712,74,1746,70"/>
+<area shape="rect" id="Node000004" href="$classLLMUnity_1_1ModelEntry.html#a5ec75ad312519e5d4877fe5b24fc96b4" title="Constructs a LLM model entry." alt="" coords="1229,37,1431,77"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="1476,42,1431,48,1431,43,1475,37"/>
+<area shape="rect" id="Node000005" href="$classLLMUnity_1_1ModelEntry.html#af361ecc0b83af2434a3abf14d2a54018" title="Returns only the required fields for bundling the model in the build." alt="" coords="991,37,1181,77"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="1216,60,1182,60,1182,55,1216,55"/>
+<area shape="rect" id="Node000006" href="$classLLMUnity_1_1LLMManager.html#a02f1f4900b433e8d44682d4375da80ca" title="Saves the model manager to disk for the build." alt="" coords="740,37,943,77"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="977,60,943,60,943,55,977,55"/>
+<area shape="rect" id="Node000007" href="$classLLMUnity_1_1LLMManager.html#a91519408988162cd6fd6a2c1f3be6e3e" title="Saves the model manager to disk along with models that are not (or can&#39;t) be downloaded for the build..." alt="" coords="488,45,692,70"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="727,60,692,60,692,55,727,55"/>
+<area shape="rect" id="Node000008" href="$classLLMUnity_1_1LLMBuilder.html#a4dd148ad9bc393191ab5c0b2d65c543a" title="Bundles the model information." alt="" coords="247,37,440,77"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="474,60,440,60,440,55,474,55"/>
+<area shape="rect" id="Node000009" href="$classLLMUnity_1_1LLMBuilder.html#ae03713b73d6f4cd4b942b1ba8ed0e9c9" title="Bundles the models and libraries." alt="" coords="5,45,199,70"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="233,60,199,60,199,55,233,55"/>
+<area shape="poly" id="edge10_Node000010_Node000004" title=" " alt="" coords="1465,76,1431,72,1431,67,1465,71"/>
+</map>

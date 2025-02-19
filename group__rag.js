@@ -25,7 +25,11 @@ var group__rag =
     ] ],
     [ "LLMUnity.RAG", "classLLMUnity_1_1RAG.html", [
       [ "Init", "classLLMUnity_1_1RAG.html#a12f6d0345e9ee76a32b61e5f676fa945", null ],
-      [ "ReturnChunks", "classLLMUnity_1_1RAG.html#ac1082e5fb0cd8c98032ec02165c3ce26", null ]
+      [ "ReturnChunks", "classLLMUnity_1_1RAG.html#ac1082e5fb0cd8c98032ec02165c3ce26", null ],
+      [ "chunking", "classLLMUnity_1_1RAG.html#aa087e2e196390ab4775723c6a4edeeb3", null ],
+      [ "chunkingType", "classLLMUnity_1_1RAG.html#a24160f1b5a42a704d566cca6b2ec19b6", null ],
+      [ "search", "classLLMUnity_1_1RAG.html#a048fec418fb7f5a824a7e98aa87c0cf2", null ],
+      [ "searchType", "classLLMUnity_1_1RAG.html#a181f8486874973f08d45fb1945c2cf91", null ]
     ] ],
     [ "LLMUnity.Searchable", "classLLMUnity_1_1Searchable.html", [
       [ "Add", "classLLMUnity_1_1Searchable.html#a5b3409ff27d91f45a77f5bf1e3249161", null ],

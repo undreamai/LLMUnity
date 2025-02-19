@@ -47,7 +47,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_tiny.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">LLM for Unity
-   &#160;<span id="projectnumber">v2.4.1</span>
+   &#160;<span id="projectnumber">v2.4.2</span>
    </div>
    <div id="projectbrief">Create characters in Unity with LLMs!</div>
   </td>
@@ -184,12 +184,16 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>Clear</b> ()</td></tr
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:a181f8486874973f08d45fb1945c2cf91" id="r_a181f8486874973f08d45fb1945c2cf91"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceLLMUnity.html#a57c2884128df2e335455f2ba44e84e46">SearchMethods</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a181f8486874973f08d45fb1945c2cf91">searchType</a> = SearchMethods.SimpleSearch</td></tr>
+<tr class="memdesc:a181f8486874973f08d45fb1945c2cf91"><td class="mdescLeft">&#160;</td><td class="mdescRight">Search method type to use for RAG. SimpleSearch is a simple brute-force search, while DBSearch is a fast Approximate Nearest Neighbor (ANN) method (recommended!).  <br /></td></tr>
 <tr class="separator:a181f8486874973f08d45fb1945c2cf91"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a048fec418fb7f5a824a7e98aa87c0cf2" id="r_a048fec418fb7f5a824a7e98aa87c0cf2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classLLMUnity_1_1SearchMethod.html">SearchMethod</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a048fec418fb7f5a824a7e98aa87c0cf2">search</a></td></tr>
+<tr class="memdesc:a048fec418fb7f5a824a7e98aa87c0cf2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Search method GameObject.  <br /></td></tr>
 <tr class="separator:a048fec418fb7f5a824a7e98aa87c0cf2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a24160f1b5a42a704d566cca6b2ec19b6" id="r_a24160f1b5a42a704d566cca6b2ec19b6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceLLMUnity.html#a8901dc84125a5c569f32e9991e846818">ChunkingMethods</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a24160f1b5a42a704d566cca6b2ec19b6">chunkingType</a> = ChunkingMethods.NoChunking</td></tr>
+<tr class="memdesc:a24160f1b5a42a704d566cca6b2ec19b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Chunking method type to use for RAG for splitting the inputs into chunks. This is useful to have a more consistent meaning within each data part.  <br /></td></tr>
 <tr class="separator:a24160f1b5a42a704d566cca6b2ec19b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa087e2e196390ab4775723c6a4edeeb3" id="r_aa087e2e196390ab4775723c6a4edeeb3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classLLMUnity_1_1Chunking.html">Chunking</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa087e2e196390ab4775723c6a4edeeb3">chunking</a></td></tr>
+<tr class="memdesc:aa087e2e196390ab4775723c6a4edeeb3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Chunking method GameObject.  <br /></td></tr>
 <tr class="separator:aa087e2e196390ab4775723c6a4edeeb3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -239,7 +243,7 @@ Public Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="RAG_8cs_source.html#l00051">51</a> of file <a class="el" href="RAG_8cs_source.html">RAG.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="RAG_8cs_source.html#l00059">59</a> of file <a class="el" href="RAG_8cs_source.html">RAG.cs</a>.</p>
 
 </div>
 </div>
@@ -274,7 +278,7 @@ Public Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="RAG_8cs_source.html#l00063">63</a> of file <a class="el" href="RAG_8cs_source.html">RAG.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="RAG_8cs_source.html#l00071">71</a> of file <a class="el" href="RAG_8cs_source.html">RAG.cs</a>.</p>
 
 </div>
 </div>
@@ -291,7 +295,9 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="RAG_8cs_source.html#l00043">43</a> of file <a class="el" href="RAG_8cs_source.html">RAG.cs</a>.</p>
+<p>Chunking method GameObject. </p>
+
+<p class="definition">Definition at line <a class="el" href="RAG_8cs_source.html#l00051">51</a> of file <a class="el" href="RAG_8cs_source.html">RAG.cs</a>.</p>
 
 </div>
 </div>
@@ -307,7 +313,9 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="RAG_8cs_source.html#l00042">42</a> of file <a class="el" href="RAG_8cs_source.html">RAG.cs</a>.</p>
+<p>Chunking method type to use for RAG for splitting the inputs into chunks. This is useful to have a more consistent meaning within each data part. </p>
+
+<p class="definition">Definition at line <a class="el" href="RAG_8cs_source.html#l00048">48</a> of file <a class="el" href="RAG_8cs_source.html">RAG.cs</a>.</p>
 
 </div>
 </div>
@@ -323,7 +331,9 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="RAG_8cs_source.html#l00041">41</a> of file <a class="el" href="RAG_8cs_source.html">RAG.cs</a>.</p>
+<p>Search method GameObject. </p>
+
+<p class="definition">Definition at line <a class="el" href="RAG_8cs_source.html#l00045">45</a> of file <a class="el" href="RAG_8cs_source.html">RAG.cs</a>.</p>
 
 </div>
 </div>
@@ -339,7 +349,9 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="RAG_8cs_source.html#l00040">40</a> of file <a class="el" href="RAG_8cs_source.html">RAG.cs</a>.</p>
+<p>Search method type to use for RAG. SimpleSearch is a simple brute-force search, while DBSearch is a fast Approximate Nearest Neighbor (ANN) method (recommended!). </p>
+
+<p class="definition">Definition at line <a class="el" href="RAG_8cs_source.html#l00042">42</a> of file <a class="el" href="RAG_8cs_source.html">RAG.cs</a>.</p>
 
 </div>
 </div>

@@ -1,0 +1,9 @@
+<map id="LLMUnity.LLMBuilder.DeletePath" name="LLMUnity.LLMBuilder.DeletePath">
+<area shape="rect" id="Node000001" title="Deletes a path after checking if we are allowed to." alt="" coords="277,55,508,80"/>
+<area shape="rect" id="Node000002" href="$classLLMUnity_1_1LLMBuilder.html#ae03713b73d6f4cd4b942b1ba8ed0e9c9" title="Bundles the models and libraries." alt="" coords="21,5,214,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="307,55,189,33,190,28,308,50"/>
+<area shape="rect" id="Node000003" href="$classLLMUnity_1_1LLMBuilder.html#a0c6b9eefaa0ed67e30e6bba0b4bc5096" title="Moves a source file to a target file." alt="" coords="5,55,229,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="264,70,230,70,230,65,264,65"/>
+<area shape="rect" id="Node000004" href="$classLLMUnity_1_1LLMBuilder.html#a0b52989a3a0ca96ffee1e0e0bb604f49" title="Resets the libraries back to their original state." alt="" coords="19,104,216,129"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="308,85,190,107,189,101,307,80"/>
+</map>

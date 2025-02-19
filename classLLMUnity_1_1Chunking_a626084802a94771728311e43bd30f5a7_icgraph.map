@@ -1,0 +1,5 @@
+<map id="LLMUnity.Chunking.ReturnChunks" name="LLMUnity.Chunking.ReturnChunks">
+<area shape="rect" id="Node000001" title="Set to true to return chunks or the direct input with the Search function." alt="" coords="261,5,455,45"/>
+<area shape="rect" id="Node000002" href="$classLLMUnity_1_1RAG.html#ac1082e5fb0cd8c98032ec02165c3ce26" title="Set to true to return chunks or the direct input with the Search function." alt="" coords="5,13,213,38"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="248,28,213,28,213,23,248,23"/>
+</map>

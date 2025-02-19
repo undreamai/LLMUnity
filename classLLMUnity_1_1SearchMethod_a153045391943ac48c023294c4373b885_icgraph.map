@@ -1,0 +1,5 @@
+<map id="LLMUnity.SearchMethod.SetLLM" name="LLMUnity.SearchMethod.SetLLM">
+<area shape="rect" id="Node000001" title="Sets the LLM for encoding the search entries." alt="" coords="192,5,421,31"/>
+<area shape="rect" id="Node000002" href="$classLLMUnity_1_1RAG.html#a12f6d0345e9ee76a32b61e5f676fa945" title="Constructs the Retrieval Augmented Generation (RAG) system based on the provided search and chunking ..." alt="" coords="5,5,144,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="178,21,144,21,144,15,178,15"/>
+</map>

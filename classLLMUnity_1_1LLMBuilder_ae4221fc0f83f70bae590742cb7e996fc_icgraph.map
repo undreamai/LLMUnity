@@ -1,0 +1,8 @@
+<map id="LLMUnity.LLMBuilder.HandleActionFileRecursive" name="LLMUnity.LLMBuilder.HandleActionFileRecursive">
+<area shape="rect" id="Node000001" title="Performs an action for a file or a directory recursively." alt="" coords="277,29,484,69"/>
+<area shape="poly" id="edge2_Node000001_Node000001" title=" " alt="" coords="425,18,410,11,381,8,355,10,340,15,334,21,337,28,332,30,329,20,337,10,354,5,381,3,411,6,427,13"/>
+<area shape="rect" id="Node000002" href="$classLLMUnity_1_1LLMBuilder.html#ac279ec780b30dc59ca436bf881ff7a04" title="Copies a source file to a target file." alt="" coords="7,11,228,37"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="263,41,228,37,229,32,264,35"/>
+<area shape="rect" id="Node000003" href="$classLLMUnity_1_1LLMBuilder.html#a0c6b9eefaa0ed67e30e6bba0b4bc5096" title="Moves a source file to a target file." alt="" coords="5,61,229,86"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="264,63,230,66,229,60,263,57"/>
+</map>

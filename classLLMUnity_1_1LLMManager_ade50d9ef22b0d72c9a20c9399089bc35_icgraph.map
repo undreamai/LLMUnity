@@ -1,0 +1,7 @@
+<map id="LLMUnity.LLMManager.SetupOnce" name="LLMUnity.LLMManager.SetupOnce">
+<area shape="rect" id="Node000001" title="Task performing the setup of the models." alt="" coords="468,5,709,31"/>
+<area shape="rect" id="Node000002" href="$classLLMUnity_1_1LLMManager.html#a685beeeaaea04e8d22e25206da055224" title="Setup of the models." alt="" coords="212,5,420,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="454,21,420,21,420,15,454,15"/>
+<area shape="rect" id="Node000003" href="$classLLMUnity_1_1LLM.html#a4ab4bbfb8a83cbe4a19e7aef153c980e" title="The Unity Awake function that starts the LLM server." alt="" coords="5,5,164,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="198,21,164,21,164,15,198,15"/>
+</map>

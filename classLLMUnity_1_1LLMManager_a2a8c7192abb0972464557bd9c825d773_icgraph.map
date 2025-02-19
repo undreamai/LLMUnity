@@ -1,0 +1,5 @@
+<map id="LLMUnity.LLMManager.Unregister" name="LLMUnity.LLMManager.Unregister">
+<area shape="rect" id="Node000001" title="Removes a LLM from the model manager." alt="" coords="237,5,476,31"/>
+<area shape="rect" id="Node000002" href="$classLLMUnity_1_1LLM.html#a52ae6076746695d25592f8355a18414e" title="The Unity OnDestroy function called when the onbject is destroyed. The function StopProcess is called..." alt="" coords="5,5,189,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="224,21,189,21,189,15,224,15"/>
+</map>
