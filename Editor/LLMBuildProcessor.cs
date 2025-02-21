@@ -3,7 +3,6 @@ using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
 #if UNITY_IOS || UNITY_VISIONOS
-using System.IO;
 using UnityEditor.iOS.Xcode;
 #endif
 
@@ -19,6 +18,12 @@ namespace LLMUnity
             Application.logMessageReceived += OnBuildError;
             LLMBuilder.Build(report.summary.platform);
             AssetDatabase.Refresh();
+#if UNITY_IOS || UNITY_VISIONOS
+            EditorApplication.delayCall += () =>
+            {
+                ModifyXCodeBuild(report.summary.platform, report.summary.outputPath);
+            };
+#endif
         }
 
         // called during build to check for errors
@@ -31,7 +36,7 @@ namespace LLMUnity
         /// <summary>
         /// Postprocess the iOS Build
         /// </summary>
-        public static void PostprocessIOSBuild(BuildTarget buildTarget, string outputPath)
+        public static void ModifyXCodeBuild(BuildTarget buildTarget, string outputPath)
         {
             string projPath = PBXProject.GetPBXProjectPath(outputPath);
 #if UNITY_VISIONOS
@@ -77,21 +82,14 @@ namespace LLMUnity
         {
             EditorApplication.delayCall += () =>
             {
-#if UNITY_IOS || UNITY_VISIONOS
-                PostprocessIOSBuild(report.summary.platform, report.summary.outputPath);
-#endif
                 BuildCompleted();
             };
         }
 
         public void BuildCompleted()
         {
-            // Delay the reset operation to ensure Unity is no longer in the build process
-            EditorApplication.delayCall += () =>
-            {
-                Application.logMessageReceived -= OnBuildError;
-                LLMBuilder.Reset();
-            };
+            Application.logMessageReceived -= OnBuildError;
+            LLMBuilder.Reset();
         }
     }
 }
