@@ -68,6 +68,7 @@ namespace LLMUnity
             }
 
             project.WriteToFile(projPath);
+            AssetDatabase.ImportAsset(projPath);
         }
 
 #endif
@@ -75,11 +76,11 @@ namespace LLMUnity
         // called after the build
         public void OnPostprocessBuild(BuildReport report)
         {
+#if UNITY_IOS || UNITY_VISIONOS
+            PostprocessIOSBuild(report.summary.platform, report.summary.outputPath);
+#endif
             EditorApplication.delayCall += () =>
             {
-#if UNITY_IOS || UNITY_VISIONOS
-                PostprocessIOSBuild(report.summary.platform, report.summary.outputPath);
-#endif
                 BuildCompleted();
             };
         }
