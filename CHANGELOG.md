@@ -1,3 +1,9 @@
+## v2.4.3
+#### 🚀 Features
+
+- VisionOS support (PR: #299)
+
+
 ## v2.4.2
 #### 🚀 Features
 
