@@ -31,7 +31,7 @@ namespace LLMUnityTests
         {
             Assert.AreEqual(
                 new GemmaTemplate().ComputePrompt(messages, "user", "assistant"),
-                "<start_of_turn>user\nyou are a bot\n\nHello, how are you?<end_of_turn>\n<start_of_turn>assistant\nI'm doing great. How can I help you today?<end_of_turn>\n<start_of_turn>user\nI'd like to show off how chat templating works!<end_of_turn>\n<start_of_turn>assistant\nchat template is awesome<end_of_turn>\n<start_of_turn>user\ndo you think so?<end_of_turn>\n<start_of_turn>assistant\n"
+                "<start_of_turn>user\nyou are a bot\n\nHello, how are you?<end_of_turn>\n<start_of_turn>model\nI'm doing great. How can I help you today?<end_of_turn>\n<start_of_turn>user\nI'd like to show off how chat templating works!<end_of_turn>\n<start_of_turn>model\nchat template is awesome<end_of_turn>\n<start_of_turn>user\ndo you think so?<end_of_turn>\n<start_of_turn>model\n"
             );
         }
 
