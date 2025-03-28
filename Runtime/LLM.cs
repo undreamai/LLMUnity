@@ -88,6 +88,7 @@ namespace LLMUnity
         /// \cond HIDE
         public int minContextLength = 0;
         public int maxContextLength = 0;
+        public string architecture => llmlib.architecture;
 
         IntPtr LLMObject = IntPtr.Zero;
         List<LLMCaller> clients = new List<LLMCaller>();
