@@ -7,6 +7,7 @@ using System;
 using System.Collections;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using UnityEngine.TestTools;
 using UnityEditor;
 using UnityEditor.TestTools.TestRunner.Api;
@@ -116,7 +117,9 @@ namespace LLMUnityTests
         protected string reply2;
         protected int tokens1;
         protected int tokens2;
+        protected int port;
 
+        static readonly object _lock = new object();
 
         public TestLLM()
         {
@@ -126,6 +129,8 @@ namespace LLMUnityTests
 
         public virtual async Task Init()
         {
+            Monitor.Enter(_lock);
+            port = new System.Random().Next(10000, 20000);
             SetParameters();
             await DownloadModels();
             gameObject = new GameObject();
@@ -226,6 +231,7 @@ namespace LLMUnityTests
             LLM llm = gameObject.AddComponent<LLM>();
             llm.SetModel(modelNameLLManager);
             llm.parallelPrompts = 1;
+            llm.port = port;
             return llm;
         }
 
@@ -240,6 +246,7 @@ namespace LLMUnityTests
             llmCharacter.seed = 0;
             llmCharacter.stream = false;
             llmCharacter.numPredict = 20;
+            llmCharacter.port = port;
             return llmCharacter;
         }
 
@@ -336,7 +343,13 @@ namespace LLMUnityTests
             Assert.That(embeddings.Count == 896);
         }
 
-        public virtual void OnDestroy() {}
+        public virtual void OnDestroy()
+        {
+            if (Monitor.IsEntered(_lock))
+            {
+                Monitor.Exit(_lock);
+            }
+        }
     }
 
     public class TestLLM_LLMManager_Load : TestLLM
@@ -371,6 +384,7 @@ namespace LLMUnityTests
 
         public override void OnDestroy()
         {
+            base.OnDestroy();
             if (!File.Exists(loadPath)) File.Delete(loadPath);
         }
     }
