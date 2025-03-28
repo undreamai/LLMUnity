@@ -36,7 +36,7 @@ LLM for Unity is built on top of the awesome [llama.cpp](https://github.com/gger
 </sub>
 
 ## At a glance
-- 💻 Cross-platform! Windows, Linux, macOS, iOS and Android
+- 💻 Cross-platform! Windows, Linux, macOS, iOS, Android and VisionOS
 - 🏠 Runs locally without internet access. No data ever leave the game!
 - ⚡ Blazing fast inference on CPU and GPU (Nvidia, AMD, Apple Metal)
 - 🤗 Supports all major LLM models
@@ -142,6 +142,9 @@ You can also:
 
 <details>
 <summary>Build a mobile app</summary>
+
+For mobile apps you can use models with up to 1-2 billion parameters ("Tiny models" in the LLM model manager).<br>
+Larger models will typically not work due to the limited mobile hardware.
 
 **iOS**
 iOS can be built with the default player settings.
