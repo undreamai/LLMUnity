@@ -484,7 +484,7 @@ MonoBehaviour:
   save: 
   saveCache: 0
   debugPrompt: 0
-  numPredict: 256
+  numPredict: -1
   slot: -1
   grammar: 
   cachePrompt: 1
