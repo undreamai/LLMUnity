@@ -4361,7 +4361,7 @@ MonoBehaviour:
   grammar: 
   cachePrompt: 1
   seed: 0
-  numPredict: 256
+  numPredict: -1
   temperature: 0.2
   topK: 40
   topP: 0.9

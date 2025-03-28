@@ -27,9 +27,9 @@ namespace LLMUnity
         /// <summary> log the constructed prompt the Unity Editor. </summary>
         [Tooltip("log the constructed prompt the Unity Editor.")]
         [LLM] public bool debugPrompt = false;
-        /// <summary> maximum number of tokens that the LLM will predict (-1 = infinity, -2 = until context filled). </summary>
-        [Tooltip("maximum number of tokens that the LLM will predict (-1 = infinity, -2 = until context filled).")]
-        [Model] public int numPredict = 256;
+        /// <summary> maximum number of tokens that the LLM will predict (-1 = infinity). </summary>
+        [Tooltip("maximum number of tokens that the LLM will predict (-1 = infinity).")]
+        [Model] public int numPredict = -1;
         /// <summary> slot of the server to use for computation (affects caching) </summary>
         [Tooltip("slot of the server to use for computation (affects caching)")]
         [ModelAdvanced] public int slot = -1;
