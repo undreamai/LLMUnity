@@ -43,6 +43,8 @@ namespace LLMUnity
                 new LLama3ChatTemplate(),
                 new LLama2ChatTemplate(),
                 new LLama2Template(),
+                new Phi4MiniTemplate(),
+                new Phi4Template(),
                 new Phi3_5Template(),
                 new Phi3Template(),
                 new Phi2Template(),
@@ -480,7 +482,7 @@ namespace LLMUnity
 
     /// @ingroup template
     /// <summary>
-    /// Class implementing the Phi-3.5 template
+    /// Class implementing the Phi-4 mini template
     /// </summary>
     public class Phi3_5Template : ChatTemplate
     {
@@ -499,6 +501,53 @@ namespace LLMUnity
         public override string[] GetStop(string playerName, string AIName)
         {
             return AddStopNewlines(new string[] { "<|end|>", "<|user|>", "<|assistant|>" });
+        }
+    }
+
+    /// @ingroup template
+    /// <summary>
+    /// Class implementing the Phi-4 mini template
+    /// </summary>
+    public class Phi4MiniTemplate : ChatTemplate
+    {
+        public override string GetName() { return "phi-4-mini"; }
+        public override string GetDescription() { return "phi-4-mini"; }
+        public override string[] GetNameMatches() { return new string[] {"phi-4-mini"}; }
+        public override string[] GetChatTemplateMatches() { return new string[] {"{% for message in messages %}{% if message['role'] == 'system' and 'tools' in message and message['tools'] is not none %}{{ '<|' + message['role'] + '|>' + message['content'] + '<|tool|>' + message['tools'] + '<|/tool|>' + '<|end|>' }}{% else %}{{ '<|' + message['role'] + '|>' + message['content'] + '<|end|>' }}{% endif %}{% endfor %}{% if add_generation_prompt %}{{ '<|assistant|>' }}{% else %}{{ eos_token }}{% endif %}"};}
+
+        protected override string PlayerPrefix(string playerName) { return $"<|user|>"; }
+        protected override string AIPrefix(string AIName) { return $"<|assistant|>"; }
+        protected override string RequestSuffix() { return "<|end|>"; }
+        protected override string PairSuffix() { return "<|end|>"; }
+        protected override string SystemPrefix() { return "<|system|>"; }
+        protected override string SystemSuffix() { return "<|end|>"; }
+
+        public override string[] GetStop(string playerName, string AIName)
+        {
+            return AddStopNewlines(new string[] { "<|end|>", "<|user|>", "<|assistant|>" });
+        }
+    }
+    /// @ingroup template
+    /// <summary>
+    /// Class implementing the Phi-4 template
+    /// </summary>
+    public class Phi4Template : ChatTemplate
+    {
+        public override string GetName() { return "phi-4"; }
+        public override string GetDescription() { return "phi-4"; }
+        public override string[] GetNameMatches() { return new string[] {"phi-4"}; }
+        public override string[] GetChatTemplateMatches() { return new string[] {"{% for message in messages %}{% if (message['role'] == 'system') %}{{'<|im_start|>system<|im_sep|>' + message['content'] + '<|im_end|>'}}{% elif (message['role'] == 'user') %}{{'<|im_start|>user<|im_sep|>' + message['content'] + '<|im_end|>'}}{% elif (message['role'] == 'assistant') %}{{'<|im_start|>assistant<|im_sep|>' + message['content'] + '<|im_end|>'}}{% endif %}{% endfor %}{% if add_generation_prompt %}{{ '<|im_start|>assistant<|im_sep|>' }}{% endif %}"};}
+
+        protected override string PlayerPrefix(string playerName) { return $"<|im_start|>user<|im_sep|>"; }
+        protected override string AIPrefix(string AIName) { return $"<|im_start|>assistant<|im_sep|>"; }
+        protected override string RequestSuffix() { return "<|im_end|>"; }
+        protected override string PairSuffix() { return "<|im_end|>"; }
+        protected override string SystemPrefix() { return "<|im_start|>system<|im_sep|>"; }
+        protected override string SystemSuffix() { return "<|im_end|>"; }
+
+        public override string[] GetStop(string playerName, string AIName)
+        {
+            return AddStopNewlines(new string[] { "<|im_end|>", "<|im_start|>" });
         }
     }
 

@@ -126,6 +126,24 @@ namespace LLMUnityTests
         }
 
         [Test]
+        public void TestPhi4Mini()
+        {
+            Assert.AreEqual(
+                new Phi4MiniTemplate().ComputePrompt(messages, "user", "assistant"),
+                "<|system|>you are a bot<|end|><|user|>Hello, how are you?<|end|><|assistant|>I'm doing great. How can I help you today?<|end|><|user|>I'd like to show off how chat templating works!<|end|><|assistant|>chat template is awesome<|end|><|user|>do you think so?<|end|><|assistant|>"
+            );
+        }
+
+        [Test]
+        public void TestPhi4()
+        {
+            Assert.AreEqual(
+                new Phi4Template().ComputePrompt(messages, "user", "assistant"),
+                "<|im_start|>system<|im_sep|>you are a bot<|im_end|><|im_start|>user<|im_sep|>Hello, how are you?<|im_end|><|im_start|>assistant<|im_sep|>I'm doing great. How can I help you today?<|im_end|><|im_start|>user<|im_sep|>I'd like to show off how chat templating works!<|im_end|><|im_start|>assistant<|im_sep|>chat template is awesome<|im_end|><|im_start|>user<|im_sep|>do you think so?<|im_end|><|im_start|>assistant<|im_sep|>"
+            );
+        }
+
+        [Test]
         public void TestZephyr()
         {
             Assert.AreEqual(
