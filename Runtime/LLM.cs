@@ -444,7 +444,7 @@ namespace LLMUnity
             if (embeddingsOnly) arguments += " --embedding";
             if (numThreadsToUse > 0) arguments += $" -t {numThreadsToUse}";
             arguments += loraArgument;
-            arguments += $" -ngl {numGPULayers}";
+            if (numGPULayers > 0) arguments += $" -ngl {numGPULayers}";
             if (LLMUnitySetup.FullLlamaLib && flashAttention) arguments += $" --flash-attn";
             if (remote)
             {
