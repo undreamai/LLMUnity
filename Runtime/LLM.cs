@@ -88,6 +88,7 @@ namespace LLMUnity
         /// \cond HIDE
         public int minContextLength = 0;
         public int maxContextLength = 0;
+        public string architecture => llmlib.architecture;
 
         IntPtr LLMObject = IntPtr.Zero;
         List<LLMCaller> clients = new List<LLMCaller>();
@@ -443,7 +444,7 @@ namespace LLMUnity
             if (embeddingsOnly) arguments += " --embedding";
             if (numThreadsToUse > 0) arguments += $" -t {numThreadsToUse}";
             arguments += loraArgument;
-            arguments += $" -ngl {numGPULayers}";
+            if (numGPULayers > 0) arguments += $" -ngl {numGPULayers}";
             if (LLMUnitySetup.FullLlamaLib && flashAttention) arguments += $" --flash-attn";
             if (remote)
             {

@@ -2,9 +2,8 @@ using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
+#if UNITY_IOS || UNITY_VISIONOS
 using System.IO;
-
-#if UNITY_IOS
 using UnityEditor.iOS.Xcode;
 #endif
 
@@ -18,27 +17,7 @@ namespace LLMUnity
         public void OnPreprocessBuild(BuildReport report)
         {
             Application.logMessageReceived += OnBuildError;
-            string platform = null;
-            switch (report.summary.platform)
-            {
-                case BuildTarget.StandaloneWindows:
-                case BuildTarget.StandaloneWindows64:
-                    platform = "windows";
-                    break;
-                case BuildTarget.StandaloneLinux64:
-                    platform = "linux";
-                    break;
-                case BuildTarget.StandaloneOSX:
-                    platform = "macos";
-                    break;
-                case BuildTarget.Android:
-                    platform = "android";
-                    break;
-                case BuildTarget.iOS:
-                    platform = "ios";
-                    break;
-            }
-            LLMBuilder.Build(platform);
+            LLMBuilder.Build(report.summary.platform);
             AssetDatabase.Refresh();
         }
 
@@ -48,13 +27,16 @@ namespace LLMUnity
             if (type == LogType.Error) BuildCompleted();
         }
 
-#if UNITY_IOS
+#if UNITY_IOS || UNITY_VISIONOS
         /// <summary>
         /// Postprocess the iOS Build
         /// </summary>
-        public static void PostprocessIOSBuild(string outputPath)
+        public static void PostprocessIOSBuild(BuildTarget buildTarget, string outputPath)
         {
             string projPath = PBXProject.GetPBXProjectPath(outputPath);
+#if UNITY_VISIONOS
+            projPath = projPath.Replace("Unity-iPhone", "Unity-VisionOS");
+#endif
             PBXProject project = new PBXProject();
             project.ReadFromFile(projPath);
 
@@ -67,8 +49,7 @@ namespace LLMUnity
             project.AddFrameworkToProject(unityMainTargetGuid, "Accelerate.framework", false);
             project.AddFrameworkToProject(targetGuid, "Accelerate.framework", false);
 
-            // Remove libundreamai_ios.a from Embed Frameworks
-            string libraryFile = Path.Combine("Libraries", LLMBuilder.PluginLibraryDir("iOS", true), "libundreamai_ios.a");
+            string libraryFile = LLMUnitySetup.RelativePath(LLMUnitySetup.SearchDirectory(outputPath, $"libundreamai_{buildTarget.ToString().ToLower()}.a"), outputPath);
             string fileGuid = project.FindFileGuidByProjectPath(libraryFile);
             if (string.IsNullOrEmpty(fileGuid)) Debug.LogError($"Library file {libraryFile} not found in project");
             else
@@ -81,10 +62,13 @@ namespace LLMUnity
                         break;
                     }
                 }
-                project.RemoveFileFromBuild(unityMainTargetGuid, fileGuid);
+
+                project.AddFileToBuild(unityMainTargetGuid, fileGuid);
+                project.AddFileToBuild(targetGuid, fileGuid);
             }
 
             project.WriteToFile(projPath);
+            AssetDatabase.ImportAsset(projPath);
         }
 
 #endif
@@ -92,10 +76,13 @@ namespace LLMUnity
         // called after the build
         public void OnPostprocessBuild(BuildReport report)
         {
-#if UNITY_IOS
-            PostprocessIOSBuild(report.summary.outputPath);
+#if UNITY_IOS || UNITY_VISIONOS
+            PostprocessIOSBuild(report.summary.platform, report.summary.outputPath);
 #endif
-            BuildCompleted();
+            EditorApplication.delayCall += () =>
+            {
+                BuildCompleted();
+            };
         }
 
         public void BuildCompleted()

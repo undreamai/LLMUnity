@@ -103,7 +103,7 @@ namespace LLMUnity
         /// <summary> LLM for Unity version </summary>
         public static string Version = "v2.4.2";
         /// <summary> LlamaLib version </summary>
-        public static string LlamaLibVersion = "v1.2.3";
+        public static string LlamaLibVersion = "v1.2.4";
         /// <summary> LlamaLib release url </summary>
         public static string LlamaLibReleaseURL = $"https://github.com/undreamai/LlamaLib/releases/download/{LlamaLibVersion}";
         /// <summary> LlamaLib name </summary>
@@ -231,7 +231,7 @@ namespace LLMUnity
 
         public static string GetDownloadAssetPath(string relPath = "")
         {
-            string assetsDir = (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer) ? Application.persistentDataPath : Application.streamingAssetsPath;
+            string assetsDir = (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer || Application.platform == RuntimePlatform.VisionOS) ? Application.persistentDataPath : Application.streamingAssetsPath;
             return Path.Combine(assetsDir, relPath).Replace('\\', '/');
         }
 
@@ -378,6 +378,19 @@ namespace LLMUnity
                 while (relativePath.StartsWith("/")) relativePath = relativePath.Substring(1);
             }
             return relativePath;
+        }
+
+        public static string SearchDirectory(string directory, string targetFileName)
+        {
+            string[] files = Directory.GetFiles(directory, targetFileName);
+            if (files.Length > 0) return files[0];
+            string[] subdirectories = Directory.GetDirectories(directory);
+            foreach (var subdirectory in subdirectories)
+            {
+                string result = SearchDirectory(subdirectory, targetFileName);
+                if (result != null) return result;
+            }
+            return null;
         }
 
 #if UNITY_EDITOR

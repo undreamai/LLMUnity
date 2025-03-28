@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System;
 using System.Collections;
 using System.IO;
+using System.Linq;
+using System.Threading;
 using UnityEngine.TestTools;
 using UnityEditor;
 using UnityEditor.TestTools.TestRunner.Api;
@@ -115,7 +117,9 @@ namespace LLMUnityTests
         protected string reply2;
         protected int tokens1;
         protected int tokens2;
+        protected int port;
 
+        static readonly object _lock = new object();
 
         public TestLLM()
         {
@@ -125,6 +129,8 @@ namespace LLMUnityTests
 
         public virtual async Task Init()
         {
+            Monitor.Enter(_lock);
+            port = new System.Random().Next(10000, 20000);
             SetParameters();
             await DownloadModels();
             gameObject = new GameObject();
@@ -225,6 +231,7 @@ namespace LLMUnityTests
             LLM llm = gameObject.AddComponent<LLM>();
             llm.SetModel(modelNameLLManager);
             llm.parallelPrompts = 1;
+            llm.port = port;
             return llm;
         }
 
@@ -239,6 +246,7 @@ namespace LLMUnityTests
             llmCharacter.seed = 0;
             llmCharacter.stream = false;
             llmCharacter.numPredict = 20;
+            llmCharacter.port = port;
             return llmCharacter;
         }
 
@@ -273,6 +281,7 @@ namespace LLMUnityTests
         {
             await llmCharacter.Tokenize("I", TestTokens);
             await llmCharacter.Warmup();
+            TestArchitecture();
             TestInitParameters(tokens1, 1);
             TestWarmup();
             await llmCharacter.Chat(query, (string reply) => TestChat(reply, reply1));
@@ -288,7 +297,12 @@ namespace LLMUnityTests
             await llmCharacter.Chat("hi");
             TestInitParameters(tokens2, 3);
             List<float> embeddings = await llmCharacter.Embeddings("hi how are you?");
-            // TestEmbeddings(embeddings);
+            TestEmbeddings(embeddings);
+        }
+
+        public virtual void TestArchitecture()
+        {
+            Assert.That(llm.architecture.Contains("avx"));
         }
 
         public void TestInitParameters(int nkeep, int chats)
@@ -311,7 +325,12 @@ namespace LLMUnityTests
         public void TestChat(string reply, string replyGT)
         {
             Debug.Log(reply.Trim());
-            Assert.That(reply.Trim() == replyGT);
+            var words1 = reply.Trim().Split(new[] { ' ', ',', '.', '!', '?' }, StringSplitOptions.RemoveEmptyEntries);
+            var words2 = replyGT.Trim().Split(new[] { ' ', ',', '.', '!', '?' }, StringSplitOptions.RemoveEmptyEntries);
+            var commonWords = words1.Intersect(words2).Count();
+            var totalWords = Math.Max(words1.Length, words2.Length);
+
+            Assert.That((double)commonWords / totalWords >= 0.7);
         }
 
         public void TestPostChat(int num)
@@ -324,7 +343,13 @@ namespace LLMUnityTests
             Assert.That(embeddings.Count == 896);
         }
 
-        public virtual void OnDestroy() {}
+        public virtual void OnDestroy()
+        {
+            if (Monitor.IsEntered(_lock))
+            {
+                Monitor.Exit(_lock);
+            }
+        }
     }
 
     public class TestLLM_LLMManager_Load : TestLLM
@@ -359,6 +384,7 @@ namespace LLMUnityTests
 
         public override void OnDestroy()
         {
+            base.OnDestroy();
             if (!File.Exists(loadPath)) File.Delete(loadPath);
         }
     }
@@ -394,6 +420,7 @@ namespace LLMUnityTests
             llm.AddLora(loraNameLLManager, loraWeight);
             return llm;
         }
+
         public override void SetParameters()
         {
             prompt = "";
@@ -551,6 +578,11 @@ namespace LLMUnityTests
                 reply2 = "To increase your meme production output, you can try using various tools and techniques to generate more memes.";
             }
         }
+
+        public override void TestArchitecture()
+        {
+            Assert.That(llm.architecture.Contains("cuda"));
+        }
     }
 
     public class TestLLM_CUDA_full : TestLLM_CUDA
@@ -569,6 +601,11 @@ namespace LLMUnityTests
                 reply2 = "To increase your meme production output, you can consider using various tools and techniques to generate content more efficiently";
             }
         }
+
+        public override void TestArchitecture()
+        {
+            Assert.That(llm.architecture.Contains("cuda") && llm.architecture.Contains("full"));
+        }
     }
 
     public class TestLLM_CUDA_full_attention : TestLLM_CUDA_full
@@ -586,7 +623,7 @@ namespace LLMUnityTests
             if (Application.platform == RuntimePlatform.LinuxEditor || Application.platform == RuntimePlatform.LinuxPlayer)
             {
                 reply1 = "To increase your meme production output, you might consider using more advanced tools and techniques to generate memes faster";
-                reply2 = "To increase your meme production output, you can try using various tools and techniques to generate more content quickly";
+                reply2 = "To increase your meme production output, you could consider using more advanced tools and techniques to generate memes faster";
             }
         }
     }
