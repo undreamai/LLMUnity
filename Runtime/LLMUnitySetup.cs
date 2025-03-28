@@ -128,6 +128,7 @@ namespace LLMUnity
              {
                  ("Qwen 2.5 14B", "https://huggingface.co/lmstudio-community/Qwen2.5-14B-Instruct-GGUF/resolve/main/Qwen2.5-14B-Instruct-Q4_K_M.gguf", null),
                  ("DeepSeek R1 Distill Qwen 14B", "https://huggingface.co/lmstudio-community/DeepSeek-R1-Distill-Qwen-14B-GGUF/resolve/main/DeepSeek-R1-Distill-Qwen-14B-Q4_K_M.gguf", null),
+                 ("Phi 4 14B", "https://huggingface.co/bartowski/phi-4-GGUF/resolve/main/phi-4-Q4_K_M.gguf", null),
              }},
             {"Medium models (up to 10B)", new(string, string, string)[]
              {
@@ -142,7 +143,7 @@ namespace LLMUnity
             {"Small models (up to 5B)", new(string, string, string)[]
              {
                  ("Llama 3.2 3B", "https://huggingface.co/hugging-quants/Llama-3.2-3B-Instruct-Q4_K_M-GGUF/resolve/main/llama-3.2-3b-instruct-q4_k_m.gguf", null),
-                 ("Phi 3.5 4B", "https://huggingface.co/bartowski/Phi-3.5-mini-instruct-GGUF/resolve/main/Phi-3.5-mini-instruct-Q4_K_M.gguf", null),
+                 ("Phi 4 4B", "https://huggingface.co/bartowski/microsoft_Phi-4-mini-instruct-GGUF/resolve/main/microsoft_Phi-4-mini-instruct-Q4_K_M.gguf", null),
                  ("Qwen 2.5 3B", "https://huggingface.co/Qwen/Qwen2.5-3B-Instruct-GGUF/resolve/main/qwen2.5-3b-instruct-q4_k_m.gguf", null),
              }},
             {"Tiny models (up to 2B)", new(string, string, string)[]
