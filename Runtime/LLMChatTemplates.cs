@@ -370,12 +370,13 @@ namespace LLMUnity
         public override string GetName() { return "gemma"; }
         public override string GetDescription() { return "gemma"; }
         public override string[] GetNameMatches() { return new string[] {"gemma"}; }
+        public override string[] GetChatTemplateMatches() { return new string[] {"{{ bos_token }}{% if messages[0]['role'] == 'system' %}{{ raise_exception('System role not supported') }}{% endif %}{% for message in messages %}{% if (message['role'] == 'user') != (loop.index0 % 2 == 0) %}{{ raise_exception('Conversation roles must alternate user/assistant/user/assistant/...') }}{% endif %}{% if (message['role'] == 'assistant') %}{% set role = 'model' %}{% else %}{% set role = message['role'] %}{% endif %}{{ '<start_of_turn>' + role + '\n' + message['content'] | trim + '<end_of_turn>\n' }}{% endfor %}{% if add_generation_prompt %}{{'<start_of_turn>model\n'}}{% endif %}"}; }
 
         protected override string RequestSuffix() { return "<end_of_turn>\n"; }
         protected override string PairSuffix() { return "<end_of_turn>\n"; }
 
-        protected override string PlayerPrefix(string playerName) { return "<start_of_turn>" + playerName + "\n"; }
-        protected override string AIPrefix(string AIName) { return "<start_of_turn>" + AIName + "\n"; }
+        protected override string PlayerPrefix(string playerName) { return "<start_of_turn>user\n"; }
+        protected override string AIPrefix(string AIName) { return "<start_of_turn>model\n"; }
 
         protected override bool SystemPromptSupported() { return false; }
 
