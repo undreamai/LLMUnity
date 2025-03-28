@@ -87,7 +87,7 @@ If the user's GPU is not supported, the LLM will fall back to the CPU
 ## 🤗 Model Settings
 - `Stream` select to receive the reply from the model as it is produced (recommended!).<br>
 If it is not selected, the full reply from the model is received in one go
-- <details><summary><code>Num Predict</code> maximum number of tokens to predict (default: 256, -1 = infinity, -2 = until context filled)</summary>This is the maximum amount of tokens the model will maximum predict. When N tokens are reached the model will stop generating. This means words / sentences might not get finished if this is too low. </details>
+- <details><summary><code>Num Predict</code> maximum number of tokens to predict (default: 256, -1 = infinity)</summary>This is the maximum amount of tokens the model will maximum predict. When N tokens are reached the model will stop generating. This means words / sentences might not get finished if this is too low. </details>
 
 - <details><summary>Advanced options</summary>
 
