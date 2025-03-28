@@ -363,6 +363,7 @@ namespace LLMUnity
     /// </summary>
     public class LLMLib
     {
+        public string architecture { get; private set; }
         IntPtr libraryHandle = IntPtr.Zero;
         static bool has_avx = false;
         static bool has_avx2 = false;
@@ -371,7 +372,10 @@ namespace LLMUnity
 
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
 
-        public LLMLib(string arch) {}
+        public LLMLib(string arch)
+        {
+            architecture = arch;
+        }
 
 #if UNITY_ANDROID
         public const string LibraryName = "libundreamai_android";
@@ -497,6 +501,7 @@ namespace LLMUnity
         /// <exception cref="Exception"></exception>
         public LLMLib(string arch)
         {
+            architecture = arch;
             foreach (string dependency in GetArchitectureDependencies(arch))
             {
                 LLMUnitySetup.Log($"Loading {dependency}");
