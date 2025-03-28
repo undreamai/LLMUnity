@@ -47,7 +47,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_tiny.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">LLM for Unity
-   &#160;<span id="projectnumber">v2.4.2</span>
+   &#160;<span id="projectnumber">v2.5.0</span>
    </div>
    <div id="projectbrief">Create characters in Unity with LLMs!</div>
   </td>
@@ -125,7 +125,7 @@ $(function(){initNavTree('index.html',''); initResizable(); });
 <h1><a class="anchor" id="autotoc_md1"></a>
 At a glance</h1>
 <ul>
-<li>💻 Cross-platform! Windows, Linux, macOS, iOS and Android</li>
+<li>💻 Cross-platform! Windows, Linux, macOS, iOS, Android and VisionOS</li>
 <li>🏠 Runs locally without internet access. No data ever leave the game!</li>
 <li>⚡ Blazing fast inference on CPU and GPU (Nvidia, AMD, Apple Metal)</li>
 <li>🤗 Supports all major LLM models</li>
@@ -230,13 +230,15 @@ In the GameObject Inspector click <code>Add Component</code> and select the LLMC
 <summary >
 Build a mobile app</summary>
 <p></p>
+<p>For mobile apps you can use models with up to 1-2 billion parameters ("Tiny models" in the LLM model manager).<br  />
+ Larger models will typically not work due to the limited mobile hardware.</p>
 <p><b>iOS</b> iOS can be built with the default player settings.</p>
 <p><b>Android</b> On Android you need to specify the <code>IL2CPP</code> scripting backend and the <code>ARM64</code> as the target architecture in the player settings.<br  />
  These settings can be accessed from the <code>Edit &gt; Project Settings</code> menu within the <code>Player &gt; Other Settings</code> section.<br  />
  <img src="images/android.png" alt="" width="400" class="inline"/></p>
 <p>Since mobile app sizes are typically small, you can download the LLM models the first time the app launches. This functionality can be enabled with the <code>Download on Build</code> option. In your project you can wait until the model download is complete with: </p><div class="fragment"><div class="line">await <a class="code hl_class" href="classLLMUnity_1_1LLM.html">LLM</a>.<a class="code hl_function" href="classLLMUnity_1_1LLM.html#a1f41b07eb274fd6194f0e97eea4ca331">WaitUntilModelSetup</a>();</div>
 <div class="ttc" id="aclassLLMUnity_1_1LLM_html"><div class="ttname"><a href="classLLMUnity_1_1LLM.html">LLMUnity.LLM</a></div><div class="ttdoc">Class implementing the LLM server.</div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00018">LLM.cs:19</a></div></div>
-<div class="ttc" id="aclassLLMUnity_1_1LLM_html_a1f41b07eb274fd6194f0e97eea4ca331"><div class="ttname"><a href="classLLMUnity_1_1LLM.html#a1f41b07eb274fd6194f0e97eea4ca331">LLMUnity.LLM.WaitUntilModelSetup</a></div><div class="ttdeci">static async Task&lt; bool &gt; WaitUntilModelSetup(Callback&lt; float &gt; downloadProgressCallback=null)</div><div class="ttdoc">Allows to wait until the LLM models are downloaded and ready.</div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00161">LLM.cs:161</a></div></div>
+<div class="ttc" id="aclassLLMUnity_1_1LLM_html_a1f41b07eb274fd6194f0e97eea4ca331"><div class="ttname"><a href="classLLMUnity_1_1LLM.html#a1f41b07eb274fd6194f0e97eea4ca331">LLMUnity.LLM.WaitUntilModelSetup</a></div><div class="ttdeci">static async Task&lt; bool &gt; WaitUntilModelSetup(Callback&lt; float &gt; downloadProgressCallback=null)</div><div class="ttdoc">Allows to wait until the LLM models are downloaded and ready.</div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00162">LLM.cs:162</a></div></div>
 </div><!-- fragment --><p> You can also receive calls during the download with the download progress: </p><div class="fragment"><div class="line">await <a class="code hl_class" href="classLLMUnity_1_1LLM.html">LLM</a>.<a class="code hl_function" href="classLLMUnity_1_1LLM.html#a1f41b07eb274fd6194f0e97eea4ca331">WaitUntilModelSetup</a>(SetProgress);</div>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">void</span> SetProgress(<span class="keywordtype">float</span> progress){</div>
@@ -391,10 +393,10 @@ Add a LLM / LLMCharacter component programmatically</summary>
 <div class="line">    }</div>
 <div class="line">}</div>
 <div class="ttc" id="aclassLLMUnity_1_1LLMCharacter_html_affc13b3416002473688130217f1b42df"><div class="ttname"><a href="classLLMUnity_1_1LLMCharacter.html#affc13b3416002473688130217f1b42df">LLMUnity.LLMCharacter.SetPrompt</a></div><div class="ttdeci">virtual void SetPrompt(string newPrompt, bool clearChat=true)</div><div class="ttdoc">Set the system prompt for the LLMCharacter.</div><div class="ttdef"><b>Definition</b> <a href="LLMCharacter_8cs_source.html#l00239">LLMCharacter.cs:239</a></div></div>
-<div class="ttc" id="aclassLLMUnity_1_1LLM_html_a26e01ce3a14c30da752cf216acfbb3ff"><div class="ttname"><a href="classLLMUnity_1_1LLM.html#a26e01ce3a14c30da752cf216acfbb3ff">LLMUnity.LLM.SetLoraWeight</a></div><div class="ttdeci">void SetLoraWeight(string path, float weight)</div><div class="ttdoc">Allows to change the weight (scale) of a LORA model in the LLM.</div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00306">LLM.cs:306</a></div></div>
-<div class="ttc" id="aclassLLMUnity_1_1LLM_html_a5c4cd1f8b959b1f36c8c50d08ee114c4"><div class="ttname"><a href="classLLMUnity_1_1LLM.html#a5c4cd1f8b959b1f36c8c50d08ee114c4">LLMUnity.LLM.AddLora</a></div><div class="ttdeci">void AddLora(string path, float weight=1)</div><div class="ttdoc">Allows to add a LORA model to use in the LLM. The model provided is copied to the Assets/StreamingAss...</div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00272">LLM.cs:272</a></div></div>
-<div class="ttc" id="aclassLLMUnity_1_1LLM_html_a9cdc4850537724d94bf88e7b78372883"><div class="ttname"><a href="classLLMUnity_1_1LLM.html#a9cdc4850537724d94bf88e7b78372883">LLMUnity.LLM.SetModel</a></div><div class="ttdeci">void SetModel(string path)</div><div class="ttdoc">Allows to set the model used by the LLM. The model provided is copied to the Assets/StreamingAssets f...</div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00231">LLM.cs:231</a></div></div>
-<div class="ttc" id="aclassLLMUnity_1_1LLM_html_ad4c7250286a33527cb211bd980f1c307"><div class="ttname"><a href="classLLMUnity_1_1LLM.html#ad4c7250286a33527cb211bd980f1c307">LLMUnity.LLM.SetTemplate</a></div><div class="ttdeci">void SetTemplate(string templateName, bool setDirty=true)</div><div class="ttdoc">Set the chat template for the LLM.</div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00337">LLM.cs:337</a></div></div>
+<div class="ttc" id="aclassLLMUnity_1_1LLM_html_a26e01ce3a14c30da752cf216acfbb3ff"><div class="ttname"><a href="classLLMUnity_1_1LLM.html#a26e01ce3a14c30da752cf216acfbb3ff">LLMUnity.LLM.SetLoraWeight</a></div><div class="ttdeci">void SetLoraWeight(string path, float weight)</div><div class="ttdoc">Allows to change the weight (scale) of a LORA model in the LLM.</div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00307">LLM.cs:307</a></div></div>
+<div class="ttc" id="aclassLLMUnity_1_1LLM_html_a5c4cd1f8b959b1f36c8c50d08ee114c4"><div class="ttname"><a href="classLLMUnity_1_1LLM.html#a5c4cd1f8b959b1f36c8c50d08ee114c4">LLMUnity.LLM.AddLora</a></div><div class="ttdeci">void AddLora(string path, float weight=1)</div><div class="ttdoc">Allows to add a LORA model to use in the LLM. The model provided is copied to the Assets/StreamingAss...</div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00273">LLM.cs:273</a></div></div>
+<div class="ttc" id="aclassLLMUnity_1_1LLM_html_a9cdc4850537724d94bf88e7b78372883"><div class="ttname"><a href="classLLMUnity_1_1LLM.html#a9cdc4850537724d94bf88e7b78372883">LLMUnity.LLM.SetModel</a></div><div class="ttdeci">void SetModel(string path)</div><div class="ttdoc">Allows to set the model used by the LLM. The model provided is copied to the Assets/StreamingAssets f...</div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00232">LLM.cs:232</a></div></div>
+<div class="ttc" id="aclassLLMUnity_1_1LLM_html_ad4c7250286a33527cb211bd980f1c307"><div class="ttname"><a href="classLLMUnity_1_1LLM.html#ad4c7250286a33527cb211bd980f1c307">LLMUnity.LLM.SetTemplate</a></div><div class="ttdeci">void SetTemplate(string templateName, bool setDirty=true)</div><div class="ttdoc">Set the chat template for the LLM.</div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00338">LLM.cs:338</a></div></div>
 </div><!-- fragment --><p></p>
 </details>
 <details >
@@ -410,7 +412,7 @@ Use a remote server</summary>
 </ul>
 <p>Alternatively you can use a server binary for easier deployment:</p><ul>
 <li>Run the above scene from the Editor and copy the command from the Debug messages (starting with "Server command:")</li>
-<li>Download the <a href="https://github.com/undreamai/LlamaLib/releases/download/v1.2.1/undreamai-v1.2.1-server.zip">server binaries</a> and <a href="https://github.com/undreamai/LlamaLib/releases/download/v1.2.1/undreamai-v1.2.1-llamacpp-full.zip">DLLs</a> and extract them into the same folder</li>
+<li>Download the <a href="https://github.com/undreamai/LlamaLib/releases/download/v1.2.4/undreamai-v1.2.4-server.zip">server binaries</a> and <a href="https://github.com/undreamai/LlamaLib/releases/download/v1.2.4/undreamai-v1.2.4-llamacpp-full.zip">DLLs</a> and extract them into the same folder</li>
 <li>Find the architecture you are interested in from the folder above e.g. for Windows and CUDA use the <code>windows-cuda-cu12.2.0</code>.<br  />
 You can also check the architecture that works for your system from the Debug messages (starting with "Using architecture").</li>
 <li>From command line change directory to the architecture folder selected and start the server by running the command copied from above.</li>

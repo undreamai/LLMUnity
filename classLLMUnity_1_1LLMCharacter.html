@@ -47,7 +47,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_tiny.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">LLM for Unity
-   &#160;<span id="projectnumber">v2.4.2</span>
+   &#160;<span id="projectnumber">v2.5.0</span>
    </div>
    <div id="projectbrief">Create characters in Unity with LLMs!</div>
   </td>
@@ -212,8 +212,8 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a6d63a498a29fc44adaef26182c84122e" id="r_a6d63a498a29fc44adaef26182c84122e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6d63a498a29fc44adaef26182c84122e">debugPrompt</a> = <a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">false</a></td></tr>
 <tr class="memdesc:a6d63a498a29fc44adaef26182c84122e"><td class="mdescLeft">&#160;</td><td class="mdescRight">log the constructed prompt the Unity Editor.  <br /></td></tr>
 <tr class="separator:a6d63a498a29fc44adaef26182c84122e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4284bba2e077a4a168caf479a32c03b7" id="r_a4284bba2e077a4a168caf479a32c03b7"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4284bba2e077a4a168caf479a32c03b7">numPredict</a> = 256</td></tr>
-<tr class="memdesc:a4284bba2e077a4a168caf479a32c03b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">maximum number of tokens that the LLM will predict (-1 = infinity, -2 = until context filled).  <br /></td></tr>
+<tr class="memitem:a4284bba2e077a4a168caf479a32c03b7" id="r_a4284bba2e077a4a168caf479a32c03b7"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4284bba2e077a4a168caf479a32c03b7">numPredict</a> = -1</td></tr>
+<tr class="memdesc:a4284bba2e077a4a168caf479a32c03b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">maximum number of tokens that the LLM will predict (-1 = infinity).  <br /></td></tr>
 <tr class="separator:a4284bba2e077a4a168caf479a32c03b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0a946ac2956e5b3800f68a34a3a93609" id="r_a0a946ac2956e5b3800f68a34a3a93609"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">slot</a> = -1</td></tr>
 <tr class="memdesc:a0a946ac2956e5b3800f68a34a3a93609"><td class="mdescLeft">&#160;</td><td class="mdescRight">slot of the server to use for computation (affects caching)  <br /></td></tr>
@@ -1335,12 +1335,12 @@ Here is the caller graph for this function:</div>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int LLMUnity.LLMCharacter.numPredict = 256</td>
+          <td class="memname">int LLMUnity.LLMCharacter.numPredict = -1</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>maximum number of tokens that the LLM will predict (-1 = infinity, -2 = until context filled). </p>
+<p>maximum number of tokens that the LLM will predict (-1 = infinity). </p>
 
 <p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00032">32</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 

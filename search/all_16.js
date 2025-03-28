@@ -8,9 +8,11 @@ var searchData=
   ['phi2template_5',['Phi2Template',['../classLLMUnity_1_1Phi2Template.html',1,'LLMUnity']]],
   ['phi3_5f5template_6',['Phi3_5Template',['../classLLMUnity_1_1Phi3__5Template.html',1,'LLMUnity']]],
   ['phi3template_7',['Phi3Template',['../classLLMUnity_1_1Phi3Template.html',1,'LLMUnity']]],
-  ['playername_8',['playerName',['../classLLMUnity_1_1LLMCharacter.html#a52ce8f5c32c14e9459c40e3863111baa',1,'LLMUnity::LLMCharacter']]],
-  ['port_9',['port',['../classLLMUnity_1_1LLM.html#aa241f4ea23654739149369cca3fbd712',1,'LLMUnity.LLM.port'],['../classLLMUnity_1_1LLMCaller.html#a366e9990e647017081c0903e7b7840e1',1,'LLMUnity.LLMCaller.port']]],
-  ['presencepenalty_10',['presencePenalty',['../classLLMUnity_1_1LLMCharacter.html#a4ab9da27106e734a240315936899df8d',1,'LLMUnity::LLMCharacter']]],
-  ['projects_20using_20llm_20for_20unity_11',['Games / Projects using LLM for Unity',['../index.html#autotoc_md3',1,'']]],
-  ['prompt_12',['prompt',['../classLLMUnity_1_1LLMCharacter.html#a477f554a7d31a52f26a717b74037ef5a',1,'LLMUnity::LLMCharacter']]]
+  ['phi4minitemplate_8',['Phi4MiniTemplate',['../classLLMUnity_1_1Phi4MiniTemplate.html',1,'LLMUnity']]],
+  ['phi4template_9',['Phi4Template',['../classLLMUnity_1_1Phi4Template.html',1,'LLMUnity']]],
+  ['playername_10',['playerName',['../classLLMUnity_1_1LLMCharacter.html#a52ce8f5c32c14e9459c40e3863111baa',1,'LLMUnity::LLMCharacter']]],
+  ['port_11',['port',['../classLLMUnity_1_1LLM.html#aa241f4ea23654739149369cca3fbd712',1,'LLMUnity.LLM.port'],['../classLLMUnity_1_1LLMCaller.html#a366e9990e647017081c0903e7b7840e1',1,'LLMUnity.LLMCaller.port']]],
+  ['presencepenalty_12',['presencePenalty',['../classLLMUnity_1_1LLMCharacter.html#a4ab9da27106e734a240315936899df8d',1,'LLMUnity::LLMCharacter']]],
+  ['projects_20using_20llm_20for_20unity_13',['Games / Projects using LLM for Unity',['../index.html#autotoc_md3',1,'']]],
+  ['prompt_14',['prompt',['../classLLMUnity_1_1LLMCharacter.html#a477f554a7d31a52f26a717b74037ef5a',1,'LLMUnity::LLMCharacter']]]
 ];

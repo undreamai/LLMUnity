@@ -1,5 +1,5 @@
 <map id="LLMUnity.Phi3_5Template" name="LLMUnity.Phi3_5Template">
-<area shape="rect" id="Node000001" title="Class implementing the Phi&#45;3.5 template." alt="" coords="5,79,193,104"/>
+<area shape="rect" id="Node000001" title="Class implementing the Phi&#45;4 mini template." alt="" coords="5,79,193,104"/>
 <area shape="rect" id="Node000002" href="$classLLMUnity_1_1ChatTemplate.html" title="Class implementing the skeleton of a chat template." alt="" coords="43,5,155,31"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="102,44,102,79,97,79,97,44"/>
 </map>

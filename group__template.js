@@ -46,6 +46,7 @@ var group__template =
       [ "GetStop", "classLLMUnity_1_1MistralChatTemplate.html#a798b015a67969d291ab0a3fa0cea1b77", null ]
     ] ],
     [ "LLMUnity.GemmaTemplate", "classLLMUnity_1_1GemmaTemplate.html", [
+      [ "GetChatTemplateMatches", "classLLMUnity_1_1GemmaTemplate.html#ad816fd888e3f3cfe97566cd00e8ade35", null ],
       [ "GetDescription", "classLLMUnity_1_1GemmaTemplate.html#a9fff6e483dc025fdbab654119c5c49e0", null ],
       [ "GetName", "classLLMUnity_1_1GemmaTemplate.html#ab48ecf4939938f28163ccd183de7c34a", null ],
       [ "GetNameMatches", "classLLMUnity_1_1GemmaTemplate.html#a168e4535570168d6268e45287b11f2ae", null ],
@@ -83,6 +84,20 @@ var group__template =
       [ "GetName", "classLLMUnity_1_1Phi3__5Template.html#a73170cb8134c1b91de567ed9fecace5e", null ],
       [ "GetNameMatches", "classLLMUnity_1_1Phi3__5Template.html#a9a591ad5d021f899a6460a97c5e1b67f", null ],
       [ "GetStop", "classLLMUnity_1_1Phi3__5Template.html#a6c32ec6b0cda2ef1f6a1903536c580b8", null ]
+    ] ],
+    [ "LLMUnity.Phi4MiniTemplate", "classLLMUnity_1_1Phi4MiniTemplate.html", [
+      [ "GetChatTemplateMatches", "classLLMUnity_1_1Phi4MiniTemplate.html#a901a1dafb06a3752b535872a4b07fe14", null ],
+      [ "GetDescription", "classLLMUnity_1_1Phi4MiniTemplate.html#a98f06d3b1fd02ca24f8a0ee3a197e821", null ],
+      [ "GetName", "classLLMUnity_1_1Phi4MiniTemplate.html#a59476deeb265e10233198cc2b7645112", null ],
+      [ "GetNameMatches", "classLLMUnity_1_1Phi4MiniTemplate.html#a838521f2da42e2b0a5c18d96fadbb150", null ],
+      [ "GetStop", "classLLMUnity_1_1Phi4MiniTemplate.html#aa369e191ab5610f62c993f29f24fa6a4", null ]
+    ] ],
+    [ "LLMUnity.Phi4Template", "classLLMUnity_1_1Phi4Template.html", [
+      [ "GetChatTemplateMatches", "classLLMUnity_1_1Phi4Template.html#a582fefccc10bf9a3ef916f74f93d1807", null ],
+      [ "GetDescription", "classLLMUnity_1_1Phi4Template.html#ad6c5c0641e38a0e8d7425afc71cd1ef6", null ],
+      [ "GetName", "classLLMUnity_1_1Phi4Template.html#a89e4c0f5ba12c11a02474886c3043bec", null ],
+      [ "GetNameMatches", "classLLMUnity_1_1Phi4Template.html#a365fb0be8265ca1a170930d17e1efe2c", null ],
+      [ "GetStop", "classLLMUnity_1_1Phi4Template.html#ab16d394492b6f2a214400b1109b78a9e", null ]
     ] ],
     [ "LLMUnity.ZephyrTemplate", "classLLMUnity_1_1ZephyrTemplate.html", [
       [ "GetChatTemplateMatches", "classLLMUnity_1_1ZephyrTemplate.html#a11040e0f56935627127f0df8e44d6826", null ],

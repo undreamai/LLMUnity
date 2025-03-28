@@ -1,29 +1,33 @@
 <map id="LLMUnity.ChatTemplate" name="LLMUnity.ChatTemplate">
-<area shape="rect" id="Node000001" title="Class implementing the skeleton of a chat template." alt="" coords="5,281,180,307"/>
+<area shape="rect" id="Node000001" title="Class implementing the skeleton of a chat template." alt="" coords="5,339,180,364"/>
 <area shape="rect" id="Node000002" href="$classLLMUnity_1_1AlpacaTemplate.html" title="Class implementing the Alpaca template." alt="" coords="247,5,437,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="98,267,112,218,138,156,175,93,199,64,226,40,246,29,249,33,230,44,203,68,180,96,143,158,117,220,103,268"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="95,324,106,265,129,188,147,147,168,108,195,71,226,40,246,28,248,33,230,44,199,75,173,111,151,150,134,190,111,266,100,325"/>
 <area shape="rect" id="Node000003" href="$classLLMUnity_1_1ChatMLTemplate.html" title="Class implementing the ChatML template." alt="" coords="245,55,439,80"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="101,267,118,228,145,179,181,130,203,108,227,89,248,78,251,83,229,94,206,112,185,134,150,182,123,230,106,270"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="97,324,111,274,136,210,174,144,198,115,226,89,246,78,249,82,230,93,202,118,179,147,141,212,116,276,102,326"/>
 <area shape="rect" id="Node000004" href="$classLLMUnity_1_1DeepSeekV2Template.html" title="Class implementing the DeepSeek V2 template." alt="" coords="228,104,456,129"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="106,268,154,202,187,167,227,138,252,127,254,132,229,143,191,171,158,206,110,271"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="100,325,118,283,144,232,180,181,202,158,227,138,248,127,251,132,229,143,206,162,184,185,149,235,122,285,105,327"/>
 <area shape="rect" id="Node000007" href="$classLLMUnity_1_1GemmaTemplate.html" title="Class implementing the Gemma template." alt="" coords="243,153,441,179"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="114,270,163,228,194,206,227,188,258,176,260,181,229,192,197,210,166,232,118,274"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="105,325,125,293,152,256,186,219,227,188,251,176,253,181,229,192,190,223,156,259,129,296,110,328"/>
 <area shape="rect" id="Node000008" href="$classLLMUnity_1_1LLama2Template.html" title="Class implementing the LLama2 template." alt="" coords="244,203,440,228"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="133,273,227,237,271,225,272,231,229,242,135,278"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="113,327,161,281,193,257,227,237,257,226,259,231,229,242,196,261,165,285,116,331"/>
 <area shape="rect" id="Node000010" href="$classLLMUnity_1_1LLama3ChatTemplate.html" title="Class implementing the LLama3 template for chat." alt="" coords="229,252,455,277"/>
-<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="194,279,234,275,234,280,194,285"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="129,330,175,308,227,287,273,275,274,280,229,293,177,313,131,335"/>
 <area shape="rect" id="Node000011" href="$classLLMUnity_1_1MistralInstructTemplate.html" title="Class implementing the Mistral Instruct template." alt="" coords="253,302,431,342"/>
-<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="194,303,253,309,252,315,193,308"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="193,337,252,330,253,335,194,342"/>
 <area shape="rect" id="Node000013" href="$classLLMUnity_1_1Phi2Template.html" title="Class implementing the Phi&#45;2 template." alt="" coords="255,367,429,392"/>
-<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="132,310,178,332,229,351,275,364,273,369,227,357,176,337,130,315"/>
+<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="194,360,256,367,255,372,193,365"/>
 <area shape="rect" id="Node000014" href="$classLLMUnity_1_1Phi3Template.html" title="Class implementing the Phi&#45;3 template." alt="" coords="255,416,429,441"/>
-<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="117,315,165,360,196,383,229,402,259,413,257,418,227,407,193,387,162,364,113,319"/>
-<area shape="rect" id="Node000015" href="$classLLMUnity_1_1Phi3__5Template.html" title="Class implementing the Phi&#45;3.5 template." alt="" coords="248,465,436,491"/>
-<area shape="poly" id="edge14_Node000001_Node000015" title=" " alt="" coords="110,317,129,349,156,385,190,422,229,452,253,463,251,468,227,456,187,426,152,389,125,352,105,320"/>
-<area shape="rect" id="Node000016" href="$classLLMUnity_1_1VicunaTemplate.html" title="Class implementing the Vicuna template." alt="" coords="247,515,437,540"/>
-<area shape="poly" id="edge15_Node000001_Node000016" title=" " alt="" coords="105,319,122,360,149,409,185,460,206,482,229,501,251,512,248,517,227,506,202,486,180,463,144,412,118,362,100,321"/>
-<area shape="rect" id="Node000017" href="$classLLMUnity_1_1ZephyrTemplate.html" title="Class implementing the Zephyr template." alt="" coords="247,564,437,589"/>
-<area shape="poly" id="edge16_Node000001_Node000017" title=" " alt="" coords="102,319,117,369,141,432,179,497,202,526,230,551,249,562,246,566,226,555,198,529,174,500,137,435,111,371,97,321"/>
+<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="136,367,229,402,272,413,271,418,227,407,134,372"/>
+<area shape="rect" id="Node000015" href="$classLLMUnity_1_1Phi3__5Template.html" title="Class implementing the Phi&#45;4 mini template." alt="" coords="248,465,436,491"/>
+<area shape="poly" id="edge14_Node000001_Node000015" title=" " alt="" coords="118,372,167,413,197,434,229,452,260,463,258,468,227,456,194,439,164,417,115,376"/>
+<area shape="rect" id="Node000016" href="$classLLMUnity_1_1Phi4MiniTemplate.html" title="Class implementing the Phi&#45;4 mini template." alt="" coords="241,515,443,540"/>
+<area shape="poly" id="edge15_Node000001_Node000016" title=" " alt="" coords="111,375,158,439,191,473,229,501,254,512,252,517,227,506,188,477,154,442,106,378"/>
+<area shape="rect" id="Node000017" href="$classLLMUnity_1_1Phi4Template.html" title="Class implementing the Phi&#45;4 template." alt="" coords="255,564,429,589"/>
+<area shape="poly" id="edge16_Node000001_Node000017" title=" " alt="" coords="106,376,124,416,150,463,185,511,229,550,256,564,254,568,227,555,182,514,146,466,119,418,101,378"/>
+<area shape="rect" id="Node000018" href="$classLLMUnity_1_1VicunaTemplate.html" title="Class implementing the Vicuna template." alt="" coords="247,613,437,639"/>
+<area shape="poly" id="edge17_Node000001_Node000018" title=" " alt="" coords="103,377,118,425,143,486,180,548,203,576,230,600,249,611,246,615,226,604,199,580,175,551,138,489,113,427,98,378"/>
+<area shape="rect" id="Node000019" href="$classLLMUnity_1_1ZephyrTemplate.html" title="Class implementing the Zephyr template." alt="" coords="247,663,437,688"/>
+<area shape="poly" id="edge18_Node000001_Node000019" title=" " alt="" coords="100,377,112,434,136,508,153,547,174,585,199,620,230,649,248,660,245,665,226,653,195,623,169,588,148,550,131,510,107,435,95,378"/>
 <area shape="rect" id="Node000005" href="$classLLMUnity_1_1DeepSeekV3Template.html" title="Class implementing the DeepSeek V3 template." alt="" coords="504,104,732,129"/>
 <area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="469,114,504,114,504,119,469,119"/>
 <area shape="rect" id="Node000006" href="$classLLMUnity_1_1DeepSeekR1Template.html" title="Class implementing the DeepSeek R1 template." alt="" coords="780,104,1008,129"/>
