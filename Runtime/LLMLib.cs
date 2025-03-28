@@ -537,7 +537,9 @@ namespace LLMUnity
                     dependencies.Add(Path.Combine(LLMUnitySetup.libraryPath, $"windows-{arch}/cublasLt64_12.dll"));
                     dependencies.Add(Path.Combine(LLMUnitySetup.libraryPath, $"windows-{arch}/cublas64_12.dll"));
                 }
-            } else if (arch == "vulkan") {
+            }
+            else if (arch == "vulkan")
+            {
                 if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsServer)
                 {
                     dependencies.Add(Path.Combine(LLMUnitySetup.libraryPath, $"windows-{arch}/vulkan-1.dll"));
