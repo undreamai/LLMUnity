@@ -213,16 +213,16 @@ namespace LLMUnity
             }
         }
 
-
         static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths, bool didDomainReload)
         {
             string pathToPlugin = Path.Combine("Assets", PluginLibraryDir(BuildTarget.VisionOS.ToString(), true), "libundreamai_visionos.a");
             for (int i = 0; i < movedAssets.Length; i++)
             {
-                if(movedAssets[i] == pathToPlugin)
+                if (movedAssets[i] == pathToPlugin)
                 {
                     var importer = AssetImporter.GetAtPath(pathToPlugin) as PluginImporter;
-                    if (importer != null && importer.isNativePlugin) {
+                    if (importer != null && importer.isNativePlugin)
+                    {
                         importer.SetCompatibleWithPlatform(BuildTarget.VisionOS, true);
                         importer.SetPlatformData(BuildTarget.VisionOS, "CPU", "ARM64");
                         AssetDatabase.ImportAsset(pathToPlugin);
