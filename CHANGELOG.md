@@ -1,7 +1,8 @@
-## v2.4.3
+## v2.5.0
 #### 🚀 Features
 
 - VisionOS support (PR: #299)
+- Upgrade LlamaLib to v1.2.4 (llama.cpp b4969) (PR: #325)
 
 
 ## v2.4.2
