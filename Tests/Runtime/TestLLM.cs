@@ -274,6 +274,7 @@ namespace LLMUnityTests
         {
             await llmCharacter.Tokenize("I", TestTokens);
             await llmCharacter.Warmup();
+            TestArchitecture();
             TestInitParameters(tokens1, 1);
             TestWarmup();
             await llmCharacter.Chat(query, (string reply) => TestChat(reply, reply1));
@@ -289,7 +290,12 @@ namespace LLMUnityTests
             await llmCharacter.Chat("hi");
             TestInitParameters(tokens2, 3);
             List<float> embeddings = await llmCharacter.Embeddings("hi how are you?");
-            // TestEmbeddings(embeddings);
+            TestEmbeddings(embeddings);
+        }
+
+        public virtual void TestArchitecture()
+        {
+            Assert.That(llm.architecture.Contains("avx"));
         }
 
         public void TestInitParameters(int nkeep, int chats)
@@ -558,6 +564,11 @@ namespace LLMUnityTests
                 reply2 = "To increase your meme production output, you can try using various tools and techniques to generate more memes.";
             }
         }
+
+        public override void TestArchitecture()
+        {
+            Assert.That(llm.architecture.Contains("cuda"));
+        }
     }
 
     public class TestLLM_CUDA_full : TestLLM_CUDA
@@ -575,6 +586,11 @@ namespace LLMUnityTests
                 reply1 = "To increase your meme production output, you might consider using more advanced tools and techniques to generate memes faster";
                 reply2 = "To increase your meme production output, you can consider using various tools and techniques to generate content more efficiently";
             }
+        }
+
+        public override void TestArchitecture()
+        {
+            Assert.That(llm.architecture.Contains("cuda") && llm.architecture.Contains("full"));
         }
     }
 
