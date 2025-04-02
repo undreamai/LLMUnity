@@ -281,7 +281,7 @@ namespace LLMUnity
 
             while (tryNr != 0)
             {
-                using (request = UnityWebRequest.Put($"{host}:{port}/{endpoint}", jsonToSend))
+                using (request = UnityWebRequest.Put($"{host}{(port != 0 ? $":{port}" : "")}/{endpoint}", jsonToSend))
                 {
                     WIPRequests.Add(request);
 
