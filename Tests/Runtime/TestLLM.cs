@@ -623,7 +623,7 @@ namespace LLMUnityTests
             if (Application.platform == RuntimePlatform.LinuxEditor || Application.platform == RuntimePlatform.LinuxPlayer)
             {
                 reply1 = "To increase your meme production output, you might consider using more advanced tools and techniques to generate memes faster";
-                reply2 = "To increase your meme production output, you could consider using more advanced tools and techniques to generate memes faster";
+                reply2 = "To increase your meme production output, you could consider using tools like Memegen or TikTok's meme";
             }
         }
     }
