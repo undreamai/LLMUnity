@@ -176,13 +176,18 @@ The [MobileDemo](Samples~/MobileDemo) is an example application for Android / iO
 <details>
 <summary>Restrict the output of the LLM / Function calling</summary>
 
-To restrict the output of the LLM you can use a GBNF grammar, read more [here](https://github.com/ggerganov/llama.cpp/tree/master/grammars).<br>
+To restrict the output of the LLM you can use a grammar, read more [here](https://github.com/ggerganov/llama.cpp/tree/master/grammars).<br>
 The grammar can be saved in a .gbnf file and loaded at the LLMCharacter with the `Load Grammar` button (Advanced options).<br>
 For instance to receive replies in json format you can use the [json.gbnf](https://github.com/ggerganov/llama.cpp/blob/b4218/grammars/json.gbnf) grammar.<br>
+Graamars in JSON schema format are also supported and can be loaded with the `Load JSON Grammar` button (Advanced options).<br>  
 
 Alternatively you can set the grammar directly with code:
 ``` c#
-llmCharacter.grammarString = "your grammar here";
+// GBNF grammar
+llmCharacter.grammarString = "your GBNF grammar here";
+
+// or JSON schema grammar
+llmCharacter.grammarJSONString = "your JSON schema grammar here";
 ```
 
 For function calling you can define similarly a grammar that allows only the function names as output, and then call the respective function.<br>

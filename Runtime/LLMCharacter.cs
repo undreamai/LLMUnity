@@ -36,6 +36,9 @@ namespace LLMUnity
         /// <summary> grammar file used for the LLMCharacter (.gbnf format) </summary>
         [Tooltip("grammar file used for the LLMCharacter (.gbnf format)")]
         [ModelAdvanced] public string grammar = null;
+        /// <summary> grammar file used for the LLMCharacter (.json format) </summary>
+        [Tooltip("grammar file used for the LLMCharacter (.json format)")]
+        [ModelAdvanced] public string grammarJSON = null;
         /// <summary> cache the processed prompt to avoid reprocessing the entire prompt every time (default: true, recommended!) </summary>
         [Tooltip("cache the processed prompt to avoid reprocessing the entire prompt every time (default: true, recommended!)")]
         [ModelAdvanced] public bool cachePrompt = true;
@@ -124,8 +127,11 @@ namespace LLMUnity
         [Tooltip("the chat history as list of chat messages")]
         public List<ChatMessage> chat = new List<ChatMessage>();
         /// <summary> the grammar to use </summary>
-        [Tooltip("the grammar to use")]
+        [Tooltip("the grammar to use (GBNF)")]
         public string grammarString;
+        /// <summary> the grammar to use </summary>
+        [Tooltip("the grammar to use (JSON schema)")]
+        public string grammarJSONString;
 
         /// \cond HIDE
         protected SemaphoreSlim chatLock = new SemaphoreSlim(1, 1);
@@ -269,9 +275,17 @@ namespace LLMUnity
 
         protected virtual void InitGrammar()
         {
-            if (grammar != null && grammar != "")
+            grammarString = "";
+            grammarJSONString = "";
+            if (!String.IsNullOrEmpty(grammar))
             {
                 grammarString = File.ReadAllText(LLMUnitySetup.GetAssetPath(grammar));
+                if (!String.IsNullOrEmpty(grammarJSON))
+                    LLMUnitySetup.LogWarning("Both GBNF and JSON grammars are set, only the GBNF will be used");
+            }
+            else if (!String.IsNullOrEmpty(grammarJSON))
+            {
+                grammarJSONString = File.ReadAllText(LLMUnitySetup.GetAssetPath(grammarJSON));
             }
         }
 
@@ -308,14 +322,33 @@ namespace LLMUnity
         /// Sets the grammar file of the LLMCharacter
         /// </summary>
         /// <param name="path">path to the grammar file</param>
-        public virtual async void SetGrammar(string path)
+        public virtual async Task SetGrammarFile(string path, bool gnbf)
         {
 #if UNITY_EDITOR
             if (!EditorApplication.isPlaying) path = LLMUnitySetup.AddAsset(path);
 #endif
             await LLMUnitySetup.AndroidExtractAsset(path, true);
-            grammar = path;
+            if (gnbf) grammar = path;
+            else grammarJSON = path;
             InitGrammar();
+        }
+
+        /// <summary>
+        /// Sets the grammar file of the LLMCharacter (GBNF)
+        /// </summary>
+        /// <param name="path">path to the grammar file</param>
+        public virtual async Task SetGrammar(string path)
+        {
+            await SetGrammarFile(path, true);
+        }
+
+        /// <summary>
+        /// Sets the grammar file of the LLMCharacter (JSON schema)
+        /// </summary>
+        /// <param name="path">path to the grammar file</param>
+        public virtual async Task SetJSONGrammar(string path)
+        {
+            await SetGrammarFile(path, false);
         }
 
         protected virtual List<string> GetStopwords()
@@ -352,6 +385,7 @@ namespace LLMUnity
             chatRequest.mirostat_tau = mirostatTau;
             chatRequest.mirostat_eta = mirostatEta;
             chatRequest.grammar = grammarString;
+            chatRequest.json_schema = grammarJSONString;
             chatRequest.seed = seed;
             chatRequest.ignore_eos = ignoreEos;
             chatRequest.logit_bias = logitBias;
@@ -418,8 +452,30 @@ namespace LLMUnity
             return result.template;
         }
 
-        protected virtual async Task<string> CompletionRequest(string json, Callback<string> callback = null)
+        protected virtual string ChatRequestToJson(ChatRequest request)
         {
+            string json = JsonUtility.ToJson(request);
+            int grammarIndex = json.LastIndexOf('}');
+            if (!String.IsNullOrEmpty(request.grammar))
+            {
+                GrammarWrapper grammarWrapper = new GrammarWrapper { grammar = request.grammar };
+                string grammarToJSON = JsonUtility.ToJson(grammarWrapper);
+                int start = grammarToJSON.IndexOf(":\"") + 2;
+                int end = grammarToJSON.LastIndexOf("\"");
+                string grammarSerialised =  grammarToJSON.Substring(start, end - start);
+                json = json.Insert(grammarIndex, $",\"grammar\": \"{grammarSerialised}\"");
+            }
+            else if (!String.IsNullOrEmpty(request.json_schema))
+            {
+                json = json.Insert(grammarIndex, $",\"json_schema\":{request.json_schema}");
+            }
+            Debug.Log(json);
+            return json;
+        }
+
+        protected virtual async Task<string> CompletionRequest(ChatRequest request, Callback<string> callback = null)
+        {
+            string json = ChatRequestToJson(request);
             string result = "";
             if (stream)
             {
@@ -470,8 +526,8 @@ namespace LLMUnity
             if (!CheckTemplate()) return null;
             if (!await InitNKeep()) return null;
 
-            string json = JsonUtility.ToJson(await PromptWithQuery(query));
-            string result = await CompletionRequest(json, callback);
+            ChatRequest request = await PromptWithQuery(query);
+            string result = await CompletionRequest(request, callback);
 
             if (addToHistory && result != null)
             {
@@ -508,8 +564,8 @@ namespace LLMUnity
             // call the completionCallback function when the answer is fully received
             await LoadTemplate();
 
-            string json = JsonUtility.ToJson(GenerateRequest(prompt));
-            string result = await CompletionRequest(json, callback);
+            ChatRequest request = GenerateRequest(prompt);
+            string result = await CompletionRequest(request, callback);
             completionCallback?.Invoke();
             return result;
         }
@@ -553,8 +609,7 @@ namespace LLMUnity
             }
 
             request.n_predict = 0;
-            string json = JsonUtility.ToJson(request);
-            await CompletionRequest(json);
+            await CompletionRequest(request);
             completionCallback?.Invoke();
         }
 
