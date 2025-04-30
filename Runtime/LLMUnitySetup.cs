@@ -128,13 +128,13 @@ namespace LLMUnity
              {
                  ("Gemma 3 12B", "https://huggingface.co/lmstudio-community/gemma-3-12b-it-GGUF/resolve/main/gemma-3-12b-it-Q4_K_M.gguf", "https://ai.google.dev/gemma/terms"),
                  ("Phi 4 14B", "https://huggingface.co/bartowski/phi-4-GGUF/resolve/main/phi-4-Q4_K_M.gguf", null),
-                 ("Qwen 2.5 14B", "https://huggingface.co/lmstudio-community/Qwen2.5-14B-Instruct-GGUF/resolve/main/Qwen2.5-14B-Instruct-Q4_K_M.gguf", null),
+                 ("Qwen 3 14B", "https://huggingface.co/unsloth/Qwen3-14B-GGUF/resolve/main/Qwen3-14B-Q4_K_M.gguf", null),
                  ("DeepSeek R1 Distill Qwen 14B", "https://huggingface.co/lmstudio-community/DeepSeek-R1-Distill-Qwen-14B-GGUF/resolve/main/DeepSeek-R1-Distill-Qwen-14B-Q4_K_M.gguf", null),
              }},
             {"Medium models (up to 10B)", new(string, string, string)[]
              {
                  ("Llama 3.1 8B", "https://huggingface.co/bartowski/Meta-Llama-3.1-8B-Instruct-GGUF/resolve/main/Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf", "https://huggingface.co/meta-llama/Meta-Llama-3.1-8B/blob/main/LICENSE"),
-                 ("Qwen 2.5 7B", "https://huggingface.co/lmstudio-community/Qwen2.5-7B-Instruct-GGUF/resolve/main/Qwen2.5-7B-Instruct-Q4_K_M.gguf", null),
+                 ("Qwen 3 8B", "https://huggingface.co/unsloth/Qwen3-8B-GGUF/resolve/main/Qwen3-8B-Q4_K_M.gguf", null),
                  ("DeepSeek R1 Distill Llama 8B", "https://huggingface.co/lmstudio-community/DeepSeek-R1-Distill-Llama-8B-GGUF/resolve/main/DeepSeek-R1-Distill-Llama-8B-Q4_K_M.gguf", null),
                  ("DeepSeek R1 Distill Qwen 7B", "https://huggingface.co/lmstudio-community/DeepSeek-R1-Distill-Qwen-7B-GGUF/resolve/main/DeepSeek-R1-Distill-Qwen-7B-Q4_K_M.gguf", null),
                  ("Gemma 2 9B it", "https://huggingface.co/bartowski/gemma-2-9b-it-GGUF/resolve/main/gemma-2-9b-it-Q4_K_M.gguf", "https://ai.google.dev/gemma/terms"),
@@ -146,14 +146,14 @@ namespace LLMUnity
                  ("Llama 3.2 3B", "https://huggingface.co/hugging-quants/Llama-3.2-3B-Instruct-Q4_K_M-GGUF/resolve/main/llama-3.2-3b-instruct-q4_k_m.gguf", "https://huggingface.co/meta-llama/Llama-3.2-1B/blob/main/LICENSE.txt"),
                  ("Gemma 3 4B", "https://huggingface.co/lmstudio-community/gemma-3-4b-it-GGUF/resolve/main/gemma-3-4b-it-Q4_K_M.gguf", "https://ai.google.dev/gemma/terms"),
                  ("Phi 4 4B", "https://huggingface.co/bartowski/microsoft_Phi-4-mini-instruct-GGUF/resolve/main/microsoft_Phi-4-mini-instruct-Q4_K_M.gguf", null),
-                 ("Qwen 2.5 3B", "https://huggingface.co/Qwen/Qwen2.5-3B-Instruct-GGUF/resolve/main/qwen2.5-3b-instruct-q4_k_m.gguf", null),
+                 ("Qwen 3 4B", "https://huggingface.co/unsloth/Qwen3-4B-GGUF/resolve/main/Qwen3-4B-Q4_K_M.gguf", null),
              }},
             {"Tiny models (up to 2B)", new(string, string, string)[]
              {
                  ("Llama 3.2 1B", "https://huggingface.co/hugging-quants/Llama-3.2-1B-Instruct-Q4_K_M-GGUF/resolve/main/llama-3.2-1b-instruct-q4_k_m.gguf", "https://huggingface.co/meta-llama/Llama-3.2-1B/blob/main/LICENSE.txt"),
                  ("Gemma 3 1B", "https://huggingface.co/lmstudio-community/gemma-3-1b-it-GGUF/resolve/main/gemma-3-1b-it-Q4_K_M.gguf", "https://ai.google.dev/gemma/terms"),
-                 ("Qwen 2.5 1.5B", "https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct-GGUF/resolve/main/qwen2.5-1.5b-instruct-q4_k_m.gguf", null),
-                 ("Qwen 2 0.5B", "https://huggingface.co/Qwen/Qwen2-0.5B-Instruct-GGUF/resolve/main/qwen2-0_5b-instruct-q4_k_m.gguf", null),
+                 ("Qwen 3 1.7B", "https://huggingface.co/unsloth/Qwen3-1.7B-GGUF/resolve/main/Qwen3-1.7B-Q4_K_M.gguf", null),
+                 ("Qwen 3 0.6B", "https://huggingface.co/unsloth/Qwen3-0.6B-GGUF/resolve/main/Qwen3-0.6B-Q4_K_M.gguf", null),
                  ("DeepSeek R1 Distill Qwen 1.5B", "https://huggingface.co/lmstudio-community/DeepSeek-R1-Distill-Qwen-1.5B-GGUF/resolve/main/DeepSeek-R1-Distill-Qwen-1.5B-Q4_K_M.gguf", null),
              }},
             {"RAG models", new(string, string, string)[]
