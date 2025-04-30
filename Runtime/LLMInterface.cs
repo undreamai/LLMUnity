@@ -30,13 +30,21 @@ namespace LLMUnity
         public int mirostat;
         public float mirostat_tau;
         public float mirostat_eta;
-        public string grammar;
+        // EXCLUDE grammars from JsonUtility serialization, serialise them manually
+        [NonSerialized] public string grammar;
+        [NonSerialized] public string json_schema;
         public int seed;
         public bool ignore_eos;
         public Dictionary<int, string> logit_bias;
         public int n_probs;
         public bool cache_prompt;
         public List<ChatMessage> messages;
+    }
+
+    [Serializable]
+    public struct GrammarWrapper
+    {
+        public string grammar;
     }
 
     [Serializable]
