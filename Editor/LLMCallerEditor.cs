@@ -35,6 +35,17 @@ namespace LLMUnity
                         }
                     };
                 }
+                if (GUILayout.Button("Load JSON grammar", GUILayout.Width(buttonWidth)))
+                {
+                    EditorApplication.delayCall += () =>
+                    {
+                        string path = EditorUtility.OpenFilePanelWithFilters("Select a json schema grammar file", "", new string[] { "Grammar Files", "json" });
+                        if (!string.IsNullOrEmpty(path))
+                        {
+                            ((LLMCharacter)target).SetJSONGrammar(path);
+                        }
+                    };
+                }
                 EditorGUILayout.EndHorizontal();
 
                 ShowPropertiesOfClass("", llmScriptSO, new List<Type> { typeof(ModelAdvancedAttribute) }, false);
