@@ -127,10 +127,10 @@ namespace LLMUnity
         [Tooltip("the chat history as list of chat messages")]
         public List<ChatMessage> chat = new List<ChatMessage>();
         /// <summary> the grammar to use </summary>
-        [Tooltip("the grammar to use (GBNF)")]
+        [Tooltip("the grammar to use")]
         public string grammarString;
         /// <summary> the grammar to use </summary>
-        [Tooltip("the grammar to use (JSON schema)")]
+        [Tooltip("the grammar to use")]
         public string grammarJSONString;
 
         /// \cond HIDE
