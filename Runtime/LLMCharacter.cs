@@ -600,7 +600,7 @@ namespace LLMUnity
             ChatRequest request;
             if (String.IsNullOrEmpty(query))
             {
-                string prompt = template.ComputePrompt(chat, playerName, AIName);
+                string prompt = template.ComputePrompt(chat, playerName, AIName, false);
                 request = GenerateRequest(prompt);
             }
             else
