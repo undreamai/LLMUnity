@@ -4,7 +4,7 @@
 - Allow JSON schema grammars (PR: #333)
 - Add support for Qwen3 models (PR: #335)
 - Add support for BitNet models (PR: #334)
-- Upgrade LlamaLib to v1.2.5 (llama.cpp b5216) (PR: #335)
+- Upgrade LlamaLib to v1.2.5 (llama.cpp b5261) (PR: #335)
 
 #### 🐛 Fixes
 
