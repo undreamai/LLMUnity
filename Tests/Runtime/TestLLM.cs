@@ -413,7 +413,14 @@ namespace LLMUnityTests
         public override void SetParameters()
         {
             prompt = "";
-            reply1 = "I am sorry, but I cannot assist with this request. Please try again or ask a different question.";
+            if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer)
+            {
+                reply1 = "I am sorry, but I cannot assist with this request. Please try again or ask a different question.";
+            }
+            else
+            {
+                reply1 = "I am sorry, but I cannot respond to your message as it is empty.Could you please provide a meaningful query or content ?";
+            }
             reply2 = "False response.";
             tokens1 = 5;
             tokens2 = 9;
@@ -557,6 +564,10 @@ namespace LLMUnityTests
         {
             base.SetParameters();
             reply1 = "Sure! Here's a fun fact: Ants work together to build complex structures like nests, even though they don't have a brain.";
+            if (Application.platform == RuntimePlatform.LinuxEditor || Application.platform == RuntimePlatform.LinuxPlayer)
+            {
+                reply2 = "Sure! Here's a fun fact: Ants work together to build complex structures like nests, even though they don't have a brain.";
+            }
         }
 
         public override void TestArchitecture()
