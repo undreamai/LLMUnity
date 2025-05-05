@@ -8,7 +8,7 @@ var searchData=
   ['clearerrorcallbacks_5',['ClearErrorCallBacks',['../classLLMUnity_1_1LLMUnitySetup.html#a7d41394dd57b4a3d89c1a2d8628f7d28',1,'LLMUnity::LLMUnitySetup']]],
   ['complete_6',['Complete',['../classLLMUnity_1_1LLMCharacter.html#adf9cc5ead56e07d72f7cf9a79acd4128',1,'LLMUnity::LLMCharacter']]],
   ['completion_7',['Completion',['../classLLMUnity_1_1LLM.html#ac50c648dc8594b31b7d3bbd54e5c3ab9',1,'LLMUnity::LLM']]],
-  ['computeprompt_8',['ComputePrompt',['../classLLMUnity_1_1ChatTemplate.html#a6d13f8b7f5f1ef59058bb345fdbbbeb7',1,'LLMUnity.ChatTemplate.ComputePrompt()'],['../classLLMUnity_1_1DeepSeekR1Template.html#a23eacd0ba8c3506946865859e070f2fb',1,'LLMUnity.DeepSeekR1Template.ComputePrompt()']]],
+  ['computeprompt_8',['ComputePrompt',['../classLLMUnity_1_1ChatTemplate.html#a6d13f8b7f5f1ef59058bb345fdbbbeb7',1,'LLMUnity::ChatTemplate']]],
   ['contains_9',['Contains',['../classLLMUnity_1_1LoraManager.html#aa80edfe89989c078c31069ee90fbf355',1,'LLMUnity::LoraManager']]],
   ['copypath_10',['CopyPath',['../classLLMUnity_1_1LLMBuilder.html#ac279ec780b30dc59ca436bf881ff7a04',1,'LLMUnity::LLMBuilder']]],
   ['copywithoverwrite_11',['CopyWithOverwrite',['../classLLMUnity_1_1LLMBuilder.html#aebe7a9cb705ce02ba6409218f19d639f',1,'LLMUnity::LLMBuilder']]],

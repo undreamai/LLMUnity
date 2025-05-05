@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['wordsplitter_0',['WordSplitter',['../classLLMUnity_1_1WordSplitter.html',1,'LLMUnity']]]
+  ['tokensplitter_0',['TokenSplitter',['../classLLMUnity_1_1TokenSplitter.html',1,'LLMUnity']]]
 ];

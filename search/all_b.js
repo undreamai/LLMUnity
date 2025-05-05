@@ -22,7 +22,7 @@ var searchData=
   ['compendiumlabs_20bge_20small_20en_20v1_205_20gguf_19',['modified by: CompendiumLabs/bge-small-en-v1.5-gguf',['../md_Third_01Party_01Notices.html#autotoc_md31',1,'']]],
   ['complete_20',['Complete',['../classLLMUnity_1_1LLMCharacter.html#adf9cc5ead56e07d72f7cf9a79acd4128',1,'LLMUnity::LLMCharacter']]],
   ['completion_21',['Completion',['../classLLMUnity_1_1LLM.html#ac50c648dc8594b31b7d3bbd54e5c3ab9',1,'LLMUnity::LLM']]],
-  ['computeprompt_22',['ComputePrompt',['../classLLMUnity_1_1ChatTemplate.html#a6d13f8b7f5f1ef59058bb345fdbbbeb7',1,'LLMUnity.ChatTemplate.ComputePrompt()'],['../classLLMUnity_1_1DeepSeekR1Template.html#a23eacd0ba8c3506946865859e070f2fb',1,'LLMUnity.DeepSeekR1Template.ComputePrompt()']]],
+  ['computeprompt_22',['ComputePrompt',['../classLLMUnity_1_1ChatTemplate.html#a6d13f8b7f5f1ef59058bb345fdbbbeb7',1,'LLMUnity::ChatTemplate']]],
   ['connectivity_23',['connectivity',['../classLLMUnity_1_1DBSearch.html#a581872daa0482eaeb2611297156161bd',1,'LLMUnity::DBSearch']]],
   ['contains_24',['Contains',['../classLLMUnity_1_1LoraManager.html#aa80edfe89989c078c31069ee90fbf355',1,'LLMUnity::LoraManager']]],
   ['contextsize_25',['contextSize',['../classLLMUnity_1_1LLM.html#a8e358f7a834e6ede3cc19aa7142e67e8',1,'LLMUnity::LLM']]],
