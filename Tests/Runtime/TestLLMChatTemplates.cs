@@ -187,5 +187,14 @@ namespace LLMUnityTests
                 "<|im_start|>system\nyou are a bot<|im_end|>\n<|im_start|>user\nHello, how are you?<|im_end|>\n<|im_start|>assistant\nI'm doing great. How can I help you today?<|im_end|>\n<|im_start|>user\nI'd like to show off how chat templating works!<|im_end|>\n<|im_start|>assistant\nchat template is awesome<|im_end|>\n<|im_start|>user\ndo you think so?<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n"
             );
         }
+
+        [Test]
+        public void TestBitNet()
+        {
+            Assert.AreEqual(
+                new BitNetTemplate().ComputePrompt(messages, "user", "assistant"),
+                "System: you are a bot<|eot_id|>User: Hello, how are you?<|eot_id|>Assistant: I'm doing great. How can I help you today?<|eot_id|>User: I'd like to show off how chat templating works!<|eot_id|>Assistant: chat template is awesome<|eot_id|>User: do you think so?<|eot_id|>Assistant: "
+            );
+        }
     }
 }
