@@ -178,5 +178,14 @@ namespace LLMUnityTests
                 "<｜begin▁of▁sentence｜>you are a bot\n\n<｜User｜>Hello, how are you?<｜Assistant｜>I'm doing great. How can I help you today?<｜end▁of▁sentence｜><｜User｜>I'd like to show off how chat templating works!<｜Assistant｜>chat template is awesome<｜end▁of▁sentence｜><｜User｜>do you think so?<｜Assistant｜><think>\n\n</think>\n\n"
             );
         }
+
+        [Test]
+        public void TestQwen3()
+        {
+            Assert.AreEqual(
+                new Qwen3Template().ComputePrompt(messages, "user", "assistant"),
+                "<|im_start|>system\nyou are a bot<|im_end|>\n<|im_start|>user\nHello, how are you?<|im_end|>\n<|im_start|>assistant\nI'm doing great. How can I help you today?<|im_end|>\n<|im_start|>user\nI'd like to show off how chat templating works!<|im_end|>\n<|im_start|>assistant\nchat template is awesome<|im_end|>\n<|im_start|>user\ndo you think so?<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n"
+            );
+        }
     }
 }
