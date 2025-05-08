@@ -497,6 +497,12 @@ namespace LLMUnity
             StringWrapper_GetString = LibraryLoader.GetSymbolDelegate<StringWrapper_GetStringDelegate>(libraryHandle, "StringWrapper_GetString");
             Logging = LibraryLoader.GetSymbolDelegate<LoggingDelegate>(libraryHandle, "Logging");
             StopLogging = LibraryLoader.GetSymbolDelegate<StopLoggingDelegate>(libraryHandle, "StopLogging");
+
+            // editor only
+#if UNITY_EDITOR
+            var symbol = LibraryLoader.GetSymbol(libraryHandle, "LLM_IsDebuggerAttached");
+            LLM_IsDebuggerAttached = (symbol != IntPtr.Zero) ? Marshal.GetDelegateForFunctionPointer<LLM_IsDebuggerAttachedDelegate>(symbol) : null;
+#endif
         }
 
         /// <summary>
@@ -606,6 +612,9 @@ namespace LLMUnity
         public delegate void StringWrapper_DeleteDelegate(IntPtr instance);
         public delegate int StringWrapper_GetStringSizeDelegate(IntPtr instance);
         public delegate void StringWrapper_GetStringDelegate(IntPtr instance, IntPtr buffer, int bufferSize, bool clear = false);
+#if UNITY_EDITOR
+        public delegate bool LLM_IsDebuggerAttachedDelegate();
+#endif
 
         public LoggingDelegate Logging;
         public StopLoggingDelegate StopLogging;
@@ -631,6 +640,9 @@ namespace LLMUnity
         public StringWrapper_DeleteDelegate StringWrapper_Delete;
         public StringWrapper_GetStringSizeDelegate StringWrapper_GetStringSize;
         public StringWrapper_GetStringDelegate StringWrapper_GetString;
+#if UNITY_EDITOR
+        public LLM_IsDebuggerAttachedDelegate LLM_IsDebuggerAttached;
+#endif
 
 #endif
 

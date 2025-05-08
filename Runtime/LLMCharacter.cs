@@ -686,6 +686,8 @@ namespace LLMUnity
             if (endpoint != "completion") return await base.PostRequestLocal(json, endpoint, getContent, callback);
 
             while (!llm.failed && !llm.started) await Task.Yield();
+            if (llm.destroyed)
+                return default;
 
             string callResult = null;
             bool callbackCalled = false;
