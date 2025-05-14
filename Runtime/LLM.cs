@@ -38,7 +38,7 @@ namespace LLMUnity
         [LLM] public bool debug = false;
         /// <summary> Wait for native debugger to connect to the backend </summary>
         [Tooltip("Wait for native debugger to connect to the backend")]
-        [LLM] public bool UseNativeDebugger = false;
+        [LLMAdvanced] public bool UseNativeDebugger = false;
         /// <summary> number of prompts that can happen in parallel (-1 = number of LLMCaller objects) </summary>
         [Tooltip("number of prompts that can happen in parallel (-1 = number of LLMCaller objects)")]
         [LLMAdvanced] public int parallelPrompts = -1;
