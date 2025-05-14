@@ -56,8 +56,6 @@ namespace LLMUnity
         public bool started { get; protected set; } = false;
         /// <summary> Boolean set to true if the server has failed to start. </summary>
         public bool failed { get; protected set; } = false;
-        /// <summary> Boolean set to true if the server has been destroyed. </summary>
-        public bool destroyed { get; protected set; } = false;
         /// <summary> Boolean set to true if the models were not downloaded successfully. </summary>
         public static bool modelSetupFailed { get; protected set; } = false;
         /// <summary> Boolean set to true if the server has started and is ready to receive requests, false otherwise. </summary>
@@ -496,7 +494,6 @@ namespace LLMUnity
         {
             started = false;
             failed = false;
-            destroyed = false;
             bool useGPU = numGPULayers > 0;
 
             foreach (string arch in LLMLib.PossibleArchitectures(useGPU))
@@ -560,7 +557,7 @@ namespace LLMUnity
             if (llmlib?.LLM_IsDebuggerAttached != null)
             {
                 LLMUnitySetup.Log("waiting debugger");
-                while (!destroyed)
+                while (llmlib != null)
                 {
                     if (llmlib.LLM_IsDebuggerAttached())
                     {
@@ -577,7 +574,7 @@ namespace LLMUnity
         {
             lock (startLock)
             {
-                if (llmlib == null || destroyed) throw new DestroyException();
+                if (llmlib == null) throw new DestroyException();
                 fn();
             }
         }
@@ -606,12 +603,9 @@ namespace LLMUnity
         {
             llmThread = new Thread(() => llmlib.LLM_Start(LLMObject));
             llmThread.Start();
-            while (!llmlib.LLM_Started(LLMObject) && !destroyed) { }
-            if (!destroyed)
-            {
-                ApplyLoras();
-                started = true;
-            }
+            while (!llmlib.LLM_Started(LLMObject)) { }
+            ApplyLoras();
+            started = true;
         }
 
         /// <summary>
@@ -664,7 +658,6 @@ namespace LLMUnity
             string error = null;
             if (failed) error = "LLM service couldn't be created";
             else if (!started) error = "LLM service not started";
-            else if (destroyed) error = "LLM service is being destroyed";
             if (error != null)
             {
                 LLMUnitySetup.LogError(error);
@@ -861,7 +854,6 @@ namespace LLMUnity
         /// </summary>
         public void Destroy()
         {
-            destroyed = true;
             lock (staticLock)
                 lock (startLock)
                 {
