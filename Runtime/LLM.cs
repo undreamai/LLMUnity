@@ -130,7 +130,7 @@ namespace LLMUnity
         public async void Awake()
         {
             if (!enabled) return;
-            _ = Task.Run(Load);
+            Load();
         }
 
         public async Awaitable Load()
