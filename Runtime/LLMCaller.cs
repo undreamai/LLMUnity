@@ -36,7 +36,7 @@ namespace LLMUnity
         [Tooltip("host of the remote LLM server")]
         [Remote] public string host = "localhost";
         /// <summary> port of the remote LLM server </summary>
-        [Tooltip("port of the remote LLM server; use '0' to omit specifying a port (http/https)")]
+        [Tooltip("port of the remote LLM server")]
         [Remote] public int port = 13333;
         /// <summary> number of retries to use for the remote LLM server requests (-1 = infinite) </summary>
         [Tooltip("number of retries to use for the remote LLM server requests (-1 = infinite)")]
