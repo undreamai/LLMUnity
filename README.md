@@ -36,7 +36,7 @@ LLM for Unity is built on top of the awesome [llama.cpp](https://github.com/gger
 </sub>
 
 ## At a glance
-- 💻 Cross-platform! Windows, Linux, macOS, iOS, Android and VisionOS
+- 💻 Runs anywhere: PC, mobile or VR!
 - 🏠 Runs locally without internet access. No data ever leave the game!
 - ⚡ Blazing fast inference on CPU and GPU (Nvidia, AMD, Apple Metal)
 - 🤗 Supports all major LLM models
