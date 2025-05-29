@@ -469,7 +469,6 @@ namespace LLMUnity
             {
                 json = json.Insert(grammarIndex, $",\"json_schema\":{request.json_schema}");
             }
-            Debug.Log(json);
             return json;
         }
 
