@@ -566,7 +566,7 @@ namespace LLMUnityTests
             reply1 = "Sure! Here's a fun fact: Ants work together to build complex structures like nests, even though they don't have a brain.";
             if (Application.platform == RuntimePlatform.LinuxEditor || Application.platform == RuntimePlatform.LinuxPlayer)
             {
-                reply2 = "Sure! Here's a fun fact: Ants work together to build complex structures like nests, even though they don't have a brain.";
+                reply2 = "Sure! Here's a fun fact: Ants work together to build complex structures like nests, which is a fascinating example of teamwork.";
             }
         }
 
@@ -591,6 +591,15 @@ namespace LLMUnityTests
             LLM llm = base.CreateLLM();
             llm.flashAttention = true;
             return llm;
+        }
+
+        public override void SetParameters()
+        {
+            base.SetParameters();
+            if (Application.platform == RuntimePlatform.LinuxEditor || Application.platform == RuntimePlatform.LinuxPlayer)
+            {
+                reply2 = "Sure! Here's a fun fact: Ants work together to build complex structures like nests, even though they don't have human-like intelligence.";
+            }
         }
     }
 }
