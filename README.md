@@ -62,6 +62,14 @@ LLM for Unity is built on top of the awesome [llama.cpp](https://github.com/gger
 - [AI Emotional Girlfriend](https://whynames.itch.io/aiemotionalgirlfriend)
 - [Case Closed](https://store.steampowered.com/app/2532160/Case_Closed)
 - [MaiMai AI Agent System](https://github.com/IhateCreatingUserNames2/MaiMai)
+- [Claria Chat](https://play.google.com/store/apps/details?id=com.ProLink.ClariaChat)
+- [Endless Casual Drive](https://store.steampowered.com/app/2928500/Endless_Casual_Drive/)
+- [Dating App Simulator](https://store.steampowered.com/app/3415680/Dating_App_Simulator/)
+- [Virtual Reality Mock Interview](https://vrmi.vercel.app/)
+- [Velesio AI server](https://github.com/Velesio/Velesio-AIServer)
+- [Dungeon Chat](https://www.meta.com/experiences/dungeonchat/8527310950709276/)
+- [Tomonaka Desk](https://joycatdev.itch.io/tomonaka-desk)
+- [Digital Humans](https://store.steampowered.com/app/3089280/Digital_Humans/)
 
 Contact us to add your project!
 
