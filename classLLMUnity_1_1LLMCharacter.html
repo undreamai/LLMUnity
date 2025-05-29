@@ -47,7 +47,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_tiny.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">LLM for Unity
-   &#160;<span id="projectnumber">v2.5.1</span>
+   &#160;<span id="projectnumber">v2.5.2</span>
    </div>
    <div id="projectbrief">Create characters in Unity with LLMs!</div>
   </td>
@@ -125,7 +125,7 @@ $(function(){initNavTree('classLLMUnity_1_1LLMCharacter.html',''); initResizable
 <div class="dynheader">
 Inheritance diagram for LLMUnity.LLMCharacter:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classLLMUnity_1_1LLMCharacter__inherit__graph.svg" width="186" height="183"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classLLMUnity_1_1LLMCharacter__inherit__graph.svg" width="186" height="110"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
@@ -190,22 +190,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a5fcf385a45c9cd71e2428b7442a163a3" id="r_a5fcf385a45c9cd71e2428b7442a163a3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">virtual</a> <a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">async</a> <a class="el" href="#a0a946ac2956e5b3800f68a34a3a93609">Task</a>&lt; string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5fcf385a45c9cd71e2428b7442a163a3">Load</a> (string filename)</td></tr>
 <tr class="memdesc:a5fcf385a45c9cd71e2428b7442a163a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load the chat history and cache from the provided filename / relative path.  <br /></td></tr>
 <tr class="separator:a5fcf385a45c9cd71e2428b7442a163a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_methods_classLLMUnity_1_1LLMCaller"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_classLLMUnity_1_1LLMCaller')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classLLMUnity_1_1LLMCaller.html">LLMUnity.LLMCaller</a></td></tr>
-<tr class="memitem:aef76981f31783776b848102de82822fb inherit pub_methods_classLLMUnity_1_1LLMCaller" id="r_aef76981f31783776b848102de82822fb"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMCaller.html#aef76981f31783776b848102de82822fb">IsAutoAssignableLLM</a> (<a class="el" href="classLLMUnity_1_1LLM.html">LLM</a> llmSet)</td></tr>
-<tr class="memdesc:aef76981f31783776b848102de82822fb inherit pub_methods_classLLMUnity_1_1LLMCaller"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if a LLM can be auto-assigned if the LLM of the LLMCaller is null.  <br /></td></tr>
-<tr class="separator:aef76981f31783776b848102de82822fb inherit pub_methods_classLLMUnity_1_1LLMCaller"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5914034b6b799e018380152c0136b511 inherit pub_methods_classLLMUnity_1_1LLMCaller" id="r_a5914034b6b799e018380152c0136b511"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMCaller.html#a5914034b6b799e018380152c0136b511">CancelRequests</a> ()</td></tr>
-<tr class="memdesc:a5914034b6b799e018380152c0136b511 inherit pub_methods_classLLMUnity_1_1LLMCaller"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cancel the ongoing requests e.g. Chat, Complete.  <br /></td></tr>
-<tr class="separator:a5914034b6b799e018380152c0136b511 inherit pub_methods_classLLMUnity_1_1LLMCaller"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a018e0cabb84a07c5dd5b8d893ab57f0f inherit pub_methods_classLLMUnity_1_1LLMCaller" id="r_a018e0cabb84a07c5dd5b8d893ab57f0f"><td class="memItemLeft" align="right" valign="top">virtual async Task&lt; List&lt; int &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMCaller.html#a018e0cabb84a07c5dd5b8d893ab57f0f">Tokenize</a> (string query, Callback&lt; List&lt; int &gt; &gt; callback=null)</td></tr>
-<tr class="memdesc:a018e0cabb84a07c5dd5b8d893ab57f0f inherit pub_methods_classLLMUnity_1_1LLMCaller"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tokenises the provided query.  <br /></td></tr>
-<tr class="separator:a018e0cabb84a07c5dd5b8d893ab57f0f inherit pub_methods_classLLMUnity_1_1LLMCaller"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5b7af360853ea9b233782ff6e71e313f inherit pub_methods_classLLMUnity_1_1LLMCaller" id="r_a5b7af360853ea9b233782ff6e71e313f"><td class="memItemLeft" align="right" valign="top">virtual async Task&lt; string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMCaller.html#a5b7af360853ea9b233782ff6e71e313f">Detokenize</a> (List&lt; int &gt; tokens, Callback&lt; string &gt; callback=null)</td></tr>
-<tr class="memdesc:a5b7af360853ea9b233782ff6e71e313f inherit pub_methods_classLLMUnity_1_1LLMCaller"><td class="mdescLeft">&#160;</td><td class="mdescRight">Detokenises the provided tokens to a string.  <br /></td></tr>
-<tr class="separator:a5b7af360853ea9b233782ff6e71e313f inherit pub_methods_classLLMUnity_1_1LLMCaller"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2344c568eafd2918a33fe418841d5481 inherit pub_methods_classLLMUnity_1_1LLMCaller" id="r_a2344c568eafd2918a33fe418841d5481"><td class="memItemLeft" align="right" valign="top">virtual async Task&lt; List&lt; float &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMCaller.html#a2344c568eafd2918a33fe418841d5481">Embeddings</a> (string query, Callback&lt; List&lt; float &gt; &gt; callback=null)</td></tr>
-<tr class="memdesc:a2344c568eafd2918a33fe418841d5481 inherit pub_methods_classLLMUnity_1_1LLMCaller"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the embeddings of the provided input.  <br /></td></tr>
-<tr class="separator:a2344c568eafd2918a33fe418841d5481 inherit pub_methods_classLLMUnity_1_1LLMCaller"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -317,31 +301,6 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a1af0455dbd722b3ed2417f461b1b4d4f" id="r_a1af0455dbd722b3ed2417f461b1b4d4f"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1af0455dbd722b3ed2417f461b1b4d4f">grammarJSONString</a></td></tr>
 <tr class="memdesc:a1af0455dbd722b3ed2417f461b1b4d4f"><td class="mdescLeft">&#160;</td><td class="mdescRight">the grammar to use  <br /></td></tr>
 <tr class="separator:a1af0455dbd722b3ed2417f461b1b4d4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_attribs_classLLMUnity_1_1LLMCaller"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_attribs_classLLMUnity_1_1LLMCaller')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="classLLMUnity_1_1LLMCaller.html">LLMUnity.LLMCaller</a></td></tr>
-<tr class="memitem:a9e88926976ee58c23a10904cd1fe3283 inherit pub_attribs_classLLMUnity_1_1LLMCaller" id="r_a9e88926976ee58c23a10904cd1fe3283"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMCaller.html#a9e88926976ee58c23a10904cd1fe3283">advancedOptions</a> = false</td></tr>
-<tr class="memdesc:a9e88926976ee58c23a10904cd1fe3283 inherit pub_attribs_classLLMUnity_1_1LLMCaller"><td class="mdescLeft">&#160;</td><td class="mdescRight">show/hide advanced options in the GameObject  <br /></td></tr>
-<tr class="separator:a9e88926976ee58c23a10904cd1fe3283 inherit pub_attribs_classLLMUnity_1_1LLMCaller"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a88d5732340d7eaee28cd82b968bbb3d4 inherit pub_attribs_classLLMUnity_1_1LLMCaller" id="r_a88d5732340d7eaee28cd82b968bbb3d4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMCaller.html#a88d5732340d7eaee28cd82b968bbb3d4">remote</a> = false</td></tr>
-<tr class="memdesc:a88d5732340d7eaee28cd82b968bbb3d4 inherit pub_attribs_classLLMUnity_1_1LLMCaller"><td class="mdescLeft">&#160;</td><td class="mdescRight">use remote LLM server  <br /></td></tr>
-<tr class="separator:a88d5732340d7eaee28cd82b968bbb3d4 inherit pub_attribs_classLLMUnity_1_1LLMCaller"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac884093a82d0b59e8b8b2573913bea79 inherit pub_attribs_classLLMUnity_1_1LLMCaller" id="r_ac884093a82d0b59e8b8b2573913bea79"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMCaller.html#ac884093a82d0b59e8b8b2573913bea79">APIKey</a></td></tr>
-<tr class="memdesc:ac884093a82d0b59e8b8b2573913bea79 inherit pub_attribs_classLLMUnity_1_1LLMCaller"><td class="mdescLeft">&#160;</td><td class="mdescRight">API key for the remote server.  <br /></td></tr>
-<tr class="separator:ac884093a82d0b59e8b8b2573913bea79 inherit pub_attribs_classLLMUnity_1_1LLMCaller"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a47607562078b546b5ad3f614d35a9c4b inherit pub_attribs_classLLMUnity_1_1LLMCaller" id="r_a47607562078b546b5ad3f614d35a9c4b"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMCaller.html#a47607562078b546b5ad3f614d35a9c4b">host</a> = &quot;localhost&quot;</td></tr>
-<tr class="memdesc:a47607562078b546b5ad3f614d35a9c4b inherit pub_attribs_classLLMUnity_1_1LLMCaller"><td class="mdescLeft">&#160;</td><td class="mdescRight">host of the remote LLM server  <br /></td></tr>
-<tr class="separator:a47607562078b546b5ad3f614d35a9c4b inherit pub_attribs_classLLMUnity_1_1LLMCaller"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a366e9990e647017081c0903e7b7840e1 inherit pub_attribs_classLLMUnity_1_1LLMCaller" id="r_a366e9990e647017081c0903e7b7840e1"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMCaller.html#a366e9990e647017081c0903e7b7840e1">port</a> = 13333</td></tr>
-<tr class="memdesc:a366e9990e647017081c0903e7b7840e1 inherit pub_attribs_classLLMUnity_1_1LLMCaller"><td class="mdescLeft">&#160;</td><td class="mdescRight">port of the remote LLM server  <br /></td></tr>
-<tr class="separator:a366e9990e647017081c0903e7b7840e1 inherit pub_attribs_classLLMUnity_1_1LLMCaller"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2dbdfc292fec059103fc3cca43e888c3 inherit pub_attribs_classLLMUnity_1_1LLMCaller" id="r_a2dbdfc292fec059103fc3cca43e888c3"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMCaller.html#a2dbdfc292fec059103fc3cca43e888c3">numRetries</a> = 10</td></tr>
-<tr class="memdesc:a2dbdfc292fec059103fc3cca43e888c3 inherit pub_attribs_classLLMUnity_1_1LLMCaller"><td class="mdescLeft">&#160;</td><td class="mdescRight">number of retries to use for the remote LLM server requests (-1 = infinite)  <br /></td></tr>
-<tr class="separator:a2dbdfc292fec059103fc3cca43e888c3 inherit pub_attribs_classLLMUnity_1_1LLMCaller"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
-Additional Inherited Members</h2></td></tr>
-<tr class="inherit_header properties_classLLMUnity_1_1LLMCaller"><td colspan="2" onclick="javascript:dynsection.toggleInherit('properties_classLLMUnity_1_1LLMCaller')"><img src="closed.png" alt="-"/>&#160;Properties inherited from <a class="el" href="classLLMUnity_1_1LLMCaller.html">LLMUnity.LLMCaller</a></td></tr>
-<tr class="memitem:a7b2fda6953bc777c24f30318b38279b7 inherit properties_classLLMUnity_1_1LLMCaller" id="r_a7b2fda6953bc777c24f30318b38279b7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classLLMUnity_1_1LLM.html">LLM</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMCaller.html#a7b2fda6953bc777c24f30318b38279b7">llm</a><code> [get, set]</code></td></tr>
-<tr class="separator:a7b2fda6953bc777c24f30318b38279b7 inherit properties_classLLMUnity_1_1LLMCaller"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class implementing the LLM characters. </p>
@@ -499,7 +458,7 @@ Here is the caller graph for this function:</div>
 <p>Asks the LLM for the chat template to use. </p>
 <dl class="section return"><dt>Returns</dt><dd>the chat template of the LLM</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00620">620</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00619">619</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -526,7 +485,7 @@ Here is the caller graph for this function:</div>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -539,8 +498,6 @@ Here is the caller graph for this function:</div>
 <li>the chat template is constructed</li>
 <li>the number of tokens to keep are based on the system prompt (if setNKeepToPrompt=true) </li>
 </ul>
-
-<p>Reimplemented from <a class="el" href="classLLMUnity_1_1LLMCaller.html#a2daf7c8535df9200720b75c4a007aaf8">LLMUnity.LLMCaller</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00151">151</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
@@ -595,7 +552,7 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the LLM response</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00520">520</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00519">519</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -676,7 +633,7 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the LLM response</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00560">560</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00559">559</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -780,7 +737,7 @@ Here is the caller graph for this function:</div>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -793,8 +750,6 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>bool specifying whether the LLM is valid</dd></dl>
-
-<p>Reimplemented from <a class="el" href="classLLMUnity_1_1LLMCaller.html#a11c235d4ba6a611262feead83bff7d34">LLMUnity.LLMCaller</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00180">180</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
@@ -832,7 +787,7 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00664">664</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00663">663</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>
@@ -903,7 +858,7 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00645">645</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00644">644</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -1098,7 +1053,7 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the LLM response</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00580">580</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00579">579</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -1144,7 +1099,7 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the LLM response</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00594">594</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMCharacter_8cs_source.html#l00593">593</a> of file <a class="el" href="LLMCharacter_8cs_source.html">LLMCharacter.cs</a>.</p>
 
 </div>
 </div>

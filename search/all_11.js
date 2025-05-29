@@ -12,7 +12,6 @@ var searchData=
   ['instruct_20gguf_9',['microsoft/Phi-3-mini-4k-instruct-gguf',['../md_Third_01Party_01Notices.html#autotoc_md23',1,'']]],
   ['instruct_20gguf_10',['Qwen/Qwen2-0.5B-Instruct-GGUF',['../md_Third_01Party_01Notices.html#autotoc_md25',1,'']]],
   ['instruct_20v0_202_11',['mistralai/Mistral-7B-Instruct-v0.2',['../md_Third_01Party_01Notices.html#autotoc_md22',1,'']]],
-  ['isautoassignablellm_12',['IsAutoAssignableLLM',['../classLLMUnity_1_1LLMCaller.html#aef76981f31783776b848102de82822fb',1,'LLMUnity.LLMCaller.IsAutoAssignableLLM()'],['../classLLMUnity_1_1LLMEmbedder.html#abc43672f7545950fa43ae49409a33555',1,'LLMUnity.LLMEmbedder.IsAutoAssignableLLM()']]],
-  ['isvalidllm_13',['IsValidLLM',['../classLLMUnity_1_1LLMCaller.html#a11c235d4ba6a611262feead83bff7d34',1,'LLMUnity.LLMCaller.IsValidLLM()'],['../classLLMUnity_1_1LLMCharacter.html#a90286b111c5946ac7239a8a03ac3d581',1,'LLMUnity.LLMCharacter.IsValidLLM()']]],
-  ['it_14',['google/gemma-2-9b-it',['../md_Third_01Party_01Notices.html#autotoc_md21',1,'']]]
+  ['isvalidllm_12',['IsValidLLM',['../classLLMUnity_1_1LLMCharacter.html#a90286b111c5946ac7239a8a03ac3d581',1,'LLMUnity::LLMCharacter']]],
+  ['it_13',['google/gemma-2-9b-it',['../md_Third_01Party_01Notices.html#autotoc_md21',1,'']]]
 ];

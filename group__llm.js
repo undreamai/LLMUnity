@@ -46,21 +46,6 @@ var group__llm =
       [ "failed", "classLLMUnity_1_1LLM.html#aeac42866b300f3652548febbbd986af5", null ],
       [ "started", "classLLMUnity_1_1LLM.html#a9bf3f3bd1e5ac32e5790415e448762e7", null ]
     ] ],
-    [ "LLMUnity.LLMCaller", "classLLMUnity_1_1LLMCaller.html", [
-      [ "Awake", "classLLMUnity_1_1LLMCaller.html#a2daf7c8535df9200720b75c4a007aaf8", null ],
-      [ "CancelRequests", "classLLMUnity_1_1LLMCaller.html#a5914034b6b799e018380152c0136b511", null ],
-      [ "Detokenize", "classLLMUnity_1_1LLMCaller.html#a5b7af360853ea9b233782ff6e71e313f", null ],
-      [ "Embeddings", "classLLMUnity_1_1LLMCaller.html#a2344c568eafd2918a33fe418841d5481", null ],
-      [ "IsAutoAssignableLLM", "classLLMUnity_1_1LLMCaller.html#aef76981f31783776b848102de82822fb", null ],
-      [ "IsValidLLM", "classLLMUnity_1_1LLMCaller.html#a11c235d4ba6a611262feead83bff7d34", null ],
-      [ "Tokenize", "classLLMUnity_1_1LLMCaller.html#a018e0cabb84a07c5dd5b8d893ab57f0f", null ],
-      [ "advancedOptions", "classLLMUnity_1_1LLMCaller.html#a9e88926976ee58c23a10904cd1fe3283", null ],
-      [ "APIKey", "classLLMUnity_1_1LLMCaller.html#ac884093a82d0b59e8b8b2573913bea79", null ],
-      [ "host", "classLLMUnity_1_1LLMCaller.html#a47607562078b546b5ad3f614d35a9c4b", null ],
-      [ "numRetries", "classLLMUnity_1_1LLMCaller.html#a2dbdfc292fec059103fc3cca43e888c3", null ],
-      [ "port", "classLLMUnity_1_1LLMCaller.html#a366e9990e647017081c0903e7b7840e1", null ],
-      [ "remote", "classLLMUnity_1_1LLMCaller.html#a88d5732340d7eaee28cd82b968bbb3d4", null ]
-    ] ],
     [ "LLMUnity.LLMCharacter", "classLLMUnity_1_1LLMCharacter.html", [
       [ "AddAIMessage", "classLLMUnity_1_1LLMCharacter.html#a8a068d19353f1b525c59e94493550d1d", null ],
       [ "AddMessage", "classLLMUnity_1_1LLMCharacter.html#ae09899c899de4a3f8d22ecdc830355c8", null ],
@@ -119,7 +104,5 @@ var group__llm =
       [ "topP", "classLLMUnity_1_1LLMCharacter.html#a1fd8d8479f214db4cbfcdbe778963992", null ],
       [ "typicalP", "classLLMUnity_1_1LLMCharacter.html#a5d27c21bb995afbb9af3c0254891d6c3", null ]
     ] ],
-    [ "LLMUnity.LLMEmbedder", "classLLMUnity_1_1LLMEmbedder.html", [
-      [ "IsAutoAssignableLLM", "classLLMUnity_1_1LLMEmbedder.html#abc43672f7545950fa43ae49409a33555", null ]
-    ] ]
+    [ "LLMUnity.LLMEmbedder", "classLLMUnity_1_1LLMEmbedder.html", null ]
 ];

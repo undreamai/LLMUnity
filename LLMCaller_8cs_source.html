@@ -47,7 +47,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_tiny.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">LLM for Unity
-   &#160;<span id="projectnumber">v2.5.1</span>
+   &#160;<span id="projectnumber">v2.5.2</span>
    </div>
    <div id="projectbrief">Create characters in Unity with LLMs!</div>
   </td>
@@ -130,81 +130,74 @@ $(function(){initNavTree('LLMCaller_8cs_source.html',''); initResizable(); });
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceLLMUnity.html">LLMUnity</a></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>{</div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>    [DefaultExecutionOrder(-2)]</div>
-<div class="foldopen" id="foldopen00016" data-start="{" data-end="};">
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno"><a class="line" href="classLLMUnity_1_1LLMCaller.html">   16</a></span>    <span class="keyword">public</span> <span class="keyword">class </span><a class="code hl_class" href="classLLMUnity_1_1LLMCaller.html">LLMCaller</a> : MonoBehaviour</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>    <span class="keyword">public</span> <span class="keyword">class </span>LLMCaller : MonoBehaviour</div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>    {</div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>        [Tooltip(<span class="stringliteral">&quot;show/hide advanced options in the GameObject&quot;</span>)]</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="classLLMUnity_1_1LLMCaller.html#a9e88926976ee58c23a10904cd1fe3283">   20</a></span>        [HideInInspector] <span class="keyword">public</span> <span class="keywordtype">bool</span> <a class="code hl_variable" href="classLLMUnity_1_1LLMCaller.html#a9e88926976ee58c23a10904cd1fe3283">advancedOptions</a> = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>        [HideInInspector] <span class="keyword">public</span> <span class="keywordtype">bool</span> advancedOptions = <span class="keyword">false</span>;</div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>        [Tooltip(<span class="stringliteral">&quot;use remote LLM server&quot;</span>)]</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno"><a class="line" href="classLLMUnity_1_1LLMCaller.html#a88d5732340d7eaee28cd82b968bbb3d4">   23</a></span>        [LocalRemote] <span class="keyword">public</span> <span class="keywordtype">bool</span> <a class="code hl_variable" href="classLLMUnity_1_1LLMCaller.html#a88d5732340d7eaee28cd82b968bbb3d4">remote</a> = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>        [LocalRemote] <span class="keyword">public</span> <span class="keywordtype">bool</span> remote = <span class="keyword">false</span>;</div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>        [Tooltip(<span class="stringliteral">&quot;LLM GameObject to use&quot;</span>)] <span class="comment">// Tooltip: ignore</span></div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>        [Local, SerializeField] <span class="keyword">protected</span> <a class="code hl_class" href="classLLMUnity_1_1LLM.html">LLM</a> _llm;</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>        <span class="keyword">public</span> <a class="code hl_class" href="classLLMUnity_1_1LLM.html">LLM</a> llm</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>        [Local, SerializeField] <span class="keyword">protected</span> LLM _llm;</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>        <span class="keyword">public</span> LLM llm</div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>        {</div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>            <span class="keyword">get</span> =&gt; _llm;<span class="comment">//whatever</span></div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>            <span class="keyword">set</span> =&gt; SetLLM(value);</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>        }</div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        [Tooltip(<span class="stringliteral">&quot;API key for the remote server&quot;</span>)]</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="classLLMUnity_1_1LLMCaller.html#ac884093a82d0b59e8b8b2573913bea79">   34</a></span>        [Remote] <span class="keyword">public</span> <span class="keywordtype">string</span> <a class="code hl_variable" href="classLLMUnity_1_1LLMCaller.html#ac884093a82d0b59e8b8b2573913bea79">APIKey</a>;</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>        [Remote] <span class="keyword">public</span> <span class="keywordtype">string</span> APIKey;</div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        [Tooltip(<span class="stringliteral">&quot;host of the remote LLM server&quot;</span>)]</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno"><a class="line" href="classLLMUnity_1_1LLMCaller.html#a47607562078b546b5ad3f614d35a9c4b">   37</a></span>        [Remote] <span class="keyword">public</span> <span class="keywordtype">string</span> <a class="code hl_variable" href="classLLMUnity_1_1LLMCaller.html#a47607562078b546b5ad3f614d35a9c4b">host</a> = <span class="stringliteral">&quot;localhost&quot;</span>;</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        [Remote] <span class="keyword">public</span> <span class="keywordtype">string</span> host = <span class="stringliteral">&quot;localhost&quot;</span>;</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>        [Tooltip(<span class="stringliteral">&quot;port of the remote LLM server&quot;</span>)]</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno"><a class="line" href="classLLMUnity_1_1LLMCaller.html#a366e9990e647017081c0903e7b7840e1">   40</a></span>        [Remote] <span class="keyword">public</span> <span class="keywordtype">int</span> <a class="code hl_variable" href="classLLMUnity_1_1LLMCaller.html#a366e9990e647017081c0903e7b7840e1">port</a> = 13333;</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>        [Remote] <span class="keyword">public</span> <span class="keywordtype">int</span> port = 13333;</div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>        [Tooltip(<span class="stringliteral">&quot;number of retries to use for the remote LLM server requests (-1 = infinite)&quot;</span>)]</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno"><a class="line" href="classLLMUnity_1_1LLMCaller.html#a2dbdfc292fec059103fc3cca43e888c3">   43</a></span>        [Remote] <span class="keyword">public</span> <span class="keywordtype">int</span> <a class="code hl_variable" href="classLLMUnity_1_1LLMCaller.html#a2dbdfc292fec059103fc3cca43e888c3">numRetries</a> = 10;</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>        [Remote] <span class="keyword">public</span> <span class="keywordtype">int</span> numRetries = 10;</div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        <span class="keyword">protected</span> <a class="code hl_class" href="classLLMUnity_1_1LLM.html">LLM</a> _prellm;</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        <span class="keyword">protected</span> LLM _prellm;</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        <span class="keyword">protected</span> List&lt;(string, string)&gt; requestHeaders;</div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>        <span class="keyword">protected</span> List&lt;UnityWebRequest&gt; WIPRequests = <span class="keyword">new</span> List&lt;UnityWebRequest&gt;();</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
-<div class="foldopen" id="foldopen00058" data-start="{" data-end="}">
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno"><a class="line" href="classLLMUnity_1_1LLMCaller.html#a2daf7c8535df9200720b75c4a007aaf8">   58</a></span>        <span class="keyword">public</span> <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classLLMUnity_1_1LLMCaller.html#a2daf7c8535df9200720b75c4a007aaf8">Awake</a>()</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        <span class="keyword">public</span> <span class="keyword">virtual</span> <span class="keywordtype">void</span> Awake()</div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        {</div>
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>            <span class="comment">// Start the LLM server in a cross-platform way</span></div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>            <span class="keywordflow">if</span> (!enabled) <span class="keywordflow">return</span>;</div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>            requestHeaders = <span class="keyword">new</span> List&lt;(string, string)&gt; { (<span class="stringliteral">&quot;Content-Type&quot;</span>, <span class="stringliteral">&quot;application/json&quot;</span>) };</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>            <span class="keywordflow">if</span> (!<a class="code hl_variable" href="classLLMUnity_1_1LLMCaller.html#a88d5732340d7eaee28cd82b968bbb3d4">remote</a>)</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>            <span class="keywordflow">if</span> (!remote)</div>
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>            {</div>
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>                AssignLLM();</div>
 <div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>                <span class="keywordflow">if</span> (llm == <span class="keyword">null</span>)</div>
 <div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>                {</div>
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>                    <span class="keywordtype">string</span> error = $<span class="stringliteral">&quot;No LLM assigned or detected for LLMCharacter {name}!&quot;</span>;</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>                    <a class="code hl_class" href="classLLMUnity_1_1LLMUnitySetup.html">LLMUnitySetup</a>.LogError(error);</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>                    LLMUnitySetup.LogError(error);</div>
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>                    <span class="keywordflow">throw</span> <span class="keyword">new</span> Exception(error);</div>
 <div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>                }</div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>            }</div>
 <div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>            <span class="keywordflow">else</span></div>
 <div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>            {</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>                <span class="keywordflow">if</span> (!String.IsNullOrEmpty(<a class="code hl_variable" href="classLLMUnity_1_1LLMCaller.html#ac884093a82d0b59e8b8b2573913bea79">APIKey</a>)) requestHeaders.Add((<span class="stringliteral">&quot;Authorization&quot;</span>, <span class="stringliteral">&quot;Bearer &quot;</span> + <a class="code hl_variable" href="classLLMUnity_1_1LLMCaller.html#ac884093a82d0b59e8b8b2573913bea79">APIKey</a>));</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>                <span class="keywordflow">if</span> (!String.IsNullOrEmpty(APIKey)) requestHeaders.Add((<span class="stringliteral">&quot;Authorization&quot;</span>, <span class="stringliteral">&quot;Bearer &quot;</span> + APIKey));</div>
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>            }</div>
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>        }</div>
-</div>
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span> </div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>        <span class="keyword">protected</span> <span class="keyword">virtual</span> <span class="keywordtype">void</span> SetLLM(<a class="code hl_class" href="classLLMUnity_1_1LLM.html">LLM</a> llmSet)</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>        <span class="keyword">protected</span> <span class="keyword">virtual</span> <span class="keywordtype">void</span> SetLLM(LLM llmSet)</div>
 <div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>        {</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>            <span class="keywordflow">if</span> (llmSet != <span class="keyword">null</span> &amp;&amp; !<a class="code hl_function" href="classLLMUnity_1_1LLMCaller.html#a11c235d4ba6a611262feead83bff7d34">IsValidLLM</a>(llmSet))</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>            <span class="keywordflow">if</span> (llmSet != <span class="keyword">null</span> &amp;&amp; !IsValidLLM(llmSet))</div>
 <div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>            {</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>                <a class="code hl_class" href="classLLMUnity_1_1LLMUnitySetup.html">LLMUnitySetup</a>.LogError(NotValidLLMError());</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>                LLMUnitySetup.LogError(NotValidLLMError());</div>
 <div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>                llmSet = <span class="keyword">null</span>;</div>
 <div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>            }</div>
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>            _llm = llmSet;</div>
 <div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>            _prellm = _llm;</div>
 <div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>        }</div>
 <div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span> </div>
-<div class="foldopen" id="foldopen00100" data-start="{" data-end="}">
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno"><a class="line" href="classLLMUnity_1_1LLMCaller.html#a11c235d4ba6a611262feead83bff7d34">  100</a></span>        <span class="keyword">public</span> <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="classLLMUnity_1_1LLMCaller.html#a11c235d4ba6a611262feead83bff7d34">IsValidLLM</a>(<a class="code hl_class" href="classLLMUnity_1_1LLM.html">LLM</a> llmSet)</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>        <span class="keyword">public</span> <span class="keyword">virtual</span> <span class="keywordtype">bool</span> IsValidLLM(LLM llmSet)</div>
 <div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>        {</div>
 <div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>            <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
 <div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>        }</div>
-</div>
 <div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span> </div>
-<div class="foldopen" id="foldopen00110" data-start="{" data-end="}">
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno"><a class="line" href="classLLMUnity_1_1LLMCaller.html#aef76981f31783776b848102de82822fb">  110</a></span>        <span class="keyword">public</span> <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="classLLMUnity_1_1LLMCaller.html#aef76981f31783776b848102de82822fb">IsAutoAssignableLLM</a>(<a class="code hl_class" href="classLLMUnity_1_1LLM.html">LLM</a> llmSet)</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>        <span class="keyword">public</span> <span class="keyword">virtual</span> <span class="keywordtype">bool</span> IsAutoAssignableLLM(LLM llmSet)</div>
 <div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>        {</div>
 <div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>            <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
 <div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>        }</div>
-</div>
 <div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span> </div>
 <div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>        <span class="keyword">protected</span> <span class="keyword">virtual</span> <span class="keywordtype">string</span> NotValidLLMError()</div>
 <div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>        {</div>
@@ -224,7 +217,7 @@ $(function(){initNavTree('LLMCaller_8cs_source.html',''); initResizable(); });
 <div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span> </div>
 <div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>        <span class="keyword">protected</span> <span class="keyword">virtual</span> <span class="keywordtype">void</span> AssignLLM()</div>
 <div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>        {</div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>            <span class="keywordflow">if</span> (<a class="code hl_variable" href="classLLMUnity_1_1LLMCaller.html#a88d5732340d7eaee28cd82b968bbb3d4">remote</a> || llm != <span class="keyword">null</span>) <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>            <span class="keywordflow">if</span> (remote || llm != <span class="keyword">null</span>) <span class="keywordflow">return</span>;</div>
 <div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span> </div>
 <div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>            List&lt;LLM&gt; validLLMs = <span class="keyword">new</span> List&lt;LLM&gt;();</div>
 <div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span><span class="preprocessor">#if UNITY_6000_0_OR_NEWER</span></div>
@@ -233,7 +226,7 @@ $(function(){initNavTree('LLMCaller_8cs_source.html',''); initResizable(); });
 <div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>            <span class="keywordflow">foreach</span> (LLM foundllm <span class="keywordflow">in</span> FindObjectsOfType&lt;LLM&gt;())</div>
 <div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>            {</div>
-<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>                <span class="keywordflow">if</span> (<a class="code hl_function" href="classLLMUnity_1_1LLMCaller.html#a11c235d4ba6a611262feead83bff7d34">IsValidLLM</a>(foundllm) &amp;&amp; <a class="code hl_function" href="classLLMUnity_1_1LLMCaller.html#aef76981f31783776b848102de82822fb">IsAutoAssignableLLM</a>(foundllm)) validLLMs.Add(foundllm);</div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>                <span class="keywordflow">if</span> (IsValidLLM(foundllm) &amp;&amp; IsAutoAssignableLLM(foundllm)) validLLMs.Add(foundllm);</div>
 <div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>            }</div>
 <div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>            <span class="keywordflow">if</span> (validLLMs.Count == 0) <span class="keywordflow">return</span>;</div>
 <div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span> </div>
@@ -318,36 +311,34 @@ $(function(){initNavTree('LLMCaller_8cs_source.html',''); initResizable(); });
 <div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>        }</div>
 <div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span> </div>
 <div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>        <span class="comment">// &lt;summary&gt;</span></div>
-<div class="foldopen" id="foldopen00230" data-start="{" data-end="}">
-<div class="line"><a id="l00230" name="l00230"></a><span class="lineno"><a class="line" href="classLLMUnity_1_1LLMCaller.html#a5914034b6b799e018380152c0136b511">  230</a></span>        <span class="keyword">public</span> <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classLLMUnity_1_1LLMCaller.html#a5914034b6b799e018380152c0136b511">CancelRequests</a>()</div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>        <span class="keyword">public</span> <span class="keyword">virtual</span> <span class="keywordtype">void</span> CancelRequests()</div>
 <div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>        {</div>
-<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>            <span class="keywordflow">if</span> (<a class="code hl_variable" href="classLLMUnity_1_1LLMCaller.html#a88d5732340d7eaee28cd82b968bbb3d4">remote</a>) CancelRequestsRemote();</div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>            <span class="keywordflow">if</span> (remote) CancelRequestsRemote();</div>
 <div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>            <span class="keywordflow">else</span> CancelRequestsLocal();</div>
 <div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>        }</div>
-</div>
 <div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span> </div>
 <div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>        <span class="keyword">protected</span> <span class="keyword">virtual</span> async Task&lt;Ret&gt; PostRequestLocal&lt;Res, Ret&gt;(<span class="keywordtype">string</span> json, <span class="keywordtype">string</span> endpoint, ContentCallback&lt;Res, Ret&gt; getContent, Callback&lt;Ret&gt; callback = <span class="keyword">null</span>)</div>
 <div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>        {</div>
 <div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>            <span class="comment">// send a post request to the server and call the relevant callbacks to convert the received content and handle it</span></div>
 <div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>            <span class="comment">// this function has streaming functionality i.e. handles the answer while it is being received</span></div>
-<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>            <span class="keywordflow">while</span> (!llm.<a class="code hl_property" href="classLLMUnity_1_1LLM.html#aeac42866b300f3652548febbbd986af5">failed</a> &amp;&amp; !llm.<a class="code hl_property" href="classLLMUnity_1_1LLM.html#a9bf3f3bd1e5ac32e5790415e448762e7">started</a>) await Task.Yield();</div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>            <span class="keywordflow">while</span> (!llm.failed &amp;&amp; !llm.started) await Task.Yield();</div>
 <div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>            <span class="keywordtype">string</span> callResult = <span class="keyword">null</span>;</div>
 <div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>            <span class="keywordflow">switch</span> (endpoint)</div>
 <div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>            {</div>
 <div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>                <span class="keywordflow">case</span> <span class="stringliteral">&quot;tokenize&quot;</span>:</div>
-<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>                    callResult = await llm.<a class="code hl_function" href="classLLMUnity_1_1LLM.html#ab8cad787f0751fa2ed7e3b2ccede3083">Tokenize</a>(json);</div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>                    callResult = await llm.Tokenize(json);</div>
 <div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>                    <span class="keywordflow">break</span>;</div>
 <div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>                <span class="keywordflow">case</span> <span class="stringliteral">&quot;detokenize&quot;</span>:</div>
-<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>                    callResult = await llm.<a class="code hl_function" href="classLLMUnity_1_1LLM.html#a4f7107b488a3592dca7555371d91f763">Detokenize</a>(json);</div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>                    callResult = await llm.Detokenize(json);</div>
 <div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>                    <span class="keywordflow">break</span>;</div>
 <div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>                <span class="keywordflow">case</span> <span class="stringliteral">&quot;embeddings&quot;</span>:</div>
-<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>                    callResult = await llm.<a class="code hl_function" href="classLLMUnity_1_1LLM.html#aef2e7a567f59048336950592f563b720">Embeddings</a>(json);</div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>                    callResult = await llm.Embeddings(json);</div>
 <div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>                    <span class="keywordflow">break</span>;</div>
 <div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>                <span class="keywordflow">case</span> <span class="stringliteral">&quot;slots&quot;</span>:</div>
-<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>                    callResult = await llm.<a class="code hl_function" href="classLLMUnity_1_1LLM.html#a16381a5907592831a0ea35137b9921ff">Slot</a>(json);</div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>                    callResult = await llm.Slot(json);</div>
 <div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>                    <span class="keywordflow">break</span>;</div>
 <div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>                <span class="keywordflow">default</span>:</div>
-<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>                    <a class="code hl_class" href="classLLMUnity_1_1LLMUnitySetup.html">LLMUnitySetup</a>.LogError($<span class="stringliteral">&quot;Unknown endpoint {endpoint}&quot;</span>);</div>
+<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>                    LLMUnitySetup.LogError($<span class="stringliteral">&quot;Unknown endpoint {endpoint}&quot;</span>);</div>
 <div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>                    <span class="keywordflow">break</span>;</div>
 <div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>            }</div>
 <div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span> </div>
@@ -370,11 +361,11 @@ $(function(){initNavTree('LLMCaller_8cs_source.html',''); initResizable(); });
 <div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>            <span class="keywordtype">byte</span>[] jsonToSend = <span class="keyword">new</span> System.Text.UTF8Encoding().GetBytes(json);</div>
 <div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>            UnityWebRequest request = <span class="keyword">null</span>;</div>
 <div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>            <span class="keywordtype">string</span> error = <span class="keyword">null</span>;</div>
-<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>            <span class="keywordtype">int</span> tryNr = <a class="code hl_variable" href="classLLMUnity_1_1LLMCaller.html#a2dbdfc292fec059103fc3cca43e888c3">numRetries</a>;</div>
+<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>            <span class="keywordtype">int</span> tryNr = numRetries;</div>
 <div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span> </div>
 <div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>            <span class="keywordflow">while</span> (tryNr != 0)</div>
 <div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>            {</div>
-<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>                <span class="keyword">using</span> (request = UnityWebRequest.Put($<span class="stringliteral">&quot;{host}:{port}/{endpoint}&quot;</span>, jsonToSend))</div>
+<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>                <span class="keyword">using</span> (request = UnityWebRequest.Put($<span class="stringliteral">&quot;{host}{(port != 0 ? $&quot;</span>:{port}<span class="stringliteral">&quot; : &quot;</span><span class="stringliteral">&quot;)}/{endpoint}&quot;</span>, jsonToSend))</div>
 <div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span>                {</div>
 <div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>                    WIPRequests.Add(request);</div>
 <div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span> </div>
@@ -418,7 +409,7 @@ $(function(){initNavTree('LLMCaller_8cs_source.html',''); initResizable(); });
 <div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span>                    }</div>
 <div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>                }</div>
 <div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span>                tryNr--;</div>
-<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>                <span class="keywordflow">if</span> (tryNr &gt; 0) await Task.Delay(200 * (<a class="code hl_variable" href="classLLMUnity_1_1LLMCaller.html#a2dbdfc292fec059103fc3cca43e888c3">numRetries</a> - tryNr));</div>
+<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>                <span class="keywordflow">if</span> (tryNr &gt; 0) await Task.Delay(200 * (numRetries - tryNr));</div>
 <div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>            }</div>
 <div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span> </div>
 <div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>            <span class="keywordflow">if</span> (error != <span class="keyword">null</span>) LLMUnitySetup.LogError(error);</div>
@@ -428,12 +419,11 @@ $(function(){initNavTree('LLMCaller_8cs_source.html',''); initResizable(); });
 <div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span> </div>
 <div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span>        <span class="keyword">protected</span> <span class="keyword">virtual</span> async Task&lt;Ret&gt; PostRequest&lt;Res, Ret&gt;(<span class="keywordtype">string</span> json, <span class="keywordtype">string</span> endpoint, ContentCallback&lt;Res, Ret&gt; getContent, Callback&lt;Ret&gt; callback = <span class="keyword">null</span>)</div>
 <div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span>        {</div>
-<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>            <span class="keywordflow">if</span> (<a class="code hl_variable" href="classLLMUnity_1_1LLMCaller.html#a88d5732340d7eaee28cd82b968bbb3d4">remote</a>) <span class="keywordflow">return</span> await PostRequestRemote(json, endpoint, getContent, callback);</div>
+<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>            <span class="keywordflow">if</span> (remote) <span class="keywordflow">return</span> await PostRequestRemote(json, endpoint, getContent, callback);</div>
 <div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>            <span class="keywordflow">return</span> await PostRequestLocal(json, endpoint, getContent, callback);</div>
 <div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>        }</div>
 <div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span> </div>
-<div class="foldopen" id="foldopen00348" data-start="{" data-end="}">
-<div class="line"><a id="l00348" name="l00348"></a><span class="lineno"><a class="line" href="classLLMUnity_1_1LLMCaller.html#a018e0cabb84a07c5dd5b8d893ab57f0f">  348</a></span>        <span class="keyword">public</span> <span class="keyword">virtual</span> async Task&lt;List&lt;int&gt;&gt; <a class="code hl_function" href="classLLMUnity_1_1LLMCaller.html#a018e0cabb84a07c5dd5b8d893ab57f0f">Tokenize</a>(<span class="keywordtype">string</span> query, Callback&lt;List&lt;int&gt;&gt; callback = <span class="keyword">null</span>)</div>
+<div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span>        <span class="keyword">public</span> <span class="keyword">virtual</span> async Task&lt;List&lt;int&gt;&gt; Tokenize(<span class="keywordtype">string</span> query, Callback&lt;List&lt;int&gt;&gt; callback = <span class="keyword">null</span>)</div>
 <div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span>        {</div>
 <div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span>            <span class="comment">// handle the tokenization of a message by the user</span></div>
 <div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span>            TokenizeRequest tokenizeRequest = <span class="keyword">new</span> TokenizeRequest();</div>
@@ -441,10 +431,8 @@ $(function(){initNavTree('LLMCaller_8cs_source.html',''); initResizable(); });
 <div class="line"><a id="l00353" name="l00353"></a><span class="lineno">  353</span>            <span class="keywordtype">string</span> json = JsonUtility.ToJson(tokenizeRequest);</div>
 <div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span>            <span class="keywordflow">return</span> await PostRequest&lt;TokenizeResult, List&lt;int&gt;&gt;(json, <span class="stringliteral">&quot;tokenize&quot;</span>, TokenizeContent, callback);</div>
 <div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span>        }</div>
-</div>
 <div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span> </div>
-<div class="foldopen" id="foldopen00363" data-start="{" data-end="}">
-<div class="line"><a id="l00363" name="l00363"></a><span class="lineno"><a class="line" href="classLLMUnity_1_1LLMCaller.html#a5b7af360853ea9b233782ff6e71e313f">  363</a></span>        <span class="keyword">public</span> <span class="keyword">virtual</span> async Task&lt;string&gt; <a class="code hl_function" href="classLLMUnity_1_1LLMCaller.html#a5b7af360853ea9b233782ff6e71e313f">Detokenize</a>(List&lt;int&gt; tokens, Callback&lt;string&gt; callback = <span class="keyword">null</span>)</div>
+<div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span>        <span class="keyword">public</span> <span class="keyword">virtual</span> async Task&lt;string&gt; Detokenize(List&lt;int&gt; tokens, Callback&lt;string&gt; callback = <span class="keyword">null</span>)</div>
 <div class="line"><a id="l00364" name="l00364"></a><span class="lineno">  364</span>        {</div>
 <div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span>            <span class="comment">// handle the detokenization of a message by the user</span></div>
 <div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span>            TokenizeResult tokenizeRequest = <span class="keyword">new</span> TokenizeResult();</div>
@@ -452,10 +440,8 @@ $(function(){initNavTree('LLMCaller_8cs_source.html',''); initResizable(); });
 <div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span>            <span class="keywordtype">string</span> json = JsonUtility.ToJson(tokenizeRequest);</div>
 <div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span>            <span class="keywordflow">return</span> await PostRequest&lt;TokenizeRequest, string&gt;(json, <span class="stringliteral">&quot;detokenize&quot;</span>, DetokenizeContent, callback);</div>
 <div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span>        }</div>
-</div>
 <div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span> </div>
-<div class="foldopen" id="foldopen00378" data-start="{" data-end="}">
-<div class="line"><a id="l00378" name="l00378"></a><span class="lineno"><a class="line" href="classLLMUnity_1_1LLMCaller.html#a2344c568eafd2918a33fe418841d5481">  378</a></span>        <span class="keyword">public</span> <span class="keyword">virtual</span> async Task&lt;List&lt;float&gt;&gt; <a class="code hl_function" href="classLLMUnity_1_1LLMCaller.html#a2344c568eafd2918a33fe418841d5481">Embeddings</a>(<span class="keywordtype">string</span> query, Callback&lt;List&lt;float&gt;&gt; callback = <span class="keyword">null</span>)</div>
+<div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span>        <span class="keyword">public</span> <span class="keyword">virtual</span> async Task&lt;List&lt;float&gt;&gt; Embeddings(<span class="keywordtype">string</span> query, Callback&lt;List&lt;float&gt;&gt; callback = <span class="keyword">null</span>)</div>
 <div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span>        {</div>
 <div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span>            <span class="comment">// handle the tokenization of a message by the user</span></div>
 <div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span>            TokenizeRequest tokenizeRequest = <span class="keyword">new</span> TokenizeRequest();</div>
@@ -463,32 +449,8 @@ $(function(){initNavTree('LLMCaller_8cs_source.html',''); initResizable(); });
 <div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span>            <span class="keywordtype">string</span> json = JsonUtility.ToJson(tokenizeRequest);</div>
 <div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>            <span class="keywordflow">return</span> await PostRequest&lt;EmbeddingsResult, List&lt;float&gt;&gt;(json, <span class="stringliteral">&quot;embeddings&quot;</span>, EmbeddingsContent, callback);</div>
 <div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span>        }</div>
-</div>
 <div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span>    }</div>
-</div>
 <div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span>}</div>
-<div class="ttc" id="aclassLLMUnity_1_1LLMCaller_html"><div class="ttname"><a href="classLLMUnity_1_1LLMCaller.html">LLMUnity.LLMCaller</a></div><div class="ttdoc">Class implementing calling of LLM functions (local and remote).</div><div class="ttdef"><b>Definition</b> <a href="#l00016">LLMCaller.cs:17</a></div></div>
-<div class="ttc" id="aclassLLMUnity_1_1LLMCaller_html_a018e0cabb84a07c5dd5b8d893ab57f0f"><div class="ttname"><a href="classLLMUnity_1_1LLMCaller.html#a018e0cabb84a07c5dd5b8d893ab57f0f">LLMUnity.LLMCaller.Tokenize</a></div><div class="ttdeci">virtual async Task&lt; List&lt; int &gt; &gt; Tokenize(string query, Callback&lt; List&lt; int &gt; &gt; callback=null)</div><div class="ttdoc">Tokenises the provided query.</div><div class="ttdef"><b>Definition</b> <a href="#l00348">LLMCaller.cs:348</a></div></div>
-<div class="ttc" id="aclassLLMUnity_1_1LLMCaller_html_a11c235d4ba6a611262feead83bff7d34"><div class="ttname"><a href="classLLMUnity_1_1LLMCaller.html#a11c235d4ba6a611262feead83bff7d34">LLMUnity.LLMCaller.IsValidLLM</a></div><div class="ttdeci">virtual bool IsValidLLM(LLM llmSet)</div><div class="ttdoc">Checks if a LLM is valid for the LLMCaller.</div><div class="ttdef"><b>Definition</b> <a href="#l00100">LLMCaller.cs:100</a></div></div>
-<div class="ttc" id="aclassLLMUnity_1_1LLMCaller_html_a2344c568eafd2918a33fe418841d5481"><div class="ttname"><a href="classLLMUnity_1_1LLMCaller.html#a2344c568eafd2918a33fe418841d5481">LLMUnity.LLMCaller.Embeddings</a></div><div class="ttdeci">virtual async Task&lt; List&lt; float &gt; &gt; Embeddings(string query, Callback&lt; List&lt; float &gt; &gt; callback=null)</div><div class="ttdoc">Computes the embeddings of the provided input.</div><div class="ttdef"><b>Definition</b> <a href="#l00378">LLMCaller.cs:378</a></div></div>
-<div class="ttc" id="aclassLLMUnity_1_1LLMCaller_html_a2daf7c8535df9200720b75c4a007aaf8"><div class="ttname"><a href="classLLMUnity_1_1LLMCaller.html#a2daf7c8535df9200720b75c4a007aaf8">LLMUnity.LLMCaller.Awake</a></div><div class="ttdeci">virtual void Awake()</div><div class="ttdoc">The Unity Awake function that initializes the state before the application starts....</div><div class="ttdef"><b>Definition</b> <a href="#l00058">LLMCaller.cs:58</a></div></div>
-<div class="ttc" id="aclassLLMUnity_1_1LLMCaller_html_a2dbdfc292fec059103fc3cca43e888c3"><div class="ttname"><a href="classLLMUnity_1_1LLMCaller.html#a2dbdfc292fec059103fc3cca43e888c3">LLMUnity.LLMCaller.numRetries</a></div><div class="ttdeci">int numRetries</div><div class="ttdoc">number of retries to use for the remote LLM server requests (-1 = infinite)</div><div class="ttdef"><b>Definition</b> <a href="#l00043">LLMCaller.cs:43</a></div></div>
-<div class="ttc" id="aclassLLMUnity_1_1LLMCaller_html_a366e9990e647017081c0903e7b7840e1"><div class="ttname"><a href="classLLMUnity_1_1LLMCaller.html#a366e9990e647017081c0903e7b7840e1">LLMUnity.LLMCaller.port</a></div><div class="ttdeci">int port</div><div class="ttdoc">port of the remote LLM server</div><div class="ttdef"><b>Definition</b> <a href="#l00040">LLMCaller.cs:40</a></div></div>
-<div class="ttc" id="aclassLLMUnity_1_1LLMCaller_html_a47607562078b546b5ad3f614d35a9c4b"><div class="ttname"><a href="classLLMUnity_1_1LLMCaller.html#a47607562078b546b5ad3f614d35a9c4b">LLMUnity.LLMCaller.host</a></div><div class="ttdeci">string host</div><div class="ttdoc">host of the remote LLM server</div><div class="ttdef"><b>Definition</b> <a href="#l00037">LLMCaller.cs:37</a></div></div>
-<div class="ttc" id="aclassLLMUnity_1_1LLMCaller_html_a5914034b6b799e018380152c0136b511"><div class="ttname"><a href="classLLMUnity_1_1LLMCaller.html#a5914034b6b799e018380152c0136b511">LLMUnity.LLMCaller.CancelRequests</a></div><div class="ttdeci">virtual void CancelRequests()</div><div class="ttdoc">Cancel the ongoing requests e.g. Chat, Complete.</div><div class="ttdef"><b>Definition</b> <a href="#l00230">LLMCaller.cs:230</a></div></div>
-<div class="ttc" id="aclassLLMUnity_1_1LLMCaller_html_a5b7af360853ea9b233782ff6e71e313f"><div class="ttname"><a href="classLLMUnity_1_1LLMCaller.html#a5b7af360853ea9b233782ff6e71e313f">LLMUnity.LLMCaller.Detokenize</a></div><div class="ttdeci">virtual async Task&lt; string &gt; Detokenize(List&lt; int &gt; tokens, Callback&lt; string &gt; callback=null)</div><div class="ttdoc">Detokenises the provided tokens to a string.</div><div class="ttdef"><b>Definition</b> <a href="#l00363">LLMCaller.cs:363</a></div></div>
-<div class="ttc" id="aclassLLMUnity_1_1LLMCaller_html_a88d5732340d7eaee28cd82b968bbb3d4"><div class="ttname"><a href="classLLMUnity_1_1LLMCaller.html#a88d5732340d7eaee28cd82b968bbb3d4">LLMUnity.LLMCaller.remote</a></div><div class="ttdeci">bool remote</div><div class="ttdoc">use remote LLM server</div><div class="ttdef"><b>Definition</b> <a href="#l00023">LLMCaller.cs:23</a></div></div>
-<div class="ttc" id="aclassLLMUnity_1_1LLMCaller_html_a9e88926976ee58c23a10904cd1fe3283"><div class="ttname"><a href="classLLMUnity_1_1LLMCaller.html#a9e88926976ee58c23a10904cd1fe3283">LLMUnity.LLMCaller.advancedOptions</a></div><div class="ttdeci">bool advancedOptions</div><div class="ttdoc">show/hide advanced options in the GameObject</div><div class="ttdef"><b>Definition</b> <a href="#l00020">LLMCaller.cs:20</a></div></div>
-<div class="ttc" id="aclassLLMUnity_1_1LLMCaller_html_ac884093a82d0b59e8b8b2573913bea79"><div class="ttname"><a href="classLLMUnity_1_1LLMCaller.html#ac884093a82d0b59e8b8b2573913bea79">LLMUnity.LLMCaller.APIKey</a></div><div class="ttdeci">string APIKey</div><div class="ttdoc">API key for the remote server.</div><div class="ttdef"><b>Definition</b> <a href="#l00034">LLMCaller.cs:34</a></div></div>
-<div class="ttc" id="aclassLLMUnity_1_1LLMCaller_html_aef76981f31783776b848102de82822fb"><div class="ttname"><a href="classLLMUnity_1_1LLMCaller.html#aef76981f31783776b848102de82822fb">LLMUnity.LLMCaller.IsAutoAssignableLLM</a></div><div class="ttdeci">virtual bool IsAutoAssignableLLM(LLM llmSet)</div><div class="ttdoc">Checks if a LLM can be auto-assigned if the LLM of the LLMCaller is null.</div><div class="ttdef"><b>Definition</b> <a href="#l00110">LLMCaller.cs:110</a></div></div>
-<div class="ttc" id="aclassLLMUnity_1_1LLMUnitySetup_html"><div class="ttname"><a href="classLLMUnity_1_1LLMUnitySetup.html">LLMUnity.LLMUnitySetup</a></div><div class="ttdoc">Class implementing helper functions for setup and process management.</div><div class="ttdef"><b>Definition</b> <a href="LLMUnitySetup_8cs_source.html#l00100">LLMUnitySetup.cs:101</a></div></div>
-<div class="ttc" id="aclassLLMUnity_1_1LLM_html"><div class="ttname"><a href="classLLMUnity_1_1LLM.html">LLMUnity.LLM</a></div><div class="ttdoc">Class implementing the LLM server.</div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00018">LLM.cs:19</a></div></div>
-<div class="ttc" id="aclassLLMUnity_1_1LLM_html_a16381a5907592831a0ea35137b9921ff"><div class="ttname"><a href="classLLMUnity_1_1LLM.html#a16381a5907592831a0ea35137b9921ff">LLMUnity.LLM.Slot</a></div><div class="ttdeci">async Task&lt; string &gt; Slot(string json)</div><div class="ttdoc">Allows to save / restore the state of a slot.</div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00764">LLM.cs:764</a></div></div>
-<div class="ttc" id="aclassLLMUnity_1_1LLM_html_a4f7107b488a3592dca7555371d91f763"><div class="ttname"><a href="classLLMUnity_1_1LLM.html#a4f7107b488a3592dca7555371d91f763">LLMUnity.LLM.Detokenize</a></div><div class="ttdeci">async Task&lt; string &gt; Detokenize(string json)</div><div class="ttdoc">Detokenises the provided query.</div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00692">LLM.cs:692</a></div></div>
-<div class="ttc" id="aclassLLMUnity_1_1LLM_html_a9bf3f3bd1e5ac32e5790415e448762e7"><div class="ttname"><a href="classLLMUnity_1_1LLM.html#a9bf3f3bd1e5ac32e5790415e448762e7">LLMUnity.LLM.started</a></div><div class="ttdeci">bool started</div><div class="ttdoc">Boolean set to true if the server has started and is ready to receive requests, false otherwise.</div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00053">LLM.cs:53</a></div></div>
-<div class="ttc" id="aclassLLMUnity_1_1LLM_html_ab8cad787f0751fa2ed7e3b2ccede3083"><div class="ttname"><a href="classLLMUnity_1_1LLM.html#ab8cad787f0751fa2ed7e3b2ccede3083">LLMUnity.LLM.Tokenize</a></div><div class="ttdeci">async Task&lt; string &gt; Tokenize(string json)</div><div class="ttdoc">Tokenises the provided query.</div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00677">LLM.cs:677</a></div></div>
-<div class="ttc" id="aclassLLMUnity_1_1LLM_html_aeac42866b300f3652548febbbd986af5"><div class="ttname"><a href="classLLMUnity_1_1LLM.html#aeac42866b300f3652548febbbd986af5">LLMUnity.LLM.failed</a></div><div class="ttdeci">bool failed</div><div class="ttdoc">Boolean set to true if the server has failed to start.</div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00055">LLM.cs:55</a></div></div>
-<div class="ttc" id="aclassLLMUnity_1_1LLM_html_aef2e7a567f59048336950592f563b720"><div class="ttname"><a href="classLLMUnity_1_1LLM.html#aef2e7a567f59048336950592f563b720">LLMUnity.LLM.Embeddings</a></div><div class="ttdeci">async Task&lt; string &gt; Embeddings(string json)</div><div class="ttdoc">Computes the embeddings of the provided query.</div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00707">LLM.cs:707</a></div></div>
 <div class="ttc" id="anamespaceLLMUnity_html"><div class="ttname"><a href="namespaceLLMUnity.html">LLMUnity</a></div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00011">LLM.cs:12</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

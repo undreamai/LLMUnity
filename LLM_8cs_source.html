@@ -47,7 +47,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_tiny.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">LLM for Unity
-   &#160;<span id="projectnumber">v2.5.1</span>
+   &#160;<span id="projectnumber">v2.5.2</span>
    </div>
    <div id="projectbrief">Create characters in Unity with LLMs!</div>
   </td>
@@ -617,7 +617,7 @@ $(function(){initNavTree('LLM_8cs_source.html',''); initResizable(); });
 <div class="line"><a id="l00562" name="l00562"></a><span class="lineno">  562</span>        }</div>
 <div class="line"><a id="l00563" name="l00563"></a><span class="lineno">  563</span> </div>
 <div class="foldopen" id="foldopen00570" data-start="{" data-end="}">
-<div class="line"><a id="l00570" name="l00570"></a><span class="lineno"><a class="line" href="classLLMUnity_1_1LLM.html#ae9def17151b9927d93f751b5455d5f34">  570</a></span>        <span class="keyword">public</span> <span class="keywordtype">int</span> <a class="code hl_function" href="classLLMUnity_1_1LLM.html#ae9def17151b9927d93f751b5455d5f34">Register</a>(<a class="code hl_class" href="classLLMUnity_1_1LLMCaller.html">LLMCaller</a> llmCaller)</div>
+<div class="line"><a id="l00570" name="l00570"></a><span class="lineno"><a class="line" href="classLLMUnity_1_1LLM.html#ae9def17151b9927d93f751b5455d5f34">  570</a></span>        <span class="keyword">public</span> <span class="keywordtype">int</span> <a class="code hl_function" href="classLLMUnity_1_1LLM.html#ae9def17151b9927d93f751b5455d5f34">Register</a>(LLMCaller llmCaller)</div>
 <div class="line"><a id="l00571" name="l00571"></a><span class="lineno">  571</span>        {</div>
 <div class="line"><a id="l00572" name="l00572"></a><span class="lineno">  572</span>            clients.Add(llmCaller);</div>
 <div class="line"><a id="l00573" name="l00573"></a><span class="lineno">  573</span>            <span class="keywordtype">int</span> index = clients.IndexOf(llmCaller);</div>
@@ -875,7 +875,6 @@ $(function(){initNavTree('LLM_8cs_source.html',''); initResizable(); });
 </div>
 <div class="ttc" id="aclassLLMUnity_1_1ChatTemplate_html"><div class="ttname"><a href="classLLMUnity_1_1ChatTemplate.html">LLMUnity.ChatTemplate</a></div><div class="ttdoc">Class implementing the skeleton of a chat template.</div><div class="ttdef"><b>Definition</b> <a href="LLMChatTemplates_8cs_source.html#l00012">LLMChatTemplates.cs:13</a></div></div>
 <div class="ttc" id="aclassLLMUnity_1_1ChatTemplate_html_afd8535970354d20efc257916e725dcef"><div class="ttname"><a href="classLLMUnity_1_1ChatTemplate.html#afd8535970354d20efc257916e725dcef">LLMUnity.ChatTemplate.DefaultTemplate</a></div><div class="ttdeci">static string DefaultTemplate</div><div class="ttdoc">the default template used when it can't be determined (&quot;chatml&quot;)</div><div class="ttdef"><b>Definition</b> <a href="LLMChatTemplates_8cs_source.html#l00015">LLMChatTemplates.cs:15</a></div></div>
-<div class="ttc" id="aclassLLMUnity_1_1LLMCaller_html"><div class="ttname"><a href="classLLMUnity_1_1LLMCaller.html">LLMUnity.LLMCaller</a></div><div class="ttdoc">Class implementing calling of LLM functions (local and remote).</div><div class="ttdef"><b>Definition</b> <a href="LLMCaller_8cs_source.html#l00016">LLMCaller.cs:17</a></div></div>
 <div class="ttc" id="aclassLLMUnity_1_1LLMManager_html"><div class="ttname"><a href="classLLMUnity_1_1LLMManager.html">LLMUnity.LLMManager</a></div><div class="ttdoc">Class implementing the LLM model manager.</div><div class="ttdef"><b>Definition</b> <a href="LLMManager_8cs_source.html#l00110">LLMManager.cs:111</a></div></div>
 <div class="ttc" id="aclassLLMUnity_1_1LLMManager_html_a2a8c7192abb0972464557bd9c825d773"><div class="ttname"><a href="classLLMUnity_1_1LLMManager.html#a2a8c7192abb0972464557bd9c825d773">LLMUnity.LLMManager.Unregister</a></div><div class="ttdeci">static void Unregister(LLM llm)</div><div class="ttdoc">Removes a LLM from the model manager.</div><div class="ttdef"><b>Definition</b> <a href="LLMManager_8cs_source.html#l00315">LLMManager.cs:315</a></div></div>
 <div class="ttc" id="aclassLLMUnity_1_1LLMManager_html_a4ce9c8c366573e96eb9d00ceab43b8ba"><div class="ttname"><a href="classLLMUnity_1_1LLMManager.html#a4ce9c8c366573e96eb9d00ceab43b8ba">LLMUnity.LLMManager.Get</a></div><div class="ttdeci">static ModelEntry Get(string path)</div><div class="ttdoc">Gets the model entry for a model path.</div><div class="ttdef"><b>Definition</b> <a href="LLMManager_8cs_source.html#l00242">LLMManager.cs:242</a></div></div>

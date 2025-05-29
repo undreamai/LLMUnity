@@ -47,7 +47,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_tiny.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">LLM for Unity
-   &#160;<span id="projectnumber">v2.5.1</span>
+   &#160;<span id="projectnumber">v2.5.2</span>
    </div>
    <div id="projectbrief">Create characters in Unity with LLMs!</div>
   </td>
@@ -125,7 +125,7 @@ $(function(){initNavTree('index.html',''); initResizable(); });
 <h1><a class="anchor" id="autotoc_md1"></a>
 At a glance</h1>
 <ul>
-<li>💻 Cross-platform! Windows, Linux, macOS, iOS, Android and VisionOS</li>
+<li>💻 Runs anywhere: PC, mobile or VR!</li>
 <li>🏠 Runs locally without internet access. No data ever leave the game!</li>
 <li>⚡ Blazing fast inference on CPU and GPU (Nvidia, AMD, Apple Metal)</li>
 <li>🤗 Supports all major LLM models</li>
@@ -153,6 +153,14 @@ Games / Projects using LLM for Unity</h1>
 <li><a href="https://whynames.itch.io/aiemotionalgirlfriend">AI Emotional Girlfriend</a></li>
 <li><a href="https://store.steampowered.com/app/2532160/Case_Closed">Case Closed</a></li>
 <li><a href="https://github.com/IhateCreatingUserNames2/MaiMai">MaiMai AI Agent System</a></li>
+<li><a href="https://play.google.com/store/apps/details?id=com.ProLink.ClariaChat">Claria Chat</a></li>
+<li><a href="https://store.steampowered.com/app/2928500/Endless_Casual_Drive/">Endless Casual Drive</a></li>
+<li><a href="https://store.steampowered.com/app/3415680/Dating_App_Simulator/">Dating App Simulator</a></li>
+<li><a href="https://vrmi.vercel.app/">Virtual Reality Mock Interview</a></li>
+<li><a href="https://github.com/Velesio/Velesio-AIServer">Velesio AI server</a></li>
+<li><a href="https://www.meta.com/experiences/dungeonchat/8527310950709276/">Dungeon Chat</a></li>
+<li><a href="https://joycatdev.itch.io/tomonaka-desk">Tomonaka Desk</a></li>
+<li><a href="https://store.steampowered.com/app/3089280/Digital_Humans/">Digital Humans</a></li>
 </ul>
 <p>Contact us to add your project!</p>
 <h1><a class="anchor" id="autotoc_md4"></a>
@@ -203,7 +211,7 @@ In the GameObject Inspector click <code>Add Component</code> and select the LLMC
 <div class="line">  }</div>
 <div class="line">}</div>
 <div class="ttc" id="aclassLLMUnity_1_1LLMCharacter_html"><div class="ttname"><a href="classLLMUnity_1_1LLMCharacter.html">LLMUnity.LLMCharacter</a></div><div class="ttdoc">Class implementing the LLM characters.</div><div class="ttdef"><b>Definition</b> <a href="LLMCharacter_8cs_source.html#l00018">LLMCharacter.cs:19</a></div></div>
-<div class="ttc" id="aclassLLMUnity_1_1LLMCharacter_html_a1367eb182ec0efe9322a3102ea22952e"><div class="ttname"><a href="classLLMUnity_1_1LLMCharacter.html#a1367eb182ec0efe9322a3102ea22952e">LLMUnity.LLMCharacter.Chat</a></div><div class="ttdeci">virtual async Task&lt; string &gt; Chat(string query, Callback&lt; string &gt; callback=null, EmptyCallback completionCallback=null, bool addToHistory=true)</div><div class="ttdoc">Chat functionality of the LLM. It calls the LLM completion based on the provided query including the ...</div><div class="ttdef"><b>Definition</b> <a href="LLMCharacter_8cs_source.html#l00520">LLMCharacter.cs:520</a></div></div>
+<div class="ttc" id="aclassLLMUnity_1_1LLMCharacter_html_a1367eb182ec0efe9322a3102ea22952e"><div class="ttname"><a href="classLLMUnity_1_1LLMCharacter.html#a1367eb182ec0efe9322a3102ea22952e">LLMUnity.LLMCharacter.Chat</a></div><div class="ttdeci">virtual async Task&lt; string &gt; Chat(string query, Callback&lt; string &gt; callback=null, EmptyCallback completionCallback=null, bool addToHistory=true)</div><div class="ttdoc">Chat functionality of the LLM. It calls the LLM completion based on the provided query including the ...</div><div class="ttdef"><b>Definition</b> <a href="LLMCharacter_8cs_source.html#l00519">LLMCharacter.cs:519</a></div></div>
 <div class="ttc" id="anamespaceLLMUnity_html"><div class="ttname"><a href="namespaceLLMUnity.html">LLMUnity</a></div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00011">LLM.cs:12</a></div></div>
 </div><!-- fragment --><p> You can also specify a function to call when the model reply has been completed.<br  />
  This is useful if the <code>Stream</code> option is enabled for continuous output from the model (default behaviour): </p><div class="fragment"><div class="line"><span class="keywordtype">void</span> ReplyCompleted(){</div>
@@ -218,8 +226,7 @@ In the GameObject Inspector click <code>Add Component</code> and select the LLMC
 <div class="line">  _ = llmCharacter.<a class="code hl_function" href="classLLMUnity_1_1LLMCharacter.html#a1367eb182ec0efe9322a3102ea22952e">Chat</a>(message, HandleReply, ReplyCompleted);</div>
 <div class="line">  ...</div>
 <div class="line">}</div>
-</div><!-- fragment --><p>To stop the chat without waiting for its completion you can use: </p><div class="fragment"><div class="line">llmCharacter.<a class="code hl_function" href="classLLMUnity_1_1LLMCaller.html#a5914034b6b799e018380152c0136b511">CancelRequests</a>();</div>
-<div class="ttc" id="aclassLLMUnity_1_1LLMCaller_html_a5914034b6b799e018380152c0136b511"><div class="ttname"><a href="classLLMUnity_1_1LLMCaller.html#a5914034b6b799e018380152c0136b511">LLMUnity.LLMCaller.CancelRequests</a></div><div class="ttdeci">virtual void CancelRequests()</div><div class="ttdoc">Cancel the ongoing requests e.g. Chat, Complete.</div><div class="ttdef"><b>Definition</b> <a href="LLMCaller_8cs_source.html#l00230">LLMCaller.cs:230</a></div></div>
+</div><!-- fragment --><p>To stop the chat without waiting for its completion you can use: </p><div class="fragment"><div class="line">llmCharacter.CancelRequests();</div>
 </div><!-- fragment --><ul>
 <li>Finally, in the Inspector of the GameObject of your script, select the LLMCharacter GameObject created above as the llmCharacter property.</li>
 </ul>
@@ -277,9 +284,9 @@ Access / Save / Load your chat history</summary>
 </p>
 <p>To automatically save / load your chat history, you can specify the <code>Save</code> parameter of the LLMCharacter to the filename (or relative path) of your choice. The file is saved in the <a href="https://docs.unity3d.com/ScriptReference/Application-persistentDataPath.html">persistentDataPath folder of Unity</a>. This also saves the state of the LLM which means that the previously cached prompt does not need to be recomputed.</p>
 <p>To manually save your chat history, you can use: </p><div class="fragment"><div class="line">llmCharacter.<a class="code hl_function" href="classLLMUnity_1_1LLMCharacter.html#a8777cf02ab4ecf5a967ade7e93925108">Save</a>(<span class="stringliteral">&quot;filename&quot;</span>);</div>
-<div class="ttc" id="aclassLLMUnity_1_1LLMCharacter_html_a8777cf02ab4ecf5a967ade7e93925108"><div class="ttname"><a href="classLLMUnity_1_1LLMCharacter.html#a8777cf02ab4ecf5a967ade7e93925108">LLMUnity.LLMCharacter.Save</a></div><div class="ttdeci">virtual async Task&lt; string &gt; Save(string filename)</div><div class="ttdoc">Saves the chat history and cache to the provided filename / relative path.</div><div class="ttdef"><b>Definition</b> <a href="LLMCharacter_8cs_source.html#l00645">LLMCharacter.cs:645</a></div></div>
+<div class="ttc" id="aclassLLMUnity_1_1LLMCharacter_html_a8777cf02ab4ecf5a967ade7e93925108"><div class="ttname"><a href="classLLMUnity_1_1LLMCharacter.html#a8777cf02ab4ecf5a967ade7e93925108">LLMUnity.LLMCharacter.Save</a></div><div class="ttdeci">virtual async Task&lt; string &gt; Save(string filename)</div><div class="ttdoc">Saves the chat history and cache to the provided filename / relative path.</div><div class="ttdef"><b>Definition</b> <a href="LLMCharacter_8cs_source.html#l00644">LLMCharacter.cs:644</a></div></div>
 </div><!-- fragment --><p> and to load the history: </p><div class="fragment"><div class="line">llmCharacter.<a class="code hl_function" href="classLLMUnity_1_1LLMCharacter.html#a5fcf385a45c9cd71e2428b7442a163a3">Load</a>(<span class="stringliteral">&quot;filename&quot;</span>);</div>
-<div class="ttc" id="aclassLLMUnity_1_1LLMCharacter_html_a5fcf385a45c9cd71e2428b7442a163a3"><div class="ttname"><a href="classLLMUnity_1_1LLMCharacter.html#a5fcf385a45c9cd71e2428b7442a163a3">LLMUnity.LLMCharacter.Load</a></div><div class="ttdeci">virtual async Task&lt; string &gt; Load(string filename)</div><div class="ttdoc">Load the chat history and cache from the provided filename / relative path.</div><div class="ttdef"><b>Definition</b> <a href="LLMCharacter_8cs_source.html#l00664">LLMCharacter.cs:664</a></div></div>
+<div class="ttc" id="aclassLLMUnity_1_1LLMCharacter_html_a5fcf385a45c9cd71e2428b7442a163a3"><div class="ttname"><a href="classLLMUnity_1_1LLMCharacter.html#a5fcf385a45c9cd71e2428b7442a163a3">LLMUnity.LLMCharacter.Load</a></div><div class="ttdeci">virtual async Task&lt; string &gt; Load(string filename)</div><div class="ttdoc">Load the chat history and cache from the provided filename / relative path.</div><div class="ttdef"><b>Definition</b> <a href="LLMCharacter_8cs_source.html#l00663">LLMCharacter.cs:663</a></div></div>
 </div><!-- fragment --><p> where filename the filename or relative path of your choice.</p>
 <p></p>
 </details>
@@ -298,7 +305,7 @@ Process the prompt at the beginning of your app for faster initial processing ti
 <div class="line">  _ = llmCharacter.<a class="code hl_function" href="classLLMUnity_1_1LLMCharacter.html#aa582248b495a4aa8dac46803e2412bb4">Warmup</a>(WarmupCompleted);</div>
 <div class="line">  ...</div>
 <div class="line">}</div>
-<div class="ttc" id="aclassLLMUnity_1_1LLMCharacter_html_aa582248b495a4aa8dac46803e2412bb4"><div class="ttname"><a href="classLLMUnity_1_1LLMCharacter.html#aa582248b495a4aa8dac46803e2412bb4">LLMUnity.LLMCharacter.Warmup</a></div><div class="ttdeci">virtual async Task Warmup(EmptyCallback completionCallback=null)</div><div class="ttdoc">Allow to warm-up a model by processing the system prompt. The prompt processing will be cached (if ca...</div><div class="ttdef"><b>Definition</b> <a href="LLMCharacter_8cs_source.html#l00580">LLMCharacter.cs:580</a></div></div>
+<div class="ttc" id="aclassLLMUnity_1_1LLMCharacter_html_aa582248b495a4aa8dac46803e2412bb4"><div class="ttname"><a href="classLLMUnity_1_1LLMCharacter.html#aa582248b495a4aa8dac46803e2412bb4">LLMUnity.LLMCharacter.Warmup</a></div><div class="ttdeci">virtual async Task Warmup(EmptyCallback completionCallback=null)</div><div class="ttdoc">Allow to warm-up a model by processing the system prompt. The prompt processing will be cached (if ca...</div><div class="ttdef"><b>Definition</b> <a href="LLMCharacter_8cs_source.html#l00579">LLMCharacter.cs:579</a></div></div>
 </div><!-- fragment --><p></p>
 </details>
 <details >
@@ -325,7 +332,7 @@ Use pure text completion</summary>
 <div class="line">  _ = llmCharacter.<a class="code hl_function" href="classLLMUnity_1_1LLMCharacter.html#adf9cc5ead56e07d72f7cf9a79acd4128">Complete</a>(message, HandleReply, ReplyCompleted);</div>
 <div class="line">  ...</div>
 <div class="line">}</div>
-<div class="ttc" id="aclassLLMUnity_1_1LLMCharacter_html_adf9cc5ead56e07d72f7cf9a79acd4128"><div class="ttname"><a href="classLLMUnity_1_1LLMCharacter.html#adf9cc5ead56e07d72f7cf9a79acd4128">LLMUnity.LLMCharacter.Complete</a></div><div class="ttdeci">virtual async Task&lt; string &gt; Complete(string prompt, Callback&lt; string &gt; callback=null, EmptyCallback completionCallback=null)</div><div class="ttdoc">Pure completion functionality of the LLM. It calls the LLM completion based solely on the provided pr...</div><div class="ttdef"><b>Definition</b> <a href="LLMCharacter_8cs_source.html#l00560">LLMCharacter.cs:560</a></div></div>
+<div class="ttc" id="aclassLLMUnity_1_1LLMCharacter_html_adf9cc5ead56e07d72f7cf9a79acd4128"><div class="ttname"><a href="classLLMUnity_1_1LLMCharacter.html#adf9cc5ead56e07d72f7cf9a79acd4128">LLMUnity.LLMCharacter.Complete</a></div><div class="ttdeci">virtual async Task&lt; string &gt; Complete(string prompt, Callback&lt; string &gt; callback=null, EmptyCallback completionCallback=null)</div><div class="ttdoc">Pure completion functionality of the LLM. It calls the LLM completion based solely on the provided pr...</div><div class="ttdef"><b>Definition</b> <a href="LLMCharacter_8cs_source.html#l00559">LLMCharacter.cs:559</a></div></div>
 </div><!-- fragment --><p></p>
 </details>
 <details >
@@ -418,7 +425,7 @@ Use a remote server</summary>
 </ul>
 <p>Alternatively you can use a server binary for easier deployment:</p><ul>
 <li>Run the above scene from the Editor and copy the command from the Debug messages (starting with "Server command:")</li>
-<li>Download the <a href="https://github.com/undreamai/LlamaLib/releases/download/v1.2.4/undreamai-v1.2.4-server.zip">server binaries</a> and <a href="https://github.com/undreamai/LlamaLib/releases/download/v1.2.4/undreamai-v1.2.4-llamacpp-full.zip">DLLs</a> and extract them into the same folder</li>
+<li>Download the <a href="https://github.com/undreamai/LlamaLib/releases/download/v1.2.6/undreamai-v1.2.6-server.zip">server binaries</a> and <a href="https://github.com/undreamai/LlamaLib/releases/download/v1.2.6/undreamai-v1.2.6-llamacpp-full.zip">DLLs</a> and extract them into the same folder</li>
 <li>Find the architecture you are interested in from the folder above e.g. for Windows and CUDA use the <code>windows-cuda-cu12.2.0</code>.<br  />
 You can also check the architecture that works for your system from the Debug messages (starting with "Using architecture").</li>
 <li>From command line change directory to the architecture folder selected and start the server by running the command copied from above.</li>
@@ -432,8 +439,7 @@ You can also check the architecture that works for your system from the Debug me
 <summary >
 Compute embeddings using a LLM</summary>
 <p></p>
-<p>The <code>Embeddings</code> function can be used to obtain the emdeddings of a phrase: </p><div class="fragment"><div class="line">List&lt;float&gt; embeddings = await llmCharacter.<a class="code hl_function" href="classLLMUnity_1_1LLMCaller.html#a2344c568eafd2918a33fe418841d5481">Embeddings</a>(<span class="stringliteral">&quot;hi, how are you?&quot;</span>);</div>
-<div class="ttc" id="aclassLLMUnity_1_1LLMCaller_html_a2344c568eafd2918a33fe418841d5481"><div class="ttname"><a href="classLLMUnity_1_1LLMCaller.html#a2344c568eafd2918a33fe418841d5481">LLMUnity.LLMCaller.Embeddings</a></div><div class="ttdeci">virtual async Task&lt; List&lt; float &gt; &gt; Embeddings(string query, Callback&lt; List&lt; float &gt; &gt; callback=null)</div><div class="ttdoc">Computes the embeddings of the provided input.</div><div class="ttdef"><b>Definition</b> <a href="LLMCaller_8cs_source.html#l00378">LLMCaller.cs:378</a></div></div>
+<p>The <code>Embeddings</code> function can be used to obtain the emdeddings of a phrase: </p><div class="fragment"><div class="line">List&lt;float&gt; embeddings = await llmCharacter.Embeddings(<span class="stringliteral">&quot;hi, how are you?&quot;</span>);</div>
 </div><!-- fragment --><p></p>
 </details>
 <p>A <b>detailed documentation</b> on function level can be found here: <a href="https://undream.ai/LLMUnity"><img src="https://img.shields.io/badge/Documentation-white.svg?logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwEAYAAAAHkiXEAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEgAACxIB0t1+/AAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAATqSURBVHic7ZtbiE1RGMc349K4M5EwklwjzUhJCMmTJPJAYjQXJJcH8+Blkry4lPJA8aAoJbekDLmUS6E8SHJL5AW5JPf77eHv93C22Wfttc/ee+0zc/4vv+bMXvusvfZa3/q+b33H80oqqaSSSmqrKnPdgXjUvbvYq5f4+7f486eb/rRajRsn7t4tPngg/vol/vkj/vghXr0q7tghzpyZ//79+on79omXLombNondukXrd9GoSxdx8mSxqUm8eVNkgAvl0aPioEFip07i6dP52z15Ig4fbvVY2VVFhbhokXjrlogJiWvAg/jwoXjqVO73+leUny9eiFVV5mfMlLDRBw+KX76ISQ+0LZ8/F00v4uJFsWPHFh83O+rdWzx3TnQ9wCZ+/Sqyl5iux1RmTu3aiYcPi64H1pasALypoOv4/8SJXraEbXc9kLbECxo2TKyuFj9/zt9u+XIvG8LWv3wpuh5QW86f3/JznT+fv93s2S23C1Z72wbhtH692LdvMvdPSgzkhAkiJhT16ZO/PRPOmcr+Rda4aa5nclTeuZP7PDgRpr1g40bPrQYOFF0PYKHEC+raVVy8OFy7R49EArvURU4mrUAqaTY0iB8/2rXD+XCm5mbR9QAWylevorV7/VpkL0ld06eLpkiyWPj9u93179+LpFZwZ1PXtGnitWui64GMStPmG7SH1NSIJBNHjvTSFZvRvHlise0N9JcBtW1/44Y4dqx45IjnU0JxAGLpklPx+9VZFwPp/9v/eZDGjxcZh7dv4+mXtch+up7Rca+MsJvxiRNi6nvBhg25HWprZMaPGeOlqxEjxGKz+XGRTAAmyJnq6sR370TXA2NLW+8HNjZ62dLOnaLrAQ1r2zmqPH482n0mTfJCKmEvCJHUooNZE/369Elct06kqiKsONRfulTEFDsX8QDlIa5nup9374pE8IiZHPY+ly+LZE/37/cM6mC6IB6Vl4urV6fzfUG6d0/csyf37wsXRFInaM4ckTjGdPg+apTYs6dI3RIWwH//1DV1qkiuxNY2FzrTd+2y6y8z2HQU6efZs+KBAyJZ4v+V0h6ArlwROaQP0uPH4ooV4sqV8Xz/4MF211M2wwoOq1mzRAq5Pnywa5+4KDHE9mI7ly0TO3fOvZ6/eZCoKwB32HS0SMFV1DNtImBKHYstBROoQ4fEQk2RaS+qrxejmj5M7NatIhWARS82xUJfAKahzFcdPnq0GLYgy7Rnbd8e6rGKRyzpuNzPBQty709RcNSZf/KkuHCh2GpMDyKbGNcLYE+YMkVks336NFx7XhTZ3szXiBaqtWvFuAOxM2dEZiyH8UErgc8JLNun7E0aFffSI7RP6owZmz9kSO73HjsmXr8ukppYsybSYyQvBp5QfOjQ3M9tRR496pGgLf1JtLlzRZJzlFzGp4SWDnUxFCrdvy+uWiWa3DJe3N69oj8uSEq8CER88uaNOGBAOv2ILGY69TBBJoM8O0t72zaRoztXBzlLlrT8XARW/IQq82JTMv3mKmv0/9CC4mJMYPwrMSETxAyurRUxQVmXP1fEid7mzeK3b+n2Jzb16CFu2SIWmtNJiriVxANsyq0uoCJfTk4G9y4t24/bSQ0rTkP6gVTG3mz//uKMGSK/ucId5Xe9lZUi5eMMLGUgz56J5Hxu3xZ50Xg3RMIltVn9BRja26PYsBHgAAAAAElFTkSuQmCC" alt="" style="pointer-events: none;" class="inline"/></a></p>

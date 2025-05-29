@@ -1,5 +1,0 @@
-<map id="LLMUnity.LLM.Register" name="LLMUnity.LLM.Register">
-<area shape="rect" id="Node000001" title="Registers a local LLMCaller object. This allows to bind the LLMCaller &quot;client&quot; to a specific slot of ..." alt="" coords="273,5,443,31"/>
-<area shape="rect" id="Node000002" href="$classLLMUnity_1_1LLMCharacter.html#a47c5f67fe64e3f6de5115c9e858152a3" title="The Unity Awake function that initializes the state before the application starts...." alt="" coords="5,5,225,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="260,21,226,21,226,15,260,15"/>
-</map>

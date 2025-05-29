@@ -9,8 +9,7 @@ var searchData=
   ['numloras_6',['NumLoras',['../classLLMUnity_1_1LLMManager.html#ab77b07a951600be6ad83934b90c411bf',1,'LLMUnity::LLMManager']]],
   ['nummodels_7',['NumModels',['../classLLMUnity_1_1LLMManager.html#a46f58f585c1facf9343f65a4deb127c4',1,'LLMUnity::LLMManager']]],
   ['numpredict_8',['numPredict',['../classLLMUnity_1_1LLMCharacter.html#a4284bba2e077a4a168caf479a32c03b7',1,'LLMUnity::LLMCharacter']]],
-  ['numretries_9',['numRetries',['../classLLMUnity_1_1LLMCaller.html#a2dbdfc292fec059103fc3cca43e888c3',1,'LLMUnity::LLMCaller']]],
-  ['numthreads_10',['numThreads',['../classLLMUnity_1_1LLM.html#a9afb1e3370f988ac5ae6bc8bb442bc95',1,'LLMUnity::LLM']]],
-  ['numtokens_11',['numTokens',['../classLLMUnity_1_1TokenSplitter.html#a42d6d90b0fa00ab7f3b212e2de991800',1,'LLMUnity::TokenSplitter']]],
-  ['numwords_12',['numWords',['../classLLMUnity_1_1WordSplitter.html#af3e6aaade1f4a488cf00ebd3d975314b',1,'LLMUnity::WordSplitter']]]
+  ['numthreads_9',['numThreads',['../classLLMUnity_1_1LLM.html#a9afb1e3370f988ac5ae6bc8bb442bc95',1,'LLMUnity::LLM']]],
+  ['numtokens_10',['numTokens',['../classLLMUnity_1_1TokenSplitter.html#a42d6d90b0fa00ab7f3b212e2de991800',1,'LLMUnity::TokenSplitter']]],
+  ['numwords_11',['numWords',['../classLLMUnity_1_1WordSplitter.html#af3e6aaade1f4a488cf00ebd3d975314b',1,'LLMUnity::WordSplitter']]]
 ];

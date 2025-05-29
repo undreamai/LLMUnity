@@ -7,7 +7,7 @@ var searchData=
   ['third_20party_20software_20notices_20and_20information_4',['THIRD-PARTY SOFTWARE NOTICES AND INFORMATION',['../md_Third_01Party_01Notices.html',1,'']]],
   ['to_20help_5',['How to help',['../index.html#autotoc_md2',1,'']]],
   ['to_20use_6',['How to use',['../index.html#autotoc_md5',1,'']]],
-  ['tokenize_7',['Tokenize',['../classLLMUnity_1_1LLM.html#ab8cad787f0751fa2ed7e3b2ccede3083',1,'LLMUnity.LLM.Tokenize()'],['../classLLMUnity_1_1LLMCaller.html#a018e0cabb84a07c5dd5b8d893ab57f0f',1,'LLMUnity.LLMCaller.Tokenize()']]],
+  ['tokenize_7',['Tokenize',['../classLLMUnity_1_1LLM.html#ab8cad787f0751fa2ed7e3b2ccede3083',1,'LLMUnity::LLM']]],
   ['tokensplitter_8',['TokenSplitter',['../classLLMUnity_1_1TokenSplitter.html',1,'LLMUnity']]],
   ['tokensplitter_2ecs_9',['TokenSplitter.cs',['../TokenSplitter_8cs.html',1,'']]],
   ['topk_10',['topK',['../classLLMUnity_1_1LLMCharacter.html#a7a5b8e94c906ae154f9d2eaa9803d190',1,'LLMUnity::LLMCharacter']]],

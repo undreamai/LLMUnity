@@ -47,7 +47,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_tiny.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">LLM for Unity
-   &#160;<span id="projectnumber">v2.5.1</span>
+   &#160;<span id="projectnumber">v2.5.2</span>
    </div>
    <div id="projectbrief">Create characters in Unity with LLMs!</div>
   </td>
@@ -354,17 +354,17 @@ $(function(){initNavTree('Search_8cs_source.html',''); initResizable(); });
 <div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span> </div>
 <div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span>        <span class="keyword">public</span> <span class="keyword">virtual</span> async Task&lt;float[]&gt; Encode(<span class="keywordtype">string</span> inputString)</div>
 <div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span>        {</div>
-<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span>            <span class="keywordflow">return</span> (await llmEmbedder.<a class="code hl_function" href="classLLMUnity_1_1LLMCaller.html#a2344c568eafd2918a33fe418841d5481">Embeddings</a>(inputString)).ToArray();</div>
+<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span>            <span class="keywordflow">return</span> (await llmEmbedder.Embeddings(inputString)).ToArray();</div>
 <div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span>        }</div>
 <div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span> </div>
 <div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span>        <span class="keyword">public</span> <span class="keyword">virtual</span> async Task&lt;List&lt;int&gt;&gt; Tokenize(<span class="keywordtype">string</span> query, Callback&lt;List&lt;int&gt;&gt; callback = <span class="keyword">null</span>)</div>
 <div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span>        {</div>
-<div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span>            <span class="keywordflow">return</span> await llmEmbedder.<a class="code hl_function" href="classLLMUnity_1_1LLMCaller.html#a018e0cabb84a07c5dd5b8d893ab57f0f">Tokenize</a>(query, callback);</div>
+<div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span>            <span class="keywordflow">return</span> await llmEmbedder.Tokenize(query, callback);</div>
 <div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span>        }</div>
 <div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span> </div>
 <div class="line"><a id="l00352" name="l00352"></a><span class="lineno">  352</span>        <span class="keyword">public</span> async Task&lt;string&gt; Detokenize(List&lt;int&gt; tokens, Callback&lt;string&gt; callback = <span class="keyword">null</span>)</div>
 <div class="line"><a id="l00353" name="l00353"></a><span class="lineno">  353</span>        {</div>
-<div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span>            <span class="keywordflow">return</span> await llmEmbedder.<a class="code hl_function" href="classLLMUnity_1_1LLMCaller.html#a5b7af360853ea9b233782ff6e71e313f">Detokenize</a>(tokens, callback);</div>
+<div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span>            <span class="keywordflow">return</span> await llmEmbedder.Detokenize(tokens, callback);</div>
 <div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span>        }</div>
 <div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span> </div>
 <div class="line"><a id="l00357" name="l00357"></a><span class="lineno">  357</span>        <span class="keyword">public</span> <span class="keyword">override</span> <span class="keywordtype">string</span> <a class="code hl_function" href="classLLMUnity_1_1Searchable.html#abaa9835f5b5302649ca6f453299f7990">Get</a>(<span class="keywordtype">int</span> key)</div>
@@ -541,9 +541,6 @@ $(function(){initNavTree('Search_8cs_source.html',''); initResizable(); });
 <div class="line"><a id="l00535" name="l00535"></a><span class="lineno">  535</span>        }</div>
 <div class="line"><a id="l00536" name="l00536"></a><span class="lineno">  536</span>    }</div>
 <div class="line"><a id="l00538" name="l00538"></a><span class="lineno">  538</span>}</div>
-<div class="ttc" id="aclassLLMUnity_1_1LLMCaller_html_a018e0cabb84a07c5dd5b8d893ab57f0f"><div class="ttname"><a href="classLLMUnity_1_1LLMCaller.html#a018e0cabb84a07c5dd5b8d893ab57f0f">LLMUnity.LLMCaller.Tokenize</a></div><div class="ttdeci">virtual async Task&lt; List&lt; int &gt; &gt; Tokenize(string query, Callback&lt; List&lt; int &gt; &gt; callback=null)</div><div class="ttdoc">Tokenises the provided query.</div><div class="ttdef"><b>Definition</b> <a href="LLMCaller_8cs_source.html#l00348">LLMCaller.cs:348</a></div></div>
-<div class="ttc" id="aclassLLMUnity_1_1LLMCaller_html_a2344c568eafd2918a33fe418841d5481"><div class="ttname"><a href="classLLMUnity_1_1LLMCaller.html#a2344c568eafd2918a33fe418841d5481">LLMUnity.LLMCaller.Embeddings</a></div><div class="ttdeci">virtual async Task&lt; List&lt; float &gt; &gt; Embeddings(string query, Callback&lt; List&lt; float &gt; &gt; callback=null)</div><div class="ttdoc">Computes the embeddings of the provided input.</div><div class="ttdef"><b>Definition</b> <a href="LLMCaller_8cs_source.html#l00378">LLMCaller.cs:378</a></div></div>
-<div class="ttc" id="aclassLLMUnity_1_1LLMCaller_html_a5b7af360853ea9b233782ff6e71e313f"><div class="ttname"><a href="classLLMUnity_1_1LLMCaller.html#a5b7af360853ea9b233782ff6e71e313f">LLMUnity.LLMCaller.Detokenize</a></div><div class="ttdeci">virtual async Task&lt; string &gt; Detokenize(List&lt; int &gt; tokens, Callback&lt; string &gt; callback=null)</div><div class="ttdoc">Detokenises the provided tokens to a string.</div><div class="ttdef"><b>Definition</b> <a href="LLMCaller_8cs_source.html#l00363">LLMCaller.cs:363</a></div></div>
 <div class="ttc" id="aclassLLMUnity_1_1LLMEmbedder_html"><div class="ttname"><a href="classLLMUnity_1_1LLMEmbedder.html">LLMUnity.LLMEmbedder</a></div><div class="ttdoc">Class implementing the LLM embedder.</div><div class="ttdef"><b>Definition</b> <a href="LLMEmbedder_8cs_source.html#l00012">LLMEmbedder.cs:13</a></div></div>
 <div class="ttc" id="aclassLLMUnity_1_1LLMUnitySetup_html"><div class="ttname"><a href="classLLMUnity_1_1LLMUnitySetup.html">LLMUnity.LLMUnitySetup</a></div><div class="ttdoc">Class implementing helper functions for setup and process management.</div><div class="ttdef"><b>Definition</b> <a href="LLMUnitySetup_8cs_source.html#l00100">LLMUnitySetup.cs:101</a></div></div>
 <div class="ttc" id="aclassLLMUnity_1_1LLM_html"><div class="ttname"><a href="classLLMUnity_1_1LLM.html">LLMUnity.LLM</a></div><div class="ttdoc">Class implementing the LLM server.</div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00018">LLM.cs:19</a></div></div>

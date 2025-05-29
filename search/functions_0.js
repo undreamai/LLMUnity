@@ -11,5 +11,5 @@ var searchData=
   ['androidgetnumbigcorescapacity_8',['AndroidGetNumBigCoresCapacity',['../classLLMUnity_1_1LLMUnitySetup.html#a178786e4a60fe1a30f702457f47013ca',1,'LLMUnity::LLMUnitySetup']]],
   ['applyloras_9',['ApplyLoras',['../classLLMUnity_1_1LLM.html#a0d9a070a62030d25a2baa0178db3abeb',1,'LLMUnity::LLM']]],
   ['asktemplate_10',['AskTemplate',['../classLLMUnity_1_1LLMCharacter.html#a4f8c68d258beb70759b0259cad5cc36e',1,'LLMUnity::LLMCharacter']]],
-  ['awake_11',['Awake',['../classLLMUnity_1_1LLM.html#a4ab4bbfb8a83cbe4a19e7aef153c980e',1,'LLMUnity.LLM.Awake()'],['../classLLMUnity_1_1LLMCaller.html#a2daf7c8535df9200720b75c4a007aaf8',1,'LLMUnity.LLMCaller.Awake()'],['../classLLMUnity_1_1LLMCharacter.html#a47c5f67fe64e3f6de5115c9e858152a3',1,'LLMUnity.LLMCharacter.Awake()']]]
+  ['awake_11',['Awake',['../classLLMUnity_1_1LLM.html#a4ab4bbfb8a83cbe4a19e7aef153c980e',1,'LLMUnity.LLM.Awake()'],['../classLLMUnity_1_1LLMCharacter.html#a47c5f67fe64e3f6de5115c9e858152a3',1,'LLMUnity.LLMCharacter.Awake()']]]
 ];

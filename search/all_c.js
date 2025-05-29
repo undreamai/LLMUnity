@@ -12,7 +12,7 @@ var searchData=
   ['delimiters_9',['delimiters',['../classLLMUnity_1_1SentenceSplitter.html#a487c90e46eda308e409dd721eb778724',1,'LLMUnity::SentenceSplitter']]],
   ['destroy_10',['Destroy',['../classLLMUnity_1_1LLM.html#ad8bf6e0910008f748ac0bce42da4a4dd',1,'LLMUnity::LLM']]],
   ['destroyexception_11',['DestroyException',['../classLLMUnity_1_1DestroyException.html',1,'LLMUnity']]],
-  ['detokenize_12',['Detokenize',['../classLLMUnity_1_1LLM.html#a4f7107b488a3592dca7555371d91f763',1,'LLMUnity.LLM.Detokenize()'],['../classLLMUnity_1_1LLMCaller.html#a5b7af360853ea9b233782ff6e71e313f',1,'LLMUnity.LLMCaller.Detokenize()']]],
+  ['detokenize_12',['Detokenize',['../classLLMUnity_1_1LLM.html#a4f7107b488a3592dca7555371d91f763',1,'LLMUnity::LLM']]],
   ['dontdestroyonload_13',['dontDestroyOnLoad',['../classLLMUnity_1_1LLM.html#ab1cd3fa19215c0ccc3c9cea09fe4b669',1,'LLMUnity::LLM']]],
   ['download_14',['Download',['../classLLMUnity_1_1LLMManager.html#a329a1fae4360d91badf54a0b3d09a16d',1,'LLMUnity::LLMManager']]],
   ['downloadlora_15',['DownloadLora',['../classLLMUnity_1_1LLMManager.html#adfa8342b065a11a96b3f383b2ac4bc0b',1,'LLMUnity::LLMManager']]],

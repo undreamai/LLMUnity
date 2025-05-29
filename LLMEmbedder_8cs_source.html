@@ -47,7 +47,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_tiny.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">LLM for Unity
-   &#160;<span id="projectnumber">v2.5.1</span>
+   &#160;<span id="projectnumber">v2.5.2</span>
    </div>
    <div id="projectbrief">Create characters in Unity with LLMs!</div>
   </td>
@@ -127,7 +127,7 @@ $(function(){initNavTree('LLMEmbedder_8cs_source.html',''); initResizable(); });
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span>{</div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span>    [DefaultExecutionOrder(-2)]</div>
 <div class="foldopen" id="foldopen00012" data-start="{" data-end="};">
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno"><a class="line" href="classLLMUnity_1_1LLMEmbedder.html">   12</a></span>    <span class="keyword">public</span> <span class="keyword">class </span><a class="code hl_class" href="classLLMUnity_1_1LLMEmbedder.html">LLMEmbedder</a> : <a class="code hl_class" href="classLLMUnity_1_1LLMCaller.html">LLMCaller</a></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno"><a class="line" href="classLLMUnity_1_1LLMEmbedder.html">   12</a></span>    <span class="keyword">public</span> <span class="keyword">class </span><a class="code hl_class" href="classLLMUnity_1_1LLMEmbedder.html">LLMEmbedder</a> : LLMCaller</div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>    {</div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>        <span class="keyword">protected</span> <span class="keyword">override</span> <span class="keywordtype">void</span> SetLLM(<a class="code hl_class" href="classLLMUnity_1_1LLM.html">LLM</a> llmSet)</div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>        {</div>
@@ -138,18 +138,14 @@ $(function(){initNavTree('LLMEmbedder_8cs_source.html',''); initResizable(); });
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>            }</div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>        }</div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
-<div class="foldopen" id="foldopen00023" data-start="{" data-end="}">
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno"><a class="line" href="classLLMUnity_1_1LLMEmbedder.html#abc43672f7545950fa43ae49409a33555">   23</a></span>        <span class="keyword">public</span> <span class="keyword">override</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="classLLMUnity_1_1LLMEmbedder.html#abc43672f7545950fa43ae49409a33555">IsAutoAssignableLLM</a>(<a class="code hl_class" href="classLLMUnity_1_1LLM.html">LLM</a> llmSet)</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>        <span class="keyword">public</span> <span class="keyword">override</span> <span class="keywordtype">bool</span> IsAutoAssignableLLM(<a class="code hl_class" href="classLLMUnity_1_1LLM.html">LLM</a> llmSet)</div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>        {</div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>            <span class="keywordflow">return</span> llmSet.embeddingsOnly;</div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>        }</div>
-</div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    }</div>
 </div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>}</div>
-<div class="ttc" id="aclassLLMUnity_1_1LLMCaller_html"><div class="ttname"><a href="classLLMUnity_1_1LLMCaller.html">LLMUnity.LLMCaller</a></div><div class="ttdoc">Class implementing calling of LLM functions (local and remote).</div><div class="ttdef"><b>Definition</b> <a href="LLMCaller_8cs_source.html#l00016">LLMCaller.cs:17</a></div></div>
 <div class="ttc" id="aclassLLMUnity_1_1LLMEmbedder_html"><div class="ttname"><a href="classLLMUnity_1_1LLMEmbedder.html">LLMUnity.LLMEmbedder</a></div><div class="ttdoc">Class implementing the LLM embedder.</div><div class="ttdef"><b>Definition</b> <a href="#l00012">LLMEmbedder.cs:13</a></div></div>
-<div class="ttc" id="aclassLLMUnity_1_1LLMEmbedder_html_abc43672f7545950fa43ae49409a33555"><div class="ttname"><a href="classLLMUnity_1_1LLMEmbedder.html#abc43672f7545950fa43ae49409a33555">LLMUnity.LLMEmbedder.IsAutoAssignableLLM</a></div><div class="ttdeci">override bool IsAutoAssignableLLM(LLM llmSet)</div><div class="ttdoc">Checks if a LLM can be auto-assigned if the LLM of the LLMCaller is null.</div><div class="ttdef"><b>Definition</b> <a href="#l00023">LLMEmbedder.cs:23</a></div></div>
 <div class="ttc" id="aclassLLMUnity_1_1LLMUnitySetup_html"><div class="ttname"><a href="classLLMUnity_1_1LLMUnitySetup.html">LLMUnity.LLMUnitySetup</a></div><div class="ttdoc">Class implementing helper functions for setup and process management.</div><div class="ttdef"><b>Definition</b> <a href="LLMUnitySetup_8cs_source.html#l00100">LLMUnitySetup.cs:101</a></div></div>
 <div class="ttc" id="aclassLLMUnity_1_1LLM_html"><div class="ttname"><a href="classLLMUnity_1_1LLM.html">LLMUnity.LLM</a></div><div class="ttdoc">Class implementing the LLM server.</div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00018">LLM.cs:19</a></div></div>
 <div class="ttc" id="anamespaceLLMUnity_html"><div class="ttname"><a href="namespaceLLMUnity.html">LLMUnity</a></div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00011">LLM.cs:12</a></div></div>
