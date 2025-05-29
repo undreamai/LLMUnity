@@ -1,3 +1,10 @@
+## v2.5.2
+#### 🚀 Features
+
+- Support Android x86-64 architecture (Magic Leap 2) (PR: #344)
+- Combine ARM and Intel architectures of macOS (PR: #345)
+
+
 ## v2.5.1
 #### 🚀 Features
 
