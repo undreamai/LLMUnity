@@ -36,6 +36,9 @@ namespace LLMUnity
         /// <summary> log the output of the LLM in the Unity Editor. </summary>
         [Tooltip("log the output of the LLM in the Unity Editor.")]
         [LLM] public bool debug = false;
+        /// <summary> Wait for native debugger to connect to the backend </summary>
+        [Tooltip("Wait for native debugger to connect to the backend")]
+        [LLM] public bool UseNativeDebugger = false;
         /// <summary> number of prompts that can happen in parallel (-1 = number of LLMCaller objects) </summary>
         [Tooltip("number of prompts that can happen in parallel (-1 = number of LLMCaller objects)")]
         [LLMAdvanced] public int parallelPrompts = -1;
@@ -53,6 +56,8 @@ namespace LLMUnity
         public bool started { get; protected set; } = false;
         /// <summary> Boolean set to true if the server has failed to start. </summary>
         public bool failed { get; protected set; } = false;
+        /// <summary> Boolean set to true if the server has been destroyed. </summary>
+        public bool destroyed { get; protected set; } = false;
         /// <summary> Boolean set to true if the models were not downloaded successfully. </summary>
         public static bool modelSetupFailed { get; protected set; } = false;
         /// <summary> Boolean set to true if the server has started and is ready to receive requests, false otherwise. </summary>
@@ -127,6 +132,13 @@ namespace LLMUnity
         public async void Awake()
         {
             if (!enabled) return;
+            Load();
+        }
+
+        public async Awaitable Load()
+        {
+            await Awaitable.BackgroundThreadAsync();
+
 #if !UNITY_EDITOR
             modelSetupFailed = !await LLMManager.Setup();
 #endif
@@ -142,9 +154,13 @@ namespace LLMUnity
                 failed = true;
                 return;
             }
-            await Task.Run(() => StartLLMServer(arguments));
+            await StartLLMServerAsync(arguments);
             if (!started) return;
-            if (dontDestroyOnLoad) DontDestroyOnLoad(transform.root.gameObject);
+            if (dontDestroyOnLoad)
+            {
+                await Awaitable.MainThreadAsync();
+                DontDestroyOnLoad(transform.root.gameObject);
+            }
         }
 
         /// <summary>
@@ -476,10 +492,11 @@ namespace LLMUnity
             DestroyStreamWrapper(logStreamWrapper);
         }
 
-        private void StartLLMServer(string arguments)
+        private async Task StartLLMServerAsync(string arguments)
         {
             started = false;
             failed = false;
+            destroyed = false;
             bool useGPU = numGPULayers > 0;
 
             foreach (string arch in LLMLib.PossibleArchitectures(useGPU))
@@ -488,6 +505,19 @@ namespace LLMUnity
                 try
                 {
                     InitLib(arch);
+#if UNITY_EDITOR
+                    if (UseNativeDebugger)
+                    {
+                        if (llmlib?.LLM_IsDebuggerAttached == null)
+                        {
+                            LLMUnitySetup.Log($"Tried architecture: {arch} is not debug library");
+                            Destroy();
+                            continue;
+                        }
+
+                        await WaitNativeDebug();
+                    }
+#endif
                     InitService(arguments);
                     LLMUnitySetup.Log($"Using architecture: {arch}");
                     break;
@@ -504,6 +534,7 @@ namespace LLMUnity
                 catch (Exception e)
                 {
                     error = $"{e.GetType()}: {e.Message}";
+                    Destroy();
                 }
                 LLMUnitySetup.Log($"Tried architecture: {arch}, error: " + error);
             }
@@ -514,20 +545,39 @@ namespace LLMUnity
                 return;
             }
             CallWithLock(StartService);
-            LLMUnitySetup.Log("LLM service created");
+            if (started)
+                LLMUnitySetup.Log("LLM service created");
         }
 
         private void InitLib(string arch)
         {
             llmlib = new LLMLib(arch);
-            CheckLLMStatus(false);
         }
+
+#if UNITY_EDITOR
+        private async Task WaitNativeDebug()
+        {
+            if (llmlib?.LLM_IsDebuggerAttached != null)
+            {
+                LLMUnitySetup.Log("waiting debugger");
+                while (!destroyed)
+                {
+                    if (llmlib.LLM_IsDebuggerAttached())
+                    {
+                        LLMUnitySetup.Log("remote debugger attached");
+                        break;
+                    }
+                    await Task.Delay(100);
+                }
+            }
+        }
+#endif
 
         void CallWithLock(EmptyCallback fn)
         {
             lock (startLock)
             {
-                if (llmlib == null) throw new DestroyException();
+                if (llmlib == null || destroyed) throw new DestroyException();
                 fn();
             }
         }
@@ -556,9 +606,12 @@ namespace LLMUnity
         {
             llmThread = new Thread(() => llmlib.LLM_Start(LLMObject));
             llmThread.Start();
-            while (!llmlib.LLM_Started(LLMObject)) {}
-            ApplyLoras();
-            started = true;
+            while (!llmlib.LLM_Started(LLMObject) && !destroyed) { }
+            if (!destroyed)
+            {
+                ApplyLoras();
+                started = true;
+            }
         }
 
         /// <summary>
@@ -611,6 +664,7 @@ namespace LLMUnity
             string error = null;
             if (failed) error = "LLM service couldn't be created";
             else if (!started) error = "LLM service not started";
+            else if (destroyed) error = "LLM service is being destroyed";
             if (error != null)
             {
                 LLMUnitySetup.LogError(error);
@@ -807,6 +861,7 @@ namespace LLMUnity
         /// </summary>
         public void Destroy()
         {
+            destroyed = true;
             lock (staticLock)
                 lock (startLock)
                 {
