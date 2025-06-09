@@ -238,6 +238,8 @@ namespace LLMUnity
             // send a post request to the server and call the relevant callbacks to convert the received content and handle it
             // this function has streaming functionality i.e. handles the answer while it is being received
             while (!llm.failed && !llm.started) await Task.Yield();
+            if (llm.destroyed)
+                return default;
             string callResult = null;
             switch (endpoint)
             {
