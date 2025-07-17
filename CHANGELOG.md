@@ -1,3 +1,9 @@
+## v2.5.3
+#### 🐛 Fixes
+
+- fix RAG for iOS (PR: #354)
+
+
 ## v2.5.2
 #### 🚀 Features
 
