@@ -9,41 +9,9 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using UnityEngine.TestTools;
-using UnityEditor;
-using UnityEditor.TestTools.TestRunner.Api;
 
 namespace LLMUnityTests
 {
-    [InitializeOnLoad]
-    public static class TestRunListener
-    {
-        static TestRunListener()
-        {
-            var api = ScriptableObject.CreateInstance<TestRunnerApi>();
-            api.RegisterCallbacks(new TestRunCallbacks());
-        }
-    }
-
-    public class TestRunCallbacks : ICallbacks
-    {
-        public void RunStarted(ITestAdaptor testsToRun) {}
-
-        public void RunFinished(ITestResultAdaptor result)
-        {
-            LLMUnitySetup.FullLlamaLib = false;
-        }
-
-        public void TestStarted(ITestAdaptor test)
-        {
-            LLMUnitySetup.FullLlamaLib = test.FullName.Contains("CUDA_full");
-        }
-
-        public void TestFinished(ITestResultAdaptor result)
-        {
-            LLMUnitySetup.FullLlamaLib = false;
-        }
-    }
-
     public class TestLLMLoraAssignment
     {
         [Test]
