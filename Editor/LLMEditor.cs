@@ -111,7 +111,7 @@ namespace LLMUnity
             if (llmScriptSO.FindProperty("advancedOptions").boolValue)
             {
                 attributeClasses.Add(typeof(ModelAdvancedAttribute));
-                if (LLMUnitySetup.FullLlamaLib) attributeClasses.Add(typeof(ModelExtrasAttribute));
+                attributeClasses.Add(typeof(ModelExtrasAttribute));
             }
             ShowPropertiesOfClass("", llmScriptSO, attributeClasses, false);
             Space();
@@ -126,10 +126,10 @@ namespace LLMUnity
         {
             List<string> existingOptions = new List<string>();
             foreach (ModelEntry entry in LLMManager.modelEntries) existingOptions.Add(entry.url);
-            modelOptions = new List<string>(){"Download model", "Custom URL"};
-            modelNames = new List<string>(){null, null};
-            modelURLs = new List<string>(){null, null};
-            modelLicenses = new List<string>(){null, null};
+            modelOptions = new List<string>() { "Download model", "Custom URL" };
+            modelNames = new List<string>() { null, null };
+            modelURLs = new List<string>() { null, null };
+            modelLicenses = new List<string>() { null, null };
             foreach (var entry in LLMUnitySetup.modelOptions)
             {
                 string category = entry.Key;
@@ -146,9 +146,9 @@ namespace LLMUnity
 
         float[] GetColumnWidths(bool expandedView)
         {
-            List<float> widths = new List<float>(){actionColumnWidth, nameColumnWidth, templateColumnWidth};
-            if (expandedView) widths.AddRange(new List<float>(){textColumnWidth, textColumnWidth});
-            widths.AddRange(new List<float>(){includeInBuildColumnWidth, actionColumnWidth});
+            List<float> widths = new List<float>() { actionColumnWidth, nameColumnWidth, templateColumnWidth };
+            if (expandedView) widths.AddRange(new List<float>() { textColumnWidth, textColumnWidth });
+            widths.AddRange(new List<float>() { includeInBuildColumnWidth, actionColumnWidth });
             return widths.ToArray();
         }
 
@@ -420,7 +420,7 @@ namespace LLMUnity
                     EditorGUI.LabelField(rects[col++], "Build");
                     EditorGUI.LabelField(rects[col++], "");
                 },
-                drawFooterCallback = {},
+                drawFooterCallback = { },
                 footerHeight = 0,
             };
         }
@@ -440,14 +440,14 @@ namespace LLMUnity
 
         private void CopyToClipboard(string text)
         {
-            TextEditor te = new TextEditor {text = text};
+            TextEditor te = new TextEditor { text = text };
             te.SelectAll();
             te.Copy();
         }
 
         public void AddExtrasToggle()
         {
-            if (ToggleButton("Use extras", LLMUnitySetup.FullLlamaLib)) LLMUnitySetup.SetFullLlamaLib(!LLMUnitySetup.FullLlamaLib);
+            if (ToggleButton("Use cuBLAS", LLMUnitySetup.CUBLAS)) LLMUnitySetup.SetCUBLAS(!LLMUnitySetup.CUBLAS);
         }
 
         public override void AddOptionsToggles(SerializedObject llmScriptSO)

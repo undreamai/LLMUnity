@@ -98,7 +98,7 @@ namespace LLMUnity
         /// <param name="path">path</param>
         public static bool DeletePath(string path)
         {
-            string[] allowedDirs = new string[] { LLMUnitySetup.GetAssetPath(), BuildTempDir, PluginDir("Android"), PluginDir("iOS"), PluginDir("VisionOS")};
+            string[] allowedDirs = new string[] { LLMUnitySetup.GetAssetPath(), BuildTempDir, PluginDir("Android"), PluginDir("iOS"), PluginDir("VisionOS") };
             bool deleteOK = false;
             foreach (string allowedDir in allowedDirs) deleteOK = deleteOK || LLMUnitySetup.IsSubPath(path, allowedDir);
             if (!deleteOK)
@@ -113,7 +113,7 @@ namespace LLMUnity
 
         static void AddMovedPair(string source, string target)
         {
-            movedPairs.Add(new StringPair {source = source, target = target});
+            movedPairs.Add(new StringPair { source = source, target = target });
             File.WriteAllText(movedCache, JsonUtility.ToJson(new ListStringPair { pairs = movedPairs }, true));
         }
 
@@ -164,37 +164,38 @@ namespace LLMUnity
         /// <param name="platform">target platform</param>
         public static void BuildLibraryPlatforms(BuildTarget buildTarget)
         {
-            string platform = "";
+            List<string> platforms = new List<string>();
+            bool checkCUBLAS = false;
             switch (buildTarget)
             {
                 case BuildTarget.StandaloneWindows:
                 case BuildTarget.StandaloneWindows64:
-                    platform = "windows";
+                    platforms.Add("win-x64");
+                    checkCUBLAS = true;
                     break;
                 case BuildTarget.StandaloneLinux64:
-                    platform = "linux";
+                    platforms.Add("linux-x64");
+                    checkCUBLAS = true;
                     break;
                 case BuildTarget.StandaloneOSX:
-                    platform = "macos";
+                    platforms.Add("osx-universal");
                     break;
                 case BuildTarget.Android:
-                    platform = "android";
+                    platforms.Add("android-arm64");
+                    platforms.Add("android-x64");
                     break;
                 case BuildTarget.iOS:
-                    platform = "ios";
+                    platforms.Add("ios-arm64");
                     break;
                 case BuildTarget.VisionOS:
-                    platform = "visionos";
+                    platforms.Add("visionos-arm64");
                     break;
             }
 
             foreach (string source in Directory.GetDirectories(LLMUnitySetup.libraryPath))
             {
                 string sourceName = Path.GetFileName(source);
-                bool move = !sourceName.StartsWith(platform);
-                move = move || (sourceName.Contains("cuda") && !sourceName.Contains("full") && LLMUnitySetup.FullLlamaLib);
-                move = move || (sourceName.Contains("cuda") && sourceName.Contains("full") && !LLMUnitySetup.FullLlamaLib);
-                if (move)
+                if (!platforms.Contains(sourceName))
                 {
                     string target = Path.Combine(BuildTempDir, sourceName);
                     MoveAction(source, target);
@@ -202,32 +203,63 @@ namespace LLMUnity
                 }
             }
 
+            if (checkCUBLAS)
+            {
+                List<string> exclusionKeywords = LLMUnitySetup.CUBLAS ? new List<string>() { "tinyblas" } : new List<string>() { "cublas", "cudart" };
+                foreach (string platform in platforms)
+                {
+                    string platformDir = Path.Combine(LLMUnitySetup.libraryPath, platform, "native");
+                    foreach (string source in Directory.GetFiles(platformDir))
+                    {
+                        string sourceName = Path.GetFileName(source);
+                        foreach (string exclusionKeyword in exclusionKeywords)
+                        {
+                            if (sourceName.Contains(exclusionKeyword))
+                            {
+                                string target = Path.Combine(BuildTempDir, platform, "native", sourceName);
+                                MoveAction(source, target);
+                                MoveAction(source + ".meta", target + ".meta"); ;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
             if (buildTarget == BuildTarget.Android || buildTarget == BuildTarget.iOS || buildTarget == BuildTarget.VisionOS)
             {
-                string source = Path.Combine(LLMUnitySetup.libraryPath, platform);
-                string target = PluginLibraryDir(buildTarget.ToString());
-                string pluginDir = PluginDir(buildTarget.ToString());
-                MoveAction(source, target);
-                MoveAction(source + ".meta", target + ".meta");
-                AddActionAddMeta(pluginDir);
+                foreach (string platform in platforms)
+                {
+                    string source = Path.Combine(LLMUnitySetup.libraryPath, platform, "native");
+                    string target = Path.Combine(PluginLibraryDir(buildTarget.ToString()), platform);
+                    string pluginDir = PluginDir(buildTarget.ToString());
+                    MoveAction(source, target);
+                    MoveAction(source + ".meta", target + ".meta");
+                    AddActionAddMeta(pluginDir);
+                }
             }
         }
 
         static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths, bool didDomainReload)
         {
-            foreach (BuildTarget buildTarget in new BuildTarget[]{BuildTarget.iOS, BuildTarget.VisionOS})
+            foreach (BuildTarget buildTarget in new BuildTarget[] { BuildTarget.iOS, BuildTarget.VisionOS, BuildTarget.Android })
             {
-                string pathToPlugin = Path.Combine("Assets", PluginLibraryDir(buildTarget.ToString(), true), $"libundreamai_{buildTarget.ToString().ToLower()}.a");
-                for (int i = 0; i < movedAssets.Length; i++)
+                string suffix = (buildTarget == BuildTarget.Android) ? "so" : "a";
+                foreach (string platformDir in Directory.GetDirectories(Path.Combine("Assets", PluginLibraryDir(buildTarget.ToString(), true))))
                 {
-                    if (movedAssets[i] == pathToPlugin)
+                    string platform = Path.GetFileName(platformDir);
+                    string pathToPlugin = Path.Combine(platformDir, $"libllamalib_{platform}.{suffix}");
+                    for (int i = 0; i < movedAssets.Length; i++)
                     {
-                        var importer = AssetImporter.GetAtPath(pathToPlugin) as PluginImporter;
-                        if (importer != null && importer.isNativePlugin)
+                        if (movedAssets[i] == pathToPlugin)
                         {
-                            importer.SetCompatibleWithPlatform(buildTarget, true);
-                            importer.SetPlatformData(buildTarget, "CPU", "ARM64");
-                            AssetDatabase.ImportAsset(pathToPlugin);
+                            var importer = AssetImporter.GetAtPath(pathToPlugin) as PluginImporter;
+                            if (importer != null && importer.isNativePlugin)
+                            {
+                                importer.SetCompatibleWithPlatform(buildTarget, true);
+                                importer.SetPlatformData(buildTarget, "CPU", platform.Split("_")[1].ToUpper());
+                                AssetDatabase.ImportAsset(pathToPlugin);
+                            }
                         }
                     }
                 }
