@@ -27,7 +27,7 @@ namespace LLMUnity
         public bool includeInBuild;
         public int contextLength;
 
-        static List<string> embeddingOnlyArchs = new List<string> {"bert", "nomic-bert", "jina-bert-v2", "t5", "t5encoder"};
+        static List<string> embeddingOnlyArchs = new List<string> { "bert", "nomic-bert", "jina-bert-v2", "t5", "t5encoder" };
 
         /// <summary>
         /// Returns the relative asset path if it is in the AssetPath folder (StreamingAssets or persistentPath), otherwise the filename.
@@ -98,7 +98,6 @@ namespace LLMUnity
         public bool downloadOnStart;
         public List<ModelEntry> modelEntries;
         public int debugMode;
-        public bool fullLlamaLib;
     }
     /// \endcond
 
@@ -167,7 +166,7 @@ namespace LLMUnity
                 else
                 {
                     target = LLMUnitySetup.GetDownloadAssetPath(modelEntry.filename);
-                    downloads.Add(new StringPair {source = modelEntry.url, target = target});
+                    downloads.Add(new StringPair { source = modelEntry.url, target = target });
                 }
             }
             if (downloads.Count == 0) return true;
@@ -327,7 +326,6 @@ namespace LLMUnity
             downloadOnStart = store.downloadOnStart;
             modelEntries = store.modelEntries;
             LLMUnitySetup.DebugMode = (LLMUnitySetup.DebugModeType)store.debugMode;
-            LLMUnitySetup.FullLlamaLib = store.fullLlamaLib;
         }
 
 #if UNITY_EDITOR
@@ -650,8 +648,7 @@ namespace LLMUnity
             {
                 modelEntries = modelEntriesBuild,
                 downloadOnStart = downloadOnStart,
-                debugMode = (int)LLMUnitySetup.DebugMode,
-                fullLlamaLib = LLMUnitySetup.FullLlamaLib
+                debugMode = (int)LLMUnitySetup.DebugMode
             }, true);
             File.WriteAllText(LLMUnitySetup.LLMManagerPath, json);
         }

@@ -445,7 +445,7 @@ namespace LLMUnity
             if (numThreadsToUse > 0) arguments += $" -t {numThreadsToUse}";
             arguments += loraArgument;
             if (numGPULayers > 0) arguments += $" -ngl {numGPULayers}";
-            if (LLMUnitySetup.FullLlamaLib && flashAttention) arguments += $" --flash-attn";
+            if (flashAttention) arguments += $" --flash-attn";
             if (remote)
             {
                 arguments += $" --port {port} --host 0.0.0.0";
@@ -556,7 +556,7 @@ namespace LLMUnity
         {
             llmThread = new Thread(() => llmlib.LLM_Start(LLMObject));
             llmThread.Start();
-            while (!llmlib.LLM_Started(LLMObject)) {}
+            while (!llmlib.LLM_Started(LLMObject)) { }
             ApplyLoras();
             started = true;
         }
@@ -780,7 +780,7 @@ namespace LLMUnity
         public async Task<string> Completion(string json, Callback<string> streamCallback = null)
         {
             AssertStarted();
-            if (streamCallback == null) streamCallback = (string s) => {};
+            if (streamCallback == null) streamCallback = (string s) => { };
             StreamWrapper streamWrapper = ConstructStreamWrapper(streamCallback);
             await Task.Run(() => llmlib.LLM_Completion(LLMObject, json, streamWrapper.GetStringWrapper()));
             if (!started) return null;

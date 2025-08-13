@@ -54,23 +54,23 @@ namespace LLMUnity
         }
     }
 
-    public class LLMAttribute : PropertyAttribute {}
-    public class LocalRemoteAttribute : PropertyAttribute {}
-    public class RemoteAttribute : PropertyAttribute {}
-    public class LocalAttribute : PropertyAttribute {}
-    public class ModelAttribute : PropertyAttribute {}
-    public class ModelExtrasAttribute : PropertyAttribute {}
-    public class ChatAttribute : PropertyAttribute {}
-    public class LLMUnityAttribute : PropertyAttribute {}
+    public class LLMAttribute : PropertyAttribute { }
+    public class LocalRemoteAttribute : PropertyAttribute { }
+    public class RemoteAttribute : PropertyAttribute { }
+    public class LocalAttribute : PropertyAttribute { }
+    public class ModelAttribute : PropertyAttribute { }
+    public class ModelExtrasAttribute : PropertyAttribute { }
+    public class ChatAttribute : PropertyAttribute { }
+    public class LLMUnityAttribute : PropertyAttribute { }
 
-    public class AdvancedAttribute : PropertyAttribute {}
-    public class LLMAdvancedAttribute : AdvancedAttribute {}
-    public class ModelAdvancedAttribute : AdvancedAttribute {}
-    public class ChatAdvancedAttribute : AdvancedAttribute {}
+    public class AdvancedAttribute : PropertyAttribute { }
+    public class LLMAdvancedAttribute : AdvancedAttribute { }
+    public class ModelAdvancedAttribute : AdvancedAttribute { }
+    public class ChatAdvancedAttribute : AdvancedAttribute { }
 
     public class NotImplementedException : Exception
     {
-        public NotImplementedException() : base("The method needs to be implemented by subclasses.") {}
+        public NotImplementedException() : base("The method needs to be implemented by subclasses.") { }
     }
 
     public delegate void EmptyCallback();
@@ -103,17 +103,15 @@ namespace LLMUnity
         /// <summary> LLM for Unity version </summary>
         public static string Version = "v2.5.2";
         /// <summary> LlamaLib version </summary>
-        public static string LlamaLibVersion = "v1.2.6";
+        public static string LlamaLibVersion = "v2.0.0";
         /// <summary> LlamaLib release url </summary>
         public static string LlamaLibReleaseURL = $"https://github.com/undreamai/LlamaLib/releases/download/{LlamaLibVersion}";
         /// <summary> LlamaLib name </summary>
-        public static string libraryName = GetLibraryName(LlamaLibVersion);
+        public static string libraryName = $"LlamaLib-{LlamaLibVersion}";
         /// <summary> LlamaLib path </summary>
         public static string libraryPath = GetAssetPath(libraryName);
         /// <summary> LlamaLib url </summary>
         public static string LlamaLibURL = $"{LlamaLibReleaseURL}/{libraryName}.zip";
-        /// <summary> LlamaLib extension url </summary>
-        public static string LlamaLibExtensionURL = $"{LlamaLibReleaseURL}/{libraryName}-full.zip";
         /// <summary> LLMnity store path </summary>
         public static string LLMUnityStore = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "LLMUnity");
         /// <summary> Model download path </summary>
@@ -122,7 +120,8 @@ namespace LLMUnity
         public static string LLMManagerPath = GetAssetPath("LLMManager.json");
 
         /// <summary> Default models for download </summary>
-        [HideInInspector] public static readonly Dictionary<string, (string, string, string)[]> modelOptions = new Dictionary<string, (string, string, string)[]>()
+        [HideInInspector]
+        public static readonly Dictionary<string, (string, string, string)[]> modelOptions = new Dictionary<string, (string, string, string)[]>()
         {
             {"Large models (more than 10B)", new(string, string, string)[]
              {
@@ -168,8 +167,8 @@ namespace LLMUnity
         /// \cond HIDE
         [LLMUnity] public static DebugModeType DebugMode = DebugModeType.All;
         static string DebugModeKey = "DebugMode";
-        public static bool FullLlamaLib = false;
-        static string FullLlamaLibKey = "FullLlamaLib";
+        public static bool CUBLAS = false;
+        static string CUBLASKey = "CUBLAS";
         static List<Callback<string>> errorCallbacks = new List<Callback<string>>();
         static readonly object lockObject = new object();
         static Dictionary<string, Task> androidExtractTasks = new Dictionary<string, Task>();
@@ -204,7 +203,7 @@ namespace LLMUnity
         static void LoadPlayerPrefs()
         {
             DebugMode = (DebugModeType)PlayerPrefs.GetInt(DebugModeKey, (int)DebugModeType.All);
-            FullLlamaLib = PlayerPrefs.GetInt(FullLlamaLibKey, 0) == 1;
+            CUBLAS = PlayerPrefs.GetInt(CUBLASKey, 0) == 1;
         }
 
         public static void SetDebugMode(DebugModeType newDebugMode)
@@ -216,21 +215,14 @@ namespace LLMUnity
         }
 
 #if UNITY_EDITOR
-        public static void SetFullLlamaLib(bool value)
+        public static void SetCUBLAS(bool value)
         {
-            if (FullLlamaLib == value) return;
-            FullLlamaLib = value;
-            PlayerPrefs.SetInt(FullLlamaLibKey, value ? 1 : 0);
+            if (CUBLAS == value) return;
+            CUBLAS = value;
+            PlayerPrefs.SetInt(CUBLASKey, value ? 1 : 0);
             PlayerPrefs.Save();
-            _ = DownloadLibrary();
         }
-
 #endif
-
-        public static string GetLibraryName(string version)
-        {
-            return $"undreamai-{version}-llamacpp";
-        }
 
         public static string GetAssetPath(string relPath = "")
         {
@@ -303,7 +295,7 @@ namespace LLMUnity
             callback?.Invoke(savePath);
         }
 
-        public static async Task AndroidExtractFile(string assetName, bool overwrite = false, bool log = true, int chunkSize = 1024*1024)
+        public static async Task AndroidExtractFile(string assetName, bool overwrite = false, bool log = true, int chunkSize = 1024 * 1024)
         {
             Task extractionTask;
             lock (lockObject)
@@ -321,7 +313,7 @@ namespace LLMUnity
             await extractionTask;
         }
 
-        public static async Task AndroidExtractFileOnce(string assetName, bool overwrite = false, bool log = true, int chunkSize = 1024*1024)
+        public static async Task AndroidExtractFileOnce(string assetName, bool overwrite = false, bool log = true, int chunkSize = 1024 * 1024)
         {
             string source = "jar:file://" + Application.dataPath + "!/assets/" + assetName;
             string target = GetAssetPath(assetName);
@@ -411,14 +403,19 @@ namespace LLMUnity
             File.Create(path).Dispose();
         }
 
-        static void ExtractInsideDirectory(string zipPath, string extractPath, bool overwrite = true)
+        static void ExtractInsideDirectory(string zipPath, string extractPath, bool overwrite = true, string prefix = "runtimes/")
         {
             using (ZipArchive archive = ZipFile.OpenRead(zipPath))
             {
                 foreach (ZipArchiveEntry entry in archive.Entries)
                 {
-                    if (string.IsNullOrEmpty(entry.Name)) continue;
-                    string destinationPath = Path.Combine(extractPath, entry.FullName);
+                    string normalizedPath = entry.FullName.Replace('\\', '/');
+                    if (!normalizedPath.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+                        continue;
+                    if (string.IsNullOrEmpty(entry.Name))
+                        continue; // Skip directories
+
+                    string destinationPath = Path.Combine(extractPath, normalizedPath.Substring(prefix.Length));
                     Directory.CreateDirectory(Path.GetDirectoryName(destinationPath));
                     entry.ExtractToFile(destinationPath, overwrite);
                 }
@@ -445,24 +442,28 @@ namespace LLMUnity
         static void DeleteEarlierVersions()
         {
             List<string> assetPathSubDirs = new List<string>();
-            foreach (string dir in new string[] {GetAssetPath(), Path.Combine(Application.dataPath, "Plugins", "Android")})
+            foreach (string dir in new string[] { GetAssetPath(), Path.Combine(Application.dataPath, "Plugins", "Android") })
             {
                 if (Directory.Exists(dir)) assetPathSubDirs.AddRange(Directory.GetDirectories(dir));
             }
 
-            Regex regex = new Regex(GetLibraryName("(.+)"));
+            List<Regex> versionRegexes = new List<Regex> { new Regex("undreamai-(.+)-llamacpp"), new Regex("LlamaLib-(.+)") };
             foreach (string assetPathSubDir in assetPathSubDirs)
             {
-                Match match = regex.Match(Path.GetFileName(assetPathSubDir));
-                if (match.Success)
+                foreach (Regex regex in versionRegexes)
                 {
-                    string version = match.Groups[1].Value;
-                    if (version != LlamaLibVersion)
+                    Match match = regex.Match(Path.GetFileName(assetPathSubDir));
+                    if (match.Success)
                     {
-                        Debug.Log($"Deleting other LLMUnity version folder: {assetPathSubDir}");
-                        Directory.Delete(assetPathSubDir, true);
-                        if (File.Exists(assetPathSubDir + ".meta")) File.Delete(assetPathSubDir + ".meta");
+                        string version = match.Groups[1].Value;
+                        if (version != LlamaLibVersion)
+                        {
+                            Debug.Log($"Deleting other LLMUnity version folder: {assetPathSubDir}");
+                            Directory.Delete(assetPathSubDir, true);
+                            if (File.Exists(assetPathSubDir + ".meta")) File.Delete(assetPathSubDir + ".meta");
+                        }
                     }
+
                 }
             }
         }
@@ -481,9 +482,6 @@ namespace LLMUnity
 
                 // setup LlamaLib in StreamingAssets
                 await DownloadAndExtractInsideDirectory(LlamaLibURL, libraryPath, setupDir);
-
-                // setup LlamaLib extras in StreamingAssets
-                if (FullLlamaLib) await DownloadAndExtractInsideDirectory(LlamaLibExtensionURL, libraryPath, setupDir);
             }
             catch (Exception e)
             {
@@ -511,7 +509,7 @@ namespace LLMUnity
             string filename = Path.GetFileName(assetPath);
             string fullPath = GetAssetPath(filename);
             AssetDatabase.StartAssetEditing();
-            foreach (string path in new string[] {fullPath, fullPath + ".meta"})
+            foreach (string path in new string[] { fullPath, fullPath + ".meta" })
             {
                 if (File.Exists(path)) File.Delete(path);
             }
@@ -627,7 +625,7 @@ namespace LLMUnity
                         int maxFreqKHz = GetMaxFreqKHz(coreIndex);
                         cpuMaxFreqKHz.Add(maxFreqKHz);
                         if (maxFreqKHz > maxFreqKHzMax) maxFreqKHzMax = maxFreqKHz;
-                        if (maxFreqKHz < maxFreqKHzMin)  maxFreqKHzMin = maxFreqKHz;
+                        if (maxFreqKHz < maxFreqKHzMin) maxFreqKHzMin = maxFreqKHz;
                         cpuIsSmtCpu.Add(IsSmtCpu(coreIndex));
                     }
                 }
