@@ -399,10 +399,10 @@ namespace LLMUnityTests
         {
             await base.Tests();
             TestModelPaths();
-            await TestLoraWeight();
+            TestLoraWeight();
             loraWeight = 0.6f;
             llm.SetLoraWeight(loraNameLLManager, loraWeight);
-            await TestLoraWeight();
+            TestLoraWeight();
         }
 
         public void TestModelPaths()
@@ -411,10 +411,10 @@ namespace LLMUnityTests
             Assert.AreEqual(llm.lora, Path.Combine(LLMUnitySetup.modelDownloadPath, Path.GetFileName(loraUrl).Split("?")[0]).Replace('\\', '/'));
         }
 
-        public async Task TestLoraWeight()
+        public void TestLoraWeight()
         {
-            List<LoraWeightResult> loras = await llm.ListLoras();
-            Assert.AreEqual(loras[0].scale, loraWeight);
+            List<UndreamAI.LlamaLib.LoraIdScalePath> loras = llm.ListLoras();
+            Assert.AreEqual(loras[0].Scale, loraWeight);
         }
     }
 
