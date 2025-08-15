@@ -3,7 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading;
+using System.Linq;
 using System.Threading.Tasks;
 using UndreamAI.LlamaLib;
 using UnityEditor;
@@ -34,9 +34,6 @@ namespace LLMUnity
         /// If the user's GPU is not supported, the LLM will fall back to the CPU </summary>
         [Tooltip("number of model layers to offload to the GPU (0 = GPU not used). If the user's GPU is not supported, the LLM will fall back to the CPU")]
         [LLM] public int numGPULayers = 0;
-        /// <summary> log the output of the LLM in the Unity Editor. </summary>
-        [Tooltip("log the output of the LLM in the Unity Editor.")]
-        [LLM] public bool debug = false;
         /// <summary> number of prompts that can happen in parallel (-1 = number of LLMCaller objects) </summary>
         [Tooltip("number of prompts that can happen in parallel (-1 = number of LLMCaller objects)")]
         [LLMAdvanced] public int parallelPrompts = -1;
@@ -63,7 +60,7 @@ namespace LLMUnity
         [ModelAdvanced] public string model = "";
         /// <summary> Chat template for the model </summary>
         [Tooltip("Chat template for the model")]
-        [ModelAdvanced] public string chatTemplate = ChatTemplate.DefaultTemplate;
+        [ModelAdvanced] public string chatTemplate = "auto";
         /// <summary> LORA models to use (.gguf format) </summary>
         [Tooltip("LORA models to use (.gguf format)")]
         [ModelAdvanced] public string lora = "";
@@ -90,13 +87,22 @@ namespace LLMUnity
         public int minContextLength = 0;
         public int maxContextLength = 0;
 
+        public static string[] ChatTemplates = new string[]
+        {
+            "auto", "chatml", "llama2", "llama2-sys", "llama2-sys-bos", "llama2-sys-strip", "mistral-v1", "mistral-v3", "mistral-v3-tekken", "mistral-v7", "mistral-v7-tekken", "phi3", "phi4", "falcon3", "zephyr", "monarch", "gemma", "orion", "openchat", "vicuna", "vicuna-orca", "deepseek", "deepseek2", "deepseek3", "command-r", "llama3", "chatglm3", "chatglm4", "glmedge", "minicpm", "exaone3", "exaone4", "rwkv-world", "granite", "gigachat", "megrez", "yandex", "bailing", "llama4", "smolvlm", "hunyuan-moe", "gpt-oss", "hunyuan-dense", "kimi-k2"
+        };
+
+        LlamaLib llmlib = null;
+        [Local, SerializeField] protected LLMService _llmService;
+        public LLMService llmService
+        {
+            get => _llmService;
+            protected set => _llmService = value;
+        }
         public string architecture => llmlib?.architecture;
+
         List<LLMCaller> clients = new List<LLMCaller>();
-        LlamaLib llmlib;
-        LLMService llmService = null;
-        Thread llmThread = null;
         public LLMManager llmManager = new LLMManager();
-        private readonly object startLock = new object();
         static readonly object staticLock = new object();
         public LoraManager loraManager = new LoraManager();
         string loraPre = "";
@@ -218,22 +224,12 @@ namespace LLMUnity
         {
             bool useGPU = numGPULayers > 0;
             llmlib = new LlamaLibUnity(useGPU);
-            if (debug)
+            if (LLMUnitySetup.DebugMode <= LLMUnitySetup.DebugModeType.All)
             {
-                //todo
-                LlamaLibUnity.Debug(2);
+                LlamaLibUnity.Debug(LLMUnitySetup.DebugModeType.All - LLMUnitySetup.DebugMode + 1);
                 LlamaLibUnity.LoggingCallback(LLMUnitySetup.Log);
             }
         }
-
-        // the following is the equivalent for running from command line
-        // string serverCommand;
-        // if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer) serverCommand = "undreamai_server.exe";
-        // else serverCommand = "./undreamai_server";
-        // serverCommand += " " + arguments;
-        // serverCommand += $" --template \"{chatTemplate}\"";
-        // if (remote && SSLCert != "" && SSLKey != "") serverCommand += $" --ssl-cert-file {SSLCertPath} --ssl-key-file {SSLKeyPath}";
-        // LLMUnitySetup.Log($"Deploy server command: {serverCommand}");
 
         private void CreateService(string modelPath, List<string> loraPaths)
         {
@@ -266,8 +262,7 @@ namespace LLMUnity
             if (!started) return;
 
             ApplyLoras();
-            //todo
-            // llmService.SetTemplate(chatTemplate);
+            SetTemplate(chatTemplate);
         }
 
         /// <summary>
@@ -359,7 +354,6 @@ namespace LLMUnity
             {
                 ModelEntry modelEntry = LLMManager.Get(model);
                 if (modelEntry == null) modelEntry = new ModelEntry(GetLLMManagerAssetRuntime(model));
-                SetTemplate(modelEntry.chatTemplate);
 
                 maxContextLength = modelEntry.contextLength;
                 if (contextSize > maxContextLength) contextSize = maxContextLength;
@@ -457,11 +451,16 @@ namespace LLMUnity
         /// <summary>
         /// Set the chat template for the LLM.
         /// </summary>
-        /// <param name="templateName">the chat template to use. The available templates can be found in the ChatTemplate.templates.Keys array </param>
+        /// <param name="templateName">the chat template to use. The available templates can be found in the ChatTemplates array </param>
         public void SetTemplate(string templateName, bool setDirty = true)
         {
+            if (!ChatTemplates.Contains(templateName))
+            {
+                LLMUnitySetup.LogError($"Template {templateName} not supported!");
+                return;
+            }
             chatTemplate = templateName;
-            if (started) llmService.SetTemplate(chatTemplate);
+            if (started) llmService.SetTemplate(chatTemplate == "auto"? "": chatTemplate);
 #if UNITY_EDITOR
             if (setDirty && !EditorApplication.isPlaying) EditorUtility.SetDirty(this);
 #endif
@@ -676,6 +675,14 @@ namespace LLMUnity
         }
 
         /// <summary>
+        /// Allows to cancel all the requests of the LLM
+        /// </summary
+        public void CancelRequests()
+        {
+            for (int i = 0; i < parallelPrompts; i++) CancelRequest(i);
+        }
+
+        /// <summary>
         /// Stops and destroys the LLM
         /// </summary>
         public void Destroy()
@@ -686,12 +693,7 @@ namespace LLMUnity
                 {
                     if (llmlib != null)
                     {
-                        if (llmService != null)
-                        {
-                            Debug.Log("stopping");
-                            llmService.Dispose();
-                            Debug.Log("Dispose");
-                        }
+                        llmService?.Dispose();
                         llmlib = null;
                     }
                     started = false;

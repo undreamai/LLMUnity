@@ -44,7 +44,7 @@ namespace LLMUnitySamples
                 playerText.text += $"Creating Embeddings (only once)...\n";
                 Stopwatch stopwatch = new Stopwatch();
                 stopwatch.Start();
-                foreach (string phrase in phrases) await rag.Add(phrase);
+                foreach (string phrase in phrases) rag.Add(phrase);
                 stopwatch.Stop();
                 Debug.Log($"embedded {rag.Count()} phrases in {stopwatch.Elapsed.TotalMilliseconds / 1000f} secs");
                 // store the embeddings
@@ -56,11 +56,11 @@ namespace LLMUnitySamples
             }
         }
 
-        protected async virtual void onInputFieldSubmit(string message)
+        protected virtual void onInputFieldSubmit(string message)
         {
             playerText.interactable = false;
             AIText.text = "...";
-            (string[] similarPhrases, float[] distances) = await rag.Search(message, 1);
+            (string[] similarPhrases, float[] distances) = rag.Search(message, 1);
             AIText.text = similarPhrases[0];
         }
 

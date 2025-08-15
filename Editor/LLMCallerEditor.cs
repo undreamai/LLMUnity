@@ -8,8 +8,8 @@ namespace LLMUnity
     [CustomEditor(typeof(LLMCaller), true)]
     public class LLMCallerEditor : PropertyEditor {}
 
-    [CustomEditor(typeof(LLMCharacter), true)]
-    public class LLMCharacterEditor : LLMCallerEditor
+    [CustomEditor(typeof(LLMAgent), true)]
+    public class LLMAgentEditor : LLMCallerEditor
     {
         public override void AddModelSettings(SerializedObject llmScriptSO)
         {
@@ -31,7 +31,7 @@ namespace LLMUnity
                         string path = EditorUtility.OpenFilePanelWithFilters("Select a gbnf grammar file", "", new string[] { "Grammar Files", "gbnf" });
                         if (!string.IsNullOrEmpty(path))
                         {
-                            ((LLMCharacter)target).SetGrammar(path);
+                            ((LLMAgent)target).SetGrammar(path);
                         }
                     };
                 }
@@ -42,7 +42,7 @@ namespace LLMUnity
                         string path = EditorUtility.OpenFilePanelWithFilters("Select a json schema grammar file", "", new string[] { "Grammar Files", "json" });
                         if (!string.IsNullOrEmpty(path))
                         {
-                            ((LLMCharacter)target).SetJSONGrammar(path);
+                            ((LLMAgent)target).SetGrammar(path);
                         }
                     };
                 }

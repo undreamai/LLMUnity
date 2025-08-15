@@ -67,40 +67,30 @@ namespace LLMUnityTests
         }
 
         [UnityTest]
-        public virtual IEnumerator RunTests()
-        {
-            Task task = RunTestsTask();
-            while (!task.IsCompleted) yield return null;
-            if (error != null)
-            {
-                Debug.LogError(error.ToString());
-                throw (error);
-            }
-        }
-
-        public virtual async Task RunTestsTask()
+        public virtual void RunTests()
         {
             error = null;
             try
             {
-                await Tests();
+                Tests();
                 llm.OnDestroy();
             }
-            catch  (Exception e)
+            catch (Exception e)
             {
-                error = e;
+                Debug.LogError(e.ToString());
+                throw (e);
             }
         }
 
-        public virtual async Task Tests()
+        public virtual void Tests()
         {
-            await TestAdd();
-            await TestSearch();
-            await TestIncrementalSearch();
-            await TestSaveLoad();
+            TestAdd();
+            TestSearch();
+            TestIncrementalSearch();
+            TestSaveLoad();
         }
 
-        public virtual async Task TestAdd()
+        public virtual void TestAdd()
         {
             void CheckCount(int[] nums)
             {
@@ -114,32 +104,32 @@ namespace LLMUnityTests
             }
 
             int key, num;
-            key = await search.Add(weather);
+            key = search.Add(weather);
             Assert.That(key == 0);
             Assert.That(search.Get(key) == weather);
             Assert.That(search.Count() == 1);
             search.Remove(key);
             Assert.That(search.Count() == 0);
 
-            key = await search.Add(weather);
+            key = search.Add(weather);
             Assert.That(key == 1);
-            key = await search.Add(raining);
+            key = search.Add(raining);
             Assert.That(key == 2);
-            key = await search.Add(sometext);
+            key = search.Add(sometext);
             Assert.That(key == 3);
             Assert.That(search.Count() == 3);
             search.Clear();
             Assert.That(search.Count() == 0);
 
-            key = await search.Add(weather, "0");
+            key = search.Add(weather, "0");
             Assert.That(key == 0);
-            key = await search.Add(raining, "0");
+            key = search.Add(raining, "0");
             Assert.That(key == 1);
-            key = await search.Add(weather, "1");
+            key = search.Add(weather, "1");
             Assert.That(key == 2);
-            key = await search.Add(sometext, "1");
+            key = search.Add(sometext, "1");
             Assert.That(key == 3);
-            key = await search.Add(sometext, "2");
+            key = search.Add(sometext, "2");
             Assert.That(key == 4);
             CheckCount(new int[] {2, 2, 1});
             num = search.Remove(weather, "0");
@@ -165,20 +155,20 @@ namespace LLMUnityTests
             Assert.That(search.Count() == 0);
         }
 
-        public virtual async Task TestSearch()
+        public virtual void TestSearch()
         {
             string[] results;
             float[] distances;
 
-            (results, distances) = await search.Search(weather, 1);
+            (results, distances) = search.Search(weather, 1);
             Assert.That(results.Length == 0);
             Assert.That(distances.Length == 0);
 
-            await search.Add(weather);
-            await search.Add(raining);
-            await search.Add(sometext);
+            search.Add(weather);
+            search.Add(raining);
+            search.Add(sometext);
 
-            (results, distances) = await search.Search(weather, 2);
+            (results, distances) = search.Search(weather, 2);
             Assert.AreEqual(results.Length, 2);
             Assert.AreEqual(distances.Length, 2);
             Assert.AreEqual(results[0], weather);
@@ -186,7 +176,7 @@ namespace LLMUnityTests
             Assert.That(ApproxEqual(distances[0], 0));
             Assert.That(ApproxEqual(distances[1], weatherRainingDiff));
 
-            (results, distances) = await search.Search(raining, 2);
+            (results, distances) = search.Search(raining, 2);
             Assert.AreEqual(results.Length, 2);
             Assert.AreEqual(distances.Length, 2);
             Assert.AreEqual(results[0], raining);
@@ -196,12 +186,12 @@ namespace LLMUnityTests
 
             search.Clear();
 
-            await search.Add(weather, "0");
-            await search.Add(raining, "1");
-            await search.Add(sometext, "0");
-            await search.Add(sometext, "1");
+            search.Add(weather, "0");
+            search.Add(raining, "1");
+            search.Add(sometext, "0");
+            search.Add(sometext, "1");
 
-            (results, distances) = await search.Search(weather, 2, "0");
+            (results, distances) = search.Search(weather, 2, "0");
             Assert.AreEqual(results.Length, 2);
             Assert.AreEqual(distances.Length, 2);
             Assert.AreEqual(results[0], weather);
@@ -209,7 +199,7 @@ namespace LLMUnityTests
             Assert.That(ApproxEqual(distances[0], 0));
             Assert.That(ApproxEqual(distances[1], weatherSometextDiff));
 
-            (results, distances) = await search.Search(weather, 2, "0");
+            (results, distances) = search.Search(weather, 2, "0");
             Assert.AreEqual(results.Length, 2);
             Assert.AreEqual(distances.Length, 2);
             Assert.AreEqual(results[0], weather);
@@ -217,14 +207,14 @@ namespace LLMUnityTests
             Assert.That(ApproxEqual(distances[0], 0));
             Assert.That(ApproxEqual(distances[1], weatherSometextDiff));
 
-            (results, distances) = await search.Search(weather, 2, "1");
+            (results, distances) = search.Search(weather, 2, "1");
             Assert.AreEqual(results.Length, 2);
             Assert.AreEqual(distances.Length, 2);
             Assert.AreEqual(results[0], raining);
             Assert.AreEqual(results[1], sometext);
             Assert.That(ApproxEqual(distances[1], weatherSometextDiff));
 
-            (results, distances) = await search.Search(weather, 3, "1");
+            (results, distances) = search.Search(weather, 3, "1");
             Assert.AreEqual(results.Length, 2);
             Assert.AreEqual(distances.Length, 2);
             Assert.AreEqual(results[0], raining);
@@ -233,13 +223,13 @@ namespace LLMUnityTests
             search.Clear();
         }
 
-        public async Task TestIncrementalSearch()
+        public void TestIncrementalSearch()
         {
             string[] results;
             float[] distances;
             bool completed;
 
-            int searchKey = await search.IncrementalSearch(weather);
+            int searchKey = search.IncrementalSearch(weather);
             (results, distances, completed) = search.IncrementalFetch(searchKey, 1);
             Assert.That(searchKey == 0);
             Assert.That(results.Length == 0);
@@ -247,11 +237,11 @@ namespace LLMUnityTests
             Assert.That(completed);
             search.Clear();
 
-            await search.Add(weather);
-            await search.Add(raining);
-            await search.Add(sometext);
+            search.Add(weather);
+            search.Add(raining);
+            search.Add(sometext);
 
-            searchKey = await search.IncrementalSearch(weather);
+            searchKey = search.IncrementalSearch(weather);
             (results, distances, completed) = search.IncrementalFetch(searchKey, 1);
             Assert.That(searchKey == 0);
             Assert.That(results.Length == 1);
@@ -269,7 +259,7 @@ namespace LLMUnityTests
             Assert.That(ApproxEqual(distances[1], weatherSometextDiff));
             Assert.That(completed);
 
-            searchKey = await search.IncrementalSearch(weather);
+            searchKey = search.IncrementalSearch(weather);
             (results, distances, completed) = search.IncrementalFetch(searchKey, 2);
             Assert.That(searchKey == 1);
             Assert.That(results.Length == 2);
@@ -283,12 +273,12 @@ namespace LLMUnityTests
             search.IncrementalSearchComplete(searchKey);
             search.Clear();
 
-            await search.Add(weather, "0");
-            await search.Add(raining, "1");
-            await search.Add(sometext, "0");
-            await search.Add(sometext, "1");
+            search.Add(weather, "0");
+            search.Add(raining, "1");
+            search.Add(sometext, "0");
+            search.Add(sometext, "1");
 
-            searchKey = await search.IncrementalSearch(weather, "0");
+            searchKey = search.IncrementalSearch(weather, "0");
             (results, distances, completed) = search.IncrementalFetch(searchKey, 2);
             Assert.That(searchKey == 0);
             Assert.AreEqual(results.Length, 2);
@@ -299,7 +289,7 @@ namespace LLMUnityTests
             Assert.That(ApproxEqual(distances[1], weatherSometextDiff));
             Assert.That(completed);
 
-            searchKey = await search.IncrementalSearch(weather, "0");
+            searchKey = search.IncrementalSearch(weather, "0");
             (results, distances, completed) = search.IncrementalFetch(searchKey, 2);
             Assert.That(searchKey == 1);
             Assert.AreEqual(results.Length, 2);
@@ -310,7 +300,7 @@ namespace LLMUnityTests
             Assert.That(ApproxEqual(distances[1], weatherSometextDiff));
             Assert.That(completed);
 
-            searchKey = await search.IncrementalSearch(weather, "1");
+            searchKey = search.IncrementalSearch(weather, "1");
             (results, distances, completed) = search.IncrementalFetch(searchKey, 1);
             Assert.That(searchKey == 2);
             Assert.AreEqual(results.Length, 1);
@@ -325,7 +315,7 @@ namespace LLMUnityTests
             Assert.That(ApproxEqual(distances[0], weatherSometextDiff));
             Assert.That(completed);
 
-            searchKey = await search.IncrementalSearch(weather, "1");
+            searchKey = search.IncrementalSearch(weather, "1");
             (results, distances, completed) = search.IncrementalFetch(searchKey, 3);
             Assert.That(searchKey == 3);
             Assert.AreEqual(results.Length, 2);
@@ -337,19 +327,19 @@ namespace LLMUnityTests
             search.Clear();
         }
 
-        public virtual async Task TestSaveLoad()
+        public virtual void TestSaveLoad()
         {
             string path = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
             string[] results;
             float[] distances;
 
-            await search.Add(weather);
-            await search.Add(raining);
-            await search.Add(sometext);
+            search.Add(weather);
+            search.Add(raining);
+            search.Add(sometext);
             search.Save(path);
 
             search.Clear();
-            await search.Load(path);
+            search.Load(path);
             File.Delete(path);
 
             Assert.That(search.Count() == 3);
@@ -357,7 +347,7 @@ namespace LLMUnityTests
             Assert.That(search.Get(1) == raining);
             Assert.That(search.Get(2) == sometext);
 
-            (results, distances) = await search.Search(raining, 2);
+            (results, distances) = search.Search(raining, 2);
             Assert.AreEqual(results[0], raining);
             Assert.AreEqual(results[1], weather);
             Assert.That(ApproxEqual(distances[0], 0));
@@ -365,14 +355,14 @@ namespace LLMUnityTests
 
             search.Clear();
 
-            await search.Add(weather, "0");
-            await search.Add(raining, "1");
-            await search.Add(sometext, "0");
-            await search.Add(sometext, "1");
+            search.Add(weather, "0");
+            search.Add(raining, "1");
+            search.Add(sometext, "0");
+            search.Add(sometext, "1");
             search.Save(path);
 
             search.Clear();
-            await search.Load(path);
+            search.Load(path);
             File.Delete(path);
 
             Assert.That(search.Count() == 4);
@@ -383,7 +373,7 @@ namespace LLMUnityTests
             Assert.That(search.Get(2) == sometext);
             Assert.That(search.Get(3) == sometext);
 
-            (results, distances) = await search.Search(raining, 2, "0");
+            (results, distances) = search.Search(raining, 2, "0");
             Assert.AreEqual(results[0], weather);
             Assert.AreEqual(results[1], sometext);
             Assert.That(ApproxEqual(distances[0], weatherRainingDiff));
@@ -401,34 +391,34 @@ namespace LLMUnityTests
             return search;
         }
 
-        public override async Task Tests()
+        public override void Tests()
         {
-            await base.Tests();
-            await TestEncode();
-            await TestSimilarity();
-            await TestSearchFromList();
+            base.Tests();
+            TestEncode();
+            TestSimilarity();
+            TestSearchFromList();
         }
 
-        public async Task TestEncode()
+        public void TestEncode()
         {
-            float[] encoding = await search.Encode(weather);
+            float[] encoding = search.Encode(weather);
             Assert.That(ApproxEqual(encoding[0], -0.02910374f));
             Assert.That(ApproxEqual(encoding[383], 0.01764517f));
         }
 
-        public async Task TestSimilarity()
+        public void TestSimilarity()
         {
-            float[] sentence1 = await search.Encode(weather);
-            float[] sentence2 = await search.Encode(raining);
+            float[] sentence1 = search.Encode(weather);
+            float[] sentence2 = search.Encode(raining);
             float similarity = SimpleSearch.DotProduct(sentence1, sentence2);
             float distance = SimpleSearch.InverseDotProduct(sentence1, sentence2);
             Assert.That(ApproxEqual(similarity, 1 - weatherRainingDiff));
             Assert.That(ApproxEqual(distance, weatherRainingDiff));
         }
 
-        public async Task TestSearchFromList()
+        public void TestSearchFromList()
         {
-            (string[] results, float[] distances) = await search.SearchFromList(weather, new string[] {sometext, raining});
+            (string[] results, float[] distances) = search.SearchFromList(weather, new string[] {sometext, raining});
             Assert.AreEqual(results.Length, 2);
             Assert.AreEqual(distances.Length, 2);
             Assert.AreEqual(results[0], raining);
@@ -491,18 +481,18 @@ namespace LLMUnityTests
             return (new string(generatedText), indices);
         }
 
-        public override async Task Tests()
+        public override void Tests()
         {
-            await base.Tests();
-            await TestProperSplit();
+            base.Tests();
+            TestProperSplit();
         }
 
-        public async Task TestProperSplit()
+        public void TestProperSplit()
         {
             for (int length = 50; length <= 500; length += 50)
             {
                 (string randomText, _) = GenerateText(length);
-                List<(int, int)> indices = await search.Split(randomText);
+                List<(int, int)> indices = search.Split(randomText);
                 int currIndex = 0;
                 foreach ((int startIndex, int endIndex) in indices)
                 {
@@ -510,7 +500,7 @@ namespace LLMUnityTests
                     currIndex = endIndex + 1;
                 }
                 Assert.AreEqual(currIndex, length);
-                int key = await search.Add(randomText);
+                int key = search.Add(randomText);
                 Assert.AreEqual(search.Get(key), randomText);
             }
         }
@@ -520,13 +510,13 @@ namespace LLMUnityTests
 
     public class TestWordSplitter : TestSplitter<WordSplitter>
     {
-        public override async Task Tests()
+        public override void Tests()
         {
-            await base.Tests();
-            await TestSplit();
+            base.Tests();
+            TestSplit();
         }
 
-        public async Task TestSplit()
+        public void TestSplit()
         {
             System.Random random = new System.Random();
             char[] characters = "abcdefghijklmnopqrstuvwxyz".ToCharArray();
@@ -549,7 +539,7 @@ namespace LLMUnityTests
                 }
 
                 string text = String.Join(" ", splits);
-                List<(int, int)> indices = await search.Split(text);
+                List<(int, int)> indices = search.Split(text);
                 for (int i = 0; i < indices.Count; i++)
                 {
                     (int startIndex, int endIndex) = indices[i];
@@ -563,17 +553,17 @@ namespace LLMUnityTests
 
     public class TestSentenceSplitter : TestSplitter<SentenceSplitter>
     {
-        public override async Task Tests()
+        public override void Tests()
         {
-            await base.Tests();
-            await TestSplit();
+            base.Tests();
+            TestSplit();
         }
 
-        public async Task TestSplit()
+        public void TestSplit()
         {
-            async Task<string[]> SplitSentences(string text)
+            string[] SplitSentences(string text)
             {
-                List<(int, int)> indices = await search.Split(text);
+                List<(int, int)> indices = search.Split(text);
                 List<string> sentences = new List<string>();
                 foreach ((int startIndex, int endIndex) in indices) sentences.Add(text.Substring(startIndex, endIndex - startIndex + 1));
                 return sentences.ToArray();
@@ -592,9 +582,9 @@ namespace LLMUnityTests
 
             sentencesGT = (string[])sentences.Clone();
             text = String.Join("", sentencesGT);
-            sentencesBack = await SplitSentences(text);
+            sentencesBack = SplitSentences(text);
             Assert.AreEqual(sentencesBack, sentencesGT);
-            key = await search.Add(text);
+            key = search.Add(text);
             Assert.AreEqual(search.Get(key), text);
 
             sentencesGT = (string[])sentences.Clone();
@@ -603,18 +593,18 @@ namespace LLMUnityTests
             sentencesGT[2] += "....  ";
             sentencesGT[3] += "  ?";
             text = String.Join("", sentencesGT);
-            sentencesBack = await SplitSentences(text);
+            sentencesBack = SplitSentences(text);
             Assert.AreEqual(sentencesBack, sentencesGT);
-            key = await search.Add(text);
+            key = search.Add(text);
             Assert.AreEqual(search.Get(key), text);
 
             for (int length = 10; length <= 100; length += 10)
             {
                 (string randomText, List<(int, int)> indicesGT) = GenerateText(length);
-                List<(int, int)> indices = await search.Split(randomText);
+                List<(int, int)> indices = search.Split(randomText);
                 Assert.AreEqual(indices.Count, indicesGT.Count);
                 Assert.AreEqual(indices, indicesGT);
-                key = await search.Add(randomText);
+                key = search.Add(randomText);
                 Assert.AreEqual(search.Get(key), randomText);
             }
 
@@ -661,24 +651,24 @@ namespace LLMUnityTests
 
     public abstract class TestRAG_Chunking : TestRAG
     {
-        public override async Task TestSearch()
+        public override void TestSearch()
         {
-            await base.TestSearch();
+            base.TestSearch();
 
             string[] results;
             float[] distances;
 
-            await search.Add(weather + raining);
-            await search.Add(sometext);
+            search.Add(weather + raining);
+            search.Add(sometext);
 
             search.ReturnChunks(false);
-            (results, distances) = await search.Search(weather, 1);
+            (results, distances) = search.Search(weather, 1);
             Assert.That(results.Length == 1);
             Assert.That(distances.Length == 1);
             Assert.AreEqual(results[0], weather + raining);
 
             search.ReturnChunks(true);
-            (results, distances) = await search.Search(weather, 1);
+            (results, distances) = search.Search(weather, 1);
             Assert.That(results.Length == 1);
             Assert.That(distances.Length == 1);
             Assert.AreEqual(results[0], weather);

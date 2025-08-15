@@ -175,6 +175,7 @@ namespace LLMUnity
 
         public enum DebugModeType
         {
+            Debug,
             All,
             Warning,
             Error,

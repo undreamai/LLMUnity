@@ -23,7 +23,7 @@ namespace LLMUnity
         /// </summary>
         /// <param name="input">phrase</param>
         /// <returns>List of start/end indices of the split chunks</returns>
-        public override async Task<List<(int, int)>> Split(string input)
+        public override List<(int, int)> Split(string input)
         {
             bool IsBoundary(char c)
             {
@@ -31,27 +31,25 @@ namespace LLMUnity
             }
 
             List<(int, int)> indices = new List<(int, int)>();
-            await Task.Run(() => {
-                List<(int, int)> wordIndices = new List<(int, int)>();
-                int startIndex = 0;
-                int endIndex;
-                for (int i = 0; i < input.Length; i++)
+            List<(int, int)> wordIndices = new List<(int, int)>();
+            int startIndex = 0;
+            int endIndex;
+            for (int i = 0; i < input.Length; i++)
+            {
+                if (i == input.Length - 1 || IsBoundary(input[i]))
                 {
-                    if (i == input.Length - 1 || IsBoundary(input[i]))
-                    {
-                        while (i < input.Length - 1 && IsBoundary(input[i + 1])) i++;
-                        endIndex = i;
-                        wordIndices.Add((startIndex, endIndex));
-                        startIndex = i + 1;
-                    }
+                    while (i < input.Length - 1 && IsBoundary(input[i + 1])) i++;
+                    endIndex = i;
+                    wordIndices.Add((startIndex, endIndex));
+                    startIndex = i + 1;
                 }
+            }
 
-                for (int i = 0; i < wordIndices.Count; i += numWords)
-                {
-                    int iTo = Math.Min(wordIndices.Count - 1, i + numWords - 1);
-                    indices.Add((wordIndices[i].Item1, wordIndices[iTo].Item2));
-                }
-            });
+            for (int i = 0; i < wordIndices.Count; i += numWords)
+            {
+                int iTo = Math.Min(wordIndices.Count - 1, i + numWords - 1);
+                indices.Add((wordIndices[i].Item1, wordIndices[iTo].Item2));
+            }
             return indices;
         }
     }

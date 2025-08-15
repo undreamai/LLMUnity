@@ -60,7 +60,7 @@ namespace LLMUnitySamples
 
         Bubble AddBubble(string message, bool isPlayerMessage)
         {
-            Bubble bubble = new Bubble(chatContainer, isPlayerMessage? playerUI: aiUI, isPlayerMessage? "PlayerBubble": "AIBubble", message);
+            Bubble bubble = new Bubble(chatContainer, isPlayerMessage ? playerUI : aiUI, isPlayerMessage ? "PlayerBubble" : "AIBubble", message);
             chatBubbles.Add(bubble);
             bubble.OnResize(UpdateBubblePositions);
             return bubble;
@@ -68,7 +68,7 @@ namespace LLMUnitySamples
 
         void ShowLoadedMessages()
         {
-            for (int i=1; i<llmCharacter.chat.Count; i++) AddBubble(llmCharacter.chat[i].content, i%2==1);
+            for (int i = 1; i < llmCharacter.chat.Count; i++) AddBubble(llmCharacter.chat[i].Content, i % 2 == 1);
         }
 
         void onInputFieldSubmit(string newText)
