@@ -351,19 +351,6 @@ namespace LLMUnity
 
                     DrawCopyableLabel(nameRect, entry.label, entry.filename);
 
-                    if (!entry.lora)
-                    {
-                        string[] templateDescriptions = ChatTemplate.templatesDescription.Keys.ToList().ToArray();
-                        string[] templates = ChatTemplate.templatesDescription.Values.ToList().ToArray();
-                        int templateIndex = Array.IndexOf(templates, entry.chatTemplate);
-                        int newTemplateIndex = EditorGUI.Popup(templateRect, templateIndex, templateDescriptions);
-                        if (newTemplateIndex != templateIndex)
-                        {
-                            LLMManager.SetTemplate(entry.filename, templates[newTemplateIndex]);
-                            UpdateModels();
-                        }
-                    }
-
                     if (expandedView)
                     {
                         if (hasURL)
@@ -420,7 +407,7 @@ namespace LLMUnity
                     EditorGUI.LabelField(rects[col++], "Build");
                     EditorGUI.LabelField(rects[col++], "");
                 },
-                drawFooterCallback = { },
+                drawFooterCallback = {},
                 footerHeight = 0,
             };
         }

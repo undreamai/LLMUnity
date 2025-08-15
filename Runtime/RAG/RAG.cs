@@ -117,13 +117,13 @@ namespace LLMUnity
 #endif
 
         public override string Get(int key) { return GetSearcher().Get(key); }
-        public override async Task<int> Add(string inputString, string group = "") { return await GetSearcher().Add(inputString, group); }
+        public override int Add(string inputString, string group = "") { return GetSearcher().Add(inputString, group); }
         public override int Remove(string inputString, string group = "") { return GetSearcher().Remove(inputString, group); }
         public override void Remove(int key) { GetSearcher().Remove(key); }
         public override int Count() { return GetSearcher().Count(); }
         public override int Count(string group) { return GetSearcher().Count(group); }
         public override void Clear() { GetSearcher().Clear(); }
-        public override async Task<int> IncrementalSearch(string queryString, string group = "") { return await GetSearcher().IncrementalSearch(queryString, group);}
+        public override int IncrementalSearch(string queryString, string group = "") { return GetSearcher().IncrementalSearch(queryString, group);}
         public override (string[], float[], bool) IncrementalFetch(int fetchKey, int k) { return GetSearcher().IncrementalFetch(fetchKey, k);}
         public override (int[], float[], bool) IncrementalFetchKeys(int fetchKey, int k) { return GetSearcher().IncrementalFetchKeys(fetchKey, k);}
         public override void IncrementalSearchComplete(int fetchKey) { GetSearcher().IncrementalSearchComplete(fetchKey);}

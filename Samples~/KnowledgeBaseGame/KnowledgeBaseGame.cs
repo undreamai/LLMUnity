@@ -82,7 +82,7 @@ namespace LLMUnitySamples
                     PlayerText.text += $"Creating Embeddings for {botName} (only once)...\n";
                     List<string> questions = botQuestionAnswers.Keys.ToList();
                     stopwatch.Start();
-                    foreach (string question in questions) await rag.Add(question, botName);
+                    foreach (string question in questions) rag.Add(question, botName);
                     stopwatch.Stop();
                     Debug.Log($"embedded {rag.Count()} phrases in {stopwatch.Elapsed.TotalMilliseconds / 1000f} secs");
                 }
@@ -95,20 +95,20 @@ namespace LLMUnitySamples
             }
         }
 
-        public async Task<List<string>> Retrieval(string question)
+        public List<string> Retrieval(string question)
         {
             // find similar questions for the current bot using the RAG
-            (string[] similarQuestions, _) = await rag.Search(question, numRAGResults, currentBotName);
+            (string[] similarQuestions, _) = rag.Search(question, numRAGResults, currentBotName);
             // get the answers of the similar questions
             List<string> similarAnswers = new List<string>();
             foreach (string similarQuestion in similarQuestions) similarAnswers.Add(botQuestionAnswers[currentBotName][similarQuestion]);
             return similarAnswers;
         }
 
-        public async Task<string> ConstructPrompt(string question)
+        public string ConstructPrompt(string question)
         {
             // get similar answers from the RAG
-            List<string> similarAnswers = await Retrieval(question);
+            List<string> similarAnswers = Retrieval(question);
             // create the prompt using the user question and the similar answers
             string answers = "";
             foreach (string similarAnswer in similarAnswers) answers += $"\n- {similarAnswer}";
@@ -118,11 +118,11 @@ namespace LLMUnitySamples
             return prompt;
         }
 
-        protected async override void OnInputFieldSubmit(string question)
+        protected override void OnInputFieldSubmit(string question)
         {
             PlayerText.interactable = false;
             SetAIText("...");
-            string prompt = await ConstructPrompt(question);
+            string prompt = ConstructPrompt(question);
             _ = llmCharacter.Chat(prompt, SetAIText, AIReplyComplete);
         }
 

@@ -20,7 +20,6 @@ namespace LLMUnity
         public string filename;
         public string path;
         public bool lora;
-        public string chatTemplate;
         public string url;
         public bool embeddingOnly;
         public int embeddingLength;
@@ -60,7 +59,6 @@ namespace LLMUnity
             this.path = LLMUnitySetup.GetFullPath(path);
             this.url = url;
             includeInBuild = true;
-            chatTemplate = null;
             contextLength = -1;
             embeddingOnly = false;
             embeddingLength = 0;
@@ -74,7 +72,6 @@ namespace LLMUnity
                     embeddingLength = reader.GetIntField($"{arch}.embedding_length");
                 }
                 embeddingOnly = embeddingOnlyArchs.Contains(arch);
-                chatTemplate = embeddingOnly ? default : ChatTemplate.FromGGUF(reader, this.path);
             }
         }
 
@@ -203,34 +200,6 @@ namespace LLMUnity
                 return false;
             }
             return true;
-        }
-
-        /// <summary>
-        /// Sets the chat template for a model and distributes it to all LLMs using it
-        /// </summary>
-        /// <param name="filename">model path</param>
-        /// <param name="chatTemplate">chat template</param>
-        public static void SetTemplate(string filename, string chatTemplate)
-        {
-            SetTemplate(Get(filename), chatTemplate);
-        }
-
-        /// <summary>
-        /// Sets the chat template for a model and distributes it to all LLMs using it
-        /// </summary>
-        /// <param name="entry">model entry</param>
-        /// <param name="chatTemplate">chat template</param>
-        public static void SetTemplate(ModelEntry entry, string chatTemplate)
-        {
-            if (entry == null) return;
-            entry.chatTemplate = chatTemplate;
-            foreach (LLM llm in llms)
-            {
-                if (llm != null && llm.model == entry.filename) llm.SetTemplate(chatTemplate);
-            }
-#if UNITY_EDITOR
-            Save();
-#endif
         }
 
         /// <summary>

@@ -21,15 +21,15 @@ If the user's GPU is not supported, the LLM will fall back to the CPU
 - `Debug` select to log the output of the model in the Unity Editor
 - <details><summary>Advanced options</summary>
 
-  - <details><summary><code>Parallel Prompts</code> number of prompts / slots that can happen in parallel (default: -1 = number of LLMCharacter objects). Note that the context size is divided among the slots.</summary> If you want to retain as much context for the LLM and don't need all the characters present at the same time, you can set this number and specify the slot for each LLMCharacter object.
-  e.g. Setting `Parallel Prompts` to 1 and slot 0 for all LLMCharacter objects will use the full context, but the entire prompt will need to be computed (no caching) whenever a LLMCharacter object is used for chat. </details>
+  - <details><summary><code>Parallel Prompts</code> number of prompts / slots that can happen in parallel (default: -1 = number of LLMAgent objects). Note that the context size is divided among the slots.</summary> If you want to retain as much context for the LLM and don't need all the characters present at the same time, you can set this number and specify the slot for each LLMAgent object.
+  e.g. Setting `Parallel Prompts` to 1 and slot 0 for all LLMAgent objects will use the full context, but the entire prompt will need to be computed (no caching) whenever a LLMAgent object is used for chat. </details>
   - `Dont Destroy On Load` select to not destroy the LLM GameObject when loading a new Scene
 
 </details>
 
 ## Server Security Settings
 
-- `API key` API key to use to allow access to requests from LLMCharacter objects (if `Remote` is set)
+- `API key` API key to use to allow access to requests from LLMAgent objects (if `Remote` is set)
 - <details><summary>Advanced options</summary>
 
   - `Load SSL certificate` allows to load a SSL certificate for end-to-end encryption of requests (if `Remote` is set). Requires SSL key as well.
@@ -58,7 +58,7 @@ If the user's GPU is not supported, the LLM will fall back to the CPU
 
 </details>
 
-## LLMCharacter Settings
+## LLMAgent Settings
 
 - `Show/Hide Advanced Options` Toggle to show/hide advanced options from below
 - `Log Level` select how verbose the log messages are
@@ -66,7 +66,7 @@ If the user's GPU is not supported, the LLM will fall back to the CPU
 
 ## 💻 Setup Settings
 <div>
-<img width="300" src=".github/LLMCharacter_GameObject.png" align="right"/>
+<img width="300" src=".github/LLMAgent_GameObject.png" align="right"/>
 </div>
 
 - `Remote` whether the LLM used is remote or local

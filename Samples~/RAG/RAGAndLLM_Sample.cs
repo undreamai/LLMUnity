@@ -8,11 +8,11 @@ namespace LLMUnitySamples
         public LLMCharacter llmCharacter;
         public Toggle ParaphraseWithLLM;
 
-        protected async override void onInputFieldSubmit(string message)
+        protected override void onInputFieldSubmit(string message)
         {
             playerText.interactable = false;
             AIText.text = "...";
-            (string[] similarPhrases, float[] distances) = await rag.Search(message, 1);
+            (string[] similarPhrases, float[] distances) = rag.Search(message, 1);
             string similarPhrase = similarPhrases[0];
             if (!ParaphraseWithLLM.isOn)
             {
