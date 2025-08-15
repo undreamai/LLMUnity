@@ -54,23 +54,23 @@ namespace LLMUnity
         }
     }
 
-    public class LLMAttribute : PropertyAttribute { }
-    public class LocalRemoteAttribute : PropertyAttribute { }
-    public class RemoteAttribute : PropertyAttribute { }
-    public class LocalAttribute : PropertyAttribute { }
-    public class ModelAttribute : PropertyAttribute { }
-    public class ModelExtrasAttribute : PropertyAttribute { }
-    public class ChatAttribute : PropertyAttribute { }
-    public class LLMUnityAttribute : PropertyAttribute { }
+    public class LLMAttribute : PropertyAttribute {}
+    public class LocalRemoteAttribute : PropertyAttribute {}
+    public class RemoteAttribute : PropertyAttribute {}
+    public class LocalAttribute : PropertyAttribute {}
+    public class ModelAttribute : PropertyAttribute {}
+    public class ModelExtrasAttribute : PropertyAttribute {}
+    public class ChatAttribute : PropertyAttribute {}
+    public class LLMUnityAttribute : PropertyAttribute {}
 
-    public class AdvancedAttribute : PropertyAttribute { }
-    public class LLMAdvancedAttribute : AdvancedAttribute { }
-    public class ModelAdvancedAttribute : AdvancedAttribute { }
-    public class ChatAdvancedAttribute : AdvancedAttribute { }
+    public class AdvancedAttribute : PropertyAttribute {}
+    public class LLMAdvancedAttribute : AdvancedAttribute {}
+    public class ModelAdvancedAttribute : AdvancedAttribute {}
+    public class ChatAdvancedAttribute : AdvancedAttribute {}
 
     public class NotImplementedException : Exception
     {
-        public NotImplementedException() : base("The method needs to be implemented by subclasses.") { }
+        public NotImplementedException() : base("The method needs to be implemented by subclasses.") {}
     }
 
     public delegate void EmptyCallback();
@@ -222,6 +222,7 @@ namespace LLMUnity
             PlayerPrefs.SetInt(CUBLASKey, value ? 1 : 0);
             PlayerPrefs.Save();
         }
+
 #endif
 
         public static string GetAssetPath(string relPath = "")
@@ -403,19 +404,28 @@ namespace LLMUnity
             File.Create(path).Dispose();
         }
 
-        static void ExtractInsideDirectory(string zipPath, string extractPath, bool overwrite = true, string prefix = "runtimes/")
+        static void ExtractInsideDirectory(string zipPath, string extractPath, string prefix = "", bool overwrite = true)
         {
             using (ZipArchive archive = ZipFile.OpenRead(zipPath))
             {
                 foreach (ZipArchiveEntry entry in archive.Entries)
                 {
-                    string normalizedPath = entry.FullName.Replace('\\', '/');
-                    if (!normalizedPath.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
-                        continue;
                     if (string.IsNullOrEmpty(entry.Name))
                         continue; // Skip directories
 
-                    string destinationPath = Path.Combine(extractPath, normalizedPath.Substring(prefix.Length));
+                    string destinationPath;
+                    if (!String.IsNullOrEmpty(prefix))
+                    {
+                        string normalizedPath = entry.FullName.Replace('\\', '/');
+                        if (!normalizedPath.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+                            continue;
+                        destinationPath = Path.Combine(extractPath, normalizedPath.Substring(prefix.Length));
+                    }
+                    else
+                    {
+                        destinationPath = Path.Combine(extractPath, entry.FullName);
+                    }
+
                     Directory.CreateDirectory(Path.GetDirectoryName(destinationPath));
                     entry.ExtractToFile(destinationPath, overwrite);
                 }
@@ -432,7 +442,7 @@ namespace LLMUnity
             await DownloadFile(url, zipPath, true, null, SetLibraryProgress);
 
             AssetDatabase.StartAssetEditing();
-            ExtractInsideDirectory(zipPath, path);
+            ExtractInsideDirectory(zipPath, path, $"{libraryName}/runtimes/");
             CreateEmptyFile(setupFile);
             AssetDatabase.StopAssetEditing();
 
@@ -463,7 +473,6 @@ namespace LLMUnity
                             if (File.Exists(assetPathSubDir + ".meta")) File.Delete(assetPathSubDir + ".meta");
                         }
                     }
-
                 }
             }
         }
