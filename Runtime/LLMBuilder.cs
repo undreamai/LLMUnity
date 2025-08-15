@@ -218,7 +218,7 @@ namespace LLMUnity
                             {
                                 string target = Path.Combine(BuildTempDir, platform, "native", sourceName);
                                 MoveAction(source, target);
-                                MoveAction(source + ".meta", target + ".meta"); ;
+                                MoveAction(source + ".meta", target + ".meta");
                                 break;
                             }
                         }
@@ -245,10 +245,12 @@ namespace LLMUnity
             foreach (BuildTarget buildTarget in new BuildTarget[] { BuildTarget.iOS, BuildTarget.VisionOS, BuildTarget.Android })
             {
                 string suffix = (buildTarget == BuildTarget.Android) ? "so" : "a";
-                foreach (string platformDir in Directory.GetDirectories(Path.Combine("Assets", PluginLibraryDir(buildTarget.ToString(), true))))
+                string platformDir = Path.Combine("Assets", PluginLibraryDir(buildTarget.ToString(), true));
+                if (!Directory.Exists(platformDir)) continue;
+                foreach (string archDir in Directory.GetDirectories(platformDir))
                 {
-                    string platform = Path.GetFileName(platformDir);
-                    string pathToPlugin = Path.Combine(platformDir, $"libllamalib_{platform}.{suffix}");
+                    string arch = Path.GetFileName(archDir);
+                    string pathToPlugin = Path.Combine(platformDir, $"libllamalib_{arch}.{suffix}");
                     for (int i = 0; i < movedAssets.Length; i++)
                     {
                         if (movedAssets[i] == pathToPlugin)
@@ -257,7 +259,7 @@ namespace LLMUnity
                             if (importer != null && importer.isNativePlugin)
                             {
                                 importer.SetCompatibleWithPlatform(buildTarget, true);
-                                importer.SetPlatformData(buildTarget, "CPU", platform.Split("_")[1].ToUpper());
+                                importer.SetPlatformData(buildTarget, "CPU", arch.Split("_")[1].ToUpper());
                                 AssetDatabase.ImportAsset(pathToPlugin);
                             }
                         }
