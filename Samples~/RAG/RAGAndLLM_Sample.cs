@@ -21,7 +21,7 @@ namespace LLMUnitySamples
             }
             else
             {
-                _ = llmCharacter.Chat("Paraphrase the following phrase: " + similarPhrase, SetAIText, AIReplyComplete);
+                _ = llmCharacter.ChatAsync("Paraphrase the following phrase: " + similarPhrase, SetAIText, AIReplyComplete);
             }
         }
 

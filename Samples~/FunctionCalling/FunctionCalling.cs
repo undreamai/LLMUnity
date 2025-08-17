@@ -13,7 +13,7 @@ namespace LLMUnitySamples
 
         public static string Weather()
         {
-            string[] weather = new string[]{"sunny", "rainy", "cloudy", "snowy"};
+            string[] weather = new string[] {"sunny", "rainy", "cloudy", "snowy"};
             return "The weather is " + weather[random.Next(weather.Length)];
         }
 
@@ -24,7 +24,7 @@ namespace LLMUnitySamples
 
         public static string Emotion()
         {
-            string[] emotion = new string[]{"happy", "sad", "exhilarated", "ok"};
+            string[] emotion = new string[] {"happy", "sad", "exhilarated", "ok"};
             return "I am feeling " + emotion[random.Next(emotion.Length)];
         }
     }
@@ -59,20 +59,20 @@ namespace LLMUnitySamples
             string prompt = "Which of the following choices matches best the input?\n\n";
             prompt += "Input:" + message + "\n\n";
             prompt += "Choices:\n";
-            foreach(string functionName in GetFunctionNames()) prompt += $"- {functionName}\n";
+            foreach (string functionName in GetFunctionNames()) prompt += $"- {functionName}\n";
             prompt += "\nAnswer directly with the choice";
             return prompt;
         }
 
         string CallFunction(string functionName)
         {
-            return (string) typeof(Functions).GetMethod(functionName).Invoke(null, null);
+            return (string)typeof(Functions).GetMethod(functionName).Invoke(null, null);
         }
 
         async void onInputFieldSubmit(string message)
         {
             playerText.interactable = false;
-            string functionName = await llmCharacter.Chat(ConstructPrompt(message));
+            string functionName = await llmCharacter.ChatAsync(ConstructPrompt(message));
             string result = CallFunction(functionName);
             AIText.text = $"Calling {functionName}\n{result}";
             playerText.interactable = true;
