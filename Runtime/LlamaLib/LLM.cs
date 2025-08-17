@@ -257,8 +257,6 @@ namespace UndreamAI.LlamaLib
 
         public void SetTemplate(string template)
         {
-            if (string.IsNullOrEmpty(template))
-                throw new ArgumentNullException(nameof(template));
             CheckLlamaLib();
             llamaLib.LLM_Set_Template(llm, template);
         }
