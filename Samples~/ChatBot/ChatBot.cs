@@ -85,7 +85,7 @@ namespace LLMUnitySamples
 
             AddBubble(message, true);
             Bubble aiBubble = AddBubble("...", false);
-            Task chatTask = llmCharacter.Chat(message, aiBubble.SetText, AllowInput);
+            Task chatTask = llmCharacter.ChatAsync(message, aiBubble.SetText, AllowInput);
             inputBubble.SetText("");
         }
 

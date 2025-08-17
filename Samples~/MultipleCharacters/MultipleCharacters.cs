@@ -28,7 +28,7 @@ namespace LLMUnitySamples
         {
             playerText.interactable = false;
             AIText.text = "...";
-            _ = llmCharacter.Chat(message, SetAIText, AIReplyComplete);
+            _ = llmCharacter.ChatAsync(message, SetAIText, AIReplyComplete);
         }
 
         public void SetAIText(string text)

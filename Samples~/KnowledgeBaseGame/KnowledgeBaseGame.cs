@@ -123,7 +123,7 @@ namespace LLMUnitySamples
             PlayerText.interactable = false;
             SetAIText("...");
             string prompt = ConstructPrompt(question);
-            _ = llmCharacter.Chat(prompt, SetAIText, AIReplyComplete);
+            _ = llmCharacter.ChatAsync(prompt, SetAIText, AIReplyComplete);
         }
 
         protected override void DropdownChange(int selection)
