@@ -51,6 +51,8 @@ namespace LLMUnity
             protected set => SetLLMClient(value);
         }
 
+        bool started = false;
+
         /// <summary>
         /// The Unity Awake function that initializes the state before the application starts.
         /// The following actions are executed:
@@ -74,12 +76,17 @@ namespace LLMUnity
                     LLMUnitySetup.LogError(error);
                     throw new Exception(error);
                 }
-                llmClient = new LLMClient(llm.llmService);
             }
-            else
-            {
-                llmClient = new LLMClient(host, port, APIKey);
-            }
+        }
+
+        public virtual void Start()
+        {
+            if (!enabled) return;
+
+            if (!remote) llmClient = new LLMClient(llm.llmService);
+            else llmClient = new LLMClient(host, port, APIKey);
+
+            started = true;
         }
 
         /// <summary>
@@ -95,12 +102,12 @@ namespace LLMUnity
             }
             _llm = llmSet;
             _prellm = _llm;
-            if (!remote) llmClient = new LLMClient(llm.llmService);
+            if (started && remote) llmClient = new LLMClient(llm.llmService);
         }
 
         protected virtual void SetLLMClient(LLMClient llmClientSet)
         {
-            llmClient = llmClientSet;
+            _llmClient = llmClientSet;
         }
 
         /// <summary>
@@ -245,7 +252,7 @@ namespace LLMUnity
         /// <param name="callback">callback function that receives the response as string</param>
         /// <param name="completionCallback">callback function called when the full response has been received</param>
         /// <returns>the LLM response</returns>
-        public virtual string CompletionSync(string prompt, LlamaLib.CharArrayCallback callback = null)
+        public virtual string Completion(string prompt, LlamaLib.CharArrayCallback callback = null)
         {
             // handle a completion request by the user
             // call the callback function while the answer is received
@@ -263,7 +270,7 @@ namespace LLMUnity
         /// <param name="callback">callback function that receives the response as string</param>
         /// <param name="completionCallback">callback function called when the full response has been received</param>
         /// <returns>the LLM response</returns>
-        public virtual async Task<string> Completion(string prompt, LlamaLib.CharArrayCallback callback = null, EmptyCallback completionCallback = null)
+        public virtual async Task<string> CompletionAsync(string prompt, LlamaLib.CharArrayCallback callback = null, EmptyCallback completionCallback = null)
         {
             // handle a completion request by the user
             // call the callback function while the answer is received

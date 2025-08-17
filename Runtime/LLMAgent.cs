@@ -127,9 +127,7 @@ namespace LLMUnity
         [Tooltip("the grammar to use")]
         public string grammarJSONString;
 
-        /// \cond HIDE
-        protected SemaphoreSlim chatLock = new SemaphoreSlim(1, 1);
-        /// \endcond
+        string completionParametersPre = "";
 
         [Local, SerializeField] protected UndreamAI.LlamaLib.LLMAgent _llmAgent;
         public UndreamAI.LlamaLib.LLMAgent llmAgent
@@ -153,15 +151,9 @@ namespace LLMUnity
         /// - the chat template is constructed
         /// - the number of tokens to keep are based on the system prompt (if setNKeepToPrompt=true)
         /// </summary>
-        public override void Awake()
+        public override void Start()
         {
-            if (!enabled) return;
-            base.Awake();
-            if (!remote)
-            {
-                int slotFromServer = llm.Register(this);
-                if (slot == -1) slot = slotFromServer;
-            }
+            base.Start();
             llmAgent = new UndreamAI.LlamaLib.LLMAgent(llmClient, prompt, userName, AIName);
             InitGrammar();
             InitHistory();
@@ -203,15 +195,7 @@ namespace LLMUnity
         protected virtual async Task LoadHistory()
         {
             if (save == "" || !File.Exists(GetJsonSavePath(save))) return;
-            await chatLock.WaitAsync(); // Acquire the lock
-            try
-            {
-                Load(save);
-            }
-            finally
-            {
-                chatLock.Release(); // Release the lock
-            }
+            Load(save);
         }
 
         protected virtual string GetSavePath(string filename)
@@ -291,24 +275,25 @@ namespace LLMUnity
                 ["top_p"] = topP,
                 ["min_p"] = minP,
                 ["n_predict"] = numPredict,
-                ["stream"] = stream,
                 ["typical_p"] = typicalP,
                 ["repeat_penalty"] = repeatPenalty,
                 ["repeat_last_n"] = repeatLastN,
-                ["penalize_nl"] = penalizeNl,
                 ["presence_penalty"] = presencePenalty,
                 ["frequency_penalty"] = frequencyPenalty,
-                ["penalty_prompt"] = (penaltyPrompt != null && penaltyPrompt != "") ? penaltyPrompt : null,
                 ["mirostat"] = mirostat,
                 ["mirostat_tau"] = mirostatTau,
                 ["mirostat_eta"] = mirostatEta,
-                ["json_schema"] = grammarJSONString,
                 ["seed"] = seed,
                 ["ignore_eos"] = ignoreEos,
                 ["n_probs"] = nProbs,
                 ["cache_prompt"] = cachePrompt
             };
-            llmAgent.SetCompletionParameters(json);
+            string completionParameters = json.ToString();
+            if (completionParameters != completionParametersPre)
+            {
+                llmAgent.SetCompletionParameters(json);
+                completionParametersPre = completionParameters;
+            }
         }
 
         /// <summary>
@@ -351,7 +336,7 @@ namespace LLMUnity
         /// <param name="completionCallback">callback function called when the full response has been received</param>
         /// <param name="addToHistory">whether to add the user query to the chat history</param>
         /// <returns>the LLM response</returns>
-        public virtual string ChatSync(string query, LlamaLib.CharArrayCallback callback = null, bool addToHistory = true)
+        public virtual string Chat(string query, LlamaLib.CharArrayCallback callback = null, bool addToHistory = true)
         {
             // handle a chat message by the user
             // call the callback function while the answer is received
@@ -371,13 +356,20 @@ namespace LLMUnity
         /// <param name="completionCallback">callback function called when the full response has been received</param>
         /// <param name="addToHistory">whether to add the user query to the chat history</param>
         /// <returns>the LLM response</returns>
-        public virtual async Task<string> Chat(string query, LlamaLib.CharArrayCallback callback = null, EmptyCallback completionCallback = null, bool addToHistory = true)
+        public virtual async Task<string> ChatAsync(string query, LlamaLib.CharArrayCallback callback = null, EmptyCallback completionCallback = null, bool addToHistory = true)
         {
-            // handle a chat message by the user
-            // call the callback function while the answer is received
-            // call the completionCallback function when the answer is fully received
             SetCompletionParameters();
-            string result = await llmAgent.ChatAsync(query, addToHistory, callback);
+            LlamaLib.CharArrayCallback wrappedCallback = null;
+            if (callback != null)
+            {
+                var context = SynchronizationContext.Current;
+                wrappedCallback = (string msg) => {
+                    if (context != null) context.Post(_ => callback(msg), null);
+                    else callback(msg);
+                };
+            }
+
+            string result = await llmAgent.ChatAsync(query, addToHistory, wrappedCallback);
             completionCallback?.Invoke();
             return result;
         }
@@ -407,7 +399,7 @@ namespace LLMUnity
         {
             int currNumPredict = numPredict;
             numPredict = 0;
-            await Chat(query, null, completionCallback, false);
+            await ChatAsync(query, null, completionCallback, false);
             numPredict = currNumPredict;
             SetCompletionParameters();
         }
