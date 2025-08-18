@@ -5,7 +5,7 @@ namespace LLMUnitySamples
 {
     public class RAGAndLLMSample : RAGSample
     {
-        public LLMCharacter llmCharacter;
+        public LLMAgent llmAgent;
         public Toggle ParaphraseWithLLM;
 
         protected override void onInputFieldSubmit(string message)
@@ -21,20 +21,20 @@ namespace LLMUnitySamples
             }
             else
             {
-                _ = llmCharacter.ChatAsync("Paraphrase the following phrase: " + similarPhrase, SetAIText, AIReplyComplete);
+                _ = llmAgent.ChatAsync("Paraphrase the following phrase: " + similarPhrase, SetAIText, AIReplyComplete);
             }
         }
 
         public void CancelRequests()
         {
-            llmCharacter.CancelRequests();
+            llmAgent.CancelRequests();
             AIReplyComplete();
         }
 
         protected override void CheckLLMs(bool debug)
         {
             base.CheckLLMs(debug);
-            CheckLLM(llmCharacter, debug);
+            CheckLLM(llmAgent, debug);
         }
     }
 }

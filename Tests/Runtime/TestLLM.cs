@@ -77,7 +77,7 @@
 
 //         protected GameObject gameObject;
 //         protected LLM llm;
-//         protected LLMCharacter llmCharacter;
+//         protected LLMAgent llmAgent;
 //         protected Exception error = null;
 //         protected string prompt;
 //         protected string query;
@@ -104,7 +104,7 @@
 //             gameObject = new GameObject();
 //             gameObject.SetActive(false);
 //             llm = CreateLLM();
-//             llmCharacter = CreateLLMCharacter();
+//             llmAgent = CreateLLMCharacter();
 //             gameObject.SetActive(true);
 //         }
 
@@ -192,19 +192,19 @@
 //             return llm;
 //         }
 
-//         public virtual LLMCharacter CreateLLMCharacter()
+//         public virtual LLMAgent CreateLLMCharacter()
 //         {
-//             LLMCharacter llmCharacter = gameObject.AddComponent<LLMCharacter>();
-//             llmCharacter.llm = llm;
-//             llmCharacter.userName = "User";
-//             llmCharacter.AIName = "Assistant";
-//             llmCharacter.prompt = prompt;
-//             llmCharacter.temperature = 0;
-//             llmCharacter.seed = 0;
-//             llmCharacter.stream = false;
-//             llmCharacter.numPredict = 50;
-//             llmCharacter.port = port;
-//             return llmCharacter;
+//             LLMAgent llmAgent = gameObject.AddComponent<LLMAgent>();
+//             llmAgent.llm = llm;
+//             llmAgent.userRole = "User";
+//             llmAgent.assistantRole = "Assistant";
+//             llmAgent.prompt = prompt;
+//             llmAgent.temperature = 0;
+//             llmAgent.seed = 0;
+//             llmAgent.stream = false;
+//             llmAgent.numPredict = 50;
+//             llmAgent.port = port;
+//             return llmAgent;
 //         }
 
 //         [UnityTest]
@@ -236,24 +236,24 @@
 
 //         public virtual async Task Tests()
 //         {
-//             await llmCharacter.Tokenize("I", TestTokens);
-//             await llmCharacter.Warmup();
+//             await llmAgent.Tokenize("I", TestTokens);
+//             await llmAgent.Warmup();
 //             TestArchitecture();
 //             TestInitParameters(tokens1, 1);
 //             TestWarmup();
-//             await llmCharacter.Chat(query, (string reply) => TestChat(reply, reply1));
+//             await llmAgent.Chat(query, (string reply) => TestChat(reply, reply1));
 //             TestPostChat(3);
-//             llmCharacter.SetPrompt(llmCharacter.prompt);
-//             llmCharacter.AIName = "False response";
-//             await llmCharacter.Chat(query, (string reply) => TestChat(reply, reply2));
+//             llmAgent.SetPrompt(llmAgent.prompt);
+//             llmAgent.assistantRole = "False response";
+//             await llmAgent.Chat(query, (string reply) => TestChat(reply, reply2));
 //             TestPostChat(3);
-//             await llmCharacter.Chat("bye!");
+//             await llmAgent.Chat("bye!");
 //             TestPostChat(5);
 //             prompt = "How are you?";
-//             llmCharacter.SetPrompt(prompt);
-//             await llmCharacter.Chat("hi");
+//             llmAgent.SetPrompt(prompt);
+//             await llmAgent.Chat("hi");
 //             TestInitParameters(tokens2, 3);
-//             List<float> embeddings = await llmCharacter.Embeddings("hi how are you?");
+//             List<float> embeddings = await llmAgent.Embeddings("hi how are you?");
 //             TestEmbeddings(embeddings);
 //         }
 
@@ -264,9 +264,9 @@
 
 //         public void TestInitParameters(int nkeep, int chats)
 //         {
-//             Assert.AreEqual(llmCharacter.nKeep, nkeep);
-//             Assert.That(ChatTemplate.GetTemplate(llm.chatTemplate).GetStop(llmCharacter.userName, llmCharacter.AIName).Length > 0);
-//             Assert.AreEqual(llmCharacter.chat.Count, chats);
+//             Assert.AreEqual(llmAgent.nKeep, nkeep);
+//             Assert.That(ChatTemplate.GetTemplate(llm.chatTemplate).GetStop(llmAgent.userRole, llmAgent.assistantRole).Length > 0);
+//             Assert.AreEqual(llmAgent.chat.Count, chats);
 //         }
 
 //         public void TestTokens(List<int> tokens)
@@ -276,7 +276,7 @@
 
 //         public void TestWarmup()
 //         {
-//             Assert.That(llmCharacter.chat.Count == 1);
+//             Assert.That(llmAgent.chat.Count == 1);
 //         }
 
 //         public void TestChat(string reply, string replyGT)
@@ -292,7 +292,7 @@
 
 //         public void TestPostChat(int num)
 //         {
-//             Assert.That(llmCharacter.chat.Count == num);
+//             Assert.That(llmAgent.chat.Count == num);
 //         }
 
 //         public void TestEmbeddings(List<float> embeddings)
@@ -427,11 +427,11 @@
 //             return llm;
 //         }
 
-//         public override LLMCharacter CreateLLMCharacter()
+//         public override LLMAgent CreateLLMCharacter()
 //         {
-//             LLMCharacter llmCharacter = base.CreateLLMCharacter();
-//             llmCharacter.remote = true;
-//             return llmCharacter;
+//             LLMAgent llmAgent = base.CreateLLMCharacter();
+//             llmAgent.remote = true;
+//             return llmAgent;
 //         }
 //     }
 
@@ -444,18 +444,18 @@
 //             return llm;
 //         }
 
-//         public override LLMCharacter CreateLLMCharacter()
+//         public override LLMAgent CreateLLMCharacter()
 //         {
-//             LLMCharacter llmCharacter = base.CreateLLMCharacter();
-//             llmCharacter.remote = true;
-//             return llmCharacter;
+//             LLMAgent llmAgent = base.CreateLLMCharacter();
+//             llmAgent.remote = true;
+//             return llmAgent;
 //         }
 //     }
 
 //     public class TestLLM_Double : TestLLM
 //     {
 //         LLM llm1;
-//         LLMCharacter llmCharacter1;
+//         LLMAgent llmCharacter1;
 
 //         public override async Task Init()
 //         {
@@ -464,7 +464,7 @@
 //             gameObject = new GameObject();
 //             gameObject.SetActive(false);
 //             llm = CreateLLM();
-//             llmCharacter = CreateLLMCharacter();
+//             llmAgent = CreateLLMCharacter();
 //             llm1 = CreateLLM();
 //             llmCharacter1 = CreateLLMCharacter();
 //             gameObject.SetActive(true);
@@ -475,17 +475,17 @@
 //     {
 //         string saveName = "TestLLMCharacter_Save";
 
-//         public override LLMCharacter CreateLLMCharacter()
+//         public override LLMAgent CreateLLMCharacter()
 //         {
-//             LLMCharacter llmCharacter = base.CreateLLMCharacter();
-//             llmCharacter.save = saveName;
-//             llmCharacter.saveCache = true;
+//             LLMAgent llmAgent = base.CreateLLMCharacter();
+//             llmAgent.save = saveName;
+//             llmAgent.saveCache = true;
 //             foreach (string filename in new string[]
 //                  {
-//                      llmCharacter.GetJsonSavePath(saveName),
-//                      llmCharacter.GetCacheSavePath(saveName)
+//                      llmAgent.GetJsonSavePath(saveName),
+//                      llmAgent.GetCacheSavePath(saveName)
 //                  }) if (File.Exists(filename)) File.Delete(filename);
-//             return llmCharacter;
+//             return llmAgent;
 //         }
 
 //         public override async Task Tests()
@@ -496,8 +496,8 @@
 
 //         public void TestSave()
 //         {
-//             string jsonPath = llmCharacter.GetJsonSavePath(saveName);
-//             string cachePath = llmCharacter.GetCacheSavePath(saveName);
+//             string jsonPath = llmAgent.GetJsonSavePath(saveName);
+//             string cachePath = llmAgent.GetCacheSavePath(saveName);
 //             Assert.That(File.Exists(jsonPath));
 //             Assert.That(File.Exists(cachePath));
 //             string json = File.ReadAllText(jsonPath);
@@ -506,15 +506,15 @@
 
 //             List<ChatMessage> chatHistory = JsonUtility.FromJson<ChatListWrapper>(json).chat;
 //             Assert.AreEqual(chatHistory.Count, 2);
-//             Assert.AreEqual(chatHistory[0].role, llmCharacter.userName);
+//             Assert.AreEqual(chatHistory[0].role, llmAgent.userRole);
 //             Assert.AreEqual(chatHistory[0].content, "hi");
-//             Assert.AreEqual(chatHistory[1].role, llmCharacter.AIName);
+//             Assert.AreEqual(chatHistory[1].role, llmAgent.assistantRole);
 
-//             Assert.AreEqual(llmCharacter.chat.Count, chatHistory.Count + 1);
+//             Assert.AreEqual(llmAgent.chat.Count, chatHistory.Count + 1);
 //             for (int i = 0; i < chatHistory.Count; i++)
 //             {
-//                 Assert.AreEqual(chatHistory[i].role, llmCharacter.chat[i + 1].role);
-//                 Assert.AreEqual(chatHistory[i].content, llmCharacter.chat[i + 1].content);
+//                 Assert.AreEqual(chatHistory[i].role, llmAgent.chat[i + 1].role);
+//                 Assert.AreEqual(chatHistory[i].content, llmAgent.chat[i + 1].content);
 //             }
 //         }
 //     }

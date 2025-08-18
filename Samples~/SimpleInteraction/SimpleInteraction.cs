@@ -6,7 +6,7 @@ namespace LLMUnitySamples
 {
     public class SimpleInteraction : MonoBehaviour
     {
-        public LLMCharacter llmCharacter;
+        public LLMAgent llmAgent;
         public InputField playerText;
         public Text AIText;
 
@@ -20,7 +20,7 @@ namespace LLMUnitySamples
         {
             playerText.interactable = false;
             AIText.text = "...";
-            _ = llmCharacter.ChatAsync(message, SetAIText, AIReplyComplete);
+            _ = llmAgent.ChatAsync(message, SetAIText, AIReplyComplete);
         }
 
         public void SetAIText(string text)
@@ -37,7 +37,7 @@ namespace LLMUnitySamples
 
         public void CancelRequests()
         {
-            llmCharacter.CancelRequests();
+            llmAgent.CancelRequests();
             AIReplyComplete();
         }
 
@@ -50,9 +50,9 @@ namespace LLMUnitySamples
         bool onValidateWarning = true;
         void OnValidate()
         {
-            if (onValidateWarning && !llmCharacter.remote && llmCharacter.llm != null && llmCharacter.llm.model == "")
+            if (onValidateWarning && !llmAgent.remote && llmAgent.llm != null && llmAgent.llm.model == "")
             {
-                Debug.LogWarning($"Please select a model in the {llmCharacter.llm.gameObject.name} GameObject!");
+                Debug.LogWarning($"Please select a model in the {llmAgent.llm.gameObject.name} GameObject!");
                 onValidateWarning = false;
             }
         }

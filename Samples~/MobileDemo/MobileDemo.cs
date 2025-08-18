@@ -7,7 +7,7 @@ namespace LLMUnitySamples
 {
     public class MobileDemo : MonoBehaviour
     {
-        public LLMCharacter llmCharacter;
+        public LLMAgent llmAgent;
 
         public GameObject ChatPanel;
         public InputField playerText;
@@ -45,7 +45,7 @@ namespace LLMUnitySamples
         async Task WarmUp()
         {
             AIText.text += $"Warming up the model...";
-            await llmCharacter.Warmup();
+            await llmAgent.Warmup();
             AIText.text = "";
             AIReplyComplete();
         }
@@ -60,7 +60,7 @@ namespace LLMUnitySamples
         {
             playerText.interactable = false;
             AIText.text = "...";
-            _ = llmCharacter.ChatAsync(message, SetAIText, AIReplyComplete);
+            _ = llmAgent.ChatAsync(message, SetAIText, AIReplyComplete);
         }
 
         public void SetAIText(string text)
@@ -77,7 +77,7 @@ namespace LLMUnitySamples
 
         public void CancelRequests()
         {
-            llmCharacter.CancelRequests();
+            llmAgent.CancelRequests();
             AIReplyComplete();
         }
 
@@ -91,14 +91,14 @@ namespace LLMUnitySamples
         bool onValidateInfo = true;
         void OnValidate()
         {
-            if (onValidateWarning && !llmCharacter.remote && llmCharacter.llm != null && llmCharacter.llm.model == "")
+            if (onValidateWarning && !llmAgent.remote && llmAgent.llm != null && llmAgent.llm.model == "")
             {
-                Debug.LogWarning($"Please select a model in the {llmCharacter.llm.gameObject.name} GameObject!");
+                Debug.LogWarning($"Please select a model in the {llmAgent.llm.gameObject.name} GameObject!");
                 onValidateWarning = false;
             }
             if (onValidateInfo)
             {
-                Debug.Log($"Select 'Download On Start' in the {llmCharacter.llm.gameObject.name} GameObject to download the models when the app starts.");
+                Debug.Log($"Select 'Download On Start' in the {llmAgent.llm.gameObject.name} GameObject to download the models when the app starts.");
                 onValidateInfo = false;
             }
         }

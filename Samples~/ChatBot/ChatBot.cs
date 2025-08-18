@@ -15,7 +15,7 @@ namespace LLMUnitySamples
         public Font font;
         public int fontSize = 16;
         public int bubbleWidth = 600;
-        public LLMCharacter llmCharacter;
+        public LLMAgent llmAgent;
         public float textPadding = 10f;
         public float bubbleSpacing = 10f;
         public Sprite sprite;
@@ -55,7 +55,7 @@ namespace LLMUnitySamples
             inputBubble.setInteractable(false);
             stopButton.gameObject.SetActive(true);
             ShowLoadedMessages();
-            _ = llmCharacter.Warmup(WarmUpCallback);
+            _ = llmAgent.Warmup(WarmUpCallback);
         }
 
         Bubble AddBubble(string message, bool isPlayerMessage)
@@ -68,7 +68,7 @@ namespace LLMUnitySamples
 
         void ShowLoadedMessages()
         {
-            for (int i = 1; i < llmCharacter.chat.Count; i++) AddBubble(llmCharacter.chat[i].Content, i % 2 == 1);
+            for (int i = 1; i < llmAgent.chat.Count; i++) AddBubble(llmAgent.chat[i].Content, i % 2 == 1);
         }
 
         void onInputFieldSubmit(string newText)
@@ -85,7 +85,7 @@ namespace LLMUnitySamples
 
             AddBubble(message, true);
             Bubble aiBubble = AddBubble("...", false);
-            Task chatTask = llmCharacter.ChatAsync(message, aiBubble.SetText, AllowInput);
+            Task chatTask = llmAgent.ChatAsync(message, aiBubble.SetText, AllowInput);
             inputBubble.SetText("");
         }
 
@@ -104,7 +104,7 @@ namespace LLMUnitySamples
 
         public void CancelRequests()
         {
-            llmCharacter.CancelRequests();
+            llmAgent.CancelRequests();
             AllowInput();
         }
 
@@ -175,9 +175,9 @@ namespace LLMUnitySamples
         bool onValidateWarning = true;
         void OnValidate()
         {
-            if (onValidateWarning && !llmCharacter.remote && llmCharacter.llm != null && llmCharacter.llm.model == "")
+            if (onValidateWarning && !llmAgent.remote && llmAgent.llm != null && llmAgent.llm.model == "")
             {
-                Debug.LogWarning($"Please select a model in the {llmCharacter.llm.gameObject.name} GameObject!");
+                Debug.LogWarning($"Please select a model in the {llmAgent.llm.gameObject.name} GameObject!");
                 onValidateWarning = false;
             }
         }
