@@ -5,6 +5,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UndreamAI.LlamaLib;
 using UnityEngine;
+using UnityEditor;
+using Newtonsoft.Json.Linq;
+using System.IO;
 
 namespace LLMUnity
 {
@@ -42,8 +45,93 @@ namespace LLMUnity
         [Tooltip("number of retries to use for the remote LLM server requests (-1 = infinite)")]
         [Remote] public int numRetries = 10;
 
-        protected LLM _prellm;
+        /// <summary> maximum number of tokens that the LLM will predict (-1 = infinity). </summary>
+        [Tooltip("maximum number of tokens that the LLM will predict (-1 = infinity).")]
+        [Model] public int numPredict = -1;
+        /// <summary> grammar file used for the LLMAgent (.gbnf format) </summary>
+        [Tooltip("grammar file used for the LLMAgent (.gbnf format)")]
+        [ModelAdvanced] public string grammar = null;
+        /// <summary> grammar file used for the LLMAgent (.json format) </summary>
+        [Tooltip("grammar file used for the LLMAgent (.json format)")]
+        [ModelAdvanced] public string grammarJSON = null;
+        /// <summary> cache the processed prompt to avoid reprocessing the entire prompt every time (default: true, recommended!) </summary>
+        [Tooltip("cache the processed prompt to avoid reprocessing the entire prompt every time (default: true, recommended!)")]
+        [ModelAdvanced] public bool cachePrompt = true;
+        /// <summary> seed for reproducibility (-1 = no reproducibility). </summary>
+        [Tooltip("seed for reproducibility (-1 = no reproducibility).")]
+        [ModelAdvanced] public int seed = 0;
+        /// <summary> LLM temperature, lower values give more deterministic answers. </summary>
+        [Tooltip("LLM temperature, lower values give more deterministic answers.")]
+        [ModelAdvanced, Float(0f, 2f)] public float temperature = 0.2f;
+        /// <summary> Top-k sampling selects the next token only from the top k most likely predicted tokens (0 = disabled).
+        /// Higher values lead to more diverse text, while lower value will generate more focused and conservative text.
+        /// </summary>
+        [Tooltip("Top-k sampling selects the next token only from the top k most likely predicted tokens (0 = disabled). Higher values lead to more diverse text, while lower value will generate more focused and conservative text. ")]
+        [ModelAdvanced, Int(-1, 100)] public int topK = 40;
+        /// <summary> Top-p sampling selects the next token from a subset of tokens that together have a cumulative probability of at least p (1.0 = disabled).
+        /// Higher values lead to more diverse text, while lower value will generate more focused and conservative text.
+        /// </summary>
+        [Tooltip("Top-p sampling selects the next token from a subset of tokens that together have a cumulative probability of at least p (1.0 = disabled). Higher values lead to more diverse text, while lower value will generate more focused and conservative text. ")]
+        [ModelAdvanced, Float(0f, 1f)] public float topP = 0.9f;
+        /// <summary> minimum probability for a token to be used. </summary>
+        [Tooltip("minimum probability for a token to be used.")]
+        [ModelAdvanced, Float(0f, 1f)] public float minP = 0.05f;
+        /// <summary> Penalty based on repeated tokens to control the repetition of token sequences in the generated text. </summary>
+        [Tooltip("Penalty based on repeated tokens to control the repetition of token sequences in the generated text.")]
+        [ModelAdvanced, Float(0f, 2f)] public float repeatPenalty = 1.1f;
+        /// <summary> Penalty based on token presence in previous responses to control the repetition of token sequences in the generated text. (0.0 = disabled). </summary>
+        [Tooltip("Penalty based on token presence in previous responses to control the repetition of token sequences in the generated text. (0.0 = disabled).")]
+        [ModelAdvanced, Float(0f, 1f)] public float presencePenalty = 0f;
+        /// <summary> Penalty based on token frequency in previous responses to control the repetition of token sequences in the generated text. (0.0 = disabled). </summary>
+        [Tooltip("Penalty based on token frequency in previous responses to control the repetition of token sequences in the generated text. (0.0 = disabled).")]
+        [ModelAdvanced, Float(0f, 1f)] public float frequencyPenalty = 0f;
+        /// <summary> enable locally typical sampling (1.0 = disabled). Higher values will promote more contextually coherent tokens, while  lower values will promote more diverse tokens. </summary>
+        [Tooltip("enable locally typical sampling (1.0 = disabled). Higher values will promote more contextually coherent tokens, while  lower values will promote more diverse tokens.")]
+        [ModelAdvanced, Float(0f, 1f)] public float typicalP = 1f;
+        /// <summary> last n tokens to consider for penalizing repetition (0 = disabled, -1 = ctx-size). </summary>
+        [Tooltip("last n tokens to consider for penalizing repetition (0 = disabled, -1 = ctx-size).")]
+        [ModelAdvanced, Int(0, 2048)] public int repeatLastN = 64;
+        /// <summary> penalize newline tokens when applying the repeat penalty. </summary>
+        [Tooltip("penalize newline tokens when applying the repeat penalty.")]
+        [ModelAdvanced] public bool penalizeNl = true;
+        /// <summary> prompt for the purpose of the penalty evaluation. Can be either null, a string or an array of numbers representing tokens (null/'' = use original prompt) </summary>
+        [Tooltip("prompt for the purpose of the penalty evaluation. Can be either null, a string or an array of numbers representing tokens (null/'' = use original prompt)")]
+        [ModelAdvanced] public string penaltyPrompt;
+        /// <summary> enable Mirostat sampling, controlling perplexity during text generation (0 = disabled, 1 = Mirostat, 2 = Mirostat 2.0). </summary>
+        [Tooltip("enable Mirostat sampling, controlling perplexity during text generation (0 = disabled, 1 = Mirostat, 2 = Mirostat 2.0).")]
+        [ModelAdvanced, Int(0, 2)] public int mirostat = 0;
+        /// <summary> The Mirostat target entropy (tau) controls the balance between coherence and diversity in the generated text. </summary>
+        [Tooltip("The Mirostat target entropy (tau) controls the balance between coherence and diversity in the generated text.")]
+        [ModelAdvanced, Float(0f, 10f)] public float mirostatTau = 5f;
+        /// <summary> The Mirostat learning rate (eta) controls how quickly the algorithm responds to feedback from the generated text. </summary>
+        [Tooltip("The Mirostat learning rate (eta) controls how quickly the algorithm responds to feedback from the generated text.")]
+        [ModelAdvanced, Float(0f, 1f)] public float mirostatEta = 0.1f;
+        /// <summary> if greater than 0, the response also contains the probabilities of top N tokens for each generated token. </summary>
+        [Tooltip("if greater than 0, the response also contains the probabilities of top N tokens for each generated token.")]
+        [ModelAdvanced, Int(0, 10)] public int nProbs = 0;
+        /// <summary> ignore end of stream token and continue generating. </summary>
+        [Tooltip("ignore end of stream token and continue generating.")]
+        [ModelAdvanced] public bool ignoreEos = false;
+        /// <summary> stopwords to stop the LLM in addition to the default stopwords from the chat template. </summary>
+        [Tooltip("stopwords to stop the LLM in addition to the default stopwords from the chat template.")]
+        public List<string> stop = new List<string>();
+        /// <summary> the logit bias option allows to manually adjust the likelihood of specific tokens appearing in the generated text.
+        /// By providing a token ID and a positive or negative bias value, you can increase or decrease the probability of that token being generated. </summary>
+        // [Tooltip("the logit bias option allows to manually adjust the likelihood of specific tokens appearing in the generated text. By providing a token ID and a positive or negative bias value, you can increase or decrease the probability of that token being generated.")]
+        // public Dictionary<int, string> logitBias = null;
+        /// <summary> Receive the reply from the model as it is produced (recommended!).
+        /// If not selected, the full reply from the model is received in one go </summary>
+        [Tooltip("Receive the reply from the model as it is produced (recommended!). If not selected, the full reply from the model is received in one go")]
+        [Chat] public bool stream = true;
 
+        /// <summary> the grammar to use </summary>
+        [Tooltip("the grammar to use")]
+        public string grammarString;
+        /// <summary> the grammar to use </summary>
+        [Tooltip("the grammar to use")]
+        public string grammarJSONString;
+
+        protected LLM _prellm;
         [Local, SerializeField] protected LLMClient _llmClient;
         public LLMClient llmClient
         {
@@ -52,6 +140,7 @@ namespace LLMUnity
         }
 
         bool started = false;
+        string completionParametersPre = "";
 
         /// <summary>
         /// The Unity Awake function that initializes the state before the application starts.
@@ -82,11 +171,22 @@ namespace LLMUnity
         public virtual void Start()
         {
             if (!enabled) return;
+            SetupLLMClient();
+            started = true;
+        }
 
+        protected virtual void SetupLLMClient()
+        {
             if (!remote) llmClient = new LLMClient(llm.llmService);
             else llmClient = new LLMClient(host, port, APIKey);
+            InitGrammar();
+            completionParametersPre = "";
+            SetCompletionParameters();
+        }
 
-            started = true;
+        protected virtual LLMLocal GetCaller()
+        {
+            return _llmClient;
         }
 
         /// <summary>
@@ -95,6 +195,11 @@ namespace LLMUnity
         /// <param name="llmSet">LLM object</param>
         protected virtual void SetLLM(LLM llmSet)
         {
+            if (remote)
+            {
+                LLMUnitySetup.LogError("The client is in remote mode");
+                return;
+            }
             if (llmSet != null && !IsValidLLM(llmSet))
             {
                 LLMUnitySetup.LogError(NotValidLLMError());
@@ -102,7 +207,7 @@ namespace LLMUnity
             }
             _llm = llmSet;
             _prellm = _llm;
-            if (started && remote) llmClient = new LLMClient(llm.llmService);
+            if (started) SetupLLMClient();
         }
 
         protected virtual void SetLLMClient(LLMClient llmClientSet)
@@ -193,6 +298,30 @@ namespace LLMUnity
             return array;
         }
 
+        protected virtual void InitGrammar()
+        {
+            grammarString = "";
+            if (!String.IsNullOrEmpty(grammar))
+            {
+                grammarString = File.ReadAllText(LLMUnitySetup.GetAssetPath(grammar));
+            }
+            GetCaller().SetGrammar(grammarString);
+        }
+
+        /// <summary>
+        /// Sets the grammar file of the LLMAgent (GBNF or JSON schema)
+        /// </summary>
+        /// <param name="path">path to the grammar file</param>
+        public virtual async Task SetGrammar(string path)
+        {
+#if UNITY_EDITOR
+            if (!EditorApplication.isPlaying) path = LLMUnitySetup.AddAsset(path);
+#endif
+            await LLMUnitySetup.AndroidExtractAsset(path, true);
+            grammar = path;
+            InitGrammar();
+        }
+
         /// <summary>
         /// Allows to cancel the requests in a specific slot of the LLM
         /// </summary>
@@ -243,6 +372,36 @@ namespace LLMUnity
             return embeddings;
         }
 
+        protected virtual void SetCompletionParameters()
+        {
+            JObject json = new JObject
+            {
+                ["temperature"] = temperature,
+                ["top_k"] = topK,
+                ["top_p"] = topP,
+                ["min_p"] = minP,
+                ["n_predict"] = numPredict,
+                ["typical_p"] = typicalP,
+                ["repeat_penalty"] = repeatPenalty,
+                ["repeat_last_n"] = repeatLastN,
+                ["presence_penalty"] = presencePenalty,
+                ["frequency_penalty"] = frequencyPenalty,
+                ["mirostat"] = mirostat,
+                ["mirostat_tau"] = mirostatTau,
+                ["mirostat_eta"] = mirostatEta,
+                ["seed"] = seed,
+                ["ignore_eos"] = ignoreEos,
+                ["n_probs"] = nProbs,
+                ["cache_prompt"] = cachePrompt
+            };
+            string completionParameters = json.ToString();
+            if (completionParameters != completionParametersPre)
+            {
+                GetCaller().SetCompletionParameters(json);
+                completionParametersPre = completionParameters;
+            }
+        }
+
         /// <summary>
         /// Completion functionality of the LLM.
         /// It calls the LLM completion based solely on the provided prompt (no formatting by the chat template).
@@ -252,13 +411,14 @@ namespace LLMUnity
         /// <param name="callback">callback function that receives the response as string</param>
         /// <param name="completionCallback">callback function called when the full response has been received</param>
         /// <returns>the LLM response</returns>
-        public virtual string Completion(string prompt, LlamaLib.CharArrayCallback callback = null)
+        public virtual string Completion(string prompt, LlamaLib.CharArrayCallback callback = null, int id_slot = -1)
         {
             // handle a completion request by the user
             // call the callback function while the answer is received
             // call the completionCallback function when the answer is fully received
 
-            return llmClient.Completion(prompt, callback);
+            SetCompletionParameters();
+            return llmClient.Completion(prompt, callback, id_slot);
         }
 
         /// <summary>
@@ -270,13 +430,14 @@ namespace LLMUnity
         /// <param name="callback">callback function that receives the response as string</param>
         /// <param name="completionCallback">callback function called when the full response has been received</param>
         /// <returns>the LLM response</returns>
-        public virtual async Task<string> CompletionAsync(string prompt, LlamaLib.CharArrayCallback callback = null, EmptyCallback completionCallback = null)
+        public virtual async Task<string> CompletionAsync(string prompt, LlamaLib.CharArrayCallback callback = null, EmptyCallback completionCallback = null, int id_slot = -1)
         {
             // handle a completion request by the user
             // call the callback function while the answer is received
             // call the completionCallback function when the answer is fully received
 
-            string result = await llmClient.CompletionAsync(prompt, callback);
+            SetCompletionParameters();
+            string result = await llmClient.CompletionAsync(prompt, callback, id_slot);
             completionCallback?.Invoke();
             return result;
         }
