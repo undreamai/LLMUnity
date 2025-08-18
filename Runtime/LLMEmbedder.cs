@@ -9,7 +9,7 @@ namespace LLMUnity
     /// <summary>
     /// Class implementing the LLM embedder.
     /// </summary>
-    public class LLMEmbedder : LLMCaller
+    public class LLMEmbedder : LLMClient
     {
         protected override void SetLLM(LLM llmSet)
         {
