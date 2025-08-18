@@ -9,13 +9,13 @@ namespace LLMUnitySamples
     {
         InputField playerText;
         Text AIText;
-        LLMCharacter llmCharacter;
+        LLMAgent llmAgent;
 
-        public MultipleCharactersInteraction(InputField playerText, Text AIText, LLMCharacter llmCharacter)
+        public MultipleCharactersInteraction(InputField playerText, Text AIText, LLMAgent llmAgent)
         {
             this.playerText = playerText;
             this.AIText = AIText;
-            this.llmCharacter = llmCharacter;
+            this.llmAgent = llmAgent;
         }
 
         public void Start()
@@ -28,7 +28,7 @@ namespace LLMUnitySamples
         {
             playerText.interactable = false;
             AIText.text = "...";
-            _ = llmCharacter.ChatAsync(message, SetAIText, AIReplyComplete);
+            _ = llmAgent.ChatAsync(message, SetAIText, AIReplyComplete);
         }
 
         public void SetAIText(string text)
@@ -46,12 +46,12 @@ namespace LLMUnitySamples
 
     public class MultipleCharacters : MonoBehaviour
     {
-        public LLMCharacter llmCharacter1;
+        public LLMAgent llmCharacter1;
         public InputField playerText1;
         public Text AIText1;
         MultipleCharactersInteraction interaction1;
 
-        public LLMCharacter llmCharacter2;
+        public LLMAgent llmCharacter2;
         public InputField playerText2;
         public Text AIText2;
         MultipleCharactersInteraction interaction2;

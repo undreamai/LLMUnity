@@ -31,7 +31,7 @@ namespace LLMUnitySamples
 
     public class FunctionCalling : MonoBehaviour
     {
-        public LLMCharacter llmCharacter;
+        public LLMAgent llmAgent;
         public InputField playerText;
         public Text AIText;
 
@@ -39,7 +39,7 @@ namespace LLMUnitySamples
         {
             playerText.onSubmit.AddListener(onInputFieldSubmit);
             playerText.Select();
-            llmCharacter.grammar = MultipleChoiceGrammar();
+            llmAgent.grammar = MultipleChoiceGrammar();
         }
 
         string[] GetFunctionNames()
@@ -72,7 +72,7 @@ namespace LLMUnitySamples
         async void onInputFieldSubmit(string message)
         {
             playerText.interactable = false;
-            string functionName = await llmCharacter.ChatAsync(ConstructPrompt(message));
+            string functionName = await llmAgent.ChatAsync(ConstructPrompt(message));
             string result = CallFunction(functionName);
             AIText.text = $"Calling {functionName}\n{result}";
             playerText.interactable = true;
@@ -80,7 +80,7 @@ namespace LLMUnitySamples
 
         public void CancelRequests()
         {
-            llmCharacter.CancelRequests();
+            llmAgent.CancelRequests();
         }
 
         public void ExitGame()
@@ -92,9 +92,9 @@ namespace LLMUnitySamples
         bool onValidateWarning = true;
         void OnValidate()
         {
-            if (onValidateWarning && !llmCharacter.remote && llmCharacter.llm != null && llmCharacter.llm.model == "")
+            if (onValidateWarning && !llmAgent.remote && llmAgent.llm != null && llmAgent.llm.model == "")
             {
-                Debug.LogWarning($"Please select a model in the {llmCharacter.llm.gameObject.name} GameObject!");
+                Debug.LogWarning($"Please select a model in the {llmAgent.llm.gameObject.name} GameObject!");
                 onValidateWarning = false;
             }
         }

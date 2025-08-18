@@ -93,7 +93,7 @@ First you will setup the LLM for your game 🏎:
 - Download one of the default models with the `Download Model` button (~GBs).<br>Or load your own .gguf model with the `Load model` button (see [LLM model management](#llm-model-management)).
 
 Then you can setup each of your characters as follows 🙋‍♀️:
-- Create an empty GameObject for the character.<br>In the GameObject Inspector click `Add Component` and select the LLMCharacter script.
+- Create an empty GameObject for the character.<br>In the GameObject Inspector click `Add Component` and select the LLMAgent script.
 - Define the role of your AI in the `Prompt`. You can define the name of the AI (`AI Name`) and the player (`Player Name`).
 - (Optional) Select the LLM constructed above in the `LLM` field if you have more than one LLM GameObjects.
 
@@ -104,7 +104,7 @@ In your script you can then use it as follows 🦄:
 using LLMUnity;
 
 public class MyScript {
-  public LLMCharacter llmCharacter;
+  public LLMAgent llmAgent;
   
   void HandleReply(string reply){
     // do something with the reply from the model
@@ -115,7 +115,7 @@ public class MyScript {
     // your game function
     ...
     string message = "Hello bot!";
-    _ = llmCharacter.Chat(message, HandleReply);
+    _ = llmAgent.Chat(message, HandleReply);
     ...
   }
 }
@@ -132,17 +132,17 @@ This is useful if the `Stream` option is enabled for continuous output from the 
     // your game function
     ...
     string message = "Hello bot!";
-    _ = llmCharacter.Chat(message, HandleReply, ReplyCompleted);
+    _ = llmAgent.Chat(message, HandleReply, ReplyCompleted);
     ...
   }
 ```
 
 To stop the chat without waiting for its completion you can use:
 ``` c#
-    llmCharacter.CancelRequests();
+    llmAgent.CancelRequests();
 ```
 
-- Finally, in the Inspector of the GameObject of your script, select the LLMCharacter GameObject created above as the llmCharacter property.
+- Finally, in the Inspector of the GameObject of your script, select the LLMAgent GameObject created above as the llmAgent property.
 
 That's all ✨!
 <br><br>
@@ -185,17 +185,17 @@ The [MobileDemo](Samples~/MobileDemo) is an example application for Android / iO
 <summary>Restrict the output of the LLM / Function calling</summary>
 
 To restrict the output of the LLM you can use a grammar, read more [here](https://github.com/ggerganov/llama.cpp/tree/master/grammars).<br>
-The grammar can be saved in a .gbnf file and loaded at the LLMCharacter with the `Load Grammar` button (Advanced options).<br>
+The grammar can be saved in a .gbnf file and loaded at the LLMAgent with the `Load Grammar` button (Advanced options).<br>
 For instance to receive replies in json format you can use the [json.gbnf](https://github.com/ggerganov/llama.cpp/blob/b4218/grammars/json.gbnf) grammar.<br>
 Graamars in JSON schema format are also supported and can be loaded with the `Load JSON Grammar` button (Advanced options).<br>  
 
 Alternatively you can set the grammar directly with code:
 ``` c#
 // GBNF grammar
-llmCharacter.grammarString = "your GBNF grammar here";
+llmAgent.grammarString = "your GBNF grammar here";
 
 // or JSON schema grammar
-llmCharacter.grammarJSONString = "your JSON schema grammar here";
+llmAgent.grammarJSONString = "your JSON schema grammar here";
 ```
 
 For function calling you can define similarly a grammar that allows only the function names as output, and then call the respective function.<br>
@@ -204,22 +204,22 @@ You can look into the [FunctionCalling](Samples~/FunctionCalling) sample for an 
 </details>
 <details>
 <summary>Access / Save / Load your chat history</summary>
-The chat history of a `LLMCharacter` is retained in the `chat` variable that is a list of `ChatMessage` objects.<br>
+The chat history of a `LLMAgent` is retained in the `chat` variable that is a list of `ChatMessage` objects.<br>
 The ChatMessage is a struct that defines the `role` of the message and the `content`.<br>
 The first element of the list is always the system prompt and then alternating messages with the player prompt and the AI reply.<br>
 You can modify the chat history directly in this list.<br>
 
-To automatically save / load your chat history, you can specify the `Save` parameter of the LLMCharacter to the filename (or relative path) of your choice.
+To automatically save / load your chat history, you can specify the `Save` parameter of the LLMAgent to the filename (or relative path) of your choice.
 The file is saved in the [persistentDataPath folder of Unity](https://docs.unity3d.com/ScriptReference/Application-persistentDataPath.html).
 This also saves the state of the LLM which means that the previously cached prompt does not need to be recomputed.
 
 To manually save your chat history, you can use:
 ``` c#
-    llmCharacter.Save("filename");
+    llmAgent.Save("filename");
 ```
 and to load the history:
 ``` c#
-    llmCharacter.Load("filename");
+    llmAgent.Load("filename");
 ```
 where filename the filename or relative path of your choice.
 
@@ -236,7 +236,7 @@ where filename the filename or relative path of your choice.
   void Game(){
     // your game function
     ...
-    _ = llmCharacter.Warmup(WarmupCompleted);
+    _ = llmAgent.Warmup(WarmupCompleted);
     ...
   }
 ```
@@ -251,7 +251,7 @@ where filename the filename or relative path of your choice.
     // your game function
     ...
     string message = "Hello bot!";
-    _ = llmCharacter.Chat(message, HandleReply, ReplyCompleted, false);
+    _ = llmAgent.Chat(message, HandleReply, ReplyCompleted, false);
     ...
   }
 ```
@@ -265,7 +265,7 @@ where filename the filename or relative path of your choice.
     // your game function
     ...
     string message = "The cat is away";
-    _ = llmCharacter.Complete(message, HandleReply, ReplyCompleted);
+    _ = llmAgent.Complete(message, HandleReply, ReplyCompleted);
     ...
   }
 ```
@@ -280,7 +280,7 @@ where filename the filename or relative path of your choice.
     // your game function
     ...
     string message = "Hello bot!";
-    string reply = await llmCharacter.Chat(message, HandleReply, ReplyCompleted);
+    string reply = await llmAgent.Chat(message, HandleReply, ReplyCompleted);
     Debug.Log(reply);
     ...
   }
@@ -288,7 +288,7 @@ where filename the filename or relative path of your choice.
 
 </details>
 <details>
-<summary>Add a LLM / LLMCharacter component programmatically</summary>
+<summary>Add a LLM / LLMAgent component programmatically</summary>
 
 ``` c#
 using UnityEngine;
@@ -297,7 +297,7 @@ using LLMUnity;
 public class MyScript : MonoBehaviour
 {
     LLM llm;
-    LLMCharacter llmCharacter;
+    LLMAgent llmAgent;
 
     async void Start()
     {
@@ -321,23 +321,23 @@ public class MyScript : MonoBehaviour
         // optional: enable GPU by setting the number of model layers to offload to it
         llm.numGPULayers = 10;
 
-        // Add an LLMCharacter object
-        llmCharacter = gameObject.AddComponent<LLMCharacter>();
+        // Add an LLMAgent object
+        llmAgent = gameObject.AddComponent<LLMAgent>();
         // set the LLM object that handles the model
-        llmCharacter.llm = llm;
+        llmAgent.llm = llm;
         // set the character prompt
-        llmCharacter.SetPrompt("A chat between a curious human and an artificial intelligence assistant.");
+        llmAgent.SetPrompt("A chat between a curious human and an artificial intelligence assistant.");
         // set the AI and player name
-        llmCharacter.assistantRole = "AI";
-        llmCharacter.userRole = "Human";
+        llmAgent.assistantRole = "AI";
+        llmAgent.userRole = "Human";
         // optional: set streaming to false to get the complete result in one go
-        // llmCharacter.stream = true;
+        // llmAgent.stream = true;
         // optional: set a save path
-        // llmCharacter.save = "AICharacter1";
+        // llmAgent.save = "AICharacter1";
         // optional: enable the save cache to avoid recomputation when loading a save file (requires ~100 MB)
-        // llmCharacter.saveCache = true;
+        // llmAgent.saveCache = true;
         // optional: set a grammar
-        // await llmCharacter.SetGrammar("json.gbnf");
+        // await llmAgent.SetGrammar("json.gbnf");
 
         // re-enable gameObject
         gameObject.SetActive(true);
@@ -366,7 +366,7 @@ Alternatively you can use a server binary for easier deployment:
 In both cases you'll need to enable 'Allow Downloads Over HTTP' in the project settings.
 
 **Create the characters**<br>
-Create a second project with the game characters using the `LLMCharacter` script as described above.
+Create a second project with the game characters using the `LLMAgent` script as described above.
 Enable the `Remote` option and configure the host with the IP address (starting with "http://") and port of the server.
 
 </details>
@@ -375,7 +375,7 @@ Enable the `Remote` option and configure the host with the IP address (starting 
 
 The `Embeddings` function can be used to obtain the emdeddings of a phrase:
 ``` c#
-    List<float> embeddings = await llmCharacter.Embeddings("hi, how are you?");
+    List<float> embeddings = await llmAgent.Embeddings("hi, how are you?");
 ```
 
 </details>
@@ -460,7 +460,7 @@ You can use the RAG to feed relevant data to the LLM based on a user message:
   prompt += $"Data:\n";
   foreach (string similarPhrase in similarPhrases) prompt += $"\n- {similarPhrase}";
 
-  _ = llmCharacter.Chat(prompt, HandleReply, ReplyCompleted);
+  _ = llmAgent.Chat(prompt, HandleReply, ReplyCompleted);
 ```
 
 The `RAG` sample includes an example RAG implementation as well as an example RAG-LLM integration.

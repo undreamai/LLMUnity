@@ -14,7 +14,7 @@ namespace LLMUnitySamples
     public class KnowledgeBaseGame : KnowledgeBaseGameUI
     {
         [Header("Models")]
-        public LLMCharacter llmCharacter;
+        public LLMAgent llmAgent;
         public RAG rag;
         public int numRAGResults = 3;
 
@@ -54,7 +54,7 @@ namespace LLMUnitySamples
         {
             // warm-up the LLM
             PlayerText.text += "Warming up the model...";
-            _ = llmCharacter.Warmup(AIReplyComplete);
+            _ = llmAgent.Warmup(AIReplyComplete);
         }
 
         public Dictionary<string, string> LoadQuestionAnswers(string questionAnswersText)
@@ -123,7 +123,7 @@ namespace LLMUnitySamples
             PlayerText.interactable = false;
             SetAIText("...");
             string prompt = ConstructPrompt(question);
-            _ = llmCharacter.ChatAsync(prompt, SetAIText, AIReplyComplete);
+            _ = llmAgent.ChatAsync(prompt, SetAIText, AIReplyComplete);
         }
 
         protected override void DropdownChange(int selection)
@@ -134,8 +134,8 @@ namespace LLMUnitySamples
             botImages[currentBotName].gameObject.SetActive(true);
             Debug.Log($"{currentBotName}: {rag.Count(currentBotName)} phrases available");
 
-            // set the LLMCharacter name
-            llmCharacter.assistantRole = currentBotName;
+            // set the LLMAgent name
+            llmAgent.assistantRole = currentBotName;
         }
 
         void SetAIText(string text)
@@ -152,7 +152,7 @@ namespace LLMUnitySamples
 
         public void CancelRequests()
         {
-            llmCharacter.CancelRequests();
+            llmAgent.CancelRequests();
             AIReplyComplete();
         }
 
@@ -175,7 +175,7 @@ namespace LLMUnitySamples
         void CheckLLMs(bool debug)
         {
             CheckLLM(rag.search.llmEmbedder, debug);
-            CheckLLM(llmCharacter, debug);
+            CheckLLM(llmAgent, debug);
         }
 
         bool onValidateWarning = true;
