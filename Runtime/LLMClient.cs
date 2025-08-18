@@ -23,7 +23,12 @@ namespace LLMUnity
         [HideInInspector] public bool advancedOptions = false;
         /// <summary> use remote LLM server </summary>
         [Tooltip("use remote LLM server")]
-        [LocalRemote] public bool remote = false;
+        [LocalRemote, SerializeField] protected bool _remote;
+        public bool remote
+        {
+            get => _remote;
+            set { if (_remote != value) { _remote = value; SetupLLMClient(); } }
+        }
         /// <summary> LLM GameObject to use </summary>
         [Tooltip("LLM GameObject to use")] // Tooltip: ignore
         [Local, SerializeField] protected LLM _llm;
@@ -34,23 +39,40 @@ namespace LLMUnity
         }
         /// <summary> API key for the remote server </summary>
         [Tooltip("API key for the remote server")]
-        [Remote] public string APIKey;
+        [Remote, SerializeField] protected string _APIKey;
+        public string APIKey
+        {
+            get => _APIKey;
+            set { if (_APIKey != value) { _APIKey = value; SetupLLMClient(); } }
+        }
         /// <summary> host of the remote LLM server </summary>
         [Tooltip("host of the remote LLM server")]
-        [Remote] public string host = "localhost";
+        [Remote, SerializeField] protected string _host = "localhost";
+        public string host
+        {
+            get => _host;
+            set { if (_host != value) { _host = value; SetupLLMClient(); } }
+        }
         /// <summary> port of the remote LLM server </summary>
         [Tooltip("port of the remote LLM server")]
-        [Remote] public int port = 13333;
-        /// <summary> number of retries to use for the remote LLM server requests (-1 = infinite) </summary>
-        [Tooltip("number of retries to use for the remote LLM server requests (-1 = infinite)")]
-        [Remote] public int numRetries = 10;
+        [Remote, SerializeField] protected int _port;
+        public int port
+        {
+            get => _port;
+            set { if (_port != value) { _port = value; SetupLLMClient(); } }
+        }
 
+        /// <summary> grammar used by the LLM </summary>
+        [Tooltip("grammar used by the LLM")]
+        [ModelAdvanced, SerializeField] protected string _grammar;
+        public string grammar
+        {
+            get => _grammar;
+            set => SetGrammar(value);
+        }
         /// <summary> maximum number of tokens that the LLM will predict (-1 = infinity). </summary>
         [Tooltip("maximum number of tokens that the LLM will predict (-1 = infinity).")]
         [Model] public int numPredict = -1;
-        /// <summary> grammar used by the LLM </summary>
-        [Tooltip("grammar used by the LLM")]
-        [ModelAdvanced] public string grammar = null;
         /// <summary> cache the processed prompt to avoid reprocessing the entire prompt every time (default: true, recommended!) </summary>
         [Tooltip("cache the processed prompt to avoid reprocessing the entire prompt every time (default: true, recommended!)")]
         [ModelAdvanced] public bool cachePrompt = true;
@@ -103,14 +125,6 @@ namespace LLMUnity
         /// <summary> ignore end of stream token and continue generating. </summary>
         [Tooltip("ignore end of stream token and continue generating.")]
         [ModelAdvanced] public bool ignoreEos = false;
-        /// <summary> the logit bias option allows to manually adjust the likelihood of specific tokens appearing in the generated text.
-        /// By providing a token ID and a positive or negative bias value, you can increase or decrease the probability of that token being generated. </summary>
-        // [Tooltip("the logit bias option allows to manually adjust the likelihood of specific tokens appearing in the generated text. By providing a token ID and a positive or negative bias value, you can increase or decrease the probability of that token being generated.")]
-        // public Dictionary<int, string> logitBias = null;
-        /// <summary> Receive the reply from the model as it is produced (recommended!).
-        /// If not selected, the full reply from the model is received in one go </summary>
-        [Tooltip("Receive the reply from the model as it is produced (recommended!). If not selected, the full reply from the model is received in one go")]
-        [Chat] public bool stream = true;
 
         protected LLM _prellm;
         [Local, SerializeField] protected UndreamAI.LlamaLib.LLMClient _llmClient;
@@ -162,7 +176,6 @@ namespace LLMUnity
             else llmClient = new UndreamAI.LlamaLib.LLMClient(host, port, APIKey);
             SetGrammar(grammar);
             completionParametersPre = "";
-            SetCompletionParameters();
         }
 
         protected virtual LLMLocal GetCaller()
@@ -176,15 +189,11 @@ namespace LLMUnity
         /// <param name="llmSet">LLM object</param>
         protected virtual void SetLLM(LLM llmSet)
         {
+            if (llmSet == _llm) return;
             if (remote)
             {
                 LLMUnitySetup.LogError("The client is in remote mode");
                 return;
-            }
-            if (llmSet != null && !IsValidLLM(llmSet))
-            {
-                LLMUnitySetup.LogError(NotValidLLMError());
-                llmSet = null;
             }
             _llm = llmSet;
             _prellm = _llm;
@@ -197,16 +206,6 @@ namespace LLMUnity
         }
 
         /// <summary>
-        /// Checks if a LLM is valid for the LLMClient
-        /// </summary>
-        /// <param name="llmSet">LLM object</param>
-        /// <returns>bool specifying whether the LLM is valid</returns>
-        public virtual bool IsValidLLM(LLM llmSet)
-        {
-            return true;
-        }
-
-        /// <summary>
         /// Checks if a LLM can be auto-assigned if the LLM of the LLMClient is null
         /// </summary>
         /// <param name="llmSet"LLM object></param>
@@ -214,11 +213,6 @@ namespace LLMUnity
         public virtual bool IsAutoAssignableLLM(LLM llmSet)
         {
             return true;
-        }
-
-        protected virtual string NotValidLLMError()
-        {
-            return $"Can't set LLM {llm.name} to {name}";
         }
 
         protected virtual void OnValidate()
@@ -243,7 +237,7 @@ namespace LLMUnity
             foreach (LLM foundllm in FindObjectsOfType<LLM>())
 #endif
             {
-                if (IsValidLLM(foundllm) && IsAutoAssignableLLM(foundllm)) validLLMs.Add(foundllm);
+                if (IsAutoAssignableLLM(foundllm)) validLLMs.Add(foundllm);
             }
             if (validLLMs.Count == 0) return;
 
@@ -351,6 +345,13 @@ namespace LLMUnity
 
         protected virtual void SetCompletionParameters()
         {
+            if (llm.embeddingsOnly)
+            {
+                string error = "LLM can't be used for completion, it is an embeddings only model!";
+                LLMUnitySetup.LogError(error);
+                throw new Exception(error);
+            }
+
             JObject json = new JObject
             {
                 ["temperature"] = temperature,

@@ -328,8 +328,8 @@ public class MyScript : MonoBehaviour
         // set the character prompt
         llmCharacter.SetPrompt("A chat between a curious human and an artificial intelligence assistant.");
         // set the AI and player name
-        llmCharacter.AIName = "AI";
-        llmCharacter.userName = "Human";
+        llmCharacter.assistantRole = "AI";
+        llmCharacter.userRole = "Human";
         // optional: set streaming to false to get the complete result in one go
         // llmCharacter.stream = true;
         // optional: set a save path

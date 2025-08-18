@@ -23,7 +23,6 @@ namespace LLMUnity
                 ShowPropertiesOfClass("", llmScriptSO, new List<Type> { typeof(ModelAttribute) }, false);
 
                 EditorGUILayout.BeginHorizontal();
-                GUILayout.Label("Grammar", GUILayout.Width(EditorGUIUtility.labelWidth));
                 if (GUILayout.Button("Load grammar", GUILayout.Width(buttonWidth)))
                 {
                     EditorApplication.delayCall += () =>

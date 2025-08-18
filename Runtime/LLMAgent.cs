@@ -28,16 +28,36 @@ namespace LLMUnity
         // [LLM] public bool debugPrompt = false;
         /// <summary> slot of the server to use for computation (affects caching) </summary>
         [Tooltip("slot of the server to use for computation (affects caching)")]
-        [ModelAdvanced] public int slot = -1;
+        [ModelAdvanced, SerializeField] protected int _slot = -1;
+        public int slot
+        {
+            get => _slot;
+            set { if (_slot != value) { _slot = value; if (llmAgent != null) llmAgent.SlotId = _slot; } }
+        }
         /// <summary> the name of the player </summary>
-        [Tooltip("the name of the player")]
-        [Chat] public string userName = "user";
+        [Tooltip("the name of the user")]
+        [Chat, SerializeField] protected string _userRole = "user";
+        public string userRole
+        {
+            get => _userRole;
+            set { if (_userRole != value) { _userRole = value; if (llmAgent != null) llmAgent.UserRole = _userRole; } }
+        }
         /// <summary> the name of the AI </summary>
-        [Tooltip("the name of the AI")]
-        [Chat] public string AIName = "assistant";
+        [Tooltip("the name of the AI assistant")]
+        [Chat, SerializeField] protected string _assistantRole = "assistant";
+        public string assistantRole
+        {
+            get => _assistantRole;
+            set { if (_assistantRole != value) { _assistantRole = value; if (llmAgent != null) llmAgent.AssistantRole = _assistantRole; } }
+        }
         /// <summary> a description of the AI role (system prompt) </summary>
         [Tooltip("a description of the AI role (system prompt)")]
-        [TextArea(5, 10), Chat] public string prompt = "A chat between a curious human and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the human's questions.";
+        [TextArea(5, 10), Chat, SerializeField] protected string _systemPrompt = "A chat between a curious human and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the human's questions.";
+        public string systemPrompt
+        {
+            get => _systemPrompt;
+            set { if (_systemPrompt != value) { _systemPrompt = value; if (llmAgent != null) llmAgent.SystemPrompt = _systemPrompt; } }
+        }
 
         [Local, SerializeField] protected UndreamAI.LlamaLib.LLMAgent _llmAgent;
         public UndreamAI.LlamaLib.LLMAgent llmAgent
@@ -64,7 +84,7 @@ namespace LLMUnity
         public override void Start()
         {
             base.Start();
-            llmAgent = new UndreamAI.LlamaLib.LLMAgent(llmClient, prompt, userName, AIName);
+            llmAgent = new UndreamAI.LlamaLib.LLMAgent(llmClient, systemPrompt, userRole, assistantRole);
             InitHistory();
         }
 
@@ -74,25 +94,10 @@ namespace LLMUnity
             if (llm != null && llm.parallelPrompts > -1 && (slot < -1 || slot >= llm.parallelPrompts)) LLMUnitySetup.LogError($"The slot needs to be between 0 and {llm.parallelPrompts - 1}, or -1 to be automatically set");
         }
 
-        protected override string NotValidLLMError()
-        {
-            return base.NotValidLLMError() + $", it is an embedding only model";
-        }
-
-        /// <summary>
-        /// Checks if a LLM is valid for the LLMClient
-        /// </summary>
-        /// <param name="llmSet">LLM object</param>
-        /// <returns>bool specifying whether the LLM is valid</returns>
-        public override bool IsValidLLM(LLM llmSet)
-        {
-            return !llmSet.embeddingsOnly;
-        }
-
         protected override void SetLLMClient(UndreamAI.LlamaLib.LLMClient llmClientSet)
         {
             base.SetLLMClient(llmClientSet);
-            llmAgent = new UndreamAI.LlamaLib.LLMAgent(llmClient, prompt, userName, AIName);
+            llmAgent = new UndreamAI.LlamaLib.LLMAgent(llmClient, systemPrompt, userRole, assistantRole);
         }
 
         protected override LLMLocal GetCaller()
@@ -159,7 +164,7 @@ namespace LLMUnity
         /// <summary>
         /// Allows to add a message in the chat history.
         /// </summary>
-        /// <param name="role">message role (e.g. userName or AIName)</param>
+        /// <param name="role">message role (e.g. userRole or assistantRole)</param>
         /// <param name="content">message content</param>
         public virtual void AddMessage(string role, string content)
         {
