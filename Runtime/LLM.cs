@@ -460,7 +460,7 @@ namespace LLMUnity
                 return;
             }
             chatTemplate = templateName;
-            if (started) llmService.SetTemplate(chatTemplate == "auto"? "": chatTemplate);
+            if (started) llmService.SetTemplate(chatTemplate == "auto" ? "" : chatTemplate);
 #if UNITY_EDITOR
             if (setDirty && !EditorApplication.isPlaying) EditorUtility.SetDirty(this);
 #endif
