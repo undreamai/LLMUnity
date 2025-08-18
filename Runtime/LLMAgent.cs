@@ -14,7 +14,7 @@ namespace LLMUnity
     /// <summary>
     /// Class implementing the LLM characters.
     /// </summary>
-    public class LLMAgent : LLMCaller
+    public class LLMAgent : LLMClient
     {
         /// <summary> file to save the chat history.
         /// The file will be saved within the persistentDataPath directory. </summary>
@@ -80,7 +80,7 @@ namespace LLMUnity
         }
 
         /// <summary>
-        /// Checks if a LLM is valid for the LLMCaller
+        /// Checks if a LLM is valid for the LLMClient
         /// </summary>
         /// <param name="llmSet">LLM object</param>
         /// <returns>bool specifying whether the LLM is valid</returns>
@@ -89,7 +89,7 @@ namespace LLMUnity
             return !llmSet.embeddingsOnly;
         }
 
-        protected override void SetLLMClient(LLMClient llmClientSet)
+        protected override void SetLLMClient(UndreamAI.LlamaLib.LLMClient llmClientSet)
         {
             base.SetLLMClient(llmClientSet);
             llmAgent = new UndreamAI.LlamaLib.LLMAgent(llmClient, prompt, userName, AIName);

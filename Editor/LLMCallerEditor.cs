@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace LLMUnity
 {
-    [CustomEditor(typeof(LLMCaller), true)]
+    [CustomEditor(typeof(LLMClient), true)]
     public class LLMCallerEditor : PropertyEditor {}
 
     [CustomEditor(typeof(LLMAgent), true)]

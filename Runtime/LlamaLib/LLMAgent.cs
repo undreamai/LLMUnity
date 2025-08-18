@@ -153,7 +153,7 @@ namespace UndreamAI.LlamaLib
                     }
                 }
             }
-            catch { }
+            catch {}
 
             return messages;
         }
@@ -279,7 +279,6 @@ namespace UndreamAI.LlamaLib
             CheckLlamaLib();
             llamaLib.LLM_Cancel(llm, SlotId);
         }
-
 
         // Override slot-based methods to hide them
         private new string SaveSlot(int id_slot, string filepath)

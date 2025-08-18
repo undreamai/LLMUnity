@@ -82,11 +82,11 @@ namespace LLMUnitySamples
             Application.Quit();
         }
 
-        protected void CheckLLM(LLMCaller llmCaller, bool debug)
+        protected void CheckLLM(LLMClient llmClient, bool debug)
         {
-            if (!llmCaller.remote && llmCaller.llm != null && llmCaller.llm.model == "")
+            if (!llmClient.remote && llmClient.llm != null && llmClient.llm.model == "")
             {
-                string error = $"Please select a llm model in the {llmCaller.llm.gameObject.name} GameObject!";
+                string error = $"Please select a llm model in the {llmClient.llm.gameObject.name} GameObject!";
                 if (debug) Debug.LogWarning(error);
                 else throw new System.Exception(error);
             }

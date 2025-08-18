@@ -16,7 +16,7 @@ namespace LLMUnity
     /// <summary>
     /// Class implementing calling of LLM functions (local and remote).
     /// </summary>
-    public class LLMCaller : MonoBehaviour
+    public class LLMClient : MonoBehaviour
     {
         /// <summary> show/hide advanced options in the GameObject </summary>
         [Tooltip("show/hide advanced options in the GameObject")]
@@ -132,8 +132,8 @@ namespace LLMUnity
         public string grammarJSONString;
 
         protected LLM _prellm;
-        [Local, SerializeField] protected LLMClient _llmClient;
-        public LLMClient llmClient
+        [Local, SerializeField] protected UndreamAI.LlamaLib.LLMClient _llmClient;
+        public UndreamAI.LlamaLib.LLMClient llmClient
         {
             get => _llmClient;
             protected set => SetLLMClient(value);
@@ -177,8 +177,8 @@ namespace LLMUnity
 
         protected virtual void SetupLLMClient()
         {
-            if (!remote) llmClient = new LLMClient(llm.llmService);
-            else llmClient = new LLMClient(host, port, APIKey);
+            if (!remote) llmClient = new UndreamAI.LlamaLib.LLMClient(llm.llmService);
+            else llmClient = new UndreamAI.LlamaLib.LLMClient(host, port, APIKey);
             InitGrammar();
             completionParametersPre = "";
             SetCompletionParameters();
@@ -190,7 +190,7 @@ namespace LLMUnity
         }
 
         /// <summary>
-        /// Sets the LLM object of the LLMCaller
+        /// Sets the LLM object of the LLMClient
         /// </summary>
         /// <param name="llmSet">LLM object</param>
         protected virtual void SetLLM(LLM llmSet)
@@ -210,13 +210,13 @@ namespace LLMUnity
             if (started) SetupLLMClient();
         }
 
-        protected virtual void SetLLMClient(LLMClient llmClientSet)
+        protected virtual void SetLLMClient(UndreamAI.LlamaLib.LLMClient llmClientSet)
         {
             _llmClient = llmClientSet;
         }
 
         /// <summary>
-        /// Checks if a LLM is valid for the LLMCaller
+        /// Checks if a LLM is valid for the LLMClient
         /// </summary>
         /// <param name="llmSet">LLM object</param>
         /// <returns>bool specifying whether the LLM is valid</returns>
@@ -226,7 +226,7 @@ namespace LLMUnity
         }
 
         /// <summary>
-        /// Checks if a LLM can be auto-assigned if the LLM of the LLMCaller is null
+        /// Checks if a LLM can be auto-assigned if the LLM of the LLMClient is null
         /// </summary>
         /// <param name="llmSet"LLM object></param>
         /// <returns>bool specifying whether the LLM can be auto-assigned</returns>

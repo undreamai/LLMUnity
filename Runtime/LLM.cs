@@ -34,8 +34,8 @@ namespace LLMUnity
         /// If the user's GPU is not supported, the LLM will fall back to the CPU </summary>
         [Tooltip("number of model layers to offload to the GPU (0 = GPU not used). If the user's GPU is not supported, the LLM will fall back to the CPU")]
         [LLM] public int numGPULayers = 0;
-        /// <summary> number of prompts that can happen in parallel (-1 = number of LLMCaller objects) </summary>
-        [Tooltip("number of prompts that can happen in parallel (-1 = number of LLMCaller objects)")]
+        /// <summary> number of prompts that can happen in parallel (-1 = number of LLMClient objects) </summary>
+        [Tooltip("number of prompts that can happen in parallel (-1 = number of LLMClient objects)")]
         [LLMAdvanced] public int parallelPrompts = -1;
         /// <summary> do not destroy the LLM GameObject when loading a new Scene. </summary>
         [Tooltip("do not destroy the LLM GameObject when loading a new Scene.")]
@@ -101,7 +101,7 @@ namespace LLMUnity
         }
         public string architecture => llmlib?.architecture;
 
-        List<LLMCaller> clients = new List<LLMCaller>();
+        List<LLMClient> clients = new List<LLMClient>();
         public LLMManager llmManager = new LLMManager();
         static readonly object staticLock = new object();
         public LoraManager loraManager = new LoraManager();
@@ -525,15 +525,15 @@ namespace LLMUnity
         }
 
         /// <summary>
-        /// Registers a local LLMCaller object.
-        /// This allows to bind the LLMCaller "client" to a specific slot of the LLM.
+        /// Registers a local LLMClient object.
+        /// This allows to bind the LLMClient "client" to a specific slot of the LLM.
         /// </summary>
-        /// <param name="llmCaller"></param>
+        /// <param name="llmClient"></param>
         /// <returns></returns>
-        public int Register(LLMCaller llmCaller)
+        public int Register(LLMClient llmClient)
         {
-            clients.Add(llmCaller);
-            int index = clients.IndexOf(llmCaller);
+            clients.Add(llmClient);
+            int index = clients.IndexOf(llmClient);
             if (parallelPrompts != -1) return index % parallelPrompts;
             return index;
         }
