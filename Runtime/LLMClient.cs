@@ -88,12 +88,6 @@ namespace LLMUnity
         /// <summary> last n tokens to consider for penalizing repetition (0 = disabled, -1 = ctx-size). </summary>
         [Tooltip("last n tokens to consider for penalizing repetition (0 = disabled, -1 = ctx-size).")]
         [ModelAdvanced, Int(0, 2048)] public int repeatLastN = 64;
-        /// <summary> penalize newline tokens when applying the repeat penalty. </summary>
-        [Tooltip("penalize newline tokens when applying the repeat penalty.")]
-        [ModelAdvanced] public bool penalizeNl = true;
-        /// <summary> prompt for the purpose of the penalty evaluation. Can be either null, a string or an array of numbers representing tokens (null/'' = use original prompt) </summary>
-        [Tooltip("prompt for the purpose of the penalty evaluation. Can be either null, a string or an array of numbers representing tokens (null/'' = use original prompt)")]
-        [ModelAdvanced] public string penaltyPrompt;
         /// <summary> enable Mirostat sampling, controlling perplexity during text generation (0 = disabled, 1 = Mirostat, 2 = Mirostat 2.0). </summary>
         [Tooltip("enable Mirostat sampling, controlling perplexity during text generation (0 = disabled, 1 = Mirostat, 2 = Mirostat 2.0).")]
         [ModelAdvanced, Int(0, 2)] public int mirostat = 0;
@@ -109,9 +103,6 @@ namespace LLMUnity
         /// <summary> ignore end of stream token and continue generating. </summary>
         [Tooltip("ignore end of stream token and continue generating.")]
         [ModelAdvanced] public bool ignoreEos = false;
-        /// <summary> stopwords to stop the LLM in addition to the default stopwords from the chat template. </summary>
-        [Tooltip("stopwords to stop the LLM in addition to the default stopwords from the chat template.")]
-        public List<string> stop = new List<string>();
         /// <summary> the logit bias option allows to manually adjust the likelihood of specific tokens appearing in the generated text.
         /// By providing a token ID and a positive or negative bias value, you can increase or decrease the probability of that token being generated. </summary>
         // [Tooltip("the logit bias option allows to manually adjust the likelihood of specific tokens appearing in the generated text. By providing a token ID and a positive or negative bias value, you can increase or decrease the probability of that token being generated.")]
