@@ -48,12 +48,9 @@ namespace LLMUnity
         /// <summary> maximum number of tokens that the LLM will predict (-1 = infinity). </summary>
         [Tooltip("maximum number of tokens that the LLM will predict (-1 = infinity).")]
         [Model] public int numPredict = -1;
-        /// <summary> grammar file used for the LLMAgent (.gbnf format) </summary>
-        [Tooltip("grammar file used for the LLMAgent (.gbnf format)")]
+        /// <summary> grammar used by the LLM </summary>
+        [Tooltip("grammar used by the LLM")]
         [ModelAdvanced] public string grammar = null;
-        /// <summary> grammar file used for the LLMAgent (.json format) </summary>
-        [Tooltip("grammar file used for the LLMAgent (.json format)")]
-        [ModelAdvanced] public string grammarJSON = null;
         /// <summary> cache the processed prompt to avoid reprocessing the entire prompt every time (default: true, recommended!) </summary>
         [Tooltip("cache the processed prompt to avoid reprocessing the entire prompt every time (default: true, recommended!)")]
         [ModelAdvanced] public bool cachePrompt = true;
@@ -124,13 +121,6 @@ namespace LLMUnity
         [Tooltip("Receive the reply from the model as it is produced (recommended!). If not selected, the full reply from the model is received in one go")]
         [Chat] public bool stream = true;
 
-        /// <summary> the grammar to use </summary>
-        [Tooltip("the grammar to use")]
-        public string grammarString;
-        /// <summary> the grammar to use </summary>
-        [Tooltip("the grammar to use")]
-        public string grammarJSONString;
-
         protected LLM _prellm;
         [Local, SerializeField] protected UndreamAI.LlamaLib.LLMClient _llmClient;
         public UndreamAI.LlamaLib.LLMClient llmClient
@@ -179,7 +169,7 @@ namespace LLMUnity
         {
             if (!remote) llmClient = new UndreamAI.LlamaLib.LLMClient(llm.llmService);
             else llmClient = new UndreamAI.LlamaLib.LLMClient(host, port, APIKey);
-            InitGrammar();
+            SetGrammar(grammar);
             completionParametersPre = "";
             SetCompletionParameters();
         }
@@ -298,28 +288,24 @@ namespace LLMUnity
             return array;
         }
 
-        protected virtual void InitGrammar()
+        /// <summary>
+        /// Sets the provided grammar (gbnf or json schema format)
+        /// </summary>
+        /// <param name="grammarString">grammar in gbnf or json schema format</param>
+        public virtual void SetGrammar(string grammarString)
         {
-            grammarString = "";
-            if (!String.IsNullOrEmpty(grammar))
-            {
-                grammarString = File.ReadAllText(LLMUnitySetup.GetAssetPath(grammar));
-            }
+            grammar = grammarString;
             GetCaller().SetGrammar(grammarString);
         }
 
         /// <summary>
-        /// Sets the grammar file of the LLMAgent (GBNF or JSON schema)
+        /// Loads a grammar file
         /// </summary>
         /// <param name="path">path to the grammar file</param>
-        public virtual async Task SetGrammar(string path)
+        public virtual void LoadGrammar(string path)
         {
-#if UNITY_EDITOR
-            if (!EditorApplication.isPlaying) path = LLMUnitySetup.AddAsset(path);
-#endif
-            await LLMUnitySetup.AndroidExtractAsset(path, true);
-            grammar = path;
-            InitGrammar();
+            if (String.IsNullOrEmpty(path)) return;
+            SetGrammar(File.ReadAllText(path));
         }
 
         /// <summary>

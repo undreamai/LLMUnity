@@ -39,7 +39,7 @@ namespace LLMUnitySamples
         {
             playerText.onSubmit.AddListener(onInputFieldSubmit);
             playerText.Select();
-            llmCharacter.grammarString = MultipleChoiceGrammar();
+            llmCharacter.grammar = MultipleChoiceGrammar();
         }
 
         string[] GetFunctionNames()
