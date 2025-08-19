@@ -1,154 +1,216 @@
 /// @file
-/// @brief File implementing the basic functionality for LLM callers.
+/// @brief File implementing the base LLM client functionality for Unity.
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using UndreamAI.LlamaLib;
 using UnityEngine;
 using UnityEditor;
 using Newtonsoft.Json.Linq;
-using System.IO;
 
 namespace LLMUnity
 {
     [DefaultExecutionOrder(-2)]
     /// @ingroup llm
     /// <summary>
-    /// Class implementing calling of LLM functions (local and remote).
+    /// Unity MonoBehaviour base class for LLM client functionality.
+    /// Handles both local and remote LLM connections, completion parameters,
+    /// and provides tokenization, completion, and embedding capabilities.
     /// </summary>
     public class LLMClient : MonoBehaviour
     {
-        /// <summary> show/hide advanced options in the GameObject </summary>
-        [Tooltip("show/hide advanced options in the GameObject")]
+        #region Inspector Fields
+        /// <summary>Show/hide advanced options in the inspector</summary>
+        [Tooltip("Show/hide advanced options in the inspector")]
         [HideInInspector] public bool advancedOptions = false;
-        /// <summary> use remote LLM server </summary>
-        [Tooltip("use remote LLM server")]
+
+        /// <summary>Use remote LLM server instead of local instance</summary>
+        [Tooltip("Use remote LLM server instead of local instance")]
         [LocalRemote, SerializeField] protected bool _remote;
+
+        /// <summary>Local LLM GameObject to connect to</summary>
+        [Tooltip("Local LLM GameObject to connect to")]
+        [Local, SerializeField] protected LLM _llm;
+
+        /// <summary>API key for remote server authentication</summary>
+        [Tooltip("API key for remote server authentication")]
+        [Remote, SerializeField] protected string _APIKey;
+
+        /// <summary>Hostname or IP address of remote LLM server</summary>
+        [Tooltip("Hostname or IP address of remote LLM server")]
+        [Remote, SerializeField] protected string _host = "localhost";
+
+        /// <summary>Port number of remote LLM server</summary>
+        [Tooltip("Port number of remote LLM server")]
+        [Remote, SerializeField] protected int _port = 13333;
+
+        /// <summary>Grammar constraints for output formatting (GBNF or JSON schema format)</summary>
+        [Tooltip("Grammar constraints for output formatting (GBNF or JSON schema format)")]
+        [ModelAdvanced, SerializeField] protected string _grammar = "";
+
+        // Completion Parameters
+        /// <summary>Maximum tokens to generate (-1 = unlimited)</summary>
+        [Tooltip("Maximum tokens to generate (-1 = unlimited)")]
+        [Model] public int numPredict = -1;
+
+        /// <summary>Cache processed prompts to speed up subsequent requests</summary>
+        [Tooltip("Cache processed prompts to speed up subsequent requests")]
+        [ModelAdvanced] public bool cachePrompt = true;
+
+        /// <summary>Random seed for reproducible generation (0 = random)</summary>
+        [Tooltip("Random seed for reproducible generation (0 = random)")]
+        [ModelAdvanced] public int seed = 0;
+
+        /// <summary>Sampling temperature (0.0 = deterministic, higher = more creative)</summary>
+        [Tooltip("Sampling temperature (0.0 = deterministic, higher = more creative)")]
+        [ModelAdvanced, Range(0f, 2f)] public float temperature = 0.2f;
+
+        /// <summary>Top-k sampling: limit to k most likely tokens (0 = disabled)</summary>
+        [Tooltip("Top-k sampling: limit to k most likely tokens (0 = disabled)")]
+        [ModelAdvanced, Range(0, 100)] public int topK = 40;
+
+        /// <summary>Top-p (nucleus) sampling: cumulative probability threshold (1.0 = disabled)</summary>
+        [Tooltip("Top-p (nucleus) sampling: cumulative probability threshold (1.0 = disabled)")]
+        [ModelAdvanced, Range(0f, 1f)] public float topP = 0.9f;
+
+        /// <summary>Minimum probability threshold for token selection</summary>
+        [Tooltip("Minimum probability threshold for token selection")]
+        [ModelAdvanced, Range(0f, 1f)] public float minP = 0.05f;
+
+        /// <summary>Penalty for repeated tokens (1.0 = no penalty)</summary>
+        [Tooltip("Penalty for repeated tokens (1.0 = no penalty)")]
+        [ModelAdvanced, Range(0f, 2f)] public float repeatPenalty = 1.1f;
+
+        /// <summary>Presence penalty: reduce likelihood of any repeated token (0.0 = disabled)</summary>
+        [Tooltip("Presence penalty: reduce likelihood of any repeated token (0.0 = disabled)")]
+        [ModelAdvanced, Range(0f, 1f)] public float presencePenalty = 0f;
+
+        /// <summary>Frequency penalty: reduce likelihood based on token frequency (0.0 = disabled)</summary>
+        [Tooltip("Frequency penalty: reduce likelihood based on token frequency (0.0 = disabled)")]
+        [ModelAdvanced, Range(0f, 1f)] public float frequencyPenalty = 0f;
+
+        /// <summary>Locally typical sampling strength (1.0 = disabled)</summary>
+        [Tooltip("Locally typical sampling strength (1.0 = disabled)")]
+        [ModelAdvanced, Range(0f, 1f)] public float typicalP = 1f;
+
+        /// <summary>Number of recent tokens to consider for repetition penalty (0 = disabled, -1 = context size)</summary>
+        [Tooltip("Number of recent tokens to consider for repetition penalty (0 = disabled, -1 = context size)")]
+        [ModelAdvanced, Range(0, 2048)] public int repeatLastN = 64;
+
+        /// <summary>Mirostat sampling mode (0 = disabled, 1 = Mirostat, 2 = Mirostat 2.0)</summary>
+        [Tooltip("Mirostat sampling mode (0 = disabled, 1 = Mirostat, 2 = Mirostat 2.0)")]
+        [ModelAdvanced, Range(0, 2)] public int mirostat = 0;
+
+        /// <summary>Mirostat target entropy (tau) - balance between coherence and diversity</summary>
+        [Tooltip("Mirostat target entropy (tau) - balance between coherence and diversity")]
+        [ModelAdvanced, Range(0f, 10f)] public float mirostatTau = 5f;
+
+        /// <summary>Mirostat learning rate (eta) - adaptation speed</summary>
+        [Tooltip("Mirostat learning rate (eta) - adaptation speed")]
+        [ModelAdvanced, Range(0f, 1f)] public float mirostatEta = 0.1f;
+
+        /// <summary>Include top N token probabilities in response (0 = disabled)</summary>
+        [Tooltip("Include top N token probabilities in response (0 = disabled)")]
+        [ModelAdvanced, Range(0, 10)] public int nProbs = 0;
+
+        /// <summary>Ignore end-of-stream token and continue generating</summary>
+        [Tooltip("Ignore end-of-stream token and continue generating")]
+        [ModelAdvanced] public bool ignoreEos = false;
+        #endregion
+
+        #region Public Properties
+        /// <summary>Whether this client uses a remote server connection</summary>
         public bool remote
         {
             get => _remote;
-            set { if (_remote != value) { _remote = value; SetupLLMClient(); } }
+            set
+            {
+                if (_remote != value)
+                {
+                    _remote = value;
+                    if (started) SetupLLMClient();
+                }
+            }
         }
-        /// <summary> LLM GameObject to use </summary>
-        [Tooltip("LLM GameObject to use")] // Tooltip: ignore
-        [Local, SerializeField] protected LLM _llm;
+
+        /// <summary>The local LLM instance (null if using remote)</summary>
         public LLM llm
         {
             get => _llm;
             set => SetLLM(value);
         }
-        /// <summary> API key for the remote server </summary>
-        [Tooltip("API key for the remote server")]
-        [Remote, SerializeField] protected string _APIKey;
+
+        /// <summary>API key for remote server authentication</summary>
         public string APIKey
         {
             get => _APIKey;
-            set { if (_APIKey != value) { _APIKey = value; SetupLLMClient(); } }
+            set
+            {
+                if (_APIKey != value)
+                {
+                    _APIKey = value;
+                    if (started) SetupLLMClient();
+                }
+            }
         }
-        /// <summary> host of the remote LLM server </summary>
-        [Tooltip("host of the remote LLM server")]
-        [Remote, SerializeField] protected string _host = "localhost";
+
+        /// <summary>Remote server hostname or IP address</summary>
         public string host
         {
             get => _host;
-            set { if (_host != value) { _host = value; SetupLLMClient(); } }
+            set
+            {
+                if (_host != value)
+                {
+                    _host = value;
+                    if (started) SetupLLMClient();
+                }
+            }
         }
-        /// <summary> port of the remote LLM server </summary>
-        [Tooltip("port of the remote LLM server")]
-        [Remote, SerializeField] protected int _port;
+
+        /// <summary>Remote server port number</summary>
         public int port
         {
             get => _port;
-            set { if (_port != value) { _port = value; SetupLLMClient(); } }
+            set
+            {
+                if (_port != value)
+                {
+                    _port = value;
+                    if (started) SetupLLMClient();
+                }
+            }
         }
 
-        /// <summary> grammar used by the LLM </summary>
-        [Tooltip("grammar used by the LLM")]
-        [ModelAdvanced, SerializeField] protected string _grammar;
+        /// <summary>Current grammar constraints for output formatting</summary>
         public string grammar
         {
             get => _grammar;
             set => SetGrammar(value);
         }
-        /// <summary> maximum number of tokens that the LLM will predict (-1 = infinity). </summary>
-        [Tooltip("maximum number of tokens that the LLM will predict (-1 = infinity).")]
-        [Model] public int numPredict = -1;
-        /// <summary> cache the processed prompt to avoid reprocessing the entire prompt every time (default: true, recommended!) </summary>
-        [Tooltip("cache the processed prompt to avoid reprocessing the entire prompt every time (default: true, recommended!)")]
-        [ModelAdvanced] public bool cachePrompt = true;
-        /// <summary> seed for reproducibility (-1 = no reproducibility). </summary>
-        [Tooltip("seed for reproducibility (-1 = no reproducibility).")]
-        [ModelAdvanced] public int seed = 0;
-        /// <summary> LLM temperature, lower values give more deterministic answers. </summary>
-        [Tooltip("LLM temperature, lower values give more deterministic answers.")]
-        [ModelAdvanced, Float(0f, 2f)] public float temperature = 0.2f;
-        /// <summary> Top-k sampling selects the next token only from the top k most likely predicted tokens (0 = disabled).
-        /// Higher values lead to more diverse text, while lower value will generate more focused and conservative text.
-        /// </summary>
-        [Tooltip("Top-k sampling selects the next token only from the top k most likely predicted tokens (0 = disabled). Higher values lead to more diverse text, while lower value will generate more focused and conservative text. ")]
-        [ModelAdvanced, Int(-1, 100)] public int topK = 40;
-        /// <summary> Top-p sampling selects the next token from a subset of tokens that together have a cumulative probability of at least p (1.0 = disabled).
-        /// Higher values lead to more diverse text, while lower value will generate more focused and conservative text.
-        /// </summary>
-        [Tooltip("Top-p sampling selects the next token from a subset of tokens that together have a cumulative probability of at least p (1.0 = disabled). Higher values lead to more diverse text, while lower value will generate more focused and conservative text. ")]
-        [ModelAdvanced, Float(0f, 1f)] public float topP = 0.9f;
-        /// <summary> minimum probability for a token to be used. </summary>
-        [Tooltip("minimum probability for a token to be used.")]
-        [ModelAdvanced, Float(0f, 1f)] public float minP = 0.05f;
-        /// <summary> Penalty based on repeated tokens to control the repetition of token sequences in the generated text. </summary>
-        [Tooltip("Penalty based on repeated tokens to control the repetition of token sequences in the generated text.")]
-        [ModelAdvanced, Float(0f, 2f)] public float repeatPenalty = 1.1f;
-        /// <summary> Penalty based on token presence in previous responses to control the repetition of token sequences in the generated text. (0.0 = disabled). </summary>
-        [Tooltip("Penalty based on token presence in previous responses to control the repetition of token sequences in the generated text. (0.0 = disabled).")]
-        [ModelAdvanced, Float(0f, 1f)] public float presencePenalty = 0f;
-        /// <summary> Penalty based on token frequency in previous responses to control the repetition of token sequences in the generated text. (0.0 = disabled). </summary>
-        [Tooltip("Penalty based on token frequency in previous responses to control the repetition of token sequences in the generated text. (0.0 = disabled).")]
-        [ModelAdvanced, Float(0f, 1f)] public float frequencyPenalty = 0f;
-        /// <summary> enable locally typical sampling (1.0 = disabled). Higher values will promote more contextually coherent tokens, while  lower values will promote more diverse tokens. </summary>
-        [Tooltip("enable locally typical sampling (1.0 = disabled). Higher values will promote more contextually coherent tokens, while  lower values will promote more diverse tokens.")]
-        [ModelAdvanced, Float(0f, 1f)] public float typicalP = 1f;
-        /// <summary> last n tokens to consider for penalizing repetition (0 = disabled, -1 = ctx-size). </summary>
-        [Tooltip("last n tokens to consider for penalizing repetition (0 = disabled, -1 = ctx-size).")]
-        [ModelAdvanced, Int(0, 2048)] public int repeatLastN = 64;
-        /// <summary> enable Mirostat sampling, controlling perplexity during text generation (0 = disabled, 1 = Mirostat, 2 = Mirostat 2.0). </summary>
-        [Tooltip("enable Mirostat sampling, controlling perplexity during text generation (0 = disabled, 1 = Mirostat, 2 = Mirostat 2.0).")]
-        [ModelAdvanced, Int(0, 2)] public int mirostat = 0;
-        /// <summary> The Mirostat target entropy (tau) controls the balance between coherence and diversity in the generated text. </summary>
-        [Tooltip("The Mirostat target entropy (tau) controls the balance between coherence and diversity in the generated text.")]
-        [ModelAdvanced, Float(0f, 10f)] public float mirostatTau = 5f;
-        /// <summary> The Mirostat learning rate (eta) controls how quickly the algorithm responds to feedback from the generated text. </summary>
-        [Tooltip("The Mirostat learning rate (eta) controls how quickly the algorithm responds to feedback from the generated text.")]
-        [ModelAdvanced, Float(0f, 1f)] public float mirostatEta = 0.1f;
-        /// <summary> if greater than 0, the response also contains the probabilities of top N tokens for each generated token. </summary>
-        [Tooltip("if greater than 0, the response also contains the probabilities of top N tokens for each generated token.")]
-        [ModelAdvanced, Int(0, 10)] public int nProbs = 0;
-        /// <summary> ignore end of stream token and continue generating. </summary>
-        [Tooltip("ignore end of stream token and continue generating.")]
-        [ModelAdvanced] public bool ignoreEos = false;
 
-        protected LLM _prellm;
-        [Local, SerializeField] protected UndreamAI.LlamaLib.LLMClient _llmClient;
+        /// <summary>The underlying LLMClient instance from LlamaLib</summary>
         public UndreamAI.LlamaLib.LLMClient llmClient
         {
             get => _llmClient;
             protected set => SetLLMClient(value);
         }
+        #endregion
 
-        bool started = false;
-        string completionParametersPre = "";
+        #region Private Fields
+        private LLM _previousLlm;
+        [Local, SerializeField] protected UndreamAI.LlamaLib.LLMClient _llmClient;
+        private bool started = false;
+        private string completionParametersCache = "";
+        #endregion
 
+        #region Unity Lifecycle
         /// <summary>
-        /// The Unity Awake function that initializes the state before the application starts.
-        /// The following actions are executed:
-        /// - the corresponding LLM server is defined (if ran locally)
-        /// - the grammar is set based on the grammar file
-        /// - the prompt and chat history are initialised
-        /// - the chat template is constructed
-        /// - the number of tokens to keep are based on the system prompt (if setNKeepToPrompt=true)
+        /// Unity Awake method that validates configuration and assigns local LLM if needed.
         /// </summary>
         public virtual void Awake()
         {
-            // Start the LLM server in a cross-platform way
             if (!enabled) return;
 
             if (!remote)
@@ -156,13 +218,16 @@ namespace LLMUnity
                 AssignLLM();
                 if (llm == null)
                 {
-                    string error = $"No LLM assigned or detected for LLMAgent {name}!";
+                    string error = $"No LLM assigned or detected for {GetType().Name} '{name}'!";
                     LLMUnitySetup.LogError(error);
-                    throw new Exception(error);
+                    throw new InvalidOperationException(error);
                 }
             }
         }
 
+        /// <summary>
+        /// Unity Start method that initializes the LLM client connection.
+        /// </summary>
         public virtual void Start()
         {
             if (!enabled) return;
@@ -170,54 +235,9 @@ namespace LLMUnity
             started = true;
         }
 
-        protected virtual void SetupLLMClient()
-        {
-            if (!remote) llmClient = new UndreamAI.LlamaLib.LLMClient(llm.llmService);
-            else llmClient = new UndreamAI.LlamaLib.LLMClient(host, port, APIKey);
-            SetGrammar(grammar);
-            completionParametersPre = "";
-        }
-
-        protected virtual LLMLocal GetCaller()
-        {
-            return _llmClient;
-        }
-
-        /// <summary>
-        /// Sets the LLM object of the LLMClient
-        /// </summary>
-        /// <param name="llmSet">LLM object</param>
-        protected virtual void SetLLM(LLM llmSet)
-        {
-            if (llmSet == _llm) return;
-            if (remote)
-            {
-                LLMUnitySetup.LogError("The client is in remote mode");
-                return;
-            }
-            _llm = llmSet;
-            _prellm = _llm;
-            if (started) SetupLLMClient();
-        }
-
-        protected virtual void SetLLMClient(UndreamAI.LlamaLib.LLMClient llmClientSet)
-        {
-            _llmClient = llmClientSet;
-        }
-
-        /// <summary>
-        /// Checks if a LLM can be auto-assigned if the LLM of the LLMClient is null
-        /// </summary>
-        /// <param name="llmSet"LLM object></param>
-        /// <returns>bool specifying whether the LLM can be auto-assigned</returns>
-        public virtual bool IsAutoAssignableLLM(LLM llmSet)
-        {
-            return true;
-        }
-
         protected virtual void OnValidate()
         {
-            if (_llm != _prellm) SetLLM(_llm);
+            if (_llm != _previousLlm) SetLLM(_llm);
             AssignLLM();
         }
 
@@ -225,31 +245,144 @@ namespace LLMUnity
         {
             AssignLLM();
         }
+        #endregion
 
+        #region Initialization
+        private void CheckLLMClient()
+        {
+            if (llmClient == null)
+            {
+                string error = "LLMClient not initialized";
+                LLMUnitySetup.LogError(error);
+                throw new System.InvalidOperationException(error);
+            }
+        }
+
+        /// <summary>
+        /// Sets up the underlying LLM client connection (local or remote).
+        /// </summary>
+        protected virtual void SetupLLMClient()
+        {
+            string exceptionMessage = "";
+            try
+            {
+                if (!remote)
+                {
+                    if (llm?.llmService == null)
+                    {
+                        throw new InvalidOperationException("Local LLM service is not available");
+                    }
+                    llmClient = new UndreamAI.LlamaLib.LLMClient(llm.llmService);
+                }
+                else
+                {
+                    llmClient = new UndreamAI.LlamaLib.LLMClient(host, port, APIKey);
+                }
+            }
+            catch (Exception ex)
+            {
+                exceptionMessage = ex.Message;
+            }
+            if (llmClient == null || exceptionMessage != "")
+            {
+                string error = "llmClient not initialized";
+                if (exceptionMessage != "") error += ", error: " + exceptionMessage;
+                LLMUnitySetup.LogError(error);
+                throw new InvalidOperationException(error);
+            }
+
+            SetGrammar(grammar);
+            completionParametersCache = "";
+        }
+
+        /// <summary>
+        /// Gets the underlying LLMLocal instance for operations requiring local access.
+        /// </summary>
+        protected virtual LLMLocal GetCaller()
+        {
+            return _llmClient;
+        }
+
+        /// <summary>
+        /// Sets the local LLM instance for this client.
+        /// </summary>
+        /// <param name="llmInstance">LLM instance to connect to</param>
+        protected virtual void SetLLM(LLM llmInstance)
+        {
+            if (llmInstance == _llm) return;
+
+            if (remote)
+            {
+                LLMUnitySetup.LogError("Cannot set LLM when client is in remote mode");
+                return;
+            }
+
+            _llm = llmInstance;
+            _previousLlm = _llm;
+
+            if (started) SetupLLMClient();
+        }
+
+        /// <summary>
+        /// Sets the underlying LLMClient instance.
+        /// </summary>
+        protected virtual void SetLLMClient(UndreamAI.LlamaLib.LLMClient llmClientInstance)
+        {
+            _llmClient = llmClientInstance;
+        }
+        #endregion
+
+        #region LLM Assignment
+        /// <summary>
+        /// Determines if an LLM instance can be auto-assigned to this client.
+        /// Override in derived classes to implement specific assignment logic.
+        /// </summary>
+        /// <param name="llmInstance">LLM instance to evaluate</param>
+        /// <returns>True if the LLM can be auto-assigned</returns>
+        public virtual bool IsAutoAssignableLLM(LLM llmInstance)
+        {
+            return true;
+        }
+
+        /// <summary>
+        /// Automatically assigns a suitable LLM instance if none is set.
+        /// </summary>
         protected virtual void AssignLLM()
         {
             if (remote || llm != null) return;
 
-            List<LLM> validLLMs = new List<LLM>();
+            var validLLMs = new List<LLM>();
+
 #if UNITY_6000_0_OR_NEWER
-            foreach (LLM foundllm in FindObjectsByType(typeof(LLM), FindObjectsSortMode.None))
+            foreach (LLM foundLlm in FindObjectsByType<LLM>(FindObjectsSortMode.None))
 #else
-            foreach (LLM foundllm in FindObjectsOfType<LLM>())
+            foreach (LLM foundLlm in FindObjectsOfType<LLM>())
 #endif
             {
-                if (IsAutoAssignableLLM(foundllm)) validLLMs.Add(foundllm);
+                if (IsAutoAssignableLLM(foundLlm))
+                {
+                    validLLMs.Add(foundLlm);
+                }
             }
+
             if (validLLMs.Count == 0) return;
 
-            llm = SortLLMsByBestMatching(validLLMs.ToArray())[0];
-            string msg = $"Assigning LLM {llm.name} to {GetType()} {name}";
-            if (llm.gameObject.scene != gameObject.scene) msg += $" from scene {llm.gameObject.scene}";
-            LLMUnitySetup.Log(msg);
+            llm = SortLLMsByBestMatch(validLLMs.ToArray())[0];
+
+            string message = $"Auto-assigned LLM '{llm.name}' to {GetType().Name} '{name}'";
+            if (llm.gameObject.scene != gameObject.scene)
+            {
+                message += $" (from scene '{llm.gameObject.scene.name}')";
+            }
+            LLMUnitySetup.Log(message);
         }
 
-        protected virtual LLM[] SortLLMsByBestMatching(LLM[] arrayIn)
+        /// <summary>
+        /// Sorts LLM instances by compatibility, preferring same-scene objects and hierarchy order.
+        /// </summary>
+        protected virtual LLM[] SortLLMsByBestMatch(LLM[] llmArray)
         {
-            LLM[] array = (LLM[])arrayIn.Clone();
+            LLM[] array = (LLM[]) llmArray.Clone();
             for (int i = 0; i < array.Length - 1; i++)
             {
                 bool swapped = false;
@@ -272,87 +405,61 @@ namespace LLMUnity
             }
             return array;
         }
+        #endregion
 
+        #region Grammar Management
         /// <summary>
-        /// Sets the provided grammar (gbnf or json schema format)
+        /// Sets grammar constraints for structured output generation.
         /// </summary>
-        /// <param name="grammarString">grammar in gbnf or json schema format</param>
+        /// <param name="grammarString">Grammar in GBNF or JSON schema format</param>
         public virtual void SetGrammar(string grammarString)
         {
-            grammar = grammarString;
-            GetCaller().SetGrammar(grammarString);
+            _grammar = grammarString ?? "";
+            GetCaller()?.SetGrammar(_grammar);
         }
 
         /// <summary>
-        /// Loads a grammar file
+        /// Loads grammar constraints from a file.
         /// </summary>
-        /// <param name="path">path to the grammar file</param>
+        /// <param name="path">Path to grammar file</param>
         public virtual void LoadGrammar(string path)
         {
-            if (String.IsNullOrEmpty(path)) return;
-            SetGrammar(File.ReadAllText(path));
-        }
+            if (string.IsNullOrEmpty(path)) return;
 
+            if (!File.Exists(path))
+            {
+                LLMUnitySetup.LogError($"Grammar file not found: {path}");
+                return;
+            }
+
+            try
+            {
+                string grammarContent = File.ReadAllText(path);
+                SetGrammar(grammarContent);
+                LLMUnitySetup.Log($"Loaded grammar from: {path}");
+            }
+            catch (Exception ex)
+            {
+                LLMUnitySetup.LogError($"Failed to load grammar file '{path}': {ex.Message}");
+            }
+        }
+        #endregion
+
+        #region Completion Parameters
         /// <summary>
-        /// Allows to cancel the requests in a specific slot of the LLM
+        /// Applies current completion parameters to the LLM client.
+        /// Only updates if parameters have changed since last call.
         /// </summary>
-        /// <param name="id_slot">slot of the LLM</param>
-        public void CancelRequest(int id_slot)
-        {
-            llmClient.Cancel(id_slot);
-        }
-
-        /// <summary>
-        /// Tokenises the provided query.
-        /// </summary>
-        /// <param name="query">query to tokenise</param>
-        /// <param name="callback">callback function called with the result tokens</param>
-        /// <returns>list of the tokens</returns>
-        public virtual List<int> Tokenize(string query, Callback<List<int>> callback = null)
-        {
-            List<int> tokens = llmClient.Tokenize(query);
-            callback?.Invoke(tokens);
-            return tokens;
-        }
-
-        /// <summary>
-        /// Detokenises the provided tokens to a string.
-        /// </summary>
-        /// <param name="tokens">tokens to detokenise</param>
-        /// <param name="callback">callback function called with the result string</param>
-        /// <returns>the detokenised string</returns>
-        public virtual string Detokenize(List<int> tokens, Callback<string> callback = null)
-        {
-            // handle the detokenization of a message by the user
-            string prompt = llmClient.Detokenize(tokens);
-            callback?.Invoke(prompt);
-            return prompt;
-        }
-
-        /// <summary>
-        /// Computes the embeddings of the provided input.
-        /// </summary>
-        /// <param name="tokens">input to compute the embeddings for</param>
-        /// <param name="callback">callback function called with the result string</param>
-        /// <returns>the computed embeddings</returns>
-        public virtual List<float> Embeddings(string query, Callback<List<float>> callback = null)
-        {
-            // handle the tokenization of a message by the user
-            List<float> embeddings = llmClient.Embeddings(query);
-            callback?.Invoke(embeddings);
-            return embeddings;
-        }
-
         protected virtual void SetCompletionParameters()
         {
-            if (llm.embeddingsOnly)
+            if (llm != null && llm.embeddingsOnly)
             {
                 string error = "LLM can't be used for completion, it is an embeddings only model!";
                 LLMUnitySetup.LogError(error);
                 throw new Exception(error);
             }
 
-            JObject json = new JObject
+            var parameters = new JObject
             {
                 ["temperature"] = temperature,
                 ["top_k"] = topK,
@@ -372,52 +479,114 @@ namespace LLMUnity
                 ["n_probs"] = nProbs,
                 ["cache_prompt"] = cachePrompt
             };
-            string completionParameters = json.ToString();
-            if (completionParameters != completionParametersPre)
+
+            string parametersJson = parameters.ToString();
+            if (parametersJson != completionParametersCache)
             {
-                GetCaller().SetCompletionParameters(json);
-                completionParametersPre = completionParameters;
+                GetCaller()?.SetCompletionParameters(parameters);
+                completionParametersCache = parametersJson;
             }
+        }
+        #endregion
+
+        #region Core LLM Operations
+        /// <summary>
+        /// Converts text into a list of token IDs.
+        /// </summary>
+        /// <param name="query">Text to tokenize</param>
+        /// <param name="callback">Optional callback to receive the result</param>
+        /// <returns>List of token IDs</returns>
+        public virtual List<int> Tokenize(string query, Callback<List<int>> callback = null)
+        {
+            if (string.IsNullOrEmpty(query))
+            {
+                throw new ArgumentNullException(nameof(query));
+            }
+            CheckLLMClient();
+
+            List<int> tokens = llmClient.Tokenize(query);
+            callback?.Invoke(tokens);
+            return tokens;
         }
 
         /// <summary>
-        /// Completion functionality of the LLM.
-        /// It calls the LLM completion based solely on the provided prompt (no formatting by the chat template).
-        /// The function allows callbacks when the response is partially or fully received.
+        /// Converts token IDs back to text.
         /// </summary>
-        /// <param name="prompt">user query</param>
-        /// <param name="callback">callback function that receives the response as string</param>
-        /// <param name="completionCallback">callback function called when the full response has been received</param>
-        /// <returns>the LLM response</returns>
+        /// <param name="tokens">Token IDs to decode</param>
+        /// <param name="callback">Optional callback to receive the result</param>
+        /// <returns>Decoded text</returns>
+        public virtual string Detokenize(List<int> tokens, Callback<string> callback = null)
+        {
+            if (tokens == null)
+            {
+                throw new ArgumentNullException(nameof(tokens));
+            }
+            CheckLLMClient();
+
+            string text = llmClient.Detokenize(tokens);
+            callback?.Invoke(text);
+            return text;
+        }
+
+        /// <summary>
+        /// Generates embedding vectors for the input text.
+        /// </summary>
+        /// <param name="query">Text to embed</param>
+        /// <param name="callback">Optional callback to receive the result</param>
+        /// <returns>Embedding vector</returns>
+        public virtual List<float> Embeddings(string query, Callback<List<float>> callback = null)
+        {
+            if (string.IsNullOrEmpty(query))
+            {
+                throw new ArgumentNullException(nameof(query));
+            }
+            CheckLLMClient();
+
+            List<float> embeddings = llmClient.Embeddings(query);
+            callback?.Invoke(embeddings);
+            return embeddings;
+        }
+
+        /// <summary>
+        /// Generates text completion for the given prompt.
+        /// </summary>
+        /// <param name="prompt">Input prompt text</param>
+        /// <param name="callback">Optional streaming callback for partial responses</param>
+        /// <param name="id_slot">Slot ID for the request (-1 for auto-assignment)</param>
+        /// <returns>Generated completion text</returns>
         public virtual string Completion(string prompt, LlamaLib.CharArrayCallback callback = null, int id_slot = -1)
         {
-            // handle a completion request by the user
-            // call the callback function while the answer is received
-            // call the completionCallback function when the answer is fully received
-
+            CheckLLMClient();
             SetCompletionParameters();
             return llmClient.Completion(prompt, callback, id_slot);
         }
 
         /// <summary>
-        /// Completion functionality of the LLM (async).
-        /// It calls the LLM completion based solely on the provided prompt (no formatting by the chat template).
-        /// The function allows callbacks when the response is partially or fully received.
+        /// Generates text completion asynchronously.
         /// </summary>
-        /// <param name="prompt">user query</param>
-        /// <param name="callback">callback function that receives the response as string</param>
-        /// <param name="completionCallback">callback function called when the full response has been received</param>
-        /// <returns>the LLM response</returns>
-        public virtual async Task<string> CompletionAsync(string prompt, LlamaLib.CharArrayCallback callback = null, EmptyCallback completionCallback = null, int id_slot = -1)
+        /// <param name="prompt">Input prompt text</param>
+        /// <param name="callback">Optional streaming callback for partial responses</param>
+        /// <param name="completionCallback">Optional callback when completion finishes</param>
+        /// <param name="id_slot">Slot ID for the request (-1 for auto-assignment)</param>
+        /// <returns>Task that returns the generated completion text</returns>
+        public virtual async Task<string> CompletionAsync(string prompt, LlamaLib.CharArrayCallback callback = null,
+            EmptyCallback completionCallback = null, int id_slot = -1)
         {
-            // handle a completion request by the user
-            // call the callback function while the answer is received
-            // call the completionCallback function when the answer is fully received
-
+            CheckLLMClient();
             SetCompletionParameters();
             string result = await llmClient.CompletionAsync(prompt, callback, id_slot);
             completionCallback?.Invoke();
             return result;
         }
+
+        /// <summary>
+        /// Cancels an active request in the specified slot.
+        /// </summary>
+        /// <param name="id_slot">Slot ID of the request to cancel</param>
+        public void CancelRequest(int id_slot)
+        {
+            llmClient?.Cancel(id_slot);
+        }
+        #endregion
     }
 }
