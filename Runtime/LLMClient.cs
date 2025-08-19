@@ -245,6 +245,7 @@ namespace LLMUnity
         {
             AssignLLM();
         }
+
         #endregion
 
         #region Initialization
@@ -330,6 +331,7 @@ namespace LLMUnity
         {
             _llmClient = llmClientInstance;
         }
+
         #endregion
 
         #region LLM Assignment
@@ -382,7 +384,7 @@ namespace LLMUnity
         /// </summary>
         protected virtual LLM[] SortLLMsByBestMatch(LLM[] llmArray)
         {
-            LLM[] array = (LLM[]) llmArray.Clone();
+            LLM[] array = (LLM[])llmArray.Clone();
             for (int i = 0; i < array.Length - 1; i++)
             {
                 bool swapped = false;
@@ -405,6 +407,7 @@ namespace LLMUnity
             }
             return array;
         }
+
         #endregion
 
         #region Grammar Management
@@ -443,6 +446,7 @@ namespace LLMUnity
                 LLMUnitySetup.LogError($"Failed to load grammar file '{path}': {ex.Message}");
             }
         }
+
         #endregion
 
         #region Completion Parameters
@@ -487,6 +491,7 @@ namespace LLMUnity
                 completionParametersCache = parametersJson;
             }
         }
+
         #endregion
 
         #region Core LLM Operations
@@ -587,6 +592,7 @@ namespace LLMUnity
         {
             llmClient?.Cancel(id_slot);
         }
+
         #endregion
     }
 }
