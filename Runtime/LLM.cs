@@ -27,68 +27,252 @@ namespace LLMUnity
 
         /// <summary>Enable remote server functionality to allow external connections</summary>
         [Tooltip("Enable remote server functionality to allow external connections")]
-        [LocalRemote] public bool remote = false;
+        [LocalRemote, SerializeField] private bool _remote = false;
 
         /// <summary>Port to use for the remote LLM server</summary>
         [Tooltip("Port to use for the remote LLM server")]
-        [Remote] public int port = 13333;
+        [Remote, SerializeField] private int _port = 13333;
+
+        /// <summary>API key required for server access (leave empty to disable authentication)</summary>
+        [Tooltip("API key required for server access (leave empty to disable authentication)")]
+        [Remote, SerializeField] private string _APIKey = "";
+
+        /// <summary>SSL certificate for the remote LLM server</summary>
+        [Tooltip("SSL certificate for the remote LLM server")]
+        [Remote, SerializeField] private string _SSLCert = "";
+
+        /// <summary>SSL key for the remote LLM server</summary>
+        [Tooltip("SSL key for the remote LLM server")]
+        [Remote, SerializeField] private string _SSLKey = "";
 
         /// <summary>Number of threads to use for processing (-1 = use all available threads)</summary>
         [Tooltip("Number of threads to use for processing (-1 = use all available threads)")]
-        [LLM] public int numThreads = -1;
+        [LLM, SerializeField] private int _numThreads = -1;
 
         /// <summary>Number of model layers to offload to GPU (0 = CPU only). Falls back to CPU if GPU unsupported</summary>
         [Tooltip("Number of model layers to offload to GPU (0 = CPU only). Falls back to CPU if GPU unsupported")]
-        [LLM] public int numGPULayers = 0;
+        [LLM, SerializeField] private int _numGPULayers = 0;
 
         /// <summary>Number of prompts that can be processed in parallel (-1 = auto-detect from clients)</summary>
         [Tooltip("Number of prompts that can be processed in parallel (-1 = auto-detect from clients)")]
-        [LLMAdvanced] public int parallelPrompts = -1;
+        [LLMAdvanced, SerializeField] private int _parallelPrompts = -1;
+
+        /// <summary>Size of the prompt context in tokens (0 = use model's default context size)</summary>
+        [Tooltip("Size of the prompt context in tokens (0 = use model's default context size). This determines how much conversation history the model can remember.")]
+        [DynamicRange("minContextLength", "maxContextLength", false), Model, SerializeField] private int _contextSize = 8192;
+
+        /// <summary>Batch size for prompt processing (larger = more memory, potentially faster)</summary>
+        [Tooltip("Batch size for prompt processing (larger = more memory, potentially faster)")]
+        [ModelAdvanced, SerializeField] private int _batchSize = 512;
+
+        /// <summary>LLM model file path (.gguf format)</summary>
+        [Tooltip("LLM model file path (.gguf format)")]
+        [ModelAdvanced, SerializeField] private string _model = "";
+
+        /// <summary>Enable flash attention optimization (requires compatible model)</summary>
+        [Tooltip("Enable flash attention optimization (requires compatible model)")]
+        [ModelExtras, SerializeField] private bool _flashAttention = false;
+
+        /// <summary>Chat template for conversation formatting ("auto" = detect from model)</summary>
+        [Tooltip("Chat template for conversation formatting (\"auto\" = detect from model)")]
+        [ModelAdvanced, SerializeField] private string _chatTemplate = "auto";
+
+        /// <summary>LORA adapter model paths (.gguf format), separated by commas</summary>
+        [Tooltip("LORA adapter model paths (.gguf format), separated by commas")]
+        [ModelAdvanced, SerializeField] private string _lora = "";
+
+        /// <summary>Weights for LORA adapters, separated by commas (default: 1.0 for each)</summary>
+        [Tooltip("Weights for LORA adapters, separated by commas (default: 1.0 for each)")]
+        [ModelAdvanced, SerializeField] private string _loraWeights = "";
 
         /// <summary>Persist this LLM GameObject across scene transitions</summary>
         [Tooltip("Persist this LLM GameObject across scene transitions")]
         [LLMAdvanced] public bool dontDestroyOnLoad = true;
-
-        /// <summary>Size of the prompt context in tokens (0 = use model's default context size)</summary>
-        [Tooltip("Size of the prompt context in tokens (0 = use model's default context size). This determines how much conversation history the model can remember.")]
-        [DynamicRange("minContextLength", "maxContextLength", false), Model] public int contextSize = 8192;
-
-        /// <summary>Batch size for prompt processing (larger = more memory, potentially faster)</summary>
-        [Tooltip("Batch size for prompt processing (larger = more memory, potentially faster)")]
-        [ModelAdvanced] public int batchSize = 512;
-
-        /// <summary>LLM model file path (.gguf format)</summary>
-        [Tooltip("LLM model file path (.gguf format)")]
-        [ModelAdvanced] public string model = "";
-
-        /// <summary>Chat template for conversation formatting ("auto" = detect from model)</summary>
-        [Tooltip("Chat template for conversation formatting (\"auto\" = detect from model)")]
-        [ModelAdvanced] public string chatTemplate = "auto";
-
-        /// <summary>LORA adapter model paths (.gguf format), separated by commas</summary>
-        [Tooltip("LORA adapter model paths (.gguf format), separated by commas")]
-        [ModelAdvanced] public string lora = "";
-
-        /// <summary>Weights for LORA adapters, separated by commas (default: 1.0 for each)</summary>
-        [Tooltip("Weights for LORA adapters, separated by commas (default: 1.0 for each)")]
-        [ModelAdvanced] public string loraWeights = "";
-
-        /// <summary>Enable flash attention optimization (requires compatible model)</summary>
-        [Tooltip("Enable flash attention optimization (requires compatible model)")]
-        [ModelExtras] public bool flashAttention = false;
-
-        /// <summary>API key required for server access (leave empty to disable authentication)</summary>
-        [Tooltip("API key required for server access (leave empty to disable authentication)")]
-        public string APIKey = "";
-
-        // SSL Configuration
-        [SerializeField] private string SSLCert = "";
-        [SerializeField] private string SSLKey = "";
-        public string SSLCertPath = "";
-        public string SSLKeyPath = "";
         #endregion
 
-        #region Public Properties
+        #region Public Properties with Validation
+
+        /// <summary>Number of threads to use for processing (-1 = use all available threads)</summary>
+        public int numThreads
+        {
+            get => _numThreads;
+            set
+            {
+                AssertNotStarted();
+                if (value < -1)
+                    throw new ArgumentException("numThreads must be >= -1");
+                _numThreads = value;
+            }
+        }
+
+        /// <summary>Number of model layers to offload to GPU (0 = CPU only)</summary>
+        public int numGPULayers
+        {
+            get => _numGPULayers;
+            set
+            {
+                AssertNotStarted();
+                if (value < 0)
+                    throw new ArgumentException("numGPULayers must be >= 0");
+                _numGPULayers = value;
+            }
+        }
+
+        /// <summary>Number of prompts that can be processed in parallel (-1 = auto-detect from clients)</summary>
+        public int parallelPrompts
+        {
+            get => _parallelPrompts;
+            set
+            {
+                AssertNotStarted();
+                if (value < -1)
+                    throw new ArgumentException("parallelPrompts must be >= -1");
+                _parallelPrompts = value;
+            }
+        }
+
+        /// <summary>Size of the prompt context in tokens (0 = use model's default context size)</summary>
+        public int contextSize
+        {
+            get => _contextSize;
+            set
+            {
+                AssertNotStarted();
+                if (value < 0)
+                    throw new ArgumentException("contextSize must be >= 0");
+                _contextSize = value;
+            }
+        }
+
+        /// <summary>Batch size for prompt processing (larger = more memory, potentially faster)</summary>
+        public int batchSize
+        {
+            get => _batchSize;
+            set
+            {
+                AssertNotStarted();
+                if (value <= 0)
+                    throw new ArgumentException("batchSize must be > 0");
+                _batchSize = value;
+            }
+        }
+
+        /// <summary>Enable flash attention optimization (requires compatible model)</summary>
+        public bool flashAttention
+        {
+            get => _flashAttention;
+            set
+            {
+                AssertNotStarted();
+                _flashAttention = value;
+            }
+        }
+
+        /// <summary>LLM model file path (.gguf format)</summary>
+        public string model
+        {
+            get => _model;
+            set => SetModel(value);
+        }
+
+        /// <summary>Chat template for conversation formatting ("auto" = detect from model)</summary>
+        public string chatTemplate
+        {
+            get => _chatTemplate;
+            set => SetTemplate(value);
+        }
+
+        /// <summary>LORA adapter model paths (.gguf format), separated by commas</summary>
+        public string lora
+        {
+            get => _lora;
+            set
+            {
+                if (value == _lora) return;
+                AssertNotStarted();
+                _lora = value;
+                UpdateLoraManagerFromStrings();
+            }
+        }
+
+        /// <summary>Weights for LORA adapters, separated by commas (default: 1.0 for each)</summary>
+        public string loraWeights
+        {
+            get => _loraWeights;
+            set
+            {
+                if (value == _loraWeights) return;
+                _loraWeights = value;
+                UpdateLoraManagerFromStrings();
+                ApplyLoras();
+            }
+        }
+
+        /// <summary>Enable remote server functionality to allow external connections</summary>
+        public bool remote
+        {
+            get => _remote;
+            set
+            {
+                if (value == _remote) return;
+                _remote = value;
+                RestartServer();
+            }
+        }
+
+        /// <summary>Port to use for the remote LLM server</summary>
+        public int port
+        {
+            get => _port;
+            set
+            {
+                if (value == _port) return;
+                if (value < 0 || value > 65535)
+                    throw new ArgumentException("port must be between 0 and 65535");
+                _port = value;
+                RestartServer();
+            }
+        }
+
+        /// <summary>API key required for server access (leave empty to disable authentication)</summary>
+        public string APIKey
+        {
+            get => _APIKey;
+            set
+            {
+                if (value == _APIKey) return;
+                _APIKey = value;
+                RestartServer();
+            }
+        }
+
+        /// <summary>SSL certificate for the remote LLM server</summary>
+        public string SSLCert
+        {
+            get => _SSLCert;
+            set
+            {
+                AssertNotStarted();
+                if (value == _SSLCert) return;
+                _SSLCert = value;
+            }
+        }
+
+        /// <summary>SSL key for the remote LLM server</summary>
+        public string SSLKey
+        {
+            get => _SSLKey;
+            set
+            {
+                AssertNotStarted();
+                if (value == _SSLKey) return;
+                _SSLKey = value;
+            }
+        }
+
+        #endregion
+
+        #region Other Public Properties
         /// <summary>True if the LLM server has started and is ready to receive requests</summary>
         public bool started { get; private set; } = false;
 
@@ -137,8 +321,6 @@ namespace LLMUnity
         public LLMManager llmManager = new LLMManager();
         private static readonly object staticLock = new object();
         public LoraManager loraManager = new LoraManager();
-        private string loraPre = "";
-        private string loraWeightsPre = "";
         /// \endcond
         #endregion
 
@@ -146,15 +328,6 @@ namespace LLMUnity
         public LLM()
         {
             LLMManager.Register(this);
-        }
-
-        void OnValidate()
-        {
-            if (lora != loraPre || loraWeights != loraWeightsPre)
-            {
-                loraManager.FromStrings(lora, loraWeights);
-                (loraPre, loraWeightsPre) = (lora, loraWeights);
-            }
         }
 
         /// <summary>
@@ -275,6 +448,31 @@ namespace LLMUnity
             }
         }
 
+        /// <summary>
+        /// Setup the remote LLM server
+        /// </summary>
+        private void SetupServer()
+        {
+            if (!remote) return;
+
+            if (!string.IsNullOrEmpty(SSLCert) && !string.IsNullOrEmpty(SSLKey))
+            {
+                LLMUnitySetup.Log("Enabling SSL for server");
+                llmService.SetSSL(SSLCert, SSLKey);
+            }
+            llmService.StartServer("", port, APIKey);
+        }
+
+        /// <summary>
+        /// Restart the remote LLM server (on parameter change)
+        /// </summary>
+        private void RestartServer()
+        {
+            if (!started) return;
+            llmService.StopServer();
+            SetupServer();
+        }
+
         private async Task CreateServiceAsync(string modelPath, List<string> loraPaths)
         {
             int numSlots = GetNumClients();
@@ -294,17 +492,7 @@ namespace LLMUnity
                         flashAttention, contextSize, batchSize, embeddingsOnly, loraPaths.ToArray());
 
                     llmService = new LLMService(llmlib, llmPtr);
-
-                    if (remote)
-                    {
-                        if (!string.IsNullOrEmpty(SSLCert) && !string.IsNullOrEmpty(SSLKey))
-                        {
-                            LLMUnitySetup.Log("Enabling SSL for server");
-                            llmService.SetSSL(SSLCert, SSLKey);
-                        }
-                        llmService.StartServer("", port, APIKey);
-                    }
-
+                    SetupServer();
                     llmService.Start();
                 }
             });
@@ -360,14 +548,12 @@ namespace LLMUnity
         /// Sets the model file to use. Automatically configures context size and embedding settings.
         /// </summary>
         /// <param name="path">Path to the model file (.gguf format)</param>
-        public void SetModel(string path)
-        {
-            if (started)
-            {
-                throw new InvalidOperationException("Cannot change model after LLM has started");
-            }
+         public void SetModel(string path)
+         {
+            if (model == path) return;
+            AssertNotStarted();
 
-            model = GetLLMManagerAsset(path);
+            _model = GetLLMManagerAsset(path);
             if (string.IsNullOrEmpty(model)) return;
 
             ModelEntry modelEntry = LLMManager.Get(model) ?? new ModelEntry(GetLLMManagerAssetRuntime(model));
@@ -397,16 +583,17 @@ namespace LLMUnity
         /// <param name="setDirty">Mark object dirty in editor</param>
         public void SetTemplate(string templateName, bool setDirty = true)
         {
+            if (_chatTemplate == templateName) return;
             if (!ChatTemplates.Contains(templateName))
             {
                 LLMUnitySetup.LogError($"Unsupported chat template: {templateName}");
                 return;
             }
 
-            chatTemplate = templateName;
+            _chatTemplate = templateName;
             if (started)
             {
-                llmService.SetTemplate(chatTemplate == "auto" ? "" : chatTemplate);
+                llmService.SetTemplate(_chatTemplate == "auto" ? "" : _chatTemplate);
             }
 
 #if UNITY_EDITOR
@@ -639,16 +826,20 @@ namespace LLMUnity
 
         private void UpdateLoras()
         {
-            (lora, loraWeights) = loraManager.ToStrings();
-            (loraPre, loraWeightsPre) = (lora, loraWeights);
-
+            (_lora, _loraWeights) = loraManager.ToStrings();
 #if UNITY_EDITOR
             if (!EditorApplication.isPlaying) EditorUtility.SetDirty(this);
 #endif
         }
 
+        private void UpdateLoraManagerFromStrings()
+        {
+            loraManager.FromStrings(_lora, _loraWeights);
+        }
+
         private void ApplyLoras()
         {
+            if (!started) return;
             var loras = new List<LoraIdScale>();
             float[] weights = loraManager.GetWeights();
 
@@ -670,9 +861,8 @@ namespace LLMUnity
         /// Sets the SSL certificate for secure server connections.
         /// </summary>
         /// <param name="path">Path to SSL certificate file</param>
-        public void SetSSLCert(string path)
+        public void SetSSLCertFromFile(string path)
         {
-            SSLCertPath = path;
             SSLCert = ReadFileContents(path);
         }
 
@@ -680,9 +870,8 @@ namespace LLMUnity
         /// Sets the SSL private key for secure server connections.
         /// </summary>
         /// <param name="path">Path to SSL private key file</param>
-        public void SetSSLKey(string path)
+        public void SetSSLKeyFromFile(string path)
         {
-            SSLKeyPath = path;
             SSLKey = ReadFileContents(path);
         }
 

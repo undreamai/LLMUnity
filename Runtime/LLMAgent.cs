@@ -148,7 +148,7 @@ namespace LLMUnity
                 throw new InvalidOperationException(error);
             }
 
-            if (slot!=-1) llmAgent.SlotId = slot;
+            if (slot != -1) llmAgent.SlotId = slot;
         }
 
         /// <summary>
@@ -212,6 +212,7 @@ namespace LLMUnity
                 LLMUnitySetup.LogError($"Failed to load chat history from '{save}': {ex.Message}");
             }
         }
+
         #endregion
 
         #region File Path Management
@@ -249,6 +250,7 @@ namespace LLMUnity
         {
             return GetSavePath(filename + ".cache");
         }
+
         #endregion
 
         #region Chat Management
@@ -291,6 +293,7 @@ namespace LLMUnity
             CheckLLMAgent();
             llmAgent.AddAssistantMessage(content);
         }
+
         #endregion
 
         #region Chat Functionality
@@ -342,6 +345,7 @@ namespace LLMUnity
             completionCallback?.Invoke();
             return result;
         }
+
         #endregion
 
         #region Model Warmup
@@ -379,6 +383,7 @@ namespace LLMUnity
                 SetCompletionParameters();
             }
         }
+
         #endregion
 
         #region Persistence
@@ -486,6 +491,7 @@ namespace LLMUnity
 
             return null;
         }
+
         #endregion
 
         #region Request Management
@@ -496,6 +502,7 @@ namespace LLMUnity
         {
             llmAgent?.Cancel();
         }
+
         #endregion
     }
 }

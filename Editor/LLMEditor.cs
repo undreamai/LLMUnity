@@ -62,11 +62,11 @@ namespace LLMUnity
             if (llmScriptSO.FindProperty("advancedOptions").boolValue)
             {
                 EditorGUILayout.BeginHorizontal();
-                AddSSLLoad("certificate", llmScript.SetSSLCert);
-                AddSSLLoad("key", llmScript.SetSSLKey);
+                AddSSLLoad("certificate", llmScript.SetSSLCertFromFile);
+                AddSSLLoad("key", llmScript.SetSSLKeyFromFile);
                 EditorGUILayout.EndHorizontal();
-                AddSSLInfo("SSLCertPath", "certificate", llmScript.SetSSLCert);
-                AddSSLInfo("SSLKeyPath", "key", llmScript.SetSSLKey);
+                AddSSLInfo("SSLCertPath", "certificate", llmScript.SetSSLCertFromFile);
+                AddSSLInfo("SSLKeyPath", "key", llmScript.SetSSLKeyFromFile);
             }
             Space();
         }
