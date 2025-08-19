@@ -2,6 +2,8 @@
 /// @brief File implementing LLM helper code.
 using System;
 using System.Collections.Generic;
+using System.Threading;
+using UndreamAI.LlamaLib;
 
 namespace LLMUnity
 {
@@ -198,6 +200,26 @@ namespace LLMUnity
             string[] loraPaths = new string[loras.Count];
             for (int i = 0; i < loras.Count; i++) loraPaths[i] = loras[i].assetPath;
             return loraPaths;
+        }
+    }
+
+    public class Utils
+    {
+        public static LlamaLib.CharArrayCallback WrapCallbackForAsync(LlamaLib.CharArrayCallback callback)
+        {
+            LlamaLib.CharArrayCallback wrappedCallback = null;
+            if (callback != null)
+            {
+                var context = SynchronizationContext.Current;
+                wrappedCallback = (string msg) =>
+                {
+                    if (context != null)
+                        context.Post(_ => callback(msg), null);
+                    else
+                        callback(msg);
+                };
+            }
+            return wrappedCallback;
         }
     }
     /// \endcond

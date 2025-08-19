@@ -6,12 +6,10 @@ using System.IO;
 using System.Threading.Tasks;
 using UndreamAI.LlamaLib;
 using UnityEngine;
-using UnityEditor;
 using Newtonsoft.Json.Linq;
 
 namespace LLMUnity
 {
-    [DefaultExecutionOrder(-2)]
     /// @ingroup llm
     /// <summary>
     /// Unity MonoBehaviour base class for LLM client functionality.
@@ -129,7 +127,7 @@ namespace LLMUnity
                 if (_remote != value)
                 {
                     _remote = value;
-                    if (started) SetupLLMClient();
+                    if (started) _ = SetupLLMClient();
                 }
             }
         }
@@ -138,7 +136,7 @@ namespace LLMUnity
         public LLM llm
         {
             get => _llm;
-            set => SetLLM(value);
+            set => _ = SetLLM(value);
         }
 
         /// <summary>API key for remote server authentication</summary>
@@ -150,7 +148,7 @@ namespace LLMUnity
                 if (_APIKey != value)
                 {
                     _APIKey = value;
-                    if (started) SetupLLMClient();
+                    if (started) _ = SetupLLMClient();
                 }
             }
         }
@@ -164,7 +162,7 @@ namespace LLMUnity
                 if (_host != value)
                 {
                     _host = value;
-                    if (started) SetupLLMClient();
+                    if (started) _ = SetupLLMClient();
                 }
             }
         }
@@ -178,7 +176,7 @@ namespace LLMUnity
                 if (_port != value)
                 {
                     _port = value;
-                    if (started) SetupLLMClient();
+                    if (started) _ = SetupLLMClient();
                 }
             }
         }
@@ -189,18 +187,10 @@ namespace LLMUnity
             get => _grammar;
             set => SetGrammar(value);
         }
-
-        /// <summary>The underlying LLMClient instance from LlamaLib</summary>
-        public UndreamAI.LlamaLib.LLMClient llmClient
-        {
-            get => _llmClient;
-            protected set => SetLLMClient(value);
-        }
         #endregion
 
         #region Private Fields
-        private LLM _previousLlm;
-        [Local, SerializeField] protected UndreamAI.LlamaLib.LLMClient _llmClient;
+        protected UndreamAI.LlamaLib.LLMClient llmClient;
         private bool started = false;
         private string completionParametersCache = "";
         #endregion
@@ -228,16 +218,15 @@ namespace LLMUnity
         /// <summary>
         /// Unity Start method that initializes the LLM client connection.
         /// </summary>
-        public virtual void Start()
+        public virtual async void Start()
         {
             if (!enabled) return;
-            SetupLLMClient();
+            await SetupLLMClient();
             started = true;
         }
 
         protected virtual void OnValidate()
         {
-            if (_llm != _previousLlm) SetLLM(_llm);
             AssignLLM();
         }
 
@@ -262,13 +251,14 @@ namespace LLMUnity
         /// <summary>
         /// Sets up the underlying LLM client connection (local or remote).
         /// </summary>
-        protected virtual void SetupLLMClient()
+        protected virtual async Task SetupLLMClient()
         {
             string exceptionMessage = "";
             try
             {
                 if (!remote)
                 {
+                    if (llm != null) await llm.WaitUntilReady();
                     if (llm?.llmService == null)
                     {
                         throw new InvalidOperationException("Local LLM service is not available");
@@ -301,14 +291,14 @@ namespace LLMUnity
         /// </summary>
         protected virtual LLMLocal GetCaller()
         {
-            return _llmClient;
+            return llmClient;
         }
 
         /// <summary>
         /// Sets the local LLM instance for this client.
         /// </summary>
         /// <param name="llmInstance">LLM instance to connect to</param>
-        protected virtual void SetLLM(LLM llmInstance)
+        protected virtual async Task SetLLM(LLM llmInstance)
         {
             if (llmInstance == _llm) return;
 
@@ -319,17 +309,7 @@ namespace LLMUnity
             }
 
             _llm = llmInstance;
-            _previousLlm = _llm;
-
-            if (started) SetupLLMClient();
-        }
-
-        /// <summary>
-        /// Sets the underlying LLMClient instance.
-        /// </summary>
-        protected virtual void SetLLMClient(UndreamAI.LlamaLib.LLMClient llmClientInstance)
-        {
-            _llmClient = llmClientInstance;
+            if (started) await SetupLLMClient();
         }
 
         #endregion
