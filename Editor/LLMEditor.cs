@@ -44,20 +44,8 @@ namespace LLMUnity
                 }
             }
 
-            void AddSSLInfo(string propertyName, string type, Callback<string> setterCallback)
-            {
-                string path = llmScriptSO.FindProperty(propertyName).stringValue;
-                if (path != "")
-                {
-                    EditorGUILayout.BeginHorizontal();
-                    EditorGUILayout.LabelField("SSL " + type + " path", path);
-                    if (GUILayout.Button(trashIcon, GUILayout.Height(actionColumnWidth), GUILayout.Width(actionColumnWidth))) setterCallback("");
-                    EditorGUILayout.EndHorizontal();
-                }
-            }
-
             EditorGUILayout.LabelField("Server Security Settings", EditorStyles.boldLabel);
-            EditorGUILayout.PropertyField(llmScriptSO.FindProperty("APIKey"));
+            EditorGUILayout.PropertyField(llmScriptSO.FindProperty("_APIKey"));
 
             if (llmScriptSO.FindProperty("advancedOptions").boolValue)
             {
@@ -65,8 +53,8 @@ namespace LLMUnity
                 AddSSLLoad("certificate", llmScript.SetSSLCertFromFile);
                 AddSSLLoad("key", llmScript.SetSSLKeyFromFile);
                 EditorGUILayout.EndHorizontal();
-                AddSSLInfo("SSLCertPath", "certificate", llmScript.SetSSLCertFromFile);
-                AddSSLInfo("SSLKeyPath", "key", llmScript.SetSSLKeyFromFile);
+                EditorGUILayout.PropertyField(llmScriptSO.FindProperty("_SSLCert"));
+                EditorGUILayout.PropertyField(llmScriptSO.FindProperty("_SSLKey"));
             }
             Space();
         }
@@ -468,7 +456,7 @@ namespace LLMUnity
 
             AddOptionsToggles(llmScriptSO);
             AddSetupSettings(llmScriptSO);
-            if (llmScriptSO.FindProperty("remote").boolValue) AddSecuritySettings(llmScriptSO, llmScript);
+            if (llmScriptSO.FindProperty("_remote").boolValue) AddSecuritySettings(llmScriptSO, llmScript);
             AddModelLoadersSettings(llmScriptSO, llmScript);
             AddChatSettings(llmScriptSO);
 

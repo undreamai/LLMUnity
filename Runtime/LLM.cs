@@ -11,7 +11,6 @@ using UnityEngine;
 
 namespace LLMUnity
 {
-    [DefaultExecutionOrder(-1)]
     /// @ingroup llm
     /// <summary>
     /// Unity MonoBehaviour component that manages a local LLM server instance.
@@ -35,15 +34,15 @@ namespace LLMUnity
 
         /// <summary>API key required for server access (leave empty to disable authentication)</summary>
         [Tooltip("API key required for server access (leave empty to disable authentication)")]
-        [Remote, SerializeField] private string _APIKey = "";
+        [SerializeField] private string _APIKey = "";
 
         /// <summary>SSL certificate for the remote LLM server</summary>
         [Tooltip("SSL certificate for the remote LLM server")]
-        [Remote, SerializeField] private string _SSLCert = "";
+        [SerializeField] private string _SSLCert = "";
 
         /// <summary>SSL key for the remote LLM server</summary>
         [Tooltip("SSL key for the remote LLM server")]
-        [Remote, SerializeField] private string _SSLKey = "";
+        [SerializeField] private string _SSLKey = "";
 
         /// <summary>Number of threads to use for processing (-1 = use all available threads)</summary>
         [Tooltip("Number of threads to use for processing (-1 = use all available threads)")]
@@ -55,7 +54,7 @@ namespace LLMUnity
 
         /// <summary>Number of prompts that can be processed in parallel (-1 = auto-detect from clients)</summary>
         [Tooltip("Number of prompts that can be processed in parallel (-1 = auto-detect from clients)")]
-        [LLMAdvanced, SerializeField] private int _parallelPrompts = -1;
+        [LLM, SerializeField] private int _parallelPrompts = -1;
 
         /// <summary>Size of the prompt context in tokens (0 = use model's default context size)</summary>
         [Tooltip("Size of the prompt context in tokens (0 = use model's default context size). This determines how much conversation history the model can remember.")]
@@ -87,7 +86,7 @@ namespace LLMUnity
 
         /// <summary>Persist this LLM GameObject across scene transitions</summary>
         [Tooltip("Persist this LLM GameObject across scene transitions")]
-        [LLMAdvanced] public bool dontDestroyOnLoad = true;
+        [LLM] public bool dontDestroyOnLoad = true;
         #endregion
 
         #region Public Properties with Validation
@@ -548,8 +547,8 @@ namespace LLMUnity
         /// Sets the model file to use. Automatically configures context size and embedding settings.
         /// </summary>
         /// <param name="path">Path to the model file (.gguf format)</param>
-         public void SetModel(string path)
-         {
+        public void SetModel(string path)
+        {
             if (model == path) return;
             AssertNotStarted();
 
@@ -687,7 +686,9 @@ namespace LLMUnity
         public async Task<string> CompletionAsync(string prompt, LlamaLibUnity.CharArrayCallback streamCallback = null, int id_slot = -1)
         {
             AssertStarted();
-            return await llmService.CompletionAsync(prompt, streamCallback, id_slot);
+            // Wrap callback to ensure it runs on the main thread
+            LlamaLib.CharArrayCallback wrappedCallback = Utils.WrapCallbackForAsync(streamCallback);
+            return await llmService.CompletionAsync(prompt, wrappedCallback, id_slot);
         }
 
         /// <summary>

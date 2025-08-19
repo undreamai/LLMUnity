@@ -26,7 +26,7 @@ namespace LLMUnity
         public virtual void AddSetupSettings(SerializedObject llmScriptSO)
         {
             List<Type> attributeClasses = new List<Type>(){typeof(LocalRemoteAttribute)};
-            SerializedProperty remoteProperty = llmScriptSO.FindProperty("remote");
+            SerializedProperty remoteProperty = llmScriptSO.FindProperty("_remote");
             if (remoteProperty != null) attributeClasses.Add(remoteProperty.boolValue ? typeof(RemoteAttribute) : typeof(LocalAttribute));
             attributeClasses.Add(typeof(LLMAttribute));
             if (llmScriptSO.FindProperty("advancedOptions").boolValue)

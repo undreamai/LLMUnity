@@ -3,14 +3,13 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
 using UndreamAI.LlamaLib;
 using UnityEngine;
 
 namespace LLMUnity
 {
-    [DefaultExecutionOrder(-2)]
+    [DefaultExecutionOrder(-1)]
     /// @ingroup llm
     /// <summary>
     /// Unity MonoBehaviour that implements a conversational AI agent with persistent chat history.
@@ -119,6 +118,12 @@ namespace LLMUnity
         #endregion
 
         #region Unity Lifecycle and Initialization
+        public override void Awake()
+        {
+            if (!remote) llm?.Register(this);
+            base.Awake();
+        }
+
         private void CheckLLMAgent()
         {
             if (llmAgent == null)
@@ -129,8 +134,10 @@ namespace LLMUnity
             }
         }
 
-        protected virtual void SetupLLMAgent()
+        protected override async Task SetupLLMClient()
         {
+            await base.SetupLLMClient();
+
             string exceptionMessage = "";
             try
             {
@@ -149,16 +156,6 @@ namespace LLMUnity
             }
 
             if (slot != -1) llmAgent.SlotId = slot;
-        }
-
-        /// <summary>
-        /// Unity Start method that initializes the agent with chat functionality.
-        /// Sets up the underlying LLMAgent with role configuration and loads saved history.
-        /// </summary>
-        public override void Start()
-        {
-            base.Start();
-            SetupLLMAgent();
             InitHistory();
         }
 
@@ -171,12 +168,6 @@ namespace LLMUnity
             {
                 LLMUnitySetup.LogError($"Slot must be between 0 and {llm.parallelPrompts - 1}, or -1 for auto-assignment");
             }
-        }
-
-        protected override void SetLLMClient(UndreamAI.LlamaLib.LLMClient llmClientSet)
-        {
-            base.SetLLMClient(llmClientSet);
-            SetupLLMAgent();
         }
 
         protected override LLMLocal GetCaller()
@@ -327,19 +318,7 @@ namespace LLMUnity
             CheckLLMAgent();
 
             // Wrap callback to ensure it runs on the main thread
-            LlamaLib.CharArrayCallback wrappedCallback = null;
-            if (callback != null)
-            {
-                var context = SynchronizationContext.Current;
-                wrappedCallback = (string msg) =>
-                {
-                    if (context != null)
-                        context.Post(_ => callback(msg), null);
-                    else
-                        callback(msg);
-                };
-            }
-
+            LlamaLib.CharArrayCallback wrappedCallback = Utils.WrapCallbackForAsync(callback);
             SetCompletionParameters();
             string result = await llmAgent.ChatAsync(query, addToHistory, wrappedCallback);
             completionCallback?.Invoke();
