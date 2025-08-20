@@ -687,7 +687,7 @@ namespace LLMUnity
         {
             AssertStarted();
             // Wrap callback to ensure it runs on the main thread
-            LlamaLib.CharArrayCallback wrappedCallback = Utils.WrapCallbackForAsync(streamCallback);
+            LlamaLib.CharArrayCallback wrappedCallback = Utils.WrapCallbackForAsync(streamCallback, this);
             return await llmService.CompletionAsync(prompt, wrappedCallback, id_slot);
         }
 
