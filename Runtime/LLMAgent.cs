@@ -318,7 +318,7 @@ namespace LLMUnity
             CheckLLMAgent();
 
             // Wrap callback to ensure it runs on the main thread
-            LlamaLib.CharArrayCallback wrappedCallback = Utils.WrapCallbackForAsync(callback);
+            LlamaLib.CharArrayCallback wrappedCallback = Utils.WrapCallbackForAsync(callback, this);
             SetCompletionParameters();
             string result = await llmAgent.ChatAsync(query, addToHistory, wrappedCallback);
             completionCallback?.Invoke();

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using UndreamAI.LlamaLib;
+using UnityEngine;
 
 namespace LLMUnity
 {
@@ -205,21 +206,20 @@ namespace LLMUnity
 
     public class Utils
     {
-        public static LlamaLib.CharArrayCallback WrapCallbackForAsync(LlamaLib.CharArrayCallback callback)
+        public static LlamaLib.CharArrayCallback WrapCallbackForAsync(
+            LlamaLib.CharArrayCallback callback, MonoBehaviour owner)
         {
-            LlamaLib.CharArrayCallback wrappedCallback = null;
-            if (callback != null)
+            if (callback == null) return null;
+            var context = SynchronizationContext.Current;
+
+            return (string msg) =>
             {
-                var context = SynchronizationContext.Current;
-                wrappedCallback = (string msg) =>
-                {
-                    if (context != null)
-                        context.Post(_ => callback(msg), null);
-                    else
-                        callback(msg);
-                };
-            }
-            return wrappedCallback;
+                if (owner == null) return;
+                if (context != null)
+                    context.Post(_ => { if (owner != null) callback(msg); }, null);
+                else
+                    callback(msg);
+            };
         }
     }
     /// \endcond
