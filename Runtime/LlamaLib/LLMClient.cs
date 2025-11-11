@@ -40,7 +40,7 @@ namespace UndreamAI.LlamaLib
 
         private IntPtr CreateRemoteClient(string url, int port, string apiKey = "")
         {
-            var llm = llamaLib.LLMClient_Construct_Remote(url, port, apiKey);
+            var llm = llamaLib.LLMClient_Construct_Remote(url ?? string.Empty, port, apiKey ?? string.Empty);
             if (llm == IntPtr.Zero)
                 throw new InvalidOperationException($"Failed to create remote LLMClient for {url}:{port}");
             return llm;

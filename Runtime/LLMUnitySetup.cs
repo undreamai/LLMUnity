@@ -194,11 +194,12 @@ namespace LLMUnity
             Debug.LogWarning(message);
         }
 
-        public static void LogError(string message)
+        public static void LogError(string message, bool throwException = false)
         {
             if ((int)DebugMode > (int)DebugModeType.Error) return;
             Debug.LogError(message);
             foreach (Callback<string> errorCallback in errorCallbacks) errorCallback(message);
+            if (throwException) throw new Exception(message);
         }
 
         static void LoadPlayerPrefs()

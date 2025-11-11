@@ -51,7 +51,7 @@ namespace LLMUnity
 
             string libraryFile = LLMUnitySetup.RelativePath(LLMUnitySetup.SearchDirectory(outputPath, $"libundreamai_{buildTarget.ToString().ToLower()}.a"), outputPath);
             string fileGuid = project.FindFileGuidByProjectPath(libraryFile);
-            if (string.IsNullOrEmpty(fileGuid)) Debug.LogError($"Library file {libraryFile} not found in project");
+            if (string.IsNullOrEmpty(fileGuid)) LLMUnitySetup.LogError($"Library file {libraryFile} not found in project");
             else
             {
                 foreach (var phaseGuid in project.GetAllBuildPhasesForTarget(unityMainTargetGuid))

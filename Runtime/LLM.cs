@@ -76,6 +76,10 @@ namespace LLMUnity
         [Tooltip("Chat template for conversation formatting (\"auto\" = detect from model)")]
         [ModelAdvanced, SerializeField] private string _chatTemplate = "auto";
 
+        /// <summary>Enable LLM reasoning ("thinking" mode)</summary>
+        [Tooltip("Enable LLM reasoning ('thinking' mode)")]
+        [ModelAdvanced, SerializeField] private bool _reasoning = false;
+
         /// <summary>LORA adapter model paths (.gguf format), separated by commas</summary>
         [Tooltip("LORA adapter model paths (.gguf format), separated by commas")]
         [ModelAdvanced, SerializeField] private string _lora = "";
@@ -179,6 +183,13 @@ namespace LLMUnity
         {
             get => _chatTemplate;
             set => SetTemplate(value);
+        }
+
+        /// <summary>Enable LLM reasoning ('thinking' mode)</summary>
+        public bool reasoning
+        {
+            get => _reasoning;
+            set => SetReasoning(value);
         }
 
         /// <summary>LORA adapter model paths (.gguf format), separated by commas</summary>
@@ -493,14 +504,16 @@ namespace LLMUnity
                     llmService = new LLMService(llmlib, llmPtr);
                     SetupServer();
                     llmService.Start();
+
+                    started = llmService.Started();
+                    if (started)
+                    {
+                        ApplyLoras();
+                        SetTemplate(chatTemplate);
+                        SetReasoning(reasoning);
+                    }
                 }
             });
-
-            started = llmService.Started();
-            if (!started) return;
-
-            ApplyLoras();
-            SetTemplate(chatTemplate);
         }
 
         #endregion
@@ -601,6 +614,15 @@ namespace LLMUnity
         }
 
         /// <summary>
+        /// Enable LLM reasoning ("thinking" mode)
+        /// </summary>
+        /// <param name="reasoning"Use LLM reasoning</param>
+        public void SetReasoning(bool reasoning)
+        {
+            llmService.EnableReasoning(reasoning);
+        }
+
+        /// <summary>
         /// Configure the LLM for embedding generation.
         /// </summary>
         /// <param name="embeddingLength">Number of embedding dimensions</param>
@@ -628,112 +650,6 @@ namespace LLMUnity
             }
 
             clients.Add(llmClient);
-        }
-
-        /// <summary>
-        /// Tokenizes the provided text into a list of token IDs.
-        /// </summary>
-        /// <param name="content">Text to tokenize</param>
-        /// <returns>List of token IDs</returns>
-        public List<int> Tokenize(string content)
-        {
-            AssertStarted();
-            return llmService.Tokenize(content);
-        }
-
-        /// <summary>
-        /// Converts token IDs back to text.
-        /// </summary>
-        /// <param name="tokens">List of token IDs</param>
-        /// <returns>Detokenised text</returns>
-        public string Detokenize(List<int> tokens)
-        {
-            AssertStarted();
-            return llmService.Detokenize(tokens);
-        }
-
-        /// <summary>
-        /// Generates embedding vectors for the provided text.
-        /// </summary>
-        /// <param name="content">Text to embed</param>
-        /// <returns>Embedding vector</returns>
-        public List<float> Embeddings(string content)
-        {
-            AssertStarted();
-            return llmService.Embeddings(content);
-        }
-
-        /// <summary>
-        /// Generates text completion for the given prompt.
-        /// </summary>
-        /// <param name="prompt">Input prompt</param>
-        /// <param name="streamCallback">Optional callback for streaming responses</param>
-        /// <param name="id_slot">Slot ID (-1 for automatic assignment)</param>
-        /// <returns>Generated text</returns>
-        public string Completion(string prompt, LlamaLibUnity.CharArrayCallback streamCallback = null, int id_slot = -1)
-        {
-            AssertStarted();
-            return llmService.Completion(prompt, streamCallback, id_slot);
-        }
-
-        /// <summary>
-        /// Generates text completion asynchronously.
-        /// </summary>
-        /// <param name="prompt">Input prompt</param>
-        /// <param name="streamCallback">Optional callback for streaming responses</param>
-        /// <param name="id_slot">Slot ID (-1 for automatic assignment)</param>
-        /// <returns>Task that returns generated text</returns>
-        public async Task<string> CompletionAsync(string prompt, LlamaLibUnity.CharArrayCallback streamCallback = null, int id_slot = -1)
-        {
-            AssertStarted();
-            // Wrap callback to ensure it runs on the main thread
-            LlamaLib.CharArrayCallback wrappedCallback = Utils.WrapCallbackForAsync(streamCallback, this);
-            return await llmService.CompletionAsync(prompt, wrappedCallback, id_slot);
-        }
-
-        /// <summary>
-        /// Cancels the request in the specified slot.
-        /// </summary>
-        /// <param name="id_slot">Slot ID</param>
-        public void CancelRequest(int id_slot)
-        {
-            AssertStarted();
-            llmService.Cancel(id_slot);
-        }
-
-        /// <summary>
-        /// Cancels all active requests.
-        /// </summary>
-        public void CancelRequests()
-        {
-            for (int i = 0; i < parallelPrompts; i++)
-            {
-                CancelRequest(i);
-            }
-        }
-
-        /// <summary>
-        /// Saves the state of a specific slot to disk.
-        /// </summary>
-        /// <param name="idSlot">Slot ID</param>
-        /// <param name="filepath">File path to save to</param>
-        /// <returns>Result message</returns>
-        public string SaveSlot(int idSlot, string filepath)
-        {
-            AssertStarted();
-            return llmService.SaveSlot(idSlot, filepath);
-        }
-
-        /// <summary>
-        /// Loads the state of a specific slot from disk.
-        /// </summary>
-        /// <param name="idSlot">Slot ID</param>
-        /// <param name="filepath">File path to load from</param>
-        /// <returns>Result message</returns>
-        public string LoadSlot(int idSlot, string filepath)
-        {
-            AssertStarted();
-            return llmService.LoadSlot(idSlot, filepath);
         }
 
         /// <summary>
@@ -902,21 +818,12 @@ namespace LLMUnity
             string error = null;
             if (failed) error = "LLM service couldn't be created";
             else if (!started) error = "LLM service not started";
-            if (error != null)
-            {
-                LLMUnitySetup.LogError(error);
-                throw new Exception(error);
-            }
+            if (error != null) LLMUnitySetup.LogError(error, true);
         }
 
         private void AssertNotStarted()
         {
-            if (started)
-            {
-                string error = "This method can't be called when the LLM has started";
-                LLMUnitySetup.LogError(error);
-                throw new Exception(error);
-            }
+            if (started) LLMUnitySetup.LogError("This method can't be called when the LLM has started", true);
         }
 
         /// <summary>

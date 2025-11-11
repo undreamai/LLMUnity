@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using UndreamAI.LlamaLib;
 using UnityEngine;
@@ -108,11 +109,25 @@ namespace LLMUnity
         /// <summary>Current conversation history as a list of chat messages</summary>
         public List<ChatMessage> chat
         {
-            get => llmAgent?.GetHistory() ?? new List<ChatMessage>();
+            get
+            {
+                if (llmAgent == null) return new List<ChatMessage>();
+
+                // convert each UndreamAI.LlamaLib.ChatMessage to LLMUnity.ChatMessage
+                return llmAgent.GetHistory()
+                    .Select(m => new ChatMessage(m))
+                    .ToList();
+            }
             set
             {
-                CheckLLMAgent();
-                llmAgent.SetHistory(value ?? new List<ChatMessage>());
+                if (llmAgent != null)
+                {
+                    // convert LLMUnity.ChatMessage back to UndreamAI.LlamaLib.ChatMessage
+                    var history = value?.Select(m => (UndreamAI.LlamaLib.ChatMessage)m).ToList()
+                        ?? new List<UndreamAI.LlamaLib.ChatMessage>();
+
+                    llmAgent.SetHistory(history);
+                }
             }
         }
         #endregion
@@ -122,16 +137,6 @@ namespace LLMUnity
         {
             if (!remote) llm?.Register(this);
             base.Awake();
-        }
-
-        private void CheckLLMAgent()
-        {
-            if (llmAgent == null)
-            {
-                string error = "LLMAgent not initialized";
-                LLMUnitySetup.LogError(error);
-                throw new System.InvalidOperationException(error);
-            }
         }
 
         protected override async Task SetupLLMClient()
@@ -151,12 +156,11 @@ namespace LLMUnity
             {
                 string error = "LLMAgent not initialized";
                 if (exceptionMessage != "") error += ", error: " + exceptionMessage;
-                LLMUnitySetup.LogError(error);
-                throw new InvalidOperationException(error);
+                LLMUnitySetup.LogError(error, true);
             }
 
             if (slot != -1) llmAgent.SlotId = slot;
-            InitHistory();
+            await InitHistory();
         }
 
         protected override void OnValidate()
@@ -178,16 +182,16 @@ namespace LLMUnity
         /// <summary>
         /// Initializes conversation history by clearing current state and loading from file if available.
         /// </summary>
-        protected virtual void InitHistory()
+        protected virtual async Task InitHistory()
         {
-            ClearChat();
-            LoadHistory();
+            await ClearChat();
+            await LoadHistory();
         }
 
         /// <summary>
         /// Loads conversation history from the saved file if it exists.
         /// </summary>
-        protected virtual void LoadHistory()
+        protected virtual async Task LoadHistory()
         {
             if (string.IsNullOrEmpty(save) || !File.Exists(GetJsonSavePath(save)))
             {
@@ -196,7 +200,7 @@ namespace LLMUnity
 
             try
             {
-                Load(save);
+                await Load(save);
             }
             catch (System.Exception ex)
             {
@@ -248,9 +252,9 @@ namespace LLMUnity
         /// <summary>
         /// Clears the entire conversation history.
         /// </summary>
-        public virtual void ClearChat()
+        public virtual async Task ClearChat()
         {
-            CheckLLMAgent();
+            await CheckLLMClient();
             llmAgent.ClearHistory();
         }
 
@@ -259,9 +263,9 @@ namespace LLMUnity
         /// </summary>
         /// <param name="role">Message role (e.g., userRole, assistantRole, or custom role)</param>
         /// <param name="content">Message content</param>
-        public virtual void AddMessage(string role, string content)
+        public virtual async Task AddMessage(string role, string content)
         {
-            CheckLLMAgent();
+            await CheckLLMClient();
             llmAgent.AddMessage(role, content);
         }
 
@@ -269,9 +273,9 @@ namespace LLMUnity
         /// Adds a user message to the conversation history.
         /// </summary>
         /// <param name="content">User message content</param>
-        public virtual void AddUserMessage(string content)
+        public virtual async Task AddUserMessage(string content)
         {
-            CheckLLMAgent();
+            await CheckLLMClient();
             llmAgent.AddUserMessage(content);
         }
 
@@ -279,30 +283,15 @@ namespace LLMUnity
         /// Adds an AI assistant message to the conversation history.
         /// </summary>
         /// <param name="content">Assistant message content</param>
-        public virtual void AddAssistantMessage(string content)
+        public virtual async Task AddAssistantMessage(string content)
         {
-            CheckLLMAgent();
+            await CheckLLMClient();
             llmAgent.AddAssistantMessage(content);
         }
 
         #endregion
 
         #region Chat Functionality
-        /// <summary>
-        /// Processes a user query and generates an AI response using conversation context.
-        /// The query and response are automatically added to chat history if specified.
-        /// </summary>
-        /// <param name="query">User's message or question</param>
-        /// <param name="callback">Optional streaming callback for partial responses</param>
-        /// <param name="addToHistory">Whether to add the exchange to conversation history</param>
-        /// <returns>AI assistant's response</returns>
-        public virtual string Chat(string query, LlamaLib.CharArrayCallback callback = null, bool addToHistory = true)
-        {
-            CheckLLMAgent();
-            SetCompletionParameters();
-            return llmAgent.Chat(query, addToHistory, callback);
-        }
-
         /// <summary>
         /// Processes a user query asynchronously and generates an AI response using conversation context.
         /// The query and response are automatically added to chat history if specified.
@@ -312,10 +301,10 @@ namespace LLMUnity
         /// <param name="completionCallback">Optional callback when response is complete</param>
         /// <param name="addToHistory">Whether to add the exchange to conversation history</param>
         /// <returns>Task that returns the AI assistant's response</returns>
-        public virtual async Task<string> ChatAsync(string query, LlamaLib.CharArrayCallback callback = null,
+        public virtual async Task<string> Chat(string query, LlamaLib.CharArrayCallback callback = null,
             EmptyCallback completionCallback = null, bool addToHistory = true)
         {
-            CheckLLMAgent();
+            await CheckLLMClient();
 
             // Wrap callback to ensure it runs on the main thread
             LlamaLib.CharArrayCallback wrappedCallback = Utils.WrapCallbackForAsync(callback, this);
@@ -325,9 +314,6 @@ namespace LLMUnity
             return result;
         }
 
-        #endregion
-
-        #region Model Warmup
         /// <summary>
         /// Warms up the model by processing the system prompt without generating output.
         /// This caches the system prompt processing for faster subsequent responses.
@@ -353,7 +339,7 @@ namespace LLMUnity
             {
                 // Set to generate no tokens for warmup
                 numPredict = 0;
-                await ChatAsync(query, null, completionCallback, false);
+                await Chat(query, null, completionCallback, false);
             }
             finally
             {
@@ -371,13 +357,13 @@ namespace LLMUnity
         /// </summary>
         /// <param name="filename">Base filename (without extension) for saving</param>
         /// <returns>Result message from cache save operation, or null if cache not saved</returns>
-        public virtual string Save(string filename)
+        public virtual async Task<string> Save(string filename)
         {
             if (string.IsNullOrEmpty(filename))
             {
                 throw new System.ArgumentNullException(nameof(filename));
             }
-            CheckLLMAgent();
+            await CheckLLMClient();
 
             // Save chat history
             string jsonPath = GetJsonSavePath(filename);
@@ -395,8 +381,7 @@ namespace LLMUnity
             }
             catch (System.Exception ex)
             {
-                LLMUnitySetup.LogError($"Failed to save chat history to '{jsonPath}': {ex.Message}");
-                throw;
+                LLMUnitySetup.LogError($"Failed to save chat history to '{jsonPath}': {ex.Message}", true);
             }
 
             // Save cache if enabled and not remote
@@ -423,13 +408,13 @@ namespace LLMUnity
         /// </summary>
         /// <param name="filename">Base filename (without extension) to load from</param>
         /// <returns>Result message from cache load operation, or null if cache not loaded</returns>
-        public virtual string Load(string filename)
+        public virtual async Task<string> Load(string filename)
         {
             if (string.IsNullOrEmpty(filename))
             {
                 throw new System.ArgumentNullException(nameof(filename));
             }
-            CheckLLMAgent();
+            await CheckLLMClient();
 
             // Load chat history
             string jsonPath = GetJsonSavePath(filename);
@@ -445,8 +430,7 @@ namespace LLMUnity
             }
             catch (System.Exception ex)
             {
-                LLMUnitySetup.LogError($"Failed to load chat history from '{jsonPath}': {ex.Message}");
-                throw;
+                LLMUnitySetup.LogError($"Failed to load chat history from '{jsonPath}': {ex.Message}", true);
             }
 
             // Load cache if enabled and not remote
@@ -483,5 +467,11 @@ namespace LLMUnity
         }
 
         #endregion
+    }
+
+    public class ChatMessage : UndreamAI.LlamaLib.ChatMessage
+    {
+        public ChatMessage(string role, string content) : base(role, content) {}
+        public ChatMessage(UndreamAI.LlamaLib.ChatMessage other) : base(other.role, other.content) {}
     }
 }

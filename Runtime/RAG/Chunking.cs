@@ -37,7 +37,7 @@ namespace LLMUnity
         /// </summary>
         /// <param name="input">phrase</param>
         /// <returns>List of start/end indices of the split chunks</returns>
-        public abstract List<(int, int)> Split(string input);
+        public abstract Task<List<(int, int)>> Split(string input);
 
         /// <summary>
         /// Retrieves the phrase with the specific id
@@ -60,15 +60,15 @@ namespace LLMUnity
         /// <param name="inputString">input phrase</param>
         /// <param name="group">data group to add it to </param>
         /// <returns>phrase id</returns>
-        public override int Add(string inputString, string group = "")
+        public override async Task<int> Add(string inputString, string group = "")
         {
             int key = nextKey++;
             // sentence -> phrase
             List<int> sentenceIds = new List<int>();
-            foreach ((int startIndex, int endIndex) in Split(inputString))
+            foreach ((int startIndex, int endIndex) in await Split(inputString))
             {
                 string sentenceText = inputString.Substring(startIndex, endIndex - startIndex + 1);
-                int sentenceId = search.Add(sentenceText, group);
+                int sentenceId = await search.Add(sentenceText, group);
                 sentenceIds.Add(sentenceId);
 
                 sentenceToPhrase[sentenceId] = key;
@@ -166,9 +166,9 @@ namespace LLMUnity
         /// <param name="queryString">search query</param>
         /// <param name="group">data group to search in</param>
         /// <returns>incremental search key</returns>
-        public override int IncrementalSearch(string queryString, string group = "")
+        public override async Task<int> IncrementalSearch(string queryString, string group = "")
         {
-            return search.IncrementalSearch(queryString, group);
+            return await search.IncrementalSearch(queryString, group);
         }
 
         /// <summary>

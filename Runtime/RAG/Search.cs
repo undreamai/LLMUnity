@@ -33,7 +33,7 @@ namespace LLMUnity
         /// <param name="inputString">input phrase</param>
         /// <param name="group">data group to add it to </param>
         /// <returns>phrase id</returns>
-        public abstract int Add(string inputString, string group = "");
+        public abstract Task<int> Add(string inputString, string group = "");
 
         /// <summary>
         /// Removes a phrase from the search.
@@ -73,7 +73,7 @@ namespace LLMUnity
         /// <param name="queryString">search query</param>
         /// <param name="group">data group to search in</param>
         /// <returns>incremental search key</returns>
-        public abstract int IncrementalSearch(string queryString, string group = "");
+        public abstract Task<int> IncrementalSearch(string queryString, string group = "");
 
         /// <summary>
         /// Retrieves the most similar search results in batches (incremental search).
@@ -112,9 +112,9 @@ namespace LLMUnity
         /// <item><description>`bool` indicating if the search is exhausted.</description></item>
         /// </list>
         /// </returns>
-        public (string[], float[]) Search(string queryString, int k, string group = "")
+        public async Task<(string[], float[])> Search(string queryString, int k, string group = "")
         {
-            int fetchKey = IncrementalSearch(queryString, group);
+            int fetchKey = await IncrementalSearch(queryString, group);
             (string[] phrases, float[] distances, bool completed) = IncrementalFetch(fetchKey, k);
             if (!completed) IncrementalSearchComplete(fetchKey);
             return (phrases, distances);
@@ -290,11 +290,11 @@ namespace LLMUnity
         /// <item><description>Array of distances for each result (`float[]`).</description></item>
         /// </list>
         /// </returns>
-        public (string[], float[]) SearchFromList(string query, string[] searchList)
+        public async Task<(string[], float[])> SearchFromList(string query, string[] searchList)
         {
-            float[] embedding = Encode(query);
+            float[] embedding = await Encode(query);
             float[][] embeddingsList = new float[searchList.Length][];
-            for (int i = 0; i < searchList.Length; i++) embeddingsList[i] = Encode(searchList[i]);
+            for (int i = 0; i < searchList.Length; i++) embeddingsList[i] = await Encode(searchList[i]);
 
             float[] unsortedDistances = InverseDotProduct(embedding, embeddingsList);
             List<(string, float)> sortedLists = searchList.Zip(unsortedDistances, (first, second) => (first, second))
@@ -339,19 +339,19 @@ namespace LLMUnity
             return results;
         }
 
-        public virtual float[] Encode(string inputString)
+        public virtual async Task<float[]> Encode(string inputString)
         {
-            return llmEmbedder.Embeddings(inputString).ToArray();
+            return (await llmEmbedder.Embeddings(inputString)).ToArray();
         }
 
-        public virtual List<int> Tokenize(string query, Callback<List<int>> callback = null)
+        public virtual async Task<List<int>> Tokenize(string query, Callback<List<int>> callback = null)
         {
-            return llmEmbedder.Tokenize(query, callback);
+            return await llmEmbedder.Tokenize(query, callback);
         }
 
-        public virtual string Detokenize(List<int> tokens, Callback<string> callback = null)
+        public async Task<string> Detokenize(List<int> tokens, Callback<string> callback = null)
         {
-            return llmEmbedder.Detokenize(tokens, callback);
+            return await llmEmbedder.Detokenize(tokens, callback);
         }
 
         public override string Get(int key)
@@ -360,10 +360,10 @@ namespace LLMUnity
             return null;
         }
 
-        public override int Add(string inputString, string group = "")
+        public override async Task<int> Add(string inputString, string group = "")
         {
             int key = nextKey++;
-            AddInternal(key, Encode(inputString));
+            AddInternal(key, await Encode(inputString));
 
             data[key] = inputString;
             if (!dataSplits.ContainsKey(group)) dataSplits[group] = new List<int>(){key};
@@ -421,9 +421,9 @@ namespace LLMUnity
             return dataSplit.Count;
         }
 
-        public override int IncrementalSearch(string queryString, string group = "")
+        public override async Task<int> IncrementalSearch(string queryString, string group = "")
         {
-            return IncrementalSearch(Encode(queryString), group);
+            return IncrementalSearch(await Encode(queryString), group);
         }
 
         public override void Save(ZipArchive archive)

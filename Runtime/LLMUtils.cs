@@ -214,11 +214,32 @@ namespace LLMUnity
 
             return (string msg) =>
             {
-                if (owner == null) return;
-                if (context != null)
-                    context.Post(_ => { if (owner != null) callback(msg); }, null);
-                else
-                    callback(msg);
+                try
+                {
+                    if (owner == null) return;
+                    if (context != null)
+                    {
+                        context.Post(_ =>
+                        {
+                            try
+                            {
+                                if (owner != null) callback(msg);
+                            }
+                            catch (Exception e)
+                            {
+                                LLMUnitySetup.LogError($"Exception in callback: {e}");
+                            }
+                        }, null);
+                    }
+                    else
+                    {
+                        callback(msg);
+                    }
+                }
+                catch (Exception e)
+                {
+                    LLMUnitySetup.LogError($"Exception in callback wrapper: {e}");
+                }
             };
         }
     }

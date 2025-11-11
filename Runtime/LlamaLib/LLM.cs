@@ -95,7 +95,7 @@ namespace UndreamAI.LlamaLib
             if (messages == null)
                 throw new ArgumentNullException(nameof(messages));
             CheckLlamaLib();
-            IntPtr result = llamaLib.LLM_Apply_Template(llm, messages.ToString());
+            IntPtr result = llamaLib.LLM_Apply_Template(llm, messages.ToString() ?? string.Empty);
             return Marshal.PtrToStringAnsi(result) ?? string.Empty;
         }
 
@@ -105,7 +105,7 @@ namespace UndreamAI.LlamaLib
                 throw new ArgumentNullException(nameof(content));
 
             CheckLlamaLib();
-            IntPtr result = llamaLib.LLM_Tokenize(llm, content);
+            IntPtr result = llamaLib.LLM_Tokenize(llm, content ?? string.Empty);
             string resultStr = Marshal.PtrToStringAnsi(result) ?? string.Empty;
             List<int> ret = new List<int>();
             try
@@ -124,7 +124,7 @@ namespace UndreamAI.LlamaLib
 
             CheckLlamaLib();
             JArray tokensJSON = JArray.FromObject(tokens);
-            IntPtr result = llamaLib.LLM_Detokenize(llm, tokensJSON.ToString());
+            IntPtr result = llamaLib.LLM_Detokenize(llm, tokensJSON.ToString() ?? string.Empty);
             return Marshal.PtrToStringAnsi(result) ?? string.Empty;
         }
 
@@ -142,7 +142,7 @@ namespace UndreamAI.LlamaLib
 
             CheckLlamaLib();
 
-            IntPtr result = llamaLib.LLM_Embeddings(llm, content);
+            IntPtr result = llamaLib.LLM_Embeddings(llm, content ?? string.Empty);
             string resultStr = Marshal.PtrToStringAnsi(result) ?? string.Empty;
 
             List<float> ret = new List<float>();
@@ -158,7 +158,7 @@ namespace UndreamAI.LlamaLib
         public void SetCompletionParameters(JObject parameters = null)
         {
             CheckLlamaLib();
-            llamaLib.LLM_Set_Completion_Parameters(llm, parameters.ToString());
+            llamaLib.LLM_Set_Completion_Parameters(llm, parameters?.ToString() ?? string.Empty);
         }
 
         public JObject GetCompletionParameters()
@@ -178,7 +178,7 @@ namespace UndreamAI.LlamaLib
         public void SetGrammar(string grammar)
         {
             CheckLlamaLib();
-            llamaLib.LLM_Set_Grammar(llm, grammar);
+            llamaLib.LLM_Set_Grammar(llm, grammar ?? string.Empty);
         }
 
         public string GetGrammar()
@@ -198,7 +198,7 @@ namespace UndreamAI.LlamaLib
         public string CompletionInternal(string prompt, LlamaLib.CharArrayCallback callback, int idSlot)
         {
             IntPtr result;
-            result = llamaLib.LLM_Completion(llm, prompt, callback, idSlot);
+            result = llamaLib.LLM_Completion(llm, prompt ?? string.Empty, callback, idSlot);
             return Marshal.PtrToStringAnsi(result) ?? string.Empty;
         }
 
@@ -227,7 +227,7 @@ namespace UndreamAI.LlamaLib
             if (string.IsNullOrEmpty(filepath))
                 throw new ArgumentNullException(nameof(filepath));
 
-            IntPtr result = llamaLib.LLM_Save_Slot(llm, idSlot, filepath);
+            IntPtr result = llamaLib.LLM_Save_Slot(llm, idSlot, filepath ?? string.Empty);
             return Marshal.PtrToStringAnsi(result) ?? string.Empty;
         }
 
@@ -236,7 +236,7 @@ namespace UndreamAI.LlamaLib
             if (string.IsNullOrEmpty(filepath) || !File.Exists(filepath))
                 throw new ArgumentNullException(nameof(filepath));
 
-            IntPtr result = llamaLib.LLM_Load_Slot(llm, idSlot, filepath);
+            IntPtr result = llamaLib.LLM_Load_Slot(llm, idSlot, filepath ?? string.Empty);
             return Marshal.PtrToStringAnsi(result) ?? string.Empty;
         }
 
@@ -258,7 +258,13 @@ namespace UndreamAI.LlamaLib
         public void SetTemplate(string template)
         {
             CheckLlamaLib();
-            llamaLib.LLM_Set_Template(llm, template);
+            llamaLib.LLM_Set_Template(llm, template ?? string.Empty);
+        }
+
+        public void EnableReasoning(bool enableReasoning)
+        {
+            CheckLlamaLib();
+            llamaLib.LLM_Enable_Reasoning(llm, enableReasoning);
         }
 
         // LoRA Weight methods
@@ -278,7 +284,7 @@ namespace UndreamAI.LlamaLib
                 throw new ArgumentNullException(nameof(loras));
 
             var lorasJSON = BuildLoraWeightJSON(loras);
-            return llamaLib.LLM_Lora_Weight(llm, lorasJSON);
+            return llamaLib.LLM_Lora_Weight(llm, lorasJSON ?? string.Empty);
         }
 
         public bool LoraWeight(params LoraIdScale[] loras)
@@ -354,10 +360,10 @@ namespace UndreamAI.LlamaLib
         public void StartServer(string host = "0.0.0.0", int port = -1, string apiKey = "")
         {
             CheckLlamaLib();
-            if (string.IsNullOrEmpty(host))
-                host = "0.0.0.0";
+            host = string.IsNullOrEmpty(host) ? "0.0.0.0" : host;
+            apiKey = apiKey ?? string.Empty;
 
-            llamaLib.LLM_Start_Server(llm, host, port, apiKey ?? string.Empty);
+            llamaLib.LLM_Start_Server(llm, host, port, apiKey);
         }
 
         public void StopServer()
@@ -386,7 +392,7 @@ namespace UndreamAI.LlamaLib
                 throw new ArgumentNullException(nameof(sslKey));
 
             CheckLlamaLib();
-            llamaLib.LLM_Set_SSL(llm, sslCert, sslKey);
+            llamaLib.LLM_Set_SSL(llm, sslCert ?? string.Empty, sslKey ?? string.Empty);
         }
 
         public int EmbeddingSize()
