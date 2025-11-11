@@ -47,17 +47,17 @@ namespace LLMUnity
         /// </summary>
         /// <param name="input">phrase</param>
         /// <returns>List of start/end indices of the split chunks</returns>
-        public override List<(int, int)> Split(string input)
+        public override async Task<List<(int, int)>> Split(string input)
         {
             List<(int, int)> indices = new List<(int, int)>();
-            List<int> tokens = search.Tokenize(input);
+            List<int> tokens = await search.Tokenize(input);
             if (tokens.Count == 0) return indices;
 
             int startIndex = 0;
             for (int i = 0; i < tokens.Count; i += numTokens)
             {
                 int batchTokens = Math.Min(tokens.Count, i + numTokens) - i;
-                string detokenised = search.Detokenize(tokens.GetRange(i, batchTokens));
+                string detokenised = await search.Detokenize(tokens.GetRange(i, batchTokens));
                 int endIndex = DetermineEndIndex(input, detokenised, startIndex);
                 indices.Add((startIndex, endIndex));
                 startIndex = endIndex + 1;

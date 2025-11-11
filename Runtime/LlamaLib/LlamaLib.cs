@@ -50,6 +50,10 @@ namespace UndreamAI.LlamaLib
         public static extern void LLM_Logging_Stop_Static();
         public static void LoggingStop() => LLM_Logging_Stop_Static();
 
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Enable_Reasoning")]
+        public static extern void LLM_Enable_Reasoning_Static(IntPtr llm, [MarshalAs(UnmanagedType.I1)] bool enable_reasoning);
+        public void LLM_Enable_Reasoning(IntPtr llm, bool enable_reasoning) => LLM_Enable_Reasoning_Static(llm, enable_reasoning);
+
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Get_Template")]
         public static extern IntPtr LLM_Get_Template_Static(IntPtr llm);
         public IntPtr LLM_Get_Template(IntPtr llm) => LLM_Get_Template_Static(llm);
@@ -71,13 +75,13 @@ namespace UndreamAI.LlamaLib
         public IntPtr LLM_Embeddings(IntPtr llm, string query) => LlamaLib.LLM_Embeddings_Static(llm, query);
 
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Completion")]
-        public static extern IntPtr LLM_Completion_Static(IntPtr llm, [MarshalAs(UnmanagedType.LPStr)] string query, CharArrayCallback callback, int id_slot = -1, bool return_response_json = false);
+        public static extern IntPtr LLM_Completion_Static(IntPtr llm, [MarshalAs(UnmanagedType.LPStr)] string query, CharArrayCallback callback, int id_slot = -1, [MarshalAs(UnmanagedType.I1)] bool return_response_json = false);
         public IntPtr LLM_Completion(IntPtr llm, string query, CharArrayCallback callback, int id_slot = -1, bool return_response_json = false) => LlamaLib.LLM_Completion_Static(llm, query, callback, id_slot, return_response_json);
 
         // LLMLocal functions
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Set_Template")]
-        public static extern IntPtr LLM_Set_Template_Static(IntPtr llm, [MarshalAs(UnmanagedType.LPStr)] string template);
-        public IntPtr LLM_Set_Template(IntPtr llm, string template) => LLM_Set_Template_Static(llm, template);
+        public static extern void LLM_Set_Template_Static(IntPtr llm, [MarshalAs(UnmanagedType.LPStr)] string template);
+        public void LLM_Set_Template(IntPtr llm, string template) => LLM_Set_Template_Static(llm, template);
 
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLM_Save_Slot")]
         public static extern IntPtr LLM_Save_Slot_Static(IntPtr llm, int id_slot, [MarshalAs(UnmanagedType.LPStr)] string filepath);
@@ -421,6 +425,7 @@ namespace UndreamAI.LlamaLib
             LLM_Logging_Stop = LibraryLoader.GetSymbolDelegate<LLM_Logging_Stop_Delegate>(libraryHandle, "LLM_Logging_Stop");
             LLM_Get_Template = LibraryLoader.GetSymbolDelegate<LLM_Get_Template_Delegate>(libraryHandle, "LLM_Get_Template");
             LLM_Set_Template = LibraryLoader.GetSymbolDelegate<LLM_Set_Template_Delegate>(libraryHandle, "LLM_Set_Template");
+            LLM_Enable_Reasoning = LibraryLoader.GetSymbolDelegate<LLM_Enable_Reasoning_Delegate>(libraryHandle, "LLM_Enable_Reasoning");
             LLM_Apply_Template = LibraryLoader.GetSymbolDelegate<LLM_Apply_Template_Delegate>(libraryHandle, "LLM_Apply_Template");
             LLM_Tokenize = LibraryLoader.GetSymbolDelegate<LLM_Tokenize_Delegate>(libraryHandle, "LLM_Tokenize");
             LLM_Detokenize = LibraryLoader.GetSymbolDelegate<LLM_Detokenize_Delegate>(libraryHandle, "LLM_Detokenize");
@@ -493,7 +498,10 @@ namespace UndreamAI.LlamaLib
         public delegate IntPtr LLM_Get_Template_Delegate(IntPtr llm);
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate IntPtr LLM_Set_Template_Delegate(IntPtr llm, [MarshalAs(UnmanagedType.LPStr)] string template);
+        public delegate void LLM_Set_Template_Delegate(IntPtr llm, [MarshalAs(UnmanagedType.LPStr)] string template);
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void LLM_Enable_Reasoning_Delegate(IntPtr llm, [MarshalAs(UnmanagedType.I1)] bool enable_reasoning);
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate IntPtr LLM_Apply_Template_Delegate(IntPtr llm, [MarshalAs(UnmanagedType.LPStr)] string messages_as_json);
@@ -508,7 +516,7 @@ namespace UndreamAI.LlamaLib
         public delegate IntPtr LLM_Embeddings_Delegate(IntPtr llm, [MarshalAs(UnmanagedType.LPStr)] string query);
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate IntPtr LLM_Completion_Delegate(IntPtr llm, [MarshalAs(UnmanagedType.LPStr)] string query, CharArrayCallback callback, int id_slot = -1, bool return_response_json = false);
+        public delegate IntPtr LLM_Completion_Delegate(IntPtr llm, [MarshalAs(UnmanagedType.LPStr)] string query, CharArrayCallback callback, int id_slot = -1, [MarshalAs(UnmanagedType.I1)] bool return_response_json = false);
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate IntPtr LLM_Save_Slot_Delegate(IntPtr llm, int id_slot, [MarshalAs(UnmanagedType.LPStr)] string filepath);
@@ -532,6 +540,7 @@ namespace UndreamAI.LlamaLib
         public delegate void LLM_Start_Delegate(IntPtr llm);
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        [return : MarshalAs(UnmanagedType.I1)]
         public delegate bool LLM_Started_Delegate(IntPtr llm);
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
@@ -671,6 +680,7 @@ namespace UndreamAI.LlamaLib
         public LLM_Logging_Stop_Delegate LLM_Logging_Stop;
         public LLM_Get_Template_Delegate LLM_Get_Template;
         public LLM_Set_Template_Delegate LLM_Set_Template;
+        public LLM_Enable_Reasoning_Delegate LLM_Enable_Reasoning;
         public LLM_Apply_Template_Delegate LLM_Apply_Template;
         public LLM_Tokenize_Delegate LLM_Tokenize;
         public LLM_Detokenize_Delegate LLM_Detokenize;

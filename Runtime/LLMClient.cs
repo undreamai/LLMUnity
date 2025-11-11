@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using UndreamAI.LlamaLib;
 using UnityEngine;
 using Newtonsoft.Json.Linq;
+using System.Threading;
 
 namespace LLMUnity
 {
@@ -187,12 +188,14 @@ namespace LLMUnity
             get => _grammar;
             set => SetGrammar(value);
         }
+
         #endregion
 
         #region Private Fields
         protected UndreamAI.LlamaLib.LLMClient llmClient;
         private bool started = false;
         private string completionParametersCache = "";
+        private readonly SemaphoreSlim startSemaphore = new SemaphoreSlim(1, 1);
         #endregion
 
         #region Unity Lifecycle
@@ -206,12 +209,7 @@ namespace LLMUnity
             if (!remote)
             {
                 AssignLLM();
-                if (llm == null)
-                {
-                    string error = $"No LLM assigned or detected for {GetType().Name} '{name}'!";
-                    LLMUnitySetup.LogError(error);
-                    throw new InvalidOperationException(error);
-                }
+                if (llm == null) LLMUnitySetup.LogError($"No LLM assigned or detected for {GetType().Name} '{name}'!", true);
             }
         }
 
@@ -238,14 +236,11 @@ namespace LLMUnity
         #endregion
 
         #region Initialization
-        private void CheckLLMClient()
+        protected virtual async Task CheckLLMClient()
         {
-            if (llmClient == null)
-            {
-                string error = "LLMClient not initialized";
-                LLMUnitySetup.LogError(error);
-                throw new System.InvalidOperationException(error);
-            }
+            await startSemaphore.WaitAsync();
+            startSemaphore.Release();
+            if (GetCaller() == null) LLMUnitySetup.LogError("LLMClient not initialized", true);
         }
 
         /// <summary>
@@ -253,37 +248,41 @@ namespace LLMUnity
         /// </summary>
         protected virtual async Task SetupLLMClient()
         {
+            await startSemaphore.WaitAsync();
+
             string exceptionMessage = "";
             try
             {
                 if (!remote)
                 {
                     if (llm != null) await llm.WaitUntilReady();
-                    if (llm?.llmService == null)
-                    {
-                        throw new InvalidOperationException("Local LLM service is not available");
-                    }
+                    if (llm?.llmService == null) LLMUnitySetup.LogError("Local LLM service is not available", true);
                     llmClient = new UndreamAI.LlamaLib.LLMClient(llm.llmService);
                 }
                 else
                 {
                     llmClient = new UndreamAI.LlamaLib.LLMClient(host, port, APIKey);
                 }
+
+                SetGrammar(grammar);
+                completionParametersCache = "";
             }
             catch (Exception ex)
             {
+                LLMUnitySetup.LogError(ex.Message);
                 exceptionMessage = ex.Message;
             }
+            finally
+            {
+                startSemaphore.Release();
+            }
+
             if (llmClient == null || exceptionMessage != "")
             {
                 string error = "llmClient not initialized";
                 if (exceptionMessage != "") error += ", error: " + exceptionMessage;
-                LLMUnitySetup.LogError(error);
-                throw new InvalidOperationException(error);
+                LLMUnitySetup.LogError(error, true);
             }
-
-            SetGrammar(grammar);
-            completionParametersCache = "";
         }
 
         /// <summary>
@@ -439,8 +438,7 @@ namespace LLMUnity
             if (llm != null && llm.embeddingsOnly)
             {
                 string error = "LLM can't be used for completion, it is an embeddings only model!";
-                LLMUnitySetup.LogError(error);
-                throw new Exception(error);
+                LLMUnitySetup.LogError(error, true);
             }
 
             var parameters = new JObject
@@ -481,13 +479,13 @@ namespace LLMUnity
         /// <param name="query">Text to tokenize</param>
         /// <param name="callback">Optional callback to receive the result</param>
         /// <returns>List of token IDs</returns>
-        public virtual List<int> Tokenize(string query, Callback<List<int>> callback = null)
+        public virtual async Task<List<int>> Tokenize(string query, Callback<List<int>> callback = null)
         {
             if (string.IsNullOrEmpty(query))
             {
                 throw new ArgumentNullException(nameof(query));
             }
-            CheckLLMClient();
+            await CheckLLMClient();
 
             List<int> tokens = llmClient.Tokenize(query);
             callback?.Invoke(tokens);
@@ -500,13 +498,13 @@ namespace LLMUnity
         /// <param name="tokens">Token IDs to decode</param>
         /// <param name="callback">Optional callback to receive the result</param>
         /// <returns>Decoded text</returns>
-        public virtual string Detokenize(List<int> tokens, Callback<string> callback = null)
+        public virtual async Task<string> Detokenize(List<int> tokens, Callback<string> callback = null)
         {
             if (tokens == null)
             {
                 throw new ArgumentNullException(nameof(tokens));
             }
-            CheckLLMClient();
+            await CheckLLMClient();
 
             string text = llmClient.Detokenize(tokens);
             callback?.Invoke(text);
@@ -519,13 +517,13 @@ namespace LLMUnity
         /// <param name="query">Text to embed</param>
         /// <param name="callback">Optional callback to receive the result</param>
         /// <returns>Embedding vector</returns>
-        public virtual List<float> Embeddings(string query, Callback<List<float>> callback = null)
+        public virtual async Task<List<float>> Embeddings(string query, Callback<List<float>> callback = null)
         {
             if (string.IsNullOrEmpty(query))
             {
                 throw new ArgumentNullException(nameof(query));
             }
-            CheckLLMClient();
+            await CheckLLMClient();
 
             List<float> embeddings = llmClient.Embeddings(query);
             callback?.Invoke(embeddings);
@@ -533,31 +531,17 @@ namespace LLMUnity
         }
 
         /// <summary>
-        /// Generates text completion for the given prompt.
-        /// </summary>
-        /// <param name="prompt">Input prompt text</param>
-        /// <param name="callback">Optional streaming callback for partial responses</param>
-        /// <param name="id_slot">Slot ID for the request (-1 for auto-assignment)</param>
-        /// <returns>Generated completion text</returns>
-        public virtual string Completion(string prompt, LlamaLib.CharArrayCallback callback = null, int id_slot = -1)
-        {
-            CheckLLMClient();
-            SetCompletionParameters();
-            return llmClient.Completion(prompt, callback, id_slot);
-        }
-
-        /// <summary>
-        /// Generates text completion asynchronously.
+        /// Generates text completion.
         /// </summary>
         /// <param name="prompt">Input prompt text</param>
         /// <param name="callback">Optional streaming callback for partial responses</param>
         /// <param name="completionCallback">Optional callback when completion finishes</param>
         /// <param name="id_slot">Slot ID for the request (-1 for auto-assignment)</param>
         /// <returns>Task that returns the generated completion text</returns>
-        public virtual async Task<string> CompletionAsync(string prompt, LlamaLib.CharArrayCallback callback = null,
+        public virtual async Task<string> Completion(string prompt, LlamaLib.CharArrayCallback callback = null,
             EmptyCallback completionCallback = null, int id_slot = -1)
         {
-            CheckLLMClient();
+            await CheckLLMClient();
             SetCompletionParameters();
             string result = await llmClient.CompletionAsync(prompt, callback, id_slot);
             completionCallback?.Invoke();
