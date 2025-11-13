@@ -254,7 +254,7 @@ namespace LLMUnity
         /// </summary>
         public virtual async Task ClearChat()
         {
-            await CheckLLMClient();
+            await CheckLLMClient(checkConnection: false);
             llmAgent.ClearHistory();
         }
 
