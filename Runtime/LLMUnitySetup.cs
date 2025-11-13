@@ -9,6 +9,7 @@ using System.IO.Compression;
 using System.Collections.Generic;
 using UnityEngine.Networking;
 using System.Text.RegularExpressions;
+using UndreamAI.LlamaLib;
 
 /// @defgroup llm LLM
 /// @defgroup template Chat Templates
@@ -239,11 +240,17 @@ namespace LLMUnity
             return Path.Combine(assetsDir, relPath).Replace('\\', '/');
         }
 
+        static void InitializeOnLoadCommon()
+        {
+            LoadPlayerPrefs();
+            LlamaLib.baseLibraryPath = Path.Combine(libraryPath, LlamaLib.GetPlatform(), "native");
+        }
+
 #if UNITY_EDITOR
         [InitializeOnLoadMethod]
         static async Task InitializeOnLoad()
         {
-            LoadPlayerPrefs();
+            InitializeOnLoadCommon();
             await DownloadLibrary();
         }
 
@@ -251,7 +258,7 @@ namespace LLMUnity
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         void InitializeOnLoad()
         {
-            LoadPlayerPrefs();
+            InitializeOnLoadCommon();
         }
 
 #endif
