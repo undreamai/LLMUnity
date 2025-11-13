@@ -449,12 +449,12 @@ namespace LLMUnity
         private void CreateLib()
         {
             bool useGPU = numGPULayers > 0;
-            llmlib = new LlamaLibUnity(useGPU);
+            llmlib = new LlamaLib(useGPU);
 
             if (LLMUnitySetup.DebugMode <= LLMUnitySetup.DebugModeType.All)
             {
-                LlamaLibUnity.Debug(LLMUnitySetup.DebugModeType.All - LLMUnitySetup.DebugMode + 1);
-                LlamaLibUnity.LoggingCallback(LLMUnitySetup.Log);
+                LlamaLib.Debug(LLMUnitySetup.DebugModeType.All - LLMUnitySetup.DebugMode + 1);
+                LlamaLib.LoggingCallback(LLMUnitySetup.Log);
             }
         }
 
@@ -916,26 +916,5 @@ namespace LLMUnity
 
         /// \endcond
         #endregion
-    }
-
-    /// <summary>
-    /// Unity-specific implementation of LlamaLib for handling native library loading.
-    /// </summary>
-    public class LlamaLibUnity : UndreamAI.LlamaLib.LlamaLib
-    {
-        public LlamaLibUnity(bool gpu = false) : base(gpu) {}
-
-        public override string FindLibrary(string libraryName)
-        {
-            string lookupDir = Path.Combine(LLMUnitySetup.libraryPath, GetPlatform(), "native");
-            string libraryPath = Path.Combine(lookupDir, libraryName);
-
-            if (File.Exists(libraryPath))
-            {
-                return libraryPath;
-            }
-
-            throw new FileNotFoundException($"Native library not found: {libraryName} in {lookupDir}");
-        }
     }
 }
