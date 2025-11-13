@@ -116,7 +116,7 @@ namespace LLMUnityTests
 
         protected GameObject gameObject;
         protected LLM llm;
-        protected LLMCharacter llmCharacter;
+        protected LLMAgent llmAgent;
         protected Exception error = null;
         protected string prompt;
         protected string prompt2;
@@ -144,7 +144,7 @@ namespace LLMUnityTests
             gameObject = new GameObject();
             gameObject.SetActive(false);
             llm = CreateLLM();
-            llmCharacter = CreateLLMCharacter();
+            llmAgent = CreateLLMAgent();
             gameObject.SetActive(true);
         }
 
@@ -233,18 +233,18 @@ namespace LLMUnityTests
             return llm;
         }
 
-        public virtual LLMCharacter CreateLLMCharacter()
+        public virtual LLMAgent CreateLLMAgent()
         {
-            LLMCharacter llmCharacter = gameObject.AddComponent<LLMCharacter>();
-            llmCharacter.llm = llm;
-            llmCharacter.playerName = "User";
-            llmCharacter.AIName = "Assistant";
-            llmCharacter.prompt = prompt;
-            llmCharacter.temperature = 0;
-            llmCharacter.seed = 0;
-            llmCharacter.numPredict = 50;
-            llmCharacter.port = port;
-            return llmCharacter;
+            LLMAgent llmAgent = gameObject.AddComponent<LLMAgent>();
+            llmAgent.llm = llm;
+            llmAgent.userRole = "User";
+            llmAgent.assistantRole = "Assistant";
+            llmAgent.systemPrompt = prompt;
+            llmAgent.temperature = 0;
+            llmAgent.seed = 0;
+            llmAgent.numPredict = 50;
+            llmAgent.port = port;
+            return llmAgent;
         }
 
         [UnityTest]
@@ -277,24 +277,24 @@ namespace LLMUnityTests
         public virtual async Task Tests()
         {
             TestArchitecture();
-            await llmCharacter.Tokenize("I", TestTokens);
-            await llmCharacter.Warmup();
-            Assert.AreEqual(llmCharacter.chat.Count, 1);
+            await llmAgent.Tokenize("I", TestTokens);
+            await llmAgent.Warmup();
+            Assert.AreEqual(llmAgent.chat.Count, 1);
             TestWarmup();
 
-            string reply = await llmCharacter.Chat(query);
+            string reply = await llmAgent.Chat(query);
             TestChat(reply, reply1);
             TestPostChat(3);
 
-            llmCharacter.SetPrompt(prompt2);
-            reply = await llmCharacter.Chat(query, TestStreamingChat);
+            llmAgent.systemPrompt = prompt2;
+            reply = await llmAgent.Chat(query, TestStreamingChat);
             TestChat(reply, reply2);
             TestPostChat(3);
 
-            await llmCharacter.Chat("bye!");
+            await llmAgent.Chat("bye!");
             TestPostChat(5);
 
-            List<float> embeddings = await llmCharacter.Embeddings("hi how are you?");
+            List<float> embeddings = await llmAgent.Embeddings("hi how are you?");
             TestEmbeddings(embeddings);
         }
 
@@ -310,7 +310,7 @@ namespace LLMUnityTests
 
         public void TestWarmup()
         {
-            Assert.That(llmCharacter.chat.Count == 1);
+            Assert.That(llmAgent.chat.Count == 1);
         }
 
         public void TestStreamingChat(string reply)
@@ -331,7 +331,7 @@ namespace LLMUnityTests
 
         public void TestPostChat(int num)
         {
-            Assert.That(llmCharacter.chat.Count == num);
+            Assert.That(llmAgent.chat.Count == num);
         }
 
         public void TestEmbeddings(List<float> embeddings)
@@ -420,16 +420,8 @@ namespace LLMUnityTests
         public override void SetParameters()
         {
             base.SetParameters();
-            // prompt = "";
-            if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer)
-            {
-                reply1 = "I am sorry, but I cannot assist with this request. Please try again or ask a different question.";
-            }
-            else
-            {
-                reply1 = "I am sorry, but I cannot respond to your message as it is empty.Could you please provide a meaningful query or content ?";
-            }
-            reply2 = "False response.";
+            reply1 = "Ants are known for their ability to build complex structures, though it's not always obvious.";
+            reply2 = "Sure! \"Ants are so sneaky, they can even steal your lunch!\"";
             tokens1 = 5;
             tokens2 = 9;
             loraWeight = 0.9f;
@@ -467,11 +459,11 @@ namespace LLMUnityTests
             return llm;
         }
 
-        public override LLMCharacter CreateLLMCharacter()
+        public override LLMAgent CreateLLMAgent()
         {
-            LLMCharacter llmCharacter = base.CreateLLMCharacter();
-            llmCharacter.remote = true;
-            return llmCharacter;
+            LLMAgent llmAgent = base.CreateLLMAgent();
+            llmAgent.remote = true;
+            return llmAgent;
         }
     }
 
@@ -484,18 +476,18 @@ namespace LLMUnityTests
             return llm;
         }
 
-        public override LLMCharacter CreateLLMCharacter()
+        public override LLMAgent CreateLLMAgent()
         {
-            LLMCharacter llmCharacter = base.CreateLLMCharacter();
-            llmCharacter.remote = true;
-            return llmCharacter;
+            LLMAgent llmAgent = base.CreateLLMAgent();
+            llmAgent.remote = true;
+            return llmAgent;
         }
     }
 
     public class TestLLM_Double : TestLLM
     {
         LLM llm1;
-        LLMCharacter llmCharacter1;
+        LLMAgent llmAgent1;
 
         public override async Task Init()
         {
@@ -504,28 +496,28 @@ namespace LLMUnityTests
             gameObject = new GameObject();
             gameObject.SetActive(false);
             llm = CreateLLM();
-            llmCharacter = CreateLLMCharacter();
+            llmAgent = CreateLLMAgent();
             llm1 = CreateLLM();
-            llmCharacter1 = CreateLLMCharacter();
+            llmAgent1 = CreateLLMAgent();
             gameObject.SetActive(true);
         }
     }
 
-    public class TestLLMCharacter_Save : TestLLM
+    public class TestLLMAgent_Save : TestLLM
     {
-        string saveName = "TestLLMCharacter_Save";
+        string saveName = "TestLLMAgent_Save";
 
-        public override LLMCharacter CreateLLMCharacter()
+        public override LLMAgent CreateLLMAgent()
         {
-            LLMCharacter llmCharacter = base.CreateLLMCharacter();
-            llmCharacter.save = saveName;
-            llmCharacter.saveCache = true;
+            LLMAgent llmAgent = base.CreateLLMAgent();
+            llmAgent.save = saveName;
+            llmAgent.saveCache = true;
             foreach (string filename in new string[]
                  {
-                     llmCharacter.GetJsonSavePath(saveName),
-                     llmCharacter.GetCacheSavePath(saveName)
+                     llmAgent.GetJsonSavePath(saveName),
+                     llmAgent.GetCacheSavePath(saveName)
                  }) if (File.Exists(filename)) File.Delete(filename);
-            return llmCharacter;
+            return llmAgent;
         }
 
         public override async Task Tests()
@@ -536,8 +528,8 @@ namespace LLMUnityTests
 
         public void TestSave()
         {
-            string jsonPath = llmCharacter.GetJsonSavePath(saveName);
-            string cachePath = llmCharacter.GetCacheSavePath(saveName);
+            string jsonPath = llmAgent.GetJsonSavePath(saveName);
+            string cachePath = llmAgent.GetCacheSavePath(saveName);
             Assert.That(File.Exists(jsonPath));
             Assert.That(File.Exists(cachePath));
             string json = File.ReadAllText(jsonPath);
@@ -546,15 +538,15 @@ namespace LLMUnityTests
 
             List<ChatMessage> chatHistory = JsonUtility.FromJson<ChatListWrapper>(json).chat;
             Assert.AreEqual(chatHistory.Count, 2);
-            Assert.AreEqual(chatHistory[0].role, llmCharacter.playerName);
+            Assert.AreEqual(chatHistory[0].role, llmAgent.userRole);
             Assert.AreEqual(chatHistory[0].content, "hi");
-            Assert.AreEqual(chatHistory[1].role, llmCharacter.AIName);
+            Assert.AreEqual(chatHistory[1].role, llmAgent.assistantRole);
 
-            Assert.AreEqual(llmCharacter.chat.Count, chatHistory.Count + 1);
+            Assert.AreEqual(llmAgent.chat.Count, chatHistory.Count + 1);
             for (int i = 0; i < chatHistory.Count; i++)
             {
-                Assert.AreEqual(chatHistory[i].role, llmCharacter.chat[i + 1].role);
-                Assert.AreEqual(chatHistory[i].content, llmCharacter.chat[i + 1].content);
+                Assert.AreEqual(chatHistory[i].role, llmAgent.chat[i + 1].role);
+                Assert.AreEqual(chatHistory[i].content, llmAgent.chat[i + 1].content);
             }
         }
     }

@@ -28,7 +28,7 @@ namespace LLMUnity
         public void SetPrompt(string newPrompt, bool clearChat = true)
         {
             systemPrompt = newPrompt;
-            if (clearChat) ClearChat();
+            if (clearChat) _ = ClearChat();
         }
     }
 }

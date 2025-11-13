@@ -44,6 +44,10 @@ namespace LLMUnity
         [Tooltip("Port number of remote LLM server")]
         [Remote, SerializeField] protected int _port = 13333;
 
+        /// <summary>Number of retries of remote LLM server</summary>
+        [Tooltip("Number of retries of remote LLM server")]
+        [Remote, SerializeField] protected int numRetries = 5;
+
         /// <summary>Grammar constraints for output formatting (GBNF or JSON schema format)</summary>
         [Tooltip("Grammar constraints for output formatting (GBNF or JSON schema format)")]
         [ModelAdvanced, SerializeField] protected string _grammar = "";
@@ -236,11 +240,19 @@ namespace LLMUnity
         #endregion
 
         #region Initialization
-        protected virtual async Task CheckLLMClient()
+        protected virtual async Task CheckLLMClient(bool checkConnection = true)
         {
             await startSemaphore.WaitAsync();
             startSemaphore.Release();
             if (GetCaller() == null) LLMUnitySetup.LogError("LLMClient not initialized", true);
+            if (remote && checkConnection)
+            {
+                for (int attempt = 0; attempt <= numRetries; attempt++)
+                {
+                    if (llmClient.IsServerAlive()) break;
+                    await Task.Yield();
+                }
+            }
         }
 
         /// <summary>
@@ -261,7 +273,7 @@ namespace LLMUnity
                 }
                 else
                 {
-                    llmClient = new UndreamAI.LlamaLib.LLMClient(host, port, APIKey);
+                    llmClient = new UndreamAI.LlamaLib.LLMClient(host, port, APIKey, numRetries);
                 }
 
                 SetGrammar(grammar);
