@@ -198,8 +198,17 @@ namespace UndreamAI.LlamaLib
         public static extern IntPtr LLMClient_Construct_Remote_Static(
             [MarshalAs(UnmanagedType.LPStr)] string url,
             int port,
-            [MarshalAs(UnmanagedType.LPStr)] string apiKey = "");
-        public IntPtr LLMClient_Construct_Remote(string url, int port, string apiKey = "") => LlamaLib.LLMClient_Construct_Remote_Static(url, port, apiKey);
+            [MarshalAs(UnmanagedType.LPStr)] string apiKey = "",
+            int numRetries = 5);
+        public IntPtr LLMClient_Construct_Remote(string url, int port, string apiKey = "", int numRetries = 5) => LlamaLib.LLMClient_Construct_Remote_Static(url, port, apiKey, numRetries);
+
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLMClient_Set_SSL")]
+        public static extern void LLMClient_Set_SSL_Static(IntPtr llm, [MarshalAs(UnmanagedType.LPStr)] string SSLCert);
+        public void LLMClient_Set_SSL(IntPtr llm, string SSLCert) => LlamaLib.LLMClient_Set_SSL_Static(llm, SSLCert);
+
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLMClient_Is_Server_Alive")]
+        public static extern bool LLMClient_Is_Server_Alive_Static(IntPtr llm);
+        public bool LLMClient_Is_Server_Alive(IntPtr llm) => LlamaLib.LLMClient_Is_Server_Alive_Static(llm);
 
         // LLMAgent functions
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLMAgent_Construct")]
@@ -305,6 +314,7 @@ namespace UndreamAI.LlamaLib
         // Desktop platform implementation with dynamic loading
         private static List<LlamaLib> instances = new List<LlamaLib>();
         private static readonly object runtimeLock = new object();
+        public static string baseLibraryPath = Assembly.GetExecutingAssembly().Location;
         private static IntPtr runtimeLibraryHandle = IntPtr.Zero;
         private IntPtr libraryHandle = IntPtr.Zero;
         private static int debugLevelGlobal = 0;
@@ -353,11 +363,9 @@ namespace UndreamAI.LlamaLib
 
         public virtual string FindLibrary(string libraryName)
         {
-            string baseDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-
             List<string> lookupDirs = new List<string>();
-            lookupDirs.Add(Path.Combine(baseDir, "runtimes", GetPlatform(), "native"));
-            lookupDirs.Add(baseDir);
+            lookupDirs.Add(baseLibraryPath);
+            lookupDirs.Add(Path.Combine(baseLibraryPath, "runtimes", GetPlatform(), "native"));
 
             foreach (string lookupDir in lookupDirs)
             {
@@ -452,6 +460,8 @@ namespace UndreamAI.LlamaLib
             LLMService_From_Command = LibraryLoader.GetSymbolDelegate<LLMService_From_Command_Delegate>(libraryHandle, "LLMService_From_Command");
             LLMClient_Construct = LibraryLoader.GetSymbolDelegate<LLMClient_Construct_Delegate>(libraryHandle, "LLMClient_Construct");
             LLMClient_Construct_Remote = LibraryLoader.GetSymbolDelegate<LLMClient_Construct_Remote_Delegate>(libraryHandle, "LLMClient_Construct_Remote");
+            LLMClient_Set_SSL = LibraryLoader.GetSymbolDelegate<LLMClient_Set_SSL_Delegate>(libraryHandle, "LLMClient_Set_SSL");
+            LLMClient_Is_Server_Alive = LibraryLoader.GetSymbolDelegate<LLMClient_Is_Server_Alive_Delegate>(libraryHandle, "LLMClient_Is_Server_Alive");
             LLMAgent_Construct = LibraryLoader.GetSymbolDelegate<LLMAgent_Construct_Delegate>(libraryHandle, "LLMAgent_Construct");
             LLMAgent_Set_User_Role = LibraryLoader.GetSymbolDelegate<LLMAgent_Set_User_Role_Delegate>(libraryHandle, "LLMAgent_Set_User_Role");
             LLMAgent_Get_User_Role = LibraryLoader.GetSymbolDelegate<LLMAgent_Get_User_Role_Delegate>(libraryHandle, "LLMAgent_Get_User_Role");
@@ -586,11 +596,20 @@ namespace UndreamAI.LlamaLib
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate IntPtr LLMService_From_Command_Delegate([MarshalAs(UnmanagedType.LPStr)] string paramsString);
 
+        // LLMClient functions
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate IntPtr LLMClient_Construct_Delegate(IntPtr llm);
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate IntPtr LLMClient_Construct_Remote_Delegate([MarshalAs(UnmanagedType.LPStr)] string url, int port, [MarshalAs(UnmanagedType.LPStr)] string apiKey = "");
+        public delegate IntPtr LLMClient_Construct_Remote_Delegate(
+            [MarshalAs(UnmanagedType.LPStr)] string url, int port, [MarshalAs(UnmanagedType.LPStr)] string apiKey = "", int numRetries = 5
+        );
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void LLMClient_Set_SSL_Delegate(IntPtr llm, [MarshalAs(UnmanagedType.LPStr)] string SSLCert);
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate bool LLMClient_Is_Server_Alive_Delegate(IntPtr llm);
 
         // LLMAgent functions
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
@@ -707,6 +726,8 @@ namespace UndreamAI.LlamaLib
         public LLMService_From_Command_Delegate LLMService_From_Command;
         public LLMClient_Construct_Delegate LLMClient_Construct;
         public LLMClient_Construct_Remote_Delegate LLMClient_Construct_Remote;
+        public LLMClient_Set_SSL_Delegate LLMClient_Set_SSL;
+        public LLMClient_Is_Server_Alive_Delegate LLMClient_Is_Server_Alive;
         public LLMAgent_Construct_Delegate LLMAgent_Construct;
         public LLMAgent_Set_User_Role_Delegate LLMAgent_Set_User_Role;
         public LLMAgent_Get_User_Role_Delegate LLMAgent_Get_User_Role;
