@@ -11,10 +11,16 @@ using System.Threading;
 using UnityEngine.TestTools;
 using UnityEditor;
 using UnityEditor.TestTools.TestRunner.Api;
-using ChatMessage = UndreamAI.LlamaLib.ChatMessage;
 
 namespace LLMUnityTests
 {
+    [Serializable]
+    public class ChatMessage
+    {
+        public string role;
+        public string content;
+    }
+
     [Serializable]
     public class ChatListWrapper
     {
@@ -512,11 +518,8 @@ namespace LLMUnityTests
             LLMAgent llmAgent = base.CreateLLMAgent();
             llmAgent.save = saveName;
             llmAgent.saveCache = true;
-            foreach (string filename in new string[]
-                 {
-                     llmAgent.GetJsonSavePath(saveName),
-                     llmAgent.GetCacheSavePath(saveName)
-                 }) if (File.Exists(filename)) File.Delete(filename);
+            foreach (string filename in new string[] {llmAgent.GetJsonSavePath(saveName), llmAgent.GetCacheSavePath(saveName)})
+                if (File.Exists(filename)) File.Delete(filename);
             return llmAgent;
         }
 
@@ -536,10 +539,10 @@ namespace LLMUnityTests
             File.Delete(jsonPath);
             File.Delete(cachePath);
 
-            List<ChatMessage> chatHistory = JsonUtility.FromJson<ChatListWrapper>(json).chat;
-            Assert.AreEqual(chatHistory.Count, 2);
+            List<ChatMessage> chatHistory = JsonUtility.FromJson<ChatListWrapper>("{ \"chat\": " + json + " }").chat;
+            Assert.AreEqual(chatHistory.Count, 4);
             Assert.AreEqual(chatHistory[0].role, llmAgent.userRole);
-            Assert.AreEqual(chatHistory[0].content, "hi");
+            Assert.AreEqual(chatHistory[0].content, query);
             Assert.AreEqual(chatHistory[1].role, llmAgent.assistantRole);
 
             Assert.AreEqual(llmAgent.chat.Count, chatHistory.Count + 1);
