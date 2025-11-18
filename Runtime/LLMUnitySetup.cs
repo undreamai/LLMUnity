@@ -242,7 +242,6 @@ namespace LLMUnity
 
         static void InitializeOnLoadCommon()
         {
-            LoadPlayerPrefs();
             LlamaLib.baseLibraryPath = Path.Combine(libraryPath, LlamaLib.GetPlatform(), "native");
         }
 
@@ -250,13 +249,15 @@ namespace LLMUnity
         [InitializeOnLoadMethod]
         static async Task InitializeOnLoad()
         {
+            LoadPlayerPrefs();
+            LlamaLib.libraryExclusion = new List<string>(){CUBLAS ? "tinyblas" : "cublas"};
             InitializeOnLoadCommon();
             await DownloadLibrary();
         }
 
 #else
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-        void InitializeOnLoad()
+        static void InitializeOnLoad()
         {
             InitializeOnLoadCommon();
         }

@@ -11,6 +11,7 @@ using System.Threading;
 using UnityEngine.TestTools;
 using UnityEditor;
 using UnityEditor.TestTools.TestRunner.Api;
+using LlamaLibCore = UndreamAI.LlamaLib.LlamaLib;
 
 namespace LLMUnityTests
 {
@@ -48,7 +49,8 @@ namespace LLMUnityTests
 
         public void TestStarted(ITestAdaptor test)
         {
-            LLMUnitySetup.CUBLAS = test.FullName.Contains("cublas");
+            LLMUnitySetup.CUBLAS = test.FullName.Contains("cuBLAS");
+            LlamaLibCore.libraryExclusion = new List<string>(){LLMUnitySetup.CUBLAS ? "tinyblas" : "cublas"};
         }
 
         public void TestFinished(ITestResultAdaptor result)
@@ -554,7 +556,7 @@ namespace LLMUnityTests
         }
     }
 
-    public class TestLLM_CUDA : TestLLM
+    public class TestLLM_tinyBLAS : TestLLM
     {
         public override LLM CreateLLM()
         {
@@ -567,27 +569,26 @@ namespace LLMUnityTests
         {
             base.SetParameters();
             reply1 = "Sure! Here's a fun fact: Ants work together to build complex structures like nests, even though they don't have a brain.";
-            if (Application.platform == RuntimePlatform.LinuxEditor || Application.platform == RuntimePlatform.LinuxPlayer)
-            {
-                reply2 = "Sure! Here's a fun fact: Ants work together to build complex structures like nests, which is a fascinating example of teamwork.";
-            }
+            reply2 = "Sure! \"Ants are so sneaky, they can even build nests that look like giant spiders!\"";
         }
 
         public override void TestArchitecture()
         {
-            Assert.That(llm.architecture.Contains("cuda"));
+            Debug.Log(llm.architecture);
+            Debug.Log(LLMUnitySetup.CUBLAS);
+            Assert.That(llm.architecture.Contains("tinyblas"));
         }
     }
 
-    public class TestLLM_CUDA_full : TestLLM_CUDA
+    public class TestLLM_cuBLAS : TestLLM_tinyBLAS
     {
         public override void TestArchitecture()
         {
-            Assert.That(llm.architecture.Contains("cuda") && llm.architecture.Contains("full"));
+            Assert.That(llm.architecture.Contains("cublas"));
         }
     }
 
-    public class TestLLM_CUDA_full_attention : TestLLM_CUDA_full
+    public class TestLLM_cuBLAS_FA : TestLLM_cuBLAS
     {
         public override LLM CreateLLM()
         {
@@ -599,10 +600,7 @@ namespace LLMUnityTests
         public override void SetParameters()
         {
             base.SetParameters();
-            if (Application.platform == RuntimePlatform.LinuxEditor || Application.platform == RuntimePlatform.LinuxPlayer)
-            {
-                reply2 = "Sure! Here's a fun fact: Ants work together to build complex structures like nests, even though they don't have human-like intelligence.";
-            }
+            reply1 = "Sure! Ants are known for their incredible teamwork, often working together to build complex structures like nests.";
         }
     }
 }
