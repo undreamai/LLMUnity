@@ -314,7 +314,8 @@ namespace UndreamAI.LlamaLib
         // Desktop platform implementation with dynamic loading
         private static List<LlamaLib> instances = new List<LlamaLib>();
         private static readonly object runtimeLock = new object();
-        public static string baseLibraryPath = Assembly.GetExecutingAssembly().Location;
+        public static string baseLibraryPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        public static List<string> libraryExclusion = new List<string>();
         private static IntPtr runtimeLibraryHandle = IntPtr.Zero;
         private IntPtr libraryHandle = IntPtr.Zero;
         private static int debugLevelGlobal = 0;
@@ -391,7 +392,7 @@ namespace UndreamAI.LlamaLib
             return FindLibrary(libName);
         }
 
-        private void LoadLibraries(bool gpu)
+        private string[] GetAvailableArchitectures(bool gpu)
         {
             string architecturesString = Marshal.PtrToStringAnsi(Available_Architectures(gpu));
             if (string.IsNullOrEmpty(architecturesString))
@@ -399,9 +400,30 @@ namespace UndreamAI.LlamaLib
                 throw new InvalidOperationException("No architectures available for the specified GPU setting.");
             }
 
-            string[] libraries = architecturesString.Split(',');
-            Exception lastException = null;
+            string[] librariesOptions = architecturesString.Split(',');
+            List<string> libraries = new List<string>();
+            foreach (string library in librariesOptions)
+            {
+                bool skip = false;
+                string libraryLower = library.ToLower();
+                foreach (string exclusionKeyword in libraryExclusion)
+                {
+                    if (libraryLower.Contains(exclusionKeyword))
+                    {
+                        skip = true;
+                        break;
+                    }
+                }
+                if (skip) continue;
+                libraries.Add(library);
+            }
+            return libraries.ToArray();
+        }
 
+        private void LoadLibraries(bool gpu)
+        {
+            string[] libraries = GetAvailableArchitectures(gpu);
+            Exception lastException = null;
             foreach (string library in libraries)
             {
                 try
