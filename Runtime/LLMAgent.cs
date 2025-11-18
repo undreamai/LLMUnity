@@ -310,6 +310,8 @@ namespace LLMUnity
             LlamaLib.CharArrayCallback wrappedCallback = Utils.WrapCallbackForAsync(callback, this);
             SetCompletionParameters();
             string result = await llmAgent.ChatAsync(query, addToHistory, wrappedCallback);
+
+            if (addToHistory && result != null && save != "") _ = Save(save);
             completionCallback?.Invoke();
             return result;
         }
