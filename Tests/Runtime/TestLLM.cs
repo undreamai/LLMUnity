@@ -287,20 +287,19 @@ namespace LLMUnityTests
             TestArchitecture();
             await llmAgent.Tokenize("I", TestTokens);
             await llmAgent.Warmup();
-            Assert.AreEqual(llmAgent.chat.Count, 1);
-            TestWarmup();
+            TestPostChat(0);
 
             string reply = await llmAgent.Chat(query);
             TestChat(reply, reply1);
-            TestPostChat(3);
+            TestPostChat(2);
 
             llmAgent.systemPrompt = prompt2;
             reply = await llmAgent.Chat(query, TestStreamingChat);
             TestChat(reply, reply2);
-            TestPostChat(3);
+            TestPostChat(2);
 
             await llmAgent.Chat("bye!");
-            TestPostChat(5);
+            TestPostChat(4);
 
             List<float> embeddings = await llmAgent.Embeddings("hi how are you?");
             TestEmbeddings(embeddings);
@@ -314,11 +313,6 @@ namespace LLMUnityTests
         public void TestTokens(List<int> tokens)
         {
             Assert.AreEqual(tokens, new List<int> { 40 });
-        }
-
-        public void TestWarmup()
-        {
-            Assert.That(llmAgent.chat.Count == 1);
         }
 
         public void TestStreamingChat(string reply)
@@ -547,11 +541,11 @@ namespace LLMUnityTests
             Assert.AreEqual(chatHistory[0].content, query);
             Assert.AreEqual(chatHistory[1].role, llmAgent.assistantRole);
 
-            Assert.AreEqual(llmAgent.chat.Count, chatHistory.Count + 1);
+            Assert.AreEqual(llmAgent.chat.Count, chatHistory.Count);
             for (int i = 0; i < chatHistory.Count; i++)
             {
-                Assert.AreEqual(chatHistory[i].role, llmAgent.chat[i + 1].role);
-                Assert.AreEqual(chatHistory[i].content, llmAgent.chat[i + 1].content);
+                Assert.AreEqual(chatHistory[i].role, llmAgent.chat[i].role);
+                Assert.AreEqual(chatHistory[i].content, llmAgent.chat[i].content);
             }
         }
     }
