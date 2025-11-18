@@ -189,6 +189,10 @@ namespace UndreamAI.LlamaLib
         public static extern IntPtr LLMService_From_Command_Static([MarshalAs(UnmanagedType.LPStr)] string paramsString);
         public IntPtr LLMService_From_Command(string paramsString) => LlamaLib.LLMService_From_Command_Static(paramsString);
 
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLMService_Command")]
+        public static extern IntPtr LLMService_Command_Static(IntPtr llm);
+        public IntPtr LLMService_Command(IntPtr llm) => LlamaLib.LLMService_Command_Static(llm);
+
         // LLMClient functions
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLMClient_Construct")]
         public static extern IntPtr LLMClient_Construct_Static(IntPtr llm);
@@ -480,6 +484,7 @@ namespace UndreamAI.LlamaLib
             LLM_Embedding_Size = LibraryLoader.GetSymbolDelegate<LLM_Embedding_Size_Delegate>(libraryHandle, "LLM_Embedding_Size");
             LLMService_Construct = LibraryLoader.GetSymbolDelegate<LLMService_Construct_Delegate>(libraryHandle, "LLMService_Construct");
             LLMService_From_Command = LibraryLoader.GetSymbolDelegate<LLMService_From_Command_Delegate>(libraryHandle, "LLMService_From_Command");
+            LLMService_Command = LibraryLoader.GetSymbolDelegate<LLMService_Command_Delegate>(libraryHandle, "LLMService_Command");
             LLMClient_Construct = LibraryLoader.GetSymbolDelegate<LLMClient_Construct_Delegate>(libraryHandle, "LLMClient_Construct");
             LLMClient_Construct_Remote = LibraryLoader.GetSymbolDelegate<LLMClient_Construct_Remote_Delegate>(libraryHandle, "LLMClient_Construct_Remote");
             LLMClient_Set_SSL = LibraryLoader.GetSymbolDelegate<LLMClient_Set_SSL_Delegate>(libraryHandle, "LLMClient_Set_SSL");
@@ -618,6 +623,9 @@ namespace UndreamAI.LlamaLib
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate IntPtr LLMService_From_Command_Delegate([MarshalAs(UnmanagedType.LPStr)] string paramsString);
 
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate IntPtr LLMService_Command_Delegate(IntPtr llm);
+
         // LLMClient functions
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate IntPtr LLMClient_Construct_Delegate(IntPtr llm);
@@ -746,6 +754,7 @@ namespace UndreamAI.LlamaLib
         public LLM_Embedding_Size_Delegate LLM_Embedding_Size;
         public LLMService_Construct_Delegate LLMService_Construct;
         public LLMService_From_Command_Delegate LLMService_From_Command;
+        public LLMService_Command_Delegate LLMService_Command;
         public LLMClient_Construct_Delegate LLMClient_Construct;
         public LLMClient_Construct_Remote_Delegate LLMClient_Construct_Remote;
         public LLMClient_Set_SSL_Delegate LLMClient_Set_SSL;
