@@ -502,6 +502,7 @@ namespace LLMUnity
                         flashAttention, contextSize, batchSize, embeddingsOnly, loraPaths.ToArray());
 
                     llmService = new LLMService(llmlib, llmPtr);
+                    LLMUnitySetup.Log($"Deploy server command: llamalib_**architecture**_server {llmService.Command}");
                     SetupServer();
                     llmService.Start();
 

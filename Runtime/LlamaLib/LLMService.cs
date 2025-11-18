@@ -122,5 +122,18 @@ namespace UndreamAI.LlamaLib
                 }
             }
         }
+
+        public string Command
+        {
+            get
+            {
+                CheckLlamaLib();
+                return Marshal.PtrToStringAnsi(llamaLib.LLMService_Command(llm)) ?? "";
+            }
+
+            set
+            {
+            }
+        }
     }
 }
