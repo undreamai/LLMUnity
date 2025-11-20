@@ -137,6 +137,8 @@ namespace LLMUnity
         protected SemaphoreSlim chatLock = new SemaphoreSlim(1, 1);
         protected string chatTemplate;
         protected ChatTemplate template = null;
+        protected Task grammarTask;
+
         /// \endcond
 
         /// <summary>
@@ -157,7 +159,7 @@ namespace LLMUnity
                 int slotFromServer = llm.Register(this);
                 if (slot == -1) slot = slotFromServer;
             }
-            InitGrammar();
+            grammarTask = InitGrammar();
             InitHistory();
         }
 
@@ -273,19 +275,33 @@ namespace LLMUnity
             return true;
         }
 
-        protected virtual void InitGrammar()
+        protected virtual async Task InitGrammar()
         {
             grammarString = "";
             grammarJSONString = "";
             if (!String.IsNullOrEmpty(grammar))
             {
-                grammarString = File.ReadAllText(LLMUnitySetup.GetAssetPath(grammar));
-                if (!String.IsNullOrEmpty(grammarJSON))
-                    LLMUnitySetup.LogWarning("Both GBNF and JSON grammars are set, only the GBNF will be used");
+                await LLMUnitySetup.AndroidExtractAsset(grammar, true);
+                string path = LLMUnitySetup.GetAssetPath(grammar);
+                if (File.Exists(path))
+                {
+                    grammarString = File.ReadAllText(path);
+                    if (!String.IsNullOrEmpty(grammarJSON))
+                        LLMUnitySetup.LogWarning("Both GBNF and JSON grammars are set, only the GBNF will be used");
+                }
+                else
+                {
+                    LLMUnitySetup.LogError($"Grammar file {path} not found!");
+                }
             }
             else if (!String.IsNullOrEmpty(grammarJSON))
             {
-                grammarJSONString = File.ReadAllText(LLMUnitySetup.GetAssetPath(grammarJSON));
+                await LLMUnitySetup.AndroidExtractAsset(grammarJSON, true);
+                string path = LLMUnitySetup.GetAssetPath(grammarJSON);
+                if (File.Exists(path))
+                    grammarJSONString = File.ReadAllText(path);
+                else
+                    LLMUnitySetup.LogError($"Grammar file {path} not found!");
             }
         }
 
@@ -327,10 +343,10 @@ namespace LLMUnity
 #if UNITY_EDITOR
             if (!EditorApplication.isPlaying) path = LLMUnitySetup.AddAsset(path);
 #endif
-            await LLMUnitySetup.AndroidExtractAsset(path, true);
             if (gnbf) grammar = path;
             else grammarJSON = path;
-            InitGrammar();
+            grammarTask = InitGrammar();
+            await grammarTask;
         }
 
         /// <summary>
@@ -524,6 +540,7 @@ namespace LLMUnity
             await LoadTemplate();
             if (!CheckTemplate()) return null;
             if (!await InitNKeep()) return null;
+            if (grammarTask != null) await grammarTask;
 
             ChatRequest request = await PromptWithQuery(query);
             string result = await CompletionRequest(request, callback);
@@ -562,6 +579,7 @@ namespace LLMUnity
             // call the callback function while the answer is received
             // call the completionCallback function when the answer is fully received
             await LoadTemplate();
+            if (grammarTask != null) await grammarTask;
 
             ChatRequest request = GenerateRequest(prompt);
             string result = await CompletionRequest(request, callback);
@@ -595,6 +613,7 @@ namespace LLMUnity
             await LoadTemplate();
             if (!CheckTemplate()) return;
             if (!await InitNKeep()) return;
+            if (grammarTask != null) await grammarTask;
 
             ChatRequest request;
             if (String.IsNullOrEmpty(query))
