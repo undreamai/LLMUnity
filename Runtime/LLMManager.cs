@@ -643,7 +643,7 @@ namespace LLMUnity
             List<ModelEntry> modelEntriesBuild = new List<ModelEntry>();
             foreach (ModelEntry modelEntry in modelEntries)
             {
-                if (!modelEntry.includeInBuild) continue;
+                if (!modelEntry.includeInBuild && string.IsNullOrEmpty(modelEntry.url)) continue;
                 modelEntriesBuild.Add(modelEntry.OnlyRequiredFields());
             }
             string json = JsonUtility.ToJson(new LLMManagerStore
