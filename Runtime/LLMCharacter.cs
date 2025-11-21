@@ -627,6 +627,8 @@ namespace LLMUnity
             }
 
             request.n_predict = 0;
+            request.grammar = null;
+            request.json_schema = null;
             await CompletionRequest(request);
             completionCallback?.Invoke();
         }

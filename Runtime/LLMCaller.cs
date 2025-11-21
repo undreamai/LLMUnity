@@ -209,10 +209,18 @@ namespace LLMUnity
                 }
                 response = $"{{\"data\": [{responseArray}]}}";
             }
-            return getContent(JsonUtility.FromJson<Res>(response));
+            try
+            {
+                return getContent(JsonUtility.FromJson<Res>(response));
+            }
+            catch (Exception e)
+            {
+                LLMUnitySetup.LogError($"Error converting response: {e.Message}\nResponse: {response}");
+                return default;
+            }
         }
 
-        protected virtual void CancelRequestsLocal() {}
+        protected virtual void CancelRequestsLocal() { }
 
         protected virtual void CancelRequestsRemote()
         {
