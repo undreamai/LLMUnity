@@ -15,7 +15,7 @@ namespace LLMUnity
     public class LLMBuilder : AssetPostprocessor
     {
         static List<StringPair> movedPairs = new List<StringPair>();
-        public static string BuildTempDir = Path.Combine(Application.temporaryCachePath, "LLMUnityBuild");
+        public static string BuildTempDir = Path.Combine(Directory.GetParent(Application.dataPath).FullName, "LLMUnityBuild");
         static string movedCache = Path.Combine(BuildTempDir, "moved.json");
 
         [InitializeOnLoadMethod]
@@ -36,6 +36,28 @@ namespace LLMUnity
             return Path.Combine(PluginDir(platform, relative), LLMUnitySetup.libraryName);
         }
 
+        public static void Retry(System.Action action, int retries = 10, int delayMs = 100)
+        {
+            for (int i = 0; i < retries; i++)
+            {
+                try
+                {
+                    action();
+                    return;
+                }
+                catch (IOException)
+                {
+                    if (i == retries - 1) throw;
+                    System.Threading.Thread.Sleep(delayMs);
+                }
+                catch (System.UnauthorizedAccessException)
+                {
+                    if (i == retries - 1) throw;
+                    System.Threading.Thread.Sleep(delayMs);
+                }
+            }
+        }
+
         /// <summary>
         /// Performs an action for a file or a directory recursively
         /// </summary>
@@ -46,7 +68,7 @@ namespace LLMUnity
         {
             if (File.Exists(source))
             {
-                actionCallback(source, target);
+                Retry(() => actionCallback(source, target));
             }
             else if (Directory.Exists(source))
             {
@@ -106,8 +128,8 @@ namespace LLMUnity
                 LLMUnitySetup.LogError($"Safeguard: {path} will not be deleted because it may not be safe");
                 return false;
             }
-            if (File.Exists(path)) File.Delete(path);
-            else if (Directory.Exists(path)) Directory.Delete(path, true);
+            if (File.Exists(path)) Retry(() => File.Delete(path));
+            else if (Directory.Exists(path)) Retry(() => Directory.Delete(path, true));
             return true;
         }
 
@@ -300,8 +322,21 @@ namespace LLMUnity
             bool refresh = false;
             foreach (var pair in movedPairs)
             {
-                if (pair.source == "") refresh |= DeletePath(pair.target);
-                else refresh |= MoveAction(pair.target, pair.source, false);
+                if (pair.source == "")
+                {
+                    refresh |= DeletePath(pair.target);
+                }
+                else
+                {
+                    if (File.Exists(pair.source) || Directory.Exists(pair.source))
+                    {
+                        refresh |= DeletePath(pair.target);
+                    }
+                    else
+                    {
+                        refresh |= MoveAction(pair.target, pair.source, false);
+                    }
+                }
             }
             if (refresh) AssetDatabase.Refresh();
             DeletePath(movedCache);
