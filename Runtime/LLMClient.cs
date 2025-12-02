@@ -132,7 +132,7 @@ namespace LLMUnity
                 if (_remote != value)
                 {
                     _remote = value;
-                    if (started) _ = SetupLLMClient();
+                    if (started) _ = SetupCaller();
                 }
             }
         }
@@ -153,7 +153,7 @@ namespace LLMUnity
                 if (_APIKey != value)
                 {
                     _APIKey = value;
-                    if (started) _ = SetupLLMClient();
+                    if (started) _ = SetupCaller();
                 }
             }
         }
@@ -167,7 +167,7 @@ namespace LLMUnity
                 if (_host != value)
                 {
                     _host = value;
-                    if (started) _ = SetupLLMClient();
+                    if (started) _ = SetupCaller();
                 }
             }
         }
@@ -181,7 +181,7 @@ namespace LLMUnity
                 if (_port != value)
                 {
                     _port = value;
-                    if (started) _ = SetupLLMClient();
+                    if (started) _ = SetupCaller();
                 }
             }
         }
@@ -223,7 +223,7 @@ namespace LLMUnity
         public virtual async void Start()
         {
             if (!enabled) return;
-            await SetupLLMClient();
+            await SetupCaller();
             started = true;
         }
 
@@ -240,11 +240,11 @@ namespace LLMUnity
         #endregion
 
         #region Initialization
-        protected virtual async Task CheckLLMClient(bool checkConnection = true)
+        protected virtual async Task CheckCaller(bool checkConnection = true)
         {
             await startSemaphore.WaitAsync();
             startSemaphore.Release();
-            if (GetCaller() == null) LLMUnitySetup.LogError("LLMClient not initialized", true);
+            if (GetCaller() == null) LLMUnitySetup.LogError("LLM caller not initialized", true);
             if (remote && checkConnection)
             {
                 for (int attempt = 0; attempt <= numRetries; attempt++)
@@ -258,7 +258,16 @@ namespace LLMUnity
         /// <summary>
         /// Sets up the underlying LLM client connection (local or remote).
         /// </summary>
-        protected virtual async Task SetupLLMClient()
+        protected virtual async Task SetupCaller()
+        {
+            await SetupCallerObject();
+            await PostSetupCallerObject();
+        }
+
+        /// <summary>
+        /// Sets up the underlying LLM client connection (local or remote).
+        /// </summary>
+        protected virtual async Task SetupCallerObject()
         {
             await startSemaphore.WaitAsync();
 
@@ -275,9 +284,6 @@ namespace LLMUnity
                 {
                     llmClient = new UndreamAI.LlamaLib.LLMClient(host, port, APIKey, numRetries);
                 }
-
-                SetGrammar(grammar);
-                completionParametersCache = "";
             }
             catch (Exception ex)
             {
@@ -295,6 +301,15 @@ namespace LLMUnity
                 if (exceptionMessage != "") error += ", error: " + exceptionMessage;
                 LLMUnitySetup.LogError(error, true);
             }
+        }
+
+        /// <summary>
+        /// Initialisation after setting up the LLM client (local or remote).
+        /// </summary>
+        protected virtual async Task PostSetupCallerObject()
+        {
+            SetGrammar(grammar);
+            completionParametersCache = "";
         }
 
         /// <summary>
@@ -320,7 +335,7 @@ namespace LLMUnity
             }
 
             _llm = llmInstance;
-            if (started) await SetupLLMClient();
+            if (started) await SetupCaller();
         }
 
         #endregion
@@ -497,7 +512,7 @@ namespace LLMUnity
             {
                 throw new ArgumentNullException(nameof(query));
             }
-            await CheckLLMClient();
+            await CheckCaller();
 
             List<int> tokens = llmClient.Tokenize(query);
             callback?.Invoke(tokens);
@@ -516,7 +531,7 @@ namespace LLMUnity
             {
                 throw new ArgumentNullException(nameof(tokens));
             }
-            await CheckLLMClient();
+            await CheckCaller();
 
             string text = llmClient.Detokenize(tokens);
             callback?.Invoke(text);
@@ -535,7 +550,7 @@ namespace LLMUnity
             {
                 throw new ArgumentNullException(nameof(query));
             }
-            await CheckLLMClient();
+            await CheckCaller();
 
             List<float> embeddings = llmClient.Embeddings(query);
             callback?.Invoke(embeddings);
@@ -553,7 +568,7 @@ namespace LLMUnity
         public virtual async Task<string> Completion(string prompt, LlamaLib.CharArrayCallback callback = null,
             EmptyCallback completionCallback = null, int id_slot = -1)
         {
-            await CheckLLMClient();
+            await CheckCaller();
             SetCompletionParameters();
             string result = await llmClient.CompletionAsync(prompt, callback, id_slot);
             completionCallback?.Invoke();

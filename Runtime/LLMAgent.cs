@@ -139,9 +139,9 @@ namespace LLMUnity
             base.Awake();
         }
 
-        protected override async Task SetupLLMClient()
+        protected override async Task SetupCallerObject()
         {
-            await base.SetupLLMClient();
+            await base.SetupCallerObject();
 
             string exceptionMessage = "";
             try
@@ -158,7 +158,14 @@ namespace LLMUnity
                 if (exceptionMessage != "") error += ", error: " + exceptionMessage;
                 LLMUnitySetup.LogError(error, true);
             }
+        }
 
+        /// <summary>
+        /// Initialisation after setting up the LLM client (local or remote).
+        /// </summary>
+        protected override async Task PostSetupCallerObject()
+        {
+            await base.PostSetupCallerObject();
             if (slot != -1) llmAgent.SlotId = slot;
             await InitHistory();
         }
@@ -217,7 +224,7 @@ namespace LLMUnity
         /// </summary>
         public virtual async Task ClearHistory()
         {
-            await CheckLLMClient(checkConnection: false);
+            await CheckCaller(checkConnection: false);
             llmAgent.ClearHistory();
         }
 
@@ -228,7 +235,7 @@ namespace LLMUnity
         /// <param name="content">Message content</param>
         public virtual async Task AddMessage(string role, string content)
         {
-            await CheckLLMClient();
+            await CheckCaller();
             llmAgent.AddMessage(role, content);
         }
 
@@ -238,7 +245,7 @@ namespace LLMUnity
         /// <param name="content">User message content</param>
         public virtual async Task AddUserMessage(string content)
         {
-            await CheckLLMClient();
+            await CheckCaller();
             llmAgent.AddUserMessage(content);
         }
 
@@ -248,7 +255,7 @@ namespace LLMUnity
         /// <param name="content">Assistant message content</param>
         public virtual async Task AddAssistantMessage(string content)
         {
-            await CheckLLMClient();
+            await CheckCaller();
             llmAgent.AddAssistantMessage(content);
         }
 
@@ -275,7 +282,7 @@ namespace LLMUnity
         public virtual async Task<string> Chat(string query, LlamaLib.CharArrayCallback callback = null,
             EmptyCallback completionCallback = null, bool addToHistory = true)
         {
-            await CheckLLMClient();
+            await CheckCaller();
 
             // Wrap callback to ensure it runs on the main thread
             LlamaLib.CharArrayCallback wrappedCallback = Utils.WrapCallbackForAsync(callback, this);
@@ -341,7 +348,7 @@ namespace LLMUnity
                 LLMUnitySetup.LogError("No save path specified");
                 return;
             }
-            await CheckLLMClient();
+            await CheckCaller();
 
             // Save chat history
             string jsonPath = GetSavePath();
@@ -373,7 +380,7 @@ namespace LLMUnity
                 LLMUnitySetup.LogError("No save path specified");
                 return;
             }
-            await CheckLLMClient();
+            await CheckCaller();
 
             // Load chat history
             string jsonPath = GetSavePath();
