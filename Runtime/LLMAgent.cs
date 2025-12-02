@@ -24,10 +24,6 @@ namespace LLMUnity
         [Tooltip("Filename for saving chat history (saved in Application.persistentDataPath)")]
         [LLM] public string save = "";
 
-        /// <summary>Save LLM processing cache for faster reload (~100MB per agent)</summary>
-        [Tooltip("Save LLM processing cache for faster reload (~100MB per agent)")]
-        [LLM] public bool saveCache = false;
-
         /// <summary>Debug LLM prompts</summary>
         [Tooltip("Debug LLM prompts")]
         [LLM] public bool debugPrompt = false;
@@ -188,27 +184,10 @@ namespace LLMUnity
         /// </summary>
         protected virtual async Task InitHistory()
         {
-            await ClearChat();
-            await LoadHistory();
-        }
-
-        /// <summary>
-        /// Loads conversation history from the saved file if it exists.
-        /// </summary>
-        protected virtual async Task LoadHistory()
-        {
-            if (string.IsNullOrEmpty(save) || !File.Exists(GetJsonSavePath(save)))
+            await ClearHistory();
+            if (!string.IsNullOrEmpty(save) && File.Exists(GetSavePath()))
             {
-                return;
-            }
-
-            try
-            {
-                await Load(save);
-            }
-            catch (System.Exception ex)
-            {
-                LLMUnitySetup.LogError($"Failed to load chat history from '{save}': {ex.Message}");
+                await LoadHistory();
             }
         }
 
@@ -218,36 +197,16 @@ namespace LLMUnity
         /// <summary>
         /// Gets the full path for a file in the persistent data directory.
         /// </summary>
-        /// <param name="filename">Filename or relative path</param>
         /// <returns>Full file path in persistent data directory</returns>
-        protected virtual string GetSavePath(string filename)
+        public virtual string GetSavePath()
         {
-            if (string.IsNullOrEmpty(filename))
+            if (string.IsNullOrEmpty(save))
             {
-                throw new System.ArgumentNullException(nameof(filename));
+                LLMUnitySetup.LogError("No save path specified");
+                return null;
             }
 
-            return Path.Combine(Application.persistentDataPath, filename).Replace('\\', '/');
-        }
-
-        /// <summary>
-        /// Gets the save path for chat history JSON file.
-        /// </summary>
-        /// <param name="filename">Base filename (without extension)</param>
-        /// <returns>Full path to JSON file</returns>
-        public virtual string GetJsonSavePath(string filename)
-        {
-            return GetSavePath(filename + ".json");
-        }
-
-        /// <summary>
-        /// Gets the save path for LLM cache file.
-        /// </summary>
-        /// <param name="filename">Base filename (without extension)</param>
-        /// <returns>Full path to cache file</returns>
-        public virtual string GetCacheSavePath(string filename)
-        {
-            return GetSavePath(filename + ".cache");
+            return Path.Combine(Application.persistentDataPath, save).Replace('\\', '/');
         }
 
         #endregion
@@ -256,7 +215,7 @@ namespace LLMUnity
         /// <summary>
         /// Clears the entire conversation history.
         /// </summary>
-        public virtual async Task ClearChat()
+        public virtual async Task ClearHistory()
         {
             await CheckLLMClient(checkConnection: false);
             llmAgent.ClearHistory();
@@ -329,7 +288,7 @@ namespace LLMUnity
                 result = responseJson.content;
             }
 
-            if (addToHistory && result != null && save != "") _ = Save(save);
+            if (addToHistory && result != null && save != "") _ = SaveHistory();
             completionCallback?.Invoke();
             return result;
         }
@@ -375,18 +334,17 @@ namespace LLMUnity
         /// <summary>
         /// Saves the conversation history and optionally the LLM cache to disk.
         /// </summary>
-        /// <param name="filename">Base filename (without extension) for saving</param>
-        /// <returns>Result message from cache save operation, or null if cache not saved</returns>
-        public virtual async Task<string> Save(string filename)
+        public virtual async Task SaveHistory()
         {
-            if (string.IsNullOrEmpty(filename))
+            if (string.IsNullOrEmpty(save))
             {
-                throw new System.ArgumentNullException(nameof(filename));
+                LLMUnitySetup.LogError("No save path specified");
+                return;
             }
             await CheckLLMClient();
 
             // Save chat history
-            string jsonPath = GetJsonSavePath(filename);
+            string jsonPath = GetSavePath();
             string directory = Path.GetDirectoryName(jsonPath);
 
             if (!Directory.Exists(directory))
@@ -399,48 +357,29 @@ namespace LLMUnity
                 llmAgent.SaveHistory(jsonPath);
                 LLMUnitySetup.Log($"Saved chat history to: {jsonPath}");
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 LLMUnitySetup.LogError($"Failed to save chat history to '{jsonPath}': {ex.Message}", true);
             }
-
-            // Save cache if enabled and not remote
-            if (!remote && saveCache)
-            {
-                try
-                {
-                    string cachePath = GetCacheSavePath(filename);
-                    string result = llmAgent.SaveSlot(cachePath);
-                    LLMUnitySetup.Log($"Saved LLM cache to: {cachePath}");
-                    return result;
-                }
-                catch (System.Exception ex)
-                {
-                    LLMUnitySetup.LogWarning($"Failed to save LLM cache: {ex.Message}");
-                }
-            }
-
-            return null;
         }
 
         /// <summary>
         /// Loads conversation history and optionally the LLM cache from disk.
         /// </summary>
-        /// <param name="filename">Base filename (without extension) to load from</param>
-        /// <returns>Result message from cache load operation, or null if cache not loaded</returns>
-        public virtual async Task<string> Load(string filename)
+        public virtual async Task LoadHistory()
         {
-            if (string.IsNullOrEmpty(filename))
+            if (string.IsNullOrEmpty(save))
             {
-                throw new System.ArgumentNullException(nameof(filename));
+                LLMUnitySetup.LogError("No save path specified");
+                return;
             }
             await CheckLLMClient();
 
             // Load chat history
-            string jsonPath = GetJsonSavePath(filename);
+            string jsonPath = GetSavePath();
             if (!File.Exists(jsonPath))
             {
-                throw new FileNotFoundException($"Chat history file not found: {jsonPath}");
+                LLMUnitySetup.LogError($"Chat history file not found: {jsonPath}");
             }
 
             try
@@ -448,31 +387,10 @@ namespace LLMUnity
                 llmAgent.LoadHistory(jsonPath);
                 LLMUnitySetup.Log($"Loaded chat history from: {jsonPath}");
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 LLMUnitySetup.LogError($"Failed to load chat history from '{jsonPath}': {ex.Message}", true);
             }
-
-            // Load cache if enabled and not remote
-            if (!remote && saveCache)
-            {
-                string cachePath = GetCacheSavePath(filename);
-                if (File.Exists(cachePath))
-                {
-                    try
-                    {
-                        string result = llmAgent.LoadSlot(cachePath);
-                        LLMUnitySetup.Log($"Loaded LLM cache from: {cachePath}");
-                        return result;
-                    }
-                    catch (System.Exception ex)
-                    {
-                        LLMUnitySetup.LogWarning($"Failed to load LLM cache from '{cachePath}': {ex.Message}");
-                    }
-                }
-            }
-
-            return null;
         }
 
         #endregion
