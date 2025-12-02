@@ -161,8 +161,8 @@ namespace LLMUnityTests
             prompt = "You are a scientific assistant and provide short and concise info on the user questions";
             prompt2 = "You are a funny assistant and answer the user questions with smartass comments";
             query = "Can you tell me some fun fact about ants in one sentence?";
-            reply1 = "Sure! Here's a fun fact: Ants work together to build complex structures like nests, even though they don't have human-like intelligence.";
-            reply2 = "Sure! \"Ants are so sneaky, they can even build nests that look like giant spiders!\"";
+            reply1 = "Sure! Ants are known for their incredible teamwork, often working together to build complex structures like nests.";
+            reply2 = "Of course! Ants are so smart and hardworking that they can build intricate nests with just a few workers.";
             tokens1 = 20;
             tokens2 = 9;
         }
@@ -296,13 +296,13 @@ namespace LLMUnityTests
             llmAgent.systemPrompt = prompt2;
             reply = await llmAgent.Chat(query, TestStreamingChat);
             TestChat(reply, reply2);
-            TestPostChat(2);
-
-            await llmAgent.Chat("bye!");
             TestPostChat(4);
 
-            List<float> embeddings = await llmAgent.Embeddings("hi how are you?");
-            TestEmbeddings(embeddings);
+            await llmAgent.ClearHistory();
+            TestPostChat(0);
+
+            await llmAgent.Chat("bye!");
+            TestPostChat(2);
         }
 
         public virtual void TestArchitecture()
@@ -334,11 +334,6 @@ namespace LLMUnityTests
         public void TestPostChat(int num)
         {
             Assert.That(llmAgent.chat.Count == num);
-        }
-
-        public void TestEmbeddings(List<float> embeddings)
-        {
-            Assert.That(embeddings.Count == 1024);
         }
 
         public virtual void OnDestroy()
@@ -422,8 +417,8 @@ namespace LLMUnityTests
         public override void SetParameters()
         {
             base.SetParameters();
-            reply1 = "Ants are known for their ability to build complex structures, though it's not always obvious.";
-            reply2 = "Sure! \"Ants are so sneaky, they can even steal your lunch!\"";
+            reply1 = "Sure! Here's a fun fact: Ants work together to build complex structures like nests, even though they don't speak.";
+            reply2 = "Of course! Ants are so sneaky and efficient that they can build a house in just a few days without any help from humans.";
             tokens1 = 5;
             tokens2 = 9;
             loraWeight = 0.9f;
@@ -484,6 +479,12 @@ namespace LLMUnityTests
             llmAgent.remote = true;
             return llmAgent;
         }
+
+        public override void SetParameters()
+        {
+            base.SetParameters();
+            reply2 = "Of course! Ants are so smart—they can remember the location of food sources and even solve problems without words.";
+        }
     }
 
     public class TestLLM_Double : TestLLM
@@ -507,15 +508,14 @@ namespace LLMUnityTests
 
     public class TestLLMAgent_Save : TestLLM
     {
-        string saveName = "TestLLMAgent_Save";
+        string saveName = "TestLLMAgent_Save.json";
 
         public override LLMAgent CreateLLMAgent()
         {
             LLMAgent llmAgent = base.CreateLLMAgent();
             llmAgent.save = saveName;
-            llmAgent.saveCache = true;
-            foreach (string filename in new string[] {llmAgent.GetJsonSavePath(saveName), llmAgent.GetCacheSavePath(saveName)})
-                if (File.Exists(filename)) File.Delete(filename);
+            string savePath = llmAgent.GetSavePath();
+            if (File.Exists(savePath)) File.Delete(savePath);
             return llmAgent;
         }
 
@@ -527,18 +527,15 @@ namespace LLMUnityTests
 
         public void TestSave()
         {
-            string jsonPath = llmAgent.GetJsonSavePath(saveName);
-            string cachePath = llmAgent.GetCacheSavePath(saveName);
-            Assert.That(File.Exists(jsonPath));
-            Assert.That(File.Exists(cachePath));
-            string json = File.ReadAllText(jsonPath);
-            File.Delete(jsonPath);
-            File.Delete(cachePath);
+            string savePath = llmAgent.GetSavePath();
+            Assert.That(File.Exists(savePath));
+            string json = File.ReadAllText(savePath);
+            File.Delete(savePath);
 
             List<ChatMessage> chatHistory = JsonUtility.FromJson<ChatListWrapper>("{ \"chat\": " + json + " }").chat;
-            Assert.AreEqual(chatHistory.Count, 4);
+            Assert.AreEqual(chatHistory.Count, 2);
             Assert.AreEqual(chatHistory[0].role, llmAgent.userRole);
-            Assert.AreEqual(chatHistory[0].content, query);
+            Assert.AreEqual(chatHistory[0].content, "bye!");
             Assert.AreEqual(chatHistory[1].role, llmAgent.assistantRole);
 
             Assert.AreEqual(llmAgent.chat.Count, chatHistory.Count);
@@ -557,13 +554,6 @@ namespace LLMUnityTests
             LLM llm = base.CreateLLM();
             llm.numGPULayers = 10;
             return llm;
-        }
-
-        public override void SetParameters()
-        {
-            base.SetParameters();
-            reply1 = "Sure! Here's a fun fact: Ants work together to build complex structures like nests, even though they don't have a brain.";
-            reply2 = "Sure! \"Ants are so sneaky, they can even build nests that look like giant spiders!\"";
         }
 
         public override void TestArchitecture()
