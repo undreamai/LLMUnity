@@ -60,7 +60,7 @@ namespace LLMUnitySamples
         {
             playerText.interactable = false;
             AIText.text = "...";
-            _ = llmAgent.ChatAsync(message, SetAIText, AIReplyComplete);
+            _ = llmAgent.Chat(message, SetAIText, AIReplyComplete);
         }
 
         public void SetAIText(string text)

@@ -72,7 +72,7 @@ namespace LLMUnitySamples
         async void onInputFieldSubmit(string message)
         {
             playerText.interactable = false;
-            string functionName = await llmAgent.ChatAsync(ConstructPrompt(message));
+            string functionName = await llmAgent.Chat(ConstructPrompt(message));
             string result = CallFunction(functionName);
             AIText.text = $"Calling {functionName}\n{result}";
             playerText.interactable = true;

@@ -178,7 +178,7 @@ MonoBehaviour:
   font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
   fontSize: 16
   bubbleWidth: 600
-  llmCharacter: {fileID: 1844795171}
+  llmAgent: {fileID: 1844795172}
   textPadding: 10
   bubbleSpacing: 10
   sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
@@ -658,26 +658,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   advancedOptions: 0
-  remote: 0
-  port: 13333
-  numThreads: -1
-  numGPULayers: 0
-  debug: 0
-  parallelPrompts: -1
+  _remote: 0
+  _port: 13333
+  _APIKey: 
+  _SSLCert: 
+  _SSLKey: 
+  _numThreads: -1
+  _numGPULayers: 0
+  _parallelPrompts: -1
+  _contextSize: 8192
+  _batchSize: 512
+  _model: 
+  _flashAttention: 0
+  _reasoning: 0
+  _lora: 
+  _loraWeights: 
   dontDestroyOnLoad: 1
-  contextSize: 8192
-  batchSize: 512
-  basePrompt: 
-  model: 
-  chatTemplate: chatml
-  lora: 
-  loraWeights: 
-  flashAttention: 0
-  APIKey: 
-  SSLCert: 
-  SSLCertPath: 
-  SSLKey: 
-  SSLKeyPath: 
   minContextLength: 0
   maxContextLength: 0
 --- !u!1 &1051131186
@@ -1100,9 +1096,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1844795170}
-  - component: {fileID: 1844795171}
+  - component: {fileID: 1844795172}
   m_Layer: 0
-  m_Name: LLMCharacter
+  m_Name: LLMAgent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1123,7 +1119,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1844795171
+--- !u!114 &1844795172
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1132,25 +1128,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 1844795168}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f6c87a428fd5d0be9bbc686bdc8c3c2, type: 3}
+  m_Script: {fileID: 11500000, guid: b4326d5ae3b03ff55847035351559f4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   advancedOptions: 0
-  remote: 0
-  llm: {fileID: 817827756}
-  host: localhost
-  port: 13333
-  numRetries: 10
-  APIKey: 
-  save: 
-  saveCache: 0
-  debugPrompt: 0
-  stream: 1
-  grammar: 
-  cachePrompt: 1
-  slot: -1
-  seed: 0
+  _remote: 0
+  _llm: {fileID: 817827756}
+  _APIKey: 
+  _host: localhost
+  _port: 13333
+  numRetries: 5
+  _grammar: 
   numPredict: -1
+  cachePrompt: 1
+  seed: 0
   temperature: 0.2
   topK: 40
   topP: 0.9
@@ -1158,25 +1149,20 @@ MonoBehaviour:
   repeatPenalty: 1.1
   presencePenalty: 0
   frequencyPenalty: 0
-  tfsZ: 1
   typicalP: 1
   repeatLastN: 64
-  penalizeNl: 1
-  penaltyPrompt: 
   mirostat: 0
   mirostatTau: 5
   mirostatEta: 0.1
   nProbs: 0
   ignoreEos: 0
-  nKeep: -1
-  stop: []
-  playerName: user
-  AIName: assistant
-  prompt: A chat between a curious human and an artificial intelligence assistant.
+  save: 
+  debugPrompt: 0
+  _slot: -1
+  _userRole: user
+  _assistantRole: assistant
+  _systemPrompt: A chat between a curious human and an artificial intelligence assistant.
     The assistant gives helpful, detailed, and polite answers to the human's questions.
-  setNKeepToPrompt: 1
-  chat: []
-  grammarString: 
 --- !u!1 &2011827136
 GameObject:
   m_ObjectHideFlags: 0

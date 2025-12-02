@@ -13,7 +13,7 @@ OcclusionCullingSettings:
 --- !u!104 &2
 RenderSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 10
+  serializedVersion: 9
   m_Fog: 0
   m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_FogMode: 3
@@ -38,12 +38,13 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
+  m_IndirectSpecularColor: {r: 0.44657832, g: 0.49641222, b: 0.57481664, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 13
-  m_BakeOnSceneLoad: 0
+  serializedVersion: 12
+  m_GIWorkflowMode: 1
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
@@ -66,6 +67,9 @@ LightmapSettings:
     m_LightmapParameters: {fileID: 0}
     m_LightmapsBakeMode: 1
     m_TextureCompression: 1
+    m_FinalGather: 0
+    m_FinalGatherFiltering: 1
+    m_FinalGatherRayCount: 256
     m_ReflectionCompression: 2
     m_MixedBakeMode: 2
     m_BakeBackend: 1
@@ -163,7 +167,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 708542fec6999ea3ebd7c69404932bb3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  llmCharacter: {fileID: 498662973}
+  llmAgent: {fileID: 498662973}
   ChatPanel: {fileID: 1084608230}
   playerText: {fileID: 1966107897}
   AIText: {fileID: 887085510}
@@ -651,7 +655,7 @@ GameObject:
   - component: {fileID: 498662972}
   - component: {fileID: 498662973}
   m_Layer: 0
-  m_Name: LLMCharacter
+  m_Name: LLMAgent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -681,22 +685,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 498662970}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f6c87a428fd5d0be9bbc686bdc8c3c2, type: 3}
+  m_Script: {fileID: 11500000, guid: b4326d5ae3b03ff55847035351559f4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   advancedOptions: 0
-  remote: 0
+  _remote: 0
   _llm: {fileID: 1047848254}
-  APIKey: 
-  host: localhost
-  port: 13333
-  numRetries: 10
-  save: 
-  saveCache: 0
-  debugPrompt: 0
+  _APIKey: 
+  _host: localhost
+  _port: 13333
+  numRetries: 5
+  _grammar: 
   numPredict: -1
-  slot: -1
-  grammar: 
   cachePrompt: 1
   seed: 0
   temperature: 0.2
@@ -706,26 +706,20 @@ MonoBehaviour:
   repeatPenalty: 1.1
   presencePenalty: 0
   frequencyPenalty: 0
-  tfsZ: 1
   typicalP: 1
   repeatLastN: 64
-  penalizeNl: 1
-  penaltyPrompt: 
   mirostat: 0
   mirostatTau: 5
   mirostatEta: 0.1
   nProbs: 0
   ignoreEos: 0
-  nKeep: -1
-  stop: []
-  stream: 1
-  playerName: user
-  AIName: assistant
-  prompt: A chat between a curious human and an artificial intelligence assistant.
+  save: 
+  debugPrompt: 0
+  _slot: -1
+  _userRole: user
+  _assistantRole: assistant
+  _systemPrompt: A chat between a curious human and an artificial intelligence assistant.
     The assistant gives helpful, detailed, and polite answers to the human's questions.
-  setNKeepToPrompt: 1
-  chat: []
-  grammarString: 
 --- !u!1 &659217390
 GameObject:
   m_ObjectHideFlags: 0
@@ -1222,8 +1216,9 @@ Light:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 909474451}
   m_Enabled: 1
-  serializedVersion: 11
+  serializedVersion: 10
   m_Type: 1
+  m_Shape: 0
   m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
   m_Intensity: 1
   m_Range: 10
@@ -1273,12 +1268,8 @@ Light:
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
-  m_ForceVisible: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
-  m_LightUnit: 1
-  m_LuxAtDistance: 1
-  m_EnableSpotReflector: 1
 --- !u!4 &909474453
 Transform:
   m_ObjectHideFlags: 0
@@ -1324,29 +1315,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   advancedOptions: 0
-  remote: 0
-  port: 13333
-  numThreads: -1
-  numGPULayers: 0
-  debug: 0
-  parallelPrompts: -1
+  _remote: 0
+  _port: 13333
+  _APIKey: 
+  _SSLCert: 
+  _SSLKey: 
+  _numThreads: -1
+  _numGPULayers: 0
+  _parallelPrompts: -1
+  _contextSize: 8192
+  _batchSize: 512
+  _model: 
+  _flashAttention: 0
+  _reasoning: 0
+  _lora: 
+  _loraWeights: 
   dontDestroyOnLoad: 1
-  contextSize: 8192
-  batchSize: 512
-  model: 
-  chatTemplate: chatml
-  lora: 
-  loraWeights: 
-  flashAttention: 0
-  APIKey: 
-  SSLCert: 
-  SSLCertPath: 
-  SSLKey: 
-  SSLKeyPath: 
   minContextLength: 0
   maxContextLength: 0
-  embeddingsOnly: 0
-  embeddingLength: 0
 --- !u!4 &1047848255
 Transform:
   m_ObjectHideFlags: 0

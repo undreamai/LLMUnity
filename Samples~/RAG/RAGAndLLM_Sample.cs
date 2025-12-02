@@ -1,5 +1,6 @@
 using UnityEngine.UI;
 using LLMUnity;
+using System.Threading.Tasks;
 
 namespace LLMUnitySamples
 {
@@ -8,11 +9,11 @@ namespace LLMUnitySamples
         public LLMAgent llmAgent;
         public Toggle ParaphraseWithLLM;
 
-        protected override void onInputFieldSubmit(string message)
+        protected override async void onInputFieldSubmit(string message)
         {
             playerText.interactable = false;
             AIText.text = "...";
-            (string[] similarPhrases, float[] distances) = rag.Search(message, 1);
+            (string[] similarPhrases, float[] distances) = await rag.Search(message, 1);
             string similarPhrase = similarPhrases[0];
             if (!ParaphraseWithLLM.isOn)
             {
@@ -21,7 +22,7 @@ namespace LLMUnitySamples
             }
             else
             {
-                _ = llmAgent.ChatAsync("Paraphrase the following phrase: " + similarPhrase, SetAIText, AIReplyComplete);
+                _ = llmAgent.Chat("Paraphrase the following phrase: " + similarPhrase, SetAIText, AIReplyComplete);
             }
         }
 

@@ -171,7 +171,7 @@ MonoBehaviour:
   playerText: {fileID: 1966107897}
   AIText: {fileID: 887085510}
   HamletText: {fileID: 4900000, guid: 145dfa55295462fa4bc804a75d8ba9c1, type: 3}
-  llmCharacter: {fileID: 498662973}
+  llmAgent: {fileID: 498662973}
   ParaphraseWithLLM: {fileID: 1151157495}
 --- !u!1 &158550913
 GameObject:
@@ -524,7 +524,7 @@ GameObject:
   - component: {fileID: 498662972}
   - component: {fileID: 498662973}
   m_Layer: 0
-  m_Name: LLMCharacter
+  m_Name: LLMAgent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -554,24 +554,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 498662970}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f6c87a428fd5d0be9bbc686bdc8c3c2, type: 3}
+  m_Script: {fileID: 11500000, guid: b4326d5ae3b03ff55847035351559f4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   advancedOptions: 0
-  remote: 0
+  _remote: 0
   _llm: {fileID: 1047848254}
-  APIKey: 
-  host: localhost
-  port: 13333
-  numRetries: 10
-  save: 
-  saveCache: 0
-  debugPrompt: 0
-  slot: -1
-  grammar: 
+  _APIKey: 
+  _host: localhost
+  _port: 13333
+  numRetries: 5
+  _grammar: 
+  numPredict: -1
   cachePrompt: 1
   seed: 0
-  numPredict: -1
   temperature: 0.2
   topK: 40
   topP: 0.9
@@ -579,31 +575,25 @@ MonoBehaviour:
   repeatPenalty: 1.1
   presencePenalty: 0
   frequencyPenalty: 0
-  tfsZ: 1
   typicalP: 1
   repeatLastN: 64
-  penalizeNl: 1
-  penaltyPrompt: 
   mirostat: 0
   mirostatTau: 5
   mirostatEta: 0.1
   nProbs: 0
   ignoreEos: 0
-  nKeep: -1
-  stop: []
-  stream: 1
-  playerName: Text
-  AIName: Paraphrased text
-  prompt: 'You are an assistant that answers with phrases from Hamlet.
+  save: 
+  debugPrompt: 0
+  _slot: -1
+  _userRole: user
+  _assistantRole: assistant
+  _systemPrompt: 'You are an assistant that answers with phrases from Hamlet.
 
     Your
     goal is to paraphrase the provided text without changing it too much.
 
     Answer
     directly with the paraphrased text.'
-  setNKeepToPrompt: 1
-  chat: []
-  grammarString: 
 --- !u!1 &718309038
 GameObject:
   m_ObjectHideFlags: 0
@@ -1279,30 +1269,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   advancedOptions: 0
-  remote: 0
-  port: 13333
-  numThreads: -1
-  numGPULayers: 0
-  debug: 0
-  parallelPrompts: -1
+  _remote: 0
+  _port: 13333
+  _APIKey: 
+  _SSLCert: 
+  _SSLKey: 
+  _numThreads: -1
+  _numGPULayers: 0
+  _parallelPrompts: -1
+  _contextSize: 8192
+  _batchSize: 512
+  _model: 
+  _flashAttention: 0
+  _reasoning: 0
+  _lora: 
+  _loraWeights: 
   dontDestroyOnLoad: 1
-  contextSize: 8192
-  batchSize: 512
-  basePrompt: 
-  model: 
-  chatTemplate: chatml
-  lora: 
-  loraWeights: 
-  flashAttention: 0
-  APIKey: 
-  SSLCert: 
-  SSLCertPath: 
-  SSLKey: 
-  SSLKeyPath: 
   minContextLength: 0
   maxContextLength: 0
-  embeddingsOnly: 0
-  embeddingLength: 0
 --- !u!4 &1047848255
 Transform:
   m_ObjectHideFlags: 0
@@ -1408,8 +1392,7 @@ GameObject:
   - component: {fileID: 1091532317}
   - component: {fileID: 1091532316}
   - component: {fileID: 1091532315}
-  - component: {fileID: 1091532314}
-  - component: {fileID: 1091532313}
+  - component: {fileID: 1091532318}
   m_Layer: 0
   m_Name: RAG
   m_TagString: Untagged
@@ -1417,40 +1400,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1091532313
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1091532312}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 354c2418b0d6913efbfb73dccd540d23, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  search: {fileID: 1091532314}
-  returnChunks: 0
-  delimiters: 2e0021003a003b003f000a000d00
---- !u!114 &1091532314
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1091532312}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f8c6492f8c97ab9a09b0eb0f93a158da, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  llmEmbedder: {fileID: 1091532315}
-  advancedOptions: 0
-  quantization: 3
-  metricKind: 1
-  connectivity: 32
-  expansionAdd: 40
-  expansionSearch: 16
 --- !u!114 &1091532315
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1464,12 +1413,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   advancedOptions: 0
-  remote: 0
+  _remote: 0
   _llm: {fileID: 1612143203}
-  APIKey: 
-  host: localhost
-  port: 13333
+  _APIKey: 
+  _host: localhost
+  _port: 13333
   numRetries: 10
+  _grammar: 
+  numPredict: -1
+  cachePrompt: 1
+  seed: 0
+  temperature: 0.2
+  topK: 40
+  topP: 0.9
+  minP: 0.05
+  repeatPenalty: 1.1
+  presencePenalty: 0
+  frequencyPenalty: 0
+  typicalP: 1
+  repeatLastN: 64
+  mirostat: 0
+  mirostatTau: 5
+  mirostatEta: 0.1
+  nProbs: 0
+  ignoreEos: 0
 --- !u!114 &1091532316
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1482,12 +1449,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2496546d1575771597fc8cbdd0d852d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  searchClass: 1
-  search: {fileID: 1091532314}
-  chunkingClass: 3
-  chunking: {fileID: 1091532313}
-  preSearchClass: 0
-  preChunkingClass: 0
+  searchType: 1
+  search: {fileID: 1091532318}
+  chunkingType: 0
+  chunking: {fileID: 0}
 --- !u!4 &1091532317
 Transform:
   m_ObjectHideFlags: 0
@@ -1503,6 +1468,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1091532318
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1091532312}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5102d32385d84d87f98c64d376cbcc90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  llmEmbedder: {fileID: 1091532315}
 --- !u!1 &1151157494
 GameObject:
   m_ObjectHideFlags: 0
@@ -1989,30 +1967,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   advancedOptions: 0
-  remote: 0
-  port: 13333
-  numThreads: -1
-  numGPULayers: 0
-  debug: 0
-  parallelPrompts: -1
+  _remote: 0
+  _port: 13333
+  _APIKey: 
+  _SSLCert: 
+  _SSLKey: 
+  _numThreads: -1
+  _numGPULayers: 0
+  _parallelPrompts: -1
+  _contextSize: 8192
+  _batchSize: 512
+  _model: 
+  _flashAttention: 0
+  _reasoning: 0
+  _lora: 
+  _loraWeights: 
   dontDestroyOnLoad: 1
-  contextSize: 8192
-  batchSize: 512
-  basePrompt: 
-  model: 
-  chatTemplate: chatml
-  lora: 
-  loraWeights: 
-  flashAttention: 0
-  APIKey: 
-  SSLCert: 
-  SSLCertPath: 
-  SSLKey: 
-  SSLKeyPath: 
   minContextLength: 0
   maxContextLength: 0
-  embeddingsOnly: 0
-  embeddingLength: 0
 --- !u!4 &1612143204
 Transform:
   m_ObjectHideFlags: 0

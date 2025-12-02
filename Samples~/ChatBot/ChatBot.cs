@@ -68,7 +68,7 @@ namespace LLMUnitySamples
 
         void ShowLoadedMessages()
         {
-            for (int i = 1; i < llmAgent.chat.Count; i++) AddBubble(llmAgent.chat[i].Content, i % 2 == 1);
+            for (int i = 1; i < llmAgent.chat.Count; i++) AddBubble(llmAgent.chat[i].content, i % 2 == 1);
         }
 
         void onInputFieldSubmit(string newText)
@@ -85,7 +85,7 @@ namespace LLMUnitySamples
 
             AddBubble(message, true);
             Bubble aiBubble = AddBubble("...", false);
-            Task chatTask = llmAgent.ChatAsync(message, aiBubble.SetText, AllowInput);
+            Task chatTask = llmAgent.Chat(message, aiBubble.SetText, AllowInput);
             inputBubble.SetText("");
         }
 
