@@ -50,7 +50,7 @@ namespace LLMUnity
 
         /// <summary>Grammar constraints for output formatting (GBNF or JSON schema format)</summary>
         [Tooltip("Grammar constraints for output formatting (GBNF or JSON schema format)")]
-        [ModelAdvanced, SerializeField] protected string _grammar = "";
+        [ModelAdvanced, TextArea(1, 10), SerializeField] protected string _grammar = "";
 
         // Completion Parameters
         /// <summary>Maximum tokens to generate (-1 = unlimited)</summary>
