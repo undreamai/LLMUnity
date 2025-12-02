@@ -28,7 +28,7 @@ namespace LLMUnity
         [Tooltip("Save LLM processing cache for faster reload (~100MB per agent)")]
         [LLM] public bool saveCache = false;
 
-        /// <summary>Save LLM processing cache for faster reload (~100MB per agent)</summary>
+        /// <summary>Debug LLM prompts</summary>
         [Tooltip("Debug LLM prompts")]
         [LLM] public bool debugPrompt = false;
 
