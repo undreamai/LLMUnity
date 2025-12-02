@@ -12,7 +12,6 @@ using System.Text.RegularExpressions;
 using UndreamAI.LlamaLib;
 
 /// @defgroup llm LLM
-/// @defgroup template Chat Templates
 /// @defgroup utils Utils
 namespace LLMUnity
 {

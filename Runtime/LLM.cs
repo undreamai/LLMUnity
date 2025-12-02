@@ -72,10 +72,6 @@ namespace LLMUnity
         [Tooltip("Enable flash attention optimization (requires compatible model)")]
         [ModelExtras, SerializeField] private bool _flashAttention = false;
 
-        /// <summary>Chat template for conversation formatting ("auto" = detect from model)</summary>
-        [Tooltip("Chat template for conversation formatting (\"auto\" = detect from model)")]
-        [ModelAdvanced, SerializeField] private string _chatTemplate = "auto";
-
         /// <summary>Enable LLM reasoning ("thinking" mode)</summary>
         [Tooltip("Enable LLM reasoning ('thinking' mode)")]
         [ModelAdvanced, SerializeField] private bool _reasoning = false;
@@ -176,13 +172,6 @@ namespace LLMUnity
         {
             get => _model;
             set => SetModel(value);
-        }
-
-        /// <summary>Chat template for conversation formatting ("auto" = detect from model)</summary>
-        public string chatTemplate
-        {
-            get => _chatTemplate;
-            set => SetTemplate(value);
         }
 
         /// <summary>Enable LLM reasoning ('thinking' mode)</summary>
@@ -312,17 +301,6 @@ namespace LLMUnity
         /// \cond HIDE
         public int minContextLength = 0;
         public int maxContextLength = 0;
-
-        public static readonly string[] ChatTemplates = new string[]
-        {
-            "auto", "chatml", "llama2", "llama2-sys", "llama2-sys-bos", "llama2-sys-strip",
-            "mistral-v1", "mistral-v3", "mistral-v3-tekken", "mistral-v7", "mistral-v7-tekken",
-            "phi3", "phi4", "falcon3", "zephyr", "monarch", "gemma", "orion", "openchat",
-            "vicuna", "vicuna-orca", "deepseek", "deepseek2", "deepseek3", "command-r",
-            "llama3", "chatglm3", "chatglm4", "glmedge", "minicpm", "exaone3", "exaone4",
-            "rwkv-world", "granite", "gigachat", "megrez", "yandex", "bailing", "llama4",
-            "smolvlm", "hunyuan-moe", "gpt-oss", "hunyuan-dense", "kimi-k2"
-        };
 
         private LlamaLib llmlib = null;
         // [Local, SerializeField]
@@ -510,7 +488,6 @@ namespace LLMUnity
                     if (started)
                     {
                         ApplyLoras();
-                        SetTemplate(chatTemplate);
                         SetReasoning(reasoning);
                     }
                 }
@@ -586,31 +563,6 @@ namespace LLMUnity
 
 #if UNITY_EDITOR
             if (!EditorApplication.isPlaying) EditorUtility.SetDirty(this);
-#endif
-        }
-
-        /// <summary>
-        /// Sets the chat template for message formatting.
-        /// </summary>
-        /// <param name="templateName">Template name (see ChatTemplates array for options)</param>
-        /// <param name="setDirty">Mark object dirty in editor</param>
-        public void SetTemplate(string templateName, bool setDirty = true)
-        {
-            if (_chatTemplate == templateName) return;
-            if (!ChatTemplates.Contains(templateName))
-            {
-                LLMUnitySetup.LogError($"Unsupported chat template: {templateName}");
-                return;
-            }
-
-            _chatTemplate = templateName;
-            if (started)
-            {
-                llmService.SetTemplate(_chatTemplate == "auto" ? "" : _chatTemplate);
-            }
-
-#if UNITY_EDITOR
-            if (setDirty && !EditorApplication.isPlaying) EditorUtility.SetDirty(this);
 #endif
         }
 
