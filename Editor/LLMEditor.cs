@@ -13,7 +13,6 @@ namespace LLMUnity
     {
         private ReorderableList modelList;
         static float nameColumnWidth = 150f;
-        static float templateColumnWidth = 150f;
         static float textColumnWidth = 150f;
         static float includeInBuildColumnWidth = 30f;
         static float actionColumnWidth = 20f;
@@ -134,7 +133,7 @@ namespace LLMUnity
 
         float[] GetColumnWidths(bool expandedView)
         {
-            List<float> widths = new List<float>() { actionColumnWidth, nameColumnWidth, templateColumnWidth };
+            List<float> widths = new List<float>() { actionColumnWidth, nameColumnWidth };
             if (expandedView) widths.AddRange(new List<float>() { textColumnWidth, textColumnWidth });
             widths.AddRange(new List<float>() { includeInBuildColumnWidth, actionColumnWidth });
             return widths.ToArray();
@@ -308,7 +307,6 @@ namespace LLMUnity
                     int col = 0;
                     Rect selectRect = rects[col++];
                     Rect nameRect = rects[col++];
-                    Rect templateRect = rects[col++];
                     Rect urlRect = new Rect();
                     Rect pathRect = new Rect();
                     if (expandedView)
@@ -386,7 +384,6 @@ namespace LLMUnity
                     int col = 0;
                     EditorGUI.LabelField(rects[col++], "");
                     EditorGUI.LabelField(rects[col++], "Model");
-                    EditorGUI.LabelField(rects[col++], "Chat template");
                     if (expandedView)
                     {
                         EditorGUI.LabelField(rects[col++], "URL");

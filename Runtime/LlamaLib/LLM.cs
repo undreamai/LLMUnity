@@ -42,7 +42,7 @@ namespace UndreamAI.LlamaLib
         protected readonly object _disposeLock = new object();
         public bool disposed = false;
 
-        protected LLM() { }
+        protected LLM() {}
 
         protected LLM(LlamaLib llamaLibInstance)
         {
@@ -76,18 +76,11 @@ namespace UndreamAI.LlamaLib
             }
         }
 
-        public virtual void Dispose() { }
+        public virtual void Dispose() {}
 
         ~LLM()
         {
             Dispose();
-        }
-
-        public string GetTemplate()
-        {
-            CheckLlamaLib();
-            IntPtr result = llamaLib.LLM_Get_Template(llm);
-            return Marshal.PtrToStringAnsi(result) ?? string.Empty;
         }
 
         public string ApplyTemplate(JArray messages = null)
@@ -113,7 +106,7 @@ namespace UndreamAI.LlamaLib
                 JArray json = JArray.Parse(resultStr);
                 ret = json?.ToObject<List<int>>();
             }
-            catch { }
+            catch {}
             return ret;
         }
 
@@ -151,7 +144,7 @@ namespace UndreamAI.LlamaLib
                 JArray json = JArray.Parse(resultStr);
                 ret = json?.ToObject<List<float>>();
             }
-            catch { }
+            catch {}
             return ret;
         }
 
@@ -171,7 +164,7 @@ namespace UndreamAI.LlamaLib
             {
                 parameters = JObject.Parse(parametersString);
             }
-            catch { }
+            catch {}
             return parameters;
         }
 
@@ -218,9 +211,9 @@ namespace UndreamAI.LlamaLib
     // LLMLocal class
     public abstract class LLMLocal : LLM
     {
-        protected LLMLocal() : base() { }
+        protected LLMLocal() : base() {}
 
-        protected LLMLocal(LlamaLib llamaLibInstance) : base(llamaLibInstance) { }
+        protected LLMLocal(LlamaLib llamaLibInstance) : base(llamaLibInstance) {}
 
         public string SaveSlot(int idSlot, string filepath)
         {
@@ -250,16 +243,9 @@ namespace UndreamAI.LlamaLib
     // LLMProvider class
     public abstract class LLMProvider : LLMLocal
     {
-        protected LLMProvider() : base() { }
+        protected LLMProvider() : base() {}
 
-        protected LLMProvider(LlamaLib llamaLibInstance) : base(llamaLibInstance) { }
-
-
-        public void SetTemplate(string template)
-        {
-            CheckLlamaLib();
-            llamaLib.LLM_Set_Template(llm, template ?? string.Empty);
-        }
+        protected LLMProvider(LlamaLib llamaLibInstance) : base(llamaLibInstance) {}
 
         public void EnableReasoning(bool enableReasoning)
         {
@@ -310,7 +296,7 @@ namespace UndreamAI.LlamaLib
                     ));
                 }
             }
-            catch { }
+            catch {}
             return loras;
         }
 
@@ -413,7 +399,7 @@ namespace UndreamAI.LlamaLib
                         {
                             llamaLib.LLM_Delete(llm);
                         }
-                        catch (Exception) { }
+                        catch (Exception) {}
                     }
                     llamaLib?.Dispose();
                     llamaLib = null;
