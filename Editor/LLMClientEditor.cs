@@ -27,7 +27,7 @@ namespace LLMUnity
                 {
                     EditorApplication.delayCall += () =>
                     {
-                        string path = EditorUtility.OpenFilePanelWithFilters("Select a gbnf grammar file", "", new string[] { "Grammar Files", "json,gbnf" });
+                        string path = EditorUtility.OpenFilePanelWithFilters("Select a grammar file", "", new string[] { "Grammar Files", "json,gbnf" });
                         if (!string.IsNullOrEmpty(path))
                         {
                             ((LLMAgent)target).LoadGrammar(path);
