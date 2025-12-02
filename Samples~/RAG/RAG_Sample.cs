@@ -56,11 +56,11 @@ namespace LLMUnitySamples
             }
         }
 
-        protected virtual void onInputFieldSubmit(string message)
+        protected virtual async void onInputFieldSubmit(string message)
         {
             playerText.interactable = false;
             AIText.text = "...";
-            (string[] similarPhrases, float[] distances) = rag.Search(message, 1);
+            (string[] similarPhrases, float[] distances) = await rag.Search(message, 1);
             AIText.text = similarPhrases[0];
         }
 
