@@ -28,6 +28,10 @@ namespace LLMUnity
         [Tooltip("Save LLM processing cache for faster reload (~100MB per agent)")]
         [LLM] public bool saveCache = false;
 
+        /// <summary>Save LLM processing cache for faster reload (~100MB per agent)</summary>
+        [Tooltip("Debug LLM prompts")]
+        [LLM] public bool debugPrompt = false;
+
         /// <summary>Server slot to use for processing (affects caching behavior)</summary>
         [Tooltip("Server slot to use for processing (affects caching behavior)")]
         [ModelAdvanced, SerializeField] protected int _slot = -1;
@@ -292,6 +296,14 @@ namespace LLMUnity
         #endregion
 
         #region Chat Functionality
+        /// \cond HIDE
+        [Serializable]
+        public class CompletionResponseJson
+        {
+            public string prompt;
+            public string content;
+        }
+        /// \endcond
         /// <summary>
         /// Processes a user query asynchronously and generates an AI response using conversation context.
         /// The query and response are automatically added to chat history if specified.
@@ -309,7 +321,13 @@ namespace LLMUnity
             // Wrap callback to ensure it runs on the main thread
             LlamaLib.CharArrayCallback wrappedCallback = Utils.WrapCallbackForAsync(callback, this);
             SetCompletionParameters();
-            string result = await llmAgent.ChatAsync(query, addToHistory, wrappedCallback);
+            string result = await llmAgent.ChatAsync(query, addToHistory, wrappedCallback, returnResponseJson: debugPrompt);
+            if (debugPrompt)
+            {
+                CompletionResponseJson responseJson = JsonUtility.FromJson<CompletionResponseJson>(result);
+                LLMUnitySetup.Log(responseJson.prompt);
+                result = responseJson.content;
+            }
 
             if (addToHistory && result != null && save != "") _ = Save(save);
             completionCallback?.Invoke();
