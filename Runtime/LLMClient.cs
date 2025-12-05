@@ -25,31 +25,24 @@ namespace LLMUnity
         [HideInInspector] public bool advancedOptions = false;
 
         /// <summary>Use remote LLM server instead of local instance</summary>
-        [Tooltip("Use remote LLM server instead of local instance")]
         [LocalRemote, SerializeField] protected bool _remote;
 
         /// <summary>Local LLM GameObject to connect to</summary>
-        [Tooltip("Local LLM GameObject to connect to")]
         [Local, SerializeField] protected LLM _llm;
 
         /// <summary>API key for remote server authentication</summary>
-        [Tooltip("API key for remote server authentication")]
         [Remote, SerializeField] protected string _APIKey;
 
         /// <summary>Hostname or IP address of remote LLM server</summary>
-        [Tooltip("Hostname or IP address of remote LLM server")]
         [Remote, SerializeField] protected string _host = "localhost";
 
         /// <summary>Port number of remote LLM server</summary>
-        [Tooltip("Port number of remote LLM server")]
         [Remote, SerializeField] protected int _port = 13333;
 
         /// <summary>Number of retries of remote LLM server</summary>
-        [Tooltip("Number of retries of remote LLM server")]
         [Remote, SerializeField] protected int numRetries = 5;
 
         /// <summary>Grammar constraints for output formatting (GBNF or JSON schema format)</summary>
-        [Tooltip("Grammar constraints for output formatting (GBNF or JSON schema format)")]
         [ModelAdvanced, TextArea(1, 10), SerializeField] protected string _grammar = "";
 
         // Completion Parameters

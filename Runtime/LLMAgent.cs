@@ -21,7 +21,7 @@ namespace LLMUnity
     {
         #region Inspector Fields
         /// <summary>Filename for saving chat history (saved in persistentDataPath)</summary>
-        [Tooltip("Filename for saving chat history (saved in Application.persistentDataPath)")]
+        [Tooltip("Filename for saving chat history (saved in persistentDataPath)")]
         [LLM] public string save = "";
 
         /// <summary>Debug LLM prompts</summary>
@@ -29,19 +29,15 @@ namespace LLMUnity
         [LLM] public bool debugPrompt = false;
 
         /// <summary>Server slot to use for processing (affects caching behavior)</summary>
-        [Tooltip("Server slot to use for processing (affects caching behavior)")]
         [ModelAdvanced, SerializeField] protected int _slot = -1;
 
         /// <summary>Role name for user messages in conversation</summary>
-        [Tooltip("Role name for user messages in conversation")]
         [Chat, SerializeField] protected string _userRole = "user";
 
         /// <summary>Role name for AI assistant messages in conversation</summary>
-        [Tooltip("Role name for AI assistant messages in conversation")]
         [Chat, SerializeField] protected string _assistantRole = "assistant";
 
         /// <summary>System prompt that defines the AI's personality and behavior</summary>
-        [Tooltip("System prompt that defines the AI's personality and behavior")]
         [TextArea(5, 10), Chat, SerializeField]
         protected string _systemPrompt = "A chat between a curious human and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the human's questions.";
         #endregion
