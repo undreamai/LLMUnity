@@ -82,7 +82,7 @@ namespace LLMUnitySamples
                     PlayerText.text += $"Creating Embeddings for {botName} (only once)...\n";
                     List<string> questions = botQuestionAnswers.Keys.ToList();
                     stopwatch.Start();
-                    foreach (string question in questions) rag.Add(question, botName);
+                    foreach (string question in questions) await rag.Add(question, botName);
                     stopwatch.Stop();
                     Debug.Log($"embedded {rag.Count()} phrases in {stopwatch.Elapsed.TotalMilliseconds / 1000f} secs");
                 }
