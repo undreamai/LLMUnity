@@ -44,7 +44,7 @@ namespace LLMUnitySamples
                 playerText.text += $"Creating Embeddings (only once)...\n";
                 Stopwatch stopwatch = new Stopwatch();
                 stopwatch.Start();
-                foreach (string phrase in phrases) rag.Add(phrase);
+                foreach (string phrase in phrases) await rag.Add(phrase);
                 stopwatch.Stop();
                 Debug.Log($"embedded {rag.Count()} phrases in {stopwatch.Elapsed.TotalMilliseconds / 1000f} secs");
                 // store the embeddings
