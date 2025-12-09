@@ -303,6 +303,7 @@ namespace LLMUnity
         {
             SetGrammar(grammar);
             completionParametersCache = "";
+            await Task.Yield();
         }
 
         /// <summary>
