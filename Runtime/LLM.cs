@@ -295,6 +295,8 @@ namespace LLMUnity
         public LLMManager llmManager = new LLMManager();
         private static readonly object staticLock = new object();
         public LoraManager loraManager = new LoraManager();
+        string loraPre = "";
+        string loraWeightsPre = "";
         /// \endcond
         #endregion
 
@@ -302,6 +304,15 @@ namespace LLMUnity
         public LLM()
         {
             LLMManager.Register(this);
+        }
+
+        void OnValidate()
+        {
+            if (lora != loraPre || loraWeights != loraWeightsPre)
+            {
+                loraManager.FromStrings(lora, loraWeights);
+                (loraPre, loraWeightsPre) = (lora, loraWeights);
+            }
         }
 
         /// <summary>
