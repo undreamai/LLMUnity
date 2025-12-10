@@ -68,9 +68,10 @@ namespace LLMUnity
     public class ModelAdvancedAttribute : AdvancedAttribute {}
     public class ChatAdvancedAttribute : AdvancedAttribute {}
 
-    public class NotImplementedException : Exception
+
+    public class LLMUnityException : Exception
     {
-        public NotImplementedException() : base("The method needs to be implemented by subclasses.") {}
+        public LLMUnityException(string message = "") : base(message) {}
     }
 
     public delegate void EmptyCallback();
@@ -199,7 +200,7 @@ namespace LLMUnity
             if ((int)DebugMode > (int)DebugModeType.Error) return;
             Debug.LogError(message);
             foreach (Callback<string> errorCallback in errorCallbacks) errorCallback(message);
-            if (throwException) throw new Exception(message);
+            if (throwException) throw new LLMUnityException(message);
         }
 
         static void LoadPlayerPrefs()

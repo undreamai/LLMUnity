@@ -504,7 +504,7 @@ namespace LLMUnity
         {
             if (string.IsNullOrEmpty(query))
             {
-                throw new ArgumentNullException(nameof(query));
+                LLMUnitySetup.LogError("query is null", true);
             }
             await CheckCaller();
 
@@ -523,7 +523,7 @@ namespace LLMUnity
         {
             if (tokens == null)
             {
-                throw new ArgumentNullException(nameof(tokens));
+                LLMUnitySetup.LogError("tokens is null", true);
             }
             await CheckCaller();
 
@@ -542,7 +542,7 @@ namespace LLMUnity
         {
             if (string.IsNullOrEmpty(query))
             {
-                throw new ArgumentNullException(nameof(query));
+                LLMUnitySetup.LogError("query is null", true);
             }
             await CheckCaller();
 

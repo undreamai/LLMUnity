@@ -99,7 +99,8 @@ namespace LLMUnity
         {
             if (chunking != null) return chunking;
             if (search != null) return search;
-            throw new Exception("The search GameObject is null");
+            LLMUnitySetup.LogError("The search GameObject is null", true);
+            return null;
         }
 
 #if UNITY_EDITOR

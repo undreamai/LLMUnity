@@ -314,8 +314,8 @@ namespace LLMUnity
         /// \cond HIDE
         public static float DotProduct(float[] vector1, float[] vector2)
         {
-            if (vector1 == null || vector2 == null) throw new ArgumentNullException("Vectors cannot be null");
-            if (vector1.Length != vector2.Length) throw new ArgumentException("Vector lengths must be equal for dot product calculation");
+            if (vector1 == null || vector2 == null) LLMUnitySetup.LogError("Vectors cannot be null", true);
+            if (vector1.Length != vector2.Length) LLMUnitySetup.LogError("Vector lengths must be equal for dot product calculation", true);
             float result = 0;
             for (int i = 0; i < vector1.Length; i++)
             {
@@ -526,7 +526,7 @@ namespace LLMUnity
         public static T Load<T>(ZipArchive archive, string name)
         {
             ZipArchiveEntry baseEntry = archive.GetEntry(name);
-            if (baseEntry == null) throw new Exception($"No entry with name {name} was found");
+            if (baseEntry == null) LLMUnitySetup.LogError($"No entry with name {name} was found", true);
             using (Stream entryStream = baseEntry.Open())
             {
                 BinaryFormatter formatter = new BinaryFormatter();
