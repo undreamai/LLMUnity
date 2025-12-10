@@ -241,6 +241,7 @@ namespace LLMUnity
             }
             // We can't deal with this one.
             LLMUnitySetup.LogError($"Unknown/unhandled field type {(GGUFValueType)raw_type}", true);
+            return (-1, null, null, null);
         }
 
         private int BuildFields(int offs, int count)
