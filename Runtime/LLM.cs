@@ -84,7 +84,7 @@ namespace LLMUnity
             {
                 AssertNotStarted();
                 if (value < -1)
-                    throw new ArgumentException("numThreads must be >= -1");
+                    LLMUnitySetup.LogError("numThreads must be >= -1", true);
                 _numThreads = value;
             }
         }
@@ -97,7 +97,7 @@ namespace LLMUnity
             {
                 AssertNotStarted();
                 if (value < 0)
-                    throw new ArgumentException("numGPULayers must be >= 0");
+                    LLMUnitySetup.LogError("numGPULayers must be >= 0", true);
                 _numGPULayers = value;
             }
         }
@@ -110,7 +110,7 @@ namespace LLMUnity
             {
                 AssertNotStarted();
                 if (value < -1)
-                    throw new ArgumentException("parallelPrompts must be >= -1");
+                    LLMUnitySetup.LogError("parallelPrompts must be >= -1", true);
                 _parallelPrompts = value;
             }
         }
@@ -123,7 +123,7 @@ namespace LLMUnity
             {
                 AssertNotStarted();
                 if (value < 0)
-                    throw new ArgumentException("contextSize must be >= 0");
+                    LLMUnitySetup.LogError("contextSize must be >= 0", true);
                 _contextSize = value;
             }
         }
@@ -136,7 +136,7 @@ namespace LLMUnity
             {
                 AssertNotStarted();
                 if (value <= 0)
-                    throw new ArgumentException("batchSize must be > 0");
+                    LLMUnitySetup.LogError("batchSize must be > 0", true);
                 _batchSize = value;
             }
         }
@@ -212,7 +212,7 @@ namespace LLMUnity
             {
                 if (value == _port) return;
                 if (value < 0 || value > 65535)
-                    throw new ArgumentException("port must be between 0 and 65535");
+                    LLMUnitySetup.LogError("port must be between 0 and 65535", true);
                 _port = value;
                 RestartServer();
             }
@@ -351,7 +351,7 @@ namespace LLMUnity
         {
             if ((SSLCert != "" && SSLKey == "") || (SSLCert == "" && SSLKey != ""))
             {
-                throw new ArgumentException("Both SSL certificate and key must be provided together!");
+                LLMUnitySetup.LogError("Both SSL certificate and key must be provided together!", true);
             }
         }
 
@@ -359,13 +359,13 @@ namespace LLMUnity
         {
             if (string.IsNullOrEmpty(model))
             {
-                throw new ArgumentException("No model file provided!");
+                LLMUnitySetup.LogError("No model file provided!", true);
             }
 
             string modelPath = GetLLMManagerAssetRuntime(model);
             if (!File.Exists(modelPath))
             {
-                throw new ArgumentException($"Model file not found: {modelPath}");
+                LLMUnitySetup.LogError($"Model file not found: {modelPath}", true);
             }
             return modelPath;
         }
@@ -380,7 +380,7 @@ namespace LLMUnity
                 string resolvedPath = GetLLMManagerAssetRuntime(loraPath);
                 if (!File.Exists(resolvedPath))
                 {
-                    throw new ArgumentException($"LORA file not found: {resolvedPath}");
+                    LLMUnitySetup.LogError($"LORA file not found: {resolvedPath}", true);
                 }
                 loraPaths.Add(resolvedPath);
             }
@@ -401,7 +401,7 @@ namespace LLMUnity
                 CreateLib();
                 await CreateServiceAsync(modelPath, loraPaths);
             }
-            catch (ArgumentException ex)
+            catch (LLMUnityException ex)
             {
                 LLMUnitySetup.LogError(ex.Message);
                 failed = true;
@@ -507,7 +507,7 @@ namespace LLMUnity
 
             if (failed)
             {
-                throw new InvalidOperationException("LLM failed to start");
+                LLMUnitySetup.LogError("LLM failed to start", true);
             }
         }
 
@@ -596,7 +596,7 @@ namespace LLMUnity
         {
             if (llmClient == null)
             {
-                throw new ArgumentNullException(nameof(llmClient));
+                LLMUnitySetup.LogError("llmClient is null", true);
             }
 
             clients.Add(llmClient);
@@ -680,7 +680,7 @@ namespace LLMUnity
         {
             if (loraToWeight == null)
             {
-                throw new ArgumentNullException(nameof(loraToWeight));
+                LLMUnitySetup.LogError("loraToWeight is null", true);
             }
 
             foreach (var entry in loraToWeight)

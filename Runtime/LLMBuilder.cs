@@ -45,14 +45,14 @@ namespace LLMUnity
                     action();
                     return;
                 }
-                catch (IOException)
+                catch (IOException e)
                 {
-                    if (i == retries - 1) throw;
+                    if (i == retries - 1) LLMUnitySetup.LogError(e.Message, true);
                     System.Threading.Thread.Sleep(delayMs);
                 }
-                catch (System.UnauthorizedAccessException)
+                catch (System.UnauthorizedAccessException e)
                 {
-                    if (i == retries - 1) throw;
+                    if (i == retries - 1) LLMUnitySetup.LogError(e.Message, true);;
                     System.Threading.Thread.Sleep(delayMs);
                 }
             }

@@ -90,7 +90,7 @@ namespace LLMUnitySamples
                 rag.Save(ragPath);
     #else
                 // if in play mode throw an error
-                throw new System.Exception("The embeddings could not be found!");
+                Debug.LogError("The embeddings could not be found!");
     #endif
             }
         }
@@ -168,7 +168,7 @@ namespace LLMUnitySamples
             {
                 string error = $"Please select a llm model in the {llmClient.llm.gameObject.name} GameObject!";
                 if (debug) Debug.LogWarning(error);
-                else throw new System.Exception(error);
+                else Debug.LogError(error);
             }
         }
 

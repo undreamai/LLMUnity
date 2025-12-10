@@ -77,7 +77,7 @@ namespace LLMUnity
 
         public override ValueTuple<int[], float[], bool> IncrementalFetchKeys(int fetchKey, int k)
         {
-            if (!incrementalSearchCache.ContainsKey(fetchKey)) throw new Exception($"There is no IncrementalSearch cached with this key: {fetchKey}");
+            if (!incrementalSearchCache.ContainsKey(fetchKey)) LLMUnitySetup.LogError($"There is no IncrementalSearch cached with this key: {fetchKey}", true);
 
             (float[] embedding, string group, List<int> seenKeys) = incrementalSearchCache[fetchKey];
 

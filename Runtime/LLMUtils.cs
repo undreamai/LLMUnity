@@ -148,7 +148,7 @@ namespace LLMUnity
             {
                 List<string> loraStringArr = new List<string>(loraString.Split(delimiter));
                 List<string> loraWeightsStringArr = new List<string>(loraWeightsString.Split(delimiter));
-                if (loraStringArr.Count != loraWeightsStringArr.Count) throw new Exception($"LoRAs number ({loraString}) doesn't match the number of weights ({loraWeightsString})");
+                if (loraStringArr.Count != loraWeightsStringArr.Count) LLMUnitySetup.LogError($"LoRAs number ({loraString}) doesn't match the number of weights ({loraWeightsString})", true);
 
                 List<LoraAsset> lorasNew = new List<LoraAsset>();
                 for (int i = 0; i < loraStringArr.Count; i++) lorasNew.Add(new LoraAsset(loraStringArr[i].Trim(), float.Parse(loraWeightsStringArr[i])));
