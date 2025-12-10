@@ -19,8 +19,9 @@
 
 LLM for Unity enables seamless integration of Large Language Models (LLMs) within the Unity engine.<br>
 It allows to create intelligent characters that your players can interact with for an immersive experience.<br>
-The package also features a Retrieval-Augmented Generation (RAG) system that allows to performs semantic search across your data, which can be used to enhance the character's knowledge.
+The package also features a Retrieval-Augmented Generation (RAG) system that allows to performs semantic search across your data, which can be used to enhance the character's knowledge.<br>
 LLM for Unity is built on top of the awesome [llama.cpp](https://github.com/ggerganov/llama.cpp) library.
+The LLM backend, [LlamaLib](https://github.com/undreamai/LlamaLib) is provided as a standalone C++/C# library.
 
 <sub>
 <a href="#at-a-glance" style="color: black">At a glance</a>&nbsp;&nbsp;•&nbsp;
@@ -46,8 +47,12 @@ LLM for Unity is built on top of the awesome [llama.cpp](https://github.com/gger
 🧪 Tested on Unity: 2021 LTS, 2022 LTS, 2023, Unity 6<br>
 🚦 [Upcoming Releases](https://github.com/orgs/undreamai/projects/2/views/10)
 
+
+### Business inquiries
+For business inquiries you can reach out at hello@undream.ai.
+
 ## How to help
-- [⭐ Star](https://github.com/undreamai/LLMUnity) the repo, leave us a [review](https://assetstore.unity.com/packages/slug/273604) and spread the word about the project!
+- [⭐ Star](https://github.com/undreamai/LLMUnity) the repo, leave a [review](https://assetstore.unity.com/packages/slug/273604) and spread the word about the project!
 - Join us at [Discord](https://discord.gg/RwXKQb6zdv) and say hi.
 - [Contribute](CONTRIBUTING.md) by submitting feature requests, bugs or even your own PR.
 - [![](https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&color=%23fe8e86)](https://github.com/sponsors/amakropoulos) this work to allow even cooler features!
@@ -70,8 +75,10 @@ LLM for Unity is built on top of the awesome [llama.cpp](https://github.com/gger
 - [Dungeon Chat](https://www.meta.com/experiences/dungeonchat/8527310950709276/)
 - [Tomonaka Desk](https://joycatdev.itch.io/tomonaka-desk)
 - [Digital Humans](https://store.steampowered.com/app/3089280/Digital_Humans/)
+- [CakeMix](https://ripenedpeach.itch.io/cakemix)
+- [HeyWaifu](https://squirclegames.itch.io/hey-waifu-ai)
 
-Contact us to add your project!
+Contact hello@undream.ai to add your project!
 
 ## Setup
 _Method 1: Install using the asset store_
@@ -94,10 +101,8 @@ First you will setup the LLM for your game 🏎:
 
 Then you can setup each of your characters as follows 🙋‍♀️:
 - Create an empty GameObject for the character.<br>In the GameObject Inspector click `Add Component` and select the LLMAgent script.
-- Define the role of your AI in the `Prompt`. You can define the name of the AI (`AI Name`) and the player (`Player Name`).
+- Define the role of your AI in the `System Prompt`. You can define the role of the AI (`Assistant Role`) and the player (`User Role`).
 - (Optional) Select the LLM constructed above in the `LLM` field if you have more than one LLM GameObjects.
-
-You can also adjust the LLM and character settings according to your preference (see [Options](#options)).
 
 In your script you can then use it as follows 🦄:
 ``` c#
@@ -120,8 +125,7 @@ public class MyScript {
   }
 }
 ```
-You can also specify a function to call when the model reply has been completed.<br>
-This is useful if the `Stream` option is enabled for continuous output from the model (default behaviour):
+You can also specify a function to call when the model reply has been completed:
 ``` c#
   void ReplyCompleted(){
     // do something when the reply from the model is complete
@@ -182,20 +186,15 @@ The [MobileDemo](Samples~/MobileDemo) is an example application for Android / iO
 
 </details>
 <details>
-<summary>Restrict the output of the LLM / Function calling</summary>
+<summary>Restrict the output of the LLM / Function calling / Grammar</summary>
 
 To restrict the output of the LLM you can use a grammar, read more [here](https://github.com/ggerganov/llama.cpp/tree/master/grammars).<br>
-The grammar can be saved in a .gbnf file and loaded at the LLMAgent with the `Load Grammar` button (Advanced options).<br>
+The grammar can edited directly in the `Grammar` field of the LLMAgent or saved in a gbnf / json schema file and loaded with the `Load Grammar` button (Advanced options).<br>
 For instance to receive replies in json format you can use the [json.gbnf](https://github.com/ggerganov/llama.cpp/blob/b4218/grammars/json.gbnf) grammar.<br>
-Graamars in JSON schema format are also supported and can be loaded with the `Load JSON Grammar` button (Advanced options).<br>  
 
 Alternatively you can set the grammar directly with code:
 ``` c#
-// GBNF grammar
-llmAgent.grammarString = "your GBNF grammar here";
-
-// or JSON schema grammar
-llmAgent.grammarJSONString = "your JSON schema grammar here";
+llmAgent.grammar = "your grammar here";
 ```
 
 For function calling you can define similarly a grammar that allows only the function names as output, and then call the respective function.<br>
@@ -205,23 +204,32 @@ You can look into the [FunctionCalling](Samples~/FunctionCalling) sample for an 
 <details>
 <summary>Access / Save / Load your chat history</summary>
 The chat history of a `LLMAgent` is retained in the `chat` variable that is a list of `ChatMessage` objects.<br>
-The ChatMessage is a struct that defines the `role` of the message and the `content`.<br>
-The first element of the list is always the system prompt and then alternating messages with the player prompt and the AI reply.<br>
-You can modify the chat history directly in this list.<br>
+The ChatMessage is a class that defines the `role` of the message and the `content`.<br>
+The list contains alternating messages with the player prompt and the AI reply.<br>
+You can modify the chat history and then set it to you LLMAgent GameObject:
+``` c#
+List<ChatMessage> newChat = new List<ChatMessage>();
+...
+llmAgent.chat = newChat;
+```
+
+To add new messages you can do:
+``` c#
+_ = llmAgent.AddUserMessage("your user message");
+_ = llmAgent.AddAssistantMessage("your assistant reply");
+```
 
 To automatically save / load your chat history, you can specify the `Save` parameter of the LLMAgent to the filename (or relative path) of your choice.
-The file is saved in the [persistentDataPath folder of Unity](https://docs.unity3d.com/ScriptReference/Application-persistentDataPath.html).
-This also saves the state of the LLM which means that the previously cached prompt does not need to be recomputed.
+The chat history is saved in the [persistentDataPath folder of Unity](https://docs.unity3d.com/ScriptReference/Application-persistentDataPath.html) as a json object.
 
 To manually save your chat history, you can use:
 ``` c#
-    llmAgent.Save("filename");
+    _ = llmAgent.SaveHistory();
 ```
 and to load the history:
 ``` c#
-    llmAgent.Load("filename");
+    _ = llmAgent.Loadistory();
 ```
-where filename the filename or relative path of your choice.
 
 </details>
 <details>
@@ -265,7 +273,7 @@ where filename the filename or relative path of your choice.
     // your game function
     ...
     string message = "The cat is away";
-    _ = llmAgent.Complete(message, HandleReply, ReplyCompleted);
+    _ = llmAgent.Completion(message, HandleReply, ReplyCompleted);
     ...
   }
 ```
@@ -309,13 +317,10 @@ public class MyScript : MonoBehaviour
         // set the model using the filename of the model.
         // The model needs to be added to the LLM model manager (see LLM model management) by loading or downloading it.
         // Otherwise the model file can be copied directly inside the StreamingAssets folder.
-        llm.SetModel("Phi-3-mini-4k-instruct-q4.gguf");
+        llm.model = "Qwen3-4B-Q4_K_M.gguf";
         // optional: you can also set loras in a similar fashion and set their weights (if needed)
         llm.AddLora("my-lora.gguf");
-        llm.SetLoraWeight(0.5f);
-        // optional: you can set the chat template of the model if it is not correctly identified
-        // You can find a list of chat templates in the ChatTemplate.templates.Keys
-        llm.SetTemplate("phi-3");
+        llm.AddLora("my-lora-2.gguf", 0.5f);
         // optional: set number of threads
         llm.numThreads = -1;
         // optional: enable GPU by setting the number of model layers to offload to it
@@ -326,18 +331,14 @@ public class MyScript : MonoBehaviour
         // set the LLM object that handles the model
         llmAgent.llm = llm;
         // set the character prompt
-        llmAgent.SetPrompt("A chat between a curious human and an artificial intelligence assistant.");
+        llmAgent.systemPrompt = "A chat between a curious human and an artificial intelligence assistant.";
         // set the AI and player name
         llmAgent.assistantRole = "AI";
         llmAgent.userRole = "Human";
-        // optional: set streaming to false to get the complete result in one go
-        // llmAgent.stream = true;
         // optional: set a save path
-        // llmAgent.save = "AICharacter1";
-        // optional: enable the save cache to avoid recomputation when loading a save file (requires ~100 MB)
-        // llmAgent.saveCache = true;
+        llmAgent.save = "AICharacter1.json";
         // optional: set a grammar
-        // await llmAgent.SetGrammar("json.gbnf");
+        llmAgent.grammar = "your grammar here";
 
         // re-enable gameObject
         gameObject.SetActive(true);
@@ -512,9 +513,6 @@ To install a sample:
 The samples can be run with the `Scene.unity` scene they contain inside their folder.<br>
 In the scene, select the `LLM` GameObject and click the `Download Model` button to download a default model or `Load model` to load your own model (see [LLM model management](#llm-model-management)).<br>
 Save the scene, run and enjoy!
-
-## Options
-Details on the different parameters are provided as Unity Tooltips. Previous documentation can be found [here](Options.md) (deprecated).
 
 ## License
 The license of LLM for Unity is MIT ([LICENSE.md](LICENSE.md)) and uses third-party software with MIT and Apache licenses.
