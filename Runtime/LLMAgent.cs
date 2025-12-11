@@ -279,20 +279,27 @@ namespace LLMUnity
             EmptyCallback completionCallback = null, bool addToHistory = true)
         {
             await CheckCaller();
-
-            // Wrap callback to ensure it runs on the main thread
-            LlamaLib.CharArrayCallback wrappedCallback = Utils.WrapCallbackForAsync(callback, this);
-            SetCompletionParameters();
-            string result = await llmAgent.ChatAsync(query, addToHistory, wrappedCallback, returnResponseJson: debugPrompt);
-            if (debugPrompt)
+            string result = "";
+            try
             {
-                CompletionResponseJson responseJson = JsonUtility.FromJson<CompletionResponseJson>(result);
-                LLMUnitySetup.Log(responseJson.prompt);
-                result = responseJson.content;
-            }
+                // Wrap callback to ensure it runs on the main thread
+                LlamaLib.CharArrayCallback wrappedCallback = Utils.WrapCallbackForAsync(callback, this);
+                SetCompletionParameters();
+                result = await llmAgent.ChatAsync(query, addToHistory, wrappedCallback, returnResponseJson: debugPrompt);
+                if (debugPrompt)
+                {
+                    CompletionResponseJson responseJson = JsonUtility.FromJson<CompletionResponseJson>(result);
+                    LLMUnitySetup.Log(responseJson.prompt);
+                    result = responseJson.content;
+                }
 
-            if (addToHistory && result != null && save != "") _ = SaveHistory();
-            completionCallback?.Invoke();
+                if (addToHistory && result != null && save != "") _ = SaveHistory();
+                completionCallback?.Invoke();
+            }
+            catch (Exception ex)
+            {
+                LLMUnitySetup.LogError(ex.Message, true);
+            }
             return result;
         }
 
