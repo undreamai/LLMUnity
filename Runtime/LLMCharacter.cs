@@ -4,16 +4,6 @@ namespace LLMUnity
 {
     public class LLMCharacter : LLMAgent
     {
-        public string playerName
-        {
-            get { return userRole; }
-            set { userRole = value; }
-        }
-        public string AIName
-        {
-            get { return assistantRole; }
-            set { assistantRole = value; }
-        }
         public string prompt
         {
             get { return systemPrompt; }
