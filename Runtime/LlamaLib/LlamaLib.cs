@@ -120,22 +120,7 @@ namespace UndreamAI.LlamaLib
 
         // LLMAgent functions
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate IntPtr LLMAgent_Construct_Delegate(IntPtr llm,
-            [MarshalAs(UnmanagedType.LPStr)] string systemPrompt = "",
-            [MarshalAs(UnmanagedType.LPStr)] string userRole = "user",
-            [MarshalAs(UnmanagedType.LPStr)] string assistantRole = "assistant");
-
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate void LLMAgent_Set_User_Role_Delegate(IntPtr llm, [MarshalAs(UnmanagedType.LPStr)] string userRole);
-
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate IntPtr LLMAgent_Get_User_Role_Delegate(IntPtr llm);
-
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate void LLMAgent_Set_Assistant_Role_Delegate(IntPtr llm, [MarshalAs(UnmanagedType.LPStr)] string assistantRole);
-
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate IntPtr LLMAgent_Get_Assistant_Role_Delegate(IntPtr llm);
+        public delegate IntPtr LLMAgent_Construct_Delegate(IntPtr llm, [MarshalAs(UnmanagedType.LPStr)] string systemPrompt = "");
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void LLMAgent_Set_System_Prompt_Delegate(IntPtr llm, [MarshalAs(UnmanagedType.LPStr)] string systemPrompt);
@@ -178,9 +163,10 @@ namespace UndreamAI.LlamaLib
         public delegate void LLMAgent_Set_History_Delegate(IntPtr llm, [MarshalAs(UnmanagedType.LPStr)] string historyJson);
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate void LLMAgent_Add_Message_Delegate(IntPtr llm,
-            [MarshalAs(UnmanagedType.LPStr)] string role,
-            [MarshalAs(UnmanagedType.LPStr)] string content);
+        public delegate void LLMAgent_Add_User_Message_Delegate(IntPtr llm, [MarshalAs(UnmanagedType.LPStr)] string content);
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void LLMAgent_Add_Assistant_Message_Delegate(IntPtr llm, [MarshalAs(UnmanagedType.LPStr)] string content);
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void LLMAgent_Remove_Last_Message_Delegate(IntPtr llm);
@@ -228,10 +214,6 @@ namespace UndreamAI.LlamaLib
         public LLMClient_Set_SSL_Delegate LLMClient_Set_SSL_Internal;
         public LLMClient_Is_Server_Alive_Delegate LLMClient_Is_Server_Alive_Internal;
         public LLMAgent_Construct_Delegate LLMAgent_Construct_Internal;
-        public LLMAgent_Set_User_Role_Delegate LLMAgent_Set_User_Role_Internal;
-        public LLMAgent_Get_User_Role_Delegate LLMAgent_Get_User_Role_Internal;
-        public LLMAgent_Set_Assistant_Role_Delegate LLMAgent_Set_Assistant_Role_Internal;
-        public LLMAgent_Get_Assistant_Role_Delegate LLMAgent_Get_Assistant_Role_Internal;
         public LLMAgent_Set_System_Prompt_Delegate LLMAgent_Set_System_Prompt_Internal;
         public LLMAgent_Get_System_Prompt_Delegate LLMAgent_Get_System_Prompt_Internal;
         public LLMAgent_Set_Slot_Delegate LLMAgent_Set_Slot_Internal;
@@ -244,7 +226,8 @@ namespace UndreamAI.LlamaLib
         public LLMAgent_Clear_History_Delegate LLMAgent_Clear_History_Internal;
         public LLMAgent_Get_History_Delegate LLMAgent_Get_History_Internal;
         public LLMAgent_Set_History_Delegate LLMAgent_Set_History_Internal;
-        public LLMAgent_Add_Message_Delegate LLMAgent_Add_Message_Internal;
+        public LLMAgent_Add_User_Message_Delegate LLMAgent_Add_User_Message_Internal;
+        public LLMAgent_Add_Assistant_Message_Delegate LLMAgent_Add_Assistant_Message_Internal;
         public LLMAgent_Remove_Last_Message_Delegate LLMAgent_Remove_Last_Message_Internal;
         public LLMAgent_Save_History_Delegate LLMAgent_Save_History_Internal;
         public LLMAgent_Load_History_Delegate LLMAgent_Load_History_Internal;
@@ -322,13 +305,8 @@ namespace UndreamAI.LlamaLib
         public IntPtr LLMClient_Construct_Remote(string url, int port, string apiKey = "", int numRetries = 5) => CallWithStatus(() => LLMClient_Construct_Remote_Internal(url, port, apiKey, numRetries));
         public void LLMClient_Set_SSL(IntPtr llm, string SSLCert) => CallWithStatus(() => LLMClient_Set_SSL_Internal(llm, SSLCert));
         public bool LLMClient_Is_Server_Alive(IntPtr llm) => CallWithStatus(() => LLMClient_Is_Server_Alive_Internal(llm));
-        public IntPtr LLMAgent_Construct(IntPtr llm, string systemPrompt = "", string userRole = "user", string assistantRole = "assistant")
-            => CallWithStatus(() => LLMAgent_Construct_Internal(llm, systemPrompt, userRole, assistantRole));
-        public void LLMAgent_Set_User_Role(IntPtr llm, string userRole) => CallWithStatus(() => LLMAgent_Set_User_Role_Internal(llm, userRole));
-        public IntPtr LLMAgent_Get_User_Role(IntPtr llm) => CallWithStatus(() => LLMAgent_Get_User_Role_Internal(llm));
-        public void LLMAgent_Set_Assistant_Role(IntPtr llm, string assistantRole) => CallWithStatus(() => LLMAgent_Set_Assistant_Role_Internal(llm, assistantRole));
-        public IntPtr LLMAgent_Get_Assistant_Role(IntPtr llm) => CallWithStatus(() => LLMAgent_Get_Assistant_Role_Internal(llm));
-        public void LLMAgent_Set_System_Prompt(IntPtr llm, string systemPrompt) => CallWithStatus(() => LLMAgent_Set_System_Prompt_Internal(llm, systemPrompt));
+        public IntPtr LLMAgent_Construct(IntPtr llm, string systemPrompt = "") => CallWithStatus(() => LLMAgent_Construct_Internal(llm, systemPrompt));
+       public void LLMAgent_Set_System_Prompt(IntPtr llm, string systemPrompt) => CallWithStatus(() => LLMAgent_Set_System_Prompt_Internal(llm, systemPrompt));
         public IntPtr LLMAgent_Get_System_Prompt(IntPtr llm) => CallWithStatus(() => LLMAgent_Get_System_Prompt_Internal(llm));
         public void LLM_Set_Completion_Parameters(IntPtr llm, string parameters) => CallWithStatus(() => LLM_Set_Completion_Parameters_Internal(llm, parameters));
         public IntPtr LLM_Get_Completion_Parameters(IntPtr llm) => CallWithStatus(() => LLM_Get_Completion_Parameters_Internal(llm));
@@ -341,7 +319,8 @@ namespace UndreamAI.LlamaLib
         public void LLMAgent_Clear_History(IntPtr llm) => CallWithStatus(() => LLMAgent_Clear_History_Internal(llm));
         public IntPtr LLMAgent_Get_History(IntPtr llm) => CallWithStatus(() => LLMAgent_Get_History_Internal(llm));
         public void LLMAgent_Set_History(IntPtr llm, string historyJson) => CallWithStatus(() => LLMAgent_Set_History_Internal(llm, historyJson));
-        public void LLMAgent_Add_Message(IntPtr llm, string role, string content) => CallWithStatus(() => LLMAgent_Add_Message_Internal(llm, role, content));
+        public void LLMAgent_Add_User_Message(IntPtr llm, string content) => CallWithStatus(() => LLMAgent_Add_User_Message_Internal(llm, content));
+        public void LLMAgent_Add_Assistant_Message(IntPtr llm, string content) => CallWithStatus(() => LLMAgent_Add_Assistant_Message_Internal(llm, content));
         public void LLMAgent_Remove_Last_Message(IntPtr llm) => CallWithStatus(() => LLMAgent_Remove_Last_Message_Internal(llm));
         public void LLMAgent_Save_History(IntPtr llm, string filepath) => CallWithStatus(() => LLMAgent_Save_History_Internal(llm, filepath));
         public void LLMAgent_Load_History(IntPtr llm, string filepath) => CallWithStatus(() => LLMAgent_Load_History_Internal(llm, filepath));
@@ -489,22 +468,7 @@ namespace UndreamAI.LlamaLib
 
         // LLMAgent functions
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLMAgent_Construct")]
-        public static extern IntPtr LLMAgent_Construct_Static(IntPtr llm,
-            [MarshalAs(UnmanagedType.LPStr)] string systemPrompt = "",
-            [MarshalAs(UnmanagedType.LPStr)] string userRole = "user",
-            [MarshalAs(UnmanagedType.LPStr)] string assistantRole = "assistant");
-
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLMAgent_Set_User_Role")]
-        public static extern void LLMAgent_Set_User_Role_Static(IntPtr llm, [MarshalAs(UnmanagedType.LPStr)] string userRole);
-
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLMAgent_Get_User_Role")]
-        public static extern IntPtr LLMAgent_Get_User_Role_Static(IntPtr llm);
-
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLMAgent_Set_Assistant_Role")]
-        public static extern void LLMAgent_Set_Assistant_Role_Static(IntPtr llm, [MarshalAs(UnmanagedType.LPStr)] string assistantRole);
-
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLMAgent_Get_Assistant_Role")]
-        public static extern IntPtr LLMAgent_Get_Assistant_Role_Static(IntPtr llm);
+        public static extern IntPtr LLMAgent_Construct_Static(IntPtr llm, [MarshalAs(UnmanagedType.LPStr)] string systemPrompt = "");
 
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLMAgent_Set_System_Prompt")]
         public static extern void LLMAgent_Set_System_Prompt_Static(IntPtr llm, [MarshalAs(UnmanagedType.LPStr)] string systemPrompt);
@@ -546,10 +510,11 @@ namespace UndreamAI.LlamaLib
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLMAgent_Set_History")]
         public static extern void LLMAgent_Set_History_Static(IntPtr llm, [MarshalAs(UnmanagedType.LPStr)] string historyJson);
 
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLMAgent_Add_Message")]
-        public static extern void LLMAgent_Add_Message_Static(IntPtr llm,
-            [MarshalAs(UnmanagedType.LPStr)] string role,
-            [MarshalAs(UnmanagedType.LPStr)] string content);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLMAgent_Add_User_Message")]
+        public static extern void LLMAgent_Add_User_Message_Static(IntPtr llm, [MarshalAs(UnmanagedType.LPStr)] string content);
+
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLMAgent_Add_Assistant_Message")]
+        public static extern void LLMAgent_Add_Assistant_Message_Static(IntPtr llm, [MarshalAs(UnmanagedType.LPStr)] string content);
 
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLMAgent_Remove_Last_Message")]
         public static extern void LLMAgent_Remove_Last_Message_Static(IntPtr llm);
@@ -605,11 +570,7 @@ namespace UndreamAI.LlamaLib
             LLMClient_Construct_Remote_Internal = (url, port, apiKey, numRetries) => LLMClient_Construct_Remote_Static(url, port, apiKey, numRetries);
             LLMClient_Set_SSL_Internal = (llm, SSLCert) => LLMClient_Set_SSL_Static(llm, SSLCert);
             LLMClient_Is_Server_Alive_Internal = (llm) => LLMClient_Is_Server_Alive_Static(llm);
-            LLMAgent_Construct_Internal = (llm, systemPrompt, userRole, assistantRole) => LLMAgent_Construct_Static(llm, systemPrompt, userRole, assistantRole);
-            LLMAgent_Set_User_Role_Internal = (llm, userRole) => LLMAgent_Set_User_Role_Static(llm, userRole);
-            LLMAgent_Get_User_Role_Internal = (llm) => LLMAgent_Get_User_Role_Static(llm);
-            LLMAgent_Set_Assistant_Role_Internal = (llm, assistantRole) => LLMAgent_Set_Assistant_Role_Static(llm, assistantRole);
-            LLMAgent_Get_Assistant_Role_Internal = (llm) => LLMAgent_Get_Assistant_Role_Static(llm);
+            LLMAgent_Construct_Internal = (llm, systemPrompt) => LLMAgent_Construct_Static(llm, systemPrompt);
             LLMAgent_Set_System_Prompt_Internal = (llm, systemPrompt) => LLMAgent_Set_System_Prompt_Static(llm, systemPrompt);
             LLMAgent_Get_System_Prompt_Internal = (llm) => LLMAgent_Get_System_Prompt_Static(llm);
             LLM_Set_Completion_Parameters_Internal = (llm, parameters) => LLM_Set_Completion_Parameters_Static(llm, parameters);
@@ -622,7 +583,8 @@ namespace UndreamAI.LlamaLib
             LLMAgent_Clear_History_Internal = (llm) => LLMAgent_Clear_History_Static(llm);
             LLMAgent_Get_History_Internal = (llm) => LLMAgent_Get_History_Static(llm);
             LLMAgent_Set_History_Internal = (llm, historyJson) => LLMAgent_Set_History_Static(llm, historyJson);
-            LLMAgent_Add_Message_Internal = (llm, role, content) => LLMAgent_Add_Message_Static(llm, role, content);
+            LLMAgent_Add_User_Message_Internal = (llm, content) => LLMAgent_Add_User_Message_Static(llm, content);
+            LLMAgent_Add_Assistant_Message_Internal = (llm, content) => LLMAgent_Add_Assistant_Message_Static(llm, content);
             LLMAgent_Remove_Last_Message_Internal = (llm) => LLMAgent_Remove_Last_Message_Static(llm);
             LLMAgent_Save_History_Internal = (llm, filepath) => LLMAgent_Save_History_Static(llm, filepath);
             LLMAgent_Load_History_Internal = (llm, filepath) => LLMAgent_Load_History_Static(llm, filepath);
@@ -814,10 +776,6 @@ namespace UndreamAI.LlamaLib
             LLMClient_Set_SSL_Internal = LibraryLoader.GetSymbolDelegate<LLMClient_Set_SSL_Delegate>(libraryHandle, "LLMClient_Set_SSL");
             LLMClient_Is_Server_Alive_Internal = LibraryLoader.GetSymbolDelegate<LLMClient_Is_Server_Alive_Delegate>(libraryHandle, "LLMClient_Is_Server_Alive");
             LLMAgent_Construct_Internal = LibraryLoader.GetSymbolDelegate<LLMAgent_Construct_Delegate>(libraryHandle, "LLMAgent_Construct");
-            LLMAgent_Set_User_Role_Internal = LibraryLoader.GetSymbolDelegate<LLMAgent_Set_User_Role_Delegate>(libraryHandle, "LLMAgent_Set_User_Role");
-            LLMAgent_Get_User_Role_Internal = LibraryLoader.GetSymbolDelegate<LLMAgent_Get_User_Role_Delegate>(libraryHandle, "LLMAgent_Get_User_Role");
-            LLMAgent_Set_Assistant_Role_Internal = LibraryLoader.GetSymbolDelegate<LLMAgent_Set_Assistant_Role_Delegate>(libraryHandle, "LLMAgent_Set_Assistant_Role");
-            LLMAgent_Get_Assistant_Role_Internal = LibraryLoader.GetSymbolDelegate<LLMAgent_Get_Assistant_Role_Delegate>(libraryHandle, "LLMAgent_Get_Assistant_Role");
             LLMAgent_Set_System_Prompt_Internal = LibraryLoader.GetSymbolDelegate<LLMAgent_Set_System_Prompt_Delegate>(libraryHandle, "LLMAgent_Set_System_Prompt");
             LLMAgent_Get_System_Prompt_Internal = LibraryLoader.GetSymbolDelegate<LLMAgent_Get_System_Prompt_Delegate>(libraryHandle, "LLMAgent_Get_System_Prompt");
             LLMAgent_Set_Slot_Internal = LibraryLoader.GetSymbolDelegate<LLMAgent_Set_Slot_Delegate>(libraryHandle, "LLMAgent_Set_Slot");
@@ -830,7 +788,8 @@ namespace UndreamAI.LlamaLib
             LLMAgent_Clear_History_Internal = LibraryLoader.GetSymbolDelegate<LLMAgent_Clear_History_Delegate>(libraryHandle, "LLMAgent_Clear_History");
             LLMAgent_Get_History_Internal = LibraryLoader.GetSymbolDelegate<LLMAgent_Get_History_Delegate>(libraryHandle, "LLMAgent_Get_History");
             LLMAgent_Set_History_Internal = LibraryLoader.GetSymbolDelegate<LLMAgent_Set_History_Delegate>(libraryHandle, "LLMAgent_Set_History");
-            LLMAgent_Add_Message_Internal = LibraryLoader.GetSymbolDelegate<LLMAgent_Add_Message_Delegate>(libraryHandle, "LLMAgent_Add_Message");
+            LLMAgent_Add_User_Message_Internal = LibraryLoader.GetSymbolDelegate<LLMAgent_Add_User_Message_Delegate>(libraryHandle, "LLMAgent_Add_User_Message");
+            LLMAgent_Add_Assistant_Message_Internal = LibraryLoader.GetSymbolDelegate<LLMAgent_Add_Assistant_Message_Delegate>(libraryHandle, "LLMAgent_Add_Assistant_Message");
             LLMAgent_Remove_Last_Message_Internal = LibraryLoader.GetSymbolDelegate<LLMAgent_Remove_Last_Message_Delegate>(libraryHandle, "LLMAgent_Remove_Last_Message");
             LLMAgent_Save_History_Internal = LibraryLoader.GetSymbolDelegate<LLMAgent_Save_History_Delegate>(libraryHandle, "LLMAgent_Save_History");
             LLMAgent_Load_History_Internal = LibraryLoader.GetSymbolDelegate<LLMAgent_Load_History_Delegate>(libraryHandle, "LLMAgent_Load_History");

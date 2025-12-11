@@ -75,10 +75,7 @@ namespace UndreamAI.LlamaLib
             llmBase = _llm;
             llamaLib = llmBase.llamaLib;
 
-            llm = llamaLib.LLMAgent_Construct(llmBase.llm,
-                _systemPrompt ?? string.Empty,
-                _userRole ?? "user",
-                _assistantRole ?? "assistant");
+            llm = llamaLib.LLMAgent_Construct(llmBase.llm, _systemPrompt ?? string.Empty);
             if (llm == IntPtr.Zero) throw new InvalidOperationException("Failed to create LLMAgent");
         }
 
@@ -94,34 +91,6 @@ namespace UndreamAI.LlamaLib
             {
                 CheckLlamaLib();
                 llamaLib.LLMAgent_Set_Slot(llm, value);
-            }
-        }
-
-        public string UserRole
-        {
-            get
-            {
-                CheckLlamaLib();
-                return Marshal.PtrToStringAnsi(llamaLib.LLMAgent_Get_User_Role(llm)) ?? "";
-            }
-            set
-            {
-                CheckLlamaLib();
-                llamaLib.LLMAgent_Set_User_Role(llm, value ?? string.Empty);
-            }
-        }
-
-        public string AssistantRole
-        {
-            get
-            {
-                CheckLlamaLib();
-                return Marshal.PtrToStringAnsi(llamaLib.LLMAgent_Get_Assistant_Role(llm)) ?? "";
-            }
-            set
-            {
-                CheckLlamaLib();
-                llamaLib.LLMAgent_Set_Assistant_Role(llm, value ?? string.Empty);
             }
         }
 
@@ -203,27 +172,16 @@ namespace UndreamAI.LlamaLib
             llamaLib.LLMAgent_Clear_History(llm);
         }
 
-        public void AddMessage(string role, string content)
-        {
-            CheckLlamaLib();
-            llamaLib.LLMAgent_Add_Message(llm, role ?? string.Empty, content ?? string.Empty);
-        }
-
         public void AddUserMessage(string content)
         {
             CheckLlamaLib();
-            llamaLib.LLMAgent_Add_Message(llm, UserRole, content ?? string.Empty);
+            llamaLib.LLMAgent_Add_User_Message(llm, content ?? string.Empty);
         }
 
         public void AddAssistantMessage(string content)
         {
             CheckLlamaLib();
-            llamaLib.LLMAgent_Add_Message(llm, AssistantRole, content ?? string.Empty);
-        }
-
-        public void AddMessage(ChatMessage message)
-        {
-            AddMessage(message.role, message.content);
+            llamaLib.LLMAgent_Add_Assistant_Message(llm, content ?? string.Empty);
         }
 
         public void RemoveLastMessage()
