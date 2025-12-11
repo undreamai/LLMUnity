@@ -31,12 +31,6 @@ namespace LLMUnity
         /// <summary>Server slot to use for processing (affects caching behavior)</summary>
         [ModelAdvanced, SerializeField] protected int _slot = -1;
 
-        /// <summary>Role name for user messages in conversation</summary>
-        [Chat, SerializeField] protected string _userRole = "user";
-
-        /// <summary>Role name for AI assistant messages in conversation</summary>
-        [Chat, SerializeField] protected string _assistantRole = "assistant";
-
         /// <summary>System prompt that defines the AI's personality and behavior</summary>
         [TextArea(5, 10), Chat, SerializeField]
         protected string _systemPrompt = "A chat between a curious human and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the human's questions.";
@@ -53,34 +47,6 @@ namespace LLMUnity
                 {
                     _slot = value;
                     if (llmAgent != null) llmAgent.SlotId = _slot;
-                }
-            }
-        }
-
-        /// <summary>Role identifier for user messages</summary>
-        public string userRole
-        {
-            get => _userRole;
-            set
-            {
-                if (_userRole != value)
-                {
-                    _userRole = value;
-                    if (llmAgent != null) llmAgent.UserRole = _userRole;
-                }
-            }
-        }
-
-        /// <summary>Role identifier for assistant messages</summary>
-        public string assistantRole
-        {
-            get => _assistantRole;
-            set
-            {
-                if (_assistantRole != value)
-                {
-                    _assistantRole = value;
-                    if (llmAgent != null) llmAgent.AssistantRole = _assistantRole;
                 }
             }
         }
@@ -142,7 +108,7 @@ namespace LLMUnity
             string exceptionMessage = "";
             try
             {
-                llmAgent = new UndreamAI.LlamaLib.LLMAgent(llmClient, systemPrompt, userRole, assistantRole);
+                llmAgent = new UndreamAI.LlamaLib.LLMAgent(llmClient, systemPrompt);
             }
             catch (Exception ex)
             {
@@ -222,17 +188,6 @@ namespace LLMUnity
         {
             await CheckCaller(checkConnection: false);
             llmAgent.ClearHistory();
-        }
-
-        /// <summary>
-        /// Adds a message with a specific role to the conversation history.
-        /// </summary>
-        /// <param name="role">Message role (e.g., userRole, assistantRole, or custom role)</param>
-        /// <param name="content">Message content</param>
-        public virtual async Task AddMessage(string role, string content)
-        {
-            await CheckCaller();
-            llmAgent.AddMessage(role, content);
         }
 
         /// <summary>
