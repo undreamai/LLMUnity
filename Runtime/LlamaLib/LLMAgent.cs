@@ -75,9 +75,9 @@ namespace UndreamAI.LlamaLib
             llmBase = _llm;
             llamaLib = llmBase.llamaLib;
 
-            llm = llamaLib.LLMAgent_Construct(llmBase.llm, 
-                _systemPrompt ?? string.Empty, 
-                _userRole ?? "user", 
+            llm = llamaLib.LLMAgent_Construct(llmBase.llm,
+                _systemPrompt ?? string.Empty,
+                _userRole ?? "user",
                 _assistantRole ?? "assistant");
             if (llm == IntPtr.Zero) throw new InvalidOperationException("Failed to create LLMAgent");
         }
@@ -179,7 +179,7 @@ namespace UndreamAI.LlamaLib
                     }
                 }
             }
-            catch { }
+            catch {}
 
             return messages;
         }
@@ -305,7 +305,6 @@ namespace UndreamAI.LlamaLib
             CheckLlamaLib();
             llamaLib.LLM_Cancel(llm, SlotId);
         }
-
 
         // Override slot-based methods to hide them
         private new string SaveSlot(int id_slot, string filepath)
