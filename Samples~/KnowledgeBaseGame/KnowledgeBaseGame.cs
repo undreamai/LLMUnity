@@ -133,9 +133,6 @@ namespace LLMUnitySamples
             currentBotName = CharacterSelect.options[selection].text;
             botImages[currentBotName].gameObject.SetActive(true);
             Debug.Log($"{currentBotName}: {rag.Count(currentBotName)} phrases available");
-
-            // set the LLMAgent name
-            llmAgent.assistantRole = currentBotName;
         }
 
         void SetAIText(string text)
