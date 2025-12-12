@@ -273,6 +273,7 @@ namespace LLMUnity
         public LLMService llmService { get; private set; }
 
         /// <summary>Model architecture name (e.g., "llama", "mistral")</summary>
+        [Tooltip("Model architecture name (e.g., "llama", "mistral")")]
         public string architecture => llmlib?.architecture;
 
         /// <summary>True if this model only supports embeddings (no text generation)</summary>
