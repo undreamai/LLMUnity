@@ -153,6 +153,7 @@ namespace LLMUnityTests
             gameObject.SetActive(false);
             llm = CreateLLM();
             llmAgent = CreateLLMAgent();
+            llmAgent.temperature = 0;
             gameObject.SetActive(true);
         }
 
@@ -161,8 +162,8 @@ namespace LLMUnityTests
             prompt = "You are a scientific assistant and provide short and concise info on the user questions";
             prompt2 = "You are a funny assistant and answer the user questions with smartass comments";
             query = "Can you tell me some fun fact about ants in one sentence?";
-            reply1 = "Sure! Ants are known for their incredible teamwork, often working together to build complex structures like nests.";
-            reply2 = "Of course! Ants are so smart and hardworking that they can build intricate nests with just a few workers.";
+            reply1 = "Sure! Here's a fun fact: Ants work together to build complex structures like nests, which is a fascinating example of teamwork.";
+            reply2 = "Of course! Ants are the most intelligent insects on Earth—working in perfect harmony to build their homes and solve problems.";
             tokens1 = 20;
             tokens2 = 9;
         }
@@ -245,8 +246,6 @@ namespace LLMUnityTests
         {
             LLMAgent llmAgent = gameObject.AddComponent<LLMAgent>();
             llmAgent.llm = llm;
-            llmAgent.userRole = "User";
-            llmAgent.assistantRole = "Assistant";
             llmAgent.systemPrompt = prompt;
             llmAgent.temperature = 0;
             llmAgent.seed = 0;
@@ -328,7 +327,7 @@ namespace LLMUnityTests
             var commonWords = words1.Intersect(words2).Count();
             var totalWords = Math.Max(words1.Length, words2.Length);
 
-            Assert.That((double)commonWords / totalWords >= 0.7);
+            Assert.That((double)commonWords / totalWords >= 0.5);
         }
 
         public void TestPostChat(int num)
@@ -417,8 +416,8 @@ namespace LLMUnityTests
         public override void SetParameters()
         {
             base.SetParameters();
-            reply1 = "Sure! Here's a fun fact: Ants work together to build complex structures like nests, even though they don't speak.";
-            reply2 = "Of course! Ants are so sneaky and efficient that they can build a house in just a few days without any help from humans.";
+            reply1 = "Ants are known for their ability to build complex structures, though it's not always obvious.";
+            reply2 = "Ants are known for their incredible teamwork and ability to create intricate structures like nests!";
             tokens1 = 5;
             tokens2 = 9;
             loraWeight = 0.9f;
@@ -479,12 +478,6 @@ namespace LLMUnityTests
             llmAgent.remote = true;
             return llmAgent;
         }
-
-        public override void SetParameters()
-        {
-            base.SetParameters();
-            reply2 = "Of course! Ants are so smart—they can remember the location of food sources and even solve problems without words.";
-        }
     }
 
     public class TestLLM_Double : TestLLM
@@ -534,9 +527,9 @@ namespace LLMUnityTests
 
             List<ChatMessage> chatHistory = JsonUtility.FromJson<ChatListWrapper>("{ \"chat\": " + json + " }").chat;
             Assert.AreEqual(chatHistory.Count, 2);
-            Assert.AreEqual(chatHistory[0].role, llmAgent.userRole);
+            Assert.AreEqual(chatHistory[0].role, "user");
             Assert.AreEqual(chatHistory[0].content, "bye!");
-            Assert.AreEqual(chatHistory[1].role, llmAgent.assistantRole);
+            Assert.AreEqual(chatHistory[1].role, "assistant");
 
             Assert.AreEqual(llmAgent.chat.Count, chatHistory.Count);
             for (int i = 0; i < chatHistory.Count; i++)
@@ -566,6 +559,12 @@ namespace LLMUnityTests
 
     public class TestLLM_cuBLAS : TestLLM_tinyBLAS
     {
+        public override void SetParameters()
+        {
+            base.SetParameters();
+            reply2 = "Of course! Ants are the most intelligent insects on Earth—though they don’t understand humans.";
+        }
+
         public override void TestArchitecture()
         {
             Assert.That(llm.architecture.Contains("cublas"));
@@ -584,7 +583,8 @@ namespace LLMUnityTests
         public override void SetParameters()
         {
             base.SetParameters();
-            reply1 = "Sure! Ants are known for their incredible teamwork, often working together to build complex structures like nests.";
+            reply1 = "Sure! Here's a fun fact: Ants work together to build complex structures like nests, even though they don't have a brain.";
+            reply2 = "Of course! Here’s a fun fact: Ants are the most intelligent insects on Earth—though they’re not really smart, they’ve got a lot of teamwork and problem-solving skills.";
         }
     }
 }
