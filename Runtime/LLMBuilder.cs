@@ -4,6 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using System.IO;
 using System.Collections.Generic;
+using System;
 
 #if UNITY_EDITOR
 namespace LLMUnity
@@ -29,11 +30,6 @@ namespace LLMUnity
             string pluginDir = Path.Combine("Plugins", platform, "LLMUnity");
             if (!relative) pluginDir = Path.Combine(Application.dataPath, pluginDir);
             return pluginDir;
-        }
-
-        public static string PluginLibraryDir(string platform, bool relative = false)
-        {
-            return Path.Combine(PluginDir(platform, relative), LLMUnitySetup.libraryName);
         }
 
         public static void Retry(System.Action action, int retries = 10, int delayMs = 100)
@@ -64,10 +60,12 @@ namespace LLMUnity
         /// <param name="source">source file/directory</param>
         /// <param name="target">targer file/directory</param>
         /// <param name="actionCallback">action</param>
-        public static void HandleActionFileRecursive(string source, string target, ActionCallback actionCallback)
+        public static void HandleActionFileRecursive(string source, string target, Action<string, string> actionCallback)
         {
             if (File.Exists(source))
             {
+                string targetDir = Path.GetDirectoryName(target);
+                if (targetDir != "" && !Directory.Exists(targetDir)) Directory.CreateDirectory(targetDir);
                 Retry(() => actionCallback(source, target));
             }
             else if (Directory.Exists(source))
@@ -146,9 +144,8 @@ namespace LLMUnity
 
         static bool MoveAction(string source, string target, bool addEntry = true)
         {
-            ActionCallback moveCallback;
-            if (File.Exists(source)) moveCallback = File.Move;
-            else if (Directory.Exists(source)) moveCallback = MovePath;
+            Action<string, string> moveCallback;
+            if (File.Exists(source) || Directory.Exists(source)) moveCallback = MovePath;
             else return false;
 
             if (addEntry) AddMovedPair(source, target);
@@ -158,7 +155,7 @@ namespace LLMUnity
 
         static bool CopyAction(string source, string target, bool addEntry = true)
         {
-            ActionCallback copyCallback;
+            Action<string, string> copyCallback;
             if (File.Exists(source)) copyCallback = File.Copy;
             else if (Directory.Exists(source)) copyCallback = CopyPath;
             else return false;
@@ -178,6 +175,17 @@ namespace LLMUnity
         {
             AddTargetPair(target);
             AddTargetPair(target + ".meta");
+        }
+
+        static string MobileSuffix(BuildTarget buildTarget)
+        {
+            return (buildTarget == BuildTarget.Android) ? "so" : "a";
+        }
+
+        static string MobilePluginPath(BuildTarget buildTarget, string arch, bool relative = false)
+        {
+            string os = buildTarget.ToString();
+            return Path.Combine(PluginDir(os, relative), arch, $"libllamalib_{os.ToLower()}.{MobileSuffix(buildTarget)}");
         }
 
         /// <summary>
@@ -252,8 +260,8 @@ namespace LLMUnity
             {
                 foreach (string platform in platforms)
                 {
-                    string source = Path.Combine(LLMUnitySetup.libraryPath, platform, "native");
-                    string target = Path.Combine(PluginLibraryDir(buildTarget.ToString()), platform);
+                    string source = Path.Combine(LLMUnitySetup.libraryPath, platform, "native",  $"libllamalib_{platform}.{MobileSuffix(buildTarget)}");
+                    string target = MobilePluginPath(buildTarget, platform.Split("-")[1].ToUpper());
                     string pluginDir = PluginDir(buildTarget.ToString());
                     MoveAction(source, target);
                     MoveAction(source + ".meta", target + ".meta");
@@ -266,13 +274,12 @@ namespace LLMUnity
         {
             foreach (BuildTarget buildTarget in new BuildTarget[] { BuildTarget.iOS, BuildTarget.VisionOS, BuildTarget.Android })
             {
-                string suffix = (buildTarget == BuildTarget.Android) ? "so" : "a";
-                string platformDir = Path.Combine("Assets", PluginLibraryDir(buildTarget.ToString(), true));
+                string platformDir = Path.Combine("Assets", PluginDir(buildTarget.ToString(), true));
                 if (!Directory.Exists(platformDir)) continue;
                 foreach (string archDir in Directory.GetDirectories(platformDir))
                 {
                     string arch = Path.GetFileName(archDir);
-                    string pathToPlugin = Path.Combine(platformDir, $"libllamalib_{arch}.{suffix}");
+                    string pathToPlugin = Path.Combine("Assets", MobilePluginPath(buildTarget, arch, true));
                     for (int i = 0; i < movedAssets.Length; i++)
                     {
                         if (movedAssets[i] == pathToPlugin)
@@ -281,7 +288,7 @@ namespace LLMUnity
                             if (importer != null && importer.isNativePlugin)
                             {
                                 importer.SetCompatibleWithPlatform(buildTarget, true);
-                                importer.SetPlatformData(buildTarget, "CPU", arch.Split("_")[1].ToUpper());
+                                importer.SetPlatformData(buildTarget, "CPU", arch);
                                 AssetDatabase.ImportAsset(pathToPlugin);
                             }
                         }
