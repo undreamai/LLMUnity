@@ -500,7 +500,7 @@ namespace LLMUnity
         /// <param name="query">Text to tokenize</param>
         /// <param name="callback">Optional callback to receive the result</param>
         /// <returns>List of token IDs</returns>
-        public virtual async Task<List<int>> Tokenize(string query, Callback<List<int>> callback = null)
+        public virtual async Task<List<int>> Tokenize(string query, Action<List<int>> callback = null)
         {
             if (string.IsNullOrEmpty(query))
             {
@@ -519,7 +519,7 @@ namespace LLMUnity
         /// <param name="tokens">Token IDs to decode</param>
         /// <param name="callback">Optional callback to receive the result</param>
         /// <returns>Decoded text</returns>
-        public virtual async Task<string> Detokenize(List<int> tokens, Callback<string> callback = null)
+        public virtual async Task<string> Detokenize(List<int> tokens, Action<string> callback = null)
         {
             if (tokens == null)
             {
@@ -538,7 +538,7 @@ namespace LLMUnity
         /// <param name="query">Text to embed</param>
         /// <param name="callback">Optional callback to receive the result</param>
         /// <returns>Embedding vector</returns>
-        public virtual async Task<List<float>> Embeddings(string query, Callback<List<float>> callback = null)
+        public virtual async Task<List<float>> Embeddings(string query, Action<List<float>> callback = null)
         {
             if (string.IsNullOrEmpty(query))
             {
@@ -559,12 +559,24 @@ namespace LLMUnity
         /// <param name="completionCallback">Optional callback when completion finishes</param>
         /// <param name="id_slot">Slot ID for the request (-1 for auto-assignment)</param>
         /// <returns>Task that returns the generated completion text</returns>
-        public virtual async Task<string> Completion(string prompt, LlamaLib.CharArrayCallback callback = null,
-            EmptyCallback completionCallback = null, int id_slot = -1)
+        public virtual async Task<string> Completion(string prompt, Action<string> callback = null,
+            Action completionCallback = null, int id_slot = -1)
         {
             await CheckCaller();
+
+            LlamaLib.CharArrayCallback wrappedCallback = null;
+            if (callback != null)
+            {
+#if ENABLE_IL2CPP
+                Action<string> mainThreadCallback = Utils.WrapActionForMainThread(callback, this);
+                wrappedCallback = IL2CPP_Completion.CreateCallback(mainThreadCallback);
+#else
+                wrappedCallback = Utils.WrapCallbackForAsync(callback, this);
+#endif
+            }
+
             SetCompletionParameters();
-            string result = await llmClient.CompletionAsync(prompt, callback, id_slot);
+            string result = await llmClient.CompletionAsync(prompt, wrappedCallback, id_slot);
             completionCallback?.Invoke();
             return result;
         }

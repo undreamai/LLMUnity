@@ -38,7 +38,7 @@ namespace LLMUnity
             return response.ContentLength;
         }
 
-        public Task DownloadFileTaskAsyncResume(Uri address, string fileName, bool resume = false, Callback<float> progressCallback = null)
+        public Task DownloadFileTaskAsyncResume(Uri address, string fileName, bool resume = false, Action<float> progressCallback = null)
         {
             var tcs = new TaskCompletionSource<object>(address);
             FileStream fs = null;
@@ -101,7 +101,7 @@ namespace LLMUnity
             }
         }
 
-        private async void DownloadBitsAsync(WebRequest request, Stream writeStream, long bytesToSkip = 0, Callback<float> progressCallback = null, TaskCompletionSource<object> tcs = null)
+        private async void DownloadBitsAsync(WebRequest request, Stream writeStream, long bytesToSkip = 0, Action<float> progressCallback = null, TaskCompletionSource<object> tcs = null)
         {
             try
             {
@@ -159,7 +159,7 @@ namespace LLMUnity
             }
         }
 
-        private void PostProgressChanged(Callback<float> progressCallback, long BytesReceived, long TotalBytesToReceive)
+        private void PostProgressChanged(Action<float> progressCallback, long BytesReceived, long TotalBytesToReceive)
         {
             if (progressCallback != null && BytesReceived > 0)
             {

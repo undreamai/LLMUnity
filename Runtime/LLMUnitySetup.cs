@@ -74,12 +74,6 @@ namespace LLMUnity
         public LLMUnityException(string message = "") : base(message) {}
     }
 
-    public delegate void EmptyCallback();
-    public delegate void Callback<T>(T message);
-    public delegate Task TaskCallback<T>(T message);
-    public delegate T2 ContentCallback<T, T2>(T message);
-    public delegate void ActionCallback(string source, string target);
-
     [Serializable]
     public struct StringPair
     {
@@ -170,7 +164,7 @@ namespace LLMUnity
         static string DebugModeKey = "DebugMode";
         public static bool CUBLAS = false;
         static string CUBLASKey = "CUBLAS";
-        static List<Callback<string>> errorCallbacks = new List<Callback<string>>();
+        static List<Action<string>> errorCallbacks = new List<Action<string>>();
         static readonly object lockObject = new object();
         static Dictionary<string, Task> androidExtractTasks = new Dictionary<string, Task>();
 
@@ -199,7 +193,7 @@ namespace LLMUnity
         {
             if ((int)DebugMode > (int)DebugModeType.Error) return;
             Debug.LogError(message);
-            foreach (Callback<string> errorCallback in errorCallbacks) errorCallback(message);
+            foreach (Action<string> errorCallback in errorCallbacks) errorCallback(message);
             if (throwException) throw new LLMUnityException(message);
         }
 
@@ -242,7 +236,9 @@ namespace LLMUnity
 
         static void InitializeOnLoadCommon()
         {
+#if UNITY_EDITOR || !((UNITY_ANDROID || UNITY_IOS || UNITY_VISIONOS))
             LlamaLib.baseLibraryPath = Path.Combine(libraryPath, LlamaLib.GetPlatform(), "native");
+#endif
         }
 
 #if UNITY_EDITOR
@@ -275,7 +271,7 @@ namespace LLMUnity
 
         public static async Task DownloadFile(
             string fileUrl, string savePath, bool overwrite = false,
-            Callback<string> callback = null, Callback<float> progressCallback = null
+            Action<string> callback = null, Action<float> progressCallback = null
         )
         {
             if (File.Exists(savePath) && !overwrite)
@@ -541,13 +537,13 @@ namespace LLMUnity
         /// \endcond
 
         /// <summary> Add callback function to call for error logs </summary>
-        public static void AddErrorCallBack(Callback<string> callback)
+        public static void AddErrorCallBack(Action<string> callback)
         {
             errorCallbacks.Add(callback);
         }
 
         /// <summary> Remove callback function added for error logs </summary>
-        public static void RemoveErrorCallBack(Callback<string> callback)
+        public static void RemoveErrorCallBack(Action<string> callback)
         {
             errorCallbacks.Remove(callback);
         }

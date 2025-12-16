@@ -344,12 +344,12 @@ namespace LLMUnity
             return (await llmEmbedder.Embeddings(inputString)).ToArray();
         }
 
-        public virtual async Task<List<int>> Tokenize(string query, Callback<List<int>> callback = null)
+        public virtual async Task<List<int>> Tokenize(string query, Action<List<int>> callback = null)
         {
             return await llmEmbedder.Tokenize(query, callback);
         }
 
-        public async Task<string> Detokenize(List<int> tokens, Callback<string> callback = null)
+        public async Task<string> Detokenize(List<int> tokens, Action<string> callback = null)
         {
             return await llmEmbedder.Detokenize(tokens, callback);
         }

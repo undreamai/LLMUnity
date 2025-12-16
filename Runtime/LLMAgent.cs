@@ -230,15 +230,26 @@ namespace LLMUnity
         /// <param name="completionCallback">Optional callback when response is complete</param>
         /// <param name="addToHistory">Whether to add the exchange to conversation history</param>
         /// <returns>Task that returns the AI assistant's response</returns>
-        public virtual async Task<string> Chat(string query, LlamaLib.CharArrayCallback callback = null,
-            EmptyCallback completionCallback = null, bool addToHistory = true)
+        public virtual async Task<string> Chat(string query, Action<string> callback = null,
+            Action completionCallback = null, bool addToHistory = true)
         {
             await CheckCaller();
             string result = "";
             try
             {
-                // Wrap callback to ensure it runs on the main thread
-                LlamaLib.CharArrayCallback wrappedCallback = Utils.WrapCallbackForAsync(callback, this);
+                LlamaLib.CharArrayCallback wrappedCallback = null;
+                if (callback != null)
+                {
+#if ENABLE_IL2CPP
+                    // For IL2CPP: wrap to IntPtr callback, then wrap for main thread
+                    Action<string> mainThreadCallback = Utils.WrapActionForMainThread(callback, this);
+                    wrappedCallback = IL2CPP_Completion.CreateCallback(mainThreadCallback);
+#else
+                    // For Mono: direct callback wrapping
+                    wrappedCallback = Utils.WrapCallbackForAsync(callback, this);
+#endif
+                }
+
                 SetCompletionParameters();
                 result = await llmAgent.ChatAsync(query, addToHistory, wrappedCallback, returnResponseJson: debugPrompt);
                 if (debugPrompt)
@@ -264,7 +275,7 @@ namespace LLMUnity
         /// </summary>
         /// <param name="completionCallback">Optional callback when warmup completes</param>
         /// <returns>Task that completes when warmup finishes</returns>
-        public virtual async Task Warmup(EmptyCallback completionCallback = null)
+        public virtual async Task Warmup(Action completionCallback = null)
         {
             await Warmup(null, completionCallback);
         }
@@ -276,7 +287,7 @@ namespace LLMUnity
         /// <param name="query">Warmup prompt (not added to history)</param>
         /// <param name="completionCallback">Optional callback when warmup completes</param>
         /// <returns>Task that completes when warmup finishes</returns>
-        public virtual async Task Warmup(string query, EmptyCallback completionCallback = null)
+        public virtual async Task Warmup(string query, Action completionCallback = null)
         {
             int originalNumPredict = numPredict;
             try
