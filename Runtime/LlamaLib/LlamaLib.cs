@@ -9,9 +9,13 @@ namespace UndreamAI.LlamaLib
     public class LlamaLib
     {
         //################################################## FUNCTION DELEGATES ##################################################//
-
+#if ENABLE_IL2CPP
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void CharArrayCallback(IntPtr charArray);
+#else
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void CharArrayCallback([MarshalAs(UnmanagedType.LPStr)] string charArray);
+#endif
 
         // Main lib
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
@@ -306,7 +310,7 @@ namespace UndreamAI.LlamaLib
         public void LLMClient_Set_SSL(IntPtr llm, string SSLCert) => CallWithStatus(() => LLMClient_Set_SSL_Internal(llm, SSLCert));
         public bool LLMClient_Is_Server_Alive(IntPtr llm) => CallWithStatus(() => LLMClient_Is_Server_Alive_Internal(llm));
         public IntPtr LLMAgent_Construct(IntPtr llm, string systemPrompt = "") => CallWithStatus(() => LLMAgent_Construct_Internal(llm, systemPrompt));
-       public void LLMAgent_Set_System_Prompt(IntPtr llm, string systemPrompt) => CallWithStatus(() => LLMAgent_Set_System_Prompt_Internal(llm, systemPrompt));
+        public void LLMAgent_Set_System_Prompt(IntPtr llm, string systemPrompt) => CallWithStatus(() => LLMAgent_Set_System_Prompt_Internal(llm, systemPrompt));
         public IntPtr LLMAgent_Get_System_Prompt(IntPtr llm) => CallWithStatus(() => LLMAgent_Get_System_Prompt_Internal(llm));
         public void LLM_Set_Completion_Parameters(IntPtr llm, string parameters) => CallWithStatus(() => LLM_Set_Completion_Parameters_Internal(llm, parameters));
         public IntPtr LLM_Get_Completion_Parameters(IntPtr llm) => CallWithStatus(() => LLM_Get_Completion_Parameters_Internal(llm));
@@ -328,8 +332,10 @@ namespace UndreamAI.LlamaLib
 
         //################################################## MOBILE IMPLEMENTATION ##################################################//
 
-#if ANDROID || IOS || VISIONOS
-#if ANDROID_ARM64
+#if (ANDROID || IOS || VISIONOS) || ((UNITY_ANDROID || UNITY_IOS || UNITY_VISIONOS) && !UNITY_EDITOR)
+#if UNITY_ANDROID
+        public const string DllName = "libllamalib_android";
+#elif ANDROID_ARM64
         public const string DllName = "libllamalib_android-arm64";
 #elif ANDROID_X64
         public const string DllName = "libllamalib_android-x64";
@@ -528,15 +534,20 @@ namespace UndreamAI.LlamaLib
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLMAgent_Get_History_Size")]
         public static extern int LLMAgent_Get_History_Size_Static(IntPtr llm);
 
+        public static IntPtr Available_Architectures([MarshalAs(UnmanagedType.I1)] bool gpu) { return IntPtr.Zero; }
+        public static bool Has_GPU_Layers([MarshalAs(UnmanagedType.LPStr)] string command) { return false; }
+
         public LlamaLib(bool gpu = false)
         {
-#if ANDROID_ARM64
+#if UNITY_ANDROID
+            architecture = "android";
+#elif ANDROID_ARM64
             architecture = "android-arm64";
 #elif ANDROID_X64
             architecture = "android-x64";
-#elif IOS
+#elif IOS || UNITY_IOS
             architecture = "ios-arm64";
-#elif VISIONOS
+#elif VISIONOS || UNITY_VISIONOS
             architecture = "visionos-arm64";
 #endif
 
@@ -555,7 +566,7 @@ namespace UndreamAI.LlamaLib
             LLM_Start_Internal = (llm) => LLM_Start_Static(llm);
             LLM_Started_Internal = (llm) => LLM_Started_Static(llm);
             LLM_Stop_Internal = (llm) => LLM_Stop_Static(llm);
-            LLM_Start_Server_Internal = (llm, host, port) => LLM_Start_Server_Static(llm, host, port, apiKey);
+            LLM_Start_Server_Internal = (llm, host, port, apiKey) => LLM_Start_Server_Static(llm, host, port, apiKey);
             LLM_Stop_Server_Internal = (llm) => LLM_Stop_Server_Static(llm);
             LLM_Join_Service_Internal = (llm) => LLM_Join_Service_Static(llm);
             LLM_Join_Server_Internal = (llm) => LLM_Join_Server_Static(llm);
@@ -590,6 +601,8 @@ namespace UndreamAI.LlamaLib
             LLMAgent_Load_History_Internal = (llm, filepath) => LLMAgent_Load_History_Static(llm, filepath);
             LLMAgent_Get_History_Size_Internal = (llm) => LLMAgent_Get_History_Size_Static(llm);
         }
+
+        public void Dispose() {}
 
 #else
         // Desktop platform implementation with dynamic loading
