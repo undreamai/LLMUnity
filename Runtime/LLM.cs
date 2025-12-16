@@ -272,8 +272,8 @@ namespace LLMUnity
         /// <summary>The underlying LLM service instance</summary>
         public LLMService llmService { get; private set; }
 
-        /// <summary>Model architecture name (e.g., "llama", "mistral")</summary>
-        [Tooltip("Model architecture name (e.g., "llama", "mistral")")]
+        /// <summary>Model architecture name (e.g., llama, mistral)</summary>
+        [Tooltip("Model architecture name (e.g., llama, mistral)")]
         public string architecture => llmlib?.architecture;
 
         /// <summary>True if this model only supports embeddings (no text generation)</summary>
@@ -423,9 +423,6 @@ namespace LLMUnity
 
         private void CreateLib()
         {
-            bool useGPU = numGPULayers > 0;
-            llmlib = new LlamaLib(useGPU);
-
             if (LLMUnitySetup.DebugMode <= LLMUnitySetup.DebugModeType.All)
             {
                 LlamaLib.Debug(LLMUnitySetup.DebugModeType.All - LLMUnitySetup.DebugMode + 1);
@@ -435,6 +432,8 @@ namespace LLMUnity
                 LlamaLib.LoggingCallback(LLMUnitySetup.Log);
 #endif
             }
+            bool useGPU = numGPULayers > 0;
+            llmlib = new LlamaLib(useGPU);
         }
 
         /// <summary>
