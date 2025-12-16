@@ -210,8 +210,6 @@ namespace UndreamAI.LlamaLib
         public LLM_Status_Code_Delegate LLM_Status_Code_Internal;
         public LLM_Status_Message_Delegate LLM_Status_Message_Internal;
         public LLM_Embedding_Size_Delegate LLM_Embedding_Size_Internal;
-        public LLMService_Construct_Delegate LLMService_Construct_Internal;
-        public LLMService_From_Command_Delegate LLMService_From_Command_Internal;
         public LLMService_Command_Delegate LLMService_Command_Internal;
         public LLMClient_Construct_Delegate LLMClient_Construct_Internal;
         public LLMClient_Construct_Remote_Delegate LLMClient_Construct_Remote_Internal;
@@ -436,6 +434,9 @@ namespace UndreamAI.LlamaLib
         public static extern int LLM_Embedding_Size_Static(IntPtr llm);
 
         // LLMService functions
+        public LLMService_Construct_Delegate LLMService_Construct_Internal;
+        public LLMService_From_Command_Delegate LLMService_From_Command_Internal;
+
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLMService_Construct")]
         public static extern IntPtr LLMService_Construct_Static(
             [MarshalAs(UnmanagedType.LPStr)] string modelPath,
@@ -574,8 +575,8 @@ namespace UndreamAI.LlamaLib
             LLM_Status_Code_Internal = () => LLM_Status_Code_Static();
             LLM_Status_Message_Internal = () => LLM_Status_Message_Static();
             LLM_Embedding_Size_Internal = (llm) => LLM_Embedding_Size_Static(llm);
-            LLMService_Construct_Internal = (modelPath, numSlots, numThreads, numGpuLayers, flashAttention, contextSize, batchSize, embeddingOnly, loraCount, loraPaths) => LLMService_Construct_Static(modelPath, numSlots, numThreads, numGpuLayers, flashAttention, contextSize, batchSize, embeddingOnly, loraCount, loraPaths);
-            LLMService_From_Command_Internal = (paramsString) => LLMService_From_Command_Static(paramsString);
+            LLMService_Construct_Internal = (modelPath, numSlots, numThreads, numGpuLayers, flashAttention, contextSize, batchSize, embeddingOnly, loraCount, loraPaths) => LLMService_Construct_With_Fallback(modelPath, numSlots, numThreads, numGpuLayers, flashAttention, contextSize, batchSize, embeddingOnly, loraCount, loraPaths);
+            LLMService_From_Command_Internal = (paramsString) => LLMService_From_Command_With_Fallback(paramsString);
             LLMService_Command_Internal = (llm) => LLMService_Command_Static(llm);
             LLMClient_Construct_Internal = (llm) => LLMClient_Construct_Static(llm);
             LLMClient_Construct_Remote_Internal = (url, port, apiKey, numRetries) => LLMClient_Construct_Remote_Static(url, port, apiKey, numRetries);
@@ -614,6 +615,8 @@ namespace UndreamAI.LlamaLib
         private IntPtr libraryHandle = IntPtr.Zero;
         private static int debugLevelGlobal = 0;
         private static CharArrayCallback loggingCallbackGlobal = null;
+        private string[] availableLibraries = null;
+        private int currentLibraryIndex = 0;
 
         // Runtime lib
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
@@ -624,6 +627,25 @@ namespace UndreamAI.LlamaLib
 
         public static Available_Architectures_Delegate Available_Architectures;
         public static Has_GPU_Layers_Delegate Has_GPU_Layers;
+
+        // LLM construction of single library
+        public LLMService_Construct_Delegate LLMService_Construct_Internal_Single;
+        public LLMService_From_Command_Delegate LLMService_From_Command_Internal_Single;
+
+        public IntPtr LLMService_Construct_Internal(
+            [MarshalAs(UnmanagedType.LPStr)] string modelPath,
+            int numSlots = 1,
+            int numThreads = -1,
+            int numGpuLayers = 0,
+            [MarshalAs(UnmanagedType.I1)] bool flashAttention = false,
+            int contextSize = 4096,
+            int batchSize = 2048,
+            [MarshalAs(UnmanagedType.I1)] bool embeddingOnly = false,
+            int loraCount = 0,
+            IntPtr loraPaths = default) => CreateLLMWithFallback(() => LLMService_Construct_Internal_Single(modelPath, numSlots, numThreads, numGpuLayers, flashAttention, contextSize, batchSize, embeddingOnly, loraCount, loraPaths));
+
+        public IntPtr LLMService_From_Command_Internal([MarshalAs(UnmanagedType.LPStr)] string paramsString) => CreateLLMWithFallback(() => LLMService_From_Command_Internal_Single(paramsString));
+
 
         private void LoadRuntimeLibrary()
         {
@@ -726,30 +748,75 @@ namespace UndreamAI.LlamaLib
 
         private void LoadLibraries(bool gpu)
         {
-            string[] libraries = GetAvailableArchitectures(gpu);
-            Exception lastException = null;
-            foreach (string library in libraries)
+            availableLibraries = GetAvailableArchitectures(gpu);
+            currentLibraryIndex = -1;
+
+            if (!TryNextLibrary())
             {
+                throw new InvalidOperationException($"Failed to load any library. Available libraries: {string.Join(", ", availableLibraries)}");
+            }
+        }
+
+        public bool TryNextLibrary()
+        {
+            if (availableLibraries == null)
+                return false;
+
+            if (libraryHandle != IntPtr.Zero)
+            {
+                try { LibraryLoader.FreeLibrary(libraryHandle); } catch {}
+                libraryHandle = IntPtr.Zero;
+            }
+
+            while (++currentLibraryIndex < availableLibraries.Length)
+            {
+                string library = availableLibraries[currentLibraryIndex];
                 try
                 {
                     string libraryPath = FindLibrary(library.Trim());
                     if (debugLevelGlobal > 0) Console.WriteLine("Trying " + libraryPath);
+
                     libraryHandle = LibraryLoader.LoadLibrary(libraryPath);
                     LoadFunctionPointers();
                     architecture = library.Trim();
                     if (debugLevelGlobal > 0) Console.WriteLine("Successfully loaded: " + libraryPath);
-                    return;
+                    return true;
                 }
                 catch (Exception ex)
                 {
-                    if (debugLevelGlobal > 0) Console.WriteLine($"Failed to load library {library}: {ex.Message}.");
-                    lastException = ex;
-                    continue;
+                    if (libraryHandle != IntPtr.Zero)
+                    {
+                        if (debugLevelGlobal > 0) Console.WriteLine($"Failed to load library {library}: {ex.Message}.");
+                        try { LibraryLoader.FreeLibrary(libraryHandle); } catch {}
+                        libraryHandle = IntPtr.Zero;
+                    }
                 }
             }
 
-            // If we get here, no library was successfully loaded
-            throw new InvalidOperationException($"Failed to load any library. Available libraries: {string.Join(", ", libraries)}", lastException);
+            return false;
+        }
+
+        public IntPtr CreateLLMWithFallback(Func<IntPtr> createFunc)
+        {
+            while (true)
+            {
+                try
+                {
+                    IntPtr llmInstance = createFunc();
+                    if (llmInstance == IntPtr.Zero) throw new InvalidOperationException("LLMService construction returned null pointer");
+                    CheckStatus();
+                    return llmInstance;
+                }
+                catch (Exception ex)
+                {
+                    if (!TryNextLibrary())
+                    {
+                        throw new InvalidOperationException(
+                            $"Failed LLMService construction with all available libraries. Last error: {ex.Message}",
+                            ex);
+                    }
+                }
+            }
         }
 
         private void LoadFunctionPointers()
@@ -781,8 +848,8 @@ namespace UndreamAI.LlamaLib
             LLM_Status_Code_Internal = LibraryLoader.GetSymbolDelegate<LLM_Status_Code_Delegate>(libraryHandle, "LLM_Status_Code");
             LLM_Status_Message_Internal = LibraryLoader.GetSymbolDelegate<LLM_Status_Message_Delegate>(libraryHandle, "LLM_Status_Message");
             LLM_Embedding_Size_Internal = LibraryLoader.GetSymbolDelegate<LLM_Embedding_Size_Delegate>(libraryHandle, "LLM_Embedding_Size");
-            LLMService_Construct_Internal = LibraryLoader.GetSymbolDelegate<LLMService_Construct_Delegate>(libraryHandle, "LLMService_Construct");
-            LLMService_From_Command_Internal = LibraryLoader.GetSymbolDelegate<LLMService_From_Command_Delegate>(libraryHandle, "LLMService_From_Command");
+            LLMService_Construct_Internal_Single = LibraryLoader.GetSymbolDelegate<LLMService_Construct_Delegate>(libraryHandle, "LLMService_Construct");
+            LLMService_From_Command_Internal_Single = LibraryLoader.GetSymbolDelegate<LLMService_From_Command_Delegate>(libraryHandle, "LLMService_From_Command");
             LLMService_Command_Internal = LibraryLoader.GetSymbolDelegate<LLMService_Command_Delegate>(libraryHandle, "LLMService_Command");
             LLMClient_Construct_Internal = LibraryLoader.GetSymbolDelegate<LLMClient_Construct_Delegate>(libraryHandle, "LLMClient_Construct");
             LLMClient_Construct_Remote_Internal = LibraryLoader.GetSymbolDelegate<LLMClient_Construct_Remote_Delegate>(libraryHandle, "LLMClient_Construct_Remote");
