@@ -55,7 +55,7 @@ For business inquiries you can reach out at hello@undream.ai.
 - [⭐ Star](https://github.com/undreamai/LLMUnity) the repo, leave a [review](https://assetstore.unity.com/packages/slug/273604) and spread the word about the project!
 - Join us at [Discord](https://discord.gg/RwXKQb6zdv) and say hi.
 - [Contribute](CONTRIBUTING.md) by submitting feature requests, bugs or even your own PR.
-- [![](https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&color=%23fe8e86)](https://github.com/sponsors/amakropoulos) this work to allow even cooler features!
+- [![](https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&color=%23fe8e86)](https://github.com/sponsors/amakropoulos) this work or buy me a  [![Ko-fi](https://img.shields.io/badge/Ko--fi-FF5E5B?logo=ko-fi&logoColor=white)](#) to allow even cooler features!
 
 
 ## Games / Projects using LLM for Unity
@@ -101,7 +101,7 @@ First you will setup the LLM for your game 🏎:
 
 Then you can setup each of your characters as follows 🙋‍♀️:
 - Create an empty GameObject for the character.<br>In the GameObject Inspector click `Add Component` and select the LLMAgent script.
-- Define the role of your AI in the `System Prompt`. You can define the role of the AI (`Assistant Role`) and the player (`User Role`).
+- Define the role of your AI in the `System Prompt`.
 - (Optional) Select the LLM constructed above in the `LLM` field if you have more than one LLM GameObjects.
 
 In your script you can then use it as follows 🦄:
@@ -111,16 +111,23 @@ using LLMUnity;
 public class MyScript {
   public LLMAgent llmAgent;
   
-  void HandleReply(string reply){
-    // do something with the reply from the model
-    Debug.Log(reply);
+  void HandleReply(string replySoFar){
+    // do something with the reply from the model as it is being produced
+    Debug.Log(replySoFar);
   }
   
   void Game(){
-    // your game function
+    // handle the response as it is being produced
     ...
-    string message = "Hello bot!";
-    _ = llmAgent.Chat(message, HandleReply);
+    _ = llmAgent.Chat("Hello bot!", HandleReply);
+    ...
+  }
+  
+  async void GameAsync(){
+    // or handle the entire response in one go
+    ...
+    string reply = await llmAgent.Chat("Hello bot!");
+    Debug.Log(reply);
     ...
   }
 }
@@ -129,14 +136,13 @@ You can also specify a function to call when the model reply has been completed:
 ``` c#
   void ReplyCompleted(){
     // do something when the reply from the model is complete
-    Debug.Log("The AI replied");
+    Debug.Log("The AI has finished replying");
   }
   
   void Game(){
     // your game function
     ...
-    string message = "Hello bot!";
-    _ = llmAgent.Chat(message, HandleReply, ReplyCompleted);
+    _ = llmAgent.Chat("Hello bot!", HandleReply, ReplyCompleted);
     ...
   }
 ```
