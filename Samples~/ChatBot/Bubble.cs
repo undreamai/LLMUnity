@@ -22,9 +22,9 @@ namespace LLMUnitySamples
 
     public class RectTransformResizeHandler : MonoBehaviour
     {
-        EmptyCallback callback;
+        Action callback;
 
-        public void SetCallBack(EmptyCallback callback)
+        public void SetCallBack(Action callback)
         {
             this.callback = callback;
         }
@@ -125,7 +125,7 @@ namespace LLMUnitySamples
             imageCanvas.sortingOrder = 1;
         }
 
-        public void OnResize(EmptyCallback callback)
+        public void OnResize(Action callback)
         {
             RectTransformResizeHandler resizeHandler = bubbleObject.AddComponent<RectTransformResizeHandler>();
             resizeHandler.SetCallBack(callback);
@@ -169,7 +169,7 @@ namespace LLMUnitySamples
         protected GameObject placeholderObject;
 
         public InputBubble(Transform parent, BubbleUI ui, string name, string message, int lineHeight = 4) :
-        base(parent, ui, name, emptyLines(message, lineHeight))
+            base(parent, ui, name, emptyLines(message, lineHeight))
         {
             Text textObjext = bubbleObject.GetComponent<Text>();
             RectTransform bubbleRectTransform = bubbleObject.GetComponent<RectTransform>();
@@ -289,5 +289,4 @@ namespace LLMUnitySamples
             inputField.ActivateInputField();
         }
     }
-
 }

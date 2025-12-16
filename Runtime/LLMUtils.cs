@@ -206,13 +206,14 @@ namespace LLMUnity
 
     public class Utils
     {
-        public static LlamaLib.CharArrayCallback WrapCallbackForAsync(
-            LlamaLib.CharArrayCallback callback, MonoBehaviour owner)
+        // Extract main thread wrapping logic
+        public static Action<string> WrapActionForMainThread(
+            Action<string> callback, MonoBehaviour owner)
         {
             if (callback == null) return null;
             var context = SynchronizationContext.Current;
 
-            return (string msg) =>
+            return msg =>
             {
                 try
                 {
@@ -242,6 +243,18 @@ namespace LLMUnity
                 }
             };
         }
+
+#if !ENABLE_IL2CPP
+        // Keep original for Mono builds
+        public static LlamaLib.CharArrayCallback WrapCallbackForAsync(
+            Action<string> callback, MonoBehaviour owner)
+        {
+            if (callback == null) return null;
+            Action<string> mainThreadCallback = WrapActionForMainThread(callback, owner);
+            return msg => mainThreadCallback(msg);
+        }
+
+#endif
     }
     /// \endcond
 }

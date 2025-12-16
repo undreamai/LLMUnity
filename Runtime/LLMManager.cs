@@ -110,7 +110,7 @@ namespace LLMUnity
         static List<LLM> llms = new List<LLM>();
 
         public static float downloadProgress = 1;
-        public static List<Callback<float>> downloadProgressCallbacks = new List<Callback<float>>();
+        public static List<Action<float>> downloadProgressCallbacks = new List<Action<float>>();
         static Task<bool> SetupTask;
         static readonly object lockObject = new object();
         static long totalSize;
@@ -124,7 +124,7 @@ namespace LLMUnity
         public static void SetDownloadProgress(float progress)
         {
             downloadProgress = (completedSize + progress * currFileSize) / totalSize;
-            foreach (Callback<float> downloadProgressCallback in downloadProgressCallbacks) downloadProgressCallback?.Invoke(downloadProgress);
+            foreach (Action<float> downloadProgressCallback in downloadProgressCallbacks) downloadProgressCallback?.Invoke(downloadProgress);
         }
 
         /// <summary>
@@ -626,7 +626,7 @@ namespace LLMUnity
         /// Saves the model manager to disk along with models that are not (or can't) be downloaded for the build
         /// </summary>
         /// <param name="copyCallback">copy function</param>
-        public static void Build(ActionCallback copyCallback)
+        public static void Build(Action<string, string> copyCallback)
         {
             SaveToDisk();
 

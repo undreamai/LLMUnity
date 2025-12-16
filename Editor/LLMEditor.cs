@@ -31,7 +31,7 @@ namespace LLMUnity
 
         public void AddSecuritySettings(SerializedObject llmScriptSO, LLM llmScript)
         {
-            void AddSSLLoad(string type, Callback<string> setterCallback)
+            void AddSSLLoad(string type, Action<string> setterCallback)
             {
                 if (GUILayout.Button("Load SSL " + type, GUILayout.Width(buttonWidth)))
                 {

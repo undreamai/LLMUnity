@@ -429,7 +429,11 @@ namespace LLMUnity
             if (LLMUnitySetup.DebugMode <= LLMUnitySetup.DebugModeType.All)
             {
                 LlamaLib.Debug(LLMUnitySetup.DebugModeType.All - LLMUnitySetup.DebugMode + 1);
+#if ENABLE_IL2CPP
+                IL2CPP_Logging.LoggingCallback(LLMUnitySetup.Log);
+#else
                 LlamaLib.LoggingCallback(LLMUnitySetup.Log);
+#endif
             }
         }
 
@@ -516,7 +520,7 @@ namespace LLMUnity
         /// </summary>
         /// <param name="downloadProgressCallback">Optional callback for download progress updates</param>
         /// <returns>True if setup succeeded, false if it failed</returns>
-        public static async Task<bool> WaitUntilModelSetup(Callback<float> downloadProgressCallback = null)
+        public static async Task<bool> WaitUntilModelSetup(Action<float> downloadProgressCallback = null)
         {
             if (downloadProgressCallback != null)
             {
