@@ -72,6 +72,14 @@ namespace LLMUnity
         /// <summary>Persist this LLM GameObject across scene transitions</summary>
         [Tooltip("Persist this LLM GameObject across scene transitions")]
         [LLM] public bool dontDestroyOnLoad = true;
+
+        /// <summary>True if this model only supports embeddings (no text generation)</summary>
+        [SerializeField]
+        private bool _embeddingsOnly = false;
+
+        /// <summary>Number of dimensions in embedding vectors (0 if not an embedding model)</summary>
+        [SerializeField]
+        private int _embeddingLength = 0;
         #endregion
 
         #region Public Properties with Validation
@@ -277,10 +285,10 @@ namespace LLMUnity
         public string architecture => llmlib?.architecture;
 
         /// <summary>True if this model only supports embeddings (no text generation)</summary>
-        public bool embeddingsOnly { get; private set; } = false;
+        public bool embeddingsOnly => _embeddingsOnly;
 
         /// <summary>Number of dimensions in embedding vectors (0 if not an embedding model)</summary>
-        public int embeddingLength { get; private set; } = 0;
+        public int embeddingLength => _embeddingLength;
         #endregion
 
         #region Private Fields
@@ -582,8 +590,8 @@ namespace LLMUnity
         /// <param name="embeddingsOnly">True if model only supports embeddings</param>
         public void SetEmbeddings(int embeddingLength, bool embeddingsOnly)
         {
-            this.embeddingsOnly = embeddingsOnly;
-            this.embeddingLength = embeddingLength;
+            _embeddingsOnly = embeddingsOnly;
+            _embeddingLength = embeddingLength;
 
 #if UNITY_EDITOR
             if (!EditorApplication.isPlaying) EditorUtility.SetDirty(this);
