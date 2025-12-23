@@ -251,14 +251,7 @@ namespace LLMUnity
                 }
 
                 SetCompletionParameters();
-                result = await llmAgent.ChatAsync(query, addToHistory, wrappedCallback, returnResponseJson: debugPrompt);
-                if (debugPrompt)
-                {
-                    CompletionResponseJson responseJson = JsonUtility.FromJson<CompletionResponseJson>(result);
-                    LLMUnitySetup.Log(responseJson.prompt);
-                    result = responseJson.content;
-                }
-
+                result = await llmAgent.ChatAsync(query, addToHistory, wrappedCallback, false, debugPrompt);
                 if (addToHistory && result != null && save != "") _ = SaveHistory();
                 completionCallback?.Invoke();
             }
