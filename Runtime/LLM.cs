@@ -488,7 +488,15 @@ namespace LLMUnity
                         flashAttention, contextSize, batchSize, embeddingsOnly, loraPaths.ToArray());
 
                     llmService = new LLMService(llmlib, llmPtr);
-                    LLMUnitySetup.Log($"Deploy server command: llamalib_**architecture**_server {llmService.Command}");
+
+                    string serverString = "llamalib_**architecture**_server";
+                    if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsServer)
+                        serverString = "llamalib_win-x64_server.exe";
+                    else if (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.OSXPlayer || Application.platform == RuntimePlatform.OSXServer)
+                        serverString = SystemInfo.processorType.Contains("Intel") ? "llamalib_osx-x64_server" : "llamalib_osx-arm64_server";
+                    else if (Application.platform == RuntimePlatform.LinuxEditor || Application.platform == RuntimePlatform.LinuxPlayer || Application.platform == RuntimePlatform.LinuxServer)
+                        serverString = "llamalib_linux-x64_server";
+                    LLMUnitySetup.Log($"Deploy server command: {serverString} {llmService.Command}");
                     SetupServer();
                     llmService.Start();
 
