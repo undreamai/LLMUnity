@@ -549,6 +549,12 @@ namespace LLMUnityTests
             return llm;
         }
 
+        public override void SetParameters()
+        {
+            base.SetParameters();
+            reply2 = "Of course! Ants are so smart—well, they’re not really!";
+        }
+
         public override void TestArchitecture()
         {
             Debug.Log(llm.architecture);
@@ -584,7 +590,7 @@ namespace LLMUnityTests
         {
             base.SetParameters();
             reply1 = "Sure! Here's a fun fact: Ants work together to build complex structures like nests, even though they don't have a brain.";
-            reply2 = "Of course! Here’s a fun fact: Ants are the most intelligent insects on Earth—though they’re not really smart, they’ve got a lot of teamwork and problem-solving skills.";
+            reply2 = "Of course! Here’s a fun fact: Ants are so smart—they can navigate mazes and even solve problems by using their exoskeleton as a map.";
         }
     }
 }
