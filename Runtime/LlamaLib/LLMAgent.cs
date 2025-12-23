@@ -215,16 +215,16 @@ namespace UndreamAI.LlamaLib
         }
 
         // Chat functionality
-        public string Chat(string userPrompt, bool addToHistory = true, LlamaLib.CharArrayCallback callback = null, bool returnResponseJson = false)
+        public string Chat(string userPrompt, bool addToHistory = true, LlamaLib.CharArrayCallback callback = null, bool returnResponseJson = false, bool debugPrompt = false)
         {
             CheckLlamaLib();
-            IntPtr result = llamaLib.LLMAgent_Chat(llm, userPrompt ?? string.Empty, addToHistory, callback, returnResponseJson);
+            IntPtr result = llamaLib.LLMAgent_Chat(llm, userPrompt ?? string.Empty, addToHistory, callback, returnResponseJson, debugPrompt);
             return Marshal.PtrToStringAnsi(result) ?? string.Empty;
         }
 
-        public async Task<string> ChatAsync(string userPrompt, bool addToHistory = true, LlamaLib.CharArrayCallback callback = null, bool returnResponseJson = false)
+        public async Task<string> ChatAsync(string userPrompt, bool addToHistory = true, LlamaLib.CharArrayCallback callback = null, bool returnResponseJson = false, bool debugPrompt = false)
         {
-            return await Task.Run(() => Chat(userPrompt, addToHistory, callback, returnResponseJson));
+            return await Task.Run(() => Chat(userPrompt, addToHistory, callback, returnResponseJson, debugPrompt));
         }
 
         // Override completion methods to use agent-specific implementations
