@@ -155,7 +155,8 @@ namespace UndreamAI.LlamaLib
             [MarshalAs(UnmanagedType.LPStr)] string userPrompt,
             [MarshalAs(UnmanagedType.I1)] bool addToHistory = true,
             CharArrayCallback callback = null,
-            [MarshalAs(UnmanagedType.I1)] bool returnResponseJson = false);
+            [MarshalAs(UnmanagedType.I1)] bool returnResponseJson = false,
+            [MarshalAs(UnmanagedType.I1)] bool debugPrompt = false);
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void LLMAgent_Clear_History_Delegate(IntPtr llm);
@@ -237,10 +238,10 @@ namespace UndreamAI.LlamaLib
 
         //################################################## STATUS CHECKING WRAPPER ##################################################//
 
-        public void CheckStatus()
+        public void CheckStatus(bool crashesOnly = false)
         {
             int status = LLM_Status_Code_Internal();
-            if (status != 0)
+            if (status > 0 || (status < 0 && !crashesOnly))
             {
                 string msg = Marshal.PtrToStringAnsi(LLM_Status_Message_Internal()) ?? "";
                 throw new InvalidOperationException($"LlamaLib error {status}: {msg}");
@@ -249,7 +250,7 @@ namespace UndreamAI.LlamaLib
 
         private T CallWithStatus<T>(Func<T> f)
         {
-            CheckStatus();
+            CheckStatus(true);
             T r = f();
             CheckStatus();
             return r;
@@ -257,7 +258,7 @@ namespace UndreamAI.LlamaLib
 
         private void CallWithStatus(Action a)
         {
-            CheckStatus();
+            CheckStatus(true);
             a();
             CheckStatus();
         }
@@ -316,8 +317,8 @@ namespace UndreamAI.LlamaLib
         public IntPtr LLM_Get_Grammar(IntPtr llm) => CallWithStatus(() => LLM_Get_Grammar_Internal(llm));
         public void LLMAgent_Set_Slot(IntPtr llm, int slotId) => CallWithStatus(() => LLMAgent_Set_Slot_Internal(llm, slotId));
         public int LLMAgent_Get_Slot(IntPtr llm) => CallWithStatus(() => LLMAgent_Get_Slot_Internal(llm));
-        public IntPtr LLMAgent_Chat(IntPtr llm, string userPrompt, bool addToHistory = true, CharArrayCallback callback = null, bool returnResponseJson = false)
-            => CallWithStatus(() => LLMAgent_Chat_Internal(llm, userPrompt, addToHistory, callback, returnResponseJson));
+        public IntPtr LLMAgent_Chat(IntPtr llm, string userPrompt, bool addToHistory = true, CharArrayCallback callback = null, bool returnResponseJson = false, bool debugPrompt = false)
+            => CallWithStatus(() => LLMAgent_Chat_Internal(llm, userPrompt, addToHistory, callback, returnResponseJson, debugPrompt));
         public void LLMAgent_Clear_History(IntPtr llm) => CallWithStatus(() => LLMAgent_Clear_History_Internal(llm));
         public IntPtr LLMAgent_Get_History(IntPtr llm) => CallWithStatus(() => LLMAgent_Get_History_Internal(llm));
         public void LLMAgent_Set_History(IntPtr llm, string historyJson) => CallWithStatus(() => LLMAgent_Set_History_Internal(llm, historyJson));
@@ -506,7 +507,8 @@ namespace UndreamAI.LlamaLib
             [MarshalAs(UnmanagedType.LPStr)] string userPrompt,
             [MarshalAs(UnmanagedType.I1)] bool addToHistory = true,
             CharArrayCallback callback = null,
-            [MarshalAs(UnmanagedType.I1)] bool returnResponseJson = false);
+            [MarshalAs(UnmanagedType.I1)] bool returnResponseJson = false,
+            [MarshalAs(UnmanagedType.I1)] bool debugPrompt = false);
 
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLMAgent_Clear_History")]
         public static extern void LLMAgent_Clear_History_Static(IntPtr llm);
@@ -575,8 +577,8 @@ namespace UndreamAI.LlamaLib
             LLM_Status_Code_Internal = () => LLM_Status_Code_Static();
             LLM_Status_Message_Internal = () => LLM_Status_Message_Static();
             LLM_Embedding_Size_Internal = (llm) => LLM_Embedding_Size_Static(llm);
-            LLMService_Construct_Internal = (modelPath, numSlots, numThreads, numGpuLayers, flashAttention, contextSize, batchSize, embeddingOnly, loraCount, loraPaths) => LLMService_Construct_With_Fallback(modelPath, numSlots, numThreads, numGpuLayers, flashAttention, contextSize, batchSize, embeddingOnly, loraCount, loraPaths);
-            LLMService_From_Command_Internal = (paramsString) => LLMService_From_Command_With_Fallback(paramsString);
+            LLMService_Construct_Internal = (modelPath, numSlots, numThreads, numGpuLayers, flashAttention, contextSize, batchSize, embeddingOnly, loraCount, loraPaths) => LLMService_Construct_Static(modelPath, numSlots, numThreads, numGpuLayers, flashAttention, contextSize, batchSize, embeddingOnly, loraCount, loraPaths);
+            LLMService_From_Command_Internal = (paramsString) => LLMService_From_Command_Static(paramsString);
             LLMService_Command_Internal = (llm) => LLMService_Command_Static(llm);
             LLMClient_Construct_Internal = (llm) => LLMClient_Construct_Static(llm);
             LLMClient_Construct_Remote_Internal = (url, port, apiKey, numRetries) => LLMClient_Construct_Remote_Static(url, port, apiKey, numRetries);
@@ -591,7 +593,7 @@ namespace UndreamAI.LlamaLib
             LLM_Get_Grammar_Internal = (llm) => LLM_Get_Grammar_Static(llm);
             LLMAgent_Set_Slot_Internal = (llm, slotId) => LLMAgent_Set_Slot_Static(llm, slotId);
             LLMAgent_Get_Slot_Internal = (llm) => LLMAgent_Get_Slot_Static(llm);
-            LLMAgent_Chat_Internal = (llm, userPrompt, addToHistory, callback, returnResponseJson) => LLMAgent_Chat_Static(llm, userPrompt, addToHistory, callback, returnResponseJson);
+            LLMAgent_Chat_Internal = (llm, userPrompt, addToHistory, callback, returnResponseJson, debugPrompt) => LLMAgent_Chat_Static(llm, userPrompt, addToHistory, callback, returnResponseJson, debugPrompt);
             LLMAgent_Clear_History_Internal = (llm) => LLMAgent_Clear_History_Static(llm);
             LLMAgent_Get_History_Internal = (llm) => LLMAgent_Get_History_Static(llm);
             LLMAgent_Set_History_Internal = (llm, historyJson) => LLMAgent_Set_History_Static(llm, historyJson);
