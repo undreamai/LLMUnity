@@ -1,5 +1,5 @@
 {
-  "name": "undream.llmunity.Runtime.Tests",
+  "name": "undream.llmunity.Editor.Tests",
   "references": [
     "undream.llmunity.Runtime"
   ],
