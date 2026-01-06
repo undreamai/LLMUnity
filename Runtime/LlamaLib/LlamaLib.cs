@@ -615,6 +615,7 @@ namespace UndreamAI.LlamaLib
         public static List<string> libraryExclusion = new List<string>();
         private static IntPtr runtimeLibraryHandle = IntPtr.Zero;
         private IntPtr libraryHandle = IntPtr.Zero;
+        private List<IntPtr> dependencyHandles = new List<IntPtr>();
         private static int debugLevelGlobal = 0;
         private static CharArrayCallback loggingCallbackGlobal = null;
         private string[] availableLibraries = null;
@@ -759,6 +760,32 @@ namespace UndreamAI.LlamaLib
             }
         }
 
+        public static List<string> GetArchitectureDependencies(string library, string libraryPath)
+        {
+            List<string> dependencies = new List<string>();
+            if (library.Contains("cublas"))
+            {
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    dependencies.Add(Path.Combine(libraryPath, "cudart64_12.dll"));
+                    dependencies.Add(Path.Combine(libraryPath, "cublasLt64_12.dll"));
+                    dependencies.Add(Path.Combine(libraryPath, "cublas64_12.dll"));
+                }
+            }
+            else if (library.Contains("vulkan"))
+            {
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    dependencies.Add(Path.Combine(libraryPath, "vulkan-1.dll"));
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                {
+                    dependencies.Add(Path.Combine(libraryPath, "libvulkan.so.1"));
+                }
+            }
+            return dependencies;
+        }
+
         public bool TryNextLibrary()
         {
             if (availableLibraries == null)
@@ -777,8 +804,13 @@ namespace UndreamAI.LlamaLib
                 {
                     string libraryPath = FindLibrary(library.Trim());
                     if (debugLevelGlobal > 0) Console.WriteLine("Trying " + libraryPath);
-
+                    
+                    foreach (string dependency in GetArchitectureDependencies(library, Path.GetDirectoryName(libraryPath)))
+                    {
+                        dependencyHandles.Add(LibraryLoader.LoadLibrary(dependency));
+                    }
                     libraryHandle = LibraryLoader.LoadLibrary(libraryPath);
+
                     LoadFunctionPointers();
                     architecture = library.Trim();
                     if (debugLevelGlobal > 0) Console.WriteLine("Successfully loaded: " + libraryPath);
@@ -919,6 +951,8 @@ namespace UndreamAI.LlamaLib
         {
             LibraryLoader.FreeLibrary(libraryHandle);
             libraryHandle = IntPtr.Zero;
+            foreach (IntPtr dependencyHandle in dependencyHandles) LibraryLoader.FreeLibrary(dependencyHandle);
+            dependencyHandles.Clear();
 
             lock (runtimeLock)
             {
