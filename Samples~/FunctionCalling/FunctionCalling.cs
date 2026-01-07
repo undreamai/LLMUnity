@@ -3,6 +3,7 @@ using LLMUnity;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace LLMUnitySamples
 {
@@ -75,7 +76,16 @@ namespace LLMUnitySamples
             string functionName = await llmAgent.Chat(ConstructPrompt(message));
             string result = CallFunction(functionName);
             AIText.text = $"Calling {functionName}\n{result}";
+
+            await Task.Yield();
+            AIReplyComplete();
+        }
+
+        public void AIReplyComplete()
+        {
+            playerText.text = "";
             playerText.interactable = true;
+            playerText.Select();
         }
 
         public void CancelRequests()

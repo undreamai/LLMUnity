@@ -1,16 +1,17 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using LLMUnity;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using LLMUnity;
 
 namespace LLMUnitySamples
 {
     public class ChatBot : MonoBehaviour
     {
         public Transform chatContainer;
-        public Color playerColor = new Color32(81, 164, 81, 255);
-        public Color aiColor = new Color32(29, 29, 73, 255);
+        public Color playerColor = new Color32(75, 70, 80, 255);
+        public Color aiColor = new Color32(70, 80, 80, 255);
         public Color fontColor = Color.white;
         public Font font;
         public int fontSize = 16;
@@ -50,8 +51,8 @@ namespace LLMUnitySamples
             aiUI.leftPosition = 1;
 
             inputBubble = new InputBubble(chatContainer, playerUI, "InputBubble", "Loading...", 4);
-            inputBubble.AddSubmitListener(onInputFieldSubmit);
-            inputBubble.AddValueChangedListener(onValueChanged);
+            inputBubble.AddSubmitListener(OnInputFieldSubmit);
+            inputBubble.AddValueChangedListener(OnValueChanged);
             inputBubble.setInteractable(false);
             stopButton.gameObject.SetActive(true);
             ShowLoadedMessages();
@@ -71,10 +72,11 @@ namespace LLMUnitySamples
             for (int i = 1; i < llmAgent.chat.Count; i++) AddBubble(llmAgent.chat[i].content, i % 2 == 1);
         }
 
-        void onInputFieldSubmit(string newText)
+        void OnInputFieldSubmit(string newText)
         {
             inputBubble.ActivateInputField();
-            if (blockInput || newText.Trim() == "" || Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+            bool shiftHeld = Keyboard.current != null && (Keyboard.current.leftShiftKey.isPressed || Keyboard.current.rightShiftKey.isPressed);
+            if (blockInput || newText.Trim() == "" || shiftHeld)
             {
                 StartCoroutine(BlockInteraction());
                 return;
@@ -118,10 +120,10 @@ namespace LLMUnitySamples
             inputBubble.MoveTextEnd();
         }
 
-        void onValueChanged(string newText)
+        void OnValueChanged(string newText)
         {
-            // Get rid of newline character added when we press enter
-            if (Input.GetKey(KeyCode.Return))
+            // Remove newline added by Enter
+            if (Keyboard.current != null && Keyboard.current.enterKey.wasPressedThisFrame)
             {
                 if (inputBubble.GetText().Trim() == "")
                     inputBubble.SetText("");
