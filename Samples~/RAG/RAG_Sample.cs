@@ -62,6 +62,9 @@ namespace LLMUnitySamples
             AIText.text = "...";
             (string[] similarPhrases, float[] distances) = await rag.Search(message, 1);
             AIText.text = similarPhrases[0];
+
+            await Task.Yield();
+            AIReplyComplete();
         }
 
         public void SetAIText(string text)
@@ -71,9 +74,9 @@ namespace LLMUnitySamples
 
         public void AIReplyComplete()
         {
+            playerText.text = "";
             playerText.interactable = true;
             playerText.Select();
-            playerText.text = "";
         }
 
         public void ExitGame()

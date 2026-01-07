@@ -18,6 +18,7 @@ namespace LLMUnitySamples
             if (!ParaphraseWithLLM.isOn)
             {
                 AIText.text = similarPhrase;
+                await Task.Yield();
                 AIReplyComplete();
             }
             else

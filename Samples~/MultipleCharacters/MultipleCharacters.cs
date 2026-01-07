@@ -1,75 +1,54 @@
 using UnityEngine;
-using LLMUnity;
 using UnityEngine.UI;
-
+using LLMUnity;
 
 namespace LLMUnitySamples
 {
-    public class MultipleCharactersInteraction
+    public class MultipleAgents : MonoBehaviour
     {
-        InputField playerText;
-        Text AIText;
-        LLMAgent llmAgent;
+        [Header("Shared UI")]
+        public InputField playerText;
+        public Dropdown agentDropdown;
 
-        public MultipleCharactersInteraction(InputField playerText, Text AIText, LLMAgent llmAgent)
-        {
-            this.playerText = playerText;
-            this.AIText = AIText;
-            this.llmAgent = llmAgent;
-        }
-
-        public void Start()
-        {
-            playerText.onSubmit.AddListener(onInputFieldSubmit);
-            playerText.Select();
-        }
-
-        public void onInputFieldSubmit(string message)
-        {
-            playerText.interactable = false;
-            AIText.text = "...";
-            _ = llmAgent.Chat(message, SetAIText, AIReplyComplete);
-        }
-
-        public void SetAIText(string text)
-        {
-            AIText.text = text;
-        }
-
-        public void AIReplyComplete()
-        {
-            playerText.interactable = true;
-            playerText.Select();
-            playerText.text = "";
-        }
-    }
-
-    public class MultipleCharacters : MonoBehaviour
-    {
-        public LLMAgent llmCharacter1;
-        public InputField playerText1;
+        [Header("AI 1")]
+        public LLMAgent llmAgent1;
         public Text AIText1;
-        MultipleCharactersInteraction interaction1;
 
-        public LLMAgent llmCharacter2;
-        public InputField playerText2;
+        [Header("AI 2")]
+        public LLMAgent llmAgent2;
         public Text AIText2;
-        MultipleCharactersInteraction interaction2;
+
+        bool onValidateWarning = true;
 
         void Start()
         {
-            interaction1 = new MultipleCharactersInteraction(playerText1, AIText1, llmCharacter1);
-            interaction2 = new MultipleCharactersInteraction(playerText2, AIText2, llmCharacter2);
-            interaction1.Start();
-            interaction2.Start();
+            playerText.onSubmit.AddListener(OnInputFieldSubmit);
+            playerText.Select();
+        }
+
+        void OnInputFieldSubmit(string message)
+        {
+            playerText.interactable = false;
+
+            var agent = agentDropdown.value == 0? llmAgent1: llmAgent2;
+            var aiText = agentDropdown.value == 0? AIText1: AIText2;
+
+            aiText.text = "...";
+            _ = agent.Chat(message, (reply) => aiText.text = reply, AIReplyComplete);
+        }
+
+        void AIReplyComplete()
+        {
+            playerText.interactable = true;
+            playerText.text = "";
+            playerText.Select();
         }
 
         public void CancelRequests()
         {
-            llmCharacter1.CancelRequests();
-            llmCharacter2.CancelRequests();
-            interaction1.AIReplyComplete();
-            interaction2.AIReplyComplete();
+            llmAgent1.CancelRequests();
+            llmAgent2.CancelRequests();
+            AIReplyComplete();
         }
 
         public void ExitGame()
@@ -78,12 +57,17 @@ namespace LLMUnitySamples
             Application.Quit();
         }
 
-        bool onValidateWarning = true;
         void OnValidate()
         {
-            if (onValidateWarning && !llmCharacter1.remote && llmCharacter1.llm != null && llmCharacter1.llm.model == "")
+            if (onValidateWarning &&
+                llmAgent1 != null &&
+                !llmAgent1.remote &&
+                llmAgent1.llm != null &&
+                llmAgent1.llm.model == "")
             {
-                Debug.LogWarning($"Please select a model in the {llmCharacter1.llm.gameObject.name} GameObject!");
+                Debug.LogWarning(
+                    $"Please select a model in the {llmAgent1.llm.gameObject.name} GameObject!"
+                );
                 onValidateWarning = false;
             }
         }
