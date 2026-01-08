@@ -4,7 +4,6 @@ using System.IO;
 using System.Diagnostics;
 using Debug = UnityEngine.Debug;
 using UnityEngine.UI;
-using UnityEngine.InputSystem;
 using System.Threading.Tasks;
 using System.Linq;
 using System;
@@ -231,11 +230,11 @@ namespace LLMUnitySamples
         void OnValueChanged(string newText)
         {
             // Remove newline added by Enter
-            if (Keyboard.current != null && Keyboard.current.enterKey.wasPressedThisFrame)
+            if (Input.GetKey(KeyCode.Return))
             {
-                if (string.IsNullOrWhiteSpace(PlayerText.text))
+                if (PlayerText.text.Trim() == "")
                 {
-                    PlayerText.SetTextWithoutNotify("");
+                    PlayerText.text = "";
                 }
             }
         }
@@ -308,9 +307,9 @@ namespace LLMUnitySamples
 
         void Update()
         {
-            if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
+            if (Input.GetMouseButtonDown(0))
             {
-                Vector2 mousePosition = Mouse.current.position.ReadValue();
+                Vector2 mousePosition = Input.mousePosition;
                 foreach (RawImage image in new RawImage[] {NotebookImage, MapImage, SuccessImage})
                 {
                     if (image.IsActive() && !RectTransformUtility.RectangleContainsScreenPoint(image.rectTransform, mousePosition))

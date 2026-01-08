@@ -30,8 +30,8 @@ namespace LLMUnitySamples
         {
             playerText.interactable = false;
 
-            var agent = agentDropdown.value == 0? llmAgent1: llmAgent2;
-            var aiText = agentDropdown.value == 0? AIText1: AIText2;
+            var agent = agentDropdown.value == 0 ? llmAgent1 : llmAgent2;
+            var aiText = agentDropdown.value == 0 ? AIText1 : AIText2;
 
             aiText.text = "...";
             _ = agent.Chat(message, (reply) => aiText.text = reply, AIReplyComplete);
