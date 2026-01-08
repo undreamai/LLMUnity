@@ -546,7 +546,17 @@ namespace LLMUnity
             }
             await CheckCaller();
 
-            List<float> embeddings = llmClient.Embeddings(query);
+            List<float> embeddings;
+            if (!llm.embeddingsOnly)
+            {
+                LLMUnitySetup.LogError("You need to use an embedding model for embeddings (see \"RAG models\" in \"Download model\")");
+                embeddings = new List<float>();
+            }
+            else
+            {
+                embeddings = llmClient.Embeddings(query);
+            }
+            if (embeddings.Count == 0) LLMUnitySetup.LogError("embeddings are empty!");
             callback?.Invoke(embeddings);
             return embeddings;
         }
