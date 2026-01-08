@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 using System.Linq;
 using System;
 using LLMUnity;
+#if ENABLE_INPUT_SYSTEM
+using UnityEngine.InputSystem;
+#endif
 
 namespace LLMUnitySamples
 {
@@ -230,7 +233,14 @@ namespace LLMUnitySamples
         void OnValueChanged(string newText)
         {
             // Remove newline added by Enter
-            if (Input.GetKey(KeyCode.Return))
+#if ENABLE_INPUT_SYSTEM
+            // new input system for latest Unity version
+            bool enterPressed = Keyboard.current != null && Keyboard.current.enterKey.wasPressedThisFrame;
+#else
+            // old input system
+            bool enterPressed = Input.GetKey(KeyCode.Return);
+#endif
+            if (enterPressed)
             {
                 if (PlayerText.text.Trim() == "")
                 {
@@ -307,9 +317,17 @@ namespace LLMUnitySamples
 
         void Update()
         {
-            if (Input.GetMouseButtonDown(0))
+#if ENABLE_INPUT_SYSTEM
+            // new input system for latest Unity version
+            bool mouseClicked = Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame;
+            Vector2 mousePosition = Mouse.current.position.ReadValue();
+#else
+            // old input system
+            bool mouseClicked = Input.GetMouseButtonDown(0);
+            Vector2 mousePosition = Input.mousePosition;
+#endif
+            if (mouseClicked)
             {
-                Vector2 mousePosition = Input.mousePosition;
                 foreach (RawImage image in new RawImage[] {NotebookImage, MapImage, SuccessImage})
                 {
                     if (image.IsActive() && !RectTransformUtility.RectangleContainsScreenPoint(image.rectTransform, mousePosition))
