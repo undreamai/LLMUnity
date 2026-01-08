@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine.UI;
 using LLMUnity;
+#if ENABLE_INPUT_SYSTEM
+using UnityEngine.InputSystem;
+#endif
 
 namespace LLMUnitySamples
 {
@@ -74,7 +77,13 @@ namespace LLMUnitySamples
         void OnInputFieldSubmit(string newText)
         {
             inputBubble.ActivateInputField();
+#if ENABLE_INPUT_SYSTEM
+            // new input system for latest Unity version
+            bool shiftHeld = Keyboard.current != null && (Keyboard.current.leftShiftKey.isPressed || Keyboard.current.rightShiftKey.isPressed);
+#else
+            // old input system
             bool shiftHeld = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
+#endif
             if (blockInput || newText.Trim() == "" || shiftHeld)
             {
                 StartCoroutine(BlockInteraction());
@@ -122,7 +131,14 @@ namespace LLMUnitySamples
         void OnValueChanged(string newText)
         {
             // Remove newline added by Enter
-            if (Input.GetKey(KeyCode.Return))
+#if ENABLE_INPUT_SYSTEM
+            // new input system for latest Unity version
+            bool enterPressed = Keyboard.current != null && Keyboard.current.enterKey.wasPressedThisFrame;
+#else
+            // old input system
+            bool enterPressed = Input.GetKey(KeyCode.Return);
+#endif
+            if (enterPressed)
             {
                 if (inputBubble.GetText().Trim() == "")
                     inputBubble.SetText("");
