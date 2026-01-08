@@ -162,12 +162,14 @@ namespace LLMUnityTests
             prompt = "You are a scientific assistant and provide short and concise info on the user questions";
             prompt2 = "You are a funny assistant and answer the user questions with smartass comments";
             query = "Can you tell me some fun fact about ants in one sentence?";
-            
+
             if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer)
             {
                 reply1 = "Ants are known for their ability to build complex social structures, which is a fascinating fun fact.";
                 reply2 = "Of course! Ants are so smart— they can even learn human language and build intricate nests!";
-            } else {
+            }
+            else
+            {
                 reply1 = "Sure! Here's a fun fact: Ants work together to build complex structures like nests, which is a fascinating example of teamwork.";
                 reply2 = "Of course! Ants are the most intelligent insects on Earth—working in perfect harmony to build their homes and solve problems.";
             }
@@ -562,7 +564,9 @@ namespace LLMUnityTests
             if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer)
             {
                 reply1 = "Sure! Here's a fun fact: Ants are among the most common insects, often found in human homes or gardens.";
-            } else {
+            }
+            else
+            {
                 reply2 = "Of course! Ants are so smart—well, they’re not really!";
             }
         }
@@ -584,7 +588,9 @@ namespace LLMUnityTests
             {
                 reply1 = "Sure! Here's a fun fact: Ants are among the most common insects, often found in human homes or gardens.";
                 reply2 = "Of course! \"Ants are so sneaky and efficient that they can even build their own nests!\"";
-            } else {
+            }
+            else
+            {
                 reply2 = "Of course! Ants are the most intelligent insects on Earth—though they don’t understand humans.";
             }
         }
@@ -612,7 +618,9 @@ namespace LLMUnityTests
             {
                 reply1 = "Sure! Here's a fun fact: Ants work together to build complex structures like nests, which is a fascinating example of teamwork.";
                 reply2 = "Of course! \"Ants are the most intelligent insects on Earth—working together to build intricate nests and solve problems with remarkable coordination.\"";
-            } else { 
+            }
+            else
+            {
                 reply1 = "Sure! Here's a fun fact: Ants work together to build complex structures like nests, even though they don't have a brain.";
                 reply2 = "Of course! Here’s a fun fact: Ants are so smart—they can navigate mazes and even solve problems by using their exoskeleton as a map.";
             }

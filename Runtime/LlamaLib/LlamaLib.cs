@@ -804,7 +804,7 @@ namespace UndreamAI.LlamaLib
                 {
                     string libraryPath = FindLibrary(library.Trim());
                     if (debugLevelGlobal > 0) Console.WriteLine("Trying " + libraryPath);
-                    
+
                     foreach (string dependency in GetArchitectureDependencies(library, Path.GetDirectoryName(libraryPath)))
                     {
                         dependencyHandles.Add(LibraryLoader.LoadLibrary(dependency));
