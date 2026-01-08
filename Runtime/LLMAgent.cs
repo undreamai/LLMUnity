@@ -252,8 +252,9 @@ namespace LLMUnity
 
                 SetCompletionParameters();
                 result = await llmAgent.ChatAsync(query, addToHistory, wrappedCallback, false, debugPrompt);
+                if (this == null) return null;
                 if (addToHistory && result != null && save != "") _ = SaveHistory();
-                completionCallback?.Invoke();
+                if (this != null) completionCallback?.Invoke();
             }
             catch (Exception ex)
             {
