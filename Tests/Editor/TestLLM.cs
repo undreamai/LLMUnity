@@ -616,8 +616,8 @@ namespace LLMUnityTests
             base.SetParameters();
             if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer)
             {
-                reply1 = "Sure! Here's a fun fact: Ants work together to build complex structures like nests, which is a fascinating example of teamwork.";
-                reply2 = "Of course! \"Ants are the most intelligent insects on Earth—working together to build intricate nests and solve problems with remarkable coordination.\"";
+                reply1 = "Sure! Here's a fun fact: Ants are among the most common insects, often found in human homes or gardens.";
+                reply2 = "Of course! \"Ants are so sneaky and efficient that they can even build their own nests!\"";
             }
             else
             {
