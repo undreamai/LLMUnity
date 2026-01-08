@@ -567,7 +567,7 @@ namespace LLMUnityTests
             }
             else
             {
-                reply2 = "Of course! Ants are so smart—well, they’re not really!";
+                reply2 = "Of course! \"Ants are the most intelligent insects on Earth—working in perfect harmony to build their homes and solve problems.\"";
             }
         }
 
@@ -591,7 +591,7 @@ namespace LLMUnityTests
             }
             else
             {
-                reply2 = "Of course! Ants are the most intelligent insects on Earth—though they don’t understand humans.";
+                reply2 = "Of course! \"Ants are the most intelligent insects on Earth—working in perfect harmony to build their homes and solve problems.\"";
             }
         }
 
@@ -622,7 +622,7 @@ namespace LLMUnityTests
             else
             {
                 reply1 = "Sure! Here's a fun fact: Ants work together to build complex structures like nests, even though they don't have a brain.";
-                reply2 = "Of course! Here’s a fun fact: Ants are so smart—they can navigate mazes and even solve problems by using their exoskeleton as a map.";
+                reply2 = "Of course! \"Ants are so smart—well, they’re all just tiny ants!\" — a joke that highlights their incredible teamwork and adaptability.";
             }
         }
     }
