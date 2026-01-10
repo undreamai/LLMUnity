@@ -479,6 +479,7 @@ namespace LLMUnity
                 effectiveThreads = LLMUnitySetup.AndroidGetNumBigCores();
             }
 
+            string processorType = SystemInfo.processorType;
             await Task.Run(() =>
             {
                 lock (staticLock)
@@ -493,7 +494,7 @@ namespace LLMUnity
                     if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsServer)
                         serverString = "llamalib_win-x64_server.exe";
                     else if (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.OSXPlayer || Application.platform == RuntimePlatform.OSXServer)
-                        serverString = SystemInfo.processorType.Contains("Intel") ? "llamalib_osx-x64_server" : "llamalib_osx-arm64_server";
+                        serverString = processorType.Contains("Intel") ? "llamalib_osx-x64_server" : "llamalib_osx-arm64_server";
                     else if (Application.platform == RuntimePlatform.LinuxEditor || Application.platform == RuntimePlatform.LinuxPlayer || Application.platform == RuntimePlatform.LinuxServer)
                         serverString = "llamalib_linux-x64_server";
                     LLMUnitySetup.Log($"Deploy server command: {serverString} {llmService.Command}");
