@@ -37,10 +37,10 @@ namespace LLMUnity
             List<string> libraryFileNames = new List<string>();
 #if UNITY_IOS
             string projPath = PBXProject.GetPBXProjectPath(outputPath);
-            libraryFileNames.Add("libllamalib_ios-arm64.a");
+            libraryFileNames.Add("libllamalib_ios.a");
 #elif UNITY_VISIONOS
             string projPath = PBXProject.GetPBXProjectPath(outputPath).Replace("Unity-iPhone", "Unity-VisionOS");
-            libraryFileNames.Add("libllamalib_visionos-arm64.a");
+            libraryFileNames.Add("libllamalib_visionos.a");
 #else
             string projPath = Path.Combine(outputPath, Path.GetFileName(outputPath) + ".xcodeproj", "project.pbxproj");
             if (!File.Exists(projPath)) return;
