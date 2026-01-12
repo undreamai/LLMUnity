@@ -230,7 +230,16 @@ namespace LLMUnity
 
         public static string GetDownloadAssetPath(string relPath = "")
         {
-            string assetsDir = (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer || Application.platform == RuntimePlatform.VisionOS) ? Application.persistentDataPath : Application.streamingAssetsPath;
+            string assetsDir = Application.streamingAssetsPath;
+
+            bool isVisionOS = false;
+#if UNITY_2022_3_OR_NEWER
+            isVisionOS = Application.platform == RuntimePlatform.VisionOS;
+#endif
+            if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer || isVisionOS)
+            {
+                assetsDir = Application.persistentDataPath;
+            }
             return Path.Combine(assetsDir, relPath).Replace('\\', '/');
         }
 
