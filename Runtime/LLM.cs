@@ -25,48 +25,63 @@ namespace LLMUnity
         [HideInInspector] public bool advancedOptions = false;
 
         /// <summary>Enable remote server functionality to allow external connections</summary>
+        [Tooltip("Enable remote server functionality to allow external connections")]
         [LocalRemote, SerializeField] private bool _remote = false;
 
         /// <summary>Port to use for the remote LLM server</summary>
+        [Tooltip("Port to use for the remote LLM server")]
         [Remote, SerializeField] private int _port = 13333;
 
         /// <summary>API key required for server access (leave empty to disable authentication)</summary>
+        [Tooltip("API key required for server access (leave empty to disable authentication)")]
         [SerializeField] private string _APIKey = "";
 
         /// <summary>SSL certificate for the remote LLM server</summary>
+        [Tooltip("SSL certificate for the remote LLM server")]
         [SerializeField] private string _SSLCert = "";
 
         /// <summary>SSL key for the remote LLM server</summary>
+        [Tooltip("SSL key for the remote LLM server")]
         [SerializeField] private string _SSLKey = "";
 
         /// <summary>Number of threads to use for processing (-1 = use all available threads)</summary>
+        [Tooltip("Number of threads to use for processing (-1 = use all available threads)")]
         [LLM, SerializeField] private int _numThreads = -1;
 
         /// <summary>Number of model layers to offload to GPU (0 = CPU only). Falls back to CPU if GPU unsupported</summary>
+        [Tooltip("Number of model layers to offload to GPU (0 = CPU only). Falls back to CPU if GPU unsupported")]
         [LLM, SerializeField] private int _numGPULayers = 0;
 
         /// <summary>Number of prompts that can be processed in parallel (-1 = auto-detect from clients)</summary>
+        [Tooltip("Number of prompts that can be processed in parallel (-1 = auto-detect from clients)")]
         [LLM, SerializeField] private int _parallelPrompts = -1;
 
         /// <summary>Size of the prompt context in tokens (0 = use model's default context size)</summary>
+        [Tooltip("Size of the prompt context in tokens (0 = use model's default context size)")]
         [DynamicRange("minContextLength", "maxContextLength", false), Model, SerializeField] private int _contextSize = 8192;
 
         /// <summary>Batch size for prompt processing (larger = more memory, potentially faster)</summary>
+        [Tooltip("Batch size for prompt processing (larger = more memory, potentially faster)")]
         [ModelAdvanced, SerializeField] private int _batchSize = 512;
 
         /// <summary>LLM model file path (.gguf format)</summary>
+        [Tooltip("LLM model file path (.gguf format)")]
         [ModelAdvanced, SerializeField] private string _model = "";
 
         /// <summary>Enable flash attention optimization (requires compatible model)</summary>
+        [Tooltip("Enable flash attention optimization (requires compatible model)")]
         [ModelExtras, SerializeField] private bool _flashAttention = false;
 
-        /// <summary>Enable LLM reasoning ("thinking" mode)</summary>
+        /// <summary>Enable LLM reasoning ('thinking' mode)</summary>
+        [Tooltip("Enable LLM reasoning ('thinking' mode)")]
         [ModelAdvanced, SerializeField] private bool _reasoning = false;
 
         /// <summary>LORA adapter model paths (.gguf format), separated by commas</summary>
+        [Tooltip("LORA adapter model paths (.gguf format), separated by commas")]
         [ModelAdvanced, SerializeField] private string _lora = "";
 
         /// <summary>Weights for LORA adapters, separated by commas (default: 1.0 for each)</summary>
+        [Tooltip("Weights for LORA adapters, separated by commas (default: 1.0 for each)")]
         [ModelAdvanced, SerializeField] private string _loraWeights = "";
 
         /// <summary>Persist this LLM GameObject across scene transitions</summary>
@@ -75,10 +90,12 @@ namespace LLMUnity
 
         /// <summary>True if this model only supports embeddings (no text generation)</summary>
         [SerializeField]
+        [Tooltip("True if this model only supports embeddings (no text generation)")]
         private bool _embeddingsOnly = false;
 
         /// <summary>Number of dimensions in embedding vectors (0 if not an embedding model)</summary>
         [SerializeField]
+        [Tooltip("Number of dimensions in embedding vectors (0 if not an embedding model)")]
         private int _embeddingLength = 0;
         #endregion
 
@@ -285,9 +302,11 @@ namespace LLMUnity
         public string architecture => llmlib?.architecture;
 
         /// <summary>True if this model only supports embeddings (no text generation)</summary>
+        [Tooltip("True if this model only supports embeddings (no text generation)")]
         public bool embeddingsOnly => _embeddingsOnly;
 
         /// <summary>Number of dimensions in embedding vectors (0 if not an embedding model)</summary>
+        [Tooltip("Number of dimensions in embedding vectors (0 if not an embedding model)")]
         public int embeddingLength => _embeddingLength;
         #endregion
 
