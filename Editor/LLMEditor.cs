@@ -168,11 +168,10 @@ namespace LLMUnity
             Repaint();
         }
 
-        void SetModelIfNone(string filename, bool lora)
+        void SelectModel(string filename, bool lora, bool ifNoneSelected = true)
         {
             LLM llmScript = (LLM)target;
-            int num = LLMManager.Num(lora);
-            if (!lora && llmScript.model == "" && num == 1) llmScript.SetModel(filename);
+            if (!lora) llmScript.SetModel(filename);
             if (lora) llmScript.AddLora(filename);
         }
 
@@ -216,7 +215,7 @@ namespace LLMUnity
                 if (submit && customURL != "")
                 {
                     string filename = await LLMManager.Download(customURL, customURLLora, true);
-                    SetModelIfNone(filename, customURLLora);
+                    SelectModel(filename, customURLLora);
                     UpdateModels(true);
                 }
             }
@@ -238,7 +237,7 @@ namespace LLMUnity
             {
                 if (modelLicenses[modelIndex] != null) LLMUnitySetup.LogWarning($"The {modelNames[modelIndex]} model is released under the following license: {modelLicenses[modelIndex]}. By using this model, you agree to the terms of the license.");
                 string filename = await LLMManager.DownloadModel(modelURLs[modelIndex], true, modelNames[modelIndex]);
-                SetModelIfNone(filename, false);
+                SelectModel(filename, false);
                 UpdateModels(true);
             }
 
@@ -250,7 +249,7 @@ namespace LLMUnity
                     if (!string.IsNullOrEmpty(path))
                     {
                         string filename = LLMManager.LoadModel(path, true);
-                        SetModelIfNone(filename, false);
+                        SelectModel(filename, false);
                         UpdateModels();
                     }
                 };
@@ -272,7 +271,7 @@ namespace LLMUnity
                         if (!string.IsNullOrEmpty(path))
                         {
                             string filename = LLMManager.LoadLora(path, true);
-                            SetModelIfNone(filename, true);
+                            SelectModel(filename, true);
                             UpdateModels();
                         }
                     };
