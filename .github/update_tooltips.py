@@ -31,7 +31,7 @@ def find_eligible_classes(file_paths):
             ret_classes.append(check_class)
         check_classes += child_classes.get(check_class, [])
     return ret_classes
-    
+
 
 
 def add_tooltips_to_unity_file(file_path, allowed_classes):
@@ -55,11 +55,11 @@ def add_tooltips_to_unity_file(file_path, allowed_classes):
             if '<summary>' in stripped_line:
                 in_summary = True
                 summary_text = ''
-            
+
             if in_summary:
                 if summary_text != "": summary_text += ' '
                 summary_text += stripped_line.replace("///", "").replace("<summary>", "").replace("</summary>", "").strip()
-            
+
             if '</summary>' in stripped_line:
                 in_summary = False
 
@@ -67,9 +67,9 @@ def add_tooltips_to_unity_file(file_path, allowed_classes):
                 if ('Tooltip: ignore' not in stripped_line):
                     continue
 
-            include_terms = ['public', ';']
+            include_terms = ['public', 'private', 'protected']
             exclude_terms = ['{', 'static', 'abstract']
-            if all([x in stripped_line for x in include_terms]) and not any([x in stripped_line for x in exclude_terms]):
+            if any([x in stripped_line for x in include_terms]) and ';' in stripped_line and not any([x in stripped_line for x in exclude_terms]):
                 if summary_text != '':
                     num_spaces = len(line) - len(line.lstrip())
                     tooltip = ''.join([' '] * num_spaces + [f'[Tooltip("{summary_text}")]', '\n'])
