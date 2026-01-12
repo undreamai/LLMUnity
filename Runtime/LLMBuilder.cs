@@ -217,9 +217,11 @@ namespace LLMUnity
                 case BuildTarget.iOS:
                     platforms.Add("ios-arm64");
                     break;
+#if UNITY_2022_3_OR_NEWER
                 case BuildTarget.VisionOS:
                     platforms.Add("visionos-arm64");
                     break;
+#endif
             }
 
             foreach (string source in Directory.GetDirectories(LLMUnitySetup.libraryPath))
@@ -256,7 +258,11 @@ namespace LLMUnity
                 }
             }
 
-            if (buildTarget == BuildTarget.Android || buildTarget == BuildTarget.iOS || buildTarget == BuildTarget.VisionOS)
+            bool isVisionOS = false;
+#if UNITY_2022_3_OR_NEWER
+            isVisionOS = buildTarget == BuildTarget.VisionOS;
+#endif
+            if (buildTarget == BuildTarget.Android || buildTarget == BuildTarget.iOS || isVisionOS)
             {
                 foreach (string platform in platforms)
                 {
@@ -272,7 +278,11 @@ namespace LLMUnity
 
         static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths, bool didDomainReload)
         {
-            foreach (BuildTarget buildTarget in new BuildTarget[] { BuildTarget.iOS, BuildTarget.VisionOS, BuildTarget.Android })
+            List<BuildTarget> buildTargets = new List<BuildTarget>() { BuildTarget.iOS, BuildTarget.Android };
+#if UNITY_2022_3_OR_NEWER
+            buildTargets.Add(BuildTarget.VisionOS);
+#endif
+            foreach (BuildTarget buildTarget in buildTargets)
             {
                 string platformDir = Path.Combine("Assets", PluginDir(buildTarget.ToString(), true));
                 if (!Directory.Exists(platformDir)) continue;
