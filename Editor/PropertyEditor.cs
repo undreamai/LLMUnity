@@ -23,6 +23,14 @@ namespace LLMUnity
             return GUILayout.Button(text, style, GUILayout.Width(buttonWidth));
         }
 
+        public void AddExtrasToggle()
+        {
+            bool useCUBLAS = LLMUnitySetup.CUBLAS;
+            GUIContent content = new GUIContent("Light build for Nvidia GPUs", "Use tinyBLAS instead of cuBLAS that takes up less space and has similar performance for quants - doesn't work with i-quants and flash attention");
+            bool newUseCUBLAS = !EditorGUILayout.Toggle(content, !useCUBLAS);
+            if (newUseCUBLAS != useCUBLAS) LLMUnitySetup.SetCUBLAS(newUseCUBLAS);
+        }
+
         public virtual void AddSetupSettings(SerializedObject llmScriptSO)
         {
             List<Type> attributeClasses = new List<Type>(){typeof(LocalRemoteAttribute)};
@@ -33,7 +41,9 @@ namespace LLMUnity
             {
                 attributeClasses.Add(typeof(LLMAdvancedAttribute));
             }
-            ShowPropertiesOfClass("Setup Settings", llmScriptSO, attributeClasses, true);
+            ShowPropertiesOfClass("Setup Settings", llmScriptSO, attributeClasses, false);
+            AddExtrasToggle();
+            Space();
         }
 
         public virtual void AddModelSettings(SerializedObject llmScriptSO)

@@ -417,19 +417,10 @@ namespace LLMUnity
             te.Copy();
         }
 
-        public void AddExtrasToggle()
-        {
-            if (ToggleButton("Use cuBLAS", LLMUnitySetup.CUBLAS)) LLMUnitySetup.SetCUBLAS(!LLMUnitySetup.CUBLAS);
-        }
-
         public override void AddOptionsToggles(SerializedObject llmScriptSO)
         {
             AddDebugModeToggle();
-
-            EditorGUILayout.BeginHorizontal();
             AddAdvancedOptionsToggle(llmScriptSO);
-            AddExtrasToggle();
-            EditorGUILayout.EndHorizontal();
             Space();
         }
 
