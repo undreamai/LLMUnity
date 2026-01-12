@@ -18,18 +18,19 @@
 [![Documentation](https://img.shields.io/badge/Docs-white.svg?logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwEAYAAAAHkiXEAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEgAACxIB0t1+/AAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAATqSURBVHic7ZtbiE1RGMc349K4M5EwklwjzUhJCMmTJPJAYjQXJJcH8+Blkry4lPJA8aAoJbekDLmUS6E8SHJL5AW5JPf77eHv93C22Wfttc/ee+0zc/4vv+bMXvusvfZa3/q+b33H80oqqaSSSmqrKnPdgXjUvbvYq5f4+7f486eb/rRajRsn7t4tPngg/vol/vkj/vghXr0q7tghzpyZ//79+on79omXLombNondukXrd9GoSxdx8mSxqUm8eVNkgAvl0aPioEFip07i6dP52z15Ig4fbvVY2VVFhbhokXjrlogJiWvAg/jwoXjqVO73+leUny9eiFVV5mfMlLDRBw+KX76ISQ+0LZ8/F00v4uJFsWPHFh83O+rdWzx3TnQ9wCZ+/Sqyl5iux1RmTu3aiYcPi64H1pasALypoOv4/8SJXraEbXc9kLbECxo2TKyuFj9/zt9u+XIvG8LWv3wpuh5QW86f3/JznT+fv93s2S23C1Z72wbhtH692LdvMvdPSgzkhAkiJhT16ZO/PRPOmcr+Rda4aa5nclTeuZP7PDgRpr1g40bPrQYOFF0PYKHEC+raVVy8OFy7R49EArvURU4mrUAqaTY0iB8/2rXD+XCm5mbR9QAWylevorV7/VpkL0ld06eLpkiyWPj9u93179+LpFZwZ1PXtGnitWui64GMStPmG7SH1NSIJBNHjvTSFZvRvHlise0N9JcBtW1/44Y4dqx45IjnU0JxAGLpklPx+9VZFwPp/9v/eZDGjxcZh7dv4+mXtch+up7Rca+MsJvxiRNi6nvBhg25HWprZMaPGeOlqxEjxGKz+XGRTAAmyJnq6sR370TXA2NLW+8HNjZ62dLOnaLrAQ1r2zmqPH482n0mTfJCKmEvCJHUooNZE/369Elct06kqiKsONRfulTEFDsX8QDlIa5nup9374pE8IiZHPY+ly+LZE/37/cM6mC6IB6Vl4urV6fzfUG6d0/csyf37wsXRFInaM4ckTjGdPg+apTYs6dI3RIWwH//1DV1qkiuxNY2FzrTd+2y6y8z2HQU6efZs+KBAyJZ4v+V0h6ArlwROaQP0uPH4ooV4sqV8Xz/4MF211M2wwoOq1mzRAq5Pnywa5+4KDHE9mI7ly0TO3fOvZ6/eZCoKwB32HS0SMFV1DNtImBKHYstBROoQ4fEQk2RaS+qrxejmj5M7NatIhWARS82xUJfAKahzFcdPnq0GLYgy7Rnbd8e6rGKRyzpuNzPBQty709RcNSZf/KkuHCh2GpMDyKbGNcLYE+YMkVks336NFx7XhTZ3szXiBaqtWvFuAOxM2dEZiyH8UErgc8JLNun7E0aFffSI7RP6owZmz9kSO73HjsmXr8ukppYsybSYyQvBp5QfOjQ3M9tRR496pGgLf1JtLlzRZJzlFzGp4SWDnUxFCrdvy+uWiWa3DJe3N69oj8uSEq8CER88uaNOGBAOv2ILGY69TBBJoM8O0t72zaRoztXBzlLlrT8XARW/IQq82JTMv3mKmv0/9CC4mJMYPwrMSETxAyurRUxQVmXP1fEid7mzeK3b+n2Jzb16CFu2SIWmtNJiriVxANsyq0uoCJfTk4G9y4t24/bSQ0rTkP6gVTG3mz//uKMGSK/ucId5Xe9lZUi5eMMLGUgz56J5Hxu3xZ50Xg3RMIltVn9BRja26PYsBHgAAAAAElFTkSuQmCC)](https://undream.ai/LLMUnity)
 
 LLM for Unity enables seamless integration of Large Language Models (LLMs) within the Unity engine.<br>
-It allows to create intelligent characters that your players can interact with for an immersive experience.<br>
-The package also features a Retrieval-Augmented Generation (RAG) system that allows to performs semantic search across your data, which can be used to enhance the character's knowledge.<br>
-LLM for Unity is built on top of the awesome [llama.cpp](https://github.com/ggerganov/llama.cpp) library.
-The LLM backend, [LlamaLib](https://github.com/undreamai/LlamaLib) is provided as a standalone C++/C# library.
+It allows to create intelligent AI characters that players can interact with for an immersive experience.<br>
+The package includes a Retrieval-Augmented Generation (RAG) system for semantic search across your data, which can be used to enhance the character's knowledge.<br>
+
+The LLM backend, [LlamaLib](https://github.com/undreamai/LlamaLib), is built on top of the awesome [llama.cpp](https://github.com/ggerganov/llama.cpp) library and  provided as a standalone C++/C# library.
 
 <sub>
 <a href="#at-a-glance" style="color: black">At a glance</a>&nbsp;&nbsp;•&nbsp;
 <a href="#how-to-help" style=color: black>How to help</a>&nbsp;&nbsp;•&nbsp;
 <a href="#games--projects-using-llm-for-unity" style=color: black>Games / Projects using LLM for Unity</a>&nbsp;&nbsp;•&nbsp;
 <a href="#setup" style=color: black>Setup</a>&nbsp;&nbsp;•&nbsp;
-<a href="#how-to-use" style=color: black>How to use</a>&nbsp;&nbsp;•&nbsp;
-<a href="#semantic-search-with-a-retrieval-augmented-generation-rag-system" style=color: black>RAG</a>&nbsp;&nbsp;•&nbsp;
+<a href="#quick-start" style=color: black>Quick start</a>&nbsp;&nbsp;•&nbsp;
+<a href="#advanced-usage" style=color: black>Advanced usage</a>&nbsp;&nbsp;•&nbsp;
+<a href="#semantic-search-with-a-rag-system" style=color: black>RAG</a>&nbsp;&nbsp;•&nbsp;
 <a href="#llm-model-management" style=color: black>LLM model management</a>&nbsp;&nbsp;•&nbsp;
 <a href="#examples" style=color: black>Examples</a>&nbsp;&nbsp;•&nbsp;
 <a href="#options" style=color: black>Options</a>&nbsp;&nbsp;•&nbsp;
@@ -38,9 +39,11 @@ The LLM backend, [LlamaLib](https://github.com/undreamai/LlamaLib) is provided a
 
 ## At a glance
 - 💻 Runs anywhere: PC, mobile or VR!
-- 🏠 Runs locally without internet access. No data ever leave the game!
 - ⚡ Blazing fast inference on CPU and GPU (Nvidia, AMD, Apple Metal)
+- 🏠 Runs locally without internet access. No data ever leave your game!
+- 📡 Supports remote server setup
 - 🤗 Supports all major LLM models
+- 🔍 Advanced RAG System (ANN search)
 - 🔧 Easy to setup, call with a single line of code
 - 💰 Free to use for both personal and commercial purposes
 
@@ -77,6 +80,8 @@ For business inquiries you can reach out at hello@undream.ai.
 - [Digital Humans](https://store.steampowered.com/app/3089280/Digital_Humans/)
 - [CakeMix](https://ripenedpeach.itch.io/cakemix)
 - [HeyWaifu](https://squirclegames.itch.io/hey-waifu-ai)
+- [Love and Lie](https://store.steampowered.com/app/3886140/Love_and_Lie/)
+- [Psycho Simulator](https://store.steampowered.com/app/1244620/Psycho_Simulator/)
 
 Contact hello@undream.ai to add your project!
 
@@ -92,19 +97,23 @@ _Method 2: Install using the GitHub repo:_
 - Click the `+` button and select `Add package from git URL`
 - Use the repository URL `https://github.com/undreamai/LLMUnity.git` and click `Add`
 
-## How to use
+## Quick start
 <img height="300" src=".github/character.png"/>
 
-First you will setup the LLM for your game 🏎:
-- Create an empty GameObject.<br>In the GameObject Inspector click `Add Component` and select the LLM script.
+#### 1. Setup the LLM
+
+First you will setup the LLM for your game:
+- Create an empty GameObject.<br>In the GameObject Inspector click `Add Component` and select the `LLM` script.
 - Download one of the default models with the `Download Model` button (~GBs).<br>Or load your own .gguf model with the `Load model` button (see [LLM model management](#llm-model-management)).
 
-Then you can setup each of your characters as follows 🙋‍♀️:
-- Create an empty GameObject for the character.<br>In the GameObject Inspector click `Add Component` and select the LLMAgent script.
+#### 2. Create an AI Character
+Then you can setup each of your characters as follows:
+- Create an empty GameObject for the character.<br>In the GameObject Inspector click `Add Component` and select the `LLMAgent` script.
 - Define the role of your AI in the `System Prompt`.
 - (Optional) Select the LLM constructed above in the `LLM` field if you have more than one LLM GameObjects.
 
-In your script you can then use it as follows 🦄:
+#### 3. Use in Your Script
+In your script you can then use it as follows:
 ``` c#
 using LLMUnity;
 
@@ -154,9 +163,9 @@ To stop the chat without waiting for its completion you can use:
 
 - Finally, in the Inspector of the GameObject of your script, select the LLMAgent GameObject created above as the llmAgent property.
 
-That's all ✨!
-<br><br>
-You can also:
+That's it! Your AI character is ready to chat! ✨
+
+## Advanced usage
 
 <details>
 <summary>Build a mobile app</summary>
@@ -172,13 +181,13 @@ On Android you need to specify the `IL2CPP` scripting backend and the `ARM64` as
 These settings can be accessed from the `Edit > Project Settings` menu within the `Player > Other Settings` section.<br>
 <img width="400" src=".github/android.png">
 
-Since mobile app sizes are typically small, you can download the LLM models the first time the app launches.
-This functionality can be enabled with the `Download on Build` option.
+Since mobile app sizes are typically small, you can download the LLM model the first time the app launches.
+This functionality is enabled with the `Download on Build` option.
 In your project you can wait until the model download is complete with:
 ``` c#
 await LLM.WaitUntilModelSetup();
 ```
-You can also receive calls during the download with the download progress:
+You can also receive calls the download progress during the model download:
 ``` c#
 await LLM.WaitUntilModelSetup(SetProgress);
 
@@ -187,8 +196,8 @@ void SetProgress(float progress){
   Debug.Log($"Download progress: {progressPercent}");
 }
 ```
-This is useful to present a progress bar or something similar.
-The [MobileDemo](Samples~/MobileDemo) is an example application for Android / iOS.
+This is useful to present e.g. a progress bar.
+The [MobileDemo](Samples~/MobileDemo) demonstrates an example application for Android / iOS.
 
 </details>
 <details>
@@ -198,7 +207,7 @@ To restrict the output of the LLM you can use a grammar, read more [here](https:
 The grammar can edited directly in the `Grammar` field of the LLMAgent or saved in a gbnf / json schema file and loaded with the `Load Grammar` button (Advanced options).<br>
 For instance to receive replies in json format you can use the [json.gbnf](https://github.com/ggerganov/llama.cpp/blob/b4218/grammars/json.gbnf) grammar.<br>
 
-Alternatively you can set the grammar directly with code:
+Alternatively you can set the grammar directly in your script:
 ``` c#
 llmAgent.grammar = "your grammar here";
 ```
@@ -212,7 +221,7 @@ You can look into the [FunctionCalling](Samples~/FunctionCalling) sample for an 
 The chat history of a `LLMAgent` is retained in the `chat` variable that is a list of `ChatMessage` objects.<br>
 The ChatMessage is a class that defines the `role` of the message and the `content`.<br>
 The list contains alternating messages with the player prompt and the AI reply.<br>
-You can modify the chat history and then set it to you LLMAgent GameObject:
+You can modify the chat history and then set it to your LLMAgent GameObject:
 ``` c#
 List<ChatMessage> newChat = new List<ChatMessage>();
 ...
@@ -286,22 +295,6 @@ and to load the history:
 
 </details>
 <details>
-<summary>Wait for the reply before proceeding to the next lines of code</summary>
-
-  For this you can use the `async`/`await` functionality:
-``` c#
-  async void Game(){
-    // your game function
-    ...
-    string message = "Hello bot!";
-    string reply = await llmAgent.Chat(message, HandleReply, ReplyCompleted);
-    Debug.Log(reply);
-    ...
-  }
-```
-
-</details>
-<details>
 <summary>Add a LLM / LLMAgent component programmatically</summary>
 
 ``` c#
@@ -361,20 +354,18 @@ You can use a remote server to carry out the processing and implement characters
 **Create the server**<br>
 To create the server:
 - Create a project with a GameObject using the `LLM` script as described above
-- Enable the `Remote` option of the `LLM` and optionally configure the server parameters: port, API key, SSL certificate, SSL key
+- Enable the `Remote` option of the `LLM` and optionally configure the server port and API key
+- Enable 'Allow Downloads Over HTTP' in the project settings
 - Build and run to start the server
 
 Alternatively you can use a server binary for easier deployment:
-- Run the above scene from the Editor and copy the command from the Debug messages (starting with "Server command:")
-- Download the [server binaries](https://github.com/undreamai/LlamaLib/releases/download/v2.0.0/undreamai-v2.0.0-server.zip) and [DLLs](https://github.com/undreamai/LlamaLib/releases/download/v2.0.0/undreamai-v2.0.0-llamacpp-full.zip) and extract them into the same folder
-- Find the architecture you are interested in from the folder above e.g. for Windows and CUDA use the `windows-cuda-cu12.2.0`.<br>You can also check the architecture that works for your system from the Debug messages (starting with "Using architecture").
-- From command line change directory to the architecture folder selected and start the server by running the command copied from above.
-
-In both cases you'll need to enable 'Allow Downloads Over HTTP' in the project settings.
+- Run the above scene from the Editor and copy the command from the Debug messages (starting with "Deploy server command:")
+- Download and extract the [LlamaLib binaries](https://github.com/undreamai/LlamaLib/releases/download/v2.0.0/LlamaLib-v2.0.0.zip)
+- From command line change directory to the `servers` folder selected and start the server by running the command copied from above.
 
 **Create the characters**<br>
 Create a second project with the game characters using the `LLMAgent` script as described above.
-Enable the `Remote` option and configure the host with the IP address (starting with "http://") and port of the server.
+Enable the `Remote` option and configure the host with the IP address (starting with "http://") and port / API key of the server.
 
 </details>
 <details>
@@ -390,9 +381,9 @@ The `Embeddings` function can be used to obtain the emdeddings of a phrase:
 A <b>detailed documentation</b> on function level can be found here:
 <a href="https://undream.ai/LLMUnity"><img src="https://img.shields.io/badge/Documentation-white.svg?logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwEAYAAAAHkiXEAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEgAACxIB0t1+/AAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAATqSURBVHic7ZtbiE1RGMc349K4M5EwklwjzUhJCMmTJPJAYjQXJJcH8+Blkry4lPJA8aAoJbekDLmUS6E8SHJL5AW5JPf77eHv93C22Wfttc/ee+0zc/4vv+bMXvusvfZa3/q+b33H80oqqaSSSmqrKnPdgXjUvbvYq5f4+7f486eb/rRajRsn7t4tPngg/vol/vkj/vghXr0q7tghzpyZ//79+on79omXLombNondukXrd9GoSxdx8mSxqUm8eVNkgAvl0aPioEFip07i6dP52z15Ig4fbvVY2VVFhbhokXjrlogJiWvAg/jwoXjqVO73+leUny9eiFVV5mfMlLDRBw+KX76ISQ+0LZ8/F00v4uJFsWPHFh83O+rdWzx3TnQ9wCZ+/Sqyl5iux1RmTu3aiYcPi64H1pasALypoOv4/8SJXraEbXc9kLbECxo2TKyuFj9/zt9u+XIvG8LWv3wpuh5QW86f3/JznT+fv93s2S23C1Z72wbhtH692LdvMvdPSgzkhAkiJhT16ZO/PRPOmcr+Rda4aa5nclTeuZP7PDgRpr1g40bPrQYOFF0PYKHEC+raVVy8OFy7R49EArvURU4mrUAqaTY0iB8/2rXD+XCm5mbR9QAWylevorV7/VpkL0ld06eLpkiyWPj9u93179+LpFZwZ1PXtGnitWui64GMStPmG7SH1NSIJBNHjvTSFZvRvHlise0N9JcBtW1/44Y4dqx45IjnU0JxAGLpklPx+9VZFwPp/9v/eZDGjxcZh7dv4+mXtch+up7Rca+MsJvxiRNi6nvBhg25HWprZMaPGeOlqxEjxGKz+XGRTAAmyJnq6sR370TXA2NLW+8HNjZ62dLOnaLrAQ1r2zmqPH482n0mTfJCKmEvCJHUooNZE/369Elct06kqiKsONRfulTEFDsX8QDlIa5nup9374pE8IiZHPY+ly+LZE/37/cM6mC6IB6Vl4urV6fzfUG6d0/csyf37wsXRFInaM4ckTjGdPg+apTYs6dI3RIWwH//1DV1qkiuxNY2FzrTd+2y6y8z2HQU6efZs+KBAyJZ4v+V0h6ArlwROaQP0uPH4ooV4sqV8Xz/4MF211M2wwoOq1mzRAq5Pnywa5+4KDHE9mI7ly0TO3fOvZ6/eZCoKwB32HS0SMFV1DNtImBKHYstBROoQ4fEQk2RaS+qrxejmj5M7NatIhWARS82xUJfAKahzFcdPnq0GLYgy7Rnbd8e6rGKRyzpuNzPBQty709RcNSZf/KkuHCh2GpMDyKbGNcLYE+YMkVks336NFx7XhTZ3szXiBaqtWvFuAOxM2dEZiyH8UErgc8JLNun7E0aFffSI7RP6owZmz9kSO73HjsmXr8ukppYsybSYyQvBp5QfOjQ3M9tRR496pGgLf1JtLlzRZJzlFzGp4SWDnUxFCrdvy+uWiWa3DJe3N69oj8uSEq8CER88uaNOGBAOv2ILGY69TBBJoM8O0t72zaRoztXBzlLlrT8XARW/IQq82JTMv3mKmv0/9CC4mJMYPwrMSETxAyurRUxQVmXP1fEid7mzeK3b+n2Jzb16CFu2SIWmtNJiriVxANsyq0uoCJfTk4G9y4t24/bSQ0rTkP6gVTG3mz//uKMGSK/ucId5Xe9lZUi5eMMLGUgz56J5Hxu3xZ50Xg3RMIltVn9BRja26PYsBHgAAAAAElFTkSuQmCC"/></a>
 
-## Semantic search with a Retrieval-Augmented Generation (RAG) system
+## Semantic search with a RAG system
 LLM for Unity implements a super-fast similarity search functionality with a Retrieval-Augmented Generation (RAG) system.<br>
-It is based on the LLM functionality, and the Approximate Nearest Neighbors (ANN) search from the [usearch](https://github.com/unum-cloud/usearch) library.<br>
+It is based on the LLM embeddings, and the Approximate Nearest Neighbors (ANN) search from the [usearch](https://github.com/unum-cloud/usearch) library.<br>
 Semantic search works as follows.
 
 **Building the data** You provide text inputs (a phrase, paragraph, document) to add to the data.<br>
@@ -432,7 +423,7 @@ public class MyScript : MonoBehaviour
     foreach (string input in inputs) await rag.Add(input);
     // get the 2 most similar inputs and their distance (dissimilarity) to the search query
     (string[] results, float[] distances) = await rag.Search("hello!", 2);
-    // to get the most similar text parts (chnuks) you can enable the returnChunks option
+    // to get the most similar text parts (chunks), instead of full input, you can enable the returnChunks option
     rag.ReturnChunks(true);
     (results, distances) = await rag.Search("hello!", 2);
     ...
@@ -475,27 +466,26 @@ The `RAG` sample includes an example RAG implementation as well as an example RA
 That's all :sparkles:!
 
 ## LLM model management
-LLM for Unity uses a model manager that allows to load or download LLMs and ship them directly in your game.<br>
-The model manager can be found as part of the LLM GameObject:<br>
+LLM for Unity includes a built-in model manager for easy model handling.<br>
+The model manager allows to load or download LLMs and can be found as part of the LLM GameObject:<br>
 <img width="360" src=".github/LLM_manager.png">
 
 You can download models with the `Download model` button.<br>
 LLM for Unity includes different state of the art models built-in for different model sizes, quantised with the Q4_K_M method.<br>
-Alternative models can be downloaded from [HuggingFace](https://huggingface.co/models?library=gguf&sort=downloads) in the .gguf format.<br>
+Alternative models can be downloaded from [HuggingFace](https://huggingface.co/models?library=gguf&sort=downloads) in .gguf format.<br>
 You can download a model locally and load it with the `Load model` button, or copy the URL in the `Download model > Custom URL` field to directly download it.<br>
 If a HuggingFace model does not provide a gguf file, it can be converted to gguf with this [online converter](https://huggingface.co/spaces/ggml-org/gguf-my-repo).<br>
 
-The chat template used for constructing the prompts is determined automatically from the model (if a relevant entry exists) or the model name. <br>
-If incorrecly identified, you can select another template from the chat template dropdown.<br>
+<br>
 <br>
 Models added in the model manager are copied to the game during the building process.<br>
-You can omit a model from being built in by deselecting the "Build" checkbox.<br>
+You can omit a model by deselecting the "Build" checkbox.<br>
 To remove the model (but not delete it from disk) you can click the bin button.<br>
-The the path and URL (if downloaded) of each added model is diplayed in the expanded view of the model manager access with the `>>` button:<br>
+The path and URL of models can be diplayed in the expanded view of the model manager with the `>>` button:<br>
 <img width="600" src=".github/LLM_manager_expanded.png">
 
 You can create lighter builds by selecting the `Download on Build` option.<br>
-Using this option the models will be downloaded the first time the game starts instead of copied in the build.<br>
+The models will be downloaded the first time the game starts instead of bundled in the build.<br>
 If you have loaded a model locally you need to set its URL through the expanded view, otherwise it will be copied in the build.<br>
 
 ❕ Before using any model make sure you **check their license** ❕
@@ -517,10 +507,10 @@ To install a sample:
 - Select the `LLM for Unity` Package. From the `Samples` Tab, click `Import` next to the sample you want to install.
 
 The samples can be run with the `Scene.unity` scene they contain inside their folder.<br>
-In the scene, select the `LLM` GameObject and click the `Download Model` button to download a default model or `Load model` to load your own model (see [LLM model management](#llm-model-management)).<br>
+In the scene, select the `LLM` GameObject and specify the LLM of your choice (see [LLM model management](#llm-model-management)).<br>
 Save the scene, run and enjoy!
 
 ## License
-The license of LLM for Unity is MIT ([LICENSE.md](LICENSE.md)) and uses third-party software with MIT and Apache licenses.
+The license of LLM for Unity is Apache 2.0 ([LICENSE.md](LICENSE.md)) and uses third-party software with MIT and Apache licenses.
 Some models included in the asset define their own license terms, please review them before using each model.
 Third-party licenses can be found in the ([Third Party Notices.md](<Third Party Notices.md>)).

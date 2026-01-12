@@ -50,10 +50,10 @@ LLMCharacter has been moved to a new class LLMAgent.<br>
 
 | **Old Property** | **New Property** | **Migration** |
 | --- | --- | --- |
-| playerName | userRole | Direct rename |
-| AIName | assistantRole | Direct rename |
 | prompt | systemPrompt | Direct rename |
 | chat | chat | Now a property with getter/setter |
+| playerName | Removed | set to "user" for broad model compatibility |
+| AIName | Removed | set to "assistant" for broad model compatibility |
 | saveCache | Removed | Cache management removed |
 
 
@@ -161,8 +161,9 @@ public class MyNPC : LLMAgent // was LLMCharacter
 
 ``` c#
 // In LLMAgent
-agent.userRole = "Player"; // was character.playerName
-agent.assistantRole = "AI"; // was character.AIName
+// Remove: 
+// agent.playerName = "Player";
+// agent.AIName = "AI";
 agent.systemPrompt = "..."; // was character.prompt
 ```
 
