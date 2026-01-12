@@ -65,7 +65,7 @@ namespace UndreamAI.LlamaLib
     {
         private LLMLocal llmBase;
 
-        public LLMAgent(LLMLocal _llm, string _systemPrompt = "", string _userRole = "user", string _assistantRole = "assistant")
+        public LLMAgent(LLMLocal _llm, string _systemPrompt = "")
         {
             if (_llm == null)
                 throw new ArgumentNullException(nameof(_llm));
