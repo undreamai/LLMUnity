@@ -2,8 +2,8 @@
 <area shape="rect" id="Node000001" title="Checks if the provided LORA based on a path exists already in the LORA manager." alt="" coords="680,5,911,31"/>
 <area shape="rect" id="Node000002" href="$classLLMUnity_1_1LoraManager.html#a14d29996fded52370f7621b86b208aea" title="Adds a LORA with the defined weight." alt="" coords="433,5,632,31"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="666,21,632,21,632,15,666,15"/>
-<area shape="rect" id="Node000003" href="$classLLMUnity_1_1LLM.html#a5c4cd1f8b959b1f36c8c50d08ee114c4" title="Allows to add a LORA model to use in the LLM. The model provided is copied to the Assets/StreamingAss..." alt="" coords="217,5,385,31"/>
+<area shape="rect" id="Node000003" href="$classLLMUnity_1_1LLM.html#aca1105d2114768d8229590043bedae42" title="Adds a LORA adapter to the existing set." alt="" coords="217,5,385,31"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="420,21,385,21,385,15,420,15"/>
-<area shape="rect" id="Node000004" href="$classLLMUnity_1_1LLM.html#a5605295ba173a06f26099125681753c6" title="Allows to set a LORA model to use in the LLM. The model provided is copied to the Assets/StreamingAss..." alt="" coords="5,5,169,31"/>
+<area shape="rect" id="Node000004" href="$classLLMUnity_1_1LLM.html#aa674f9494857d43207e30fc1451b5728" title="Sets a single LORA adapter, replacing any existing ones." alt="" coords="5,5,169,31"/>
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="203,21,170,21,170,15,203,15"/>
 </map>

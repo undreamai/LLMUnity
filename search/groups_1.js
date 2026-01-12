@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['llm_0',['LLM',['../group__llm.html',1,'']]]
+  ['rag_0',['RAG',['../group__rag.html',1,'']]]
 ];

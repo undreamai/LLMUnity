@@ -47,7 +47,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_tiny.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">LLM for Unity
-   &#160;<span id="projectnumber">v2.5.2</span>
+   &#160;<span id="projectnumber">v3.0.0</span>
    </div>
    <div id="projectbrief">Create characters in Unity with LLMs!</div>
   </td>
@@ -133,8 +133,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a229aebafa9608c9372b839c17a8b4add"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeb47be093fa7a48525575d6892e51654" id="r_aeb47be093fa7a48525575d6892e51654"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aeb47be093fa7a48525575d6892e51654">GetURLFileSize</a> (Uri address)</td></tr>
 <tr class="separator:aeb47be093fa7a48525575d6892e51654"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9135a8719a11635b6f77967208901338" id="r_a9135a8719a11635b6f77967208901338"><td class="memItemLeft" align="right" valign="top">Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9135a8719a11635b6f77967208901338">DownloadFileTaskAsyncResume</a> (Uri address, string fileName, bool resume=false, Callback&lt; float &gt; progressCallback=null)</td></tr>
-<tr class="separator:a9135a8719a11635b6f77967208901338"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6bb19ae2d2cd2faa227f0bd2145f13be" id="r_a6bb19ae2d2cd2faa227f0bd2145f13be"><td class="memItemLeft" align="right" valign="top">Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6bb19ae2d2cd2faa227f0bd2145f13be">DownloadFileTaskAsyncResume</a> (Uri address, string fileName, bool resume=false, Action&lt; float &gt; progressCallback=null)</td></tr>
+<tr class="separator:a6bb19ae2d2cd2faa227f0bd2145f13be"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a806ba25e6a888174591e7548e72135ee" id="r_a806ba25e6a888174591e7548e72135ee"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a806ba25e6a888174591e7548e72135ee">CancelDownloadAsync</a> ()</td></tr>
 <tr class="separator:a806ba25e6a888174591e7548e72135ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a95a3df1ca8525350c8dbc8b21d02259b" id="r_a95a3df1ca8525350c8dbc8b21d02259b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a95a3df1ca8525350c8dbc8b21d02259b">AbortRequest</a> (WebRequest request)</td></tr>
@@ -227,8 +227,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a9135a8719a11635b6f77967208901338" name="a9135a8719a11635b6f77967208901338"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9135a8719a11635b6f77967208901338">&#9670;&#160;</a></span>DownloadFileTaskAsyncResume()</h2>
+<a id="a6bb19ae2d2cd2faa227f0bd2145f13be" name="a6bb19ae2d2cd2faa227f0bd2145f13be"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6bb19ae2d2cd2faa227f0bd2145f13be">&#9670;&#160;</a></span>DownloadFileTaskAsyncResume()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -254,7 +254,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Callback&lt; float &gt;</td>          <td class="paramname"><span class="paramname"><em>progressCallback</em><span class="paramdefsep"> = </span><span class="paramdefval">null</span></span>&#160;)</td>
+          <td class="paramtype">Action&lt; float &gt;</td>          <td class="paramname"><span class="paramname"><em>progressCallback</em><span class="paramdefsep"> = </span><span class="paramdefval">null</span></span>&#160;)</td>
         </tr>
       </table>
   </td>

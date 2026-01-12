@@ -1,7 +1,0 @@
-<map id="LLMUnity.LLM.ApplyLoras" name="LLMUnity.LLM.ApplyLoras">
-<area shape="rect" id="Node000001" title="Sets the lora scale, only works after the LLM service has started." alt="" coords="269,31,456,56"/>
-<area shape="rect" id="Node000002" href="$classLLMUnity_1_1LLM.html#a26e01ce3a14c30da752cf216acfbb3ff" title="Allows to change the weight (scale) of a LORA model in the LLM." alt="" coords="9,5,218,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="256,35,218,31,219,26,256,30"/>
-<area shape="rect" id="Node000003" href="$classLLMUnity_1_1LLM.html#a1bd7e0bc45826dba87990fa088a32bf9" title="Allows to change the weights (scale) of the LORA models in the LLM." alt="" coords="5,55,221,80"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="256,56,222,60,221,54,255,51"/>
-</map>

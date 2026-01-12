@@ -4,7 +4,7 @@
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1216,28,1182,28,1182,23,1216,23"/>
 <area shape="rect" id="Node000003" href="$classLLMUnity_1_1LLMManager.html#a02f1f4900b433e8d44682d4375da80ca" title="Saves the model manager to disk for the build." alt="" coords="740,5,943,45"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="977,28,943,28,943,23,977,23"/>
-<area shape="rect" id="Node000004" href="$classLLMUnity_1_1LLMManager.html#a91519408988162cd6fd6a2c1f3be6e3e" title="Saves the model manager to disk along with models that are not (or can&#39;t) be downloaded for the build..." alt="" coords="488,13,692,38"/>
+<area shape="rect" id="Node000004" href="$classLLMUnity_1_1LLMManager.html#aef0784998e68822c2f4f1132b7208e7b" title="Saves the model manager to disk along with models that are not (or can&#39;t) be downloaded for the build..." alt="" coords="488,13,692,38"/>
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="727,28,692,28,692,23,727,23"/>
 <area shape="rect" id="Node000005" href="$classLLMUnity_1_1LLMBuilder.html#a4dd148ad9bc393191ab5c0b2d65c543a" title="Bundles the model information." alt="" coords="247,5,440,45"/>
 <area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="474,28,440,28,440,23,474,23"/>

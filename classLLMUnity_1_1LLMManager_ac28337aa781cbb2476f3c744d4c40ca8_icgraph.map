@@ -1,4 +1,0 @@
-<map id="LLMUnity.LLMManager.SetTemplate" name="LLMUnity.LLMManager.SetTemplate">
-<area shape="rect" id="Node000001" title="Sets the chat template for a model and distributes it to all LLMs using it." alt="" coords="5,29,257,55"/>
-<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="176,20,173,15,165,12,131,8,104,10,90,15,87,20,95,27,91,31,82,21,86,11,103,5,131,3,167,7,177,11,181,17"/>
-</map>

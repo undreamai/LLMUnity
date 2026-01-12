@@ -1,0 +1,5 @@
+<map id="LLMUnity.LLM.Register" name="LLMUnity.LLM.Register">
+<area shape="rect" id="Node000001" title="Registers an LLMClient for slot management." alt="" coords="249,5,419,31"/>
+<area shape="rect" id="Node000002" href="$classLLMUnity_1_1LLMAgent.html#a6e5eb898f6be4f4289f6f08d655099e8" title="Unity Awake method that validates configuration and assigns local LLM if needed." alt="" coords="5,5,201,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="235,21,201,21,201,15,235,15"/>
+</map>

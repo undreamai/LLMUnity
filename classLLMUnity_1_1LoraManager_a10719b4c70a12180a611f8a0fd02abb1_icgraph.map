@@ -1,9 +1,0 @@
-<map id="LLMUnity.LoraManager.GetWeights" name="LLMUnity.LoraManager.GetWeights">
-<area shape="rect" id="Node000001" title="Gets the weights of the LORAs in the manager." alt="" coords="504,23,700,63"/>
-<area shape="rect" id="Node000002" href="$classLLMUnity_1_1LLM.html#a0d9a070a62030d25a2baa0178db3abeb" title="Sets the lora scale, only works after the LLM service has started." alt="" coords="269,31,456,56"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="490,46,456,46,456,41,490,41"/>
-<area shape="rect" id="Node000003" href="$classLLMUnity_1_1LLM.html#a26e01ce3a14c30da752cf216acfbb3ff" title="Allows to change the weight (scale) of a LORA model in the LLM." alt="" coords="9,5,218,31"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="256,35,218,31,219,26,256,30"/>
-<area shape="rect" id="Node000004" href="$classLLMUnity_1_1LLM.html#a1bd7e0bc45826dba87990fa088a32bf9" title="Allows to change the weights (scale) of the LORA models in the LLM." alt="" coords="5,55,221,80"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="256,56,222,60,221,54,255,51"/>
-</map>

@@ -47,7 +47,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_tiny.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">LLM for Unity
-   &#160;<span id="projectnumber">v2.5.2</span>
+   &#160;<span id="projectnumber">v3.0.0</span>
    </div>
    <div id="projectbrief">Create characters in Unity with LLMs!</div>
   </td>
@@ -134,12 +134,6 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:ade50d9ef22b0d72c9a20c9399089bc35" id="r_ade50d9ef22b0d72c9a20c9399089bc35"><td class="memItemLeft" align="right" valign="top">static async Task&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ade50d9ef22b0d72c9a20c9399089bc35">SetupOnce</a> ()</td></tr>
 <tr class="memdesc:ade50d9ef22b0d72c9a20c9399089bc35"><td class="mdescLeft">&#160;</td><td class="mdescRight">Task performing the setup of the models.  <br /></td></tr>
 <tr class="separator:ade50d9ef22b0d72c9a20c9399089bc35"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac28337aa781cbb2476f3c744d4c40ca8" id="r_ac28337aa781cbb2476f3c744d4c40ca8"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac28337aa781cbb2476f3c744d4c40ca8">SetTemplate</a> (string filename, string chatTemplate)</td></tr>
-<tr class="memdesc:ac28337aa781cbb2476f3c744d4c40ca8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the chat template for a model and distributes it to all LLMs using it.  <br /></td></tr>
-<tr class="separator:ac28337aa781cbb2476f3c744d4c40ca8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a008ba453476f14727ea2d109bbb209b5" id="r_a008ba453476f14727ea2d109bbb209b5"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a008ba453476f14727ea2d109bbb209b5">SetTemplate</a> (<a class="el" href="classLLMUnity_1_1ModelEntry.html">ModelEntry</a> entry, string chatTemplate)</td></tr>
-<tr class="memdesc:a008ba453476f14727ea2d109bbb209b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the chat template for a model and distributes it to all LLMs using it.  <br /></td></tr>
-<tr class="separator:a008ba453476f14727ea2d109bbb209b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4ce9c8c366573e96eb9d00ceab43b8ba" id="r_a4ce9c8c366573e96eb9d00ceab43b8ba"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classLLMUnity_1_1ModelEntry.html">ModelEntry</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4ce9c8c366573e96eb9d00ceab43b8ba">Get</a> (string path)</td></tr>
 <tr class="memdesc:a4ce9c8c366573e96eb9d00ceab43b8ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the model entry for a model path.  <br /></td></tr>
 <tr class="separator:a4ce9c8c366573e96eb9d00ceab43b8ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -224,9 +218,9 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a02f1f4900b433e8d44682d4375da80ca" id="r_a02f1f4900b433e8d44682d4375da80ca"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a02f1f4900b433e8d44682d4375da80ca">SaveToDisk</a> ()</td></tr>
 <tr class="memdesc:a02f1f4900b433e8d44682d4375da80ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Saves the model manager to disk for the build.  <br /></td></tr>
 <tr class="separator:a02f1f4900b433e8d44682d4375da80ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a91519408988162cd6fd6a2c1f3be6e3e" id="r_a91519408988162cd6fd6a2c1f3be6e3e"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a91519408988162cd6fd6a2c1f3be6e3e">Build</a> (ActionCallback copyCallback)</td></tr>
-<tr class="memdesc:a91519408988162cd6fd6a2c1f3be6e3e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Saves the model manager to disk along with models that are not (or can't) be downloaded for the build.  <br /></td></tr>
-<tr class="separator:a91519408988162cd6fd6a2c1f3be6e3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aef0784998e68822c2f4f1132b7208e7b" id="r_aef0784998e68822c2f4f1132b7208e7b"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aef0784998e68822c2f4f1132b7208e7b">Build</a> (Action&lt; string, string &gt; copyCallback)</td></tr>
+<tr class="memdesc:aef0784998e68822c2f4f1132b7208e7b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Saves the model manager to disk along with models that are not (or can't) be downloaded for the build.  <br /></td></tr>
+<tr class="separator:aef0784998e68822c2f4f1132b7208e7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
@@ -236,8 +230,8 @@ Static Public Attributes</h2></td></tr>
 <tr class="separator:a46a78941b36045e512a3d07fdcdf29f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad192174cef0b299aa1e7fe011e7e2f0a" id="r_ad192174cef0b299aa1e7fe011e7e2f0a"><td class="memItemLeft" align="right" valign="top">static float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad192174cef0b299aa1e7fe011e7e2f0a">downloadProgress</a> = 1</td></tr>
 <tr class="separator:ad192174cef0b299aa1e7fe011e7e2f0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aafef201ec84fdf4d7abfb9ce8a919097" id="r_aafef201ec84fdf4d7abfb9ce8a919097"><td class="memItemLeft" align="right" valign="top">static List&lt; Callback&lt; float &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aafef201ec84fdf4d7abfb9ce8a919097">downloadProgressCallbacks</a> = new List&lt;Callback&lt;float&gt;&gt;()</td></tr>
-<tr class="separator:aafef201ec84fdf4d7abfb9ce8a919097"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b5feaafa0273b5cd16d5a2da16090ad" id="r_a2b5feaafa0273b5cd16d5a2da16090ad"><td class="memItemLeft" align="right" valign="top">static List&lt; Action&lt; float &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2b5feaafa0273b5cd16d5a2da16090ad">downloadProgressCallbacks</a> = new List&lt;Action&lt;float&gt;&gt;()</td></tr>
+<tr class="separator:a2b5feaafa0273b5cd16d5a2da16090ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa45b25ebd3285f6487f96e50444ef14a" id="r_aa45b25ebd3285f6487f96e50444ef14a"><td class="memItemLeft" align="right" valign="top">static float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa45b25ebd3285f6487f96e50444ef14a">modelProgress</a> = 1</td></tr>
 <tr class="separator:aa45b25ebd3285f6487f96e50444ef14a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9a2abb8b958d3cdd1f75e017cabecea3" id="r_a9a2abb8b958d3cdd1f75e017cabecea3"><td class="memItemLeft" align="right" valign="top">static float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9a2abb8b958d3cdd1f75e017cabecea3">loraProgress</a> = 1</td></tr>
@@ -246,7 +240,7 @@ Static Public Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class implementing the LLM model manager. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00110">110</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00106">106</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="ade1fd2084aec2e7dc92d615779706ce4" name="ade1fd2084aec2e7dc92d615779706ce4"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ade1fd2084aec2e7dc92d615779706ce4">&#9670;&#160;</a></span>AddEntry() <span class="overload">[1/2]</span></h2>
@@ -280,7 +274,7 @@ Static Public Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>model filename</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00350">350</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00317">317</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -338,12 +332,12 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>model filename</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00381">381</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00348">348</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>
-<a id="a91519408988162cd6fd6a2c1f3be6e3e" name="a91519408988162cd6fd6a2c1f3be6e3e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a91519408988162cd6fd6a2c1f3be6e3e">&#9670;&#160;</a></span>Build()</h2>
+<a id="aef0784998e68822c2f4f1132b7208e7b" name="aef0784998e68822c2f4f1132b7208e7b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aef0784998e68822c2f4f1132b7208e7b">&#9670;&#160;</a></span>Build()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -354,7 +348,7 @@ Here is the caller graph for this function:</div>
         <tr>
           <td class="memname">static void LLMUnity.LLMManager.Build </td>
           <td>(</td>
-          <td class="paramtype">ActionCallback</td>          <td class="paramname"><span class="paramname"><em>copyCallback</em></span></td><td>)</td>
+          <td class="paramtype">Action&lt; string, string &gt;</td>          <td class="paramname"><span class="paramname"><em>copyCallback</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -373,11 +367,11 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00663">663</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00629">629</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classLLMUnity_1_1LLMManager_a91519408988162cd6fd6a2c1f3be6e3e_icgraph.svg" width="698" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classLLMUnity_1_1LLMManager_aef0784998e68822c2f4f1132b7208e7b_icgraph.svg" width="698" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
@@ -431,7 +425,7 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>model filename</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00394">394</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00361">361</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -483,7 +477,7 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>model filename</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00477">477</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00444">444</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>
@@ -530,7 +524,7 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>model filename</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00465">465</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00432">432</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>
@@ -566,11 +560,11 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>model entry</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00242">242</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00210">210</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classLLMUnity_1_1LLMManager_a4ce9c8c366573e96eb9d00ceab43b8ba_icgraph.svg" width="824" height="522"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classLLMUnity_1_1LLMManager_a4ce9c8c366573e96eb9d00ceab43b8ba_icgraph.svg" width="824" height="448"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
@@ -607,7 +601,7 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>asset path</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00258">258</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00226">226</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>
@@ -636,7 +630,7 @@ Here is the caller graph for this function:</div>
 
 <p>Deserialises and loads the model manager. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00629">629</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00596">596</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -694,7 +688,7 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>model filename</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00447">447</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00414">414</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>
@@ -723,7 +717,7 @@ Here is the caller graph for this function:</div>
 
 <p>Loads the model manager from a file. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00323">323</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00291">291</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -775,7 +769,7 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>model filename</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00501">501</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00468">468</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>
@@ -822,7 +816,7 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>model filename</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00489">489</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00456">456</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>
@@ -858,7 +852,7 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>number of LLM/LORA models</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00274">274</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00242">242</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -893,7 +887,7 @@ Here is the caller graph for this function:</div>
 <p>Returns the number of LORA models. </p>
 <dl class="section return"><dt>Returns</dt><dd>number of LORA models</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00297">297</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00265">265</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>
@@ -923,7 +917,7 @@ Here is the caller graph for this function:</div>
 <p>Returns the number of LLM models. </p>
 <dl class="section return"><dt>Returns</dt><dd>number of LLM models</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00288">288</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00256">256</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>
@@ -958,7 +952,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00306">306</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00274">274</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>
@@ -993,7 +987,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00582">582</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00549">549</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>
@@ -1028,7 +1022,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00573">573</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00540">540</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -1062,11 +1056,11 @@ Here is the caller graph for this function:</div>
 
 <p>Serialises and saves the model manager. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00615">615</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00582">582</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classLLMUnity_1_1LLMManager_a966727ae26510d3987ebb03ffa180c6b_icgraph.svg" width="1115" height="363"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classLLMUnity_1_1LLMManager_a966727ae26510d3987ebb03ffa180c6b_icgraph.svg" width="1115" height="314"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
@@ -1096,7 +1090,7 @@ Here is the caller graph for this function:</div>
 
 <p>Saves the model manager to disk for the build. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00641">641</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00608">608</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -1136,7 +1130,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00554">554</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00521">521</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>
@@ -1171,7 +1165,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00128">128</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00124">124</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -1216,7 +1210,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00543">543</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00510">510</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>
@@ -1256,7 +1250,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00533">533</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00500">500</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -1296,7 +1290,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00607">607</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00574">574</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -1336,96 +1330,11 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00598">598</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00565">565</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><iframe scrolling="no" frameborder="0" src="classLLMUnity_1_1LLMManager_a8f2dda9ac3b3c44017fb63b208e37578_icgraph.svg" width="839" height="102"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-
-</div>
-</div>
-<a id="a008ba453476f14727ea2d109bbb209b5" name="a008ba453476f14727ea2d109bbb209b5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a008ba453476f14727ea2d109bbb209b5">&#9670;&#160;</a></span>SetTemplate() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static void LLMUnity.LLMManager.SetTemplate </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classLLMUnity_1_1ModelEntry.html">ModelEntry</a></td>          <td class="paramname"><span class="paramname"><em>entry</em>, </span></td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>chatTemplate</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Sets the chat template for a model and distributes it to all LLMs using it. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">entry</td><td>model entry</td></tr>
-    <tr><td class="paramname">chatTemplate</td><td>chat template</td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00224">224</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
-
-</div>
-</div>
-<a id="ac28337aa781cbb2476f3c744d4c40ca8" name="ac28337aa781cbb2476f3c744d4c40ca8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac28337aa781cbb2476f3c744d4c40ca8">&#9670;&#160;</a></span>SetTemplate() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static void LLMUnity.LLMManager.SetTemplate </td>
-          <td>(</td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>filename</em>, </span></td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>chatTemplate</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Sets the chat template for a model and distributes it to all LLMs using it. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">filename</td><td>model path</td></tr>
-    <tr><td class="paramname">chatTemplate</td><td>chat template</td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00214">214</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classLLMUnity_1_1LLMManager_ac28337aa781cbb2476f3c744d4c40ca8_icgraph.svg" width="263" height="60"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
@@ -1456,7 +1365,7 @@ Here is the caller graph for this function:</div>
 <p>Setup of the models. </p>
 <dl class="section return"><dt>Returns</dt><dd>bool specifying if the setup was successful</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00138">138</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00134">134</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -1491,7 +1400,7 @@ Here is the caller graph for this function:</div>
 <p>Task performing the setup of the models. </p>
 <dl class="section return"><dt>Returns</dt><dd>bool specifying if the setup was successful</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00151">151</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00147">147</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -1536,7 +1445,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00521">521</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00488">488</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>
@@ -1576,7 +1485,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00511">511</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00478">478</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -1616,12 +1525,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00315">315</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classLLMUnity_1_1LLMManager_a2a8c7192abb0972464557bd9c825d773_icgraph.svg" width="482" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00283">283</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>
@@ -1646,7 +1550,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00112">112</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00108">108</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>
@@ -1670,12 +1574,12 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00116">116</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00112">112</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>
-<a id="aafef201ec84fdf4d7abfb9ce8a919097" name="aafef201ec84fdf4d7abfb9ce8a919097"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aafef201ec84fdf4d7abfb9ce8a919097">&#9670;&#160;</a></span>downloadProgressCallbacks</h2>
+<a id="a2b5feaafa0273b5cd16d5a2da16090ad" name="a2b5feaafa0273b5cd16d5a2da16090ad"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2b5feaafa0273b5cd16d5a2da16090ad">&#9670;&#160;</a></span>downloadProgressCallbacks</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1684,7 +1588,7 @@ Here is the caller graph for this function:</div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">List&lt;Callback&lt;float&gt; &gt; LLMUnity.LLMManager.downloadProgressCallbacks = new List&lt;Callback&lt;float&gt;&gt;()</td>
+          <td class="memname">List&lt;Action&lt;float&gt; &gt; LLMUnity.LLMManager.downloadProgressCallbacks = new List&lt;Action&lt;float&gt;&gt;()</td>
         </tr>
       </table>
   </td>
@@ -1694,7 +1598,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00117">117</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00113">113</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>
@@ -1718,7 +1622,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00337">337</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00304">304</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>
@@ -1742,7 +1646,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00113">113</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00109">109</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>
@@ -1766,7 +1670,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00336">336</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMManager_8cs_source.html#l00303">303</a> of file <a class="el" href="LLMManager_8cs_source.html">LLMManager.cs</a>.</p>
 
 </div>
 </div>

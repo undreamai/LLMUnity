@@ -1,5 +1,5 @@
 <map id="LLMUnity.LLM.SetEmbeddings" name="LLMUnity.LLM.SetEmbeddings">
-<area shape="rect" id="Node000001" title="Set LLM Embedding parameters." alt="" coords="229,5,445,31"/>
-<area shape="rect" id="Node000002" href="$classLLMUnity_1_1LLM.html#a9cdc4850537724d94bf88e7b78372883" title="Allows to set the model used by the LLM. The model provided is copied to the Assets/StreamingAssets f..." alt="" coords="5,5,181,31"/>
+<area shape="rect" id="Node000001" title="Configure the LLM for embedding generation." alt="" coords="229,5,445,31"/>
+<area shape="rect" id="Node000002" href="$classLLMUnity_1_1LLM.html#a9cdc4850537724d94bf88e7b78372883" title="Sets the model file to use. Automatically configures context size and embedding settings." alt="" coords="5,5,181,31"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="216,21,182,21,182,15,216,15"/>
 </map>

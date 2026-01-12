@@ -1,0 +1,5 @@
+<map id="LLMUnity.LLMClient.SetGrammar" name="LLMUnity.LLMClient.SetGrammar">
+<area shape="rect" id="Node000001" title="Sets grammar constraints for structured output generation." alt="" coords="300,5,536,31"/>
+<area shape="rect" id="Node000002" href="$classLLMUnity_1_1LLMClient.html#a1d033ddcc7815db282981c2ea6760e46" title="Loads grammar constraints from a file." alt="" coords="5,5,252,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="286,21,252,21,252,15,286,15"/>
+</map>

@@ -47,7 +47,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_tiny.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">LLM for Unity
-   &#160;<span id="projectnumber">v2.5.2</span>
+   &#160;<span id="projectnumber">v3.0.0</span>
    </div>
    <div id="projectbrief">Create characters in Unity with LLMs!</div>
   </td>
@@ -169,7 +169,7 @@ $(function(){initNavTree('SimpleSearch_8cs_source.html',''); initResizable(); })
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>        <span class="keyword">public</span> <span class="keyword">override</span> ValueTuple&lt;int[], float[], bool&gt; <a class="code hl_function" href="classLLMUnity_1_1Searchable.html#aa3c33fa876b7ee72799a4c89aa80c8f9">IncrementalFetchKeys</a>(<span class="keywordtype">int</span> fetchKey, <span class="keywordtype">int</span> k)</div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        {</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>            <span class="keywordflow">if</span> (!incrementalSearchCache.ContainsKey(fetchKey)) <span class="keywordflow">throw</span> <span class="keyword">new</span> Exception($<span class="stringliteral">&quot;There is no IncrementalSearch cached with this key: {fetchKey}&quot;</span>);</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>            <span class="keywordflow">if</span> (!incrementalSearchCache.ContainsKey(fetchKey)) <a class="code hl_class" href="classLLMUnity_1_1LLMUnitySetup.html">LLMUnitySetup</a>.LogError($<span class="stringliteral">&quot;There is no IncrementalSearch cached with this key: {fetchKey}&quot;</span>, <span class="keyword">true</span>);</div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>            <span class="keywordtype">bool</span> completed;</div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>            List&lt;(int, float)&gt; sortedLists;</div>
@@ -223,13 +223,14 @@ $(function(){initNavTree('SimpleSearch_8cs_source.html',''); initResizable(); })
 <div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    }</div>
 </div>
 <div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>}</div>
+<div class="ttc" id="aclassLLMUnity_1_1LLMUnitySetup_html"><div class="ttname"><a href="classLLMUnity_1_1LLMUnitySetup.html">LLMUnity.LLMUnitySetup</a></div><div class="ttdoc">Class implementing helper functions for setup and process management.</div><div class="ttdef"><b>Definition</b> <a href="LLMUnitySetup_8cs_source.html#l00095">LLMUnitySetup.cs:96</a></div></div>
 <div class="ttc" id="aclassLLMUnity_1_1SearchMethod_html"><div class="ttname"><a href="classLLMUnity_1_1SearchMethod.html">LLMUnity.SearchMethod</a></div><div class="ttdoc">Class implementing the search method template.</div><div class="ttdef"><b>Definition</b> <a href="Search_8cs_source.html#l00253">Search.cs:254</a></div></div>
 <div class="ttc" id="aclassLLMUnity_1_1Searchable_html_a72b9b574682c4d0e1de10e7c407ca0c0"><div class="ttname"><a href="classLLMUnity_1_1Searchable.html#a72b9b574682c4d0e1de10e7c407ca0c0">LLMUnity.Searchable.Count</a></div><div class="ttdeci">int Count()</div><div class="ttdoc">Returns a count of the phrases.</div></div>
 <div class="ttc" id="aclassLLMUnity_1_1Searchable_html_aa3c33fa876b7ee72799a4c89aa80c8f9"><div class="ttname"><a href="classLLMUnity_1_1Searchable.html#aa3c33fa876b7ee72799a4c89aa80c8f9">LLMUnity.Searchable.IncrementalFetchKeys</a></div><div class="ttdeci">ValueTuple&lt; int[], float[], bool &gt; IncrementalFetchKeys(int fetchKey, int k)</div><div class="ttdoc">Retrieves the most similar search results in batches (incremental search). The phrase keys and distan...</div></div>
 <div class="ttc" id="aclassLLMUnity_1_1Searchable_html_aaf8995192a5d202a7c0763cfa4571a0f"><div class="ttname"><a href="classLLMUnity_1_1Searchable.html#aaf8995192a5d202a7c0763cfa4571a0f">LLMUnity.Searchable.IncrementalSearchComplete</a></div><div class="ttdeci">void IncrementalSearchComplete(int fetchKey)</div><div class="ttdoc">Completes the search and clears the cached results for an incremental search.</div></div>
 <div class="ttc" id="aclassLLMUnity_1_1Searchable_html_add95eea5ed30906b2fd674801b5c17d3"><div class="ttname"><a href="classLLMUnity_1_1Searchable.html#add95eea5ed30906b2fd674801b5c17d3">LLMUnity.Searchable.IncrementalSearch</a></div><div class="ttdeci">Task&lt; int &gt; IncrementalSearch(string queryString, string group=&quot;&quot;)</div><div class="ttdoc">Allows to do search and retrieve results in batches (incremental search).</div></div>
 <div class="ttc" id="aclassLLMUnity_1_1SimpleSearch_html"><div class="ttname"><a href="classLLMUnity_1_1SimpleSearch.html">LLMUnity.SimpleSearch</a></div><div class="ttdoc">Class implementing a simple search that compares the enconding of the search query with all the searc...</div><div class="ttdef"><b>Definition</b> <a href="#l00014">SimpleSearch.cs:15</a></div></div>
-<div class="ttc" id="anamespaceLLMUnity_html"><div class="ttname"><a href="namespaceLLMUnity.html">LLMUnity</a></div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00011">LLM.cs:12</a></div></div>
+<div class="ttc" id="anamespaceLLMUnity_html"><div class="ttname"><a href="namespaceLLMUnity.html">LLMUnity</a></div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00012">LLM.cs:13</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

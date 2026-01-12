@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['bitnettemplate_0',['BitNetTemplate',['../classLLMUnity_1_1BitNetTemplate.html',1,'LLMUnity']]]
+  ['dbsearch_0',['DBSearch',['../classLLMUnity_1_1DBSearch.html',1,'LLMUnity']]],
+  ['destroyexception_1',['DestroyException',['../classLLMUnity_1_1DestroyException.html',1,'LLMUnity']]]
 ];

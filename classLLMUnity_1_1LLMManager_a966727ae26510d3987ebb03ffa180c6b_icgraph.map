@@ -1,17 +1,15 @@
 <map id="LLMUnity.LLMManager.Save" name="LLMUnity.LLMManager.Save">
-<area shape="rect" id="Node000001" title="Serialises and saves the model manager." alt="" coords="907,193,1109,219"/>
+<area shape="rect" id="Node000001" title="Serialises and saves the model manager." alt="" coords="907,161,1109,187"/>
 <area shape="rect" id="Node000002" href="$classLLMUnity_1_1LLMManager.html#ade1fd2084aec2e7dc92d615779706ce4" title="Adds a model entry to the model manager." alt="" coords="615,55,845,80"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="983,186,929,138,895,114,858,94,826,83,827,78,860,89,897,109,932,134,987,182"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="976,156,922,124,858,94,819,83,820,77,860,89,925,119,979,151"/>
 <area shape="rect" id="Node000008" href="$classLLMUnity_1_1LLMManager.html#ae01487df0886500aaa26da71389ee562" title="Removes a model from the model manager." alt="" coords="617,104,843,129"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="968,190,917,166,858,145,808,132,809,127,859,139,919,161,971,185"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="935,161,858,145,796,132,797,127,859,139,936,156"/>
 <area shape="rect" id="Node000009" href="$classLLMUnity_1_1LLMManager.html#aafdb9d2fe53990ad8d9129958aa76258" title="Sets whether to download files on start." alt="" coords="601,154,859,194"/>
-<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="893,195,858,191,859,186,894,190"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="893,177,859,177,859,171,893,171"/>
 <area shape="rect" id="Node000010" href="$classLLMUnity_1_1LLMManager.html#a10fea94c8a35a01f0b3275b7ac777583" title="Sets whether to include a model to the build." alt="" coords="611,218,849,258"/>
-<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="893,222,850,227,849,222,893,217"/>
-<area shape="rect" id="Node000011" href="$classLLMUnity_1_1LLMManager.html#a008ba453476f14727ea2d109bbb209b5" title="Sets the chat template for a model and distributes it to all LLMs using it." alt="" coords="604,283,856,308"/>
-<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="971,227,919,251,859,273,809,285,808,280,858,267,917,246,968,222"/>
-<area shape="rect" id="Node000012" href="$classLLMUnity_1_1LLMManager.html#af198a425cde4753e9d530ce41d41f3de" title="Sets the URL for a model." alt="" coords="621,332,839,357"/>
-<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="987,230,932,278,897,303,860,323,827,334,826,329,858,318,895,298,929,274,983,226"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="939,192,818,221,817,215,938,187"/>
+<area shape="rect" id="Node000011" href="$classLLMUnity_1_1LLMManager.html#af198a425cde4753e9d530ce41d41f3de" title="Sets the URL for a model." alt="" coords="621,283,839,308"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="982,197,928,236,860,272,819,285,817,280,858,268,925,232,979,193"/>
 <area shape="rect" id="Node000003" href="$classLLMUnity_1_1LLMManager.html#a96e147c144d00bc7355e251b39d38afd" title="Creates and adds a model entry to the model manager." alt="" coords="320,5,551,31"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="639,55,512,33,513,28,640,50"/>
 <area shape="rect" id="Node000004" href="$classLLMUnity_1_1LLMManager.html#a329a1fae4360d91badf54a0b3d09a16d" title="Downloads a model and adds a model entry to the model manager." alt="" coords="317,55,553,80"/>

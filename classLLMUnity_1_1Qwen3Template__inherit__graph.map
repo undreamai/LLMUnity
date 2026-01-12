@@ -1,7 +1,0 @@
-<map id="LLMUnity.Qwen3Template" name="LLMUnity.Qwen3Template">
-<area shape="rect" id="Node000001" title="Class implementing the Qwen3 template." alt="" coords="5,152,196,177"/>
-<area shape="rect" id="Node000002" href="$classLLMUnity_1_1ChatMLTemplate.html" title="Class implementing the ChatML template." alt="" coords="35,79,166,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="103,118,103,152,98,152,98,118"/>
-<area shape="rect" id="Node000003" href="$classLLMUnity_1_1ChatTemplate.html" title="Class implementing the skeleton of a chat template." alt="" coords="45,5,157,31"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="103,44,103,79,98,79,98,44"/>
-</map>

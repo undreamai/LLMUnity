@@ -4,6 +4,6 @@
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="744,28,709,28,709,23,744,23"/>
 <area shape="rect" id="Node000003" href="$classLLMUnity_1_1LLMManager.html#a685beeeaaea04e8d22e25206da055224" title="Setup of the models." alt="" coords="212,13,420,38"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="454,28,420,28,420,23,454,23"/>
-<area shape="rect" id="Node000004" href="$classLLMUnity_1_1LLM.html#a4ab4bbfb8a83cbe4a19e7aef153c980e" title="The Unity Awake function that starts the LLM server." alt="" coords="5,13,164,38"/>
+<area shape="rect" id="Node000004" href="$classLLMUnity_1_1LLM.html#a4ab4bbfb8a83cbe4a19e7aef153c980e" title="Unity Awake method that initializes the LLM server. Sets up the model, starts the service,..." alt="" coords="5,13,164,38"/>
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="198,28,164,28,164,23,198,23"/>
 </map>

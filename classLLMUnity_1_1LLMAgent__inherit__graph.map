@@ -1,0 +1,9 @@
+<map id="LLMUnity.LLMAgent" name="LLMUnity.LLMAgent">
+<area shape="rect" id="Node000001" title="Unity MonoBehaviour that implements a conversational AI agent with persistent chat history...." alt="" coords="18,152,167,177"/>
+<area shape="rect" id="Node000004" href="$classLLMUnity_1_1LLMCharacter.html" title=" " alt="" coords="5,225,180,251"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="95,191,95,225,90,225,90,191"/>
+<area shape="rect" id="Node000002" href="$classLLMUnity_1_1LLMClient.html" title="Unity MonoBehaviour base class for LLM client functionality. Handles both local and remote LLM connec..." alt="" coords="49,79,136,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="95,118,95,152,90,152,90,118"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="31,5,155,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="95,44,95,79,90,79,90,44"/>
+</map>

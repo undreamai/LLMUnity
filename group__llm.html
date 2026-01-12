@@ -47,7 +47,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_tiny.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">LLM for Unity
-   &#160;<span id="projectnumber">v2.5.2</span>
+   &#160;<span id="projectnumber">v3.0.0</span>
    </div>
    <div id="projectbrief">Create characters in Unity with LLMs!</div>
   </td>
@@ -121,10 +121,13 @@ $(function(){initNavTree('group__llm.html',''); initResizable(); });
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLM.html">LLMUnity.LLM</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class implementing the LLM server.  <a href="classLLMUnity_1_1LLM.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unity MonoBehaviour component that manages a local LLM server instance. Handles model loading, GPU acceleration, LORA adapters, and provides completion, tokenization, and embedding functionality.  <a href="classLLMUnity_1_1LLM.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMCharacter.html">LLMUnity.LLMCharacter</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class implementing the LLM characters.  <a href="classLLMUnity_1_1LLMCharacter.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMAgent.html">LLMUnity.LLMAgent</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unity MonoBehaviour that implements a conversational AI agent with persistent chat history. Extends LLMClient to provide chat-specific functionality including role management, conversation history persistence, and specialized chat completion methods.  <a href="classLLMUnity_1_1LLMAgent.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html">LLMUnity.LLMClient</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unity MonoBehaviour base class for LLM client functionality. Handles both local and remote LLM connections, completion parameters, and provides tokenization, completion, and embedding capabilities.  <a href="classLLMUnity_1_1LLMClient.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMEmbedder.html">LLMUnity.LLMEmbedder</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class implementing the LLM embedder.  <a href="classLLMUnity_1_1LLMEmbedder.html#details">More...</a><br /></td></tr>

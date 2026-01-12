@@ -20,7 +20,7 @@
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="classLLMUnity_1_1LLM.html#a716e19a5161ca61b2ba4e64da3e4cac2" target="_top" xlink:title="Allows to remove a LORA model from the LLM. Models supported are in .gguf format.">
+<g id="a_Node000002"><a xlink:href="classLLMUnity_1_1LLM.html#a716e19a5161ca61b2ba4e64da3e4cac2" target="_top" xlink:title="Removes a specific LORA adapter.">
 <polygon fill="white" stroke="#666666" points="353,-19 205,-19 205,0 353,0 353,-19"/>
 <text text-anchor="middle" x="279" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">LLMUnity.LLM.RemoveLora</text>
 </a>

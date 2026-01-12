@@ -1,6 +1,6 @@
 <map id="LLMUnity.LoraManager.Remove" name="LLMUnity.LoraManager.Remove">
 <area shape="rect" id="Node000001" title="Removes a LORA based on its path." alt="" coords="524,5,751,31"/>
-<area shape="rect" id="Node000002" href="$classLLMUnity_1_1LLM.html#a716e19a5161ca61b2ba4e64da3e4cac2" title="Allows to remove a LORA model from the LLM. Models supported are in .gguf format." alt="" coords="279,5,476,31"/>
+<area shape="rect" id="Node000002" href="$classLLMUnity_1_1LLM.html#a716e19a5161ca61b2ba4e64da3e4cac2" title="Removes a specific LORA adapter." alt="" coords="279,5,476,31"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="510,21,476,21,476,15,510,15"/>
 <area shape="rect" id="Node000003" href="$classLLMUnity_1_1LLMManager.html#ae01487df0886500aaa26da71389ee562" title="Removes a model from the model manager." alt="" coords="5,5,231,31"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="265,21,231,21,231,15,265,15"/>

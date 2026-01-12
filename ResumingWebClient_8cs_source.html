@@ -47,7 +47,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_tiny.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">LLM for Unity
-   &#160;<span id="projectnumber">v2.5.2</span>
+   &#160;<span id="projectnumber">v3.0.0</span>
    </div>
    <div id="projectbrief">Create characters in Unity with LLMs!</div>
   </td>
@@ -156,7 +156,7 @@ $(function(){initNavTree('ResumingWebClient_8cs_source.html',''); initResizable(
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>            <span class="keywordflow">return</span> response.ContentLength;</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>        }</div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>        <span class="keyword">public</span> Task DownloadFileTaskAsyncResume(Uri address, <span class="keywordtype">string</span> fileName, <span class="keywordtype">bool</span> resume = <span class="keyword">false</span>, Callback&lt;float&gt; progressCallback = <span class="keyword">null</span>)</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>        <span class="keyword">public</span> Task DownloadFileTaskAsyncResume(Uri address, <span class="keywordtype">string</span> fileName, <span class="keywordtype">bool</span> resume = <span class="keyword">false</span>, Action&lt;float&gt; progressCallback = <span class="keyword">null</span>)</div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>        {</div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>            var tcs = <span class="keyword">new</span> TaskCompletionSource&lt;object&gt;(address);</div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>            FileStream fs = <span class="keyword">null</span>;</div>
@@ -219,7 +219,7 @@ $(function(){initNavTree('ResumingWebClient_8cs_source.html',''); initResizable(
 <div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>            }</div>
 <div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>        }</div>
 <div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span> </div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>        <span class="keyword">private</span> async <span class="keywordtype">void</span> DownloadBitsAsync(WebRequest request, Stream writeStream, <span class="keywordtype">long</span> bytesToSkip = 0, Callback&lt;float&gt; progressCallback = <span class="keyword">null</span>, TaskCompletionSource&lt;object&gt; tcs = <span class="keyword">null</span>)</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>        <span class="keyword">private</span> async <span class="keywordtype">void</span> DownloadBitsAsync(WebRequest request, Stream writeStream, <span class="keywordtype">long</span> bytesToSkip = 0, Action&lt;float&gt; progressCallback = <span class="keyword">null</span>, TaskCompletionSource&lt;object&gt; tcs = <span class="keyword">null</span>)</div>
 <div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>        {</div>
 <div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>            <span class="keywordflow">try</span></div>
 <div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>            {</div>
@@ -277,7 +277,7 @@ $(function(){initNavTree('ResumingWebClient_8cs_source.html',''); initResizable(
 <div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>            }</div>
 <div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>        }</div>
 <div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span> </div>
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>        <span class="keyword">private</span> <span class="keywordtype">void</span> PostProgressChanged(Callback&lt;float&gt; progressCallback, <span class="keywordtype">long</span> BytesReceived, <span class="keywordtype">long</span> TotalBytesToReceive)</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>        <span class="keyword">private</span> <span class="keywordtype">void</span> PostProgressChanged(Action&lt;float&gt; progressCallback, <span class="keywordtype">long</span> BytesReceived, <span class="keywordtype">long</span> TotalBytesToReceive)</div>
 <div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>        {</div>
 <div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>            <span class="keywordflow">if</span> (progressCallback != <span class="keyword">null</span> &amp;&amp; BytesReceived &gt; 0)</div>
 <div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>            {</div>
@@ -288,9 +288,9 @@ $(function(){initNavTree('ResumingWebClient_8cs_source.html',''); initResizable(
 <div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>    }</div>
 </div>
 <div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>}</div>
-<div class="ttc" id="aclassLLMUnity_1_1LLMUnitySetup_html"><div class="ttname"><a href="classLLMUnity_1_1LLMUnitySetup.html">LLMUnity.LLMUnitySetup</a></div><div class="ttdoc">Class implementing helper functions for setup and process management.</div><div class="ttdef"><b>Definition</b> <a href="LLMUnitySetup_8cs_source.html#l00100">LLMUnitySetup.cs:101</a></div></div>
+<div class="ttc" id="aclassLLMUnity_1_1LLMUnitySetup_html"><div class="ttname"><a href="classLLMUnity_1_1LLMUnitySetup.html">LLMUnity.LLMUnitySetup</a></div><div class="ttdoc">Class implementing helper functions for setup and process management.</div><div class="ttdef"><b>Definition</b> <a href="LLMUnitySetup_8cs_source.html#l00095">LLMUnitySetup.cs:96</a></div></div>
 <div class="ttc" id="aclassLLMUnity_1_1ResumingWebClient_html"><div class="ttname"><a href="classLLMUnity_1_1ResumingWebClient.html">LLMUnity.ResumingWebClient</a></div><div class="ttdoc">Class implementing a resumable Web client.</div><div class="ttdef"><b>Definition</b> <a href="#l00016">ResumingWebClient.cs:17</a></div></div>
-<div class="ttc" id="anamespaceLLMUnity_html"><div class="ttname"><a href="namespaceLLMUnity.html">LLMUnity</a></div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00011">LLM.cs:12</a></div></div>
+<div class="ttc" id="anamespaceLLMUnity_html"><div class="ttname"><a href="namespaceLLMUnity.html">LLMUnity</a></div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00012">LLM.cs:13</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

@@ -47,7 +47,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_tiny.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">LLM for Unity
-   &#160;<span id="projectnumber">v2.5.2</span>
+   &#160;<span id="projectnumber">v3.0.0</span>
    </div>
    <div id="projectbrief">Create characters in Unity with LLMs!</div>
   </td>
@@ -132,11 +132,11 @@ Inheritance diagram for LLMUnity.LLMBuilder:</div>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:acf02909e337a0e103a75f2c82d58b3db" id="r_acf02909e337a0e103a75f2c82d58b3db"><td class="memItemLeft" align="right" valign="top">static string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acf02909e337a0e103a75f2c82d58b3db">PluginDir</a> (string platform, bool relative=false)</td></tr>
 <tr class="separator:acf02909e337a0e103a75f2c82d58b3db"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a403007a9b21e587a5ae11f6ae56c874c" id="r_a403007a9b21e587a5ae11f6ae56c874c"><td class="memItemLeft" align="right" valign="top">static string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a403007a9b21e587a5ae11f6ae56c874c">PluginLibraryDir</a> (string platform, bool relative=false)</td></tr>
-<tr class="separator:a403007a9b21e587a5ae11f6ae56c874c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae4221fc0f83f70bae590742cb7e996fc" id="r_ae4221fc0f83f70bae590742cb7e996fc"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae4221fc0f83f70bae590742cb7e996fc">HandleActionFileRecursive</a> (string source, string target, ActionCallback actionCallback)</td></tr>
-<tr class="memdesc:ae4221fc0f83f70bae590742cb7e996fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs an action for a file or a directory recursively.  <br /></td></tr>
-<tr class="separator:ae4221fc0f83f70bae590742cb7e996fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae2a8aff32551979a223d2ac00249170e" id="r_ae2a8aff32551979a223d2ac00249170e"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae2a8aff32551979a223d2ac00249170e">Retry</a> (System.Action action, int retries=10, int delayMs=100)</td></tr>
+<tr class="separator:ae2a8aff32551979a223d2ac00249170e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a46bf7f5dec48d0adae862dc1924672c6" id="r_a46bf7f5dec48d0adae862dc1924672c6"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a46bf7f5dec48d0adae862dc1924672c6">HandleActionFileRecursive</a> (string source, string target, Action&lt; string, string &gt; actionCallback)</td></tr>
+<tr class="memdesc:a46bf7f5dec48d0adae862dc1924672c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs an action for a file or a directory recursively.  <br /></td></tr>
+<tr class="separator:a46bf7f5dec48d0adae862dc1924672c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aebe7a9cb705ce02ba6409218f19d639f" id="r_aebe7a9cb705ce02ba6409218f19d639f"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aebe7a9cb705ce02ba6409218f19d639f">CopyWithOverwrite</a> (string source, string target)</td></tr>
 <tr class="memdesc:aebe7a9cb705ce02ba6409218f19d639f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Overwrites a target file based on the source file.  <br /></td></tr>
 <tr class="separator:aebe7a9cb705ce02ba6409218f19d639f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -164,13 +164,13 @@ Static Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
-<tr class="memitem:a9415e63d1447f5762ae43474293e3d2b" id="r_a9415e63d1447f5762ae43474293e3d2b"><td class="memItemLeft" align="right" valign="top">static string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9415e63d1447f5762ae43474293e3d2b">BuildTempDir</a> = Path.Combine(Application.temporaryCachePath, &quot;LLMUnityBuild&quot;)</td></tr>
+<tr class="memitem:a9415e63d1447f5762ae43474293e3d2b" id="r_a9415e63d1447f5762ae43474293e3d2b"><td class="memItemLeft" align="right" valign="top">static string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9415e63d1447f5762ae43474293e3d2b">BuildTempDir</a> = Path.Combine(Directory.GetParent(Application.dataPath).FullName, &quot;LLMUnityBuild&quot;)</td></tr>
 <tr class="separator:a9415e63d1447f5762ae43474293e3d2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class implementing the <a class="el" href="namespaceLLMUnity.html">LLMUnity</a> builder. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMBuilder_8cs_source.html#l00015">15</a> of file <a class="el" href="LLMBuilder_8cs_source.html">LLMBuilder.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMBuilder_8cs_source.html#l00016">16</a> of file <a class="el" href="LLMBuilder_8cs_source.html">LLMBuilder.cs</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="ab57a21ef0643f8c4fec18543abbc43c0" name="ab57a21ef0643f8c4fec18543abbc43c0"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab57a21ef0643f8c4fec18543abbc43c0">&#9670;&#160;</a></span>Build()</h2>
@@ -197,7 +197,7 @@ Static Public Attributes</h2></td></tr>
 
 <p>Bundles the models and libraries. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMBuilder_8cs_source.html#l00249">249</a> of file <a class="el" href="LLMBuilder_8cs_source.html">LLMBuilder.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMBuilder_8cs_source.html#l00322">322</a> of file <a class="el" href="LLMBuilder_8cs_source.html">LLMBuilder.cs</a>.</p>
 
 </div>
 </div>
@@ -232,7 +232,7 @@ Static Public Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMBuilder_8cs_source.html#l00165">165</a> of file <a class="el" href="LLMBuilder_8cs_source.html">LLMBuilder.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMBuilder_8cs_source.html#l00195">195</a> of file <a class="el" href="LLMBuilder_8cs_source.html">LLMBuilder.cs</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -266,7 +266,7 @@ Here is the caller graph for this function:</div>
 
 <p>Bundles the model information. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMBuilder_8cs_source.html#l00240">240</a> of file <a class="el" href="LLMBuilder_8cs_source.html">LLMBuilder.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMBuilder_8cs_source.html#l00313">313</a> of file <a class="el" href="LLMBuilder_8cs_source.html">LLMBuilder.cs</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -311,7 +311,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMBuilder_8cs_source.html#l00079">79</a> of file <a class="el" href="LLMBuilder_8cs_source.html">LLMBuilder.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMBuilder_8cs_source.html#l00099">99</a> of file <a class="el" href="LLMBuilder_8cs_source.html">LLMBuilder.cs</a>.</p>
 
 </div>
 </div>
@@ -351,7 +351,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMBuilder_8cs_source.html#l00069">69</a> of file <a class="el" href="LLMBuilder_8cs_source.html">LLMBuilder.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMBuilder_8cs_source.html#l00089">89</a> of file <a class="el" href="LLMBuilder_8cs_source.html">LLMBuilder.cs</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -391,7 +391,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMBuilder_8cs_source.html#l00099">99</a> of file <a class="el" href="LLMBuilder_8cs_source.html">LLMBuilder.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMBuilder_8cs_source.html#l00119">119</a> of file <a class="el" href="LLMBuilder_8cs_source.html">LLMBuilder.cs</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -400,8 +400,8 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
-<a id="ae4221fc0f83f70bae590742cb7e996fc" name="ae4221fc0f83f70bae590742cb7e996fc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae4221fc0f83f70bae590742cb7e996fc">&#9670;&#160;</a></span>HandleActionFileRecursive()</h2>
+<a id="a46bf7f5dec48d0adae862dc1924672c6" name="a46bf7f5dec48d0adae862dc1924672c6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a46bf7f5dec48d0adae862dc1924672c6">&#9670;&#160;</a></span>HandleActionFileRecursive()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -422,7 +422,7 @@ Here is the caller graph for this function:</div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">ActionCallback</td>          <td class="paramname"><span class="paramname"><em>actionCallback</em></span>&#160;)</td>
+          <td class="paramtype">Action&lt; string, string &gt;</td>          <td class="paramname"><span class="paramname"><em>actionCallback</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -442,11 +442,11 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMBuilder_8cs_source.html#l00045">45</a> of file <a class="el" href="LLMBuilder_8cs_source.html">LLMBuilder.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMBuilder_8cs_source.html#l00063">63</a> of file <a class="el" href="LLMBuilder_8cs_source.html">LLMBuilder.cs</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classLLMUnity_1_1LLMBuilder_ae4221fc0f83f70bae590742cb7e996fc_icgraph.svg" width="490" height="92"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classLLMUnity_1_1LLMBuilder_a46bf7f5dec48d0adae862dc1924672c6_icgraph.svg" width="490" height="92"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
@@ -487,7 +487,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMBuilder_8cs_source.html#l00089">89</a> of file <a class="el" href="LLMBuilder_8cs_source.html">LLMBuilder.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMBuilder_8cs_source.html#l00109">109</a> of file <a class="el" href="LLMBuilder_8cs_source.html">LLMBuilder.cs</a>.</p>
 
 </div>
 </div>
@@ -518,38 +518,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMBuilder_8cs_source.html#l00027">27</a> of file <a class="el" href="LLMBuilder_8cs_source.html">LLMBuilder.cs</a>.</p>
-
-</div>
-</div>
-<a id="a403007a9b21e587a5ae11f6ae56c874c" name="a403007a9b21e587a5ae11f6ae56c874c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a403007a9b21e587a5ae11f6ae56c874c">&#9670;&#160;</a></span>PluginLibraryDir()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static string LLMUnity.LLMBuilder.PluginLibraryDir </td>
-          <td>(</td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>platform</em>, </span></td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>relative</em><span class="paramdefsep"> = </span><span class="paramdefval">false</span></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="LLMBuilder_8cs_source.html#l00034">34</a> of file <a class="el" href="LLMBuilder_8cs_source.html">LLMBuilder.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMBuilder_8cs_source.html#l00028">28</a> of file <a class="el" href="LLMBuilder_8cs_source.html">LLMBuilder.cs</a>.</p>
 
 </div>
 </div>
@@ -578,7 +547,43 @@ Here is the caller graph for this function:</div>
 
 <p>Resets the libraries back to their original state. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMBuilder_8cs_source.html#l00260">260</a> of file <a class="el" href="LLMBuilder_8cs_source.html">LLMBuilder.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMBuilder_8cs_source.html#l00333">333</a> of file <a class="el" href="LLMBuilder_8cs_source.html">LLMBuilder.cs</a>.</p>
+
+</div>
+</div>
+<a id="ae2a8aff32551979a223d2ac00249170e" name="ae2a8aff32551979a223d2ac00249170e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae2a8aff32551979a223d2ac00249170e">&#9670;&#160;</a></span>Retry()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void LLMUnity.LLMBuilder.Retry </td>
+          <td>(</td>
+          <td class="paramtype">System::Action</td>          <td class="paramname"><span class="paramname"><em>action</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>retries</em><span class="paramdefsep"> = </span><span class="paramdefval">10</span>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>delayMs</em><span class="paramdefsep"> = </span><span class="paramdefval">100</span></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="LLMBuilder_8cs_source.html#l00035">35</a> of file <a class="el" href="LLMBuilder_8cs_source.html">LLMBuilder.cs</a>.</p>
 
 </div>
 </div>
@@ -593,7 +598,7 @@ Here is the caller graph for this function:</div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">string LLMUnity.LLMBuilder.BuildTempDir = Path.Combine(Application.temporaryCachePath, &quot;LLMUnityBuild&quot;)</td>
+          <td class="memname">string LLMUnity.LLMBuilder.BuildTempDir = Path.Combine(Directory.GetParent(Application.dataPath).FullName, &quot;LLMUnityBuild&quot;)</td>
         </tr>
       </table>
   </td>
@@ -603,7 +608,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMBuilder_8cs_source.html#l00018">18</a> of file <a class="el" href="LLMBuilder_8cs_source.html">LLMBuilder.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMBuilder_8cs_source.html#l00019">19</a> of file <a class="el" href="LLMBuilder_8cs_source.html">LLMBuilder.cs</a>.</p>
 
 </div>
 </div>

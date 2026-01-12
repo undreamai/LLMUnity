@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['expansionadd_0',['expansionAdd',['../classLLMUnity_1_1DBSearch.html#a5e493c0d409f651290a9b841a027e026',1,'LLMUnity::DBSearch']]],
-  ['expansionsearch_1',['expansionSearch',['../classLLMUnity_1_1DBSearch.html#a3c80741de51f31cf0ee0d764cfb9b17f',1,'LLMUnity::DBSearch']]]
+  ['fields_0',['fields',['../classLLMUnity_1_1GGUFReader.html#aed747865098917e6a8d26c44a2ac82bc',1,'LLMUnity::GGUFReader']]],
+  ['frequencypenalty_1',['frequencyPenalty',['../classLLMUnity_1_1LLMClient.html#a687c28d3670a8c3d97ef54aff59c4004',1,'LLMUnity::LLMClient']]]
 ];

@@ -1,0 +1,11 @@
+<map id="LLMUnity.LLMAgent.GetSavePath" name="LLMUnity.LLMAgent.GetSavePath">
+<area shape="rect" id="Node000001" title="Gets the full path for a file in the persistent data directory." alt="" coords="771,31,1007,56"/>
+<area shape="rect" id="Node000002" href="$classLLMUnity_1_1LLMAgent.html#acb1d3b6a724321b024a4ddd0b6d84f81" title="Loads conversation history and optionally the LLM cache from disk." alt="" coords="491,5,722,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="757,34,722,31,722,26,757,29"/>
+<area shape="rect" id="Node000003" href="$classLLMUnity_1_1LLMAgent.html#a645e508151519ce876ca14b3284c09bd" title="Saves the conversation history and optionally the LLM cache to disk." alt="" coords="491,55,723,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="757,57,723,60,723,55,757,52"/>
+<area shape="rect" id="Node000004" href="$classLLMUnity_1_1LLMAgent.html#ae6c59733400df0e8ab289a91e23eb2ef" title="Processes a user query asynchronously and generates an AI response using conversation context...." alt="" coords="260,55,443,80"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="477,70,443,70,443,65,477,65"/>
+<area shape="rect" id="Node000005" href="$classLLMUnity_1_1LLMAgent.html#a0da61a2053f60594ee3a0c7db5d650f2" title="Warms up the model with a specific prompt without adding it to history. This pre&#45;processes prompts fo..." alt="" coords="5,55,212,80"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="246,70,212,70,212,65,246,65"/>
+</map>

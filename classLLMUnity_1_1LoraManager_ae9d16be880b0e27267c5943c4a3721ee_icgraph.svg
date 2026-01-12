@@ -39,7 +39,7 @@
 <!-- Node3 -->
 <g id="Node000003" class="node">
 <title>Node3</title>
-<g id="a_Node000003"><a xlink:href="classLLMUnity_1_1LLM.html#ab02fa0f6e97b8c7cbe85806885727200" target="_top" xlink:title="Allows to remove all LORA models from the LLM.">
+<g id="a_Node000003"><a xlink:href="classLLMUnity_1_1LLM.html#ab02fa0f6e97b8c7cbe85806885727200" target="_top" xlink:title="Removes all LORA adapters.">
 <polygon fill="white" stroke="#666666" points="154,-56 1,-56 1,-37 154,-37 154,-56"/>
 <text text-anchor="middle" x="77.5" y="-44" font-family="Helvetica,sans-Serif" font-size="10.00">LLMUnity.LLM.RemoveLoras</text>
 </a>
@@ -57,7 +57,7 @@
 <!-- Node4 -->
 <g id="Node000004" class="node">
 <title>Node4</title>
-<g id="a_Node000004"><a xlink:href="classLLMUnity_1_1LLM.html#a5605295ba173a06f26099125681753c6" target="_top" xlink:title="Allows to set a LORA model to use in the LLM. The model provided is copied to the Assets/StreamingAss...">
+<g id="a_Node000004"><a xlink:href="classLLMUnity_1_1LLM.html#aa674f9494857d43207e30fc1451b5728" target="_top" xlink:title="Sets a single LORA adapter, replacing any existing ones.">
 <polygon fill="white" stroke="#666666" points="139,-19 16,-19 16,0 139,0 139,-19"/>
 <text text-anchor="middle" x="77.5" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">LLMUnity.LLM.SetLora</text>
 </a>

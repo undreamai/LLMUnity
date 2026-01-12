@@ -1,9 +1,0 @@
-<map id="LLMUnity.DeepSeekR1Template" name="LLMUnity.DeepSeekR1Template">
-<area shape="rect" id="Node000001" title="Class implementing the DeepSeek R1 template." alt="" coords="5,225,233,251"/>
-<area shape="rect" id="Node000002" href="$classLLMUnity_1_1DeepSeekV3Template.html" title="Class implementing the DeepSeek V3 template." alt="" coords="37,152,202,177"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="122,191,122,225,117,225,117,191"/>
-<area shape="rect" id="Node000003" href="$classLLMUnity_1_1DeepSeekV2Template.html" title="Class implementing the DeepSeek V2 template." alt="" coords="37,79,202,104"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="122,118,122,152,117,152,117,118"/>
-<area shape="rect" id="Node000004" href="$classLLMUnity_1_1ChatTemplate.html" title="Class implementing the skeleton of a chat template." alt="" coords="63,5,175,31"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="122,44,122,79,117,79,117,44"/>
-</map>

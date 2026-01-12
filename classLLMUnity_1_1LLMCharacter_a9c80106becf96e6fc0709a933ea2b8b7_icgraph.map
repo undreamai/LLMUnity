@@ -1,7 +1,0 @@
-<map id="LLMUnity.LLMCharacter.SetGrammarFile" name="LLMUnity.LLMCharacter.SetGrammarFile">
-<area shape="rect" id="Node000001" title="Sets the grammar file of the LLMCharacter." alt="" coords="252,37,451,77"/>
-<area shape="rect" id="Node000002" href="$classLLMUnity_1_1LLMCharacter.html#a80918825a101ec1c70ca9219d0f611c5" title="Sets the grammar file of the LLMCharacter (GBNF)" alt="" coords="5,5,204,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="238,45,204,41,205,36,239,40"/>
-<area shape="rect" id="Node000003" href="$classLLMUnity_1_1LLMCharacter.html#a0fbb914c2ab825170ccb4ac4a7bb2a57" title="Sets the grammar file of the LLMCharacter (JSON schema)" alt="" coords="5,69,204,109"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="239,75,205,79,204,74,238,69"/>
-</map>

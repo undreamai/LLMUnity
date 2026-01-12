@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['remote_0',['remote',['../classLLMUnity_1_1LLM.html#aa26e432f58fe58ff701b26204752f06c',1,'LLMUnity::LLM']]],
-  ['repeatlastn_1',['repeatLastN',['../classLLMUnity_1_1LLMCharacter.html#ac3e719d20f168c96803f28fbb31c4c20',1,'LLMUnity::LLMCharacter']]],
-  ['repeatpenalty_2',['repeatPenalty',['../classLLMUnity_1_1LLMCharacter.html#a92dc1b3b37727851b3ea31edecede524',1,'LLMUnity::LLMCharacter']]]
+  ['temperature_0',['temperature',['../classLLMUnity_1_1LLMClient.html#a775ac662624b11500de2e947daf704f3',1,'LLMUnity::LLMClient']]],
+  ['topk_1',['topK',['../classLLMUnity_1_1LLMClient.html#acfa4c418e936f6d8336c18401d94d6b1',1,'LLMUnity::LLMClient']]],
+  ['topp_2',['topP',['../classLLMUnity_1_1LLMClient.html#a149eb4d009f7bc6940dfa1847cb9dee5',1,'LLMUnity::LLMClient']]],
+  ['typicalp_3',['typicalP',['../classLLMUnity_1_1LLMClient.html#ade517a54a2d0b3c0188127643f073c8e',1,'LLMUnity::LLMClient']]]
 ];

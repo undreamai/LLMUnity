@@ -1,10 +1,6 @@
 var searchData=
 [
-  ['cacheprompt_0',['cachePrompt',['../classLLMUnity_1_1LLMCharacter.html#a03d3a1dff711f98d27726a190fe1a215',1,'LLMUnity::LLMCharacter']]],
-  ['chat_1',['chat',['../classLLMUnity_1_1LLMCharacter.html#af27b4d3cebcd4d5ebee7c50827330203',1,'LLMUnity::LLMCharacter']]],
-  ['chattemplate_2',['chatTemplate',['../classLLMUnity_1_1LLM.html#ac45dcfa1ea44a94b26642ab844b0e0dd',1,'LLMUnity::LLM']]],
-  ['chunking_3',['chunking',['../classLLMUnity_1_1RAG.html#aa087e2e196390ab4775723c6a4edeeb3',1,'LLMUnity::RAG']]],
-  ['chunkingtype_4',['chunkingType',['../classLLMUnity_1_1RAG.html#a24160f1b5a42a704d566cca6b2ec19b6',1,'LLMUnity::RAG']]],
-  ['connectivity_5',['connectivity',['../classLLMUnity_1_1DBSearch.html#a581872daa0482eaeb2611297156161bd',1,'LLMUnity::DBSearch']]],
-  ['contextsize_6',['contextSize',['../classLLMUnity_1_1LLM.html#a8e358f7a834e6ede3cc19aa7142e67e8',1,'LLMUnity::LLM']]]
+  ['debugprompt_0',['debugPrompt',['../classLLMUnity_1_1LLMAgent.html#a6f5bc81ba877e66c15b2a86ed7ed59a9',1,'LLMUnity::LLMAgent']]],
+  ['delimiters_1',['delimiters',['../classLLMUnity_1_1SentenceSplitter.html#a487c90e46eda308e409dd721eb778724',1,'LLMUnity::SentenceSplitter']]],
+  ['dontdestroyonload_2',['dontDestroyOnLoad',['../classLLMUnity_1_1LLM.html#ab1cd3fa19215c0ccc3c9cea09fe4b669',1,'LLMUnity::LLM']]]
 ];

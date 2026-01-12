@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['chat_20templates_0',['Chat Templates',['../group__template.html',1,'']]]
+  ['llm_0',['LLM',['../group__llm.html',1,'']]]
 ];

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['embeddings_0',['Embeddings',['../classLLMUnity_1_1LLM.html#aef2e7a567f59048336950592f563b720',1,'LLMUnity::LLM']]]
+  ['embeddings_0',['Embeddings',['../classLLMUnity_1_1LLMClient.html#a4a2e444ff6f9031820cfac4fa3190f52',1,'LLMUnity::LLMClient']]]
 ];

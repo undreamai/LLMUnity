@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['mistralchattemplate_0',['MistralChatTemplate',['../classLLMUnity_1_1MistralChatTemplate.html',1,'LLMUnity']]],
-  ['mistralinstructtemplate_1',['MistralInstructTemplate',['../classLLMUnity_1_1MistralInstructTemplate.html',1,'LLMUnity']]],
-  ['modelentry_2',['ModelEntry',['../classLLMUnity_1_1ModelEntry.html',1,'LLMUnity']]]
+  ['rag_0',['RAG',['../classLLMUnity_1_1RAG.html',1,'LLMUnity']]],
+  ['resumingwebclient_1',['ResumingWebClient',['../classLLMUnity_1_1ResumingWebClient.html',1,'LLMUnity']]]
 ];

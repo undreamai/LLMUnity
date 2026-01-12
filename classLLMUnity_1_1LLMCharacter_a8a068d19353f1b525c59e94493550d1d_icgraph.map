@@ -1,5 +1,0 @@
-<map id="LLMUnity.LLMCharacter.AddAIMessage" name="LLMUnity.LLMCharacter.AddAIMessage">
-<area shape="rect" id="Node000001" title="Allows to add a AI message in the chat history." alt="" coords="260,5,463,45"/>
-<area shape="rect" id="Node000002" href="$classLLMUnity_1_1LLMCharacter.html#a1367eb182ec0efe9322a3102ea22952e" title="Chat functionality of the LLM. It calls the LLM completion based on the provided query including the ..." alt="" coords="5,13,212,38"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="246,28,212,28,212,23,246,23"/>
-</map>

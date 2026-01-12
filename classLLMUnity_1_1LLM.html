@@ -47,7 +47,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_tiny.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">LLM for Unity
-   &#160;<span id="projectnumber">v2.5.2</span>
+   &#160;<span id="projectnumber">v3.0.0</span>
    </div>
    <div id="projectbrief">Create characters in Unity with LLMs!</div>
   </td>
@@ -122,7 +122,7 @@ $(function(){initNavTree('classLLMUnity_1_1LLM.html',''); initResizable(); });
 </div><!--header-->
 <div class="contents">
 
-<p>Class implementing the LLM server.  
+<p>Unity MonoBehaviour component that manages a local LLM server instance. Handles model loading, GPU acceleration, LORA adapters, and provides completion, tokenization, and embedding functionality.  
  <a href="#details">More...</a></p>
 <div class="dynheader">
 Inheritance diagram for LLMUnity.LLM:</div>
@@ -133,166 +133,147 @@ Inheritance diagram for LLMUnity.LLM:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a4ab4bbfb8a83cbe4a19e7aef153c980e" id="r_a4ab4bbfb8a83cbe4a19e7aef153c980e"><td class="memItemLeft" align="right" valign="top">async void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4ab4bbfb8a83cbe4a19e7aef153c980e">Awake</a> ()</td></tr>
-<tr class="memdesc:a4ab4bbfb8a83cbe4a19e7aef153c980e"><td class="mdescLeft">&#160;</td><td class="mdescRight">The Unity Awake function that starts the LLM server.  <br /></td></tr>
+<tr class="memdesc:a4ab4bbfb8a83cbe4a19e7aef153c980e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unity Awake method that initializes the LLM server. Sets up the model, starts the service, and handles GPU fallback if needed.  <br /></td></tr>
 <tr class="separator:a4ab4bbfb8a83cbe4a19e7aef153c980e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a52ae6076746695d25592f8355a18414e" id="r_a52ae6076746695d25592f8355a18414e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a52ae6076746695d25592f8355a18414e">OnDestroy</a> ()</td></tr>
+<tr class="separator:a52ae6076746695d25592f8355a18414e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad3499733035a57a839d22c66f39d3f36" id="r_ad3499733035a57a839d22c66f39d3f36"><td class="memItemLeft" align="right" valign="top">async Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad3499733035a57a839d22c66f39d3f36">WaitUntilReady</a> ()</td></tr>
-<tr class="memdesc:ad3499733035a57a839d22c66f39d3f36"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allows to wait until the LLM is ready.  <br /></td></tr>
+<tr class="memdesc:ad3499733035a57a839d22c66f39d3f36"><td class="mdescLeft">&#160;</td><td class="mdescRight">Waits asynchronously until the LLM is ready to accept requests.  <br /></td></tr>
 <tr class="separator:ad3499733035a57a839d22c66f39d3f36"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9cdc4850537724d94bf88e7b78372883" id="r_a9cdc4850537724d94bf88e7b78372883"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9cdc4850537724d94bf88e7b78372883">SetModel</a> (string path)</td></tr>
-<tr class="memdesc:a9cdc4850537724d94bf88e7b78372883"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allows to set the model used by the LLM. The model provided is copied to the Assets/StreamingAssets folder that allows it to also work in the build. Models supported are in .gguf format.  <br /></td></tr>
+<tr class="memdesc:a9cdc4850537724d94bf88e7b78372883"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the model file to use. Automatically configures context size and embedding settings.  <br /></td></tr>
 <tr class="separator:a9cdc4850537724d94bf88e7b78372883"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5605295ba173a06f26099125681753c6" id="r_a5605295ba173a06f26099125681753c6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5605295ba173a06f26099125681753c6">SetLora</a> (string path, float weight=1)</td></tr>
-<tr class="memdesc:a5605295ba173a06f26099125681753c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allows to set a LORA model to use in the LLM. The model provided is copied to the Assets/StreamingAssets folder that allows it to also work in the build. Models supported are in .gguf format.  <br /></td></tr>
-<tr class="separator:a5605295ba173a06f26099125681753c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5c4cd1f8b959b1f36c8c50d08ee114c4" id="r_a5c4cd1f8b959b1f36c8c50d08ee114c4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5c4cd1f8b959b1f36c8c50d08ee114c4">AddLora</a> (string path, float weight=1)</td></tr>
-<tr class="memdesc:a5c4cd1f8b959b1f36c8c50d08ee114c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allows to add a LORA model to use in the LLM. The model provided is copied to the Assets/StreamingAssets folder that allows it to also work in the build. Models supported are in .gguf format.  <br /></td></tr>
-<tr class="separator:a5c4cd1f8b959b1f36c8c50d08ee114c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5e531bdc0fd310d40825677cb395798b" id="r_a5e531bdc0fd310d40825677cb395798b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5e531bdc0fd310d40825677cb395798b">SetReasoning</a> (bool <a class="el" href="#a5e8720cac52433a52cb557d3adb0b748">reasoning</a>)</td></tr>
+<tr class="memdesc:a5e531bdc0fd310d40825677cb395798b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable LLM reasoning ("thinking" mode)  <br /></td></tr>
+<tr class="separator:a5e531bdc0fd310d40825677cb395798b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab22e03a486a7ee3b06c8955a380ae5f9" id="r_ab22e03a486a7ee3b06c8955a380ae5f9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab22e03a486a7ee3b06c8955a380ae5f9">SetEmbeddings</a> (int <a class="el" href="#abb255416f0f7f33b3c38e520c3124086">embeddingLength</a>, bool <a class="el" href="#a74354822d1f8c3a61dcde51a2c293282">embeddingsOnly</a>)</td></tr>
+<tr class="memdesc:ab22e03a486a7ee3b06c8955a380ae5f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configure the LLM for embedding generation.  <br /></td></tr>
+<tr class="separator:ab22e03a486a7ee3b06c8955a380ae5f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abbb7bea724153cc6d45c88c3501f1bd7" id="r_abbb7bea724153cc6d45c88c3501f1bd7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abbb7bea724153cc6d45c88c3501f1bd7">Register</a> (<a class="el" href="classLLMUnity_1_1LLMClient.html">LLMClient</a> llmClient)</td></tr>
+<tr class="memdesc:abbb7bea724153cc6d45c88c3501f1bd7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers an LLMClient for slot management.  <br /></td></tr>
+<tr class="separator:abbb7bea724153cc6d45c88c3501f1bd7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af6f50602e0b606dfd40dcc996a34cee9" id="r_af6f50602e0b606dfd40dcc996a34cee9"><td class="memItemLeft" align="right" valign="top">List&lt; LoraIdScalePath &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af6f50602e0b606dfd40dcc996a34cee9">ListLoras</a> ()</td></tr>
+<tr class="memdesc:af6f50602e0b606dfd40dcc996a34cee9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets a list of loaded LORA adapters.  <br /></td></tr>
+<tr class="separator:af6f50602e0b606dfd40dcc996a34cee9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa674f9494857d43207e30fc1451b5728" id="r_aa674f9494857d43207e30fc1451b5728"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa674f9494857d43207e30fc1451b5728">SetLora</a> (string path, float weight=1f)</td></tr>
+<tr class="memdesc:aa674f9494857d43207e30fc1451b5728"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a single LORA adapter, replacing any existing ones.  <br /></td></tr>
+<tr class="separator:aa674f9494857d43207e30fc1451b5728"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca1105d2114768d8229590043bedae42" id="r_aca1105d2114768d8229590043bedae42"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aca1105d2114768d8229590043bedae42">AddLora</a> (string path, float weight=1f)</td></tr>
+<tr class="memdesc:aca1105d2114768d8229590043bedae42"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a LORA adapter to the existing set.  <br /></td></tr>
+<tr class="separator:aca1105d2114768d8229590043bedae42"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a716e19a5161ca61b2ba4e64da3e4cac2" id="r_a716e19a5161ca61b2ba4e64da3e4cac2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a716e19a5161ca61b2ba4e64da3e4cac2">RemoveLora</a> (string path)</td></tr>
-<tr class="memdesc:a716e19a5161ca61b2ba4e64da3e4cac2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allows to remove a LORA model from the LLM. Models supported are in .gguf format.  <br /></td></tr>
+<tr class="memdesc:a716e19a5161ca61b2ba4e64da3e4cac2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes a specific LORA adapter.  <br /></td></tr>
 <tr class="separator:a716e19a5161ca61b2ba4e64da3e4cac2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab02fa0f6e97b8c7cbe85806885727200" id="r_ab02fa0f6e97b8c7cbe85806885727200"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab02fa0f6e97b8c7cbe85806885727200">RemoveLoras</a> ()</td></tr>
-<tr class="memdesc:ab02fa0f6e97b8c7cbe85806885727200"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allows to remove all LORA models from the LLM.  <br /></td></tr>
+<tr class="memdesc:ab02fa0f6e97b8c7cbe85806885727200"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes all LORA adapters.  <br /></td></tr>
 <tr class="separator:ab02fa0f6e97b8c7cbe85806885727200"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a26e01ce3a14c30da752cf216acfbb3ff" id="r_a26e01ce3a14c30da752cf216acfbb3ff"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a26e01ce3a14c30da752cf216acfbb3ff">SetLoraWeight</a> (string path, float weight)</td></tr>
-<tr class="memdesc:a26e01ce3a14c30da752cf216acfbb3ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allows to change the weight (scale) of a LORA model in the LLM.  <br /></td></tr>
+<tr class="memdesc:a26e01ce3a14c30da752cf216acfbb3ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Changes the weight of a specific LORA adapter.  <br /></td></tr>
 <tr class="separator:a26e01ce3a14c30da752cf216acfbb3ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1bd7e0bc45826dba87990fa088a32bf9" id="r_a1bd7e0bc45826dba87990fa088a32bf9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1bd7e0bc45826dba87990fa088a32bf9">SetLoraWeights</a> (Dictionary&lt; string, float &gt; loraToWeight)</td></tr>
-<tr class="memdesc:a1bd7e0bc45826dba87990fa088a32bf9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allows to change the weights (scale) of the LORA models in the LLM.  <br /></td></tr>
+<tr class="memdesc:a1bd7e0bc45826dba87990fa088a32bf9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Changes the weights of multiple LORA adapters.  <br /></td></tr>
 <tr class="separator:a1bd7e0bc45826dba87990fa088a32bf9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5ef8b94e4aebb09c42713d91bf3e42e5" id="r_a5ef8b94e4aebb09c42713d91bf3e42e5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5ef8b94e4aebb09c42713d91bf3e42e5">UpdateLoras</a> ()</td></tr>
-<tr class="separator:a5ef8b94e4aebb09c42713d91bf3e42e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad4c7250286a33527cb211bd980f1c307" id="r_ad4c7250286a33527cb211bd980f1c307"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad4c7250286a33527cb211bd980f1c307">SetTemplate</a> (string templateName, bool setDirty=true)</td></tr>
-<tr class="memdesc:ad4c7250286a33527cb211bd980f1c307"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the chat template for the LLM.  <br /></td></tr>
-<tr class="separator:ad4c7250286a33527cb211bd980f1c307"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab22e03a486a7ee3b06c8955a380ae5f9" id="r_ab22e03a486a7ee3b06c8955a380ae5f9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab22e03a486a7ee3b06c8955a380ae5f9">SetEmbeddings</a> (int embeddingLength, bool embeddingsOnly)</td></tr>
-<tr class="memdesc:ab22e03a486a7ee3b06c8955a380ae5f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set LLM Embedding parameters.  <br /></td></tr>
-<tr class="separator:ab22e03a486a7ee3b06c8955a380ae5f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aab0df30ed32482e11f293e512427d10a" id="r_aab0df30ed32482e11f293e512427d10a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aab0df30ed32482e11f293e512427d10a">SetSSLCert</a> (string path)</td></tr>
-<tr class="memdesc:aab0df30ed32482e11f293e512427d10a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Use a SSL certificate for the LLM server.  <br /></td></tr>
-<tr class="separator:aab0df30ed32482e11f293e512427d10a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac33e65352d328cdbeaee9bb019cae5c7" id="r_ac33e65352d328cdbeaee9bb019cae5c7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac33e65352d328cdbeaee9bb019cae5c7">SetSSLKey</a> (string path)</td></tr>
-<tr class="memdesc:ac33e65352d328cdbeaee9bb019cae5c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Use a SSL key for the LLM server.  <br /></td></tr>
-<tr class="separator:ac33e65352d328cdbeaee9bb019cae5c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2615c48420fd97bf210ca02c0f44156d" id="r_a2615c48420fd97bf210ca02c0f44156d"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2615c48420fd97bf210ca02c0f44156d">GetTemplate</a> ()</td></tr>
-<tr class="memdesc:a2615c48420fd97bf210ca02c0f44156d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the chat template of the LLM.  <br /></td></tr>
-<tr class="separator:a2615c48420fd97bf210ca02c0f44156d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae9def17151b9927d93f751b5455d5f34" id="r_ae9def17151b9927d93f751b5455d5f34"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae9def17151b9927d93f751b5455d5f34">Register</a> (LLMCaller llmCaller)</td></tr>
-<tr class="memdesc:ae9def17151b9927d93f751b5455d5f34"><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers a local LLMCaller object. This allows to bind the LLMCaller "client" to a specific slot of the LLM.  <br /></td></tr>
-<tr class="separator:ae9def17151b9927d93f751b5455d5f34"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adadd6997f4df7412db71a7218eb3917b" id="r_adadd6997f4df7412db71a7218eb3917b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adadd6997f4df7412db71a7218eb3917b">Update</a> ()</td></tr>
-<tr class="memdesc:adadd6997f4df7412db71a7218eb3917b"><td class="mdescLeft">&#160;</td><td class="mdescRight">The Unity Update function. It is used to retrieve the LLM replies.  <br /></td></tr>
-<tr class="separator:adadd6997f4df7412db71a7218eb3917b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab8cad787f0751fa2ed7e3b2ccede3083" id="r_ab8cad787f0751fa2ed7e3b2ccede3083"><td class="memItemLeft" align="right" valign="top">async Task&lt; string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab8cad787f0751fa2ed7e3b2ccede3083">Tokenize</a> (string json)</td></tr>
-<tr class="memdesc:ab8cad787f0751fa2ed7e3b2ccede3083"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tokenises the provided query.  <br /></td></tr>
-<tr class="separator:ab8cad787f0751fa2ed7e3b2ccede3083"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4f7107b488a3592dca7555371d91f763" id="r_a4f7107b488a3592dca7555371d91f763"><td class="memItemLeft" align="right" valign="top">async Task&lt; string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4f7107b488a3592dca7555371d91f763">Detokenize</a> (string json)</td></tr>
-<tr class="memdesc:a4f7107b488a3592dca7555371d91f763"><td class="mdescLeft">&#160;</td><td class="mdescRight">Detokenises the provided query.  <br /></td></tr>
-<tr class="separator:a4f7107b488a3592dca7555371d91f763"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aef2e7a567f59048336950592f563b720" id="r_aef2e7a567f59048336950592f563b720"><td class="memItemLeft" align="right" valign="top">async Task&lt; string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aef2e7a567f59048336950592f563b720">Embeddings</a> (string json)</td></tr>
-<tr class="memdesc:aef2e7a567f59048336950592f563b720"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the embeddings of the provided query.  <br /></td></tr>
-<tr class="separator:aef2e7a567f59048336950592f563b720"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0d9a070a62030d25a2baa0178db3abeb" id="r_a0d9a070a62030d25a2baa0178db3abeb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0d9a070a62030d25a2baa0178db3abeb">ApplyLoras</a> ()</td></tr>
-<tr class="memdesc:a0d9a070a62030d25a2baa0178db3abeb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the lora scale, only works after the LLM service has started.  <br /></td></tr>
-<tr class="separator:a0d9a070a62030d25a2baa0178db3abeb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1c8f169076c614dd7630268e64296130" id="r_a1c8f169076c614dd7630268e64296130"><td class="memItemLeft" align="right" valign="top">async Task&lt; List&lt; LoraWeightResult &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1c8f169076c614dd7630268e64296130">ListLoras</a> ()</td></tr>
-<tr class="memdesc:a1c8f169076c614dd7630268e64296130"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets a list of the lora adapters.  <br /></td></tr>
-<tr class="separator:a1c8f169076c614dd7630268e64296130"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a16381a5907592831a0ea35137b9921ff" id="r_a16381a5907592831a0ea35137b9921ff"><td class="memItemLeft" align="right" valign="top">async Task&lt; string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a16381a5907592831a0ea35137b9921ff">Slot</a> (string json)</td></tr>
-<tr class="memdesc:a16381a5907592831a0ea35137b9921ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allows to save / restore the state of a slot.  <br /></td></tr>
-<tr class="separator:a16381a5907592831a0ea35137b9921ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac50c648dc8594b31b7d3bbd54e5c3ab9" id="r_ac50c648dc8594b31b7d3bbd54e5c3ab9"><td class="memItemLeft" align="right" valign="top">async Task&lt; string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac50c648dc8594b31b7d3bbd54e5c3ab9">Completion</a> (string json, Callback&lt; string &gt; streamCallback=null)</td></tr>
-<tr class="memdesc:ac50c648dc8594b31b7d3bbd54e5c3ab9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allows to use the chat and completion functionality of the LLM.  <br /></td></tr>
-<tr class="separator:ac50c648dc8594b31b7d3bbd54e5c3ab9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a281d49a8f23fbf506d178a875b43c688" id="r_a281d49a8f23fbf506d178a875b43c688"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a281d49a8f23fbf506d178a875b43c688">CancelRequest</a> (int id_slot)</td></tr>
-<tr class="memdesc:a281d49a8f23fbf506d178a875b43c688"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allows to cancel the requests in a specific slot of the LLM.  <br /></td></tr>
-<tr class="separator:a281d49a8f23fbf506d178a875b43c688"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a926287808c0f892e0c0e1a911e0a0a0f" id="r_a926287808c0f892e0c0e1a911e0a0a0f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a926287808c0f892e0c0e1a911e0a0a0f">SetSSLCertFromFile</a> (string path)</td></tr>
+<tr class="memdesc:a926287808c0f892e0c0e1a911e0a0a0f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the SSL certificate for secure server connections.  <br /></td></tr>
+<tr class="separator:a926287808c0f892e0c0e1a911e0a0a0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aceb0539e1da36837498b62efae908e20" id="r_aceb0539e1da36837498b62efae908e20"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aceb0539e1da36837498b62efae908e20">SetSSLKeyFromFile</a> (string path)</td></tr>
+<tr class="memdesc:aceb0539e1da36837498b62efae908e20"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the SSL private key for secure server connections.  <br /></td></tr>
+<tr class="separator:aceb0539e1da36837498b62efae908e20"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad8bf6e0910008f748ac0bce42da4a4dd" id="r_ad8bf6e0910008f748ac0bce42da4a4dd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad8bf6e0910008f748ac0bce42da4a4dd">Destroy</a> ()</td></tr>
-<tr class="memdesc:ad8bf6e0910008f748ac0bce42da4a4dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stops and destroys the LLM.  <br /></td></tr>
+<tr class="memdesc:ad8bf6e0910008f748ac0bce42da4a4dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stops and cleans up the LLM service.  <br /></td></tr>
 <tr class="separator:ad8bf6e0910008f748ac0bce42da4a4dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a52ae6076746695d25592f8355a18414e" id="r_a52ae6076746695d25592f8355a18414e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a52ae6076746695d25592f8355a18414e">OnDestroy</a> ()</td></tr>
-<tr class="memdesc:a52ae6076746695d25592f8355a18414e"><td class="mdescLeft">&#160;</td><td class="mdescRight">The Unity OnDestroy function called when the onbject is destroyed. The function StopProcess is called to stop the LLM server.  <br /></td></tr>
-<tr class="separator:a52ae6076746695d25592f8355a18414e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a1f41b07eb274fd6194f0e97eea4ca331" id="r_a1f41b07eb274fd6194f0e97eea4ca331"><td class="memItemLeft" align="right" valign="top">static async Task&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1f41b07eb274fd6194f0e97eea4ca331">WaitUntilModelSetup</a> (Callback&lt; float &gt; downloadProgressCallback=null)</td></tr>
-<tr class="memdesc:a1f41b07eb274fd6194f0e97eea4ca331"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allows to wait until the LLM models are downloaded and ready.  <br /></td></tr>
-<tr class="separator:a1f41b07eb274fd6194f0e97eea4ca331"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a24dd61490ab2510492915d2d5f28f86b" id="r_a24dd61490ab2510492915d2d5f28f86b"><td class="memItemLeft" align="right" valign="top">static async Task&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a24dd61490ab2510492915d2d5f28f86b">WaitUntilModelSetup</a> (Action&lt; float &gt; downloadProgressCallback=null)</td></tr>
+<tr class="memdesc:a24dd61490ab2510492915d2d5f28f86b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Waits asynchronously until model setup is complete.  <br /></td></tr>
+<tr class="separator:a24dd61490ab2510492915d2d5f28f86b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:a6f40f3b1281cce08d0c0327943b32cd7" id="r_a6f40f3b1281cce08d0c0327943b32cd7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6f40f3b1281cce08d0c0327943b32cd7">advancedOptions</a> = false</td></tr>
-<tr class="memdesc:a6f40f3b1281cce08d0c0327943b32cd7"><td class="mdescLeft">&#160;</td><td class="mdescRight">show/hide advanced options in the GameObject  <br /></td></tr>
+<tr class="memdesc:a6f40f3b1281cce08d0c0327943b32cd7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Show/hide advanced options in the inspector.  <br /></td></tr>
 <tr class="separator:a6f40f3b1281cce08d0c0327943b32cd7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa26e432f58fe58ff701b26204752f06c" id="r_aa26e432f58fe58ff701b26204752f06c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa26e432f58fe58ff701b26204752f06c">remote</a> = false</td></tr>
-<tr class="memdesc:aa26e432f58fe58ff701b26204752f06c"><td class="mdescLeft">&#160;</td><td class="mdescRight">enable remote server functionality  <br /></td></tr>
-<tr class="separator:aa26e432f58fe58ff701b26204752f06c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa241f4ea23654739149369cca3fbd712" id="r_aa241f4ea23654739149369cca3fbd712"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa241f4ea23654739149369cca3fbd712">port</a> = 13333</td></tr>
-<tr class="memdesc:aa241f4ea23654739149369cca3fbd712"><td class="mdescLeft">&#160;</td><td class="mdescRight">port to use for the remote LLM server  <br /></td></tr>
-<tr class="separator:aa241f4ea23654739149369cca3fbd712"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9afb1e3370f988ac5ae6bc8bb442bc95" id="r_a9afb1e3370f988ac5ae6bc8bb442bc95"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9afb1e3370f988ac5ae6bc8bb442bc95">numThreads</a> = -1</td></tr>
-<tr class="memdesc:a9afb1e3370f988ac5ae6bc8bb442bc95"><td class="mdescLeft">&#160;</td><td class="mdescRight">number of threads to use (-1 = all)  <br /></td></tr>
-<tr class="separator:a9afb1e3370f988ac5ae6bc8bb442bc95"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0cd82e3728d77575d4f453c5ae443cb9" id="r_a0cd82e3728d77575d4f453c5ae443cb9"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0cd82e3728d77575d4f453c5ae443cb9">numGPULayers</a> = 0</td></tr>
-<tr class="memdesc:a0cd82e3728d77575d4f453c5ae443cb9"><td class="mdescLeft">&#160;</td><td class="mdescRight">number of model layers to offload to the GPU (0 = GPU not used). If the user's GPU is not supported, the LLM will fall back to the CPU  <br /></td></tr>
-<tr class="separator:a0cd82e3728d77575d4f453c5ae443cb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a415905d972e2922dd99b289ceaf56a5c" id="r_a415905d972e2922dd99b289ceaf56a5c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a415905d972e2922dd99b289ceaf56a5c">debug</a> = false</td></tr>
-<tr class="memdesc:a415905d972e2922dd99b289ceaf56a5c"><td class="mdescLeft">&#160;</td><td class="mdescRight">log the output of the LLM in the Unity Editor.  <br /></td></tr>
-<tr class="separator:a415905d972e2922dd99b289ceaf56a5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2a03591ffb964eacb31d2afbe42c4405" id="r_a2a03591ffb964eacb31d2afbe42c4405"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2a03591ffb964eacb31d2afbe42c4405">parallelPrompts</a> = -1</td></tr>
-<tr class="memdesc:a2a03591ffb964eacb31d2afbe42c4405"><td class="mdescLeft">&#160;</td><td class="mdescRight">number of prompts that can happen in parallel (-1 = number of LLMCaller objects)  <br /></td></tr>
-<tr class="separator:a2a03591ffb964eacb31d2afbe42c4405"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab1cd3fa19215c0ccc3c9cea09fe4b669" id="r_ab1cd3fa19215c0ccc3c9cea09fe4b669"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab1cd3fa19215c0ccc3c9cea09fe4b669">dontDestroyOnLoad</a> = true</td></tr>
-<tr class="memdesc:ab1cd3fa19215c0ccc3c9cea09fe4b669"><td class="mdescLeft">&#160;</td><td class="mdescRight">do not destroy the LLM GameObject when loading a new Scene.  <br /></td></tr>
+<tr class="memdesc:ab1cd3fa19215c0ccc3c9cea09fe4b669"><td class="mdescLeft">&#160;</td><td class="mdescRight">Persist this LLM GameObject across scene transitions.  <br /></td></tr>
 <tr class="separator:ab1cd3fa19215c0ccc3c9cea09fe4b669"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8e358f7a834e6ede3cc19aa7142e67e8" id="r_a8e358f7a834e6ede3cc19aa7142e67e8"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8e358f7a834e6ede3cc19aa7142e67e8">contextSize</a> = 8192</td></tr>
-<tr class="memdesc:a8e358f7a834e6ede3cc19aa7142e67e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Size of the prompt context (0 = context size of the model). This is the number of tokens the model can take as input when generating responses.  <br /></td></tr>
-<tr class="separator:a8e358f7a834e6ede3cc19aa7142e67e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac1d133a050b4cc2ec567fcb1691f46b3" id="r_ac1d133a050b4cc2ec567fcb1691f46b3"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac1d133a050b4cc2ec567fcb1691f46b3">batchSize</a> = 512</td></tr>
-<tr class="memdesc:ac1d133a050b4cc2ec567fcb1691f46b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Batch size for prompt processing.  <br /></td></tr>
-<tr class="separator:ac1d133a050b4cc2ec567fcb1691f46b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab3feb52deeee0c441322c81628c065cd" id="r_ab3feb52deeee0c441322c81628c065cd"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab3feb52deeee0c441322c81628c065cd">model</a> = &quot;&quot;</td></tr>
-<tr class="memdesc:ab3feb52deeee0c441322c81628c065cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">LLM model to use (.gguf format)  <br /></td></tr>
-<tr class="separator:ab3feb52deeee0c441322c81628c065cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac45dcfa1ea44a94b26642ab844b0e0dd" id="r_ac45dcfa1ea44a94b26642ab844b0e0dd"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac45dcfa1ea44a94b26642ab844b0e0dd">chatTemplate</a> = <a class="el" href="classLLMUnity_1_1ChatTemplate.html#afd8535970354d20efc257916e725dcef">ChatTemplate.DefaultTemplate</a></td></tr>
-<tr class="memdesc:ac45dcfa1ea44a94b26642ab844b0e0dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Chat template for the model.  <br /></td></tr>
-<tr class="separator:ac45dcfa1ea44a94b26642ab844b0e0dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a80c81993fcc33ee253ffec2f3d1302fd" id="r_a80c81993fcc33ee253ffec2f3d1302fd"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a80c81993fcc33ee253ffec2f3d1302fd">lora</a> = &quot;&quot;</td></tr>
-<tr class="memdesc:a80c81993fcc33ee253ffec2f3d1302fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">LORA models to use (.gguf format)  <br /></td></tr>
-<tr class="separator:a80c81993fcc33ee253ffec2f3d1302fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae1093ec1e0baaab9620276c7a628649a" id="r_ae1093ec1e0baaab9620276c7a628649a"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae1093ec1e0baaab9620276c7a628649a">loraWeights</a> = &quot;&quot;</td></tr>
-<tr class="memdesc:ae1093ec1e0baaab9620276c7a628649a"><td class="mdescLeft">&#160;</td><td class="mdescRight">the weights of the LORA models being used.  <br /></td></tr>
-<tr class="separator:ae1093ec1e0baaab9620276c7a628649a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac4cd7573f92b344e8171a6c88bbf0da3" id="r_ac4cd7573f92b344e8171a6c88bbf0da3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac4cd7573f92b344e8171a6c88bbf0da3">flashAttention</a> = false</td></tr>
-<tr class="memdesc:ac4cd7573f92b344e8171a6c88bbf0da3"><td class="mdescLeft">&#160;</td><td class="mdescRight">enable use of flash attention  <br /></td></tr>
-<tr class="separator:ac4cd7573f92b344e8171a6c88bbf0da3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab7e347a02e70f5231a1ae9e8c9936e4a" id="r_ab7e347a02e70f5231a1ae9e8c9936e4a"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab7e347a02e70f5231a1ae9e8c9936e4a">APIKey</a></td></tr>
-<tr class="memdesc:ab7e347a02e70f5231a1ae9e8c9936e4a"><td class="mdescLeft">&#160;</td><td class="mdescRight">API key to use for the server.  <br /></td></tr>
-<tr class="separator:ab7e347a02e70f5231a1ae9e8c9936e4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaa9666f09daa187f9f9353b4e27204a6" id="r_aaa9666f09daa187f9f9353b4e27204a6"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aaa9666f09daa187f9f9353b4e27204a6">SSLCertPath</a> = &quot;&quot;</td></tr>
-<tr class="separator:aaa9666f09daa187f9f9353b4e27204a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2a121b5151a411f24b8ad50b6d1e4762" id="r_a2a121b5151a411f24b8ad50b6d1e4762"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2a121b5151a411f24b8ad50b6d1e4762">SSLKeyPath</a> = &quot;&quot;</td></tr>
-<tr class="separator:a2a121b5151a411f24b8ad50b6d1e4762"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="properties" name="properties"></a>
 Properties</h2></td></tr>
+<tr class="memitem:a9afb1e3370f988ac5ae6bc8bb442bc95" id="r_a9afb1e3370f988ac5ae6bc8bb442bc95"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9afb1e3370f988ac5ae6bc8bb442bc95">numThreads</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:a9afb1e3370f988ac5ae6bc8bb442bc95"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of threads to use for processing (-1 = use all available threads)  <br /></td></tr>
+<tr class="separator:a9afb1e3370f988ac5ae6bc8bb442bc95"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0cd82e3728d77575d4f453c5ae443cb9" id="r_a0cd82e3728d77575d4f453c5ae443cb9"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0cd82e3728d77575d4f453c5ae443cb9">numGPULayers</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:a0cd82e3728d77575d4f453c5ae443cb9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of model layers to offload to GPU (0 = CPU only)  <br /></td></tr>
+<tr class="separator:a0cd82e3728d77575d4f453c5ae443cb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2a03591ffb964eacb31d2afbe42c4405" id="r_a2a03591ffb964eacb31d2afbe42c4405"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2a03591ffb964eacb31d2afbe42c4405">parallelPrompts</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:a2a03591ffb964eacb31d2afbe42c4405"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of prompts that can be processed in parallel (-1 = auto-detect from clients)  <br /></td></tr>
+<tr class="separator:a2a03591ffb964eacb31d2afbe42c4405"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8e358f7a834e6ede3cc19aa7142e67e8" id="r_a8e358f7a834e6ede3cc19aa7142e67e8"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8e358f7a834e6ede3cc19aa7142e67e8">contextSize</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:a8e358f7a834e6ede3cc19aa7142e67e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Size of the prompt context in tokens (0 = use model's default context size)  <br /></td></tr>
+<tr class="separator:a8e358f7a834e6ede3cc19aa7142e67e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac1d133a050b4cc2ec567fcb1691f46b3" id="r_ac1d133a050b4cc2ec567fcb1691f46b3"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac1d133a050b4cc2ec567fcb1691f46b3">batchSize</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:ac1d133a050b4cc2ec567fcb1691f46b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Batch size for prompt processing (larger = more memory, potentially faster)  <br /></td></tr>
+<tr class="separator:ac1d133a050b4cc2ec567fcb1691f46b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac4cd7573f92b344e8171a6c88bbf0da3" id="r_ac4cd7573f92b344e8171a6c88bbf0da3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac4cd7573f92b344e8171a6c88bbf0da3">flashAttention</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:ac4cd7573f92b344e8171a6c88bbf0da3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable flash attention optimization (requires compatible model)  <br /></td></tr>
+<tr class="separator:ac4cd7573f92b344e8171a6c88bbf0da3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab3feb52deeee0c441322c81628c065cd" id="r_ab3feb52deeee0c441322c81628c065cd"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab3feb52deeee0c441322c81628c065cd">model</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:ab3feb52deeee0c441322c81628c065cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">LLM model file path (.gguf format)  <br /></td></tr>
+<tr class="separator:ab3feb52deeee0c441322c81628c065cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5e8720cac52433a52cb557d3adb0b748" id="r_a5e8720cac52433a52cb557d3adb0b748"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5e8720cac52433a52cb557d3adb0b748">reasoning</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:a5e8720cac52433a52cb557d3adb0b748"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable LLM reasoning ('thinking' mode)  <br /></td></tr>
+<tr class="separator:a5e8720cac52433a52cb557d3adb0b748"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a80c81993fcc33ee253ffec2f3d1302fd" id="r_a80c81993fcc33ee253ffec2f3d1302fd"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a80c81993fcc33ee253ffec2f3d1302fd">lora</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:a80c81993fcc33ee253ffec2f3d1302fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">LORA adapter model paths (.gguf format), separated by commas.  <br /></td></tr>
+<tr class="separator:a80c81993fcc33ee253ffec2f3d1302fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae1093ec1e0baaab9620276c7a628649a" id="r_ae1093ec1e0baaab9620276c7a628649a"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae1093ec1e0baaab9620276c7a628649a">loraWeights</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:ae1093ec1e0baaab9620276c7a628649a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Weights for LORA adapters, separated by commas (default: 1.0 for each)  <br /></td></tr>
+<tr class="separator:ae1093ec1e0baaab9620276c7a628649a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa26e432f58fe58ff701b26204752f06c" id="r_aa26e432f58fe58ff701b26204752f06c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa26e432f58fe58ff701b26204752f06c">remote</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:aa26e432f58fe58ff701b26204752f06c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable remote server functionality to allow external connections.  <br /></td></tr>
+<tr class="separator:aa26e432f58fe58ff701b26204752f06c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa241f4ea23654739149369cca3fbd712" id="r_aa241f4ea23654739149369cca3fbd712"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa241f4ea23654739149369cca3fbd712">port</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:aa241f4ea23654739149369cca3fbd712"><td class="mdescLeft">&#160;</td><td class="mdescRight">Port to use for the remote LLM server.  <br /></td></tr>
+<tr class="separator:aa241f4ea23654739149369cca3fbd712"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab7e347a02e70f5231a1ae9e8c9936e4a" id="r_ab7e347a02e70f5231a1ae9e8c9936e4a"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab7e347a02e70f5231a1ae9e8c9936e4a">APIKey</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:ab7e347a02e70f5231a1ae9e8c9936e4a"><td class="mdescLeft">&#160;</td><td class="mdescRight">API key required for server access (leave empty to disable authentication)  <br /></td></tr>
+<tr class="separator:ab7e347a02e70f5231a1ae9e8c9936e4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:affec27f46f6806f146f2c81c7097a7ba" id="r_affec27f46f6806f146f2c81c7097a7ba"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#affec27f46f6806f146f2c81c7097a7ba">SSLCert</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:affec27f46f6806f146f2c81c7097a7ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">SSL certificate for the remote LLM server.  <br /></td></tr>
+<tr class="separator:affec27f46f6806f146f2c81c7097a7ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab133f7ca60469e42162bc8e68cd1bdf6" id="r_ab133f7ca60469e42162bc8e68cd1bdf6"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab133f7ca60469e42162bc8e68cd1bdf6">SSLKey</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:ab133f7ca60469e42162bc8e68cd1bdf6"><td class="mdescLeft">&#160;</td><td class="mdescRight">SSL key for the remote LLM server.  <br /></td></tr>
+<tr class="separator:ab133f7ca60469e42162bc8e68cd1bdf6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9bf3f3bd1e5ac32e5790415e448762e7" id="r_a9bf3f3bd1e5ac32e5790415e448762e7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9bf3f3bd1e5ac32e5790415e448762e7">started</a> = false<code> [get]</code></td></tr>
-<tr class="memdesc:a9bf3f3bd1e5ac32e5790415e448762e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Boolean set to true if the server has started and is ready to receive requests, false otherwise.  <br /></td></tr>
+<tr class="memdesc:a9bf3f3bd1e5ac32e5790415e448762e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">True if the LLM server has started and is ready to receive requests.  <br /></td></tr>
 <tr class="separator:a9bf3f3bd1e5ac32e5790415e448762e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeac42866b300f3652548febbbd986af5" id="r_aeac42866b300f3652548febbbd986af5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aeac42866b300f3652548febbbd986af5">failed</a> = false<code> [get]</code></td></tr>
-<tr class="memdesc:aeac42866b300f3652548febbbd986af5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Boolean set to true if the server has failed to start.  <br /></td></tr>
+<tr class="memdesc:aeac42866b300f3652548febbbd986af5"><td class="mdescLeft">&#160;</td><td class="mdescRight">True if the LLM server failed to start.  <br /></td></tr>
 <tr class="separator:aeac42866b300f3652548febbbd986af5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7ff0c9a8487d2a875b55d9be53fddf4e" id="r_a7ff0c9a8487d2a875b55d9be53fddf4e"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7ff0c9a8487d2a875b55d9be53fddf4e">modelSetupFailed</a> = false<code> [get]</code></td></tr>
-<tr class="memdesc:a7ff0c9a8487d2a875b55d9be53fddf4e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Boolean set to true if the models were not downloaded successfully.  <br /></td></tr>
+<tr class="memdesc:a7ff0c9a8487d2a875b55d9be53fddf4e"><td class="mdescLeft">&#160;</td><td class="mdescRight">True if model setup failed during initialization.  <br /></td></tr>
 <tr class="separator:a7ff0c9a8487d2a875b55d9be53fddf4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac9fa78f74a04a6b87b990630dc64b472" id="r_ac9fa78f74a04a6b87b990630dc64b472"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac9fa78f74a04a6b87b990630dc64b472">modelSetupComplete</a> = false<code> [get]</code></td></tr>
-<tr class="memdesc:ac9fa78f74a04a6b87b990630dc64b472"><td class="mdescLeft">&#160;</td><td class="mdescRight">Boolean set to true if the server has started and is ready to receive requests, false otherwise.  <br /></td></tr>
+<tr class="memdesc:ac9fa78f74a04a6b87b990630dc64b472"><td class="mdescLeft">&#160;</td><td class="mdescRight">True if model setup completed (successfully or not)  <br /></td></tr>
 <tr class="separator:ac9fa78f74a04a6b87b990630dc64b472"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a29bf125aa91ad56a65604899fd8f8760" id="r_a29bf125aa91ad56a65604899fd8f8760"><td class="memItemLeft" align="right" valign="top">LLMService&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a29bf125aa91ad56a65604899fd8f8760">llmService</a><code> [get]</code></td></tr>
+<tr class="memdesc:a29bf125aa91ad56a65604899fd8f8760"><td class="mdescLeft">&#160;</td><td class="mdescRight">The underlying LLM service instance.  <br /></td></tr>
+<tr class="separator:a29bf125aa91ad56a65604899fd8f8760"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3b243ee397191d2960f26d9093f81935" id="r_a3b243ee397191d2960f26d9093f81935"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3b243ee397191d2960f26d9093f81935">architecture</a><code> [get]</code></td></tr>
+<tr class="memdesc:a3b243ee397191d2960f26d9093f81935"><td class="mdescLeft">&#160;</td><td class="mdescRight">Model architecture name (e.g., llama, mistral)  <br /></td></tr>
+<tr class="separator:a3b243ee397191d2960f26d9093f81935"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a74354822d1f8c3a61dcde51a2c293282" id="r_a74354822d1f8c3a61dcde51a2c293282"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a74354822d1f8c3a61dcde51a2c293282">embeddingsOnly</a><code> [get]</code></td></tr>
+<tr class="memdesc:a74354822d1f8c3a61dcde51a2c293282"><td class="mdescLeft">&#160;</td><td class="mdescRight">True if this model only supports embeddings (no text generation)  <br /></td></tr>
+<tr class="separator:a74354822d1f8c3a61dcde51a2c293282"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb255416f0f7f33b3c38e520c3124086" id="r_abb255416f0f7f33b3c38e520c3124086"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abb255416f0f7f33b3c38e520c3124086">embeddingLength</a><code> [get]</code></td></tr>
+<tr class="memdesc:abb255416f0f7f33b3c38e520c3124086"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of dimensions in embedding vectors (0 if not an embedding model)  <br /></td></tr>
+<tr class="separator:abb255416f0f7f33b3c38e520c3124086"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Class implementing the LLM server. </p>
+<div class="textblock"><p>Unity MonoBehaviour component that manages a local LLM server instance. Handles model loading, GPU acceleration, LORA adapters, and provides completion, tokenization, and embedding functionality. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00018">18</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00020">20</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="aea7584d7316ab288f016646e1782fc79" name="aea7584d7316ab288f016646e1782fc79"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aea7584d7316ab288f016646e1782fc79">&#9670;&#160;</a></span>LLM()</h2>
@@ -317,13 +298,13 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00110">110</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00331">331</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a5c4cd1f8b959b1f36c8c50d08ee114c4" name="a5c4cd1f8b959b1f36c8c50d08ee114c4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5c4cd1f8b959b1f36c8c50d08ee114c4">&#9670;&#160;</a></span>AddLora()</h2>
+<a id="aca1105d2114768d8229590043bedae42" name="aca1105d2114768d8229590043bedae42"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aca1105d2114768d8229590043bedae42">&#9670;&#160;</a></span>AddLora()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -339,7 +320,7 @@ Properties</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>weight</em><span class="paramdefsep"> = </span><span class="paramdefval">1</span></span>&#160;)</td>
+          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>weight</em><span class="paramdefsep"> = </span><span class="paramdefval">1f</span></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -349,54 +330,20 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Allows to add a LORA model to use in the LLM. The model provided is copied to the Assets/StreamingAssets folder that allows it to also work in the build. Models supported are in .gguf format. </p>
+<p>Adds a LORA adapter to the existing set. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">path</td><td>path to LORA model to use (.gguf format)</td></tr>
+    <tr><td class="paramname">path</td><td>Path to LORA file (.gguf format)</td></tr>
+    <tr><td class="paramname">weight</td><td>Adapter weight (default: 1.0)</td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00273">273</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00674">674</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classLLMUnity_1_1LLM_a5c4cd1f8b959b1f36c8c50d08ee114c4_icgraph.svg" width="391" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-
-</div>
-</div>
-<a id="a0d9a070a62030d25a2baa0178db3abeb" name="a0d9a070a62030d25a2baa0178db3abeb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0d9a070a62030d25a2baa0178db3abeb">&#9670;&#160;</a></span>ApplyLoras()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void LLMUnity.LLM.ApplyLoras </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Sets the lora scale, only works after the LLM service has started. </p>
-<dl class="section return"><dt>Returns</dt><dd>switch result</dd></dl>
-
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00721">721</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classLLMUnity_1_1LLM_a0d9a070a62030d25a2baa0178db3abeb_icgraph.svg" width="462" height="86"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classLLMUnity_1_1LLM_aca1105d2114768d8229590043bedae42_icgraph.svg" width="391" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
@@ -424,85 +371,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>The Unity Awake function that starts the LLM server. </p>
+<p>Unity Awake method that initializes the LLM server. Sets up the model, starts the service, and handles GPU fallback if needed. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00127">127</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
-
-</div>
-</div>
-<a id="a281d49a8f23fbf506d178a875b43c688" name="a281d49a8f23fbf506d178a875b43c688"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a281d49a8f23fbf506d178a875b43c688">&#9670;&#160;</a></span>CancelRequest()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void LLMUnity.LLM.CancelRequest </td>
-          <td>(</td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>id_slot</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Allows to cancel the requests in a specific slot of the LLM. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">id_slot</td><td>slot of the LLM</td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00798">798</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
-
-</div>
-</div>
-<a id="ac50c648dc8594b31b7d3bbd54e5c3ab9" name="ac50c648dc8594b31b7d3bbd54e5c3ab9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac50c648dc8594b31b7d3bbd54e5c3ab9">&#9670;&#160;</a></span>Completion()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">async Task&lt; string &gt; LLMUnity.LLM.Completion </td>
-          <td>(</td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>json</em>, </span></td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">Callback&lt; string &gt;</td>          <td class="paramname"><span class="paramname"><em>streamCallback</em><span class="paramdefsep"> = </span><span class="paramdefval">null</span></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Allows to use the chat and completion functionality of the LLM. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">json</td><td>json request containing the query</td></tr>
-    <tr><td class="paramname">streamCallback</td><td>callback function to call with intermediate responses</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>completion result</dd></dl>
-
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00780">780</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00349">349</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -529,19 +400,14 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Stops and destroys the LLM. </p>
+<p>Stops and cleans up the LLM service. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00808">808</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classLLMUnity_1_1LLM_ad8bf6e0910008f748ac0bce42da4a4dd_icgraph.svg" width="410" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00821">821</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
-<a id="a4f7107b488a3592dca7555371d91f763" name="a4f7107b488a3592dca7555371d91f763"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4f7107b488a3592dca7555371d91f763">&#9670;&#160;</a></span>Detokenize()</h2>
+<a id="af6f50602e0b606dfd40dcc996a34cee9" name="af6f50602e0b606dfd40dcc996a34cee9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af6f50602e0b606dfd40dcc996a34cee9">&#9670;&#160;</a></span>ListLoras()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -550,79 +416,7 @@ Here is the caller graph for this function:</div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">async Task&lt; string &gt; LLMUnity.LLM.Detokenize </td>
-          <td>(</td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>json</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Detokenises the provided query. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">json</td><td>json request containing the query</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>detokenisation result</dd></dl>
-
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00692">692</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
-
-</div>
-</div>
-<a id="aef2e7a567f59048336950592f563b720" name="aef2e7a567f59048336950592f563b720"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aef2e7a567f59048336950592f563b720">&#9670;&#160;</a></span>Embeddings()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">async Task&lt; string &gt; LLMUnity.LLM.Embeddings </td>
-          <td>(</td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>json</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Computes the embeddings of the provided query. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">json</td><td>json request containing the query</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>embeddings result</dd></dl>
-
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00707">707</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
-
-</div>
-</div>
-<a id="a2615c48420fd97bf210ca02c0f44156d" name="a2615c48420fd97bf210ca02c0f44156d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2615c48420fd97bf210ca02c0f44156d">&#9670;&#160;</a></span>GetTemplate()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">string LLMUnity.LLM.GetTemplate </td>
+          <td class="memname">List&lt; LoraIdScalePath &gt; LLMUnity.LLM.ListLoras </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"></span></td><td>)</td>
           <td></td>
@@ -635,40 +429,10 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Returns the chat template of the LLM. </p>
-<dl class="section return"><dt>Returns</dt><dd>chat template of the LLM</dd></dl>
+<p>Gets a list of loaded LORA adapters. </p>
+<dl class="section return"><dt>Returns</dt><dd>List of LORA adapter information</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00400">400</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
-
-</div>
-</div>
-<a id="a1c8f169076c614dd7630268e64296130" name="a1c8f169076c614dd7630268e64296130"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1c8f169076c614dd7630268e64296130">&#9670;&#160;</a></span>ListLoras()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">async Task&lt; List&lt; LoraWeightResult &gt; &gt; LLMUnity.LLM.ListLoras </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Gets a list of the lora adapters. </p>
-<dl class="section return"><dt>Returns</dt><dd>list of lara adapters</dd></dl>
-
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00746">746</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00648">648</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -695,14 +459,12 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>The Unity OnDestroy function called when the onbject is destroyed. The function StopProcess is called to stop the LLM server. </p>
-
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00843">843</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00368">368</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
-<a id="ae9def17151b9927d93f751b5455d5f34" name="ae9def17151b9927d93f751b5455d5f34"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae9def17151b9927d93f751b5455d5f34">&#9670;&#160;</a></span>Register()</h2>
+<a id="abbb7bea724153cc6d45c88c3501f1bd7" name="abbb7bea724153cc6d45c88c3501f1bd7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abbb7bea724153cc6d45c88c3501f1bd7">&#9670;&#160;</a></span>Register()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -711,9 +473,9 @@ Here is the caller graph for this function:</div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">int LLMUnity.LLM.Register </td>
+          <td class="memname">void LLMUnity.LLM.Register </td>
           <td>(</td>
-          <td class="paramtype">LLMCaller</td>          <td class="paramname"><span class="paramname"><em>llmCaller</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="classLLMUnity_1_1LLMClient.html">LLMClient</a></td>          <td class="paramname"><span class="paramname"><em>llmClient</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -724,16 +486,21 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Registers a local LLMCaller object. This allows to bind the LLMCaller "client" to a specific slot of the LLM. </p>
+<p>Registers an LLMClient for slot management. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">llmCaller</td><td></td></tr>
+    <tr><td class="paramname">llmClient</td><td>Client to register</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Assigned slot ID</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00570">570</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00634">634</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="classLLMUnity_1_1LLM_abbb7bea724153cc6d45c88c3501f1bd7_icgraph.svg" width="424" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 
 </div>
 </div>
@@ -760,15 +527,15 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Allows to remove a LORA model from the LLM. Models supported are in .gguf format. </p>
+<p>Removes a specific LORA adapter. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">path</td><td>path to LORA model to remove (.gguf format)</td></tr>
+    <tr><td class="paramname">path</td><td>Path to LORA file to remove</td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00285">285</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00685">685</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -800,9 +567,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Allows to remove all LORA models from the LLM. </p>
+<p>Removes all LORA adapters. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00295">295</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00695">695</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -833,16 +600,16 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Set LLM Embedding parameters. </p>
+<p>Configure the LLM for embedding generation. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">embeddingLength</td><td>number of embedding dimensions </td></tr>
-    <tr><td class="paramname">embeddingsOnly</td><td>if true, the LLM will be used only for embeddings </td></tr>
+    <tr><td class="paramname">embeddingLength</td><td>Number of embedding dimensions</td></tr>
+    <tr><td class="paramname">embeddingsOnly</td><td>True if model only supports embeddings</td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00352">352</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00619">619</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -851,8 +618,8 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
-<a id="a5605295ba173a06f26099125681753c6" name="a5605295ba173a06f26099125681753c6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5605295ba173a06f26099125681753c6">&#9670;&#160;</a></span>SetLora()</h2>
+<a id="aa674f9494857d43207e30fc1451b5728" name="aa674f9494857d43207e30fc1451b5728"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa674f9494857d43207e30fc1451b5728">&#9670;&#160;</a></span>SetLora()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -868,7 +635,7 @@ Here is the caller graph for this function:</div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>weight</em><span class="paramdefsep"> = </span><span class="paramdefval">1</span></span>&#160;)</td>
+          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>weight</em><span class="paramdefsep"> = </span><span class="paramdefval">1f</span></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -878,15 +645,16 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Allows to set a LORA model to use in the LLM. The model provided is copied to the Assets/StreamingAssets folder that allows it to also work in the build. Models supported are in .gguf format. </p>
+<p>Sets a single LORA adapter, replacing any existing ones. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">path</td><td>path to LORA model to use (.gguf format)</td></tr>
+    <tr><td class="paramname">path</td><td>Path to LORA file (.gguf format)</td></tr>
+    <tr><td class="paramname">weight</td><td>Adapter weight (default: 1.0)</td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00260">260</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00662">662</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -917,16 +685,16 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Allows to change the weight (scale) of a LORA model in the LLM. </p>
+<p>Changes the weight of a specific LORA adapter. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">path</td><td>path of LORA model to change (.gguf format)</td></tr>
-    <tr><td class="paramname">weight</td><td>weight of LORA</td></tr>
+    <tr><td class="paramname">path</td><td>Path to LORA file</td></tr>
+    <tr><td class="paramname">weight</td><td>New weight value</td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00307">307</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00707">707</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -953,15 +721,15 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Allows to change the weights (scale) of the LORA models in the LLM. </p>
+<p>Changes the weights of multiple LORA adapters. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">loraToWeight</td><td>Dictionary (string, float) mapping the path of LORA models with weights to change</td></tr>
+    <tr><td class="paramname">loraToWeight</td><td>Dictionary mapping LORA paths to weights</td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00318">318</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00718">718</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -988,20 +756,20 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Allows to set the model used by the LLM. The model provided is copied to the Assets/StreamingAssets folder that allows it to also work in the build. Models supported are in .gguf format. </p>
+<p>Sets the model file to use. Automatically configures context size and embedding settings. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">path</td><td>path to model to use (.gguf format)</td></tr>
+    <tr><td class="paramname">path</td><td>Path to the model file (.gguf format)</td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00232">232</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00577">577</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
-<a id="aab0df30ed32482e11f293e512427d10a" name="aab0df30ed32482e11f293e512427d10a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aab0df30ed32482e11f293e512427d10a">&#9670;&#160;</a></span>SetSSLCert()</h2>
+<a id="a5e531bdc0fd310d40825677cb395798b" name="a5e531bdc0fd310d40825677cb395798b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5e531bdc0fd310d40825677cb395798b">&#9670;&#160;</a></span>SetReasoning()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1010,7 +778,37 @@ Here is the caller graph for this function:</div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void LLMUnity.LLM.SetSSLCert </td>
+          <td class="memname">void LLMUnity.LLM.SetReasoning </td>
+          <td>(</td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>reasoning</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Enable LLM reasoning ("thinking" mode) </p>
+<p>&lt;param name="reasoning"Use LLM reasoning</p>
+
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00609">609</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+
+</div>
+</div>
+<a id="a926287808c0f892e0c0e1a911e0a0a0f" name="a926287808c0f892e0c0e1a911e0a0a0f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a926287808c0f892e0c0e1a911e0a0a0f">&#9670;&#160;</a></span>SetSSLCertFromFile()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void LLMUnity.LLM.SetSSLCertFromFile </td>
           <td>(</td>
           <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>path</em></span></td><td>)</td>
           <td></td>
@@ -1023,20 +821,20 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Use a SSL certificate for the LLM server. </p>
+<p>Sets the SSL certificate for secure server connections. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">templateName</td><td>the SSL certificate path </td></tr>
+    <tr><td class="paramname">path</td><td>Path to SSL certificate file</td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00380">380</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00770">770</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
-<a id="ac33e65352d328cdbeaee9bb019cae5c7" name="ac33e65352d328cdbeaee9bb019cae5c7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac33e65352d328cdbeaee9bb019cae5c7">&#9670;&#160;</a></span>SetSSLKey()</h2>
+<a id="aceb0539e1da36837498b62efae908e20" name="aceb0539e1da36837498b62efae908e20"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aceb0539e1da36837498b62efae908e20">&#9670;&#160;</a></span>SetSSLKeyFromFile()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1045,7 +843,7 @@ Here is the caller graph for this function:</div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void LLMUnity.LLM.SetSSLKey </td>
+          <td class="memname">void LLMUnity.LLM.SetSSLKeyFromFile </td>
           <td>(</td>
           <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>path</em></span></td><td>)</td>
           <td></td>
@@ -1058,192 +856,20 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Use a SSL key for the LLM server. </p>
+<p>Sets the SSL private key for secure server connections. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">templateName</td><td>the SSL key path </td></tr>
+    <tr><td class="paramname">path</td><td>Path to SSL private key file</td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00390">390</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00779">779</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
-<a id="ad4c7250286a33527cb211bd980f1c307" name="ad4c7250286a33527cb211bd980f1c307"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad4c7250286a33527cb211bd980f1c307">&#9670;&#160;</a></span>SetTemplate()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void LLMUnity.LLM.SetTemplate </td>
-          <td>(</td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>templateName</em>, </span></td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>setDirty</em><span class="paramdefsep"> = </span><span class="paramdefval">true</span></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Set the chat template for the LLM. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">templateName</td><td>the chat template to use. The available templates can be found in the ChatTemplate.templates.Keys array </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00338">338</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classLLMUnity_1_1LLM_ad4c7250286a33527cb211bd980f1c307_icgraph.svg" width="507" height="86"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-
-</div>
-</div>
-<a id="a16381a5907592831a0ea35137b9921ff" name="a16381a5907592831a0ea35137b9921ff"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a16381a5907592831a0ea35137b9921ff">&#9670;&#160;</a></span>Slot()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">async Task&lt; string &gt; LLMUnity.LLM.Slot </td>
-          <td>(</td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>json</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Allows to save / restore the state of a slot. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">json</td><td>json request containing the query</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>slot result</dd></dl>
-
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00764">764</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
-
-</div>
-</div>
-<a id="ab8cad787f0751fa2ed7e3b2ccede3083" name="ab8cad787f0751fa2ed7e3b2ccede3083"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab8cad787f0751fa2ed7e3b2ccede3083">&#9670;&#160;</a></span>Tokenize()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">async Task&lt; string &gt; LLMUnity.LLM.Tokenize </td>
-          <td>(</td>
-          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>json</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Tokenises the provided query. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">json</td><td>json request containing the query</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>tokenisation result</dd></dl>
-
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00677">677</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
-
-</div>
-</div>
-<a id="adadd6997f4df7412db71a7218eb3917b" name="adadd6997f4df7412db71a7218eb3917b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adadd6997f4df7412db71a7218eb3917b">&#9670;&#160;</a></span>Update()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void LLMUnity.LLM.Update </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>The Unity Update function. It is used to retrieve the LLM replies. </p>
-
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00604">604</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
-
-</div>
-</div>
-<a id="a5ef8b94e4aebb09c42713d91bf3e42e5" name="a5ef8b94e4aebb09c42713d91bf3e42e5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5ef8b94e4aebb09c42713d91bf3e42e5">&#9670;&#160;</a></span>UpdateLoras()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void LLMUnity.LLM.UpdateLoras </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00325">325</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
-
-</div>
-</div>
-<a id="a1f41b07eb274fd6194f0e97eea4ca331" name="a1f41b07eb274fd6194f0e97eea4ca331"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1f41b07eb274fd6194f0e97eea4ca331">&#9670;&#160;</a></span>WaitUntilModelSetup()</h2>
+<a id="a24dd61490ab2510492915d2d5f28f86b" name="a24dd61490ab2510492915d2d5f28f86b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a24dd61490ab2510492915d2d5f28f86b">&#9670;&#160;</a></span>WaitUntilModelSetup()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1254,7 +880,7 @@ Here is the caller graph for this function:</div>
         <tr>
           <td class="memname">static async Task&lt; bool &gt; LLMUnity.LLM.WaitUntilModelSetup </td>
           <td>(</td>
-          <td class="paramtype">Callback&lt; float &gt;</td>          <td class="paramname"><span class="paramname"><em>downloadProgressCallback</em><span class="paramdefsep"> = </span><span class="paramdefval">null</span></span></td><td>)</td>
+          <td class="paramtype">Action&lt; float &gt;</td>          <td class="paramname"><span class="paramname"><em>downloadProgressCallback</em><span class="paramdefsep"> = </span><span class="paramdefval">null</span></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -1265,15 +891,16 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Allows to wait until the LLM models are downloaded and ready. </p>
+<p>Waits asynchronously until model setup is complete. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">downloadProgressCallback</td><td>function to call with the download progress (float)</td></tr>
+    <tr><td class="paramname">downloadProgressCallback</td><td>Optional callback for download progress updates</td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>True if setup succeeded, false if it failed</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00162">162</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00558">558</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -1300,9 +927,10 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Allows to wait until the LLM is ready. </p>
+<p>Waits asynchronously until the LLM is ready to accept requests. </p>
+<dl class="section return"><dt>Returns</dt><dd>Task that completes when LLM is ready</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00153">153</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00540">540</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -1319,99 +947,9 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>show/hide advanced options in the GameObject </p>
+<p>Show/hide advanced options in the inspector. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00022">22</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
-
-</div>
-</div>
-<a id="ab7e347a02e70f5231a1ae9e8c9936e4a" name="ab7e347a02e70f5231a1ae9e8c9936e4a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab7e347a02e70f5231a1ae9e8c9936e4a">&#9670;&#160;</a></span>APIKey</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">string LLMUnity.LLM.APIKey</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>API key to use for the server. </p>
-
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00077">77</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
-
-</div>
-</div>
-<a id="ac1d133a050b4cc2ec567fcb1691f46b3" name="ac1d133a050b4cc2ec567fcb1691f46b3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac1d133a050b4cc2ec567fcb1691f46b3">&#9670;&#160;</a></span>batchSize</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int LLMUnity.LLM.batchSize = 512</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Batch size for prompt processing. </p>
-
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00051">51</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
-
-</div>
-</div>
-<a id="ac45dcfa1ea44a94b26642ab844b0e0dd" name="ac45dcfa1ea44a94b26642ab844b0e0dd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac45dcfa1ea44a94b26642ab844b0e0dd">&#9670;&#160;</a></span>chatTemplate</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">string LLMUnity.LLM.chatTemplate = <a class="el" href="classLLMUnity_1_1ChatTemplate.html#afd8535970354d20efc257916e725dcef">ChatTemplate.DefaultTemplate</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Chat template for the model. </p>
-
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00065">65</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
-
-</div>
-</div>
-<a id="a8e358f7a834e6ede3cc19aa7142e67e8" name="a8e358f7a834e6ede3cc19aa7142e67e8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8e358f7a834e6ede3cc19aa7142e67e8">&#9670;&#160;</a></span>contextSize</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int LLMUnity.LLM.contextSize = 8192</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Size of the prompt context (0 = context size of the model). This is the number of tokens the model can take as input when generating responses. </p>
-
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00048">48</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
-
-</div>
-</div>
-<a id="a415905d972e2922dd99b289ceaf56a5c" name="a415905d972e2922dd99b289ceaf56a5c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a415905d972e2922dd99b289ceaf56a5c">&#9670;&#160;</a></span>debug</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool LLMUnity.LLM.debug = false</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>log the output of the LLM in the Unity Editor. </p>
-
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00038">38</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00025">25</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -1427,207 +965,169 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>do not destroy the LLM GameObject when loading a new Scene. </p>
+<p>Persist this LLM GameObject across scene transitions. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00044">44</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
-
-</div>
-</div>
-<a id="ac4cd7573f92b344e8171a6c88bbf0da3" name="ac4cd7573f92b344e8171a6c88bbf0da3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac4cd7573f92b344e8171a6c88bbf0da3">&#9670;&#160;</a></span>flashAttention</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool LLMUnity.LLM.flashAttention = false</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>enable use of flash attention </p>
-
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00074">74</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
-
-</div>
-</div>
-<a id="a80c81993fcc33ee253ffec2f3d1302fd" name="a80c81993fcc33ee253ffec2f3d1302fd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a80c81993fcc33ee253ffec2f3d1302fd">&#9670;&#160;</a></span>lora</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">string LLMUnity.LLM.lora = &quot;&quot;</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>LORA models to use (.gguf format) </p>
-
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00068">68</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
-
-</div>
-</div>
-<a id="ae1093ec1e0baaab9620276c7a628649a" name="ae1093ec1e0baaab9620276c7a628649a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae1093ec1e0baaab9620276c7a628649a">&#9670;&#160;</a></span>loraWeights</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">string LLMUnity.LLM.loraWeights = &quot;&quot;</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>the weights of the LORA models being used. </p>
-
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00071">71</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
-
-</div>
-</div>
-<a id="ab3feb52deeee0c441322c81628c065cd" name="ab3feb52deeee0c441322c81628c065cd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab3feb52deeee0c441322c81628c065cd">&#9670;&#160;</a></span>model</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">string LLMUnity.LLM.model = &quot;&quot;</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>LLM model to use (.gguf format) </p>
-
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00062">62</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
-
-</div>
-</div>
-<a id="a0cd82e3728d77575d4f453c5ae443cb9" name="a0cd82e3728d77575d4f453c5ae443cb9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0cd82e3728d77575d4f453c5ae443cb9">&#9670;&#160;</a></span>numGPULayers</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int LLMUnity.LLM.numGPULayers = 0</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>number of model layers to offload to the GPU (0 = GPU not used). If the user's GPU is not supported, the LLM will fall back to the CPU </p>
-
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00035">35</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
-
-</div>
-</div>
-<a id="a9afb1e3370f988ac5ae6bc8bb442bc95" name="a9afb1e3370f988ac5ae6bc8bb442bc95"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9afb1e3370f988ac5ae6bc8bb442bc95">&#9670;&#160;</a></span>numThreads</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int LLMUnity.LLM.numThreads = -1</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>number of threads to use (-1 = all) </p>
-
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00031">31</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
-
-</div>
-</div>
-<a id="a2a03591ffb964eacb31d2afbe42c4405" name="a2a03591ffb964eacb31d2afbe42c4405"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2a03591ffb964eacb31d2afbe42c4405">&#9670;&#160;</a></span>parallelPrompts</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int LLMUnity.LLM.parallelPrompts = -1</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>number of prompts that can happen in parallel (-1 = number of LLMCaller objects) </p>
-
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00041">41</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
-
-</div>
-</div>
-<a id="aa241f4ea23654739149369cca3fbd712" name="aa241f4ea23654739149369cca3fbd712"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa241f4ea23654739149369cca3fbd712">&#9670;&#160;</a></span>port</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int LLMUnity.LLM.port = 13333</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>port to use for the remote LLM server </p>
-
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00028">28</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
-
-</div>
-</div>
-<a id="aa26e432f58fe58ff701b26204752f06c" name="aa26e432f58fe58ff701b26204752f06c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa26e432f58fe58ff701b26204752f06c">&#9670;&#160;</a></span>remote</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool LLMUnity.LLM.remote = false</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>enable remote server functionality </p>
-
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00025">25</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
-
-</div>
-</div>
-<a id="aaa9666f09daa187f9f9353b4e27204a6" name="aaa9666f09daa187f9f9353b4e27204a6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaa9666f09daa187f9f9353b4e27204a6">&#9670;&#160;</a></span>SSLCertPath</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">string LLMUnity.LLM.SSLCertPath = &quot;&quot;</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00082">82</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
-
-</div>
-</div>
-<a id="a2a121b5151a411f24b8ad50b6d1e4762" name="a2a121b5151a411f24b8ad50b6d1e4762"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2a121b5151a411f24b8ad50b6d1e4762">&#9670;&#160;</a></span>SSLKeyPath</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">string LLMUnity.LLM.SSLKeyPath = &quot;&quot;</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00086">86</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00089">89</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Property Documentation</h2>
+<a id="ab7e347a02e70f5231a1ae9e8c9936e4a" name="ab7e347a02e70f5231a1ae9e8c9936e4a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab7e347a02e70f5231a1ae9e8c9936e4a">&#9670;&#160;</a></span>APIKey</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">string LLMUnity.LLM.APIKey</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>API key required for server access (leave empty to disable authentication) </p>
+
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00247">247</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+
+</div>
+</div>
+<a id="a3b243ee397191d2960f26d9093f81935" name="a3b243ee397191d2960f26d9093f81935"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3b243ee397191d2960f26d9093f81935">&#9670;&#160;</a></span>architecture</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">string LLMUnity.LLM.architecture</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Model architecture name (e.g., llama, mistral) </p>
+
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00302">302</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+
+</div>
+</div>
+<a id="ac1d133a050b4cc2ec567fcb1691f46b3" name="ac1d133a050b4cc2ec567fcb1691f46b3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac1d133a050b4cc2ec567fcb1691f46b3">&#9670;&#160;</a></span>batchSize</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int LLMUnity.LLM.batchSize</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Batch size for prompt processing (larger = more memory, potentially faster) </p>
+
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00157">157</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+
+</div>
+</div>
+<a id="a8e358f7a834e6ede3cc19aa7142e67e8" name="a8e358f7a834e6ede3cc19aa7142e67e8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8e358f7a834e6ede3cc19aa7142e67e8">&#9670;&#160;</a></span>contextSize</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int LLMUnity.LLM.contextSize</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Size of the prompt context in tokens (0 = use model's default context size) </p>
+
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00144">144</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+
+</div>
+</div>
+<a id="abb255416f0f7f33b3c38e520c3124086" name="abb255416f0f7f33b3c38e520c3124086"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abb255416f0f7f33b3c38e520c3124086">&#9670;&#160;</a></span>embeddingLength</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int LLMUnity.LLM.embeddingLength</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Number of dimensions in embedding vectors (0 if not an embedding model) </p>
+
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00310">310</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+
+</div>
+</div>
+<a id="a74354822d1f8c3a61dcde51a2c293282" name="a74354822d1f8c3a61dcde51a2c293282"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a74354822d1f8c3a61dcde51a2c293282">&#9670;&#160;</a></span>embeddingsOnly</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool LLMUnity.LLM.embeddingsOnly</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>True if this model only supports embeddings (no text generation) </p>
+
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00306">306</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+
+</div>
+</div>
 <a id="aeac42866b300f3652548febbbd986af5" name="aeac42866b300f3652548febbbd986af5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aeac42866b300f3652548febbbd986af5">&#9670;&#160;</a></span>failed</h2>
 
@@ -1648,9 +1148,139 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Boolean set to true if the server has failed to start. </p>
+<p>True if the LLM server failed to start. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00055">55</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00289">289</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+
+</div>
+</div>
+<a id="ac4cd7573f92b344e8171a6c88bbf0da3" name="ac4cd7573f92b344e8171a6c88bbf0da3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac4cd7573f92b344e8171a6c88bbf0da3">&#9670;&#160;</a></span>flashAttention</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool LLMUnity.LLM.flashAttention</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Enable flash attention optimization (requires compatible model) </p>
+
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00170">170</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+
+</div>
+</div>
+<a id="a29bf125aa91ad56a65604899fd8f8760" name="a29bf125aa91ad56a65604899fd8f8760"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a29bf125aa91ad56a65604899fd8f8760">&#9670;&#160;</a></span>llmService</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">LLMService LLMUnity.LLM.llmService</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The underlying LLM service instance. </p>
+
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00298">298</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+
+</div>
+</div>
+<a id="a80c81993fcc33ee253ffec2f3d1302fd" name="a80c81993fcc33ee253ffec2f3d1302fd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a80c81993fcc33ee253ffec2f3d1302fd">&#9670;&#160;</a></span>lora</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">string LLMUnity.LLM.lora</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>LORA adapter model paths (.gguf format), separated by commas. </p>
+
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00195">195</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+
+</div>
+</div>
+<a id="ae1093ec1e0baaab9620276c7a628649a" name="ae1093ec1e0baaab9620276c7a628649a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae1093ec1e0baaab9620276c7a628649a">&#9670;&#160;</a></span>loraWeights</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">string LLMUnity.LLM.loraWeights</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Weights for LORA adapters, separated by commas (default: 1.0 for each) </p>
+
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00208">208</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+
+</div>
+</div>
+<a id="ab3feb52deeee0c441322c81628c065cd" name="ab3feb52deeee0c441322c81628c065cd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab3feb52deeee0c441322c81628c065cd">&#9670;&#160;</a></span>model</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">string LLMUnity.LLM.model</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>LLM model file path (.gguf format) </p>
+
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00181">181</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -1674,9 +1304,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Boolean set to true if the server has started and is ready to receive requests, false otherwise. </p>
+<p>True if model setup completed (successfully or not) </p>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00059">59</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00295">295</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -1700,9 +1330,217 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Boolean set to true if the models were not downloaded successfully. </p>
+<p>True if model setup failed during initialization. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00057">57</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00292">292</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+
+</div>
+</div>
+<a id="a0cd82e3728d77575d4f453c5ae443cb9" name="a0cd82e3728d77575d4f453c5ae443cb9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0cd82e3728d77575d4f453c5ae443cb9">&#9670;&#160;</a></span>numGPULayers</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int LLMUnity.LLM.numGPULayers</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Number of model layers to offload to GPU (0 = CPU only) </p>
+
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00118">118</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+
+</div>
+</div>
+<a id="a9afb1e3370f988ac5ae6bc8bb442bc95" name="a9afb1e3370f988ac5ae6bc8bb442bc95"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9afb1e3370f988ac5ae6bc8bb442bc95">&#9670;&#160;</a></span>numThreads</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int LLMUnity.LLM.numThreads</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Number of threads to use for processing (-1 = use all available threads) </p>
+
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00105">105</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+
+</div>
+</div>
+<a id="a2a03591ffb964eacb31d2afbe42c4405" name="a2a03591ffb964eacb31d2afbe42c4405"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2a03591ffb964eacb31d2afbe42c4405">&#9670;&#160;</a></span>parallelPrompts</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int LLMUnity.LLM.parallelPrompts</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Number of prompts that can be processed in parallel (-1 = auto-detect from clients) </p>
+
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00131">131</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+
+</div>
+</div>
+<a id="aa241f4ea23654739149369cca3fbd712" name="aa241f4ea23654739149369cca3fbd712"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa241f4ea23654739149369cca3fbd712">&#9670;&#160;</a></span>port</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int LLMUnity.LLM.port</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Port to use for the remote LLM server. </p>
+
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00233">233</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+
+</div>
+</div>
+<a id="a5e8720cac52433a52cb557d3adb0b748" name="a5e8720cac52433a52cb557d3adb0b748"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5e8720cac52433a52cb557d3adb0b748">&#9670;&#160;</a></span>reasoning</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool LLMUnity.LLM.reasoning</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Enable LLM reasoning ('thinking' mode) </p>
+
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00188">188</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+
+</div>
+</div>
+<a id="aa26e432f58fe58ff701b26204752f06c" name="aa26e432f58fe58ff701b26204752f06c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa26e432f58fe58ff701b26204752f06c">&#9670;&#160;</a></span>remote</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool LLMUnity.LLM.remote</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Enable remote server functionality to allow external connections. </p>
+
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00221">221</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+
+</div>
+</div>
+<a id="affec27f46f6806f146f2c81c7097a7ba" name="affec27f46f6806f146f2c81c7097a7ba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#affec27f46f6806f146f2c81c7097a7ba">&#9670;&#160;</a></span>SSLCert</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">string LLMUnity.LLM.SSLCert</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>SSL certificate for the remote LLM server. </p>
+
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00259">259</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+
+</div>
+</div>
+<a id="ab133f7ca60469e42162bc8e68cd1bdf6" name="ab133f7ca60469e42162bc8e68cd1bdf6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab133f7ca60469e42162bc8e68cd1bdf6">&#9670;&#160;</a></span>SSLKey</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">string LLMUnity.LLM.SSLKey</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>SSL key for the remote LLM server. </p>
+
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00271">271</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>
@@ -1726,9 +1564,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Boolean set to true if the server has started and is ready to receive requests, false otherwise. </p>
+<p>True if the LLM server has started and is ready to receive requests. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00053">53</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLM_8cs_source.html#l00286">286</a> of file <a class="el" href="LLM_8cs_source.html">LLM.cs</a>.</p>
 
 </div>
 </div>

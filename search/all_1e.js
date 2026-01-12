@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['zephyrtemplate_0',['ZephyrTemplate',['../classLLMUnity_1_1ZephyrTemplate.html',1,'LLMUnity']]]
+  ['your_20script_0',['3. Use in Your Script',['../index.html#autotoc_md9',1,'']]]
 ];

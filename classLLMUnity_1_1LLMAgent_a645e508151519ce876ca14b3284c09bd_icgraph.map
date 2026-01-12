@@ -1,0 +1,7 @@
+<map id="LLMUnity.LLMAgent.SaveHistory" name="LLMUnity.LLMAgent.SaveHistory">
+<area shape="rect" id="Node000001" title="Saves the conversation history and optionally the LLM cache to disk." alt="" coords="491,5,723,31"/>
+<area shape="rect" id="Node000002" href="$classLLMUnity_1_1LLMAgent.html#ae6c59733400df0e8ab289a91e23eb2ef" title="Processes a user query asynchronously and generates an AI response using conversation context...." alt="" coords="260,5,443,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="477,21,443,21,443,15,477,15"/>
+<area shape="rect" id="Node000003" href="$classLLMUnity_1_1LLMAgent.html#a0da61a2053f60594ee3a0c7db5d650f2" title="Warms up the model with a specific prompt without adding it to history. This pre&#45;processes prompts fo..." alt="" coords="5,5,212,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="246,21,212,21,212,15,246,15"/>
+</map>

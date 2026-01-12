@@ -20,7 +20,7 @@
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="classLLMUnity_1_1LLM.html#a4ab4bbfb8a83cbe4a19e7aef153c980e" target="_top" xlink:title="The Unity Awake function that starts the LLM server.">
+<g id="a_Node000002"><a xlink:href="classLLMUnity_1_1LLM.html#a4ab4bbfb8a83cbe4a19e7aef153c980e" target="_top" xlink:title="Unity Awake method that initializes the LLM server. Sets up the model, starts the service,...">
 <polygon fill="white" stroke="#666666" points="119,-19 0,-19 0,0 119,0 119,-19"/>
 <text text-anchor="middle" x="59.5" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">LLMUnity.LLM.Awake</text>
 </a>

@@ -6,5 +6,5 @@ var searchData=
   ['incrementalsearchcomplete_3',['IncrementalSearchComplete',['../classLLMUnity_1_1Chunking.html#a22dc53df80c2750ff01165a6ff44fdb3',1,'LLMUnity.Chunking.IncrementalSearchComplete()'],['../classLLMUnity_1_1Searchable.html#aaf8995192a5d202a7c0763cfa4571a0f',1,'LLMUnity.Searchable.IncrementalSearchComplete()']]],
   ['indexof_4',['IndexOf',['../classLLMUnity_1_1LoraManager.html#a4b3f0a0d870133147ef82b787568fb4b',1,'LLMUnity::LoraManager']]],
   ['init_5',['Init',['../classLLMUnity_1_1RAG.html#a12f6d0345e9ee76a32b61e5f676fa945',1,'LLMUnity::RAG']]],
-  ['isvalidllm_6',['IsValidLLM',['../classLLMUnity_1_1LLMCharacter.html#a90286b111c5946ac7239a8a03ac3d581',1,'LLMUnity::LLMCharacter']]]
+  ['isautoassignablellm_6',['IsAutoAssignableLLM',['../classLLMUnity_1_1LLMClient.html#aa7eb552751644eaa4dc4cc33c8a5fcac',1,'LLMUnity.LLMClient.IsAutoAssignableLLM()'],['../classLLMUnity_1_1LLMEmbedder.html#abc43672f7545950fa43ae49409a33555',1,'LLMUnity.LLMEmbedder.IsAutoAssignableLLM()']]]
 ];

@@ -1,9 +1,0 @@
-<map id="LLMUnity.LLMCharacter.GetCacheSavePath" name="LLMUnity.LLMCharacter.GetCacheSavePath">
-<area shape="rect" id="Node000001" title="Allows to get the save path of the LLM cache based on the provided filename or relative path." alt="" coords="517,23,717,63"/>
-<area shape="rect" id="Node000002" href="$classLLMUnity_1_1LLMCharacter.html#a5fcf385a45c9cd71e2428b7442a163a3" title="Load the chat history and cache from the provided filename / relative path." alt="" coords="261,5,469,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="503,35,469,31,469,26,504,29"/>
-<area shape="rect" id="Node000003" href="$classLLMUnity_1_1LLMCharacter.html#a8777cf02ab4ecf5a967ade7e93925108" title="Saves the chat history and cache to the provided filename / relative path." alt="" coords="260,55,469,80"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="504,57,470,60,469,55,504,51"/>
-<area shape="rect" id="Node000004" href="$classLLMUnity_1_1LLMCharacter.html#a1367eb182ec0efe9322a3102ea22952e" title="Chat functionality of the LLM. It calls the LLM completion based on the provided query including the ..." alt="" coords="5,55,212,80"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="247,70,212,70,212,65,247,65"/>
-</map>

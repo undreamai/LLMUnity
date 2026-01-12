@@ -47,7 +47,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_tiny.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">LLM for Unity
-   &#160;<span id="projectnumber">v2.5.2</span>
+   &#160;<span id="projectnumber">v3.0.0</span>
    </div>
    <div id="projectbrief">Create characters in Unity with LLMs!</div>
   </td>
@@ -123,186 +123,245 @@ $(function(){initNavTree('LLMUtils_8cs_source.html',''); initResizable(); });
 <a href="LLMUtils_8cs.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span> </div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="keyword">using </span>System;</div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="keyword">using </span>System.Collections.Generic;</div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span> </div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceLLMUnity.html">LLMUnity</a></div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span>{</div>
-<div class="foldopen" id="foldopen00012" data-start="{" data-end="};">
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno"><a class="line" href="classLLMUnity_1_1LLMException.html">   12</a></span>    <span class="keyword">public</span> <span class="keyword">class </span><a class="code hl_class" href="classLLMUnity_1_1LLMException.html">LLMException</a> : Exception</div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>    {</div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>        <span class="keyword">public</span> <span class="keywordtype">int</span> ErrorCode { <span class="keyword">get</span>; <span class="keyword">private</span> <span class="keyword">set</span>; }</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>        <span class="keyword">public</span> <a class="code hl_class" href="classLLMUnity_1_1LLMException.html">LLMException</a>(<span class="keywordtype">string</span> message, <span class="keywordtype">int</span> errorCode) : base(message)</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>        {</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>            ErrorCode = errorCode;</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>        }</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    }</div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="keyword">using </span>System.Threading;</div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="keyword">using </span>UndreamAI.LlamaLib;</div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="keyword">using </span>UnityEngine;</div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceLLMUnity.html">LLMUnity</a></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>{</div>
+<div class="foldopen" id="foldopen00015" data-start="{" data-end="};">
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno"><a class="line" href="classLLMUnity_1_1LLMException.html">   15</a></span>    <span class="keyword">public</span> <span class="keyword">class </span><a class="code hl_class" href="classLLMUnity_1_1LLMException.html">LLMException</a> : Exception</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>    {</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>        <span class="keyword">public</span> <span class="keywordtype">int</span> ErrorCode { <span class="keyword">get</span>; <span class="keyword">private</span> <span class="keyword">set</span>; }</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>        <span class="keyword">public</span> <a class="code hl_class" href="classLLMUnity_1_1LLMException.html">LLMException</a>(<span class="keywordtype">string</span> message, <span class="keywordtype">int</span> errorCode) : base(message)</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>        {</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>            ErrorCode = errorCode;</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>        }</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    }</div>
 </div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno"><a class="line" href="classLLMUnity_1_1DestroyException.html">   26</a></span>    <span class="keyword">public</span> <span class="keyword">class </span><a class="code hl_class" href="classLLMUnity_1_1DestroyException.html">DestroyException</a> : Exception {}</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
-<div class="foldopen" id="foldopen00032" data-start="{" data-end="};">
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno"><a class="line" href="classLLMUnity_1_1LoraAsset.html">   32</a></span>    <span class="keyword">public</span> <span class="keyword">class </span><a class="code hl_class" href="classLLMUnity_1_1LoraAsset.html">LoraAsset</a></div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    {</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>        <span class="keyword">public</span> <span class="keywordtype">string</span> assetPath;</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>        <span class="keyword">public</span> <span class="keywordtype">string</span> fullPath;</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        <span class="keyword">public</span> <span class="keywordtype">float</span> weight;</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        <span class="keyword">public</span> <a class="code hl_class" href="classLLMUnity_1_1LoraAsset.html">LoraAsset</a>(<span class="keywordtype">string</span> path, <span class="keywordtype">float</span> weight = 1)</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>        {</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>            assetPath = <a class="code hl_class" href="classLLMUnity_1_1LLM.html">LLM</a>.GetLLMManagerAsset(path);</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>            fullPath = RuntimePath(path);</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>            this.weight = weight;</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>        }</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        <span class="keyword">public</span> <span class="keyword">static</span> <span class="keywordtype">string</span> RuntimePath(<span class="keywordtype">string</span> path)</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        {</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>            <span class="keywordflow">return</span> <a class="code hl_class" href="classLLMUnity_1_1LLMUnitySetup.html">LLMUnitySetup</a>.GetFullPath(<a class="code hl_class" href="classLLMUnity_1_1LLM.html">LLM</a>.GetLLMManagerAssetRuntime(path));</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>        }</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    }</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno"><a class="line" href="classLLMUnity_1_1DestroyException.html">   29</a></span>    <span class="keyword">public</span> <span class="keyword">class </span><a class="code hl_class" href="classLLMUnity_1_1DestroyException.html">DestroyException</a> : Exception {}</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
+<div class="foldopen" id="foldopen00035" data-start="{" data-end="};">
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno"><a class="line" href="classLLMUnity_1_1LoraAsset.html">   35</a></span>    <span class="keyword">public</span> <span class="keyword">class </span><a class="code hl_class" href="classLLMUnity_1_1LoraAsset.html">LoraAsset</a></div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    {</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        <span class="keyword">public</span> <span class="keywordtype">string</span> assetPath;</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        <span class="keyword">public</span> <span class="keywordtype">string</span> fullPath;</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>        <span class="keyword">public</span> <span class="keywordtype">float</span> weight;</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>        <span class="keyword">public</span> <a class="code hl_class" href="classLLMUnity_1_1LoraAsset.html">LoraAsset</a>(<span class="keywordtype">string</span> path, <span class="keywordtype">float</span> weight = 1)</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>        {</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>            assetPath = <a class="code hl_class" href="classLLMUnity_1_1LLM.html">LLM</a>.GetLLMManagerAsset(path);</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>            fullPath = RuntimePath(path);</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>            this.weight = weight;</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        }</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>        <span class="keyword">public</span> <span class="keyword">static</span> <span class="keywordtype">string</span> RuntimePath(<span class="keywordtype">string</span> path)</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        {</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>            <span class="keywordflow">return</span> <a class="code hl_class" href="classLLMUnity_1_1LLMUnitySetup.html">LLMUnitySetup</a>.GetFullPath(<a class="code hl_class" href="classLLMUnity_1_1LLM.html">LLM</a>.GetLLMManagerAssetRuntime(path));</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>        }</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    }</div>
 </div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
-<div class="foldopen" id="foldopen00055" data-start="{" data-end="};">
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno"><a class="line" href="classLLMUnity_1_1LoraManager.html">   55</a></span>    <span class="keyword">public</span> <span class="keyword">class </span><a class="code hl_class" href="classLLMUnity_1_1LoraManager.html">LoraManager</a></div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    {</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>        List&lt;LoraAsset&gt; loras = <span class="keyword">new</span> List&lt;LoraAsset&gt;();</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        <span class="keyword">public</span> <span class="keywordtype">string</span> delimiter = <span class="stringliteral">&quot;,&quot;</span>;</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
-<div class="foldopen" id="foldopen00063" data-start="{" data-end="}">
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno"><a class="line" href="classLLMUnity_1_1LoraManager.html#ae9d16be880b0e27267c5943c4a3721ee">   63</a></span>        <span class="keyword">public</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classLLMUnity_1_1LoraManager.html#ae9d16be880b0e27267c5943c4a3721ee">Clear</a>()</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>        {</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>            loras.Clear();</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>        }</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
+<div class="foldopen" id="foldopen00058" data-start="{" data-end="};">
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno"><a class="line" href="classLLMUnity_1_1LoraManager.html">   58</a></span>    <span class="keyword">public</span> <span class="keyword">class </span><a class="code hl_class" href="classLLMUnity_1_1LoraManager.html">LoraManager</a></div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    {</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>        List&lt;LoraAsset&gt; loras = <span class="keyword">new</span> List&lt;LoraAsset&gt;();</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>        <span class="keyword">public</span> <span class="keywordtype">string</span> delimiter = <span class="stringliteral">&quot;,&quot;</span>;</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
+<div class="foldopen" id="foldopen00066" data-start="{" data-end="}">
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno"><a class="line" href="classLLMUnity_1_1LoraManager.html#ae9d16be880b0e27267c5943c4a3721ee">   66</a></span>        <span class="keyword">public</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classLLMUnity_1_1LoraManager.html#ae9d16be880b0e27267c5943c4a3721ee">Clear</a>()</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>        {</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>            loras.Clear();</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>        }</div>
 </div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span> </div>
-<div class="foldopen" id="foldopen00073" data-start="{" data-end="}">
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno"><a class="line" href="classLLMUnity_1_1LoraManager.html#a4b3f0a0d870133147ef82b787568fb4b">   73</a></span>        <span class="keyword">public</span> <span class="keywordtype">int</span> <a class="code hl_function" href="classLLMUnity_1_1LoraManager.html#a4b3f0a0d870133147ef82b787568fb4b">IndexOf</a>(<span class="keywordtype">string</span> path)</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>        {</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>            <span class="keywordtype">string</span> fullPath = <a class="code hl_class" href="classLLMUnity_1_1LoraAsset.html">LoraAsset</a>.RuntimePath(path);</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>            <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; loras.Count; i++)</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>            {</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>                <a class="code hl_class" href="classLLMUnity_1_1LoraAsset.html">LoraAsset</a> lora = loras[i];</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>                <span class="keywordflow">if</span> (lora.assetPath == path || lora.fullPath == fullPath) <span class="keywordflow">return</span> i;</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>            }</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>            <span class="keywordflow">return</span> -1;</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>        }</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
+<div class="foldopen" id="foldopen00076" data-start="{" data-end="}">
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno"><a class="line" href="classLLMUnity_1_1LoraManager.html#a4b3f0a0d870133147ef82b787568fb4b">   76</a></span>        <span class="keyword">public</span> <span class="keywordtype">int</span> <a class="code hl_function" href="classLLMUnity_1_1LoraManager.html#a4b3f0a0d870133147ef82b787568fb4b">IndexOf</a>(<span class="keywordtype">string</span> path)</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>        {</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>            <span class="keywordtype">string</span> fullPath = <a class="code hl_class" href="classLLMUnity_1_1LoraAsset.html">LoraAsset</a>.RuntimePath(path);</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>            <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; loras.Count; i++)</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>            {</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>                <a class="code hl_class" href="classLLMUnity_1_1LoraAsset.html">LoraAsset</a> lora = loras[i];</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>                <span class="keywordflow">if</span> (lora.assetPath == path || lora.fullPath == fullPath) <span class="keywordflow">return</span> i;</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>            }</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>            <span class="keywordflow">return</span> -1;</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>        }</div>
 </div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span> </div>
-<div class="foldopen" id="foldopen00089" data-start="{" data-end="}">
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno"><a class="line" href="classLLMUnity_1_1LoraManager.html#aa80edfe89989c078c31069ee90fbf355">   89</a></span>        <span class="keyword">public</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="classLLMUnity_1_1LoraManager.html#aa80edfe89989c078c31069ee90fbf355">Contains</a>(<span class="keywordtype">string</span> path)</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>        {</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>            <span class="keywordflow">return</span> <a class="code hl_function" href="classLLMUnity_1_1LoraManager.html#a4b3f0a0d870133147ef82b787568fb4b">IndexOf</a>(path) != -1;</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>        }</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span> </div>
+<div class="foldopen" id="foldopen00092" data-start="{" data-end="}">
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno"><a class="line" href="classLLMUnity_1_1LoraManager.html#aa80edfe89989c078c31069ee90fbf355">   92</a></span>        <span class="keyword">public</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="classLLMUnity_1_1LoraManager.html#aa80edfe89989c078c31069ee90fbf355">Contains</a>(<span class="keywordtype">string</span> path)</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>        {</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>            <span class="keywordflow">return</span> <a class="code hl_function" href="classLLMUnity_1_1LoraManager.html#a4b3f0a0d870133147ef82b787568fb4b">IndexOf</a>(path) != -1;</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>        }</div>
 </div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span> </div>
-<div class="foldopen" id="foldopen00099" data-start="{" data-end="}">
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno"><a class="line" href="classLLMUnity_1_1LoraManager.html#a14d29996fded52370f7621b86b208aea">   99</a></span>        <span class="keyword">public</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classLLMUnity_1_1LoraManager.html#a14d29996fded52370f7621b86b208aea">Add</a>(<span class="keywordtype">string</span> path, <span class="keywordtype">float</span> weight = 1)</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>        {</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>            <span class="keywordflow">if</span> (<a class="code hl_function" href="classLLMUnity_1_1LoraManager.html#aa80edfe89989c078c31069ee90fbf355">Contains</a>(path)) <span class="keywordflow">return</span>;</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>            loras.Add(<span class="keyword">new</span> <a class="code hl_class" href="classLLMUnity_1_1LoraAsset.html">LoraAsset</a>(path, weight));</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>        }</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span> </div>
+<div class="foldopen" id="foldopen00102" data-start="{" data-end="}">
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno"><a class="line" href="classLLMUnity_1_1LoraManager.html#a14d29996fded52370f7621b86b208aea">  102</a></span>        <span class="keyword">public</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classLLMUnity_1_1LoraManager.html#a14d29996fded52370f7621b86b208aea">Add</a>(<span class="keywordtype">string</span> path, <span class="keywordtype">float</span> weight = 1)</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>        {</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>            <span class="keywordflow">if</span> (<a class="code hl_function" href="classLLMUnity_1_1LoraManager.html#aa80edfe89989c078c31069ee90fbf355">Contains</a>(path)) <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>            loras.Add(<span class="keyword">new</span> <a class="code hl_class" href="classLLMUnity_1_1LoraAsset.html">LoraAsset</a>(path, weight));</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>        }</div>
 </div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span> </div>
-<div class="foldopen" id="foldopen00109" data-start="{" data-end="}">
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno"><a class="line" href="classLLMUnity_1_1LoraManager.html#a1ea418187b8e0256404d44da45357b89">  109</a></span>        <span class="keyword">public</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classLLMUnity_1_1LoraManager.html#a1ea418187b8e0256404d44da45357b89">Remove</a>(<span class="keywordtype">string</span> path)</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>        {</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>            <span class="keywordtype">int</span> index = <a class="code hl_function" href="classLLMUnity_1_1LoraManager.html#a4b3f0a0d870133147ef82b787568fb4b">IndexOf</a>(path);</div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>            <span class="keywordflow">if</span> (index != -1) loras.RemoveAt(index);</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>        }</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span> </div>
+<div class="foldopen" id="foldopen00112" data-start="{" data-end="}">
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno"><a class="line" href="classLLMUnity_1_1LoraManager.html#a1ea418187b8e0256404d44da45357b89">  112</a></span>        <span class="keyword">public</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classLLMUnity_1_1LoraManager.html#a1ea418187b8e0256404d44da45357b89">Remove</a>(<span class="keywordtype">string</span> path)</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>        {</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>            <span class="keywordtype">int</span> index = <a class="code hl_function" href="classLLMUnity_1_1LoraManager.html#a4b3f0a0d870133147ef82b787568fb4b">IndexOf</a>(path);</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>            <span class="keywordflow">if</span> (index != -1) loras.RemoveAt(index);</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>        }</div>
 </div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span> </div>
-<div class="foldopen" id="foldopen00120" data-start="{" data-end="}">
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno"><a class="line" href="classLLMUnity_1_1LoraManager.html#a5eb7c712a8a74a8d81d312ec94fa4705">  120</a></span>        <span class="keyword">public</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classLLMUnity_1_1LoraManager.html#a5eb7c712a8a74a8d81d312ec94fa4705">SetWeight</a>(<span class="keywordtype">string</span> path, <span class="keywordtype">float</span> weight)</div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>        {</div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>            <span class="keywordtype">int</span> index = <a class="code hl_function" href="classLLMUnity_1_1LoraManager.html#a4b3f0a0d870133147ef82b787568fb4b">IndexOf</a>(path);</div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>            <span class="keywordflow">if</span> (index == -1)</div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>            {</div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>                <a class="code hl_class" href="classLLMUnity_1_1LLMUnitySetup.html">LLMUnitySetup</a>.LogError($<span class="stringliteral">&quot;LoRA {path} not loaded with the LLM&quot;</span>);</div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>                <span class="keywordflow">return</span>;</div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>            }</div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>            loras[index].weight = weight;</div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>        }</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span> </div>
+<div class="foldopen" id="foldopen00123" data-start="{" data-end="}">
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno"><a class="line" href="classLLMUnity_1_1LoraManager.html#a5eb7c712a8a74a8d81d312ec94fa4705">  123</a></span>        <span class="keyword">public</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classLLMUnity_1_1LoraManager.html#a5eb7c712a8a74a8d81d312ec94fa4705">SetWeight</a>(<span class="keywordtype">string</span> path, <span class="keywordtype">float</span> weight)</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>        {</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>            <span class="keywordtype">int</span> index = <a class="code hl_function" href="classLLMUnity_1_1LoraManager.html#a4b3f0a0d870133147ef82b787568fb4b">IndexOf</a>(path);</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>            <span class="keywordflow">if</span> (index == -1)</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>            {</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>                <a class="code hl_class" href="classLLMUnity_1_1LLMUnitySetup.html">LLMUnitySetup</a>.LogError($<span class="stringliteral">&quot;LoRA {path} not loaded with the LLM&quot;</span>);</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>                <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>            }</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>            loras[index].weight = weight;</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>        }</div>
 </div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span> </div>
-<div class="foldopen" id="foldopen00136" data-start="{" data-end="}">
-<div class="line"><a id="l00136" name="l00136"></a><span class="lineno"><a class="line" href="classLLMUnity_1_1LoraManager.html#a9a22a86fc6a836005fe6c64b7d629993">  136</a></span>        <span class="keyword">public</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classLLMUnity_1_1LoraManager.html#a9a22a86fc6a836005fe6c64b7d629993">FromStrings</a>(<span class="keywordtype">string</span> loraString, <span class="keywordtype">string</span> loraWeightsString)</div>
-<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>        {</div>
-<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>            <span class="keywordflow">if</span> (<span class="keywordtype">string</span>.IsNullOrEmpty(loraString) &amp;&amp; <span class="keywordtype">string</span>.IsNullOrEmpty(loraWeightsString))</div>
-<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>            {</div>
-<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>                <a class="code hl_function" href="classLLMUnity_1_1LoraManager.html#ae9d16be880b0e27267c5943c4a3721ee">Clear</a>();</div>
-<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>                <span class="keywordflow">return</span>;</div>
-<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>            }</div>
-<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span> </div>
-<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>            <span class="keywordflow">try</span></div>
-<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>            {</div>
-<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>                List&lt;string&gt; loraStringArr = <span class="keyword">new</span> List&lt;string&gt;(loraString.Split(delimiter));</div>
-<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>                List&lt;string&gt; loraWeightsStringArr = <span class="keyword">new</span> List&lt;string&gt;(loraWeightsString.Split(delimiter));</div>
-<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>                <span class="keywordflow">if</span> (loraStringArr.Count != loraWeightsStringArr.Count) <span class="keywordflow">throw</span> <span class="keyword">new</span> Exception($<span class="stringliteral">&quot;LoRAs number ({loraString}) doesn&#39;t match the number of weights ({loraWeightsString})&quot;</span>);</div>
-<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span> </div>
-<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>                List&lt;LoraAsset&gt; lorasNew = <span class="keyword">new</span> List&lt;LoraAsset&gt;();</div>
-<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>                <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; loraStringArr.Count; i++) lorasNew.Add(<span class="keyword">new</span> <a class="code hl_class" href="classLLMUnity_1_1LoraAsset.html">LoraAsset</a>(loraStringArr[i].Trim(), <span class="keywordtype">float</span>.Parse(loraWeightsStringArr[i])));</div>
-<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>                loras = lorasNew;</div>
-<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>            }</div>
-<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>            <span class="keywordflow">catch</span> (Exception e)</div>
-<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>            {</div>
-<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>                <a class="code hl_class" href="classLLMUnity_1_1LLMUnitySetup.html">LLMUnitySetup</a>.LogError($<span class="stringliteral">&quot;Loras not set: {e.Message}&quot;</span>);</div>
-<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>            }</div>
-<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>        }</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span> </div>
+<div class="foldopen" id="foldopen00139" data-start="{" data-end="}">
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno"><a class="line" href="classLLMUnity_1_1LoraManager.html#a9a22a86fc6a836005fe6c64b7d629993">  139</a></span>        <span class="keyword">public</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classLLMUnity_1_1LoraManager.html#a9a22a86fc6a836005fe6c64b7d629993">FromStrings</a>(<span class="keywordtype">string</span> loraString, <span class="keywordtype">string</span> loraWeightsString)</div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>        {</div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>            <span class="keywordflow">if</span> (<span class="keywordtype">string</span>.IsNullOrEmpty(loraString) &amp;&amp; <span class="keywordtype">string</span>.IsNullOrEmpty(loraWeightsString))</div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>            {</div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>                <a class="code hl_function" href="classLLMUnity_1_1LoraManager.html#ae9d16be880b0e27267c5943c4a3721ee">Clear</a>();</div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>                <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>            }</div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span> </div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>            <span class="keywordflow">try</span></div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>            {</div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>                List&lt;string&gt; loraStringArr = <span class="keyword">new</span> List&lt;string&gt;(loraString.Split(delimiter));</div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>                List&lt;string&gt; loraWeightsStringArr = <span class="keyword">new</span> List&lt;string&gt;(loraWeightsString.Split(delimiter));</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>                <span class="keywordflow">if</span> (loraStringArr.Count != loraWeightsStringArr.Count) <a class="code hl_class" href="classLLMUnity_1_1LLMUnitySetup.html">LLMUnitySetup</a>.LogError($<span class="stringliteral">&quot;LoRAs number ({loraString}) doesn&#39;t match the number of weights ({loraWeightsString})&quot;</span>, <span class="keyword">true</span>);</div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span> </div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>                List&lt;LoraAsset&gt; lorasNew = <span class="keyword">new</span> List&lt;LoraAsset&gt;();</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>                <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; loraStringArr.Count; i++) lorasNew.Add(<span class="keyword">new</span> <a class="code hl_class" href="classLLMUnity_1_1LoraAsset.html">LoraAsset</a>(loraStringArr[i].Trim(), <span class="keywordtype">float</span>.Parse(loraWeightsStringArr[i])));</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>                loras = lorasNew;</div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>            }</div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>            <span class="keywordflow">catch</span> (Exception e)</div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>            {</div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>                <a class="code hl_class" href="classLLMUnity_1_1LLMUnitySetup.html">LLMUnitySetup</a>.LogError($<span class="stringliteral">&quot;Loras not set: {e.Message}&quot;</span>);</div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>            }</div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>        }</div>
 </div>
-<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span> </div>
-<div class="line"><a id="l00164" name="l00164"></a><span class="lineno"><a class="line" href="classLLMUnity_1_1LoraManager.html#aa2bd9015648af9d92318710b651683d1">  164</a></span>        <span class="keyword">public</span> (<a class="code hl_variable" href="classLLMUnity_1_1LoraManager.html#aa2bd9015648af9d92318710b651683d1">string</a>, <a class="code hl_variable" href="classLLMUnity_1_1LoraManager.html#aa2bd9015648af9d92318710b651683d1">string</a>) ToStrings()</div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>        {</div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>            <span class="keywordtype">string</span> loraString = <span class="stringliteral">&quot;&quot;</span>;</div>
-<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>            <span class="keywordtype">string</span> loraWeightsString = <span class="stringliteral">&quot;&quot;</span>;</div>
-<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>            <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; loras.Count; i++)</div>
-<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>            {</div>
-<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>                <span class="keywordflow">if</span> (i &gt; 0)</div>
-<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>                {</div>
-<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>                    loraString += delimiter;</div>
-<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>                    loraWeightsString += delimiter;</div>
-<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>                }</div>
-<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>                loraString += loras[i].assetPath;</div>
-<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>                loraWeightsString += loras[i].weight;</div>
-<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>            }</div>
-<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>            <span class="keywordflow">return</span> (loraString, loraWeightsString);</div>
-<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>        }</div>
-<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span> </div>
-<div class="foldopen" id="foldopen00185" data-start="{" data-end="}">
-<div class="line"><a id="l00185" name="l00185"></a><span class="lineno"><a class="line" href="classLLMUnity_1_1LoraManager.html#a10719b4c70a12180a611f8a0fd02abb1">  185</a></span>        <span class="keyword">public</span> <span class="keywordtype">float</span>[] <a class="code hl_function" href="classLLMUnity_1_1LoraManager.html#a10719b4c70a12180a611f8a0fd02abb1">GetWeights</a>()</div>
-<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>        {</div>
-<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>            <span class="keywordtype">float</span>[] weights = <span class="keyword">new</span> <span class="keywordtype">float</span>[loras.Count];</div>
-<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>            <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; loras.Count; i++) weights[i] = loras[i].weight;</div>
-<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>            <span class="keywordflow">return</span> weights;</div>
-<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>        }</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span> </div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno"><a class="line" href="classLLMUnity_1_1LoraManager.html#aa2bd9015648af9d92318710b651683d1">  167</a></span>        <span class="keyword">public</span> (<a class="code hl_variable" href="classLLMUnity_1_1LoraManager.html#aa2bd9015648af9d92318710b651683d1">string</a>, <a class="code hl_variable" href="classLLMUnity_1_1LoraManager.html#aa2bd9015648af9d92318710b651683d1">string</a>) ToStrings()</div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>        {</div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>            <span class="keywordtype">string</span> loraString = <span class="stringliteral">&quot;&quot;</span>;</div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>            <span class="keywordtype">string</span> loraWeightsString = <span class="stringliteral">&quot;&quot;</span>;</div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>            <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; loras.Count; i++)</div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>            {</div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>                <span class="keywordflow">if</span> (i &gt; 0)</div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>                {</div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>                    loraString += delimiter;</div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>                    loraWeightsString += delimiter;</div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>                }</div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>                loraString += loras[i].assetPath;</div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>                loraWeightsString += loras[i].weight;</div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>            }</div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>            <span class="keywordflow">return</span> (loraString, loraWeightsString);</div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>        }</div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span> </div>
+<div class="foldopen" id="foldopen00188" data-start="{" data-end="}">
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno"><a class="line" href="classLLMUnity_1_1LoraManager.html#a10719b4c70a12180a611f8a0fd02abb1">  188</a></span>        <span class="keyword">public</span> <span class="keywordtype">float</span>[] <a class="code hl_function" href="classLLMUnity_1_1LoraManager.html#a10719b4c70a12180a611f8a0fd02abb1">GetWeights</a>()</div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>        {</div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>            <span class="keywordtype">float</span>[] weights = <span class="keyword">new</span> <span class="keywordtype">float</span>[loras.Count];</div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>            <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; loras.Count; i++) weights[i] = loras[i].weight;</div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>            <span class="keywordflow">return</span> weights;</div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>        }</div>
 </div>
-<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span> </div>
-<div class="foldopen" id="foldopen00196" data-start="{" data-end="}">
-<div class="line"><a id="l00196" name="l00196"></a><span class="lineno"><a class="line" href="classLLMUnity_1_1LoraManager.html#acf13f736caebcfce500cca6ecfa90b24">  196</a></span>        <span class="keyword">public</span> <span class="keywordtype">string</span>[] <a class="code hl_function" href="classLLMUnity_1_1LoraManager.html#acf13f736caebcfce500cca6ecfa90b24">GetLoras</a>()</div>
-<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>        {</div>
-<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>            <span class="keywordtype">string</span>[] loraPaths = <span class="keyword">new</span> <span class="keywordtype">string</span>[loras.Count];</div>
-<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>            <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; loras.Count; i++) loraPaths[i] = loras[i].assetPath;</div>
-<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>            <span class="keywordflow">return</span> loraPaths;</div>
-<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>        }</div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span> </div>
+<div class="foldopen" id="foldopen00199" data-start="{" data-end="}">
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno"><a class="line" href="classLLMUnity_1_1LoraManager.html#acf13f736caebcfce500cca6ecfa90b24">  199</a></span>        <span class="keyword">public</span> <span class="keywordtype">string</span>[] <a class="code hl_function" href="classLLMUnity_1_1LoraManager.html#acf13f736caebcfce500cca6ecfa90b24">GetLoras</a>()</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>        {</div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>            <span class="keywordtype">string</span>[] loraPaths = <span class="keyword">new</span> <span class="keywordtype">string</span>[loras.Count];</div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>            <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; loras.Count; i++) loraPaths[i] = loras[i].assetPath;</div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>            <span class="keywordflow">return</span> loraPaths;</div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>        }</div>
 </div>
-<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>    }</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>    }</div>
 </div>
-<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>}</div>
-<div class="ttc" id="aclassLLMUnity_1_1DestroyException_html"><div class="ttname"><a href="classLLMUnity_1_1DestroyException.html">LLMUnity.DestroyException</a></div><div class="ttdoc">Class implementing a basic LLM Destroy Exception.</div><div class="ttdef"><b>Definition</b> <a href="#l00026">LLMUtils.cs:26</a></div></div>
-<div class="ttc" id="aclassLLMUnity_1_1LLMException_html"><div class="ttname"><a href="classLLMUnity_1_1LLMException.html">LLMUnity.LLMException</a></div><div class="ttdoc">Class implementing a basic LLM Exception.</div><div class="ttdef"><b>Definition</b> <a href="#l00012">LLMUtils.cs:13</a></div></div>
-<div class="ttc" id="aclassLLMUnity_1_1LLMUnitySetup_html"><div class="ttname"><a href="classLLMUnity_1_1LLMUnitySetup.html">LLMUnity.LLMUnitySetup</a></div><div class="ttdoc">Class implementing helper functions for setup and process management.</div><div class="ttdef"><b>Definition</b> <a href="LLMUnitySetup_8cs_source.html#l00100">LLMUnitySetup.cs:101</a></div></div>
-<div class="ttc" id="aclassLLMUnity_1_1LLM_html"><div class="ttname"><a href="classLLMUnity_1_1LLM.html">LLMUnity.LLM</a></div><div class="ttdoc">Class implementing the LLM server.</div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00018">LLM.cs:19</a></div></div>
-<div class="ttc" id="aclassLLMUnity_1_1LoraAsset_html"><div class="ttname"><a href="classLLMUnity_1_1LoraAsset.html">LLMUnity.LoraAsset</a></div><div class="ttdoc">Class representing a LORA asset.</div><div class="ttdef"><b>Definition</b> <a href="#l00032">LLMUtils.cs:33</a></div></div>
-<div class="ttc" id="aclassLLMUnity_1_1LoraManager_html"><div class="ttname"><a href="classLLMUnity_1_1LoraManager.html">LLMUnity.LoraManager</a></div><div class="ttdoc">Class representing the LORA manager allowing to convert and retrieve LORA assets to string (for seria...</div><div class="ttdef"><b>Definition</b> <a href="#l00055">LLMUtils.cs:56</a></div></div>
-<div class="ttc" id="aclassLLMUnity_1_1LoraManager_html_a10719b4c70a12180a611f8a0fd02abb1"><div class="ttname"><a href="classLLMUnity_1_1LoraManager.html#a10719b4c70a12180a611f8a0fd02abb1">LLMUnity.LoraManager.GetWeights</a></div><div class="ttdeci">float[] GetWeights()</div><div class="ttdoc">Gets the weights of the LORAs in the manager.</div><div class="ttdef"><b>Definition</b> <a href="#l00185">LLMUtils.cs:185</a></div></div>
-<div class="ttc" id="aclassLLMUnity_1_1LoraManager_html_a14d29996fded52370f7621b86b208aea"><div class="ttname"><a href="classLLMUnity_1_1LoraManager.html#a14d29996fded52370f7621b86b208aea">LLMUnity.LoraManager.Add</a></div><div class="ttdeci">void Add(string path, float weight=1)</div><div class="ttdoc">Adds a LORA with the defined weight.</div><div class="ttdef"><b>Definition</b> <a href="#l00099">LLMUtils.cs:99</a></div></div>
-<div class="ttc" id="aclassLLMUnity_1_1LoraManager_html_a1ea418187b8e0256404d44da45357b89"><div class="ttname"><a href="classLLMUnity_1_1LoraManager.html#a1ea418187b8e0256404d44da45357b89">LLMUnity.LoraManager.Remove</a></div><div class="ttdeci">void Remove(string path)</div><div class="ttdoc">Removes a LORA based on its path.</div><div class="ttdef"><b>Definition</b> <a href="#l00109">LLMUtils.cs:109</a></div></div>
-<div class="ttc" id="aclassLLMUnity_1_1LoraManager_html_a4b3f0a0d870133147ef82b787568fb4b"><div class="ttname"><a href="classLLMUnity_1_1LoraManager.html#a4b3f0a0d870133147ef82b787568fb4b">LLMUnity.LoraManager.IndexOf</a></div><div class="ttdeci">int IndexOf(string path)</div><div class="ttdoc">Searches for a LORA based on the path.</div><div class="ttdef"><b>Definition</b> <a href="#l00073">LLMUtils.cs:73</a></div></div>
-<div class="ttc" id="aclassLLMUnity_1_1LoraManager_html_a5eb7c712a8a74a8d81d312ec94fa4705"><div class="ttname"><a href="classLLMUnity_1_1LoraManager.html#a5eb7c712a8a74a8d81d312ec94fa4705">LLMUnity.LoraManager.SetWeight</a></div><div class="ttdeci">void SetWeight(string path, float weight)</div><div class="ttdoc">Modifies the weight of a LORA.</div><div class="ttdef"><b>Definition</b> <a href="#l00120">LLMUtils.cs:120</a></div></div>
-<div class="ttc" id="aclassLLMUnity_1_1LoraManager_html_a9a22a86fc6a836005fe6c64b7d629993"><div class="ttname"><a href="classLLMUnity_1_1LoraManager.html#a9a22a86fc6a836005fe6c64b7d629993">LLMUnity.LoraManager.FromStrings</a></div><div class="ttdeci">void FromStrings(string loraString, string loraWeightsString)</div><div class="ttdoc">Converts strings with the lora paths and weights to entries in the LORA manager.</div><div class="ttdef"><b>Definition</b> <a href="#l00136">LLMUtils.cs:136</a></div></div>
-<div class="ttc" id="aclassLLMUnity_1_1LoraManager_html_aa2bd9015648af9d92318710b651683d1"><div class="ttname"><a href="classLLMUnity_1_1LoraManager.html#aa2bd9015648af9d92318710b651683d1">LLMUnity.LoraManager.string</a></div><div class="ttdeci">string</div><div class="ttdoc">Converts the entries of the LORA manager to strings with the lora paths and weights.</div><div class="ttdef"><b>Definition</b> <a href="#l00164">LLMUtils.cs:164</a></div></div>
-<div class="ttc" id="aclassLLMUnity_1_1LoraManager_html_aa80edfe89989c078c31069ee90fbf355"><div class="ttname"><a href="classLLMUnity_1_1LoraManager.html#aa80edfe89989c078c31069ee90fbf355">LLMUnity.LoraManager.Contains</a></div><div class="ttdeci">bool Contains(string path)</div><div class="ttdoc">Checks if the provided LORA based on a path exists already in the LORA manager.</div><div class="ttdef"><b>Definition</b> <a href="#l00089">LLMUtils.cs:89</a></div></div>
-<div class="ttc" id="aclassLLMUnity_1_1LoraManager_html_acf13f736caebcfce500cca6ecfa90b24"><div class="ttname"><a href="classLLMUnity_1_1LoraManager.html#acf13f736caebcfce500cca6ecfa90b24">LLMUnity.LoraManager.GetLoras</a></div><div class="ttdeci">string[] GetLoras()</div><div class="ttdoc">Gets the paths of the LORAs in the manager.</div><div class="ttdef"><b>Definition</b> <a href="#l00196">LLMUtils.cs:196</a></div></div>
-<div class="ttc" id="aclassLLMUnity_1_1LoraManager_html_ae9d16be880b0e27267c5943c4a3721ee"><div class="ttname"><a href="classLLMUnity_1_1LoraManager.html#ae9d16be880b0e27267c5943c4a3721ee">LLMUnity.LoraManager.Clear</a></div><div class="ttdeci">void Clear()</div><div class="ttdoc">Clears the LORA assets.</div><div class="ttdef"><b>Definition</b> <a href="#l00063">LLMUtils.cs:63</a></div></div>
-<div class="ttc" id="anamespaceLLMUnity_html"><div class="ttname"><a href="namespaceLLMUnity.html">LLMUnity</a></div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00011">LLM.cs:12</a></div></div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span> </div>
+<div class="foldopen" id="foldopen00207" data-start="{" data-end="};">
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno"><a class="line" href="classLLMUnity_1_1Utils.html">  207</a></span>    <span class="keyword">public</span> <span class="keyword">class </span><a class="code hl_class" href="classLLMUnity_1_1Utils.html">Utils</a></div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>    {</div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>        <span class="comment">// Extract main thread wrapping logic</span></div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>        <span class="keyword">public</span> <span class="keyword">static</span> Action&lt;string&gt; WrapActionForMainThread(</div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>            Action&lt;string&gt; callback, MonoBehaviour owner)</div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>        {</div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>            <span class="keywordflow">if</span> (callback == <span class="keyword">null</span>) <span class="keywordflow">return</span> <span class="keyword">null</span>;</div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>            var context = SynchronizationContext.Current;</div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span> </div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>            <span class="keywordflow">return</span> msg =&gt;</div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>            {</div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>                <span class="keywordflow">try</span></div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>                {</div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>                    <span class="keywordflow">if</span> (owner == <span class="keyword">null</span>) <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>                    <span class="keywordflow">if</span> (context != <span class="keyword">null</span>)</div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>                    {</div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>                        context.Post(_ =&gt;</div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>                        {</div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>                            <span class="keywordflow">try</span></div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>                            {</div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>                                <span class="keywordflow">if</span> (owner != <span class="keyword">null</span>) callback(msg);</div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>                            }</div>
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>                            <span class="keywordflow">catch</span> (Exception e)</div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>                            {</div>
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>                                <a class="code hl_class" href="classLLMUnity_1_1LLMUnitySetup.html">LLMUnitySetup</a>.LogError($<span class="stringliteral">&quot;Exception in callback: {e}&quot;</span>);</div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>                            }</div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>                        }, <span class="keyword">null</span>);</div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>                    }</div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>                    <span class="keywordflow">else</span></div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>                    {</div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>                        callback(msg);</div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>                    }</div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>                }</div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>                <span class="keywordflow">catch</span> (Exception e)</div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>                {</div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>                    <a class="code hl_class" href="classLLMUnity_1_1LLMUnitySetup.html">LLMUnitySetup</a>.LogError($<span class="stringliteral">&quot;Exception in callback wrapper: {e}&quot;</span>);</div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>                }</div>
+<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>            };</div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>        }</div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span> </div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span><span class="preprocessor">#if !ENABLE_IL2CPP</span></div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>        <span class="comment">// Keep original for Mono builds</span></div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>        <span class="keyword">public</span> <span class="keyword">static</span> LlamaLib.CharArrayCallback WrapCallbackForAsync(</div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>            Action&lt;string&gt; callback, MonoBehaviour owner)</div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>        {</div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>            <span class="keywordflow">if</span> (callback == <span class="keyword">null</span>) <span class="keywordflow">return</span> <span class="keyword">null</span>;</div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>            Action&lt;string&gt; mainThreadCallback = WrapActionForMainThread(callback, owner);</div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>            <span class="keywordflow">return</span> msg =&gt; mainThreadCallback(msg);</div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>        }</div>
+<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span> </div>
+<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>    }</div>
+</div>
+<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>}</div>
+<div class="ttc" id="aclassLLMUnity_1_1DestroyException_html"><div class="ttname"><a href="classLLMUnity_1_1DestroyException.html">LLMUnity.DestroyException</a></div><div class="ttdoc">Class implementing a basic LLM Destroy Exception.</div><div class="ttdef"><b>Definition</b> <a href="#l00029">LLMUtils.cs:29</a></div></div>
+<div class="ttc" id="aclassLLMUnity_1_1LLMException_html"><div class="ttname"><a href="classLLMUnity_1_1LLMException.html">LLMUnity.LLMException</a></div><div class="ttdoc">Class implementing a basic LLM Exception.</div><div class="ttdef"><b>Definition</b> <a href="#l00015">LLMUtils.cs:16</a></div></div>
+<div class="ttc" id="aclassLLMUnity_1_1LLMUnitySetup_html"><div class="ttname"><a href="classLLMUnity_1_1LLMUnitySetup.html">LLMUnity.LLMUnitySetup</a></div><div class="ttdoc">Class implementing helper functions for setup and process management.</div><div class="ttdef"><b>Definition</b> <a href="LLMUnitySetup_8cs_source.html#l00095">LLMUnitySetup.cs:96</a></div></div>
+<div class="ttc" id="aclassLLMUnity_1_1LLM_html"><div class="ttname"><a href="classLLMUnity_1_1LLM.html">LLMUnity.LLM</a></div><div class="ttdoc">Unity MonoBehaviour component that manages a local LLM server instance. Handles model loading,...</div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00020">LLM.cs:21</a></div></div>
+<div class="ttc" id="aclassLLMUnity_1_1LoraAsset_html"><div class="ttname"><a href="classLLMUnity_1_1LoraAsset.html">LLMUnity.LoraAsset</a></div><div class="ttdoc">Class representing a LORA asset.</div><div class="ttdef"><b>Definition</b> <a href="#l00035">LLMUtils.cs:36</a></div></div>
+<div class="ttc" id="aclassLLMUnity_1_1LoraManager_html"><div class="ttname"><a href="classLLMUnity_1_1LoraManager.html">LLMUnity.LoraManager</a></div><div class="ttdoc">Class representing the LORA manager allowing to convert and retrieve LORA assets to string (for seria...</div><div class="ttdef"><b>Definition</b> <a href="#l00058">LLMUtils.cs:59</a></div></div>
+<div class="ttc" id="aclassLLMUnity_1_1LoraManager_html_a10719b4c70a12180a611f8a0fd02abb1"><div class="ttname"><a href="classLLMUnity_1_1LoraManager.html#a10719b4c70a12180a611f8a0fd02abb1">LLMUnity.LoraManager.GetWeights</a></div><div class="ttdeci">float[] GetWeights()</div><div class="ttdoc">Gets the weights of the LORAs in the manager.</div><div class="ttdef"><b>Definition</b> <a href="#l00188">LLMUtils.cs:188</a></div></div>
+<div class="ttc" id="aclassLLMUnity_1_1LoraManager_html_a14d29996fded52370f7621b86b208aea"><div class="ttname"><a href="classLLMUnity_1_1LoraManager.html#a14d29996fded52370f7621b86b208aea">LLMUnity.LoraManager.Add</a></div><div class="ttdeci">void Add(string path, float weight=1)</div><div class="ttdoc">Adds a LORA with the defined weight.</div><div class="ttdef"><b>Definition</b> <a href="#l00102">LLMUtils.cs:102</a></div></div>
+<div class="ttc" id="aclassLLMUnity_1_1LoraManager_html_a1ea418187b8e0256404d44da45357b89"><div class="ttname"><a href="classLLMUnity_1_1LoraManager.html#a1ea418187b8e0256404d44da45357b89">LLMUnity.LoraManager.Remove</a></div><div class="ttdeci">void Remove(string path)</div><div class="ttdoc">Removes a LORA based on its path.</div><div class="ttdef"><b>Definition</b> <a href="#l00112">LLMUtils.cs:112</a></div></div>
+<div class="ttc" id="aclassLLMUnity_1_1LoraManager_html_a4b3f0a0d870133147ef82b787568fb4b"><div class="ttname"><a href="classLLMUnity_1_1LoraManager.html#a4b3f0a0d870133147ef82b787568fb4b">LLMUnity.LoraManager.IndexOf</a></div><div class="ttdeci">int IndexOf(string path)</div><div class="ttdoc">Searches for a LORA based on the path.</div><div class="ttdef"><b>Definition</b> <a href="#l00076">LLMUtils.cs:76</a></div></div>
+<div class="ttc" id="aclassLLMUnity_1_1LoraManager_html_a5eb7c712a8a74a8d81d312ec94fa4705"><div class="ttname"><a href="classLLMUnity_1_1LoraManager.html#a5eb7c712a8a74a8d81d312ec94fa4705">LLMUnity.LoraManager.SetWeight</a></div><div class="ttdeci">void SetWeight(string path, float weight)</div><div class="ttdoc">Modifies the weight of a LORA.</div><div class="ttdef"><b>Definition</b> <a href="#l00123">LLMUtils.cs:123</a></div></div>
+<div class="ttc" id="aclassLLMUnity_1_1LoraManager_html_a9a22a86fc6a836005fe6c64b7d629993"><div class="ttname"><a href="classLLMUnity_1_1LoraManager.html#a9a22a86fc6a836005fe6c64b7d629993">LLMUnity.LoraManager.FromStrings</a></div><div class="ttdeci">void FromStrings(string loraString, string loraWeightsString)</div><div class="ttdoc">Converts strings with the lora paths and weights to entries in the LORA manager.</div><div class="ttdef"><b>Definition</b> <a href="#l00139">LLMUtils.cs:139</a></div></div>
+<div class="ttc" id="aclassLLMUnity_1_1LoraManager_html_aa2bd9015648af9d92318710b651683d1"><div class="ttname"><a href="classLLMUnity_1_1LoraManager.html#aa2bd9015648af9d92318710b651683d1">LLMUnity.LoraManager.string</a></div><div class="ttdeci">string</div><div class="ttdoc">Converts the entries of the LORA manager to strings with the lora paths and weights.</div><div class="ttdef"><b>Definition</b> <a href="#l00167">LLMUtils.cs:167</a></div></div>
+<div class="ttc" id="aclassLLMUnity_1_1LoraManager_html_aa80edfe89989c078c31069ee90fbf355"><div class="ttname"><a href="classLLMUnity_1_1LoraManager.html#aa80edfe89989c078c31069ee90fbf355">LLMUnity.LoraManager.Contains</a></div><div class="ttdeci">bool Contains(string path)</div><div class="ttdoc">Checks if the provided LORA based on a path exists already in the LORA manager.</div><div class="ttdef"><b>Definition</b> <a href="#l00092">LLMUtils.cs:92</a></div></div>
+<div class="ttc" id="aclassLLMUnity_1_1LoraManager_html_acf13f736caebcfce500cca6ecfa90b24"><div class="ttname"><a href="classLLMUnity_1_1LoraManager.html#acf13f736caebcfce500cca6ecfa90b24">LLMUnity.LoraManager.GetLoras</a></div><div class="ttdeci">string[] GetLoras()</div><div class="ttdoc">Gets the paths of the LORAs in the manager.</div><div class="ttdef"><b>Definition</b> <a href="#l00199">LLMUtils.cs:199</a></div></div>
+<div class="ttc" id="aclassLLMUnity_1_1LoraManager_html_ae9d16be880b0e27267c5943c4a3721ee"><div class="ttname"><a href="classLLMUnity_1_1LoraManager.html#ae9d16be880b0e27267c5943c4a3721ee">LLMUnity.LoraManager.Clear</a></div><div class="ttdeci">void Clear()</div><div class="ttdoc">Clears the LORA assets.</div><div class="ttdef"><b>Definition</b> <a href="#l00066">LLMUtils.cs:66</a></div></div>
+<div class="ttc" id="aclassLLMUnity_1_1Utils_html"><div class="ttname"><a href="classLLMUnity_1_1Utils.html">LLMUnity.Utils</a></div><div class="ttdef"><b>Definition</b> <a href="#l00207">LLMUtils.cs:208</a></div></div>
+<div class="ttc" id="anamespaceLLMUnity_html"><div class="ttname"><a href="namespaceLLMUnity.html">LLMUnity</a></div><div class="ttdef"><b>Definition</b> <a href="LLM_8cs_source.html#l00012">LLM.cs:13</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
