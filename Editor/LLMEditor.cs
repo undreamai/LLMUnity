@@ -424,6 +424,14 @@ namespace LLMUnity
             Space();
         }
 
+        public override void AddSetupExtras()
+        {
+            bool useCUBLAS = LLMUnitySetup.CUBLAS;
+            GUIContent content = new GUIContent("Light build for Nvidia GPUs", "Use tinyBLAS instead of cuBLAS that takes up less space and has similar performance for quants - doesn't work with i-quants and flash attention");
+            bool newUseCUBLAS = !EditorGUILayout.Toggle(content, !useCUBLAS);
+            if (newUseCUBLAS != useCUBLAS) LLMUnitySetup.SetCUBLAS(newUseCUBLAS);
+        }
+
         public override void OnInspectorGUI()
         {
             if (elementFocus != "")
