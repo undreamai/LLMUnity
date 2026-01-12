@@ -417,11 +417,9 @@ namespace LLMUnity
             te.Copy();
         }
 
-        public override void AddOptionsToggles(SerializedObject llmScriptSO)
+        public override void AddOptionsExtras()
         {
             AddDebugModeToggle();
-            AddAdvancedOptionsToggle(llmScriptSO);
-            Space();
         }
 
         public override void AddSetupExtras()
