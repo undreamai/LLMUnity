@@ -90,8 +90,14 @@ namespace LLMUnity
                             }
                         }
 
+                        string relLibraryDir = Path.GetDirectoryName(relLibraryFile);
                         project.AddFileToBuild(unityMainTargetGuid, fileGuid);
-                        if (targetGuid != null) project.AddFileToBuild(targetGuid, fileGuid);
+                        project.AddBuildProperty(unityMainTargetGuid, "LIBRARY_SEARCH_PATHS", "$(PROJECT_DIR)/" + relLibraryDir);
+                        if (targetGuid != null)
+                        {
+                            project.AddFileToBuild(targetGuid, fileGuid);
+                            project.AddBuildProperty(targetGuid, "LIBRARY_SEARCH_PATHS", "$(PROJECT_DIR)/" + relLibraryDir);
+                        }
                     }
                 }
             }
