@@ -40,7 +40,7 @@ namespace UndreamAI.LlamaLib
             if (string.IsNullOrEmpty(libraryPath))
                 throw new ArgumentNullException(nameof(libraryPath));
 
-#if (ANDROID || IOS || VISIONOS) || (UNITY_ANDROID || UNITY_IOS || UNITY_VISIONOS)
+#if (ANDROID || IOS || VISIONOS) || (!UNITY_EDITOR && (UNITY_ANDROID || UNITY_IOS || UNITY_VISIONOS))
             return Mobile.dlopen(libraryPath);
 #else
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -64,7 +64,7 @@ namespace UndreamAI.LlamaLib
             if (string.IsNullOrEmpty(symbolName))
                 throw new ArgumentNullException(nameof(symbolName));
 
-#if (ANDROID || IOS || VISIONOS) || (UNITY_ANDROID || UNITY_IOS || UNITY_VISIONOS)
+#if (ANDROID || IOS || VISIONOS) || (!UNITY_EDITOR && (UNITY_ANDROID || UNITY_IOS || UNITY_VISIONOS))
             return Mobile.dlsym(library, symbolName);
 #else
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -86,7 +86,7 @@ namespace UndreamAI.LlamaLib
             if (library == IntPtr.Zero)
                 return;
 
-#if (ANDROID || IOS || VISIONOS) || (UNITY_ANDROID || UNITY_IOS || UNITY_VISIONOS)
+#if (ANDROID || IOS || VISIONOS) || (!UNITY_EDITOR && (UNITY_ANDROID || UNITY_IOS || UNITY_VISIONOS))
             Mobile.dlclose(library);
 #else
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -192,7 +192,7 @@ namespace UndreamAI.LlamaLib
         {
             public static IntPtr dlopen(string path) => dlopen(path, 1);
 
-#if (ANDROID || IOS || VISIONOS) || (UNITY_ANDROID || UNITY_IOS || UNITY_VISIONOS)
+#if (ANDROID || IOS || VISIONOS) || (!UNITY_EDITOR && (UNITY_ANDROID || UNITY_IOS || UNITY_VISIONOS))
             [DllImport("__Internal")]
             public static extern IntPtr dlopen(string filename, int flags);
 
