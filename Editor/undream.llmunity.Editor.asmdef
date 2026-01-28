@@ -4,6 +4,7 @@
         "Editor"
     ],
     "references": [
-        "undream.llmunity.Runtime"
+        "undream.llmunity.Runtime",
+        "Unity.Nuget.Newtonsoft-Json"
     ]
 }

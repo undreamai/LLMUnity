@@ -1,6 +1,7 @@
 {
     "name": "undream.llmunity.Runtime",
     "references": [
-        "Cloud.Unum.USearch"
+        "Cloud.Unum.USearch",
+        "Unity.Nuget.Newtonsoft-Json"
     ]
 }
