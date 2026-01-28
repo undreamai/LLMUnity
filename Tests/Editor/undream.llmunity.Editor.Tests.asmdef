@@ -1,7 +1,8 @@
 {
   "name": "undream.llmunity.Editor.Tests",
   "references": [
-    "undream.llmunity.Runtime"
+    "undream.llmunity.Runtime",
+    "Unity.Nuget.Newtonsoft-Json"
   ],
   "optionalUnityReferences": [
     "TestAssemblies"
