@@ -318,7 +318,7 @@ namespace LLMUnity
             {
                 if (!androidExtractTasks.TryGetValue(assetName, out extractionTask))
                 {
-#if UNITY_ANDROID
+#if !UNITY_EDITOR && UNITY_ANDROID
                     extractionTask = AndroidExtractFileOnce(assetName, overwrite, log, chunkSize);
 #else
                     extractionTask = Task.CompletedTask;
