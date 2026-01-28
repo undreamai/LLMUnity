@@ -1,3 +1,9 @@
+## v3.0.1
+#### 🐛 Fixes
+
+- fix running in Editor with Android/iOS platform selected (PR: #378)
+
+
 ## v2.5.2
 #### 🚀 Features
 
