@@ -9,7 +9,7 @@
 
 <h3 align="center">Create characters in Unity with LLMs!</h3>
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: Apache](https://img.shields.io/badge/License-Apache_2.0-yellow.svg)](https://opensource.org/license/apache-2-0)
 <a href="https://discord.gg/RwXKQb6zdv"><img src="https://discordapp.com/api/guilds/1194779009284841552/widget.png?style=shield"/></a>
 [![Reddit](https://img.shields.io/badge/Reddit-%23FF4500.svg?style=flat&logo=Reddit&logoColor=white)](https://www.reddit.com/user/UndreamAI)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-blue?style=flat&logo=linkedin&labelColor=blue)](https://www.linkedin.com/company/undreamai)
@@ -58,7 +58,7 @@ For business inquiries you can reach out at hello@undream.ai.
 - [⭐ Star](https://github.com/undreamai/LLMUnity) the repo, leave a [review](https://assetstore.unity.com/packages/slug/273604) and spread the word about the project!
 - Join us at [Discord](https://discord.gg/RwXKQb6zdv) and say hi.
 - [Contribute](CONTRIBUTING.md) by submitting feature requests, bugs or even your own PR.
-- [![](https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&color=%23fe8e86)](https://github.com/sponsors/amakropoulos) this work or buy me a  [![Ko-fi](https://img.shields.io/badge/Ko--fi-FF5E5B?logo=ko-fi&logoColor=white)](#) to allow even cooler features!
+- [![](https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&color=%23fe8e86)](https://github.com/sponsors/amakropoulos) this work or buy me a [![Ko-fi](https://img.shields.io/badge/Ko--fi-FF5E5B?logo=ko-fi&logoColor=white)](https://ko-fi.com/amakropoulos) to allow even cooler features!
 
 
 ## Games / Projects using LLM for Unity
