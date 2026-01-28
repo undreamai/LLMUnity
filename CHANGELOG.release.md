@@ -1,5 +1,9 @@
 ### 🚀 Features
 
-- Support Android x86-64 architecture (Magic Leap 2) (PR: #344)
-- Combine ARM and Intel architectures of macOS (PR: #345)
+- add Unity.Nuget.Newtonsoft-Json in the assembly definition (PR: #379)
+- Update LlamaLib to v2.0.2 (llama.cpp b7777) (PR: #380)
+
+### 🐛 Fixes
+
+- fix running in Editor with Android/iOS platform selected (PR: #378)
 

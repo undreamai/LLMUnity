@@ -98,7 +98,7 @@ namespace LLMUnity
         /// <summary> LLM for Unity version </summary>
         public static string Version = "v3.0.0";
         /// <summary> LlamaLib version </summary>
-        public static string LlamaLibVersion = "v2.0.0";
+        public static string LlamaLibVersion = "v2.0.2";
         /// <summary> LlamaLib release url </summary>
         public static string LlamaLibReleaseURL = $"https://github.com/undreamai/LlamaLib/releases/download/{LlamaLibVersion}";
         /// <summary> LlamaLib name </summary>
@@ -318,7 +318,7 @@ namespace LLMUnity
             {
                 if (!androidExtractTasks.TryGetValue(assetName, out extractionTask))
                 {
-#if UNITY_ANDROID
+#if !UNITY_EDITOR && UNITY_ANDROID
                     extractionTask = AndroidExtractFileOnce(assetName, overwrite, log, chunkSize);
 #else
                     extractionTask = Task.CompletedTask;
