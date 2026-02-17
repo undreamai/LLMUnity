@@ -44,8 +44,10 @@ namespace LLMUnity
 #else
             string projPath = Path.Combine(outputPath, Path.GetFileName(outputPath) + ".xcodeproj", "project.pbxproj");
             if (!File.Exists(projPath)) return;
-            libraryFileNames.Add("libllamalib_osx-universal_acc.dylib");
-            libraryFileNames.Add("libllamalib_osx-universal_no-acc.dylib");
+            libraryFileNames.Add("libllamalib_osx-x64_acc.dylib");
+            libraryFileNames.Add("libllamalib_osx-x64_no-acc.dylib");
+            libraryFileNames.Add("libllamalib_osx-arm64_acc.dylib");
+            libraryFileNames.Add("libllamalib_osx-arm64_no-acc.dylib");
 #endif
 
             PBXProject project = new PBXProject();
