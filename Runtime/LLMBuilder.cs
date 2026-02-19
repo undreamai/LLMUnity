@@ -208,7 +208,8 @@ namespace LLMUnity
                     checkCUBLAS = true;
                     break;
                 case BuildTarget.StandaloneOSX:
-                    platforms.Add("osx-universal");
+                    platforms.Add("osx-x64");
+                    platforms.Add("osx-arm64");
                     break;
                 case BuildTarget.Android:
                     platforms.Add("android-arm64");
