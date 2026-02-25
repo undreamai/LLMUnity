@@ -185,6 +185,15 @@ namespace UndreamAI.LlamaLib
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate int LLMAgent_Get_History_Size_Delegate(IntPtr llm);
 
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void LLMAgent_Set_Overflow_Strategy_Delegate(IntPtr llm, int strategy, float targetRatio, [MarshalAs(UnmanagedType.LPStr)] string summarizePrompt);
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate IntPtr LLMAgent_Get_Summary_Delegate(IntPtr llm);
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void LLMAgent_Set_Summary_Delegate(IntPtr llm, [MarshalAs(UnmanagedType.LPStr)] string summary);
+
         //################################################## FUNCTION POINTERS ##################################################//
 
         // Main lib
@@ -235,13 +244,16 @@ namespace UndreamAI.LlamaLib
         public LLMAgent_Save_History_Delegate LLMAgent_Save_History_Internal;
         public LLMAgent_Load_History_Delegate LLMAgent_Load_History_Internal;
         public LLMAgent_Get_History_Size_Delegate LLMAgent_Get_History_Size_Internal;
+        public LLMAgent_Set_Overflow_Strategy_Delegate LLMAgent_Set_Overflow_Strategy_Internal;
+        public LLMAgent_Get_Summary_Delegate LLMAgent_Get_Summary_Internal;
+        public LLMAgent_Set_Summary_Delegate LLMAgent_Set_Summary_Internal;
 
         //################################################## STATUS CHECKING WRAPPER ##################################################//
 
         public void CheckStatus(bool crashesOnly = false)
         {
             int status = LLM_Status_Code_Internal();
-            if (status > 0 || (status < 0 && !crashesOnly))
+            if (status < 0 || (status > 0 && !crashesOnly))
             {
                 string msg = Marshal.PtrToStringAnsi(LLM_Status_Message_Internal()) ?? "";
                 throw new InvalidOperationException($"LlamaLib error {status}: {msg}");
@@ -328,6 +340,9 @@ namespace UndreamAI.LlamaLib
         public void LLMAgent_Save_History(IntPtr llm, string filepath) => CallWithStatus(() => LLMAgent_Save_History_Internal(llm, filepath));
         public void LLMAgent_Load_History(IntPtr llm, string filepath) => CallWithStatus(() => LLMAgent_Load_History_Internal(llm, filepath));
         public int LLMAgent_Get_History_Size(IntPtr llm) => CallWithStatus(() => LLMAgent_Get_History_Size_Internal(llm));
+        public void LLMAgent_Set_Overflow_Strategy(IntPtr llm, int strategy, float targetRatio, string summarizePrompt = null) => CallWithStatus(() => LLMAgent_Set_Overflow_Strategy_Internal(llm, strategy, targetRatio, summarizePrompt));
+        public string LLMAgent_Get_Summary(IntPtr llm) => Marshal.PtrToStringAnsi(CallWithStatus(() => LLMAgent_Get_Summary_Internal(llm)));
+        public void LLMAgent_Set_Summary(IntPtr llm, string summary) => CallWithStatus(() => LLMAgent_Set_Summary_Internal(llm, summary));
 
         //################################################## MOBILE IMPLEMENTATION ##################################################//
 
@@ -537,6 +552,15 @@ namespace UndreamAI.LlamaLib
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLMAgent_Get_History_Size")]
         public static extern int LLMAgent_Get_History_Size_Static(IntPtr llm);
 
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLMAgent_Set_Overflow_Strategy")]
+        public static extern void LLMAgent_Set_Overflow_Strategy_Static(IntPtr llm, int strategy, float targetRatio, [MarshalAs(UnmanagedType.LPStr)] string summarizePrompt);
+
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLMAgent_Get_Summary")]
+        public static extern IntPtr LLMAgent_Get_Summary_Static(IntPtr llm);
+
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "LLMAgent_Set_Summary")]
+        public static extern void LLMAgent_Set_Summary_Static(IntPtr llm, [MarshalAs(UnmanagedType.LPStr)] string summary);
+
         public static IntPtr Available_Architectures([MarshalAs(UnmanagedType.I1)] bool gpu) { return IntPtr.Zero; }
         public static bool Has_GPU_Layers([MarshalAs(UnmanagedType.LPStr)] string command) { return false; }
 
@@ -603,6 +627,9 @@ namespace UndreamAI.LlamaLib
             LLMAgent_Save_History_Internal = (llm, filepath) => LLMAgent_Save_History_Static(llm, filepath);
             LLMAgent_Load_History_Internal = (llm, filepath) => LLMAgent_Load_History_Static(llm, filepath);
             LLMAgent_Get_History_Size_Internal = (llm) => LLMAgent_Get_History_Size_Static(llm);
+            LLMAgent_Set_Overflow_Strategy_Internal = (llm, strategy, targetRatio, summarizePrompt) => LLMAgent_Set_Overflow_Strategy_Static(llm, strategy, targetRatio, summarizePrompt);
+            LLMAgent_Get_Summary_Internal = (llm) => LLMAgent_Get_Summary_Static(llm);
+            LLMAgent_Set_Summary_Internal = (llm, summary) => LLMAgent_Set_Summary_Static(llm, summary);
         }
 
         public void Dispose() {}
@@ -908,6 +935,9 @@ namespace UndreamAI.LlamaLib
             LLMAgent_Save_History_Internal = LibraryLoader.GetSymbolDelegate<LLMAgent_Save_History_Delegate>(libraryHandle, "LLMAgent_Save_History");
             LLMAgent_Load_History_Internal = LibraryLoader.GetSymbolDelegate<LLMAgent_Load_History_Delegate>(libraryHandle, "LLMAgent_Load_History");
             LLMAgent_Get_History_Size_Internal = LibraryLoader.GetSymbolDelegate<LLMAgent_Get_History_Size_Delegate>(libraryHandle, "LLMAgent_Get_History_Size");
+            LLMAgent_Set_Overflow_Strategy_Internal = LibraryLoader.GetSymbolDelegate<LLMAgent_Set_Overflow_Strategy_Delegate>(libraryHandle, "LLMAgent_Set_Overflow_Strategy");
+            LLMAgent_Get_Summary_Internal = LibraryLoader.GetSymbolDelegate<LLMAgent_Get_Summary_Delegate>(libraryHandle, "LLMAgent_Get_Summary");
+            LLMAgent_Set_Summary_Internal = LibraryLoader.GetSymbolDelegate<LLMAgent_Set_Summary_Delegate>(libraryHandle, "LLMAgent_Set_Summary");
         }
 
         // Static functions
