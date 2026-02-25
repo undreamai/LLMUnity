@@ -96,12 +96,11 @@ namespace LLMUnity
             }
         }
 
-        public virtual void AddOptionsExtras() {}
-
         public virtual void AddOptionsToggles(SerializedObject llmScriptSO)
         {
             AddLogo();
             AddAdvancedOptionsToggle(llmScriptSO);
+            AddDebugModeToggle();
             Space();
         }
 
