@@ -416,11 +416,6 @@ namespace LLMUnity
             te.Copy();
         }
 
-        public override void AddOptionsExtras()
-        {
-            AddDebugModeToggle();
-        }
-
         public override void AddSetupExtras()
         {
             bool useCUBLAS = LLMUnitySetup.CUBLAS;

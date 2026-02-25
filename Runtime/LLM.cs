@@ -452,7 +452,9 @@ namespace LLMUnity
         {
             if (LLMUnitySetup.DebugMode <= LLMUnitySetup.DebugModeType.All)
             {
-                LlamaLib.Debug(LLMUnitySetup.DebugModeType.All - LLMUnitySetup.DebugMode + 1);
+                int debugLevel = 1;
+                if (LLMUnitySetup.DebugMode == LLMUnitySetup.DebugModeType.Debug) debugLevel = 5;
+                LlamaLib.Debug(debugLevel);
 #if ENABLE_IL2CPP
                 IL2CPP_Logging.LoggingCallback(LLMUnitySetup.Log);
 #else
