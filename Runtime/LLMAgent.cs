@@ -30,7 +30,7 @@ namespace LLMUnity
 
         /// <summary>Strategy to apply when the conversation history exceeds the model's context window</summary>
         [Tooltip("Strategy to apply when the conversation history exceeds the model's context window")]
-        [LLM] public ContextOverflowStrategy overflowStrategy = ContextOverflowStrategy.None;
+        [LLM] public ContextOverflowStrategy overflowStrategy = ContextOverflowStrategy.Truncate;
 
         /// <summary>Target fraction of the context window to fill after truncation or summarization (0.0–1.0)</summary>
         [Tooltip("Target fraction of the context window to fill after truncation or summarization (0.0–1.0)")]
