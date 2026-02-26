@@ -416,7 +416,7 @@ namespace LLMUnity
             te.Copy();
         }
 
-        public override void AddSetupExtras()
+        public override void AddSetupExtras(SerializedObject llmScriptSO)
         {
             bool useCUBLAS = LLMUnitySetup.CUBLAS;
             GUIContent content = new GUIContent("Light build for Nvidia GPUs", "Use tinyBLAS instead of cuBLAS that takes up less space and has similar performance for quants - doesn't work with i-quants and flash attention");

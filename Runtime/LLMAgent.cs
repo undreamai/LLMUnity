@@ -34,11 +34,11 @@ namespace LLMUnity
 
         /// <summary>Target fraction of the context window to fill after truncation or summarization (0.0–1.0)</summary>
         [Tooltip("Target fraction of the context window to fill after truncation or summarization (0.0–1.0)")]
-        [LLM, Range(0.1f, 0.95f)] public float overflowTargetRatio = 0.5f;
+        [Overflow1, Range(0.1f, 0.95f)] public float overflowTargetRatio = 0.5f;
 
         /// <summary>Custom prompt used when asking the LLM to summarize history (leave empty for default)</summary>
         [Tooltip("Custom prompt used when asking the LLM to summarize history (leave empty for default)")]
-        [LLM, TextArea(2, 4)] public string overflowSummarizePrompt = "";
+        [Overflow2, TextArea(2, 4)] public string overflowSummarizePrompt = "";
 
         /// <summary>Server slot to use for processing (affects caching behavior)</summary>
         [Tooltip("Server slot to use for processing (affects caching behavior)")]

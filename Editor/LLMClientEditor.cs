@@ -11,6 +11,13 @@ namespace LLMUnity
     [CustomEditor(typeof(LLMAgent), true)]
     public class LLMAgentEditor : LLMCallerEditor
     {
+        public override void AddSetupExtras(SerializedObject llmScriptSO)
+        {
+            int strategy = llmScriptSO.FindProperty("overflowStrategy").intValue;
+            if (strategy > 0) ShowPropertiesOfClass("", llmScriptSO, new List<Type> { typeof(Overflow1Attribute) }, false);
+            if (strategy > 1) ShowPropertiesOfClass("", llmScriptSO, new List<Type> { typeof(Overflow2Attribute) }, false);
+        }
+
         public override void AddModelSettings(SerializedObject llmScriptSO)
         {
             if (!llmScriptSO.FindProperty("advancedOptions").boolValue)
