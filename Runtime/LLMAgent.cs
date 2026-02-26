@@ -28,6 +28,18 @@ namespace LLMUnity
         [Tooltip("Debug LLM prompts")]
         [LLM] public bool debugPrompt = false;
 
+        /// <summary>Strategy to apply when the conversation history exceeds the model's context window</summary>
+        [Tooltip("Strategy to apply when the conversation history exceeds the model's context window")]
+        [LLM] public ContextOverflowStrategy overflowStrategy = ContextOverflowStrategy.None;
+
+        /// <summary>Target fraction of the context window to fill after truncation or summarization (0.0–1.0)</summary>
+        [Tooltip("Target fraction of the context window to fill after truncation or summarization (0.0–1.0)")]
+        [LLM, Range(0.1f, 0.95f)] public float overflowTargetRatio = 0.5f;
+
+        /// <summary>Custom prompt used when asking the LLM to summarize history (leave empty for default)</summary>
+        [Tooltip("Custom prompt used when asking the LLM to summarize history (leave empty for default)")]
+        [LLM, TextArea(2, 4)] public string overflowSummarizePrompt = "";
+
         /// <summary>Server slot to use for processing (affects caching behavior)</summary>
         [Tooltip("Server slot to use for processing (affects caching behavior)")]
         [ModelAdvanced, SerializeField] protected int _slot = -1;
@@ -131,6 +143,11 @@ namespace LLMUnity
         {
             await base.PostSetupCallerObject();
             if (slot != -1) llmAgent.SlotId = slot;
+            if (overflowStrategy != ContextOverflowStrategy.None)
+            {
+                string prompt = string.IsNullOrEmpty(overflowSummarizePrompt) ? null : overflowSummarizePrompt;
+                llmAgent.SetOverflowStrategy(overflowStrategy, overflowTargetRatio, prompt);
+            }
             await InitHistory();
         }
 
@@ -210,6 +227,23 @@ namespace LLMUnity
         {
             await CheckCaller();
             llmAgent.AddAssistantMessage(content);
+        }
+
+        /// <summary>
+        /// Returns the current rolling summary produced by the Summarize overflow strategy.
+        /// Empty string if no summary has been generated yet.
+        /// </summary>
+        public string GetSummary()
+        {
+            return llmAgent?.GetSummary() ?? string.Empty;
+        }
+
+        /// <summary>
+        /// Overrides the rolling summary directly, e.g. to restore custom state.
+        /// </summary>
+        public void SetSummary(string summary)
+        {
+            llmAgent?.SetSummary(summary ?? string.Empty);
         }
 
         #endregion
