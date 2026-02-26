@@ -33,7 +33,6 @@ The LLM backend, [LlamaLib](https://github.com/undreamai/LlamaLib), is built on 
 <a href="#semantic-search-with-a-rag-system" style=color: black>RAG</a>&nbsp;&nbsp;•&nbsp;
 <a href="#llm-model-management" style=color: black>LLM model management</a>&nbsp;&nbsp;•&nbsp;
 <a href="#examples" style=color: black>Examples</a>&nbsp;&nbsp;•&nbsp;
-<a href="#options" style=color: black>Options</a>&nbsp;&nbsp;•&nbsp;
 <a href="#license" style=color: black>License</a>
 </sub>
 
