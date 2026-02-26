@@ -67,6 +67,8 @@ namespace LLMUnity
     public class LLMAdvancedAttribute : AdvancedAttribute {}
     public class ModelAdvancedAttribute : AdvancedAttribute {}
     public class ChatAdvancedAttribute : AdvancedAttribute {}
+    public class Overflow1Attribute : PropertyAttribute {}
+    public class Overflow2Attribute : PropertyAttribute {}
 
 
     public class LLMUnityException : Exception

@@ -24,7 +24,7 @@ namespace LLMUnity
             return GUILayout.Button(text, style, GUILayout.Width(buttonWidth));
         }
 
-        public virtual void AddSetupExtras() {}
+        public virtual void AddSetupExtras(SerializedObject llmScriptSO) {}
 
         public virtual void AddSetupSettings(SerializedObject llmScriptSO)
         {
@@ -37,7 +37,7 @@ namespace LLMUnity
                 attributeClasses.Add(typeof(LLMAdvancedAttribute));
             }
             ShowPropertiesOfClass("Setup Settings", llmScriptSO, attributeClasses, false);
-            AddSetupExtras();
+            AddSetupExtras(llmScriptSO);
             Space();
         }
 
