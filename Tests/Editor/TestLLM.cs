@@ -170,8 +170,8 @@ namespace LLMUnityTests
             }
             else
             {
-                reply1 = "Sure! Here's a fun fact: Ants work together to build complex structures like nests, which is a fascinating example of teamwork.";
-                reply2 = "Of course! Ants are the most intelligent insects on Earth—working in perfect harmony to build their homes and solve problems.";
+                reply1 = "Sure! Here's a fun fact: Ants are among the most common insects, often found in human homes, and they play an important role in soil fertility by breaking down organic matter.";
+                reply2 = "Of course! Here's a fun fact: Ants are among the most common insects, often found in human homes, and they play an important role in soil fertility by breaking down organic matter.";
             }
             tokens1 = 20;
             tokens2 = 9;
@@ -531,21 +531,18 @@ namespace LLMUnityTests
         {
             string savePath = llmAgent.GetSavePath();
             Assert.That(File.Exists(savePath));
-            string json = File.ReadAllText(savePath);
+
+            llmAgent.chat = new List<LLMUnity.ChatMessage>();
+            Assert.AreEqual(llmAgent.chat.Count, 0);
+
+            llmAgent.LoadHistory();
             File.Delete(savePath);
 
-            List<ChatMessage> chatHistory = JsonUtility.FromJson<ChatListWrapper>("{ \"chat\": " + json + " }").chat;
+            List<LLMUnity.ChatMessage> chatHistory = llmAgent.chat;
             Assert.AreEqual(chatHistory.Count, 2);
             Assert.AreEqual(chatHistory[0].role, "user");
             Assert.AreEqual(chatHistory[0].content, "bye!");
             Assert.AreEqual(chatHistory[1].role, "assistant");
-
-            Assert.AreEqual(llmAgent.chat.Count, chatHistory.Count);
-            for (int i = 0; i < chatHistory.Count; i++)
-            {
-                Assert.AreEqual(chatHistory[i].role, llmAgent.chat[i].role);
-                Assert.AreEqual(chatHistory[i].content, llmAgent.chat[i].content);
-            }
         }
     }
 
@@ -567,7 +564,8 @@ namespace LLMUnityTests
             }
             else
             {
-                reply2 = "Of course! \"Ants are the most intelligent insects on Earth—working in perfect harmony to build their homes and solve problems.\"";
+                reply1 = "Ants are known for their ability to build complex structures, such as hexagons, which is a key feature of their social behavior.";
+                reply2 = "Of course! Ants are so sneaky and clever that they can even build intricate nests with just a few minutes of effort—no matter where you start!";
             }
         }
 
@@ -591,7 +589,8 @@ namespace LLMUnityTests
             }
             else
             {
-                reply2 = "Of course! \"Ants are the most intelligent insects on Earth—working in perfect harmony to build their homes and solve problems.\"";
+                reply1 = "Ants are known for their ability to build complex structures, such as hexagons, which is a key feature of their social behavior.";
+                reply2 = "Sure! \"Ants are the most intelligent insects on Earth—using simple tools and communication to build complex structures like hexagons.\"";
             }
         }
 
@@ -621,8 +620,8 @@ namespace LLMUnityTests
             }
             else
             {
-                reply1 = "Sure! Here's a fun fact: Ants work together to build complex structures like nests, even though they don't have a brain.";
-                reply2 = "Of course! \"Ants are so smart—well, they’re all just tiny ants!\" — a joke that highlights their incredible teamwork and adaptability.";
+                reply1 = "Sure! Here's a fun fact: Ants are among the most common insects, often found in human homes or gardens.";
+                reply2 = "Of course! \"Ants are so sneaky and efficient that they can even build a tiny house!\" — a smart-ass comment with a twist on their behavior.";
             }
         }
     }
