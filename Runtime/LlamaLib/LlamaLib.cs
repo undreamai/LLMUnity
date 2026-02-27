@@ -645,7 +645,7 @@ namespace UndreamAI.LlamaLib
         private List<IntPtr> dependencyHandles = new List<IntPtr>();
         private static int debugLevelGlobal = 0;
         private static CharArrayCallback loggingCallbackGlobal = null;
-        private string[] availableLibraries = null;
+        private List<Tuple<string, bool>> availableLibraries = null;
         private int currentLibraryIndex = 0;
 
         // Runtime lib
@@ -778,12 +778,20 @@ namespace UndreamAI.LlamaLib
 
         private void LoadLibraries(bool gpu)
         {
-            availableLibraries = GetAvailableArchitectures(gpu);
+            availableLibraries = new List<Tuple<string, bool>>();
+            bool[] arch_options = gpu ? new bool[] { true, false }: new bool[] { false };
+            foreach (bool arch_gpu in arch_options)
+            {
+                string[] archs = GetAvailableArchitectures(arch_gpu);
+                foreach (string arch in archs) availableLibraries.Add(new Tuple<string, bool>(arch, arch_gpu));
+            }
             currentLibraryIndex = -1;
 
             if (!TryNextLibrary())
             {
-                throw new InvalidOperationException($"Failed to load any library. Available libraries: {string.Join(", ", availableLibraries)}");
+                string libs = "";
+                foreach (Tuple<string, bool> arch in availableLibraries) libs += arch.Item1 + ", ";
+                throw new InvalidOperationException($"Failed to load any library. Available libraries: {libs.TrimEnd(',', ' ')}");
             }
         }
 
@@ -824,9 +832,9 @@ namespace UndreamAI.LlamaLib
                 libraryHandle = IntPtr.Zero;
             }
 
-            while (++currentLibraryIndex < availableLibraries.Length)
+            while (++currentLibraryIndex < availableLibraries.Count)
             {
-                string library = availableLibraries[currentLibraryIndex];
+                var (library, is_gpu_library) = availableLibraries[currentLibraryIndex];
                 try
                 {
                     string libraryPath = FindLibrary(library.Trim());
@@ -839,6 +847,8 @@ namespace UndreamAI.LlamaLib
                     libraryHandle = LibraryLoader.LoadLibrary(libraryPath);
 
                     LoadFunctionPointers();
+                    if (is_gpu_library && !LLMService_Supports_GPU()) continue;
+
                     architecture = library.Trim();
                     if (debugLevelGlobal > 0) Console.WriteLine("Successfully loaded: " + libraryPath);
                     return true;
@@ -885,6 +895,7 @@ namespace UndreamAI.LlamaLib
             LLM_Debug = LibraryLoader.GetSymbolDelegate<LLM_Debug_Delegate>(libraryHandle, "LLM_Debug");
             LLM_Logging_Callback = LibraryLoader.GetSymbolDelegate<LLM_Logging_Callback_Delegate>(libraryHandle, "LLM_Logging_Callback");
             LLM_Logging_Stop = LibraryLoader.GetSymbolDelegate<LLM_Logging_Stop_Delegate>(libraryHandle, "LLM_Logging_Stop");
+            LLMService_Supports_GPU = LibraryLoader.GetSymbolDelegate<LLMService_Supports_GPU_Delegate>(libraryHandle, "LLMService_Supports_GPU");
 
             LLM_Enable_Reasoning_Internal = LibraryLoader.GetSymbolDelegate<LLM_Enable_Reasoning_Delegate>(libraryHandle, "LLM_Enable_Reasoning");
             LLM_Apply_Template_Internal = LibraryLoader.GetSymbolDelegate<LLM_Apply_Template_Delegate>(libraryHandle, "LLM_Apply_Template");
@@ -950,9 +961,13 @@ namespace UndreamAI.LlamaLib
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void LLM_Logging_Stop_Delegate();
 
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate bool LLMService_Supports_GPU_Delegate();
+
         public LLM_Debug_Delegate LLM_Debug;
         public LLM_Logging_Callback_Delegate LLM_Logging_Callback;
         public LLM_Logging_Stop_Delegate LLM_Logging_Stop;
+        public LLMService_Supports_GPU_Delegate LLMService_Supports_GPU;
 
         public static void Debug(int debugLevel)
         {
