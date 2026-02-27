@@ -113,6 +113,8 @@ namespace LLMUnity
         public static string LLMUnityStore = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "LLMUnity");
         /// <summary> Model download path </summary>
         public static string modelDownloadPath = Path.Combine(LLMUnityStore, "models");
+        /// <summary> cache download path </summary>
+        public static string cacheDownloadPath = Path.Combine(LLMUnityStore, "cache");
         /// <summary> Path of file with build information for runtime </summary>
         public static string LLMManagerPath = GetAssetPath("LLMManager.json");
 
@@ -282,31 +284,33 @@ namespace LLMUnity
 
         public static async Task DownloadFile(
             string fileUrl, string savePath, bool overwrite = false,
-            Action<string> callback = null, Action<float> progressCallback = null
+            Action<string> callback = null, Action<float> progressCallback = null, bool debug = true
         )
         {
             if (File.Exists(savePath) && !overwrite)
             {
-                Log($"File already exists at: {savePath}");
+                if(debug) Log($"File already exists at: {savePath}");
             }
             else
             {
-                Log($"Downloading {fileUrl} to {savePath}...");
+                if(debug) Log($"Downloading {fileUrl} to {savePath}...");
                 string tmpPath = Path.Combine(Application.temporaryCachePath, Path.GetFileName(savePath));
 
                 ResumingWebClient client = new ResumingWebClient();
                 downloadClients[savePath] = client;
+                if (File.Exists(tmpPath) && overwrite) File.Delete(tmpPath);
                 await client.DownloadFileTaskAsyncResume(new Uri(fileUrl), tmpPath, !overwrite, progressCallback);
                 downloadClients.Remove(savePath);
 #if UNITY_EDITOR
                 AssetDatabase.StartAssetEditing();
 #endif
                 Directory.CreateDirectory(Path.GetDirectoryName(savePath));
+                if (File.Exists(savePath)) File.Delete(savePath);
                 File.Move(tmpPath, savePath);
 #if UNITY_EDITOR
                 AssetDatabase.StopAssetEditing();
 #endif
-                Log($"Download complete!");
+                if(debug) Log($"Download complete!");
             }
 
             progressCallback?.Invoke(1f);
@@ -452,18 +456,43 @@ namespace LLMUnity
         static async Task DownloadAndExtractInsideDirectory(string url, string path, string setupDir)
         {
             string urlName = Path.GetFileName(url);
+            string zipPath = Path.Combine(cacheDownloadPath, urlName);
             string setupFile = Path.Combine(setupDir, urlName + ".complete");
             if (File.Exists(setupFile)) return;
 
-            string zipPath = Path.Combine(Application.temporaryCachePath, urlName);
-            await DownloadFile(url, zipPath, true, null, SetLibraryProgress);
+            Directory.CreateDirectory(cacheDownloadPath);
+            foreach (string existingZipPath in Directory.GetFiles(cacheDownloadPath, "*.zip"))
+            {
+                if (existingZipPath != zipPath)
+                {
+                    Debug.Log(existingZipPath);
+                    File.Delete(existingZipPath);
+                }
+            }
+
+            string hashurl = url + ".sha256";
+            string hashPath = zipPath + ".sha256";
+            string hash = File.Exists(hashPath)? File.ReadAllText(hashPath).Trim() : "";
+            bool same_hash = false;
+            try
+            {
+                new ResumingWebClient().GetURLFileSize(hashurl); // avoid showing error if url doesn't exist
+                await DownloadFile(hashurl, hashPath+".new", debug: false);
+                same_hash = File.ReadAllText(hashPath+".new").Trim() == hash;
+            } catch {}
+
+            if (!File.Exists(zipPath) || !same_hash)  await DownloadFile(url, zipPath, true, null, SetLibraryProgress);
 
             AssetDatabase.StartAssetEditing();
             ExtractInsideDirectory(zipPath, path, $"{libraryName}/runtimes/");
             CreateEmptyFile(setupFile);
             AssetDatabase.StopAssetEditing();
 
-            File.Delete(zipPath);
+            if (File.Exists(hashPath+".new"))
+            {
+                if (File.Exists(hashPath)) File.Delete(hashPath);
+                File.Move(hashPath+".new", hashPath);
+            }
         }
 
         static void DeleteEarlierVersions()
