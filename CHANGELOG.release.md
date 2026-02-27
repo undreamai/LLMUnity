@@ -1,9 +1,8 @@
 ### 🚀 Features
 
-- add Unity.Nuget.Newtonsoft-Json in the assembly definition (PR: #379)
-- Update LlamaLib to v2.0.2 (llama.cpp b7777) (PR: #380)
+- cache LlamaLib to prevent re-downloads (PR: #386)
 
 ### 🐛 Fixes
 
-- fix running in Editor with Android/iOS platform selected (PR: #378)
+- Ensure macOS build includes the required runtime library (PR: #382)
 

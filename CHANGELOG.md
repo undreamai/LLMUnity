@@ -1,3 +1,13 @@
+## v3.0.2
+#### 🚀 Features
+
+- cache LlamaLib to prevent re-downloads (PR: #386)
+
+#### 🐛 Fixes
+
+- Ensure macOS build includes the required runtime library (PR: #382)
+
+
 ## v3.0.1
 #### 🚀 Features
 
