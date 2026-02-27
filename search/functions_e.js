@@ -21,10 +21,11 @@ var searchData=
   ['setsearch_18',['SetSearch',['../classLLMUnity_1_1SearchPlugin.html#a426debdeb4996340915d053479c99f05',1,'LLMUnity::SearchPlugin']]],
   ['setsslcertfromfile_19',['SetSSLCertFromFile',['../classLLMUnity_1_1LLM.html#a926287808c0f892e0c0e1a911e0a0a0f',1,'LLMUnity::LLM']]],
   ['setsslkeyfromfile_20',['SetSSLKeyFromFile',['../classLLMUnity_1_1LLM.html#aceb0539e1da36837498b62efae908e20',1,'LLMUnity::LLM']]],
-  ['setup_21',['Setup',['../classLLMUnity_1_1LLMManager.html#a685beeeaaea04e8d22e25206da055224',1,'LLMUnity::LLMManager']]],
-  ['setuponce_22',['SetupOnce',['../classLLMUnity_1_1LLMManager.html#ade50d9ef22b0d72c9a20c9399089bc35',1,'LLMUnity::LLMManager']]],
-  ['seturl_23',['SetURL',['../classLLMUnity_1_1LLMManager.html#a8ca621896e13bac2da3ce9100591847a',1,'LLMUnity.LLMManager.SetURL(string filename, string url)'],['../classLLMUnity_1_1LLMManager.html#af198a425cde4753e9d530ce41d41f3de',1,'LLMUnity.LLMManager.SetURL(ModelEntry entry, string url)']]],
-  ['setweight_24',['SetWeight',['../classLLMUnity_1_1LoraManager.html#a5eb7c712a8a74a8d81d312ec94fa4705',1,'LLMUnity::LoraManager']]],
-  ['split_25',['Split',['../classLLMUnity_1_1Chunking.html#a1f6826e0f1281b84e74d919e63d9d421',1,'LLMUnity.Chunking.Split()'],['../classLLMUnity_1_1SentenceSplitter.html#a695bf225a1e2949ac7007104bf1dfde2',1,'LLMUnity.SentenceSplitter.Split()'],['../classLLMUnity_1_1TokenSplitter.html#a5e907de08301cfc16c65cc4e82283648',1,'LLMUnity.TokenSplitter.Split()'],['../classLLMUnity_1_1WordSplitter.html#aef3ccf8d9064bc7a725e8278cb62ffc8',1,'LLMUnity.WordSplitter.Split()']]],
-  ['start_26',['Start',['../classLLMUnity_1_1LLMClient.html#ae43e4a2934e007a6be12bf59f23bea96',1,'LLMUnity::LLMClient']]]
+  ['setsummary_21',['SetSummary',['../classLLMUnity_1_1LLMAgent.html#a26af8c6d4a518e4db84076f43b4cc02f',1,'LLMUnity::LLMAgent']]],
+  ['setup_22',['Setup',['../classLLMUnity_1_1LLMManager.html#a685beeeaaea04e8d22e25206da055224',1,'LLMUnity::LLMManager']]],
+  ['setuponce_23',['SetupOnce',['../classLLMUnity_1_1LLMManager.html#ade50d9ef22b0d72c9a20c9399089bc35',1,'LLMUnity::LLMManager']]],
+  ['seturl_24',['SetURL',['../classLLMUnity_1_1LLMManager.html#a8ca621896e13bac2da3ce9100591847a',1,'LLMUnity.LLMManager.SetURL(string filename, string url)'],['../classLLMUnity_1_1LLMManager.html#af198a425cde4753e9d530ce41d41f3de',1,'LLMUnity.LLMManager.SetURL(ModelEntry entry, string url)']]],
+  ['setweight_25',['SetWeight',['../classLLMUnity_1_1LoraManager.html#a5eb7c712a8a74a8d81d312ec94fa4705',1,'LLMUnity::LoraManager']]],
+  ['split_26',['Split',['../classLLMUnity_1_1Chunking.html#a1f6826e0f1281b84e74d919e63d9d421',1,'LLMUnity.Chunking.Split()'],['../classLLMUnity_1_1SentenceSplitter.html#a695bf225a1e2949ac7007104bf1dfde2',1,'LLMUnity.SentenceSplitter.Split()'],['../classLLMUnity_1_1TokenSplitter.html#a5e907de08301cfc16c65cc4e82283648',1,'LLMUnity.TokenSplitter.Split()'],['../classLLMUnity_1_1WordSplitter.html#aef3ccf8d9064bc7a725e8278cb62ffc8',1,'LLMUnity.WordSplitter.Split()']]],
+  ['start_27',['Start',['../classLLMUnity_1_1LLMClient.html#ae43e4a2934e007a6be12bf59f23bea96',1,'LLMUnity::LLMClient']]]
 ];

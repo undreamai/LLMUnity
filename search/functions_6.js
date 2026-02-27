@@ -9,6 +9,7 @@ var searchData=
   ['getloras_6',['GetLoras',['../classLLMUnity_1_1LoraManager.html#acf13f736caebcfce500cca6ecfa90b24',1,'LLMUnity::LoraManager']]],
   ['getsavepath_7',['GetSavePath',['../classLLMUnity_1_1LLMAgent.html#a9b93131da925c0aebbd29e8dc4fa63f1',1,'LLMUnity::LLMAgent']]],
   ['getstringfield_8',['GetStringField',['../classLLMUnity_1_1GGUFReader.html#ad2355ac7292bda7f4e2168ada895c6d9',1,'LLMUnity::GGUFReader']]],
-  ['getweights_9',['GetWeights',['../classLLMUnity_1_1LoraManager.html#a10719b4c70a12180a611f8a0fd02abb1',1,'LLMUnity::LoraManager']]],
-  ['ggufreader_10',['GGUFReader',['../classLLMUnity_1_1GGUFReader.html#a6373fc9f2577137c2e7f1e05b0e20d92',1,'LLMUnity::GGUFReader']]]
+  ['getsummary_9',['GetSummary',['../classLLMUnity_1_1LLMAgent.html#aff198ef719698e0178c3c38e7a72f5c3',1,'LLMUnity::LLMAgent']]],
+  ['getweights_10',['GetWeights',['../classLLMUnity_1_1LoraManager.html#a10719b4c70a12180a611f8a0fd02abb1',1,'LLMUnity::LoraManager']]],
+  ['ggufreader_11',['GGUFReader',['../classLLMUnity_1_1GGUFReader.html#a6373fc9f2577137c2e7f1e05b0e20d92',1,'LLMUnity::GGUFReader']]]
 ];

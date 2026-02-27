@@ -47,7 +47,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_tiny.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">LLM for Unity
-   &#160;<span id="projectnumber">v3.0.1</span>
+   &#160;<span id="projectnumber">v3.0.2</span>
    </div>
    <div id="projectbrief">Create characters in Unity with LLMs!</div>
   </td>
@@ -146,6 +146,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:af619217340b1ea39bb293b6fa076b338" id="r_af619217340b1ea39bb293b6fa076b338"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#af15c658be5e7e997e468a8660370e950">virtual</a> <a class="el" href="#af15c658be5e7e997e468a8660370e950">async</a> <a class="el" href="#af15c658be5e7e997e468a8660370e950">Task</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af619217340b1ea39bb293b6fa076b338">AddAssistantMessage</a> (string <a class="el" href="#af15c658be5e7e997e468a8660370e950">content</a>)</td></tr>
 <tr class="memdesc:af619217340b1ea39bb293b6fa076b338"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds an AI assistant message to the conversation history.  <br /></td></tr>
 <tr class="separator:af619217340b1ea39bb293b6fa076b338"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aff198ef719698e0178c3c38e7a72f5c3" id="r_aff198ef719698e0178c3c38e7a72f5c3"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aff198ef719698e0178c3c38e7a72f5c3">GetSummary</a> ()</td></tr>
+<tr class="memdesc:aff198ef719698e0178c3c38e7a72f5c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current rolling summary produced by the Summarize overflow strategy. Empty string if no summary has been generated yet.  <br /></td></tr>
+<tr class="separator:aff198ef719698e0178c3c38e7a72f5c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a26af8c6d4a518e4db84076f43b4cc02f" id="r_a26af8c6d4a518e4db84076f43b4cc02f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#af15c658be5e7e997e468a8660370e950">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a26af8c6d4a518e4db84076f43b4cc02f">SetSummary</a> (string <a class="el" href="#af15c658be5e7e997e468a8660370e950">summary</a>)</td></tr>
+<tr class="memdesc:a26af8c6d4a518e4db84076f43b4cc02f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Overrides the rolling summary directly, e.g. to restore custom state.  <br /></td></tr>
+<tr class="separator:a26af8c6d4a518e4db84076f43b4cc02f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae6c59733400df0e8ab289a91e23eb2ef" id="r_ae6c59733400df0e8ab289a91e23eb2ef"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#af15c658be5e7e997e468a8660370e950">virtual</a> <a class="el" href="#af15c658be5e7e997e468a8660370e950">async</a> <a class="el" href="#af15c658be5e7e997e468a8660370e950">Task</a>&lt; string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae6c59733400df0e8ab289a91e23eb2ef">Chat</a> (string <a class="el" href="#af15c658be5e7e997e468a8660370e950">query</a>, <a class="el" href="#af15c658be5e7e997e468a8660370e950">Action</a>&lt; string &gt; <a class="el" href="#af15c658be5e7e997e468a8660370e950">callback</a>=<a class="el" href="#af15c658be5e7e997e468a8660370e950">null</a>, <a class="el" href="#af15c658be5e7e997e468a8660370e950">Action</a> <a class="el" href="#af15c658be5e7e997e468a8660370e950">completionCallback</a>=<a class="el" href="#af15c658be5e7e997e468a8660370e950">null</a>, <a class="el" href="#af15c658be5e7e997e468a8660370e950">bool</a> <a class="el" href="#af15c658be5e7e997e468a8660370e950">addToHistory</a>=<a class="el" href="#af15c658be5e7e997e468a8660370e950">true</a>)</td></tr>
 <tr class="memdesc:ae6c59733400df0e8ab289a91e23eb2ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Processes a user query asynchronously and generates an AI response using conversation context. The query and response are automatically added to chat history if specified.  <br /></td></tr>
 <tr class="separator:ae6c59733400df0e8ab289a91e23eb2ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -201,6 +207,15 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a6f5bc81ba877e66c15b2a86ed7ed59a9" id="r_a6f5bc81ba877e66c15b2a86ed7ed59a9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#af15c658be5e7e997e468a8660370e950">bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6f5bc81ba877e66c15b2a86ed7ed59a9">debugPrompt</a> = <a class="el" href="#af15c658be5e7e997e468a8660370e950">false</a></td></tr>
 <tr class="memdesc:a6f5bc81ba877e66c15b2a86ed7ed59a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Debug LLM prompts.  <br /></td></tr>
 <tr class="separator:a6f5bc81ba877e66c15b2a86ed7ed59a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a65f635195e91eb9913b2ea2237f5eef2" id="r_a65f635195e91eb9913b2ea2237f5eef2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#af15c658be5e7e997e468a8660370e950">ContextOverflowStrategy</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a65f635195e91eb9913b2ea2237f5eef2">overflowStrategy</a> = ContextOverflowStrategy.Truncate</td></tr>
+<tr class="memdesc:a65f635195e91eb9913b2ea2237f5eef2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Strategy to apply when the conversation history exceeds the model's context window.  <br /></td></tr>
+<tr class="separator:a65f635195e91eb9913b2ea2237f5eef2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae958c5c1da2155246a568861dfa1a4e5" id="r_ae958c5c1da2155246a568861dfa1a4e5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#af15c658be5e7e997e468a8660370e950">float</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae958c5c1da2155246a568861dfa1a4e5">overflowTargetRatio</a> = 0.5<a class="el" href="#af15c658be5e7e997e468a8660370e950">f</a></td></tr>
+<tr class="memdesc:ae958c5c1da2155246a568861dfa1a4e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Target fraction of the context window to fill after truncation or summarization (0.0–1.0)  <br /></td></tr>
+<tr class="separator:ae958c5c1da2155246a568861dfa1a4e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8d38f3d5f46369d614031427f076e02c" id="r_a8d38f3d5f46369d614031427f076e02c"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8d38f3d5f46369d614031427f076e02c">overflowSummarizePrompt</a> = &quot;&quot;</td></tr>
+<tr class="memdesc:a8d38f3d5f46369d614031427f076e02c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Custom prompt used when asking the LLM to summarize history (leave empty for default)  <br /></td></tr>
+<tr class="separator:a8d38f3d5f46369d614031427f076e02c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_attribs_classLLMUnity_1_1LLMClient"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_attribs_classLLMUnity_1_1LLMClient')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="classLLMUnity_1_1LLMClient.html">LLMUnity.LLMClient</a></td></tr>
 <tr class="memitem:aa537432840ec57946208d48c4369236e inherit pub_attribs_classLLMUnity_1_1LLMClient" id="r_aa537432840ec57946208d48c4369236e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLLMUnity_1_1LLMClient.html#aa537432840ec57946208d48c4369236e">advancedOptions</a> = false</td></tr>
 <tr class="memdesc:aa537432840ec57946208d48c4369236e inherit pub_attribs_classLLMUnity_1_1LLMClient"><td class="mdescLeft">&#160;</td><td class="mdescRight">Show/hide advanced options in the inspector.  <br /></td></tr>
@@ -327,7 +342,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMAgent_8cs_source.html#l00209">209</a> of file <a class="el" href="LLMAgent_8cs_source.html">LLMAgent.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMAgent_8cs_source.html#l00226">226</a> of file <a class="el" href="LLMAgent_8cs_source.html">LLMAgent.cs</a>.</p>
 
 </div>
 </div>
@@ -362,7 +377,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMAgent_8cs_source.html#l00199">199</a> of file <a class="el" href="LLMAgent_8cs_source.html">LLMAgent.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMAgent_8cs_source.html#l00216">216</a> of file <a class="el" href="LLMAgent_8cs_source.html">LLMAgent.cs</a>.</p>
 
 </div>
 </div>
@@ -393,7 +408,7 @@ Properties</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="classLLMUnity_1_1LLMClient.html#ad81a06d4f1f5a70bd53ab1ec94bb273d">LLMUnity.LLMClient</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="LLMAgent_8cs_source.html#l00100">100</a> of file <a class="el" href="LLMAgent_8cs_source.html">LLMAgent.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMAgent_8cs_source.html#l00112">112</a> of file <a class="el" href="LLMAgent_8cs_source.html">LLMAgent.cs</a>.</p>
 
 </div>
 </div>
@@ -422,7 +437,7 @@ Properties</h2></td></tr>
 
 <p>Cancels any active requests for this agent. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMAgent_8cs_source.html#l00374">374</a> of file <a class="el" href="LLMAgent_8cs_source.html">LLMAgent.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMAgent_8cs_source.html#l00408">408</a> of file <a class="el" href="LLMAgent_8cs_source.html">LLMAgent.cs</a>.</p>
 
 </div>
 </div>
@@ -475,7 +490,7 @@ Properties</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Task that returns the AI assistant's response</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMAgent_8cs_source.html#l00235">235</a> of file <a class="el" href="LLMAgent_8cs_source.html">LLMAgent.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMAgent_8cs_source.html#l00269">269</a> of file <a class="el" href="LLMAgent_8cs_source.html">LLMAgent.cs</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -509,7 +524,7 @@ Here is the caller graph for this function:</div>
 
 <p>Clears the entire conversation history. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMAgent_8cs_source.html#l00189">189</a> of file <a class="el" href="LLMAgent_8cs_source.html">LLMAgent.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMAgent_8cs_source.html#l00206">206</a> of file <a class="el" href="LLMAgent_8cs_source.html">LLMAgent.cs</a>.</p>
 
 </div>
 </div>
@@ -539,12 +554,41 @@ Here is the caller graph for this function:</div>
 <p>Gets the full path for a file in the persistent data directory. </p>
 <dl class="section return"><dt>Returns</dt><dd>Full file path in persistent data directory</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMAgent_8cs_source.html#l00172">172</a> of file <a class="el" href="LLMAgent_8cs_source.html">LLMAgent.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMAgent_8cs_source.html#l00189">189</a> of file <a class="el" href="LLMAgent_8cs_source.html">LLMAgent.cs</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><iframe scrolling="no" frameborder="0" src="classLLMUnity_1_1LLMAgent_a9b93131da925c0aebbd29e8dc4fa63f1_icgraph.svg" width="1012" height="86"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
+
+</div>
+</div>
+<a id="aff198ef719698e0178c3c38e7a72f5c3" name="aff198ef719698e0178c3c38e7a72f5c3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aff198ef719698e0178c3c38e7a72f5c3">&#9670;&#160;</a></span>GetSummary()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">string LLMUnity.LLMAgent.GetSummary </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns the current rolling summary produced by the Summarize overflow strategy. Empty string if no summary has been generated yet. </p>
+
+<p class="definition">Definition at line <a class="el" href="LLMAgent_8cs_source.html#l00236">236</a> of file <a class="el" href="LLMAgent_8cs_source.html">LLMAgent.cs</a>.</p>
 
 </div>
 </div>
@@ -573,7 +617,7 @@ Here is the caller graph for this function:</div>
 
 <p>Loads conversation history and optionally the LLM cache from disk. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMAgent_8cs_source.html#l00341">341</a> of file <a class="el" href="LLMAgent_8cs_source.html">LLMAgent.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMAgent_8cs_source.html#l00375">375</a> of file <a class="el" href="LLMAgent_8cs_source.html">LLMAgent.cs</a>.</p>
 
 </div>
 </div>
@@ -602,12 +646,41 @@ Here is the caller graph for this function:</div>
 
 <p>Saves the conversation history and optionally the LLM cache to disk. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMAgent_8cs_source.html#l00309">309</a> of file <a class="el" href="LLMAgent_8cs_source.html">LLMAgent.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMAgent_8cs_source.html#l00343">343</a> of file <a class="el" href="LLMAgent_8cs_source.html">LLMAgent.cs</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><iframe scrolling="no" frameborder="0" src="classLLMUnity_1_1LLMAgent_a645e508151519ce876ca14b3284c09bd_icgraph.svg" width="728" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
+
+</div>
+</div>
+<a id="a26af8c6d4a518e4db84076f43b4cc02f" name="a26af8c6d4a518e4db84076f43b4cc02f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a26af8c6d4a518e4db84076f43b4cc02f">&#9670;&#160;</a></span>SetSummary()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#af15c658be5e7e997e468a8660370e950">void</a> LLMUnity.LLMAgent.SetSummary </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>summary</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Overrides the rolling summary directly, e.g. to restore custom state. </p>
+
+<p class="definition">Definition at line <a class="el" href="LLMAgent_8cs_source.html#l00244">244</a> of file <a class="el" href="LLMAgent_8cs_source.html">LLMAgent.cs</a>.</p>
 
 </div>
 </div>
@@ -643,7 +716,7 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Task that completes when warmup finishes</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMAgent_8cs_source.html#l00274">274</a> of file <a class="el" href="LLMAgent_8cs_source.html">LLMAgent.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMAgent_8cs_source.html#l00308">308</a> of file <a class="el" href="LLMAgent_8cs_source.html">LLMAgent.cs</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -689,7 +762,7 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Task that completes when warmup finishes</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMAgent_8cs_source.html#l00286">286</a> of file <a class="el" href="LLMAgent_8cs_source.html">LLMAgent.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMAgent_8cs_source.html#l00320">320</a> of file <a class="el" href="LLMAgent_8cs_source.html">LLMAgent.cs</a>.</p>
 
 </div>
 </div>
@@ -709,6 +782,60 @@ Here is the caller graph for this function:</div>
 <p>Debug LLM prompts. </p>
 
 <p class="definition">Definition at line <a class="el" href="LLMAgent_8cs_source.html#l00029">29</a> of file <a class="el" href="LLMAgent_8cs_source.html">LLMAgent.cs</a>.</p>
+
+</div>
+</div>
+<a id="a65f635195e91eb9913b2ea2237f5eef2" name="a65f635195e91eb9913b2ea2237f5eef2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a65f635195e91eb9913b2ea2237f5eef2">&#9670;&#160;</a></span>overflowStrategy</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#af15c658be5e7e997e468a8660370e950">ContextOverflowStrategy</a> LLMUnity.LLMAgent.overflowStrategy = ContextOverflowStrategy.Truncate</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Strategy to apply when the conversation history exceeds the model's context window. </p>
+
+<p class="definition">Definition at line <a class="el" href="LLMAgent_8cs_source.html#l00033">33</a> of file <a class="el" href="LLMAgent_8cs_source.html">LLMAgent.cs</a>.</p>
+
+</div>
+</div>
+<a id="a8d38f3d5f46369d614031427f076e02c" name="a8d38f3d5f46369d614031427f076e02c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8d38f3d5f46369d614031427f076e02c">&#9670;&#160;</a></span>overflowSummarizePrompt</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string LLMUnity.LLMAgent.overflowSummarizePrompt = &quot;&quot;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Custom prompt used when asking the LLM to summarize history (leave empty for default) </p>
+
+<p class="definition">Definition at line <a class="el" href="LLMAgent_8cs_source.html#l00041">41</a> of file <a class="el" href="LLMAgent_8cs_source.html">LLMAgent.cs</a>.</p>
+
+</div>
+</div>
+<a id="ae958c5c1da2155246a568861dfa1a4e5" name="ae958c5c1da2155246a568861dfa1a4e5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae958c5c1da2155246a568861dfa1a4e5">&#9670;&#160;</a></span>overflowTargetRatio</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#af15c658be5e7e997e468a8660370e950">float</a> LLMUnity.LLMAgent.overflowTargetRatio = 0.5<a class="el" href="#af15c658be5e7e997e468a8660370e950">f</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Target fraction of the context window to fill after truncation or summarization (0.0–1.0) </p>
+
+<p class="definition">Definition at line <a class="el" href="LLMAgent_8cs_source.html#l00037">37</a> of file <a class="el" href="LLMAgent_8cs_source.html">LLMAgent.cs</a>.</p>
 
 </div>
 </div>
@@ -753,7 +880,7 @@ Here is the caller graph for this function:</div>
 
 <p>Current conversation history as a list of chat messages. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMAgent_8cs_source.html#l00074">74</a> of file <a class="el" href="LLMAgent_8cs_source.html">LLMAgent.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMAgent_8cs_source.html#l00086">86</a> of file <a class="el" href="LLMAgent_8cs_source.html">LLMAgent.cs</a>.</p>
 
 </div>
 </div>
@@ -779,7 +906,7 @@ Here is the caller graph for this function:</div>
 
 <p>The underlying LLMAgent instance from LlamaLib. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMAgent_8cs_source.html#l00071">71</a> of file <a class="el" href="LLMAgent_8cs_source.html">LLMAgent.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMAgent_8cs_source.html#l00083">83</a> of file <a class="el" href="LLMAgent_8cs_source.html">LLMAgent.cs</a>.</p>
 
 </div>
 </div>
@@ -805,7 +932,7 @@ Here is the caller graph for this function:</div>
 
 <p>Server slot ID for this agent's requests. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMAgent_8cs_source.html#l00043">43</a> of file <a class="el" href="LLMAgent_8cs_source.html">LLMAgent.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMAgent_8cs_source.html#l00055">55</a> of file <a class="el" href="LLMAgent_8cs_source.html">LLMAgent.cs</a>.</p>
 
 </div>
 </div>
@@ -831,7 +958,7 @@ Here is the caller graph for this function:</div>
 
 <p>System prompt defining the agent's behavior and personality. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMAgent_8cs_source.html#l00057">57</a> of file <a class="el" href="LLMAgent_8cs_source.html">LLMAgent.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMAgent_8cs_source.html#l00069">69</a> of file <a class="el" href="LLMAgent_8cs_source.html">LLMAgent.cs</a>.</p>
 
 </div>
 </div>

@@ -11,11 +11,12 @@ var searchData=
   ['getloras_8',['GetLoras',['../classLLMUnity_1_1LoraManager.html#acf13f736caebcfce500cca6ecfa90b24',1,'LLMUnity::LoraManager']]],
   ['getsavepath_9',['GetSavePath',['../classLLMUnity_1_1LLMAgent.html#a9b93131da925c0aebbd29e8dc4fa63f1',1,'LLMUnity::LLMAgent']]],
   ['getstringfield_10',['GetStringField',['../classLLMUnity_1_1GGUFReader.html#ad2355ac7292bda7f4e2168ada895c6d9',1,'LLMUnity::GGUFReader']]],
-  ['getweights_11',['GetWeights',['../classLLMUnity_1_1LoraManager.html#a10719b4c70a12180a611f8a0fd02abb1',1,'LLMUnity::LoraManager']]],
-  ['gguf_12',['Gguf',['../md_Third_01Party_01Notices.html#autotoc_md27',1,'microsoft/Phi-3-mini-4k-instruct-gguf'],['../md_Third_01Party_01Notices.html#autotoc_md33',1,'modified by: CompendiumLabs/bge-base-en-v1.5-gguf'],['../md_Third_01Party_01Notices.html#autotoc_md31',1,'modified by: CompendiumLabs/bge-large-en-v1.5-gguf'],['../md_Third_01Party_01Notices.html#autotoc_md35',1,'modified by: CompendiumLabs/bge-small-en-v1.5-gguf']]],
-  ['gguf_13',['GGUF',['../md_Third_01Party_01Notices.html#autotoc_md37',1,'modified by: leliuga/all-MiniLM-L12-v2-GGUF'],['../md_Third_01Party_01Notices.html#autotoc_md29',1,'Qwen/Qwen2-0.5B-Instruct-GGUF']]],
-  ['ggufreader_14',['GGUFReader',['../classLLMUnity_1_1GGUFReader.html',1,'LLMUnity.GGUFReader'],['../classLLMUnity_1_1GGUFReader.html#a6373fc9f2577137c2e7f1e05b0e20d92',1,'LLMUnity.GGUFReader.GGUFReader()']]],
-  ['glance_15',['At a glance',['../index.html#autotoc_md1',1,'']]],
-  ['google_20gemma_202_209b_20it_16',['google/gemma-2-9b-it',['../md_Third_01Party_01Notices.html#autotoc_md25',1,'']]],
-  ['grammar_17',['grammar',['../classLLMUnity_1_1LLMClient.html#a8028c567bfea1e66c7107ea3cae43bab',1,'LLMUnity::LLMClient']]]
+  ['getsummary_11',['GetSummary',['../classLLMUnity_1_1LLMAgent.html#aff198ef719698e0178c3c38e7a72f5c3',1,'LLMUnity::LLMAgent']]],
+  ['getweights_12',['GetWeights',['../classLLMUnity_1_1LoraManager.html#a10719b4c70a12180a611f8a0fd02abb1',1,'LLMUnity::LoraManager']]],
+  ['gguf_13',['Gguf',['../md_Third_01Party_01Notices.html#autotoc_md27',1,'microsoft/Phi-3-mini-4k-instruct-gguf'],['../md_Third_01Party_01Notices.html#autotoc_md33',1,'modified by: CompendiumLabs/bge-base-en-v1.5-gguf'],['../md_Third_01Party_01Notices.html#autotoc_md31',1,'modified by: CompendiumLabs/bge-large-en-v1.5-gguf'],['../md_Third_01Party_01Notices.html#autotoc_md35',1,'modified by: CompendiumLabs/bge-small-en-v1.5-gguf']]],
+  ['gguf_14',['GGUF',['../md_Third_01Party_01Notices.html#autotoc_md37',1,'modified by: leliuga/all-MiniLM-L12-v2-GGUF'],['../md_Third_01Party_01Notices.html#autotoc_md29',1,'Qwen/Qwen2-0.5B-Instruct-GGUF']]],
+  ['ggufreader_15',['GGUFReader',['../classLLMUnity_1_1GGUFReader.html',1,'LLMUnity.GGUFReader'],['../classLLMUnity_1_1GGUFReader.html#a6373fc9f2577137c2e7f1e05b0e20d92',1,'LLMUnity.GGUFReader.GGUFReader()']]],
+  ['glance_16',['At a glance',['../index.html#autotoc_md1',1,'']]],
+  ['google_20gemma_202_209b_20it_17',['google/gemma-2-9b-it',['../md_Third_01Party_01Notices.html#autotoc_md25',1,'']]],
+  ['grammar_18',['grammar',['../classLLMUnity_1_1LLMClient.html#a8028c567bfea1e66c7107ea3cae43bab',1,'LLMUnity::LLMClient']]]
 ];

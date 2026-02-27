@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['quantization_0',['quantization',['../classLLMUnity_1_1DBSearch.html#a0d4c1098f52c3d512922f434553e2069',1,'LLMUnity::DBSearch']]]
+  ['presencepenalty_0',['presencePenalty',['../classLLMUnity_1_1LLMClient.html#ad344fd53a956d5b561944153b8fb013d',1,'LLMUnity::LLMClient']]]
 ];
