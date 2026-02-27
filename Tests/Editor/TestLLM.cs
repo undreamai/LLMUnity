@@ -166,7 +166,7 @@ namespace LLMUnityTests
             if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer)
             {
                 reply1 = "Ants are known for their ability to build complex social structures, which is a fascinating fun fact.";
-                reply2 = "Of course! Ants are so smart— they can even learn human language and build intricate nests!";
+                reply2 = "Of course! Ants are so smart—like a tiny version of humans—and they can even build houses made entirely of their own exoskeletons";
             }
             else
             {
@@ -560,7 +560,8 @@ namespace LLMUnityTests
             base.SetParameters();
             if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer)
             {
-                reply1 = "Sure! Here's a fun fact: Ants are among the most common insects, often found in human homes or gardens.";
+                reply1 = "Ants are known for their ability to build complex structures, such as hexagons, which is a key feature of their social behavior.";
+                reply2 = "Of course! Ants are so sneaky and clever that they can build intricate nests with just a few minutes of effort—no matter where you start!";
             }
             else
             {
@@ -584,8 +585,8 @@ namespace LLMUnityTests
             base.SetParameters();
             if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer)
             {
-                reply1 = "Sure! Here's a fun fact: Ants are among the most common insects, often found in human homes or gardens.";
-                reply2 = "Of course! \"Ants are so sneaky and efficient that they can even build their own nests!\"";
+                reply1 = "Ants are known for their ability to build complex structures, such as hexagons, which is a key feature of their social behavior";
+                reply2 = "Of course! Ants are so sneaky and clever that they can even build nests made of mud and chewed wood—no matter how hard or how small the nest is!";
             }
             else
             {
@@ -616,7 +617,7 @@ namespace LLMUnityTests
             if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer)
             {
                 reply1 = "Sure! Here's a fun fact: Ants are among the most common insects, often found in human homes or gardens.";
-                reply2 = "Of course! \"Ants are so sneaky and efficient that they can even build their own nests!\"";
+                reply2 = "Of course! Here’s a fun fact: Ants are so tiny that they can fit into the space between your fingers, but they’re actually super effective at building nests and keeping the soil alive.";
             }
             else
             {
