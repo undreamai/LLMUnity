@@ -751,10 +751,7 @@ namespace UndreamAI.LlamaLib
         private string[] GetAvailableArchitectures(bool gpu)
         {
             string architecturesString = Marshal.PtrToStringAnsi(Available_Architectures(gpu));
-            if (string.IsNullOrEmpty(architecturesString))
-            {
-                throw new InvalidOperationException("No architectures available for the specified GPU setting.");
-            }
+            if (string.IsNullOrEmpty(architecturesString)) return new string[0];
 
             string[] librariesOptions = architecturesString.Split(',');
             List<string> libraries = new List<string>();
