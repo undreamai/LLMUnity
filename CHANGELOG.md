@@ -1,3 +1,9 @@
+## v3.0.3
+#### 🚀 Features
+
+- Android GPU support with vulkan (PR: #390)
+
+
 ## v3.0.2
 #### 🚀 Features
 
