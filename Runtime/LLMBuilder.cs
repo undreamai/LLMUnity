@@ -267,7 +267,10 @@ namespace LLMUnity
             {
                 foreach (string platform in platforms)
                 {
-                    string source = Path.Combine(LLMUnitySetup.libraryPath, platform, "native",  $"libllamalib_{platform}.{MobileSuffix(buildTarget)}");
+                    string archFilename = $"libllamalib_{platform}.{MobileSuffix(buildTarget)}";
+                    if (buildTarget == BuildTarget.Android && LLMUnitySetup.AndroidVulkan)
+                        archFilename = $"libllamalib_{platform}-vulkan.{MobileSuffix(buildTarget)}";
+                    string source = Path.Combine(LLMUnitySetup.libraryPath, platform, "native", archFilename);
                     string target = MobilePluginPath(buildTarget, platform.Split("-")[1].ToUpper());
                     string pluginDir = PluginDir(buildTarget.ToString());
                     MoveAction(source, target);
