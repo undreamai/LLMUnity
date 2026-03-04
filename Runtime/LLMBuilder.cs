@@ -177,17 +177,6 @@ namespace LLMUnity
             AddTargetPair(target + ".meta");
         }
 
-        static string MobileSuffix(BuildTarget buildTarget)
-        {
-            return (buildTarget == BuildTarget.Android) ? "so" : "a";
-        }
-
-        static string MobilePluginPath(BuildTarget buildTarget, string arch, bool relative = false)
-        {
-            string os = buildTarget.ToString();
-            return Path.Combine(PluginDir(os, relative), arch, $"libllamalib_{os.ToLower()}.{MobileSuffix(buildTarget)}");
-        }
-
         /// <summary>
         /// Moves libraries in the correct place for building
         /// </summary>
@@ -267,11 +256,14 @@ namespace LLMUnity
             {
                 foreach (string platform in platforms)
                 {
-                    string source = Path.Combine(LLMUnitySetup.libraryPath, platform, "native",  $"libllamalib_{platform}.{MobileSuffix(buildTarget)}");
-                    string target = MobilePluginPath(buildTarget, platform.Split("-")[1].ToUpper());
+                    string arch = platform.Split("-")[1];
                     string pluginDir = PluginDir(buildTarget.ToString());
-                    MoveAction(source, target);
-                    MoveAction(source + ".meta", target + ".meta");
+                    string sourceDir = Path.Combine(LLMUnitySetup.libraryPath, platform, "native");
+                    foreach (string source in Directory.GetFiles(sourceDir))
+                    {
+                        string target = Path.Combine(pluginDir, arch.ToUpper(), Path.GetFileName(source).Replace("-" + arch, ""));
+                        MoveAction(source, target);
+                    }
                     AddActionAddMeta(pluginDir);
                 }
             }
@@ -290,17 +282,19 @@ namespace LLMUnity
                 foreach (string archDir in Directory.GetDirectories(platformDir))
                 {
                     string arch = Path.GetFileName(archDir);
-                    string pathToPlugin = Path.Combine("Assets", MobilePluginPath(buildTarget, arch, true));
-                    for (int i = 0; i < movedAssets.Length; i++)
+                    foreach (string pathToPlugin in Directory.GetFiles(archDir))
                     {
-                        if (movedAssets[i] == pathToPlugin)
+                        for (int i = 0; i < movedAssets.Length; i++)
                         {
-                            var importer = AssetImporter.GetAtPath(pathToPlugin) as PluginImporter;
-                            if (importer != null && importer.isNativePlugin)
+                            if (movedAssets[i] == pathToPlugin)
                             {
-                                importer.SetCompatibleWithPlatform(buildTarget, true);
-                                importer.SetPlatformData(buildTarget, "CPU", arch);
-                                AssetDatabase.ImportAsset(pathToPlugin);
+                                var importer = AssetImporter.GetAtPath(pathToPlugin) as PluginImporter;
+                                if (importer != null && importer.isNativePlugin)
+                                {
+                                    importer.SetCompatibleWithPlatform(buildTarget, true);
+                                    importer.SetPlatformData(buildTarget, "CPU", arch);
+                                    AssetDatabase.ImportAsset(pathToPlugin);
+                                }
                             }
                         }
                     }
