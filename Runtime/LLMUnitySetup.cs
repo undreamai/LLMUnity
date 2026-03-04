@@ -168,6 +168,8 @@ namespace LLMUnity
         static string DebugModeKey = "DebugMode";
         public static bool CUBLAS = false;
         static string CUBLASKey = "CUBLAS";
+        public static bool AndroidVulkan = false;
+        static string AndroidVulkanKey = "AndroidVulkan";
         static List<Action<string>> errorCallbacks = new List<Action<string>>();
         static readonly object lockObject = new object();
         static Dictionary<string, Task> androidExtractTasks = new Dictionary<string, Task>();
@@ -205,6 +207,7 @@ namespace LLMUnity
         {
             DebugMode = (DebugModeType)PlayerPrefs.GetInt(DebugModeKey, (int)DebugModeType.All);
             CUBLAS = PlayerPrefs.GetInt(CUBLASKey, 0) == 1;
+            AndroidVulkan = PlayerPrefs.GetInt(AndroidVulkanKey, 0) == 1;
         }
 
         public static void SetDebugMode(DebugModeType newDebugMode)
@@ -221,6 +224,14 @@ namespace LLMUnity
             if (CUBLAS == value) return;
             CUBLAS = value;
             PlayerPrefs.SetInt(CUBLASKey, value ? 1 : 0);
+            PlayerPrefs.Save();
+        }
+
+        public static void SetAndroidVulkan(bool value)
+        {
+            if (AndroidVulkan == value) return;
+            AndroidVulkan = value;
+            PlayerPrefs.SetInt(AndroidVulkanKey, value ? 1 : 0);
             PlayerPrefs.Save();
         }
 
