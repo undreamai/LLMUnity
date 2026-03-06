@@ -280,6 +280,24 @@ namespace LLMUnity
             }
         }
 
+        public override async Task AddOtherToggles()
+        {
+            if (GUILayout.Button("Redownload libraries", GUILayout.Width(buttonWidth)))
+            {
+                bool confirmed = EditorUtility.DisplayDialog(
+                    "Confirm Action",
+                    "Are you sure you want to redownload the libraries?",
+                    "Yes",
+                    "Cancel"
+                );
+
+                if (confirmed)
+                {
+                   await LLMUnitySetup.RedownloadLibrary();
+                }
+            }
+        }
+
         async Task AddLoadButtons()
         {
             if (showCustomURL) await createCustomURLField();

@@ -115,6 +115,8 @@ namespace LLMUnity
         public static string modelDownloadPath = Path.Combine(LLMUnityStore, "models");
         /// <summary> cache download path </summary>
         public static string cacheDownloadPath = Path.Combine(LLMUnityStore, "cache");
+        public static string cacheZipPath = Path.Combine(cacheDownloadPath, Path.GetFileName(LlamaLibURL));
+        public static string cacheZipHashPath = cacheZipPath + ".sha256";
         /// <summary> Path of file with build information for runtime </summary>
         public static string LLMManagerPath = GetAssetPath("LLMManager.json");
 
@@ -464,45 +466,45 @@ namespace LLMUnity
             }
         }
 
-        static async Task DownloadAndExtractInsideDirectory(string url, string path, string setupDir)
+        static async Task DownloadAndExtractInsideDirectory()
         {
-            string urlName = Path.GetFileName(url);
-            string zipPath = Path.Combine(cacheDownloadPath, urlName);
-            string setupFile = Path.Combine(setupDir, urlName + ".complete");
+            string setupDir = Path.Combine(libraryPath, "setup");
+            Directory.CreateDirectory(setupDir);
+
+            string setupFile = Path.Combine(setupDir, Path.GetFileName(LlamaLibURL) + ".complete");
             if (File.Exists(setupFile)) return;
 
             Directory.CreateDirectory(cacheDownloadPath);
             foreach (string existingZipPath in Directory.GetFiles(cacheDownloadPath, "*.zip"))
             {
-                if (existingZipPath != zipPath)
+                if (existingZipPath != cacheZipPath)
                 {
-                    Debug.Log(existingZipPath);
                     File.Delete(existingZipPath);
                 }
             }
 
-            string hashurl = url + ".sha256";
-            string hashPath = zipPath + ".sha256";
-            string hash = File.Exists(hashPath)? File.ReadAllText(hashPath).Trim() : "";
+            string hashurl = LlamaLibURL + ".sha256";
+            string cacheZipNewHashPath = cacheZipHashPath + ".new";
+            string hash = File.Exists(cacheZipHashPath)? File.ReadAllText(cacheZipHashPath).Trim() : "";
             bool same_hash = false;
             try
             {
                 new ResumingWebClient().GetURLFileSize(hashurl); // avoid showing error if url doesn't exist
-                await DownloadFile(hashurl, hashPath+".new", debug: false);
-                same_hash = File.ReadAllText(hashPath+".new").Trim() == hash;
+                await DownloadFile(hashurl, cacheZipNewHashPath, debug: false);
+                same_hash = File.ReadAllText(cacheZipNewHashPath).Trim() == hash;
             } catch {}
 
-            if (!File.Exists(zipPath) || !same_hash)  await DownloadFile(url, zipPath, true, null, SetLibraryProgress);
+            if (!File.Exists(cacheZipPath) || !same_hash)  await DownloadFile(LlamaLibURL, cacheZipPath, true, null, SetLibraryProgress);
 
             AssetDatabase.StartAssetEditing();
-            ExtractInsideDirectory(zipPath, path, $"{libraryName}/runtimes/");
+            ExtractInsideDirectory(cacheZipPath, libraryPath, $"{libraryName}/runtimes/");
             CreateEmptyFile(setupFile);
             AssetDatabase.StopAssetEditing();
 
-            if (File.Exists(hashPath+".new"))
+            if (File.Exists(cacheZipNewHashPath))
             {
-                if (File.Exists(hashPath)) File.Delete(hashPath);
-                File.Move(hashPath+".new", hashPath);
+                if (File.Exists(cacheZipHashPath)) File.Delete(cacheZipHashPath);
+                File.Move(cacheZipNewHashPath, cacheZipHashPath);
             }
         }
 
@@ -537,24 +539,39 @@ namespace LLMUnity
         static async Task DownloadLibrary()
         {
             if (libraryProgress < 1) return;
-            libraryProgress = 0;
-
             try
             {
                 DeleteEarlierVersions();
-
-                string setupDir = Path.Combine(libraryPath, "setup");
-                Directory.CreateDirectory(setupDir);
-
-                // setup LlamaLib in StreamingAssets
-                await DownloadAndExtractInsideDirectory(LlamaLibURL, libraryPath, setupDir);
             }
             catch (Exception e)
             {
                 LogError(e.Message);
             }
 
+            for (int i=1; i<=3; i++)
+            {
+                if (i > 1) Log("Downloading LlamaLib failed, try #" + i);
+                libraryProgress = 0;
+                try
+                {
+                    await DownloadAndExtractInsideDirectory();
+                    break;
+                }
+                catch (Exception e)
+                {
+                    LogError(e.Message);
+                }
+            }
+
             libraryProgress = 1;
+        }
+
+        public static async Task RedownloadLibrary()
+        {
+            if (File.Exists(cacheZipPath)) File.Delete(cacheZipPath);
+            if (File.Exists(cacheZipHashPath)) File.Delete(cacheZipHashPath);
+            if (Directory.Exists(libraryPath)) Directory.Delete(libraryPath, true);
+            await DownloadLibrary();
         }
 
         private static void SetLibraryProgress(float progress)
