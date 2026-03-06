@@ -199,9 +199,11 @@ namespace LLMUnity
 
         public static void LogError(string message, bool throwException = false)
         {
-            if ((int)DebugMode > (int)DebugModeType.Error) return;
-            Debug.LogError(message);
-            foreach (Action<string> errorCallback in errorCallbacks) errorCallback(message);
+            if ((int)DebugMode <= (int)DebugModeType.Error || throwException)
+            {
+                Debug.LogError(message);
+                foreach (Action<string> errorCallback in errorCallbacks) errorCallback(message);
+            }
             if (throwException) throw new LLMUnityException(message);
         }
 
