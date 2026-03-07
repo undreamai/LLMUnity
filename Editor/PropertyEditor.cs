@@ -3,6 +3,7 @@ using UnityEditor;
 using UnityEngine;
 using System.Reflection;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace LLMUnity
 {
@@ -96,11 +97,17 @@ namespace LLMUnity
             }
         }
 
+        public virtual async Task AddOtherToggles()
+        {
+            await Task.CompletedTask;
+        }
+
         public virtual void AddOptionsToggles(SerializedObject llmScriptSO)
         {
             AddLogo();
             AddAdvancedOptionsToggle(llmScriptSO);
             AddDebugModeToggle();
+            _ = AddOtherToggles();
             Space();
         }
 

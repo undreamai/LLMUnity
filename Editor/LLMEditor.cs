@@ -280,6 +280,24 @@ namespace LLMUnity
             }
         }
 
+        public override async Task AddOtherToggles()
+        {
+            if (GUILayout.Button("Redownload libraries", GUILayout.Width(buttonWidth)))
+            {
+                bool confirmed = EditorUtility.DisplayDialog(
+                    "Confirm Action",
+                    "Are you sure you want to redownload the libraries?",
+                    "Yes",
+                    "Cancel"
+                );
+
+                if (confirmed)
+                {
+                   await LLMUnitySetup.RedownloadLibrary();
+                }
+            }
+        }
+
         async Task AddLoadButtons()
         {
             if (showCustomURL) await createCustomURLField();
@@ -418,10 +436,23 @@ namespace LLMUnity
 
         public override void AddSetupExtras(SerializedObject llmScriptSO)
         {
-            bool useCUBLAS = LLMUnitySetup.CUBLAS;
-            GUIContent content = new GUIContent("Light build for Nvidia GPUs", "Use tinyBLAS instead of cuBLAS that takes up less space and has similar performance for quants - doesn't work with i-quants and flash attention");
-            bool newUseCUBLAS = !EditorGUILayout.Toggle(content, !useCUBLAS);
-            if (newUseCUBLAS != useCUBLAS) LLMUnitySetup.SetCUBLAS(newUseCUBLAS);
+            if (EditorUserBuildSettings.activeBuildTarget == BuildTarget.StandaloneWindows || 
+                EditorUserBuildSettings.activeBuildTarget == BuildTarget.StandaloneWindows64 || 
+                EditorUserBuildSettings.activeBuildTarget == BuildTarget.StandaloneLinux64)
+            {
+                bool useCUBLAS = LLMUnitySetup.CUBLAS;
+                GUIContent contentCUBLAS = new GUIContent("Light build for Nvidia GPUs", "Use tinyBLAS instead of cuBLAS that takes up less space and has similar performance for quants - doesn't work with i-quants and flash attention");
+                bool newUseCUBLAS = !EditorGUILayout.Toggle(contentCUBLAS, !useCUBLAS);
+                if (newUseCUBLAS != useCUBLAS) LLMUnitySetup.SetCUBLAS(newUseCUBLAS);
+            }
+
+            if (EditorUserBuildSettings.activeBuildTarget == BuildTarget.Android)
+            {
+                bool useAndroidVulkan = LLMUnitySetup.AndroidVulkan;
+                GUIContent contentAndroidVulkan = new GUIContent("Use Android GPU (Vulkan, API>=29)", "Use the Android Vulkan build that works with the Android GPU according to the number of GPU layers");
+                bool newUseAndroidVulkan = EditorGUILayout.Toggle(contentAndroidVulkan, useAndroidVulkan);
+                if (newUseAndroidVulkan != useAndroidVulkan) LLMUnitySetup.SetAndroidVulkan(newUseAndroidVulkan);
+            }
         }
 
         public override void OnInspectorGUI()

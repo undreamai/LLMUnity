@@ -1,13 +1,7 @@
 ### 🚀 Features
 
-- Cache LlamaLib to prevent re-downloads (PR: #386)
-- Implement strategies for context overflow (chat truncation, chat summarization) (PR: #384)
-- Upgrade LlamaLib to v2.0.4 (PR: #384)
-- Re-introduce UI dropdown for level of debug messages (PR: #384)
-
-### 🐛 Fixes
-
-- Fix context overflow with caching and overflow strategies (PR: #384)
-- Ensure macOS build includes the required runtime library (PR: #382)
-- Fix inference for AMD GPUs using Vulkan (PR: #384)
+- Support Qwen 3.5 models (PR: #391)
+- Upgrade LlamaLib to v2.0.4 (llama.cpp b8209) (PR: #391)
+- Android GPU support with Vulkan (PR: #390)
+- add button to redownload LlamaLib (PR: #393)
 

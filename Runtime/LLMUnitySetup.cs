@@ -98,9 +98,9 @@ namespace LLMUnity
     {
         // DON'T CHANGE! the version is autocompleted with a GitHub action
         /// <summary> LLM for Unity version </summary>
-        public static string Version = "v3.0.2";
+        public static string Version = "v3.0.3";
         /// <summary> LlamaLib version </summary>
-        public static string LlamaLibVersion = "v2.0.4";
+        public static string LlamaLibVersion = "v2.0.5";
         /// <summary> LlamaLib release url </summary>
         public static string LlamaLibReleaseURL = $"https://github.com/undreamai/LlamaLib/releases/download/{LlamaLibVersion}";
         /// <summary> LlamaLib name </summary>
@@ -115,6 +115,8 @@ namespace LLMUnity
         public static string modelDownloadPath = Path.Combine(LLMUnityStore, "models");
         /// <summary> cache download path </summary>
         public static string cacheDownloadPath = Path.Combine(LLMUnityStore, "cache");
+        public static string cacheZipPath = Path.Combine(cacheDownloadPath, Path.GetFileName(LlamaLibURL));
+        public static string cacheZipHashPath = cacheZipPath + ".sha256";
         /// <summary> Path of file with build information for runtime </summary>
         public static string LLMManagerPath = GetAssetPath("LLMManager.json");
 
@@ -131,8 +133,8 @@ namespace LLMUnity
              }},
             {"Medium models (up to 10B)", new(string, string, string)[]
              {
+                 ("Qwen 3.5 9B", "https://huggingface.co/unsloth/Qwen3.5-9B-GGUF/resolve/main/Qwen3.5-9B-Q4_K_M.gguf", null),
                  ("Llama 3.1 8B", "https://huggingface.co/bartowski/Meta-Llama-3.1-8B-Instruct-GGUF/resolve/main/Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf", "https://huggingface.co/meta-llama/Meta-Llama-3.1-8B/blob/main/LICENSE"),
-                 ("Qwen 3 8B", "https://huggingface.co/unsloth/Qwen3-8B-GGUF/resolve/main/Qwen3-8B-Q4_K_M.gguf", null),
                  ("DeepSeek R1 Distill Llama 8B", "https://huggingface.co/lmstudio-community/DeepSeek-R1-Distill-Llama-8B-GGUF/resolve/main/DeepSeek-R1-Distill-Llama-8B-Q4_K_M.gguf", null),
                  ("DeepSeek R1 Distill Qwen 7B", "https://huggingface.co/lmstudio-community/DeepSeek-R1-Distill-Qwen-7B-GGUF/resolve/main/DeepSeek-R1-Distill-Qwen-7B-Q4_K_M.gguf", null),
                  ("Gemma 2 9B it", "https://huggingface.co/bartowski/gemma-2-9b-it-GGUF/resolve/main/gemma-2-9b-it-Q4_K_M.gguf", "https://ai.google.dev/gemma/terms"),
@@ -141,17 +143,17 @@ namespace LLMUnity
              }},
             {"Small models (up to 5B)", new(string, string, string)[]
              {
+                 ("Qwen 3.5 4B", "https://huggingface.co/unsloth/Qwen3.5-4B-GGUF/resolve/main/Qwen3.5-4B-Q4_K_M.gguf", null),
                  ("Llama 3.2 3B", "https://huggingface.co/hugging-quants/Llama-3.2-3B-Instruct-Q4_K_M-GGUF/resolve/main/llama-3.2-3b-instruct-q4_k_m.gguf", "https://huggingface.co/meta-llama/Llama-3.2-1B/blob/main/LICENSE.txt"),
                  ("Gemma 3 4B", "https://huggingface.co/lmstudio-community/gemma-3-4b-it-GGUF/resolve/main/gemma-3-4b-it-Q4_K_M.gguf", "https://ai.google.dev/gemma/terms"),
                  ("Phi 4 4B", "https://huggingface.co/bartowski/microsoft_Phi-4-mini-instruct-GGUF/resolve/main/microsoft_Phi-4-mini-instruct-Q4_K_M.gguf", null),
-                 ("Qwen 3 4B", "https://huggingface.co/unsloth/Qwen3-4B-GGUF/resolve/main/Qwen3-4B-Q4_K_M.gguf", null),
              }},
             {"Tiny models (up to 2B)", new(string, string, string)[]
              {
+                 ("Qwen 3.5 2B", "https://huggingface.co/unsloth/Qwen3.5-2B-GGUF/resolve/main/Qwen3.5-2B-Q4_K_M.gguf", null),
+                 ("Qwen 3.5 0.8B", "https://huggingface.co/unsloth/Qwen3.5-0.8B-GGUF/resolve/main/Qwen3.5-0.8B-Q4_K_M.gguf", null),
                  ("Llama 3.2 1B", "https://huggingface.co/hugging-quants/Llama-3.2-1B-Instruct-Q4_K_M-GGUF/resolve/main/llama-3.2-1b-instruct-q4_k_m.gguf", "https://huggingface.co/meta-llama/Llama-3.2-1B/blob/main/LICENSE.txt"),
                  ("Gemma 3 1B", "https://huggingface.co/lmstudio-community/gemma-3-1b-it-GGUF/resolve/main/gemma-3-1b-it-Q4_K_M.gguf", "https://ai.google.dev/gemma/terms"),
-                 ("Qwen 3 1.7B", "https://huggingface.co/unsloth/Qwen3-1.7B-GGUF/resolve/main/Qwen3-1.7B-Q4_K_M.gguf", null),
-                 ("Qwen 3 0.6B", "https://huggingface.co/unsloth/Qwen3-0.6B-GGUF/resolve/main/Qwen3-0.6B-Q4_K_M.gguf", null),
                  ("DeepSeek R1 Distill Qwen 1.5B", "https://huggingface.co/lmstudio-community/DeepSeek-R1-Distill-Qwen-1.5B-GGUF/resolve/main/DeepSeek-R1-Distill-Qwen-1.5B-Q4_K_M.gguf", null),
              }},
             {"RAG models", new(string, string, string)[]
@@ -168,6 +170,8 @@ namespace LLMUnity
         static string DebugModeKey = "DebugMode";
         public static bool CUBLAS = false;
         static string CUBLASKey = "CUBLAS";
+        public static bool AndroidVulkan = false;
+        static string AndroidVulkanKey = "AndroidVulkan";
         static List<Action<string>> errorCallbacks = new List<Action<string>>();
         static readonly object lockObject = new object();
         static Dictionary<string, Task> androidExtractTasks = new Dictionary<string, Task>();
@@ -195,9 +199,11 @@ namespace LLMUnity
 
         public static void LogError(string message, bool throwException = false)
         {
-            if ((int)DebugMode > (int)DebugModeType.Error) return;
-            Debug.LogError(message);
-            foreach (Action<string> errorCallback in errorCallbacks) errorCallback(message);
+            if ((int)DebugMode <= (int)DebugModeType.Error || throwException)
+            {
+                Debug.LogError(message);
+                foreach (Action<string> errorCallback in errorCallbacks) errorCallback(message);
+            }
             if (throwException) throw new LLMUnityException(message);
         }
 
@@ -205,6 +211,7 @@ namespace LLMUnity
         {
             DebugMode = (DebugModeType)PlayerPrefs.GetInt(DebugModeKey, (int)DebugModeType.All);
             CUBLAS = PlayerPrefs.GetInt(CUBLASKey, 0) == 1;
+            AndroidVulkan = PlayerPrefs.GetInt(AndroidVulkanKey, 0) == 1;
         }
 
         public static void SetDebugMode(DebugModeType newDebugMode)
@@ -221,6 +228,14 @@ namespace LLMUnity
             if (CUBLAS == value) return;
             CUBLAS = value;
             PlayerPrefs.SetInt(CUBLASKey, value ? 1 : 0);
+            PlayerPrefs.Save();
+        }
+
+        public static void SetAndroidVulkan(bool value)
+        {
+            if (AndroidVulkan == value) return;
+            AndroidVulkan = value;
+            PlayerPrefs.SetInt(AndroidVulkanKey, value ? 1 : 0);
             PlayerPrefs.Save();
         }
 
@@ -453,45 +468,45 @@ namespace LLMUnity
             }
         }
 
-        static async Task DownloadAndExtractInsideDirectory(string url, string path, string setupDir)
+        static async Task DownloadAndExtractInsideDirectory()
         {
-            string urlName = Path.GetFileName(url);
-            string zipPath = Path.Combine(cacheDownloadPath, urlName);
-            string setupFile = Path.Combine(setupDir, urlName + ".complete");
+            string setupDir = Path.Combine(libraryPath, "setup");
+            Directory.CreateDirectory(setupDir);
+
+            string setupFile = Path.Combine(setupDir, Path.GetFileName(LlamaLibURL) + ".complete");
             if (File.Exists(setupFile)) return;
 
             Directory.CreateDirectory(cacheDownloadPath);
             foreach (string existingZipPath in Directory.GetFiles(cacheDownloadPath, "*.zip"))
             {
-                if (existingZipPath != zipPath)
+                if (existingZipPath != cacheZipPath)
                 {
-                    Debug.Log(existingZipPath);
                     File.Delete(existingZipPath);
                 }
             }
 
-            string hashurl = url + ".sha256";
-            string hashPath = zipPath + ".sha256";
-            string hash = File.Exists(hashPath)? File.ReadAllText(hashPath).Trim() : "";
+            string hashurl = LlamaLibURL + ".sha256";
+            string cacheZipNewHashPath = cacheZipHashPath + ".new";
+            string hash = File.Exists(cacheZipHashPath)? File.ReadAllText(cacheZipHashPath).Trim() : "";
             bool same_hash = false;
             try
             {
                 new ResumingWebClient().GetURLFileSize(hashurl); // avoid showing error if url doesn't exist
-                await DownloadFile(hashurl, hashPath+".new", debug: false);
-                same_hash = File.ReadAllText(hashPath+".new").Trim() == hash;
+                await DownloadFile(hashurl, cacheZipNewHashPath, debug: false);
+                same_hash = File.ReadAllText(cacheZipNewHashPath).Trim() == hash;
             } catch {}
 
-            if (!File.Exists(zipPath) || !same_hash)  await DownloadFile(url, zipPath, true, null, SetLibraryProgress);
+            if (!File.Exists(cacheZipPath) || !same_hash)  await DownloadFile(LlamaLibURL, cacheZipPath, true, null, SetLibraryProgress);
 
             AssetDatabase.StartAssetEditing();
-            ExtractInsideDirectory(zipPath, path, $"{libraryName}/runtimes/");
+            ExtractInsideDirectory(cacheZipPath, libraryPath, $"{libraryName}/runtimes/");
             CreateEmptyFile(setupFile);
             AssetDatabase.StopAssetEditing();
 
-            if (File.Exists(hashPath+".new"))
+            if (File.Exists(cacheZipNewHashPath))
             {
-                if (File.Exists(hashPath)) File.Delete(hashPath);
-                File.Move(hashPath+".new", hashPath);
+                if (File.Exists(cacheZipHashPath)) File.Delete(cacheZipHashPath);
+                File.Move(cacheZipNewHashPath, cacheZipHashPath);
             }
         }
 
@@ -526,24 +541,39 @@ namespace LLMUnity
         static async Task DownloadLibrary()
         {
             if (libraryProgress < 1) return;
-            libraryProgress = 0;
-
             try
             {
                 DeleteEarlierVersions();
-
-                string setupDir = Path.Combine(libraryPath, "setup");
-                Directory.CreateDirectory(setupDir);
-
-                // setup LlamaLib in StreamingAssets
-                await DownloadAndExtractInsideDirectory(LlamaLibURL, libraryPath, setupDir);
             }
             catch (Exception e)
             {
                 LogError(e.Message);
             }
 
+            for (int i=1; i<=3; i++)
+            {
+                if (i > 1) Log("Downloading LlamaLib failed, try #" + i);
+                libraryProgress = 0;
+                try
+                {
+                    await DownloadAndExtractInsideDirectory();
+                    break;
+                }
+                catch (Exception e)
+                {
+                    LogError(e.Message);
+                }
+            }
+
             libraryProgress = 1;
+        }
+
+        public static async Task RedownloadLibrary()
+        {
+            if (File.Exists(cacheZipPath)) File.Delete(cacheZipPath);
+            if (File.Exists(cacheZipHashPath)) File.Delete(cacheZipHashPath);
+            if (Directory.Exists(libraryPath)) Directory.Delete(libraryPath, true);
+            await DownloadLibrary();
         }
 
         private static void SetLibraryProgress(float progress)
