@@ -170,7 +170,7 @@ namespace LLMUnityTests
             }
             else
             {
-                reply1 = "Sure! Here's a fun fact: Ants are among the most common insects, often found in human homes, and they play an important role in soil fertility by breaking down organic matter.";
+                reply1 = "Sure! Here's a fun fact: Ants work together to build complex structures like nests, which is a fascinating example of teamwork.";
                 reply2 = "Of course! Here's a fun fact: Ants are among the most common insects, often found in human homes, and they play an important role in soil fertility by breaking down organic matter.";
             }
             tokens1 = 20;
@@ -566,7 +566,7 @@ namespace LLMUnityTests
             else
             {
                 reply1 = "Ants are known for their ability to build complex structures, such as hexagons, which is a key feature of their social behavior.";
-                reply2 = "Of course! Ants are so sneaky and clever that they can even build intricate nests with just a few minutes of effort—no matter where you start!";
+                reply2 = "Of course! Ants are so smart—well, they’re not really!";
             }
         }
 
