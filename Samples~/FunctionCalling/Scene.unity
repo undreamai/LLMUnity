@@ -738,6 +738,9 @@ MonoBehaviour:
   ignoreEos: 0
   save: 
   debugPrompt: 0
+  overflowStrategy: 1
+  overflowTargetRatio: 0.5
+  overflowSummarizePrompt: 
   _slot: -1
   _systemPrompt: You are an AI assistant and your task is to answer multiple choice
     questions
@@ -1455,7 +1458,7 @@ MonoBehaviour:
   _SSLKey: 
   _numThreads: -1
   _numGPULayers: 0
-  _parallelPrompts: -1
+  _parallelPrompts: 1
   _contextSize: 8192
   _batchSize: 512
   _model: 

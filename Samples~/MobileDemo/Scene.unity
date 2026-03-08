@@ -924,6 +924,9 @@ MonoBehaviour:
   ignoreEos: 0
   save: 
   debugPrompt: 0
+  overflowStrategy: 1
+  overflowTargetRatio: 0.5
+  overflowSummarizePrompt: 
   _slot: -1
   _systemPrompt: A chat between a curious human and an artificial intelligence assistant.
     The assistant gives helpful, detailed, and polite answers to the human's questions.
@@ -1599,7 +1602,7 @@ MonoBehaviour:
   _SSLKey: 
   _numThreads: -1
   _numGPULayers: 0
-  _parallelPrompts: -1
+  _parallelPrompts: 1
   _contextSize: 8192
   _batchSize: 512
   _model: 

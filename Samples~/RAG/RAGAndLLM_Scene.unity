@@ -400,6 +400,9 @@ MonoBehaviour:
   ignoreEos: 0
   save: 
   debugPrompt: 0
+  overflowStrategy: 1
+  overflowTargetRatio: 0.5
+  overflowSummarizePrompt: 
   _slot: -1
   _systemPrompt: 'You are an assistant that answers with phrases from Hamlet.
 
@@ -1313,7 +1316,7 @@ MonoBehaviour:
   _SSLKey: 
   _numThreads: -1
   _numGPULayers: 0
-  _parallelPrompts: -1
+  _parallelPrompts: 1
   _contextSize: 8192
   _batchSize: 512
   _model: 
