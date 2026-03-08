@@ -54,7 +54,7 @@ namespace LLMUnity
 
         /// <summary>Number of prompts that can be processed in parallel (-1 = auto-detect from clients)</summary>
         [Tooltip("Number of prompts that can be processed in parallel (-1 = auto-detect from clients)")]
-        [LLM, SerializeField] private int _parallelPrompts = -1;
+        [LLM, SerializeField] private int _parallelPrompts = 1;
 
         /// <summary>Size of the prompt context in tokens (0 = use model's default context size)</summary>
         [Tooltip("Size of the prompt context in tokens (0 = use model's default context size)")]
