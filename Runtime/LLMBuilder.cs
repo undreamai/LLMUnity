@@ -212,10 +212,7 @@ namespace LLMUnity
                     platforms.Add("osx-arm64");
                     break;
                 case BuildTarget.Android:
-                    if (LLMUnitySetup.AndroidVulkan)
-                        platforms.Add("android-arm64-vulkan");
-                    else
-                        platforms.Add("android-arm64");
+                    platforms.Add("android-arm64");
                     platforms.Add("android-x64");
                     break;
                 case BuildTarget.iOS:
@@ -270,7 +267,7 @@ namespace LLMUnity
             {
                 foreach (string platform in platforms)
                 {
-                    string source = Path.Combine(LLMUnitySetup.libraryPath, platform, "native", $"libllamalib_{platform}.{MobileSuffix(buildTarget)}");
+                    string source = Path.Combine(LLMUnitySetup.libraryPath, platform, "native",  $"libllamalib_{platform}.{MobileSuffix(buildTarget)}");
                     string target = MobilePluginPath(buildTarget, platform.Split("-")[1].ToUpper());
                     string pluginDir = PluginDir(buildTarget.ToString());
                     MoveAction(source, target);
