@@ -47,7 +47,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_tiny.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">LLM for Unity
-   &#160;<span id="projectnumber">v3.0.2</span>
+   &#160;<span id="projectnumber">v3.0.3</span>
    </div>
    <div id="projectbrief">Create characters in Unity with LLMs!</div>
   </td>
@@ -147,10 +147,10 @@ Static Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
-<tr class="memitem:aa9e562edf406d931b3f58b28b28e7c60" id="r_aa9e562edf406d931b3f58b28b28e7c60"><td class="memItemLeft" align="right" valign="top">static string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa9e562edf406d931b3f58b28b28e7c60">Version</a> = &quot;v3.0.2&quot;</td></tr>
+<tr class="memitem:aa9e562edf406d931b3f58b28b28e7c60" id="r_aa9e562edf406d931b3f58b28b28e7c60"><td class="memItemLeft" align="right" valign="top">static string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa9e562edf406d931b3f58b28b28e7c60">Version</a> = &quot;v3.0.3&quot;</td></tr>
 <tr class="memdesc:aa9e562edf406d931b3f58b28b28e7c60"><td class="mdescLeft">&#160;</td><td class="mdescRight">LLM for Unity version.  <br /></td></tr>
 <tr class="separator:aa9e562edf406d931b3f58b28b28e7c60"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8c890a623cf474c4515ae64698c3f236" id="r_a8c890a623cf474c4515ae64698c3f236"><td class="memItemLeft" align="right" valign="top">static string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8c890a623cf474c4515ae64698c3f236">LlamaLibVersion</a> = &quot;v2.0.4&quot;</td></tr>
+<tr class="memitem:a8c890a623cf474c4515ae64698c3f236" id="r_a8c890a623cf474c4515ae64698c3f236"><td class="memItemLeft" align="right" valign="top">static string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8c890a623cf474c4515ae64698c3f236">LlamaLibVersion</a> = &quot;v2.0.5&quot;</td></tr>
 <tr class="memdesc:a8c890a623cf474c4515ae64698c3f236"><td class="mdescLeft">&#160;</td><td class="mdescRight">LlamaLib version.  <br /></td></tr>
 <tr class="separator:a8c890a623cf474c4515ae64698c3f236"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4cd55e5c095d9f275aa760dfa662ba40" id="r_a4cd55e5c095d9f275aa760dfa662ba40"><td class="memItemLeft" align="right" valign="top">static string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4cd55e5c095d9f275aa760dfa662ba40">LlamaLibReleaseURL</a> = $&quot;https://github.com/undreamai/LlamaLib/releases/download/{<a class="el" href="#a8c890a623cf474c4515ae64698c3f236">LlamaLibVersion</a>}&quot;</td></tr>
@@ -174,6 +174,10 @@ Static Public Attributes</h2></td></tr>
 <tr class="memitem:ab8f82646b118ea7d6fa230aed4bae070" id="r_ab8f82646b118ea7d6fa230aed4bae070"><td class="memItemLeft" align="right" valign="top">static string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab8f82646b118ea7d6fa230aed4bae070">cacheDownloadPath</a> = Path.Combine(<a class="el" href="#acc4cf4e81898fc852f1c22ac754b10e2">LLMUnityStore</a>, &quot;cache&quot;)</td></tr>
 <tr class="memdesc:ab8f82646b118ea7d6fa230aed4bae070"><td class="mdescLeft">&#160;</td><td class="mdescRight">cache download path  <br /></td></tr>
 <tr class="separator:ab8f82646b118ea7d6fa230aed4bae070"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac860fae836ee16cebddeff7f1e54fb30" id="r_ac860fae836ee16cebddeff7f1e54fb30"><td class="memItemLeft" align="right" valign="top">static string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac860fae836ee16cebddeff7f1e54fb30">cacheZipPath</a> = Path.Combine(<a class="el" href="#ab8f82646b118ea7d6fa230aed4bae070">cacheDownloadPath</a>, Path.GetFileName(<a class="el" href="#ae298a065eafff77f499f05f5f4447427">LlamaLibURL</a>))</td></tr>
+<tr class="separator:ac860fae836ee16cebddeff7f1e54fb30"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a650f5b335c49eeaa8b4e20408a8d63e6" id="r_a650f5b335c49eeaa8b4e20408a8d63e6"><td class="memItemLeft" align="right" valign="top">static string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a650f5b335c49eeaa8b4e20408a8d63e6">cacheZipHashPath</a> = cacheZipPath + &quot;.sha256&quot;</td></tr>
+<tr class="separator:a650f5b335c49eeaa8b4e20408a8d63e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a457f4ce48c2d305d2e1ba1c891c2c751" id="r_a457f4ce48c2d305d2e1ba1c891c2c751"><td class="memItemLeft" align="right" valign="top">static string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a457f4ce48c2d305d2e1ba1c891c2c751">LLMManagerPath</a> = GetAssetPath(&quot;LLMManager.json&quot;)</td></tr>
 <tr class="memdesc:a457f4ce48c2d305d2e1ba1c891c2c751"><td class="mdescLeft">&#160;</td><td class="mdescRight">Path of file with build information for runtime.  <br /></td></tr>
 <tr class="separator:a457f4ce48c2d305d2e1ba1c891c2c751"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -211,7 +215,7 @@ Static Public Attributes</h2></td></tr>
 
 <p>Add callback function to call for error logs. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00580">580</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00599">599</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
 
 </div>
 </div>
@@ -241,7 +245,7 @@ Static Public Attributes</h2></td></tr>
 <p>Calculates the number of big cores in Android similarly to ncnn (<a href="https://github.com/Tencent/ncnn">https://github.com/Tencent/ncnn</a>) </p>
 <dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00661">661</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00680">680</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
 
 </div>
 </div>
@@ -271,7 +275,7 @@ Static Public Attributes</h2></td></tr>
 <p>Calculates the number of big cores in Android similarly to Unity (<a href="https://docs.unity3d.com/2022.3/Documentation/Manual/android-thread-configuration.html">https://docs.unity3d.com/2022.3/Documentation/Manual/android-thread-configuration.html</a>) </p>
 <dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00715">715</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00734">734</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
 
 </div>
 </div>
@@ -300,7 +304,7 @@ Static Public Attributes</h2></td></tr>
 
 <p>Remove all callback function added for error logs. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00592">592</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00611">611</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
 
 </div>
 </div>
@@ -327,7 +331,7 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00597">597</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00616">616</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
 
 </div>
 </div>
@@ -354,7 +358,7 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00631">631</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00650">650</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
 
 </div>
 </div>
@@ -383,7 +387,7 @@ Static Public Attributes</h2></td></tr>
 
 <p>Remove callback function added for error logs. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00586">586</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00605">605</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
 
 </div>
 </div>
@@ -411,6 +415,54 @@ Static Public Attributes</h2></td></tr>
 <p>cache download path </p>
 
 <p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00117">117</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
+
+</div>
+</div>
+<a id="a650f5b335c49eeaa8b4e20408a8d63e6" name="a650f5b335c49eeaa8b4e20408a8d63e6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a650f5b335c49eeaa8b4e20408a8d63e6">&#9670;&#160;</a></span>cacheZipHashPath</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">string LLMUnity.LLMUnitySetup.cacheZipHashPath = cacheZipPath + &quot;.sha256&quot;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00119">119</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
+
+</div>
+</div>
+<a id="ac860fae836ee16cebddeff7f1e54fb30" name="ac860fae836ee16cebddeff7f1e54fb30"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac860fae836ee16cebddeff7f1e54fb30">&#9670;&#160;</a></span>cacheZipPath</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">string LLMUnity.LLMUnitySetup.cacheZipPath = Path.Combine(<a class="el" href="#ab8f82646b118ea7d6fa230aed4bae070">cacheDownloadPath</a>, Path.GetFileName(<a class="el" href="#ae298a065eafff77f499f05f5f4447427">LlamaLibURL</a>))</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00118">118</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
 
 </div>
 </div>
@@ -528,7 +580,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">string LLMUnity.LLMUnitySetup.LlamaLibVersion = &quot;v2.0.4&quot;</td>
+          <td class="memname">string LLMUnity.LLMUnitySetup.LlamaLibVersion = &quot;v2.0.5&quot;</td>
         </tr>
       </table>
   </td>
@@ -566,7 +618,7 @@ Static Public Attributes</h2></td></tr>
 
 <p>Path of file with build information for runtime. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00119">119</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00121">121</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
 
 </div>
 </div>
@@ -644,7 +696,7 @@ Static Public Attributes</h2></td></tr>
 
 <p>Default models for download. </p>
 
-<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00123">123</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LLMUnitySetup_8cs_source.html#l00125">125</a> of file <a class="el" href="LLMUnitySetup_8cs_source.html">LLMUnitySetup.cs</a>.</p>
 
 </div>
 </div>
@@ -658,7 +710,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">string LLMUnity.LLMUnitySetup.Version = &quot;v3.0.2&quot;</td>
+          <td class="memname">string LLMUnity.LLMUnitySetup.Version = &quot;v3.0.3&quot;</td>
         </tr>
       </table>
   </td>

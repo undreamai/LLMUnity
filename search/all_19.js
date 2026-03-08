@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['save_0',['save',['../classLLMUnity_1_1LLMAgent.html#a0fe7b0d8295eba33202fe26da6b563c3',1,'LLMUnity::LLMAgent']]],
-  ['save_1',['Save',['../classLLMUnity_1_1LLMManager.html#a966727ae26510d3987ebb03ffa180c6b',1,'LLMUnity.LLMManager.Save()'],['../classLLMUnity_1_1Searchable.html#acefe00cbe46e2222bc45afc4a5380af1',1,'LLMUnity.Searchable.Save()']]],
+  ['save_0',['Save',['../classLLMUnity_1_1LLMManager.html#a966727ae26510d3987ebb03ffa180c6b',1,'LLMUnity.LLMManager.Save()'],['../classLLMUnity_1_1Searchable.html#acefe00cbe46e2222bc45afc4a5380af1',1,'LLMUnity.Searchable.Save()']]],
+  ['save_1',['save',['../classLLMUnity_1_1LLMAgent.html#a0fe7b0d8295eba33202fe26da6b563c3',1,'LLMUnity::LLMAgent']]],
   ['savehistory_2',['SaveHistory',['../classLLMUnity_1_1LLMAgent.html#a645e508151519ce876ca14b3284c09bd',1,'LLMUnity::LLMAgent']]],
   ['savetodisk_3',['SaveToDisk',['../classLLMUnity_1_1LLMManager.html#a02f1f4900b433e8d44682d4375da80ca',1,'LLMUnity::LLMManager']]],
   ['script_4',['3. Use in Your Script',['../index.html#autotoc_md9',1,'']]],
