@@ -183,23 +183,23 @@ namespace UndreamAI.LlamaLib
             CheckLlamaLib();
         }
 
-        public string CompletionInternal(string prompt, LlamaLib.CharArrayCallback callback, int idSlot)
+        public string CompletionInternal(string prompt, LlamaLib.CharArrayCallback callback, int idSlot, bool returnResponseJson = false)
         {
             IntPtr result;
-            result = llamaLib.LLM_Completion(llm, prompt ?? string.Empty, callback, idSlot);
+            result = llamaLib.LLM_Completion(llm, prompt ?? string.Empty, callback, idSlot, returnResponseJson);
             return Marshal.PtrToStringAnsi(result) ?? string.Empty;
         }
 
-        public string Completion(string prompt, LlamaLib.CharArrayCallback callback = null, int idSlot = -1)
+        public string Completion(string prompt, LlamaLib.CharArrayCallback callback = null, int idSlot = -1, bool returnResponseJson = false)
         {
             CheckCompletionInternal(prompt);
-            return CompletionInternal(prompt, callback, idSlot);
+            return CompletionInternal(prompt, callback, idSlot, returnResponseJson);
         }
 
-        public async Task<string> CompletionAsync(string prompt, LlamaLib.CharArrayCallback callback = null, int idSlot = -1)
+        public async Task<string> CompletionAsync(string prompt, LlamaLib.CharArrayCallback callback = null, int idSlot = -1, bool returnResponseJson = false)
         {
             CheckCompletionInternal(prompt);
-            return await Task.Run(() => CompletionInternal(prompt, callback, idSlot));
+            return await Task.Run(() => CompletionInternal(prompt, callback, idSlot, returnResponseJson));
         }
     }
 
