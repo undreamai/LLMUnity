@@ -87,7 +87,7 @@ namespace LLMUnity
 
         /// <summary>Presence penalty: reduce likelihood of any repeated token (0.0 = disabled)</summary>
         [Tooltip("Presence penalty: reduce likelihood of any repeated token (0.0 = disabled)")]
-        [ModelAdvanced, Range(0f, 1f)] public float presencePenalty = 0f;
+        [ModelAdvanced, Range(0f, 2f)] public float presencePenalty = 0f;
 
         /// <summary>Frequency penalty: reduce likelihood based on token frequency (0.0 = disabled)</summary>
         [Tooltip("Frequency penalty: reduce likelihood based on token frequency (0.0 = disabled)")]
