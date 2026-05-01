@@ -287,7 +287,8 @@ namespace LLMUnity
                 }
 
                 SetCompletionParameters();
-                result = await llmAgent.ChatAsync(query, addToHistory, wrappedCallback, false, debugPrompt);
+                result = await llmAgent.ChatAsync(query, addToHistory, wrappedCallback, true, debugPrompt);
+                result = ParseCompletionResponse(result);
                 if (this == null) return null;
                 if (addToHistory && result != null && save != "") _ = SaveHistory();
                 if (this != null) completionCallback?.Invoke();

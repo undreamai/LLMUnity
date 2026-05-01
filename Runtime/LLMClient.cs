@@ -2,6 +2,7 @@
 /// @brief File implementing the base LLM client functionality for Unity.
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
 using UndreamAI.LlamaLib;
@@ -192,6 +193,12 @@ namespace LLMUnity
             get => _grammar;
             set => SetGrammar(value);
         }
+
+        /// <summary>Generated tokens per second from the most recent completed request, or -1 if unavailable</summary>
+        public float TokensPerSecond { get; protected set; } = -1f;
+
+        /// <summary>Prompt tokens per second from the most recent completed request, or -1 if unavailable</summary>
+        public float PromptTokensPerSecond { get; protected set; } = -1f;
 
         #endregion
 
@@ -498,6 +505,39 @@ namespace LLMUnity
             }
         }
 
+        /// <summary>
+        /// Extracts plain text and timing data from a completion response payload.
+        /// Falls back to the raw response if the payload is not valid JSON.
+        /// </summary>
+        /// <param name="response">Raw response payload returned by LlamaLib</param>
+        /// <returns>Assistant content as plain text</returns>
+        protected virtual string ParseCompletionResponse(string response)
+        {
+            TokensPerSecond = -1f;
+            PromptTokensPerSecond = -1f;
+
+            if (string.IsNullOrEmpty(response)) return response ?? string.Empty;
+
+            try
+            {
+                JObject json = JObject.Parse(response);
+                TokensPerSecond = ParsePositiveTimingValue(json["timings"]?["predicted_per_second"]);
+                PromptTokensPerSecond = ParsePositiveTimingValue(json["timings"]?["prompt_per_second"]);
+                return json["content"]?.ToString() ?? string.Empty;
+            }
+            catch
+            {
+                return response;
+            }
+        }
+
+        protected float ParsePositiveTimingValue(JToken token)
+        {
+            if (token == null) return -1f;
+            if (!float.TryParse(token.ToString(), NumberStyles.Float, CultureInfo.InvariantCulture, out float value)) return -1f;
+            return value > 0f ? value : -1f;
+        }
+
         #endregion
 
         #region Core LLM Operations
@@ -593,7 +633,8 @@ namespace LLMUnity
             }
 
             SetCompletionParameters();
-            string result = await llmClient.CompletionAsync(prompt, wrappedCallback, id_slot);
+            string result = await llmClient.CompletionAsync(prompt, wrappedCallback, id_slot, true);
+            result = ParseCompletionResponse(result);
             completionCallback?.Invoke();
             return result;
         }

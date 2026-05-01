@@ -118,6 +118,64 @@ namespace LLMUnityTests
         }
     }
 
+    public class TestLLMClient_ResponseParsing
+    {
+        private class TestableLLMClient : LLMClient
+        {
+            public string Parse(string response)
+            {
+                return ParseCompletionResponse(response);
+            }
+        }
+
+        [Test]
+        public void TestParseCompletionResponseJson()
+        {
+            GameObject gameObject = new GameObject();
+            var llmClient = gameObject.AddComponent<TestableLLMClient>();
+
+            string result = llmClient.Parse("{\"content\":\"Hello!\",\"timings\":{\"predicted_per_second\":148.62,\"prompt_per_second\":345.12}}");
+
+            Assert.AreEqual("Hello!", result);
+            Assert.AreEqual(148.62f, llmClient.TokensPerSecond);
+            Assert.AreEqual(345.12f, llmClient.PromptTokensPerSecond);
+
+            UnityEngine.Object.DestroyImmediate(gameObject);
+        }
+
+        [Test]
+        public void TestParseCompletionResponseFallback()
+        {
+            GameObject gameObject = new GameObject();
+            var llmClient = gameObject.AddComponent<TestableLLMClient>();
+
+            string result = llmClient.Parse("plain text response");
+
+            Assert.AreEqual("plain text response", result);
+            Assert.AreEqual(-1f, llmClient.TokensPerSecond);
+            Assert.AreEqual(-1f, llmClient.PromptTokensPerSecond);
+
+            UnityEngine.Object.DestroyImmediate(gameObject);
+        }
+
+        [Test]
+        public void TestParseCompletionResponseResetsStaleMetrics()
+        {
+            GameObject gameObject = new GameObject();
+            var llmClient = gameObject.AddComponent<TestableLLMClient>();
+
+            string firstResult = llmClient.Parse("{\"content\":\"Hello!\",\"timings\":{\"predicted_per_second\":148.62,\"prompt_per_second\":345.12}}");
+            string secondResult = llmClient.Parse("{\"content\":\"No timings this time\"}");
+
+            Assert.AreEqual("Hello!", firstResult);
+            Assert.AreEqual("No timings this time", secondResult);
+            Assert.AreEqual(-1f, llmClient.TokensPerSecond);
+            Assert.AreEqual(-1f, llmClient.PromptTokensPerSecond);
+
+            UnityEngine.Object.DestroyImmediate(gameObject);
+        }
+    }
+
     public class TestLLM
     {
         protected string modelNameLLManager;
@@ -296,21 +354,32 @@ namespace LLMUnityTests
             await llmAgent.Tokenize("I", TestTokens);
             await llmAgent.Warmup();
             TestPostChat(0);
+            TestWarmupTimings();
 
             string reply = await llmAgent.Chat(query);
             TestChat(reply, reply1);
+            TestInferenceTimings();
             TestPostChat(2);
 
             llmAgent.systemPrompt = prompt2;
             reply = await llmAgent.Chat(query, TestStreamingChat);
             TestChat(reply, reply2);
+            TestInferenceTimings();
             TestPostChat(4);
+
+            string completion = await llmAgent.Completion("The cat is away");
+            Assert.That(!string.IsNullOrWhiteSpace(completion));
+            TestInferenceTimings();
 
             await llmAgent.ClearHistory();
             TestPostChat(0);
 
             await llmAgent.Chat("bye!");
+            TestInferenceTimings();
             TestPostChat(2);
+
+            await llmAgent.Warmup();
+            TestWarmupTimings();
         }
 
         public virtual void TestArchitecture()
@@ -326,6 +395,18 @@ namespace LLMUnityTests
         public void TestStreamingChat(string reply)
         {
             Assert.That(reply != "");
+        }
+
+        public void TestInferenceTimings()
+        {
+            Assert.That(llmAgent.TokensPerSecond > 0f);
+            Assert.That(llmAgent.PromptTokensPerSecond == -1f || llmAgent.PromptTokensPerSecond > 0f);
+        }
+
+        public void TestWarmupTimings()
+        {
+            Assert.AreEqual(-1f, llmAgent.TokensPerSecond);
+            Assert.That(llmAgent.PromptTokensPerSecond == -1f || llmAgent.PromptTokensPerSecond > 0f);
         }
 
         public void TestChat(string reply, string replyGT)
